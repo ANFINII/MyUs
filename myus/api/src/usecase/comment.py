@@ -177,7 +177,9 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, N
     comment = comments[0]
 
     if parent is not None:
-        create_notification(user_id, parent.author_id, NotificationTypeNo.REPLY, comment.id, NotificationObjectType.COMMENT)
+        notification_ret = create_notification(user_id, parent.author_id, NotificationTypeNo.REPLY, comment.id, NotificationObjectType.COMMENT)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
 
     data = CommentDTO(
         ulid=comment.ulid,
@@ -235,6 +237,9 @@ def delete_comment(user_id: int, comment_ulid: str) -> Result[None, NotFoundErro
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
 
-        delete_object_notifications(NotificationObjectType.COMMENT, [comment.id])
+        notification_ret = delete_object_notifications(NotificationObjectType.COMMENT, [comment.id])
+        if notification_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(notification_ret.err_value)
 
     return Result.ok(None)

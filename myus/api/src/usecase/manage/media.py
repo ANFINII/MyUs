@@ -83,13 +83,16 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
 
     with transaction.atomic():
         repository.bulk_save([update_data])
-        ret = category_repo.bulk_save(MediaType.VIDEO, obj.id, categories)
-        if ret.is_err:
+        category_ret = category_repo.bulk_save(MediaType.VIDEO, obj.id, categories)
+        if category_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(ret.err_value)
+            return Result.err(category_ret.err_value)
 
     if not obj.publish and input.publish and obj.convert != "":
-        create_publish_notification(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
+        notification_ret = create_publish_notification(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -107,7 +110,11 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> bool:
     try:
         with transaction.atomic():
             repository.bulk_delete(delete_ids)
-            delete_object_notifications(NotificationObjectType.VIDEO, delete_ids)
+            notification_ret = delete_object_notifications(NotificationObjectType.VIDEO, delete_ids)
+            if notification_ret.is_err:
+                transaction.set_rollback(True)
+                log.error("delete_manage_video error", error=notification_ret.err_value.error_message)
+                return False
         return True
     except Exception as e:
         log.error("delete_manage_video error", exc=e)
@@ -155,13 +162,16 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
 
     with transaction.atomic():
         repository.bulk_save([update_data])
-        ret = category_repo.bulk_save(MediaType.MUSIC, obj.id, categories)
-        if ret.is_err:
+        category_ret = category_repo.bulk_save(MediaType.MUSIC, obj.id, categories)
+        if category_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(ret.err_value)
+            return Result.err(category_ret.err_value)
 
     if not obj.publish and input.publish:
-        create_publish_notification(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        notification_ret = create_publish_notification(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -179,7 +189,11 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> bool:
     try:
         with transaction.atomic():
             repository.bulk_delete(delete_ids)
-            delete_object_notifications(NotificationObjectType.MUSIC, delete_ids)
+            notification_ret = delete_object_notifications(NotificationObjectType.MUSIC, delete_ids)
+            if notification_ret.is_err:
+                transaction.set_rollback(True)
+                log.error("delete_manage_music error", error=notification_ret.err_value.error_message)
+                return False
         return True
     except Exception as e:
         log.error("delete_manage_music error", exc=e)
@@ -230,13 +244,16 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
 
     with transaction.atomic():
         repository.bulk_save([update_data])
-        ret = category_repo.bulk_save(MediaType.BLOG, obj.id, categories)
-        if ret.is_err:
+        category_ret = category_repo.bulk_save(MediaType.BLOG, obj.id, categories)
+        if category_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(ret.err_value)
+            return Result.err(category_ret.err_value)
 
     if not obj.publish and input.publish:
-        create_publish_notification(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
+        notification_ret = create_publish_notification(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -254,7 +271,11 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> bool:
     try:
         with transaction.atomic():
             repository.bulk_delete(delete_ids)
-            delete_object_notifications(NotificationObjectType.BLOG, delete_ids)
+            notification_ret = delete_object_notifications(NotificationObjectType.BLOG, delete_ids)
+            if notification_ret.is_err:
+                transaction.set_rollback(True)
+                log.error("delete_manage_blog error", error=notification_ret.err_value.error_message)
+                return False
         return True
     except Exception as e:
         log.error("delete_manage_blog error", exc=e)
@@ -311,13 +332,16 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
 
     with transaction.atomic():
         repository.bulk_save([update_data])
-        ret = category_repo.bulk_save(MediaType.COMIC, obj.id, categories)
-        if ret.is_err:
+        category_ret = category_repo.bulk_save(MediaType.COMIC, obj.id, categories)
+        if category_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(ret.err_value)
+            return Result.err(category_ret.err_value)
 
     if not obj.publish and input.publish:
-        create_publish_notification(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
+        notification_ret = create_publish_notification(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -335,7 +359,11 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> bool:
     try:
         with transaction.atomic():
             repository.bulk_delete(delete_ids)
-            delete_object_notifications(NotificationObjectType.COMIC, delete_ids)
+            notification_ret = delete_object_notifications(NotificationObjectType.COMIC, delete_ids)
+            if notification_ret.is_err:
+                transaction.set_rollback(True)
+                log.error("delete_manage_comic error", error=notification_ret.err_value.error_message)
+                return False
         return True
     except Exception as e:
         log.error("delete_manage_comic error", exc=e)
@@ -386,13 +414,16 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
 
     with transaction.atomic():
         repository.bulk_save([update_data])
-        ret = category_repo.bulk_save(MediaType.PICTURE, obj.id, categories)
-        if ret.is_err:
+        category_ret = category_repo.bulk_save(MediaType.PICTURE, obj.id, categories)
+        if category_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(ret.err_value)
+            return Result.err(category_ret.err_value)
 
     if not obj.publish and input.publish:
-        create_publish_notification(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
+        notification_ret = create_publish_notification(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -410,7 +441,11 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> bool:
     try:
         with transaction.atomic():
             repository.bulk_delete(delete_ids)
-            delete_object_notifications(NotificationObjectType.PICTURE, delete_ids)
+            notification_ret = delete_object_notifications(NotificationObjectType.PICTURE, delete_ids)
+            if notification_ret.is_err:
+                transaction.set_rollback(True)
+                log.error("delete_manage_picture error", error=notification_ret.err_value.error_message)
+                return False
         return True
     except Exception as e:
         log.error("delete_manage_picture error", exc=e)
@@ -455,13 +490,16 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
 
     with transaction.atomic():
         repository.bulk_save([update_data])
-        ret = category_repo.bulk_save(MediaType.CHAT, obj.id, categories)
-        if ret.is_err:
+        category_ret = category_repo.bulk_save(MediaType.CHAT, obj.id, categories)
+        if category_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(ret.err_value)
+            return Result.err(category_ret.err_value)
 
     if not obj.publish and input.publish:
-        create_publish_notification(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
+        notification_ret = create_publish_notification(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -480,14 +518,21 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, NotFoundE
     message_repo = injector.get(MessageInterface)
     reply_ids: list[int] = []
     for chat_id in delete_ids:
-        ret = message_repo.get_ids(MessageFilterOption(chat_id=chat_id, is_parent=False), MessageSortOption())
-        if ret.is_err:
-            return Result.err(ret.err_value)
-        reply_ids += ret.ok_value
+        reply_ids_ret = message_repo.get_ids(MessageFilterOption(chat_id=chat_id, is_parent=False), MessageSortOption())
+        if reply_ids_ret.is_err:
+            return Result.err(reply_ids_ret.err_value)
+        reply_ids += reply_ids_ret.ok_value
 
     with transaction.atomic():
         repository.bulk_delete(delete_ids)
-        delete_object_notifications(NotificationObjectType.CHAT, delete_ids)
-        delete_object_notifications(NotificationObjectType.MESSAGE, reply_ids)
+        chat_notification_ret = delete_object_notifications(NotificationObjectType.CHAT, delete_ids)
+        if chat_notification_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(chat_notification_ret.err_value)
+
+        message_notification_ret = delete_object_notifications(NotificationObjectType.MESSAGE, reply_ids)
+        if message_notification_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(message_notification_ret.err_value)
 
     return Result.ok(None)

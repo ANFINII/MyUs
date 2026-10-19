@@ -166,10 +166,14 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, NotFoundError | Fat
             return Result.err(comments_ret.err_value)
 
         comment = comments_ret.ok_value[0]
-        create_notification(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
+        create_ret = create_notification(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
+        if create_ret.is_err:
+            return Result.err(create_ret.err_value)
     else:
         notification_repo = injector.get(NotificationInterface)
-        notification_repo.delete(NotificationTypeNo.LIKE, NotificationObjectType.COMMENT, ids[0], user_id)
+        delete_ret = notification_repo.delete(NotificationTypeNo.LIKE, NotificationObjectType.COMMENT, ids[0], user_id)
+        if delete_ret.is_err:
+            return Result.err(delete_ret.err_value)
 
     return Result.ok(LikeDTO(is_like=is_like, like_count=like_count))
 

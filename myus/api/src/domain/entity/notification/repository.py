@@ -11,6 +11,7 @@ from api.src.domain.entity.notification._convert import convert_data, get_media_
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
+from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
@@ -40,7 +41,8 @@ class NotificationRepository(NotificationInterface):
     def queryset(self) -> QuerySet[Notification]:
         return Notification.objects.select_related("user_from", "user_to")
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.ulid:
             q_list.append(Q(ulid=filter.ulid))
@@ -69,11 +71,12 @@ class NotificationRepository(NotificationInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[NotificationData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[NotificationData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
@@ -109,14 +112,15 @@ class NotificationRepository(NotificationInterface):
                 case _:
                     assert_never(object_type)
 
-        return [
+        return Result.ok([
             convert_data(obj, content_map.get(f"{obj.object_type}:{obj.object_id}"), comment_media_ulids)
             for obj in sorted_objs
-        ]
+        ])
 
-    def bulk_save(self, objs: list[NotificationData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[NotificationData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, Notification)
@@ -127,25 +131,33 @@ class NotificationRepository(NotificationInterface):
             update_fields=NOTIFICATION_FIELDS,
         )
 
-        return new_ids
+        return Result.ok(new_ids)
 
-    def bulk_delete(self, ids: list[int]) -> None:
+    @Result.shield_exception()
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
         if len(ids) == 0:
-            return
+            return Result.ok(None)
         Notification.objects.filter(id__in=ids).delete()
+        return Result.ok(None)
 
-    def delete(self, type_no: NotificationTypeNo, object_type: NotificationObjectType, object_id: int, user_from_id: int) -> None:
+    @Result.shield_exception()
+    def delete(self, type_no: NotificationTypeNo, object_type: NotificationObjectType, object_id: int, user_from_id: int) -> Result[None, FatalError]:
         Notification.objects.filter(type_no=type_no, object_type=object_type, object_id=object_id, user_from_id=user_from_id).delete()
+        return Result.ok(None)
 
-    def delete_by_user(self, ulid: str, user_id: int) -> None:
+    @Result.shield_exception()
+    def delete_by_user(self, ulid: str, user_id: int) -> Result[None, FatalError]:
         notification = Notification.objects.filter(ulid=ulid).first()
         if notification is None:
-            return
+            return Result.ok(None)
         notification.confirmed.add(user_id)
         notification.deleted.add(user_id)
+        return Result.ok(None)
 
-    def confirm(self, ulid: str, user_id: int) -> None:
+    @Result.shield_exception()
+    def confirm(self, ulid: str, user_id: int) -> Result[None, FatalError]:
         notification = Notification.objects.filter(ulid=ulid).first()
         if notification is None:
-            return
+            return Result.ok(None)
         notification.confirmed.add(user_id)
+        return Result.ok(None)

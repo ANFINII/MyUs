@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from api.src.domain.interface.notification.data import NotificationData
+from api.utils.common.result import FatalError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
 
@@ -30,29 +31,29 @@ class SortOption:
 
 class NotificationInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[NotificationData]:
+    def bulk_get(self, ids: list[int]) -> Result[list[NotificationData], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[NotificationData]) -> list[int]:
+    def bulk_save(self, objs: list[NotificationData]) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_delete(self, ids: list[int]) -> None:
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
         ...
 
     @abstractmethod
-    def delete(self, type_no: NotificationTypeNo, object_type: NotificationObjectType, object_id: int, user_from_id: int) -> None:
+    def delete(self, type_no: NotificationTypeNo, object_type: NotificationObjectType, object_id: int, user_from_id: int) -> Result[None, FatalError]:
         ...
 
     @abstractmethod
-    def delete_by_user(self, ulid: str, user_id: int) -> None:
+    def delete_by_user(self, ulid: str, user_id: int) -> Result[None, FatalError]:
         ...
 
     @abstractmethod
-    def confirm(self, ulid: str, user_id: int) -> None:
+    def confirm(self, ulid: str, user_id: int) -> Result[None, FatalError]:
         ...
