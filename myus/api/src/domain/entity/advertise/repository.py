@@ -6,6 +6,7 @@ from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
+from api.utils.common.result import FatalError, Result
 
 
 ADVERTISE_FIELDS = ["author_id", "title", "url", "content", "image", "video", "read", "type", "period", "publish"]
@@ -30,24 +31,27 @@ class AdvertiseRepository(AdvertiseInterface):
     def queryset(self) -> QuerySet[Advertise]:
         return Advertise.objects.all()
 
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
         qs = Advertise.objects.filter(*_filter_q_list(filter, exclude))
         order_by_key = "id" if sort.is_asc else "-id"
         qs = qs.order_by(order_by_key)
         qs = qs[page.offset:page.offset + page.limit]
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[AdvertiseData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[AdvertiseData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, objs: list[AdvertiseData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[AdvertiseData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, Advertise)
@@ -58,10 +62,13 @@ class AdvertiseRepository(AdvertiseInterface):
             update_fields=ADVERTISE_FIELDS,
         )
 
-        return new_ids
+        return Result.ok(new_ids)
 
-    def bulk_delete(self, ids: list[int]) -> None:
+    @Result.shield_exception()
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
         Advertise.objects.filter(id__in=ids).delete()
+        return Result.ok(None)
 
-    def count(self, filter: FilterOption) -> int:
-        return Advertise.objects.filter(*_filter_q_list(filter)).count()
+    @Result.shield_exception()
+    def count(self, filter: FilterOption) -> Result[int, FatalError]:
+        return Result.ok(Advertise.objects.filter(*_filter_q_list(filter)).count())
