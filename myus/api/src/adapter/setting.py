@@ -63,7 +63,7 @@ class SettingProfileAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("SettingProfileAPI put", input=input)
 
@@ -83,7 +83,7 @@ class SettingProfileAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -139,7 +139,7 @@ class SettingMyPageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner_file: UploadedFile = File(None)):
         log.info("SettingMyPageAPI put", input=input)
 
@@ -158,7 +158,7 @@ class SettingMyPageAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -175,7 +175,7 @@ class SettingNotificationAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: SettingNotificationOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: SettingNotificationOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("SettingNotificationAPI get")
 
@@ -213,7 +213,7 @@ class SettingNotificationAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingNotificationIn):
         log.info("SettingNotificationAPI put", input=input)
 
@@ -229,7 +229,7 @@ class SettingNotificationAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

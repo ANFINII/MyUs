@@ -8,7 +8,7 @@ from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.broadcast import broadcast_create_message, broadcast_delete_message, broadcast_update_message
 from api.src.usecase.message import create_message, delete_message, get_replies, update_message
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
 
 
 class MessageAPI:
@@ -17,7 +17,7 @@ class MessageAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MessageOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MessageOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MessageCreateIn):
         log.info("MessageAPI post", input=input)
 
@@ -34,7 +34,7 @@ class MessageAPI:
             if message_ret.is_err:
                 match message_ret.err_value:
                     case NotFoundError():
-                        return 400, ErrorOut(message=message_ret.err_value.error_message)
+                        return 404, ErrorOut(message=message_ret.err_value.error_message)
                     case FatalError():
                         return 500, ErrorOut(message="Internal Server Error")
                     case _:
@@ -100,7 +100,7 @@ class MessageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut})
+    @router.put("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, message_ulid: str, input: MessageUpdateIn):
         log.info("MessageAPI put", message_ulid=message_ulid, input=input)
 
@@ -117,6 +117,8 @@ class MessageAPI:
             if update_ret.is_err:
                 match update_ret.err_value:
                     case NotFoundError():
+                        return 404, ErrorOut(message=update_ret.err_value.error_message)
+                    case ForbiddenError():
                         return 403, ErrorOut(message=update_ret.err_value.error_message)
                     case FatalError():
                         return 500, ErrorOut(message="Internal Server Error")
@@ -131,7 +133,7 @@ class MessageAPI:
             return 500, ErrorOut(message="メッセージの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut})
+    @router.delete("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI delete", message_ulid=message_ulid)
 
@@ -148,6 +150,8 @@ class MessageAPI:
             if delete_ret.is_err:
                 match delete_ret.err_value:
                     case NotFoundError():
+                        return 404, ErrorOut(message=delete_ret.err_value.error_message)
+                    case ForbiddenError():
                         return 403, ErrorOut(message=delete_ret.err_value.error_message)
                     case FatalError():
                         return 500, ErrorOut(message="Internal Server Error")

@@ -10,7 +10,7 @@ from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
 from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_author_data
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
 
@@ -188,18 +188,18 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
 
 @Result.shield_exception()
-def update_message(user_id: int, message_ulid: str, text: str) -> Result[MessageDTO, NotFoundError | FatalError]:
+def update_message(user_id: int, message_ulid: str, text: str) -> Result[MessageDTO, NotFoundError | ForbiddenError | FatalError]:
     message_ret = get_message_data(message_ulid)
     if message_ret.is_err:
         return Result.err(message_ret.err_value)
 
     message = message_ret.ok_value
     if message is None:
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(NotFoundError("Not Found"))
 
     if message.author_id != user_id:
         log.warning("メッセージの編集権限がありません", message_ulid=message_ulid, user_id=user_id)
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(ForbiddenError("Forbidden"))
 
     save_ret = save_message_data(replace(message, text=text))
     if save_ret.is_err:
@@ -222,18 +222,18 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[Message
 
 
 @Result.shield_exception()
-def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError | FatalError]:
+def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError | ForbiddenError | FatalError]:
     message_ret = get_message_data(message_ulid)
     if message_ret.is_err:
         return Result.err(message_ret.err_value)
 
     message = message_ret.ok_value
     if message is None:
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(NotFoundError("Not Found"))
 
     if message.author_id != user_id:
         log.warning("メッセージの削除権限がありません", message_ulid=message_ulid, user_id=user_id)
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(ForbiddenError("Forbidden"))
 
     # 返信の場合はNotificationも削除
     if message.parent_id is not None:
@@ -250,7 +250,7 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError
     chats = chats_ret.ok_value
     if len(chats) == 0:
         log.warning("チャットが見つかりませんでした", chat_id=message.chat_id)
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(NotFoundError("Not Found"))
 
     message_repo = injector.get(MessageInterface)
     delete_ret = message_repo.delete(message.id)

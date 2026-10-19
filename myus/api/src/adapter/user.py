@@ -163,7 +163,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/follow/user", response={200: FollowOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/follow/user", response={200: FollowOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def follow_user(request: HttpRequest, input: FollowIn):
         log.info("UserAPI follow_user", input=input)
 
@@ -187,7 +187,7 @@ class UserAPI:
         if follow_ret.is_err:
             match follow_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=follow_ret.err_value.error_message)
+                    return 404, ErrorOut(message=follow_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -198,7 +198,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/like/media", response={200: LikeOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/like/media", response={200: LikeOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def post_like_media(request: HttpRequest, input: LikeMediaIn):
         log.info("UserAPI like_media", input=input)
 
@@ -214,7 +214,7 @@ class UserAPI:
         if like_ret.is_err:
             match like_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=like_ret.err_value.error_message)
+                    return 404, ErrorOut(message=like_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -241,7 +241,7 @@ class UserAPI:
         if like_ret.is_err:
             match like_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=like_ret.err_value.error_message)
+                    return 404, ErrorOut(message=like_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

@@ -20,7 +20,7 @@ from api.src.usecase.manage.media import (
     get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture,
     get_manage_chats, get_manage_chat, update_manage_chat, delete_manage_chat,
 )
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 
 
 class ManageVideoAPI:
@@ -75,7 +75,7 @@ class ManageVideoAPI:
         return 200, convert_videos([video])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: VideoUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageVideoAPI put", ulid=ulid, input=input, image=image)
 
@@ -91,7 +91,9 @@ class ManageVideoAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -100,7 +102,7 @@ class ManageVideoAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageVideoAPI delete", ulids=input.ulids)
 
@@ -116,7 +118,7 @@ class ManageVideoAPI:
         if delete_ret.is_err:
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                    return 404, ErrorOut(message=delete_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -177,7 +179,7 @@ class ManageMusicAPI:
         return 200, convert_musics([music])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: MusicUpdateIn):
         log.info("ManageMusicAPI put", ulid=ulid, input=input)
 
@@ -193,7 +195,9 @@ class ManageMusicAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -202,7 +206,7 @@ class ManageMusicAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageMusicAPI delete", ulids=input.ulids)
 
@@ -218,7 +222,7 @@ class ManageMusicAPI:
         if delete_ret.is_err:
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                    return 404, ErrorOut(message=delete_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -279,7 +283,7 @@ class ManageBlogAPI:
         return 200, convert_blogs([blog])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: BlogUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageBlogAPI put", ulid=ulid, input=input, image=image)
 
@@ -295,7 +299,9 @@ class ManageBlogAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -304,7 +310,7 @@ class ManageBlogAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageBlogAPI delete", ulids=input.ulids)
 
@@ -320,7 +326,7 @@ class ManageBlogAPI:
         if delete_ret.is_err:
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                    return 404, ErrorOut(message=delete_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -381,7 +387,7 @@ class ManageComicAPI:
         return 200, convert_comics([comic])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ComicUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageComicAPI put", ulid=ulid, input=input, image=image)
 
@@ -397,7 +403,9 @@ class ManageComicAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -406,7 +414,7 @@ class ManageComicAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageComicAPI delete", ulids=input.ulids)
 
@@ -422,7 +430,7 @@ class ManageComicAPI:
         if delete_ret.is_err:
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                    return 404, ErrorOut(message=delete_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -483,7 +491,7 @@ class ManagePictureAPI:
         return 200, convert_pictures([picture])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: PictureUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManagePictureAPI put", ulid=ulid, input=input, image=image)
 
@@ -499,7 +507,9 @@ class ManagePictureAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -508,7 +518,7 @@ class ManagePictureAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManagePictureAPI delete", ulids=input.ulids)
 
@@ -524,7 +534,7 @@ class ManagePictureAPI:
         if delete_ret.is_err:
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                    return 404, ErrorOut(message=delete_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -585,7 +595,7 @@ class ManageChatAPI:
         return 200, convert_chats([chat])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChatUpdateIn):
         log.info("ManageChatAPI put", ulid=ulid, input=input)
 
@@ -601,7 +611,9 @@ class ManageChatAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -610,7 +622,7 @@ class ManageChatAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageChatAPI delete", ulids=input.ulids)
 
@@ -626,7 +638,7 @@ class ManageChatAPI:
         if delete_ret.is_err:
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                    return 404, ErrorOut(message=delete_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -687,7 +699,7 @@ class ManageAdvertiseAPI:
         return 200, convert_advertises([advertise])[0]
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: AdvertiseIn = Form(...), image: UploadedFile = File(...), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI post", input=input, image=image, video=video)
 
@@ -703,6 +715,8 @@ class ManageAdvertiseAPI:
         if create_ret.is_err:
             match create_ret.err_value:
                 case NotFoundError():
+                    return 404, ErrorOut(message=create_ret.err_value.error_message)
+                case ValidationError():
                     return 400, ErrorOut(message=create_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
@@ -713,7 +727,7 @@ class ManageAdvertiseAPI:
         return 201, MediaCreateOut(ulid=advertise.ulid)
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: AdvertiseUpdateIn = Form(...), image: UploadedFile | None = File(None), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI put", ulid=ulid, input=input, image=image, video=video)
 
@@ -729,7 +743,7 @@ class ManageAdvertiseAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -738,7 +752,7 @@ class ManageAdvertiseAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageAdvertiseAPI delete", ulids=input.ulids)
 
@@ -754,7 +768,7 @@ class ManageAdvertiseAPI:
         if delete_ret.is_err:
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                    return 404, ErrorOut(message=delete_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

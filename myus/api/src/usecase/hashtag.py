@@ -6,7 +6,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.src.domain.interface.ng_word.interface import FilterOption as NgWordFilterOption, NgWordInterface, SortOption as NgWordSortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.functions.media import get_media_repository
 
@@ -64,7 +64,7 @@ def get_ng_words() -> Result[list[str], FatalError]:
 
 
 @Result.shield_exception()
-def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, NotFoundError | FatalError]:
+def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     media_repo = get_media_repository(media_type)
     hashtag_repo = injector.get(HashtagInterface)
     media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
@@ -84,7 +84,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
     media = medias[0]
     if media.channel.owner_id != user_id:
         log.error("Media owner mismatch", media_type=media_type.value, media_ulid=media_ulid, user_id=user_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("保存に失敗しました!"))
 
     ulids = [h.ulid for h in hashtags if h.ulid]
     ulid_data_map: dict[str, HashtagData] = {}
