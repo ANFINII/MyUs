@@ -15,7 +15,11 @@ from api.utils.plan import get_plan
 
 @Result.shield_exception()
 def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalError]:
-    user = get_user_data(ulid=user_ulid)
+    user_ret = get_user_data(ulid=user_ulid)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
     if user is None:
         log.info("User not found", user_ulid=user_ulid)
         return Result.ok([])
@@ -38,8 +42,9 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
+    objs = objs_ret.ok_value
     today = timezone.now().date()
-    active = [o for o in objs_ret.ok_value if is_active(o, today)]
+    active = [o for o in objs if is_active(o, today)]
     if len(active) == 0:
         return Result.ok([])
 
@@ -64,7 +69,8 @@ def increment_advertise_read(ulid: str) -> Result[int, NotFoundError | FatalErro
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     updated = replace(obj, read=obj.read + 1)
     save_ret = repository.bulk_save([updated])
     if save_ret.is_err:

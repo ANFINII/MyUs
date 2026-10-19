@@ -11,8 +11,10 @@ def get_categories() -> Result[list[CategoryDTO], FatalError]:
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    categories_ret = repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    categories_ret = repo.bulk_get(ids)
     if categories_ret.is_err:
         return Result.err(categories_ret.err_value)
 
-    return Result.ok([CategoryDTO(ulid=c.ulid, jp_name=c.jp_name, en_name=c.en_name) for c in categories_ret.ok_value])
+    categories = categories_ret.ok_value
+    return Result.ok([CategoryDTO(ulid=c.ulid, jp_name=c.jp_name, en_name=c.en_name) for c in categories])

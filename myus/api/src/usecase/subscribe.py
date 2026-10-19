@@ -26,12 +26,14 @@ def get_subscribe_channels(user_id: int) -> Result[list[ChannelData], FatalError
     if subscribes_ret.is_err:
         return Result.err(subscribes_ret.err_value)
 
-    channel_ids = [s.channel_id for s in subscribes_ret.ok_value]
+    subscribes = subscribes_ret.ok_value
+    channel_ids = [s.channel_id for s in subscribes]
     channels_ret = channel_repo.bulk_get(channel_ids)
     if channels_ret.is_err:
         return Result.err(channels_ret.err_value)
 
-    return Result.ok(channels_ret.ok_value)
+    channels = channels_ret.ok_value
+    return Result.ok(channels)
 
 
 @Result.shield_exception()
@@ -50,7 +52,8 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    subscribes_ret = subscribe_repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    subscribes_ret = subscribe_repo.bulk_get(ids)
     if subscribes_ret.is_err:
         return Result.err(subscribes_ret.err_value)
 

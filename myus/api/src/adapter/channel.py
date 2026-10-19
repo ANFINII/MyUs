@@ -21,15 +21,19 @@ class ChannelAPI:
     def get(request: HttpRequest):
         log.info("ChannelAPI get")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_user_channels(user_id)
-        if ret.is_err:
+        channels_ret = get_user_channels(user_id)
+        if channels_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        channels = ret.ok_value
+        channels = channels_ret.ok_value
         data = [
             ChannelOut(
                 ulid=str(c.ulid),
@@ -50,15 +54,19 @@ class ChannelAPI:
     def get_subscribe(request: HttpRequest):
         log.info("ChannelAPI get_subscribe")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_subscribe_channels(user_id)
-        if ret.is_err:
+        channels_ret = get_subscribe_channels(user_id)
+        if channels_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        channels = ret.ok_value
+        channels = channels_ret.ok_value
         data = [
             ChannelOut(
                 ulid=str(c.ulid),
@@ -79,17 +87,21 @@ class ChannelAPI:
     def post_subscribe(request: HttpRequest, input: SubscribeIn):
         log.info("ChannelAPI post_subscribe", input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        subscribe_ret = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
+        if subscribe_ret.is_err:
+            if isinstance(subscribe_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=subscribe_ret.err_value.error_message)
 
-        subscribe = ret.ok_value
+        subscribe = subscribe_ret.ok_value
         data = SubscribeOut(is_subscribe=subscribe.is_subscribe, count=subscribe.count)
         return 200, data
 
@@ -98,29 +110,38 @@ class ChannelAPI:
     def post(request: HttpRequest, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("ChannelAPI post", input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = create_user_channel(user_id, input, avatar_file)
-        if ret.is_err:
+        create_ret = create_user_channel(user_id, input, avatar_file)
+        if create_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        return 201, ChannelCreateOut(ulid=ret.ok_value)
+        ulid = create_ret.ok_value
+        return 201, ChannelCreateOut(ulid=ulid)
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("ChannelAPI put", ulid=ulid, input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_user_channel(user_id, ulid, input, avatar_file)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_user_channel(user_id, ulid, input, avatar_file)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")

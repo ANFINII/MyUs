@@ -29,11 +29,19 @@ class PaymentAPI:
     def checkout(request: HttpRequest, input: PaymentCheckoutIn):
         log.info("PaymentAPI checkout", plan=input.plan)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data = get_user_data(user_id=user_id)
+        user_data_ret = get_user_data(user_id=user_id)
+        if user_data_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_data = user_data_ret.ok_value
         if user_data is None:
             return 404, ErrorOut(message="Not Found")
 
@@ -57,11 +65,12 @@ class PaymentAPI:
         )
 
         payment = injector.get(PaymentInterface)
-        ret = payment.create_checkout(data)
-        if ret.is_err:
+        create_ret = payment.create_checkout(data)
+        if create_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        match ret.ok_value:
+        checkout = create_ret.ok_value
+        match checkout:
             case CheckoutCreated(session=session):
                 return 200, PaymentCheckoutOut(url=session.redirect_url)
             case CheckoutFailed(error=error, message=message):
@@ -79,7 +88,8 @@ class PaymentAPI:
         if verify_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        match verify_ret.ok_value:
+        verification = verify_ret.ok_value
+        match verification:
             case WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=message):
                 log.info("PaymentAPI webhook unsupported event", message=message)
                 return 200, PaymentWebhookOut(message="Unsupported event type")
@@ -98,7 +108,8 @@ class PaymentAPI:
                 if existing_ids_ret.is_err:
                     return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-                if len(existing_ids_ret.ok_value) > 0:
+                existing_ids = existing_ids_ret.ok_value
+                if len(existing_ids) > 0:
                     log.info("PaymentAPI webhook already processed", event_id=event.event_id)
                     return 200, PaymentWebhookOut(message="Already processed")
 
@@ -119,7 +130,11 @@ class PaymentAPI:
     @staticmethod
     @router.post("/cancel", response={200: PaymentCancelOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def cancel(request: HttpRequest):
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
@@ -140,7 +155,8 @@ class PaymentAPI:
         if subs_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        subscription = subs_ret.ok_value[0]
+        subs = subs_ret.ok_value
+        subscription = subs[0]
         if subscription.status != SubscriptionStatus.ACTIVE:
             return 404, ErrorOut(message="アクティブなサブスクリプションが見つかりません")
 
@@ -149,7 +165,8 @@ class PaymentAPI:
         if cancel_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        match cancel_ret.ok_value:
+        cancellation = cancel_ret.ok_value
+        match cancellation:
             case CancelSuccess(canceled_at=canceled_at, period_end=period_end):
                 updated = replace(subscription, canceled_at=canceled_at, current_period_end=period_end)
                 save_ret = sub_repo.bulk_save([updated])

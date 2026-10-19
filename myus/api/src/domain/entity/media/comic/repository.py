@@ -8,6 +8,7 @@ from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, 
 from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
+from api.utils.common.result import FatalError, Result
 
 
 COMIC_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
@@ -18,25 +19,28 @@ class ComicRepository(ComicInterface):
         pages_prefetch = Prefetch("comic", queryset=ComicPage.objects.order_by("sequence"))
         return Comic.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category", pages_prefetch).annotate(like_count=Count("like"))
 
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
         qs = Comic.objects.filter(*filter_q_list(filter, exclude))
         qs = distinct_queryset(qs, filter)
         qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend, user_id)
         qs = qs.order_by(order_by_key)
         qs = qs[page.offset:page.offset + page.limit]
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[ComicData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[ComicData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, objs: list[ComicData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[ComicData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, Comic)
@@ -55,18 +59,23 @@ class ComicRepository(ComicInterface):
                 for seq, page_path in enumerate(obj.pages)
             ])
 
-        return new_ids
+        return Result.ok(new_ids)
 
-    def bulk_delete(self, ids: list[int]) -> None:
+    @Result.shield_exception()
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
         Comic.objects.filter(id__in=ids).delete()
+        return Result.ok(None)
 
-    def count(self, filter: FilterOption) -> int:
+    @Result.shield_exception()
+    def count(self, filter: FilterOption) -> Result[int, FatalError]:
         qs = Comic.objects.filter(*filter_q_list(filter))
-        return distinct_queryset(qs, filter).count()
+        return Result.ok(distinct_queryset(qs, filter).count())
 
-    def is_liked(self, media_id: int, user_id: int) -> bool:
-        return Comic.objects.filter(id=media_id, like__id=user_id).exists()
+    @Result.shield_exception()
+    def is_liked(self, media_id: int, user_id: int) -> Result[bool, FatalError]:
+        return Result.ok(Comic.objects.filter(id=media_id, like__id=user_id).exists())
 
-    def increment_read(self, media_id: int) -> int:
+    @Result.shield_exception()
+    def increment_read(self, media_id: int) -> Result[int, FatalError]:
         Comic.objects.filter(id=media_id).update(read=F("read") + 1)
-        return Comic.objects.values_list("read", flat=True).get(id=media_id)
+        return Result.ok(Comic.objects.values_list("read", flat=True).get(id=media_id))

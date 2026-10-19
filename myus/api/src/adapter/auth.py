@@ -16,7 +16,7 @@ class AuthAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.get("", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def auth(request: HttpRequest):
         log.info("AuthAPI auth")
 
@@ -31,7 +31,12 @@ class AuthAPI:
             if not user_id:
                 return 401, ErrorOut(message="Invalid token")
 
-            if not verify_user(user_id):
+            ret = verify_user(user_id)
+            if ret.is_err:
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+            is_verified = ret.ok_value
+            if not is_verified:
                 return 401, ErrorOut(message="Unauthorized")
 
             return 200, ErrorOut(message="認証済みです!")
@@ -68,7 +73,12 @@ class AuthAPI:
                 log.warning("No user_id in token")
                 return 401, ErrorOut(message="Invalid token")
 
-            if not verify_user(user_id):
+            ret = verify_user(user_id)
+            if ret.is_err:
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+            is_verified = ret.ok_value
+            if not is_verified:
                 log.warning("User verification failed", user_id=user_id)
                 return 401, ErrorOut(message="Unauthorized")
 
@@ -94,9 +104,13 @@ class AuthAPI:
     def signup_email(request: HttpRequest, input: SignupEmailIn):
         log.info("AuthAPI signup_email", email=input.email)
 
-        validation = signup_send_email(input.email)
-        if validation:
-            return 400, ErrorOut(message=validation)
+        ret = signup_send_email(input.email)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        error_message = ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         return 200, ErrorOut(message="メールを送信しました!")
 
@@ -125,12 +139,13 @@ class AuthAPI:
             log.warning("Signup email mismatch", token_email=token_email, input_email=input.email)
             return 400, ErrorOut(message="メールアドレスが一致しません!")
 
-        validation = signup_check(input)
-        if validation:
-            log.warning("Signup validation failed", message=validation)
-            return 400, ErrorOut(message=validation)
+        error_message = signup_check(input)
+        if len(error_message) > 0:
+            log.warning("Signup validation failed", message=error_message)
+            return 400, ErrorOut(message=error_message)
 
-        if not signup_user(input):
+        ret = signup_user(input)
+        if ret.is_err:
             return 500, ErrorOut(message="アカウント登録に失敗しました!")
 
         return 201, ErrorOut(message="アカウント登録が完了しました!")
@@ -172,17 +187,25 @@ class AuthAPI:
             return 500, ErrorOut(message="ログアウトに失敗しました!")
 
     @staticmethod
-    @router.post("/password/change", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("/password/change", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def password_change(request: HttpRequest, input: PasswordChangeIn):
         log.info("AuthAPI password_change")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        validation = change_password(user_id, input)
-        if validation:
-            return 400, ErrorOut(message=validation)
+        change_ret = change_password(user_id, input)
+        if change_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        error_message = change_ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         return 204, ErrorOut(message="パスワードを変更しました!")
 
@@ -191,9 +214,13 @@ class AuthAPI:
     def password_reset_email(request: HttpRequest, input: PasswordResetEmailIn):
         log.info("AuthAPI password_reset_email", email=input.email)
 
-        validation = password_reset_send_email(input.email)
-        if validation:
-            return 400, ErrorOut(message=validation)
+        ret = password_reset_send_email(input.email)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        error_message = ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         return 200, ErrorOut(message="メールを送信しました!")
 
@@ -210,28 +237,40 @@ class AuthAPI:
         return 200, PasswordResetVerifyOut(email=email)
 
     @staticmethod
-    @router.post("/password/reset", response={204: ErrorOut, 400: ErrorOut})
+    @router.post("/password/reset", response={204: ErrorOut, 400: ErrorOut, 500: ErrorOut})
     def password_reset(request: HttpRequest, input: PasswordResetIn):
         log.info("AuthAPI password_reset")
 
-        validation = reset_password(input)
-        if validation:
-            return 400, ErrorOut(message=validation)
+        ret = reset_password(input)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        error_message = ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         return 204, ErrorOut(message="パスワードをリセットしました!")
 
     @staticmethod
-    @router.post("/withdrawal", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("/withdrawal", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def withdrawal(request: HttpRequest, response: HttpResponse, input: WithdrawalIn):
         log.info("AuthAPI withdrawal")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        validation = withdraw_user(user_id, input)
-        if validation:
-            return 400, ErrorOut(message=validation)
+        withdraw_ret = withdraw_user(user_id, input)
+        if withdraw_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        error_message = withdraw_ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")

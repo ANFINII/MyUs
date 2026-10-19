@@ -2,7 +2,6 @@ import datetime
 from dataclasses import replace
 from ninja import UploadedFile
 from api.db.models.user import User
-from api.modules.logger import log
 from api.src.injectors.container import injector
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
@@ -22,30 +21,44 @@ from api.utils.functions.media import get_media_repository, save_upload
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
-def get_user_data(user_id: int = 0, ulid: str = "") -> UserAllData | None:
+@Result.shield_exception()
+def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None, FatalError]:
     repository = injector.get(UserInterface)
-    ids = repository.get_ids(FilterOption(id=user_id, ulid=ulid))
+    ids_ret = repository.get_ids(FilterOption(id=user_id, ulid=ulid))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
-        return None
+        return Result.ok(None)
 
-    users = repository.bulk_get(ids)
-    return users[0]
+    users_ret = repository.bulk_get(ids)
+    if users_ret.is_err:
+        return Result.err(users_ret.err_value)
+
+    users = users_ret.ok_value
+    return Result.ok(users[0])
 
 
-def save_user_data(data: UserAllData) -> bool:
+@Result.shield_exception()
+def save_user_data(data: UserAllData) -> Result[None, FatalError]:
     repository = injector.get(UserInterface)
-    try:
-        repository.bulk_save([data])
-        return True
-    except Exception as e:
-        log.error("save_user_data error", exc=e)
-        return False
+    ret = repository.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)
 
 
-def get_author_data(user_id: int) -> AuthorDTO:
-    user = get_user_data(user_id=user_id)
+@Result.shield_exception()
+def get_author_data(user_id: int) -> Result[AuthorDTO, FatalError]:
+    ret = get_user_data(user_id=user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    user = ret.ok_value
     if user is None:
-        return AuthorDTO(avatar="", ulid="", nickname="", follower_count=0)
+        return Result.ok(AuthorDTO(avatar="", ulid="", nickname="", follower_count=0))
 
     data = AuthorDTO(
         avatar=create_url(user.user.avatar),
@@ -54,13 +67,18 @@ def get_author_data(user_id: int) -> AuthorDTO:
         follower_count=user.mypage.follower_count,
     )
 
-    return data
+    return Result.ok(data)
 
 
-def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> bool:
-    data = get_user_data(user_id)
+@Result.shield_exception()
+def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> Result[None, NotFoundError | FatalError]:
+    data_ret = get_user_data(user_id)
+    if data_ret.is_err:
+        return Result.err(data_ret.err_value)
+
+    data = data_ret.ok_value
     if data is None:
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     base = data.user
     avatar = save_upload(avatar_file, ImageUpload.USER, base.ulid) if avatar_file else base.avatar
@@ -88,14 +106,22 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
     )
 
     save_data = replace(data, user=user, profile=profile)
+    save_ret = save_user_data(save_data)
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
-    return save_user_data(save_data)
+    return Result.ok(None)
 
 
-def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFile) -> bool:
-    data = get_user_data(user_id)
+@Result.shield_exception()
+def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFile) -> Result[None, NotFoundError | FatalError]:
+    data_ret = get_user_data(user_id)
+    if data_ret.is_err:
+        return Result.err(data_ret.err_value)
+
+    data = data_ret.ok_value
     if data is None:
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     banner = save_upload(banner_file, ImageUpload.USER, data.user.ulid) if banner_file else data.mypage.banner
 
@@ -109,14 +135,22 @@ def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFil
     )
 
     save_data = replace(data, mypage=mypage)
+    save_ret = save_user_data(save_data)
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
-    return save_user_data(save_data)
+    return Result.ok(None)
 
 
-def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
-    data = get_user_data(user_id)
+@Result.shield_exception()
+def update_notification(user_id: int, input: SettingNotificationIn) -> Result[None, NotFoundError | FatalError]:
+    data_ret = get_user_data(user_id)
+    if data_ret.is_err:
+        return Result.err(data_ret.err_value)
+
+    data = data_ret.ok_value
     if data is None:
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     notification = UserNotificationData(
         is_video=input.is_video,
@@ -132,19 +166,31 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
     )
 
     save_data = replace(data, notification=notification)
+    save_ret = save_user_data(save_data)
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
-    return save_user_data(save_data)
+    return Result.ok(None)
 
 
-def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeDTO | None:
+@Result.shield_exception()
+def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO, NotFoundError | FatalError]:
     repository = injector.get(UserInterface)
     media_repo = get_media_repository(media_type)
-    ids = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
-    if len(ids) == 0:
-        return None
+    ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    is_like, like_count = repository.media_like(user_id, media_type, ids[0])
-    return LikeDTO(is_like=is_like, like_count=like_count)
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        return Result.err(NotFoundError("メディアが見つかりません!"))
+
+    like_ret = repository.media_like(user_id, media_type, ids[0])
+    if like_ret.is_err:
+        return Result.err(like_ret.err_value)
+
+    is_like, like_count = like_ret.ok_value
+    return Result.ok(LikeDTO(is_like=is_like, like_count=like_count))
 
 
 @Result.shield_exception()
@@ -159,13 +205,18 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, NotFoundError | Fat
     if len(ids) == 0:
         return Result.err(NotFoundError("コメントが見つかりません!"))
 
-    is_like, like_count = repository.comment_like(user_id, ids[0])
+    like_ret = repository.comment_like(user_id, ids[0])
+    if like_ret.is_err:
+        return Result.err(like_ret.err_value)
+
+    is_like, like_count = like_ret.ok_value
     if is_like:
         comments_ret = comment_repo.bulk_get(ids)
         if comments_ret.is_err:
             return Result.err(comments_ret.err_value)
 
-        comment = comments_ret.ok_value[0]
+        comments = comments_ret.ok_value
+        comment = comments[0]
         create_ret = create_notification(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
         if create_ret.is_err:
             return Result.err(create_ret.err_value)

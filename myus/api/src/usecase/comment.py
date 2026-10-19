@@ -35,7 +35,8 @@ def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
-    return Result.ok(comments_ret.ok_value[0])
+    comments = comments_ret.ok_value
+    return Result.ok(comments[0])
 
 
 @Result.shield_exception()
@@ -48,12 +49,17 @@ def save_comment_data(data: CommentData) -> Result[None, FatalError]:
     return Result.ok(None)
 
 
-def get_author_data_map(ids: list[int]) -> dict[int, AuthorDTO]:
+@Result.shield_exception()
+def get_author_data_map(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalError]:
     if len(ids) == 0:
-        return {}
+        return Result.ok({})
 
     repository = injector.get(UserInterface)
-    authors = repository.bulk_get(ids)
+    ret = repository.bulk_get(ids)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    authors = ret.ok_value
     author_map: dict[int, AuthorDTO] = {}
     for author in authors:
         author_map[author.user.id] = AuthorDTO(
@@ -63,7 +69,7 @@ def get_author_data_map(ids: list[int]) -> dict[int, AuthorDTO]:
             follower_count=author.mypage.follower_count,
         )
 
-    return author_map
+    return Result.ok(author_map)
 
 
 @Result.shield_exception()
@@ -82,7 +88,11 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
     comments = [c for c in all_comments if c.parent_id is None]
     replies = [c for c in all_comments if c.parent_id is not None]
     author_ids = list({c.author_id for c in comments} | {r.author_id for r in replies})
-    author_map = get_author_data_map(author_ids)
+    author_map_ret = get_author_data_map(author_ids)
+    if author_map_ret.is_err:
+        return Result.err(author_map_ret.err_value)
+
+    author_map = author_map_ret.ok_value
 
     reply_map: dict[int, list[CommentData]] = {}
     for r in replies:
@@ -95,7 +105,8 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
         if liked_ids_ret.is_err:
             return Result.err(liked_ids_ret.err_value)
 
-        liked_ids = set(liked_ids_ret.ok_value)
+        liked_comment_ids = liked_ids_ret.ok_value
+        liked_ids = set(liked_comment_ids)
 
     data = [
         CommentDTO(
@@ -127,7 +138,11 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, NotFoundError | FatalError]:
     comment_repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
-    media_ids = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    media_ids_ret = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    if media_ids_ret.is_err:
+        return Result.err(media_ids_ret.err_value)
+
+    media_ids = media_ids_ret.ok_value
     if len(media_ids) == 0:
         log.warning("メディアが見つかりませんでした")
         return Result.err(NotFoundError("コメントの作成に失敗しました"))
@@ -146,9 +161,14 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, N
         if parents_ret.is_err:
             return Result.err(parents_ret.err_value)
 
-        parent = parents_ret.ok_value[0]
+        parents = parents_ret.ok_value
+        parent = parents[0]
 
-    author = get_author_data(user_id)
+    author_ret = get_author_data(user_id)
+    if author_ret.is_err:
+        return Result.err(author_ret.err_value)
+
+    author = author_ret.ok_value
     new_comment = CommentData(
         id=0,
         ulid="",
@@ -168,7 +188,8 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, N
     if new_ids_ret.is_err:
         return Result.err(new_ids_ret.err_value)
 
-    comments_ret = comment_repo.bulk_get(new_ids_ret.ok_value)
+    new_ids = new_ids_ret.ok_value
+    comments_ret = comment_repo.bulk_get(new_ids)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 

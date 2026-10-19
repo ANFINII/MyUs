@@ -1,33 +1,34 @@
 from abc import ABC, abstractmethod
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.domain.interface.media.video.data import VideoData
+from api.utils.common.result import FatalError, Result
 
 
 class VideoInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
+    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[VideoData]:
+    def bulk_get(self, ids: list[int]) -> Result[list[VideoData], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[VideoData]) -> list[int]:
+    def bulk_save(self, objs: list[VideoData]) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_delete(self, ids: list[int]) -> None:
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
         ...
 
     @abstractmethod
-    def count(self, filter: FilterOption) -> int:
+    def count(self, filter: FilterOption) -> Result[int, FatalError]:
         ...
 
     @abstractmethod
-    def is_liked(self, media_id: int, user_id: int) -> bool:
+    def is_liked(self, media_id: int, user_id: int) -> Result[bool, FatalError]:
         ...
 
     @abstractmethod
-    def increment_read(self, media_id: int) -> int:
+    def increment_read(self, media_id: int) -> Result[int, FatalError]:
         ...

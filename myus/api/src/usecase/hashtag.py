@@ -38,11 +38,13 @@ def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    hashtags_ret = repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    hashtags_ret = repo.bulk_get(ids)
     if hashtags_ret.is_err:
         return Result.err(hashtags_ret.err_value)
 
-    return Result.ok([HashtagDTO(ulid=h.ulid, name=h.name) for h in hashtags_ret.ok_value])
+    hashtags = hashtags_ret.ok_value
+    return Result.ok([HashtagDTO(ulid=h.ulid, name=h.name) for h in hashtags])
 
 
 @Result.shield_exception()
@@ -52,23 +54,34 @@ def get_ng_words() -> Result[list[str], FatalError]:
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    ng_words_ret = repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    ng_words_ret = repo.bulk_get(ids)
     if ng_words_ret.is_err:
         return Result.err(ng_words_ret.err_value)
 
-    return Result.ok([n.word for n in ng_words_ret.ok_value])
+    ng_words = ng_words_ret.ok_value
+    return Result.ok([n.word for n in ng_words])
 
 
 @Result.shield_exception()
 def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, NotFoundError | FatalError]:
     media_repo = get_media_repository(media_type)
     hashtag_repo = injector.get(HashtagInterface)
-    media_ids = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
+    media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
+    if media_ids_ret.is_err:
+        return Result.err(media_ids_ret.err_value)
+
+    media_ids = media_ids_ret.ok_value
     if len(media_ids) == 0:
         log.error("Media not found", media_type=media_type.value, media_ulid=media_ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    media = media_repo.bulk_get(media_ids)[0]
+    medias_ret = media_repo.bulk_get(media_ids)
+    if medias_ret.is_err:
+        return Result.err(medias_ret.err_value)
+
+    medias = medias_ret.ok_value
+    media = medias[0]
     if media.channel.owner_id != user_id:
         log.error("Media owner mismatch", media_type=media_type.value, media_ulid=media_ulid, user_id=user_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -80,11 +93,13 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
         if existing_ids_ret.is_err:
             return Result.err(existing_ids_ret.err_value)
 
-        existing_hashtags_ret = hashtag_repo.bulk_get(existing_ids_ret.ok_value)
+        existing_ids = existing_ids_ret.ok_value
+        existing_hashtags_ret = hashtag_repo.bulk_get(existing_ids)
         if existing_hashtags_ret.is_err:
             return Result.err(existing_hashtags_ret.err_value)
 
-        for tag in existing_hashtags_ret.ok_value:
+        existing_hashtags = existing_hashtags_ret.ok_value
+        for tag in existing_hashtags:
             ulid_data_map[tag.ulid] = tag
 
     ng_words_ret = get_ng_words()

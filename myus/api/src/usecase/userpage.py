@@ -5,14 +5,39 @@ from api.src.usecase.media import get_videos, get_musics, get_blogs, get_comics,
 from api.utils.common.result import FatalError, Result
 
 
-def get_userpage_media(limit: int, search: str, channel_id: int = 0) -> HomeDTO:
-    videos, _ = get_videos(search, channel_id=channel_id, limit=limit)
-    musics, _ = get_musics(search, channel_id=channel_id, limit=limit)
-    blogs, _ = get_blogs(search, channel_id=channel_id, limit=limit)
-    comics, _ = get_comics(search, channel_id=channel_id, limit=limit)
-    pictures, _ = get_pictures(search, channel_id=channel_id, limit=limit)
-    chats, _ = get_chats(search, channel_id=channel_id, limit=limit)
-    return HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats)
+@Result.shield_exception()
+def get_userpage_media(limit: int, search: str, channel_id: int = 0) -> Result[HomeDTO, FatalError]:
+    videos_ret = get_videos(search, channel_id=channel_id, limit=limit)
+    if videos_ret.is_err:
+        return Result.err(videos_ret.err_value)
+
+    musics_ret = get_musics(search, channel_id=channel_id, limit=limit)
+    if musics_ret.is_err:
+        return Result.err(musics_ret.err_value)
+
+    blogs_ret = get_blogs(search, channel_id=channel_id, limit=limit)
+    if blogs_ret.is_err:
+        return Result.err(blogs_ret.err_value)
+
+    comics_ret = get_comics(search, channel_id=channel_id, limit=limit)
+    if comics_ret.is_err:
+        return Result.err(comics_ret.err_value)
+
+    pictures_ret = get_pictures(search, channel_id=channel_id, limit=limit)
+    if pictures_ret.is_err:
+        return Result.err(pictures_ret.err_value)
+
+    chats_ret = get_chats(search, channel_id=channel_id, limit=limit)
+    if chats_ret.is_err:
+        return Result.err(chats_ret.err_value)
+
+    videos, _ = videos_ret.ok_value
+    musics, _ = musics_ret.ok_value
+    blogs, _ = blogs_ret.ok_value
+    comics, _ = comics_ret.ok_value
+    pictures, _ = pictures_ret.ok_value
+    chats, _ = chats_ret.ok_value
+    return Result.ok(HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats))
 
 
 @Result.shield_exception()
@@ -22,11 +47,13 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    if len(ids_ret.ok_value) == 0:
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
         return Result.ok(False)
 
-    follows_ret = follow_repo.bulk_get(ids_ret.ok_value)
+    follows_ret = follow_repo.bulk_get(ids)
     if follows_ret.is_err:
         return Result.err(follows_ret.err_value)
 
-    return Result.ok(follows_ret.ok_value[0].is_follow)
+    follows = follows_ret.ok_value
+    return Result.ok(follows[0].is_follow)
