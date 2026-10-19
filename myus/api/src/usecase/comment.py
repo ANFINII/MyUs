@@ -12,31 +12,40 @@ from api.src.types.dto.user import AuthorDTO
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.notification import create_notification, delete_object_notifications
 from api.src.usecase.user import get_author_data
+from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository
 
 
-def get_comment_data(comment_ulid: str) -> CommentData | None:
+@Result.shield_exception()
+def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError]:
     repository = injector.get(CommentInterface)
-    ids = repository.get_ids(FilterOption(ulid=comment_ulid), SortOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=comment_ulid), SortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.warning("コメントが見つかりませんでした")
-        return None
+        return Result.ok(None)
 
-    comment = repository.bulk_get(ids)[0]
-    return comment
+    comments_ret = repository.bulk_get(ids)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
+    return Result.ok(comments_ret.ok_value[0])
 
 
-def save_comment_data(data: CommentData) -> bool:
+@Result.shield_exception()
+def save_comment_data(data: CommentData) -> Result[None, FatalError]:
     repository = injector.get(CommentInterface)
-    try:
-        repository.bulk_save([data])
-        return True
-    except Exception as e:
-        log.error("save_comment_data error", exc=e)
-        return False
+    ret = repository.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)
 
 
 def get_author_data_map(ids: list[int]) -> dict[int, AuthorDTO]:
@@ -57,11 +66,19 @@ def get_author_data_map(ids: list[int]) -> dict[int, AuthorDTO]:
     return author_map
 
 
-def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentDTO]:
+@Result.shield_exception()
+def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> Result[list[CommentDTO], FatalError]:
     comment_repo = injector.get(CommentInterface)
-    ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption())
-    all_comments = comment_repo.bulk_get(ids)
+    ids_ret = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
+    ids = ids_ret.ok_value
+    all_comments_ret = comment_repo.bulk_get(ids)
+    if all_comments_ret.is_err:
+        return Result.err(all_comments_ret.err_value)
+
+    all_comments = all_comments_ret.ok_value
     comments = [c for c in all_comments if c.parent_id is None]
     replies = [c for c in all_comments if c.parent_id is not None]
     author_ids = list({c.author_id for c in comments} | {r.author_id for r in replies})
@@ -74,7 +91,11 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 
     liked_ids: set[int] = set()
     if user_id is not None:
-        liked_ids = set(comment_repo.get_liked_ids(ids, user_id))
+        liked_ids_ret = comment_repo.get_liked_ids(ids, user_id)
+        if liked_ids_ret.is_err:
+            return Result.err(liked_ids_ret.err_value)
+
+        liked_ids = set(liked_ids_ret.ok_value)
 
     data = [
         CommentDTO(
@@ -99,23 +120,33 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
             ],
         ) for c in comments
     ]
-    return data
+    return Result.ok(data)
 
 
-def create_comment(user_id: int, input: CommentCreateIn) -> CommentDTO | None:
+@Result.shield_exception()
+def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, NotFoundError | FatalError]:
     comment_repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
     media_ids = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if len(media_ids) == 0:
         log.warning("メディアが見つかりませんでした")
-        return None
+        return Result.err(NotFoundError("コメントの作成に失敗しました"))
 
     parent: CommentData | None = None
     if input.parent_ulid:
-        parent_ids = comment_repo.get_ids(FilterOption(ulid=input.parent_ulid, is_parent=True), SortOption())
+        parent_ids_ret = comment_repo.get_ids(FilterOption(ulid=input.parent_ulid, is_parent=True), SortOption())
+        if parent_ids_ret.is_err:
+            return Result.err(parent_ids_ret.err_value)
+
+        parent_ids = parent_ids_ret.ok_value
         if len(parent_ids) == 0:
-            return None
-        parent = comment_repo.bulk_get(parent_ids)[0]
+            return Result.err(NotFoundError("コメントの作成に失敗しました"))
+
+        parents_ret = comment_repo.bulk_get(parent_ids)
+        if parents_ret.is_err:
+            return Result.err(parents_ret.err_value)
+
+        parent = parents_ret.ok_value[0]
 
     author = get_author_data(user_id)
     new_comment = CommentData(
@@ -133,8 +164,15 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentDTO | None:
         like_count=0,
     )
 
-    new_ids = comment_repo.bulk_save([new_comment])
-    comments = comment_repo.bulk_get(new_ids)
+    new_ids_ret = comment_repo.bulk_save([new_comment])
+    if new_ids_ret.is_err:
+        return Result.err(new_ids_ret.err_value)
+
+    comments_ret = comment_repo.bulk_get(new_ids_ret.ok_value)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
+    comments = comments_ret.ok_value
     assert len(comments) > 0, "コメントの作成に失敗しました"
     comment = comments[0]
 
@@ -152,36 +190,51 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentDTO | None:
         replys=[],
     )
 
-    return data
+    return Result.ok(data)
 
 
-def update_comment(user_id: int, comment_ulid: str, text: str) -> bool | None:
-    comment = get_comment_data(comment_ulid)
+@Result.shield_exception()
+def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, NotFoundError | FatalError]:
+    comment_ret = get_comment_data(comment_ulid)
+    if comment_ret.is_err:
+        return Result.err(comment_ret.err_value)
+
+    comment = comment_ret.ok_value
     if comment is None:
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
     if comment.author_id != user_id:
         log.warning("コメントの編集権限がありません", comment_ulid=comment_ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
-    return save_comment_data(replace(comment, text=text))
+    save_ret = save_comment_data(replace(comment, text=text))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)
 
 
-def delete_comment(user_id: int, comment_ulid: str) -> bool | None:
-    comment = get_comment_data(comment_ulid)
+@Result.shield_exception()
+def delete_comment(user_id: int, comment_ulid: str) -> Result[None, NotFoundError | FatalError]:
+    comment_ret = get_comment_data(comment_ulid)
+    if comment_ret.is_err:
+        return Result.err(comment_ret.err_value)
+
+    comment = comment_ret.ok_value
     if comment is None:
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
     if comment.author_id != user_id:
         log.warning("コメントの削除権限がありません", comment_ulid=comment_ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
     repository = injector.get(CommentInterface)
-    try:
-        with transaction.atomic():
-            repository.bulk_save([replace(comment, deleted=True)])
-            delete_object_notifications(NotificationObjectType.COMMENT, [comment.id])
-        return True
-    except Exception as e:
-        log.error("delete_comment error", exc=e)
-        return False
+    with transaction.atomic():
+        save_ret = repository.bulk_save([replace(comment, deleted=True)])
+        if save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(save_ret.err_value)
+
+        delete_object_notifications(NotificationObjectType.COMMENT, [comment.id])
+
+    return Result.ok(None)

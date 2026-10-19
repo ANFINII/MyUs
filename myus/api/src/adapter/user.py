@@ -185,10 +185,13 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        like = like_comment(user_id, input.ulid)
-        if like is None:
-            return 400, ErrorOut(message="コメントが見つかりません!")
+        ret = like_comment(user_id, input.ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
+        like = ret.ok_value
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
         return 200, data
 

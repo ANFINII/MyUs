@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from api.src.domain.interface.comment.data import CommentData
+from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import CommentTypeNo
 
 
@@ -27,17 +28,17 @@ class SortOption:
 
 class CommentInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[CommentData]:
+    def bulk_get(self, ids: list[int]) -> Result[list[CommentData], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[CommentData]) -> list[int]:
+    def bulk_save(self, objs: list[CommentData]) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def get_liked_ids(self, ids: list[int], user_id: int) -> list[int]:
+    def get_liked_ids(self, ids: list[int], user_id: int) -> Result[list[int], FatalError]:
         ...
