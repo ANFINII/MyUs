@@ -177,9 +177,11 @@ B1〜B3 は PR 6-1 で対応済み（ブランチ `back_fix_legacy_removal_block
 - `TEMPLATES["DIRS"]` を `[api/templates, templates]` にする（旧実装もメールテンプレートを使うため、削除までは `templates` も残す）
 - 確認：mypy で新しいエラーなし、`manage.py check` pass、テンプレートが `api/templates` から読まれる、WebSocket に接続して group_send したメッセージを受信できる
 
-### PR 6-2【back】旧実装のルーティングとテンプレートを削除する
+### PR 6-2【back】旧実装のルーティングとテンプレートを削除する（完了）
 
-Phase 1〜5（または対象外と決めたもの）が終わってから。
+当初は Phase 1〜5 の後に行う予定だったが、利用者が使うのは Vercel の FE で、旧実装の画面はバックエンドのドメインに直接アクセスしたときにしか見えないため、先に削除した。未移行の機能は元々新実装に無いので、削除しても使える機能は減らない（Phase 1〜5 は引き続き新実装で対応する）。
+
+- 旧実装専用だった `api/utils/` のモジュール・関数・定数も削除（`decorators/auth.py`・`enum/response.py`・`filter_data.py`・`functions/search.py`・`functions/convert/convert_hls.py`・`functions/convert/master_m3u8.py`、`is_bool`・`set_attr`・`email_user`・`notification_type_no`・`model_list` など）
 
 - `config/urls.py` から `path("", include("app.urls"))` と `path("setting/", include("django.contrib.auth.urls"))` を外す
 - `config/settings/base.py` から `LOGIN_URL = "app:login"`・`LOGIN_REDIRECT_URL = "app:index"`・`LOGOUT_REDIRECT_URL = "app:login"` を外し、`TEMPLATES["DIRS"]` を `api/templates` だけにする
@@ -203,4 +205,4 @@ Phase 1〜5（または対象外と決めたもの）が終わってから。
 | Phase 3: Google Tag Manager | 未着手 |
 | Phase 4: 音楽ダウンロードのプラン制限 | 未着手 |
 | Phase 5: 小さいもの | 未着手 |
-| Phase 6: 旧実装の撤去 | PR 6-1（削除の障壁 B1〜B3）完了、PR 6-2 は未着手 |
+| Phase 6: 旧実装の撤去 | 完了（PR 6-1：削除の障壁 B1〜B3、PR 6-2：旧実装の削除） |

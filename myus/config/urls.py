@@ -9,8 +9,6 @@ from config.views import serve_media
 
 urlpatterns = [
     path("api/", api.urls),
-    path("", include("app.urls")),
-    path("setting/", include("django.contrib.auth.urls")),
     path("myus-admin/", admin.site.urls),
     path("myus-manage/", manage_site.urls),
 ]
