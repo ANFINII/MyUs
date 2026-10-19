@@ -63,6 +63,11 @@ plugins = ["mypy_django_plugin.main"]    # Django stubsプラグイン
 module = ["django.*", "api.tests.*"]
 ignore_missing_imports = true  # 外部ライブラリの型情報が見つからない場合はエラーを無視
 
+[[tool.mypy.overrides]]
+module = ["api.src.adapter.websocket"]
+disallow_subclassing_any = false  # channels の WebsocketConsumer は型情報が無いため継承を許可
+disallow_any_unimported = false   # 同上
+
 [tool.django-stubs]
 django_settings_module = "config.settings.base"
 
