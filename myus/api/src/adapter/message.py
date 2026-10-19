@@ -7,6 +7,7 @@ from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.broadcast import broadcast_create_message, broadcast_delete_message, broadcast_update_message
 from api.src.usecase.message import create_message, delete_message, get_replies, update_message
+from api.utils.common.result import FatalError
 
 
 class MessageAPI:
@@ -24,10 +25,13 @@ class MessageAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            message = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
-            if message is None:
-                return 400, ErrorOut(message="メッセージの作成に失敗しました")
+            ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
+            if ret.is_err:
+                if isinstance(ret.err_value, FatalError):
+                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 400, ErrorOut(message=ret.err_value.error_message)
 
+            message = ret.ok_value
             data = MessageOut(
                 ulid=message.ulid,
                 text=message.text,
@@ -50,14 +54,18 @@ class MessageAPI:
             return 500, ErrorOut(message="メッセージの作成に失敗しました")
 
     @staticmethod
-    @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 401: ErrorOut})
+    @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 401: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI get", message_ulid=message_ulid)
 
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        replies = get_replies(message_ulid)
+        ret = get_replies(message_ulid)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        replies = ret.ok_value
         data = [
             MessageReplyOut(
                 ulid=r.ulid,
@@ -87,9 +95,11 @@ class MessageAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            result = update_message(user_id, message_ulid, input.text)
-            if result is None:
-                return 403, ErrorOut(message="Forbidden")
+            ret = update_message(user_id, message_ulid, input.text)
+            if ret.is_err:
+                if isinstance(ret.err_value, FatalError):
+                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 403, ErrorOut(message=ret.err_value.error_message)
 
             broadcast_update_message(input.chat_ulid, message_ulid, input.text)
 
@@ -108,11 +118,13 @@ class MessageAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            chat_ulid = delete_message(user_id, message_ulid)
-            if chat_ulid is None:
-                return 403, ErrorOut(message="Forbidden")
+            ret = delete_message(user_id, message_ulid)
+            if ret.is_err:
+                if isinstance(ret.err_value, FatalError):
+                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 403, ErrorOut(message=ret.err_value.error_message)
 
-            broadcast_delete_message(chat_ulid, message_ulid)
+            broadcast_delete_message(ret.ok_value, message_ulid)
 
             return 200, ErrorOut(message="メッセージを削除しました")
         except Exception as e:
