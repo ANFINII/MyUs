@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 from django_ulid.models import ulid
 from api.db.models.base import MediaModel
@@ -178,17 +179,17 @@ class Chat(models.Model):
     def __str__(self):
         return self.title
 
+    @admin.display(description="like")
     def total_like(self):
         return self.like.count()
-    total_like.short_description = "like"
 
+    @admin.display(description="thread")
     def thread_count(self) -> int:
         return self.message.filter(parent__isnull=True).count()
-    thread_count.short_description = "thread"
 
+    @admin.display(description="joined")
     def joined_count(self) -> int:
         return self.message.values_list("author").distinct().count()
-    joined_count.short_description = "joined"
 
     def score(self):
         return int(self.read + self.like.count()*10 + self.read*self.like.count()/(self.read+1)*20)

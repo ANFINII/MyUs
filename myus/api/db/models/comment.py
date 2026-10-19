@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 from django_ulid.models import ulid
 from api.db.models.user import User
@@ -21,13 +22,13 @@ class Comment(models.Model):
     def __str__(self):
         return str(self.id)
 
+    @admin.display(description="like")
     def total_like(self) -> int:
         return self.like.count()
-    total_like.short_description = "like"
 
+    @admin.display(description="reply")
     def reply_count(self) -> int:
         return self.reply.filter(parent=self).count()
-    reply_count.short_description = "reply"
 
     class Meta:
         db_table = "comment"

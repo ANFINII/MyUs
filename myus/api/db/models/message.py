@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 from django.db.models import Count
 from django_ulid.models import ulid
@@ -27,9 +28,9 @@ class Message(models.Model):
     def __str__(self):
         return str(self.id)
 
+    @admin.display(description="reply")
     def reply_count(self):
        return self.reply.filter(parent=self).count()
-    reply_count.short_description = "reply"
 
     class Meta:
         db_table = "message"

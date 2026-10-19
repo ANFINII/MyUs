@@ -57,9 +57,9 @@ class HashtagRepository(HashtagInterface):
                 hashtag_ids = [existing_map[o.name] for o in objs]
 
             ModelClass, fk_name = through_model(media_type)
-            ModelClass.objects.filter(**{fk_name: media_id}).delete()
+            ModelClass._default_manager.filter(**{fk_name: media_id}).delete()
             if len(hashtag_ids) > 0:
                 rows = [marshal_through(media_type, media_id, hid, i) for i, hid in enumerate(hashtag_ids)]
-                ModelClass.objects.bulk_create(rows)
+                ModelClass._default_manager.bulk_create(rows)
 
         return Result.ok(hashtag_ids)

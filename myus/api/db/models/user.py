@@ -9,14 +9,14 @@ from api.utils.functions.file import avatar_upload
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, nickname, password=None):
+    def create_user(self, email: str, username: str, nickname: str, password: str | None = None) -> "User":
         if not email:
             raise ValueError("Users must have an email")
         elif not username:
             raise ValueError("Users must have an username")
         elif not nickname:
             raise ValueError("Users must have an nickname")
-        user = self.model(email=self.normalize_email(email), username=username, nickname=nickname)
+        user: User = self.model(email=self.normalize_email(email), username=username, nickname=nickname)
         user.set_password(password)
         user.is_active=False
         user.save(using=self._db)
