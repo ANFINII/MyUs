@@ -908,7 +908,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.PICTURE)
-    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
