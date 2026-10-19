@@ -440,7 +440,6 @@ def create_checkout_session(request):
     post_data = json.loads(request.body.decode("utf-8"))
     try:
         checkout_session = stripe.checkout.Session.create(
-            payment_method_types=["card"],
             line_items=[{"price": post_data["priceId"], "quantity": 1}],
             mode="subscription",
             success_url=request.build_absolute_uri(reverse("app:payment_success")),

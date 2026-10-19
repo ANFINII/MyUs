@@ -30,7 +30,7 @@ dependencies = [
     "pyjwt>=2.15.1",
     "python-dateutil>=2.9.0.post0",
     "python-ffmpeg-video-streaming>=0.1.16",
-    "stripe>=15.6.1",
+    "stripe>=16.0.0",
 ]
 
 [dependency-groups]
