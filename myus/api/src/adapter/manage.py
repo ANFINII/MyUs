@@ -19,6 +19,7 @@ from api.src.usecase.manage.media import (
     get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture,
     get_manage_chats, get_manage_chat, update_manage_chat, delete_manage_chat,
 )
+from api.utils.common.result import FatalError
 
 
 class ManageVideoAPI:
@@ -393,7 +394,7 @@ class ManageAdvertiseAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: AdvertiseListOut, 401: ErrorOut})
+    @router.get("", response={200: AdvertiseListOut, 401: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageAdvertiseAPI list", search=search, limit=limit, offset=offset)
 
@@ -401,11 +402,15 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs, total = get_manage_advertises(user_id, search, limit, offset)
+        ret = get_manage_advertises(user_id, search, limit, offset)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = ret.ok_value
         return 200, AdvertiseListOut(items=convert_advertises(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: AdvertiseOut, 401: ErrorOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: AdvertiseOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageAdvertiseAPI get", ulid=ulid)
 
@@ -413,14 +418,16 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = get_manage_advertise(user_id, ulid)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_manage_advertise(user_id, ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, convert_advertises([obj])[0]
+        return 200, convert_advertises([ret.ok_value])[0]
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: AdvertiseIn = Form(...), image: UploadedFile = File(...), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI post", input=input, image=image, video=video)
 
@@ -428,14 +435,16 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_manage_advertise(user_id, input, image, video)
-        if obj is None:
-            return 400, ErrorOut(message="作成に失敗しました!")
+        ret = create_manage_advertise(user_id, input, image, video)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
-        return 201, MediaCreateOut(ulid=obj.ulid)
+        return 201, MediaCreateOut(ulid=ret.ok_value.ulid)
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: AdvertiseUpdateIn = Form(...), image: UploadedFile | None = File(None), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI put", ulid=ulid, input=input, image=image, video=video)
 
@@ -443,13 +452,16 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_manage_advertise(user_id, ulid, input, image, video):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_manage_advertise(user_id, ulid, input, image, video)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageAdvertiseAPI delete", ulids=input.ulids)
 
@@ -457,7 +469,10 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not delete_manage_advertise(user_id, input.ulids):
-            return 400, ErrorOut(message="削除に失敗しました!")
+        ret = delete_manage_advertise(user_id, input.ulids)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")

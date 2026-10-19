@@ -8,48 +8,69 @@ from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.injectors.container import injector
 from api.src.usecase.user import get_user_data
+from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.functions.index import create_url
 from api.utils.plan import get_plan
 
 
-def get_user_advertises(user_ulid: str) -> list[AdvertiseData]:
+@Result.shield_exception()
+def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalError]:
     user = get_user_data(ulid=user_ulid)
     if user is None:
         log.info("User not found", user_ulid=user_ulid)
-        return []
+        return Result.ok([])
 
     plan = get_plan(user.user_plan.plan)
     max_count = plan.max_advertise if plan is not None else 0
     if max_count <= 0:
-        return []
+        return Result.ok([])
 
     repository = injector.get(AdvertiseInterface)
-    ids = repository.get_ids(FilterOption(owner_id=user.user.id, publish=True), ExcludeOption(), SortOption(), PageOption())
-    if len(ids) == 0:
-        return []
+    ids_ret = repository.get_ids(FilterOption(owner_id=user.user.id, publish=True), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    objs = repository.bulk_get(ids)
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        return Result.ok([])
+
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
     today = timezone.now().date()
-    active = [o for o in objs if is_active(o, today)]
+    active = [o for o in objs_ret.ok_value if is_active(o, today)]
     if len(active) == 0:
-        return []
+        return Result.ok([])
 
     sample_size = min(max_count, len(active))
     picked = random.sample(active, sample_size)
-    return [replace(a, image=create_url(a.image), video=create_url(a.video)) for a in picked]
+    return Result.ok([replace(a, image=create_url(a.image), video=create_url(a.video)) for a in picked])
 
 
-def increment_advertise_read(ulid: str) -> int | None:
+@Result.shield_exception()
+def increment_advertise_read(ulid: str) -> Result[int, NotFoundError | FatalError]:
     repository = injector.get(AdvertiseInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("data not found", ulid=ulid)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
-    obj = repository.bulk_get(ids)[0]
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
     updated = replace(obj, read=obj.read + 1)
-    repository.bulk_save([updated])
-    return updated.read
+    save_ret = repository.bulk_save([updated])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(updated.read)
 
 
 def is_active(ad: AdvertiseData, today: date) -> bool:
