@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import cx from 'utils/functions/cx'
+import { getVolume, saveVolume } from 'utils/functions/volume'
 import style from './AudioPlayer.module.scss'
 
 const PLAY_EVENT = 'audioplayer:play'
@@ -31,7 +32,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
   const [loaded, setLoaded] = useState<number>(0)
-  const [volume, setVolume] = useState<number>(0.5)
+  const [volume, setVolume] = useState<number>(getVolume())
 
   const seekToPosition = useCallback((clientX: number) => {
     const audio = audioRef.current
@@ -50,6 +51,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
     const newVolume = Math.max(0, Math.min(1, 1 - (clientY - rect.top) / rect.height))
     audio.volume = newVolume
     setVolume(newVolume)
+    saveVolume(newVolume)
     if (newVolume > 0 && audio.muted) {
       audio.muted = false
       setIsMuted(false)
@@ -91,7 +93,10 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   }
 
   const handleLoadedMetadata = () => {
-    if (audioRef.current) setDuration(audioRef.current.duration)
+    const audio = audioRef.current
+    if (!audio) return
+    audio.volume = volume
+    setDuration(audio.duration)
   }
 
   const handleProgress = () => {
@@ -111,7 +116,6 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
     const audio = audioRef.current
     if (!audio) return
     audio.playbackRate = playbackRate
-    audio.volume = 0.5
   }, [playbackRate])
 
   useEffect(() => {
