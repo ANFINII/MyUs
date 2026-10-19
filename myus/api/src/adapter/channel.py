@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
@@ -7,7 +8,7 @@ from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import create_user_channel, get_user_channels, update_user_channel
 from api.src.usecase.subscribe import get_subscribe_channels, upsert_subscribe
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 from api.utils.functions.index import create_url
 
 
@@ -97,9 +98,13 @@ class ChannelAPI:
 
         subscribe_ret = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
         if subscribe_ret.is_err:
-            if isinstance(subscribe_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=subscribe_ret.err_value.error_message)
+            match subscribe_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=subscribe_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(subscribe_ret.err_value)
 
         subscribe = subscribe_ret.ok_value
         data = SubscribeOut(is_subscribe=subscribe.is_subscribe, count=subscribe.count)
@@ -140,8 +145,12 @@ class ChannelAPI:
 
         update_ret = update_user_channel(user_id, ulid, input, avatar_file)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")

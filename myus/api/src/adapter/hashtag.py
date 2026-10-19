@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
@@ -6,7 +7,7 @@ from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.hashtag import HashtagOut, MediaHashtagsUpdateIn
 from api.src.usecase.auth import auth_check
 from api.src.usecase.hashtag import get_master_hashtags, update_media_hashtags
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 
 
 class MediaHashtagAPI:
@@ -50,8 +51,12 @@ class MediaHashtagAPI:
         hashtags = [HashtagDTO(ulid=h.ulid, name=h.name) for h in input.hashtags]
         update_ret = update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
