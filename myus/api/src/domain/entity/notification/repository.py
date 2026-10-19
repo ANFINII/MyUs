@@ -27,8 +27,6 @@ class NotificationRepository(NotificationInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.type_no is not None:
             q_list.append(Q(type_no=filter.type_no))
-        if filter.object_id:
-            q_list.append(Q(object_id=filter.object_id))
         if filter.object_type is not None:
             q_list.append(Q(object_type=filter.object_type))
         if filter.object_ids:

@@ -13,7 +13,6 @@ class SortType(Enum):
 class FilterOption:
     ulid: str = ""
     type_no: NotificationTypeNo | None = None
-    object_id: int = 0
     object_type: NotificationObjectType | None = None
     object_ids: list[int] = field(default_factory=list)
     user_to_id: int = 0

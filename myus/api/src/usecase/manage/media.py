@@ -18,6 +18,7 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption
+from api.src.domain.interface.message.interface import FilterOption as MessageFilterOption, MessageInterface, SortOption as MessageSortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.notification import delete_object_notifications
@@ -456,10 +457,16 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> bool:
             return False
         delete_ids.append(ids[0])
 
+    message_repo = injector.get(MessageInterface)
+    reply_ids: list[int] = []
+    for chat_id in delete_ids:
+        reply_ids += message_repo.get_ids(MessageFilterOption(chat_id=chat_id, is_parent=False), MessageSortOption())
+
     try:
         with transaction.atomic():
             repository.bulk_delete(delete_ids)
             delete_object_notifications(NotificationObjectType.CHAT, delete_ids)
+            delete_object_notifications(NotificationObjectType.MESSAGE, reply_ids)
         return True
     except Exception as e:
         log.error("delete_manage_chat error", exc=e)
