@@ -6,28 +6,28 @@ from api.utils.common.result import FatalError, Result
 
 
 @Result.shield_exception()
-def get_userpage_media(limit: int, search: str, channel_id: int = 0) -> Result[HomeDTO, FatalError]:
-    videos_ret = get_videos(search, channel_id=channel_id, limit=limit)
+def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int = 0) -> Result[HomeDTO, FatalError]:
+    videos_ret = get_videos(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
     if videos_ret.is_err:
         return Result.err(videos_ret.err_value)
 
-    musics_ret = get_musics(search, channel_id=channel_id, limit=limit)
+    musics_ret = get_musics(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    blogs_ret = get_blogs(search, channel_id=channel_id, limit=limit)
+    blogs_ret = get_blogs(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
     if blogs_ret.is_err:
         return Result.err(blogs_ret.err_value)
 
-    comics_ret = get_comics(search, channel_id=channel_id, limit=limit)
+    comics_ret = get_comics(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
     if comics_ret.is_err:
         return Result.err(comics_ret.err_value)
 
-    pictures_ret = get_pictures(search, channel_id=channel_id, limit=limit)
+    pictures_ret = get_pictures(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
     if pictures_ret.is_err:
         return Result.err(pictures_ret.err_value)
 
-    chats_ret = get_chats(search, channel_id=channel_id, limit=limit)
+    chats_ret = get_chats(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
     if chats_ret.is_err:
         return Result.err(chats_ret.err_value)
 

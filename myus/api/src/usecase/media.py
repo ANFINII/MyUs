@@ -485,9 +485,9 @@ def get_recommend(limit: int, search: str) -> Result[HomeDTO, FatalError]:
 
 
 @Result.shield_exception()
-def get_videos(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
+def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
     repository = injector.get(VideoInterface)
-    filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
     count_ret = repository.count(filter)
     if count_ret.is_err:
@@ -515,9 +515,9 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, user_id: int | Non
 
 
 @Result.shield_exception()
-def get_musics(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
+def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
     repository = injector.get(MusicInterface)
-    filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
     count_ret = repository.count(filter)
     if count_ret.is_err:
@@ -539,9 +539,9 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, user_id: int | Non
 
 
 @Result.shield_exception()
-def get_blogs(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
+def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
     repository = injector.get(BlogInterface)
-    filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
     count_ret = repository.count(filter)
     if count_ret.is_err:
@@ -563,9 +563,9 @@ def get_blogs(search: str, id: int = 0, channel_id: int = 0, user_id: int | None
 
 
 @Result.shield_exception()
-def get_comics(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
+def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
     repository = injector.get(ComicInterface)
-    filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
     count_ret = repository.count(filter)
     if count_ret.is_err:
@@ -592,9 +592,9 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, user_id: int | Non
 
 
 @Result.shield_exception()
-def get_pictures(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
+def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
     repository = injector.get(PictureInterface)
-    filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
     count_ret = repository.count(filter)
     if count_ret.is_err:
@@ -616,9 +616,9 @@ def get_pictures(search: str, id: int = 0, channel_id: int = 0, user_id: int | N
 
 
 @Result.shield_exception()
-def get_chats(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
+def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
     repository = injector.get(ChatInterface)
-    filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
     count_ret = repository.count(filter)
     if count_ret.is_err:
