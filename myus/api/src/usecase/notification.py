@@ -1,4 +1,4 @@
-from api.src.domain.interface.notification.data import NotificationContentData as NotificationContentDomainData, NotificationData
+from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.src.domain.interface.user.data import UserNotificationData
 from api.src.domain.interface.user.interface import UserInterface
@@ -75,7 +75,7 @@ def create_notification(user_from_id: int, user_to_id: int, type_no: Notificatio
         type_name=NotificationType[type_no.name],
         object_id=object_id,
         object_type=object_type,
-        content=NotificationContentDomainData(id=0, ulid="", title="", text="", read=0),
+        content=None,
     )
     repository.bulk_save([notification])
 
@@ -104,7 +104,7 @@ def get_notification(user_id: int) -> NotificationDTO:
     items: list[NotificationItemDTO] = []
     for o in objs:
         user_from = user_map.get(o.user_from_id)
-        if user_from is None:
+        if user_from is None or o.content is None:
             continue
 
         item = NotificationItemDTO(

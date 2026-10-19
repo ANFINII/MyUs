@@ -20,4 +20,4 @@ class NotificationData:
     type_name: str
     object_id: int
     object_type: str
-    content: NotificationContentData
+    content: NotificationContentData | None

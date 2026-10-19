@@ -23,9 +23,9 @@ def convert_data(obj: Notification, content_obj: Any | None) -> NotificationData
     )
 
 
-def get_content(obj: Any | None) -> NotificationContentData:
+def get_content(obj: Any | None) -> NotificationContentData | None:
     if obj is None:
-        return NotificationContentData(id=0, ulid="", title="", text="", read=0)
+        return None
 
     return NotificationContentData(
         id=0,

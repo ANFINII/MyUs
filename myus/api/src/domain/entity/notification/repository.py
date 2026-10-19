@@ -81,7 +81,7 @@ class NotificationRepository(NotificationInterface):
                 case NotificationObjectType.FOLLOW:
                     content_map.update({f"{object_type.value}:{o.id}": o for o in Follow.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.COMMENT:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Comment.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Comment.objects.filter(id__in=obj_ids, deleted=False)})
                 case NotificationObjectType.MESSAGE:
                     content_map.update({f"{object_type.value}:{o.id}": o for o in Message.objects.filter(id__in=obj_ids)})
                 case _:
