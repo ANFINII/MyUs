@@ -6,6 +6,7 @@ import AvatarLink from 'components/parts/Avatar/Link'
 import Divide from 'components/parts/Divide'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import Advertise from 'components/widgets/Advertise'
 import Hashtags from 'components/widgets/Media/Hashtags'
 import SubscribeButton from 'components/widgets/SubscribeButton'
 import View from 'components/widgets/View'
@@ -59,6 +60,7 @@ export default function SectionContent(props: Props): React.JSX.Element {
           </div>
         </VStack>
       </div>
+      <Advertise userUlid={channel.ownerUlid} className={style.advertise} />
     </div>
   )
 }
