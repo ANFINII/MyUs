@@ -5,17 +5,14 @@ from api.modules.logger import log
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
-from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
-from api.src.types.dto.user import AuthorDTO
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.notification import create_notification, delete_object_notifications
-from api.src.usecase.user import get_author_data
+from api.src.usecase.user import get_author_data, get_author_data_map
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
-from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository
 
 
@@ -47,29 +44,6 @@ def save_comment_data(data: CommentData) -> Result[None, FatalError]:
         return Result.err(ret.err_value)
 
     return Result.ok(None)
-
-
-@Result.shield_exception()
-def get_author_data_map(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalError]:
-    if len(ids) == 0:
-        return Result.ok({})
-
-    repository = injector.get(UserInterface)
-    ret = repository.bulk_get(ids)
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    authors = ret.ok_value
-    author_map: dict[int, AuthorDTO] = {}
-    for author in authors:
-        author_map[author.user.id] = AuthorDTO(
-            avatar=create_url(author.user.avatar),
-            ulid=author.user.ulid,
-            nickname=author.user.nickname,
-            follower_count=author.mypage.follower_count,
-        )
-
-    return Result.ok(author_map)
 
 
 @Result.shield_exception()

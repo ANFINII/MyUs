@@ -10,7 +10,7 @@ from api.src.domain.interface.notification.interface import NotificationInterfac
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
 from api.src.usecase.notification import create_notification
-from api.src.usecase.user import get_author_data
+from api.src.usecase.user import get_author_data, get_author_data_map
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
@@ -58,21 +58,21 @@ def get_messages(chat_id: int) -> Result[list[MessageDTO], FatalError]:
         return Result.err(messages_ret.err_value)
 
     messages = messages_ret.ok_value
-    data: list[MessageDTO] = []
-    for m in messages:
-        author_ret = get_author_data(m.author_id)
-        if author_ret.is_err:
-            return Result.err(author_ret.err_value)
+    author_map_ret = get_author_data_map(list({m.author_id for m in messages}))
+    if author_map_ret.is_err:
+        return Result.err(author_map_ret.err_value)
 
-        author = author_ret.ok_value
-        data.append(MessageDTO(
+    author_map = author_map_ret.ok_value
+    data = [
+        MessageDTO(
             ulid=m.ulid,
             text=m.text,
             reply_count=m.reply_count,
             created=m.created,
             updated=m.updated,
-            author=author,
-        ))
+            author=author_map[m.author_id],
+        ) for m in messages
+    ]
 
     return Result.ok(data)
 
@@ -90,21 +90,21 @@ def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
         return Result.err(messages_ret.err_value)
 
     messages = messages_ret.ok_value
-    data: list[MessageReplyDTO] = []
-    for m in messages:
-        author_ret = get_author_data(m.author_id)
-        if author_ret.is_err:
-            return Result.err(author_ret.err_value)
+    author_map_ret = get_author_data_map(list({m.author_id for m in messages}))
+    if author_map_ret.is_err:
+        return Result.err(author_map_ret.err_value)
 
-        author = author_ret.ok_value
-        data.append(MessageReplyDTO(
+    author_map = author_map_ret.ok_value
+    data = [
+        MessageReplyDTO(
             ulid=m.ulid,
             parent_id=m.parent_ulid,
             text=m.text,
             created=m.created,
             updated=m.updated,
-            author=author,
-        ))
+            author=author_map[m.author_id],
+        ) for m in messages
+    ]
 
     return Result.ok(data)
 
