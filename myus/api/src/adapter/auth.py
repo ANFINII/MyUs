@@ -108,9 +108,9 @@ class AuthAPI:
         if ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        validation = ret.ok_value
-        if validation:
-            return 400, ErrorOut(message=validation)
+        error_message = ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         return 200, ErrorOut(message="メールを送信しました!")
 
@@ -139,10 +139,10 @@ class AuthAPI:
             log.warning("Signup email mismatch", token_email=token_email, input_email=input.email)
             return 400, ErrorOut(message="メールアドレスが一致しません!")
 
-        validation = signup_check(input)
-        if validation:
-            log.warning("Signup validation failed", message=validation)
-            return 400, ErrorOut(message=validation)
+        error_message = signup_check(input)
+        if len(error_message) > 0:
+            log.warning("Signup validation failed", message=error_message)
+            return 400, ErrorOut(message=error_message)
 
         ret = signup_user(input)
         if ret.is_err:
@@ -203,9 +203,9 @@ class AuthAPI:
         if change_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        validation = change_ret.ok_value
-        if validation:
-            return 400, ErrorOut(message=validation)
+        error_message = change_ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         return 204, ErrorOut(message="パスワードを変更しました!")
 
@@ -218,9 +218,9 @@ class AuthAPI:
         if ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        validation = ret.ok_value
-        if validation:
-            return 400, ErrorOut(message=validation)
+        error_message = ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         return 200, ErrorOut(message="メールを送信しました!")
 
@@ -245,9 +245,9 @@ class AuthAPI:
         if ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        validation = ret.ok_value
-        if validation:
-            return 400, ErrorOut(message=validation)
+        error_message = ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         return 204, ErrorOut(message="パスワードをリセットしました!")
 
@@ -268,9 +268,9 @@ class AuthAPI:
         if withdraw_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        validation = withdraw_ret.ok_value
-        if validation:
-            return 400, ErrorOut(message=validation)
+        error_message = withdraw_ret.ok_value
+        if len(error_message) > 0:
+            return 400, ErrorOut(message=error_message)
 
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
