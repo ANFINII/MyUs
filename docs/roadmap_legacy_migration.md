@@ -156,20 +156,40 @@ D4 で「使う」と決まった場合のみ。
 
 ## Phase 6: 旧実装の撤去
 
-Phase 1〜5（または対象外と決めたもの）が終わってから。
+### 削除の障壁（新実装が旧実装に依存している箇所）
 
-### PR 6-1【back】チャットの WebSocket ルーティングを api 側に移す
+旧実装を消すと新実装まで壊れる箇所。削除より先に api 側へ移す。
 
-- `config/asgi.py` が `app/routing.py` を参照しているため、そのまま `app/` を消すとチャットの WebSocket が動かなくなる
-- ルーティング（と consumer）を `api` 配下に移し、`config/asgi.py` の参照先を変える
-- 完了条件：新しい FE のチャットがリアルタイム更新される
+| # | 障壁 | 消すと壊れるもの | 対応 |
+|---|---|---|---|
+| B1 | `config/asgi.py` が `app/routing.py` → `app/consumers.py`（`ChatConsumer`）を読み込んでいる | チャットの WebSocket（新 FE の `useChatWebSocket` と `usecase/broadcast.py`） | `api/src/adapter/websocket.py` に移動（完了） |
+| B2 | `api/src/usecase/auth.py` が `templates/registration/email/` を `render_to_string` で読んでいる | 会員登録・パスワード再設定のメール送信 | `api/templates/registration/email/` に移動し、`TEMPLATES["DIRS"]` に追加（完了） |
+| B3 | `templates/admin/base_site.html` が管理画面の見た目を上書きしている | `/myus-admin/` の見た目（`static/css/admin.css`・`base_site.css` を読み込む） | `api/templates/admin/` に移動（完了） |
+
+B1〜B3 は PR 6-1 で対応済み（ブランチ `back_fix_legacy_removal_blockers`）。
+
+### PR 6-1【back】旧実装の削除に備え、WebSocket とテンプレートを api 側に移す（完了）
+
+- `ChatConsumer` と `websocket_urlpatterns` を `api/src/adapter/websocket.py` に移し、`config/asgi.py` の参照先を変更
+  - asgi の起動時に読み込まれるため、モデルを import しないモジュールに置く
+  - `channels` の `WebsocketConsumer` は型情報が無いため、`pyproject.toml` でこのモジュールだけ `disallow_subclassing_any` / `disallow_any_unimported` を外す
+- メールテンプレートと管理画面の `base_site.html` を `api/templates/` に `git mv`
+- `TEMPLATES["DIRS"]` を `[api/templates, templates]` にする（旧実装もメールテンプレートを使うため、削除までは `templates` も残す）
+- 確認：mypy で新しいエラーなし、`manage.py check` pass、テンプレートが `api/templates` から読まれる、WebSocket に接続して group_send したメッセージを受信できる
 
 ### PR 6-2【back】旧実装のルーティングとテンプレートを削除する
 
-- `config/urls.py` の `path("", include("app.urls"))` を外す
-- `myus/app/`・`myus/templates/`・旧実装専用の `static/` を削除
-- `api/utils/functions/` などで旧実装からしか使われていない関数も削除
-- 完了条件：mypy pass、`manage.py check` pass、FE の全画面が動く
+Phase 1〜5（または対象外と決めたもの）が終わってから。
+
+- `config/urls.py` から `path("", include("app.urls"))` と `path("setting/", include("django.contrib.auth.urls"))` を外す
+- `config/settings/base.py` から `LOGIN_URL = "app:login"`・`LOGIN_REDIRECT_URL = "app:index"`・`LOGOUT_REDIRECT_URL = "app:login"` を外し、`TEMPLATES["DIRS"]` を `api/templates` だけにする
+- `myus/app/`・`myus/templates/` を削除（`templates/admin/myusapp/` は api アプリのラベルが `db` のため元から使われていない）
+- `myus/static/` は次だけ残して削除
+  - `img/user_icon.png`・`img/MyUs_banner.png`（`api/db/models/user.py`・`channel.py` の初期画像）
+  - `css/admin.css`・`css/base_site.css`（管理画面）
+- `api/utils/` などで旧実装からしか使われていない関数も削除
+- 404 / 500 / 403 のテンプレートは旧実装の `base2.html` を継承しているので一緒に消す（Django 標準の画面になる。API は JSON を返すので影響なし）
+- 完了条件：mypy pass、`manage.py check` pass、FE の全画面とチャットの WebSocket・メール送信・管理画面が動く
 
 ---
 
@@ -183,4 +203,4 @@ Phase 1〜5（または対象外と決めたもの）が終わってから。
 | Phase 3: Google Tag Manager | 未着手 |
 | Phase 4: 音楽ダウンロードのプラン制限 | 未着手 |
 | Phase 5: 小さいもの | 未着手 |
-| Phase 6: 旧実装の撤去 | 未着手 |
+| Phase 6: 旧実装の撤去 | PR 6-1（削除の障壁 B1〜B3）完了、PR 6-2 は未着手 |
