@@ -5,13 +5,15 @@ from api.src.domain.entity.index import sort_ids
 from api.src.domain.entity.ng_word._convert import convert_data
 from api.src.domain.interface.ng_word.data import NgWordData
 from api.src.domain.interface.ng_word.interface import FilterOption, NgWordInterface, SortOption
+from api.utils.common.result import FatalError, Result
 
 
 class NgWordRepository(NgWordInterface):
     def queryset(self) -> QuerySet[NgWord]:
         return NgWord.objects.all()
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.search:
             q_list.append(Q(word__icontains=filter.search))
@@ -23,12 +25,13 @@ class NgWordRepository(NgWordInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[NgWordData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[NgWordData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
