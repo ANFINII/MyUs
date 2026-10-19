@@ -20,18 +20,22 @@ class MessageAPI:
     def post(request: HttpRequest, input: MessageCreateIn):
         log.info("MessageAPI post", input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
-            if ret.is_err:
-                if isinstance(ret.err_value, FatalError):
+            message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
+            if message_ret.is_err:
+                if isinstance(message_ret.err_value, FatalError):
                     return 500, ErrorOut(message="サーバーエラーが発生しました")
-                return 400, ErrorOut(message=ret.err_value.error_message)
+                return 400, ErrorOut(message=message_ret.err_value.error_message)
 
-            message = ret.ok_value
+            message = message_ret.ok_value
             data = MessageOut(
                 ulid=message.ulid,
                 text=message.text,
@@ -58,14 +62,18 @@ class MessageAPI:
     def get(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI get", message_ulid=message_ulid)
 
-        if auth_check(request) is None:
-            return 401, ErrorOut(message="Unauthorized")
-
-        ret = get_replies(message_ulid)
-        if ret.is_err:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        replies = ret.ok_value
+        if user_id_ret.ok_value is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        replies_ret = get_replies(message_ulid)
+        if replies_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        replies = replies_ret.ok_value
         data = [
             MessageReplyOut(
                 ulid=r.ulid,
@@ -90,16 +98,20 @@ class MessageAPI:
     def put(request: HttpRequest, message_ulid: str, input: MessageUpdateIn):
         log.info("MessageAPI put", message_ulid=message_ulid, input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            ret = update_message(user_id, message_ulid, input.text)
-            if ret.is_err:
-                if isinstance(ret.err_value, FatalError):
+            update_ret = update_message(user_id, message_ulid, input.text)
+            if update_ret.is_err:
+                if isinstance(update_ret.err_value, FatalError):
                     return 500, ErrorOut(message="サーバーエラーが発生しました")
-                return 403, ErrorOut(message=ret.err_value.error_message)
+                return 403, ErrorOut(message=update_ret.err_value.error_message)
 
             broadcast_update_message(input.chat_ulid, message_ulid, input.text)
 
@@ -113,18 +125,22 @@ class MessageAPI:
     def delete(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI delete", message_ulid=message_ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            ret = delete_message(user_id, message_ulid)
-            if ret.is_err:
-                if isinstance(ret.err_value, FatalError):
+            delete_ret = delete_message(user_id, message_ulid)
+            if delete_ret.is_err:
+                if isinstance(delete_ret.err_value, FatalError):
                     return 500, ErrorOut(message="サーバーエラーが発生しました")
-                return 403, ErrorOut(message=ret.err_value.error_message)
+                return 403, ErrorOut(message=delete_ret.err_value.error_message)
 
-            broadcast_delete_message(ret.ok_value, message_ulid)
+            broadcast_delete_message(delete_ret.ok_value, message_ulid)
 
             return 200, ErrorOut(message="メッセージを削除しました")
         except Exception as e:

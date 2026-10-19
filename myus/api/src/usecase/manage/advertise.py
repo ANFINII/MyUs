@@ -79,7 +79,11 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
         log.error("Advertise limit exceeded", user_id=user_id, count=count)
         return Result.err(NotFoundError("作成に失敗しました!"))
 
-    user = get_user_data(user_id=user_id)
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
     if user is None:
         log.error("User not found", user_id=user_id)
         return Result.err(NotFoundError("作成に失敗しました!"))
@@ -135,7 +139,11 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
 
     obj = objs_ret.ok_value[0]
 
-    user = get_user_data(user_id=user_id)
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
     if user is None:
         log.error("User not found", user_id=user_id)
         return Result.err(NotFoundError("保存に失敗しました!"))

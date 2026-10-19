@@ -32,15 +32,19 @@ class ManageVideoAPI:
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageVideoAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_videos(user_id, search, channel, limit, offset)
-        if ret.is_err:
+        videos_ret = get_manage_videos(user_id, search, channel, limit, offset)
+        if videos_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        objs, total = videos_ret.ok_value
         return 200, VideoListOut(items=convert_videos(objs), total=total)
 
     @staticmethod
@@ -48,32 +52,40 @@ class ManageVideoAPI:
     def get(request: HttpRequest, ulid: str):
         log.info("ManageVideoAPI get", ulid=ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_video(user_id, ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        video_ret = get_manage_video(user_id, ulid)
+        if video_ret.is_err:
+            if isinstance(video_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            return 404, ErrorOut(message=video_ret.err_value.error_message)
 
-        return 200, convert_videos([ret.ok_value])[0]
+        return 200, convert_videos([video_ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: VideoUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageVideoAPI put", ulid=ulid, input=input, image=image)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_manage_video(user_id, ulid, input, image)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_manage_video(user_id, ulid, input, image)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -82,15 +94,19 @@ class ManageVideoAPI:
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageVideoAPI delete", ulids=input.ulids)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = delete_manage_video(user_id, input.ulids)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        delete_ret = delete_manage_video(user_id, input.ulids)
+        if delete_ret.is_err:
+            if isinstance(delete_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -105,15 +121,19 @@ class ManageMusicAPI:
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageMusicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_musics(user_id, search, channel, limit, offset)
-        if ret.is_err:
+        musics_ret = get_manage_musics(user_id, search, channel, limit, offset)
+        if musics_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        objs, total = musics_ret.ok_value
         return 200, MusicListOut(items=convert_musics(objs), total=total)
 
     @staticmethod
@@ -121,32 +141,40 @@ class ManageMusicAPI:
     def get(request: HttpRequest, ulid: str):
         log.info("ManageMusicAPI get", ulid=ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_music(user_id, ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        music_ret = get_manage_music(user_id, ulid)
+        if music_ret.is_err:
+            if isinstance(music_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            return 404, ErrorOut(message=music_ret.err_value.error_message)
 
-        return 200, convert_musics([ret.ok_value])[0]
+        return 200, convert_musics([music_ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: MusicUpdateIn):
         log.info("ManageMusicAPI put", ulid=ulid, input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_manage_music(user_id, ulid, input)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_manage_music(user_id, ulid, input)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -155,15 +183,19 @@ class ManageMusicAPI:
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageMusicAPI delete", ulids=input.ulids)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = delete_manage_music(user_id, input.ulids)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        delete_ret = delete_manage_music(user_id, input.ulids)
+        if delete_ret.is_err:
+            if isinstance(delete_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -178,15 +210,19 @@ class ManageBlogAPI:
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageBlogAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_blogs(user_id, search, channel, limit, offset)
-        if ret.is_err:
+        blogs_ret = get_manage_blogs(user_id, search, channel, limit, offset)
+        if blogs_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        objs, total = blogs_ret.ok_value
         return 200, BlogListOut(items=convert_blogs(objs), total=total)
 
     @staticmethod
@@ -194,32 +230,40 @@ class ManageBlogAPI:
     def get(request: HttpRequest, ulid: str):
         log.info("ManageBlogAPI get", ulid=ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_blog(user_id, ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        blog_ret = get_manage_blog(user_id, ulid)
+        if blog_ret.is_err:
+            if isinstance(blog_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            return 404, ErrorOut(message=blog_ret.err_value.error_message)
 
-        return 200, convert_blogs([ret.ok_value])[0]
+        return 200, convert_blogs([blog_ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: BlogUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageBlogAPI put", ulid=ulid, input=input, image=image)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_manage_blog(user_id, ulid, input, image)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_manage_blog(user_id, ulid, input, image)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -228,15 +272,19 @@ class ManageBlogAPI:
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageBlogAPI delete", ulids=input.ulids)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = delete_manage_blog(user_id, input.ulids)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        delete_ret = delete_manage_blog(user_id, input.ulids)
+        if delete_ret.is_err:
+            if isinstance(delete_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -251,15 +299,19 @@ class ManageComicAPI:
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageComicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_comics(user_id, search, channel, limit, offset)
-        if ret.is_err:
+        comics_ret = get_manage_comics(user_id, search, channel, limit, offset)
+        if comics_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        objs, total = comics_ret.ok_value
         return 200, ComicListOut(items=convert_comics(objs), total=total)
 
     @staticmethod
@@ -267,32 +319,40 @@ class ManageComicAPI:
     def get(request: HttpRequest, ulid: str):
         log.info("ManageComicAPI get", ulid=ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_comic(user_id, ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        comic_ret = get_manage_comic(user_id, ulid)
+        if comic_ret.is_err:
+            if isinstance(comic_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            return 404, ErrorOut(message=comic_ret.err_value.error_message)
 
-        return 200, convert_comics([ret.ok_value])[0]
+        return 200, convert_comics([comic_ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ComicUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageComicAPI put", ulid=ulid, input=input, image=image)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_manage_comic(user_id, ulid, input, image)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_manage_comic(user_id, ulid, input, image)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -301,15 +361,19 @@ class ManageComicAPI:
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageComicAPI delete", ulids=input.ulids)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = delete_manage_comic(user_id, input.ulids)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        delete_ret = delete_manage_comic(user_id, input.ulids)
+        if delete_ret.is_err:
+            if isinstance(delete_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -324,15 +388,19 @@ class ManagePictureAPI:
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManagePictureAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_pictures(user_id, search, channel, limit, offset)
-        if ret.is_err:
+        pictures_ret = get_manage_pictures(user_id, search, channel, limit, offset)
+        if pictures_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        objs, total = pictures_ret.ok_value
         return 200, PictureListOut(items=convert_pictures(objs), total=total)
 
     @staticmethod
@@ -340,32 +408,40 @@ class ManagePictureAPI:
     def get(request: HttpRequest, ulid: str):
         log.info("ManagePictureAPI get", ulid=ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_picture(user_id, ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        picture_ret = get_manage_picture(user_id, ulid)
+        if picture_ret.is_err:
+            if isinstance(picture_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            return 404, ErrorOut(message=picture_ret.err_value.error_message)
 
-        return 200, convert_pictures([ret.ok_value])[0]
+        return 200, convert_pictures([picture_ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: PictureUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManagePictureAPI put", ulid=ulid, input=input, image=image)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_manage_picture(user_id, ulid, input, image)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_manage_picture(user_id, ulid, input, image)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -374,15 +450,19 @@ class ManagePictureAPI:
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManagePictureAPI delete", ulids=input.ulids)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = delete_manage_picture(user_id, input.ulids)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        delete_ret = delete_manage_picture(user_id, input.ulids)
+        if delete_ret.is_err:
+            if isinstance(delete_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -397,15 +477,19 @@ class ManageChatAPI:
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageChatAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_chats(user_id, search, channel, limit, offset)
-        if ret.is_err:
+        chats_ret = get_manage_chats(user_id, search, channel, limit, offset)
+        if chats_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        objs, total = chats_ret.ok_value
         return 200, ChatListOut(items=convert_chats(objs), total=total)
 
     @staticmethod
@@ -413,32 +497,40 @@ class ManageChatAPI:
     def get(request: HttpRequest, ulid: str):
         log.info("ManageChatAPI get", ulid=ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_chat(user_id, ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        chat_ret = get_manage_chat(user_id, ulid)
+        if chat_ret.is_err:
+            if isinstance(chat_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            return 404, ErrorOut(message=chat_ret.err_value.error_message)
 
-        return 200, convert_chats([ret.ok_value])[0]
+        return 200, convert_chats([chat_ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChatUpdateIn):
         log.info("ManageChatAPI put", ulid=ulid, input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_manage_chat(user_id, ulid, input)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_manage_chat(user_id, ulid, input)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -447,15 +539,19 @@ class ManageChatAPI:
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageChatAPI delete", ulids=input.ulids)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = delete_manage_chat(user_id, input.ulids)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        delete_ret = delete_manage_chat(user_id, input.ulids)
+        if delete_ret.is_err:
+            if isinstance(delete_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -470,15 +566,19 @@ class ManageAdvertiseAPI:
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageAdvertiseAPI list", search=search, limit=limit, offset=offset)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_advertises(user_id, search, limit, offset)
-        if ret.is_err:
+        advertises_ret = get_manage_advertises(user_id, search, limit, offset)
+        if advertises_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        objs, total = advertises_ret.ok_value
         return 200, AdvertiseListOut(items=convert_advertises(objs), total=total)
 
     @staticmethod
@@ -486,49 +586,61 @@ class ManageAdvertiseAPI:
     def get(request: HttpRequest, ulid: str):
         log.info("ManageAdvertiseAPI get", ulid=ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_manage_advertise(user_id, ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        advertise_ret = get_manage_advertise(user_id, ulid)
+        if advertise_ret.is_err:
+            if isinstance(advertise_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            return 404, ErrorOut(message=advertise_ret.err_value.error_message)
 
-        return 200, convert_advertises([ret.ok_value])[0]
+        return 200, convert_advertises([advertise_ret.ok_value])[0]
 
     @staticmethod
     @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: AdvertiseIn = Form(...), image: UploadedFile = File(...), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI post", input=input, image=image, video=video)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = create_manage_advertise(user_id, input, image, video)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        create_ret = create_manage_advertise(user_id, input, image, video)
+        if create_ret.is_err:
+            if isinstance(create_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=create_ret.err_value.error_message)
 
-        return 201, MediaCreateOut(ulid=ret.ok_value.ulid)
+        return 201, MediaCreateOut(ulid=create_ret.ok_value.ulid)
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: AdvertiseUpdateIn = Form(...), image: UploadedFile | None = File(None), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI put", ulid=ulid, input=input, image=image, video=video)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_manage_advertise(user_id, ulid, input, image, video)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_manage_advertise(user_id, ulid, input, image, video)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -537,14 +649,18 @@ class ManageAdvertiseAPI:
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageAdvertiseAPI delete", ulids=input.ulids)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = delete_manage_advertise(user_id, input.ulids)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        delete_ret = delete_manage_advertise(user_id, input.ulids)
+        if delete_ret.is_err:
+            if isinstance(delete_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")

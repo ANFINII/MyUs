@@ -16,49 +16,60 @@ from api.utils.enum.user import PlanName
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
+from api.utils.common.result import FatalError, Result
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import password_reset_token, signup_token
 from api.utils.functions.validation import has_email
 
 
-def auth_check(request: HttpRequest) -> int | None:
+@Result.shield_exception()
+def auth_check(request: HttpRequest) -> Result[int | None, FatalError]:
     token = request.COOKIES.get("access_token")
     if token is None:
-        return None
+        return Result.ok(None)
 
     key = settings.SECRET_KEY
     try:
         payload = jwt.decode(jwt=token, key=key, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
-        return None
+        return Result.ok(None)
     except jwt.exceptions.DecodeError:
-        return None
+        return Result.ok(None)
 
     if payload.get("type") != "access":
         log.warning("アクセストークンのタイプが不正です")
-        return None
+        return Result.ok(None)
 
     user_id = payload.get("user_id")
     if user_id is None:
-        return None
+        return Result.ok(None)
 
-    if not verify_user(user_id):
+    ret = verify_user(user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    if not ret.ok_value:
         log.warning("無効なユーザーのトークンです", user_id=user_id)
-        return None
+        return Result.ok(None)
 
-    return user_id
+    return Result.ok(user_id)
 
 
-def verify_user(user_id: int) -> bool:
+@Result.shield_exception()
+def verify_user(user_id: int) -> Result[bool, FatalError]:
     repository = injector.get(UserInterface)
-    users = repository.bulk_get([user_id])
+    ret = repository.bulk_get([user_id])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    users = ret.ok_value
     if len(users) == 0:
-        return False
+        return Result.ok(False)
 
     if not users[0].user.is_active:
-        return False
+        return Result.ok(False)
 
-    return True
+    return Result.ok(True)
 
 
 def login_user(username: str, password: str) -> int | None:
@@ -82,14 +93,19 @@ def login_user(username: str, password: str) -> int | None:
     return user.id
 
 
-def signup_send_email(email: str) -> str:
+@Result.shield_exception()
+def signup_send_email(email: str) -> Result[str, FatalError]:
     if has_email(email):
-        return "メールアドレスの形式が違います!"
+        return Result.ok("メールアドレスの形式が違います!")
 
     repository = injector.get(UserInterface)
-    user_ids = repository.get_ids(FilterOption(email=email))
+    ret = repository.get_ids(FilterOption(email=email))
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    user_ids = ret.ok_value
     if len(user_ids) > 0:
-        return "メールアドレスは既に登録されています!"
+        return Result.ok("メールアドレスは既に登録されています!")
 
     token = signup_token(email)
     subject = render_to_string("registration/email/account/subject.txt").strip()
@@ -102,13 +118,13 @@ def signup_send_email(email: str) -> str:
         send_mail(subject, message, None, [email])
     except Exception as e:
         log.error("Signup email send error", exc=e)
-        return "メールの送信に失敗しました!"
+        return Result.ok("メールの送信に失敗しました!")
 
     if settings.DEBUG:
         url = f"{settings.FRONTEND_URL}/account/signup?token={token}"
         log.info("Signup verify URL (dev)", url=url)
 
-    return ""
+    return Result.ok("")
 
 
 def signup_verify_token(token: str) -> str | None:
@@ -133,7 +149,8 @@ def signup_verify_token(token: str) -> str | None:
     return email
 
 
-def signup_user(input: SignupIn) -> bool:
+@Result.shield_exception()
+def signup_user(input: SignupIn) -> Result[None, FatalError]:
     user_data = UserAllData(
         user=UserData(
             id=0,
@@ -191,13 +208,12 @@ def signup_user(input: SignupIn) -> bool:
         ),
     )
 
-    try:
-        user_repository = injector.get(UserInterface)
-        user_ids = user_repository.bulk_save(objs=[user_data])
-    except Exception as e:
-        log.error("Signup error", exc=e)
-        return False
+    user_repository = injector.get(UserInterface)
+    user_ret = user_repository.bulk_save(objs=[user_data])
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
 
+    user_ids = user_ret.ok_value
     channel_repository = injector.get(ChannelInterface)
     channel_ret = channel_repository.bulk_save([ChannelData(
         id=0,
@@ -213,62 +229,74 @@ def signup_user(input: SignupIn) -> bool:
     if channel_ret.is_err:
         log.error("Default channel create error", error=channel_ret.err_value.error_message, user_id=user_ids[0])
 
-    return True
+    return Result.ok(None)
 
 
 PASSWORD_MIN_LENGTH = 8
 PASSWORD_MAX_LENGTH = 16
 
 
-def change_password(user_id: int, input: PasswordChangeIn) -> str:
+@Result.shield_exception()
+def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalError]:
     try:
         old_password = decrypt(input.old_password)
         password1 = decrypt(input.password1)
         password2 = decrypt(input.password2)
     except Exception:
         log.error("Decrypt error")
-        return "復号に失敗しました!"
+        return Result.ok("復号に失敗しました!")
 
     if password1 != password2:
-        return "新規パスワードが一致しません!"
+        return Result.ok("新規パスワードが一致しません!")
 
     if len(password1) < PASSWORD_MIN_LENGTH or len(password1) > PASSWORD_MAX_LENGTH:
-        return "新規パスワードは英数字8~16文字で入力してください!"
+        return Result.ok("新規パスワードは英数字8~16文字で入力してください!")
 
     repository = injector.get(UserInterface)
-    users = repository.bulk_get([user_id])
+    users_ret = repository.bulk_get([user_id])
+    if users_ret.is_err:
+        return Result.err(users_ret.err_value)
+
+    users = users_ret.ok_value
     if len(users) == 0:
         log.error("User not found", user_id=user_id)
-        return "ユーザーが見つかりません!"
+        return Result.ok("ユーザーが見つかりません!")
 
     user_data = users[0]
     if not check_password(old_password, user_data.user.password):
-        return "現在のパスワードが違います!"
+        return Result.ok("現在のパスワードが違います!")
 
     new_user = replace(user_data.user, password=make_password(password1))
     new_data = replace(user_data, user=new_user)
 
-    try:
-        repository.bulk_save([new_data])
-        return ""
-    except Exception as e:
-        log.error("change_password error", exc=e)
-        return "パスワードの変更に失敗しました!"
+    save_ret = repository.bulk_save([new_data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok("")
 
 
-def password_reset_send_email(email: str) -> str:
+@Result.shield_exception()
+def password_reset_send_email(email: str) -> Result[str, FatalError]:
     if has_email(email):
-        return "メールアドレスの形式が違います!"
+        return Result.ok("メールアドレスの形式が違います!")
 
     repository = injector.get(UserInterface)
-    user_ids = repository.get_ids(FilterOption(email=email))
-    if len(user_ids) == 0:
-        return ""
+    ids_ret = repository.get_ids(FilterOption(email=email))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    users = repository.bulk_get(user_ids)
-    user_data = users[0]
+    user_ids = ids_ret.ok_value
+    if len(user_ids) == 0:
+        return Result.ok("")
+
+    users_ret = repository.bulk_get(user_ids)
+    if users_ret.is_err:
+        return Result.err(users_ret.err_value)
+
+    user_data = users_ret.ok_value[0]
     if not user_data.user.is_active:
-        return ""
+        return Result.ok("")
 
     token = password_reset_token(user_data.user.id, email)
     subject = render_to_string("registration/email/reset/subject.txt").strip()
@@ -281,13 +309,13 @@ def password_reset_send_email(email: str) -> str:
         send_mail(subject, message, None, [email])
     except Exception as e:
         log.error("Password reset email send error", exc=e)
-        return "メールの送信に失敗しました!"
+        return Result.ok("メールの送信に失敗しました!")
 
     if settings.DEBUG:
         url = f"{settings.FRONTEND_URL}/account/reset/confirm?token={token}"
         log.info("Password reset URL (dev)", url=url)
 
-    return ""
+    return Result.ok("")
 
 
 def password_reset_verify_token(token: str) -> tuple[int, str] | None:
@@ -317,10 +345,11 @@ def password_reset_verify_token(token: str) -> tuple[int, str] | None:
     return (user_id, email)
 
 
-def reset_password(input: PasswordResetIn) -> str:
+@Result.shield_exception()
+def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
     result = password_reset_verify_token(input.token)
     if result is None:
-        return "リンクの有効期限が切れています!"
+        return Result.ok("リンクの有効期限が切れています!")
     user_id, _ = result
 
     try:
@@ -328,55 +357,62 @@ def reset_password(input: PasswordResetIn) -> str:
         password2 = decrypt(input.password2)
     except Exception:
         log.error("Decrypt error")
-        return "復号に失敗しました!"
+        return Result.ok("復号に失敗しました!")
 
     if password1 != password2:
-        return "新規パスワードが一致しません!"
+        return Result.ok("新規パスワードが一致しません!")
 
     if len(password1) < PASSWORD_MIN_LENGTH or len(password1) > PASSWORD_MAX_LENGTH:
-        return "新規パスワードは英数字8~16文字で入力してください!"
+        return Result.ok("新規パスワードは英数字8~16文字で入力してください!")
 
     repository = injector.get(UserInterface)
-    users = repository.bulk_get([user_id])
+    users_ret = repository.bulk_get([user_id])
+    if users_ret.is_err:
+        return Result.err(users_ret.err_value)
+
+    users = users_ret.ok_value
     if len(users) == 0:
         log.error("User not found", user_id=user_id)
-        return "ユーザーが見つかりません!"
+        return Result.ok("ユーザーが見つかりません!")
 
     user_data = users[0]
     new_user = replace(user_data.user, password=make_password(password1))
     new_data = replace(user_data, user=new_user)
 
-    try:
-        repository.bulk_save([new_data])
-        return ""
-    except Exception as e:
-        log.error("reset_password error", exc=e)
-        return "パスワードのリセットに失敗しました!"
+    save_ret = repository.bulk_save([new_data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok("")
 
 
-def withdraw_user(user_id: int, input: WithdrawalIn) -> str:
+@Result.shield_exception()
+def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
     try:
         password = decrypt(input.password)
     except Exception:
         log.error("Decrypt error")
-        return "復号に失敗しました!"
+        return Result.ok("復号に失敗しました!")
 
     repository = injector.get(UserInterface)
-    users = repository.bulk_get([user_id])
+    users_ret = repository.bulk_get([user_id])
+    if users_ret.is_err:
+        return Result.err(users_ret.err_value)
+
+    users = users_ret.ok_value
     if len(users) == 0:
         log.error("User not found", user_id=user_id)
-        return "ユーザーが見つかりません!"
+        return Result.ok("ユーザーが見つかりません!")
 
     user_data = users[0]
     if not check_password(password, user_data.user.password):
-        return "パスワードが違います!"
+        return Result.ok("パスワードが違います!")
 
     new_user = replace(user_data.user, is_active=False)
     new_data = replace(user_data, user=new_user)
 
-    try:
-        repository.bulk_save([new_data])
-        return ""
-    except Exception as e:
-        log.error("withdraw_user error", exc=e)
-        return "退会処理に失敗しました!"
+    save_ret = repository.bulk_save([new_data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok("")

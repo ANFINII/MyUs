@@ -54,16 +54,21 @@ def get_messages(chat_id: int) -> Result[list[MessageDTO], FatalError]:
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
-    data = [
-        MessageDTO(
+    data: list[MessageDTO] = []
+    for m in messages_ret.ok_value:
+        author_ret = get_author_data(m.author_id)
+        if author_ret.is_err:
+            return Result.err(author_ret.err_value)
+
+        data.append(MessageDTO(
             ulid=m.ulid,
             text=m.text,
             reply_count=m.reply_count,
             created=m.created,
             updated=m.updated,
-            author=get_author_data(m.author_id),
-        ) for m in messages_ret.ok_value
-    ]
+            author=author_ret.ok_value,
+        ))
+
     return Result.ok(data)
 
 
@@ -78,16 +83,21 @@ def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
-    data = [
-        MessageReplyDTO(
+    data: list[MessageReplyDTO] = []
+    for m in messages_ret.ok_value:
+        author_ret = get_author_data(m.author_id)
+        if author_ret.is_err:
+            return Result.err(author_ret.err_value)
+
+        data.append(MessageReplyDTO(
             ulid=m.ulid,
             parent_id=m.parent_ulid,
             text=m.text,
             created=m.created,
             updated=m.updated,
-            author=get_author_data(m.author_id),
-        ) for m in messages_ret.ok_value
-    ]
+            author=author_ret.ok_value,
+        ))
+
     return Result.ok(data)
 
 
@@ -117,7 +127,11 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
             return Result.err(NotFoundError("メッセージの作成に失敗しました"))
         parent_id = parent_ids[0]
 
-    author = get_author_data(user_id)
+    author_ret = get_author_data(user_id)
+    if author_ret.is_err:
+        return Result.err(author_ret.err_value)
+
+    author = author_ret.ok_value
     new_message = MessageDomainData(
         id=0,
         ulid="",
@@ -183,13 +197,17 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[Message
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
+    author_ret = get_author_data(message.author_id)
+    if author_ret.is_err:
+        return Result.err(author_ret.err_value)
+
     data = MessageDTO(
         ulid=message.ulid,
         text=text,
         reply_count=message.reply_count,
         created=message.created,
         updated=message.updated,
-        author=get_author_data(message.author_id),
+        author=author_ret.ok_value,
     )
     return Result.ok(data)
 

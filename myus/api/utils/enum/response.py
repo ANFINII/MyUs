@@ -4,6 +4,7 @@ from enum import Enum
 class ApiResponse(Enum):
     UNAUTHORIZED = (True, "Un Authorized", 401)
     NOT_FOUND = (True, "Not Found", 404)
+    SERVER_ERROR = (True, "Server Error", 500)
 
     def run(self) -> dict[str, str | bool | int]:
         is_error, content, status_code = self.value

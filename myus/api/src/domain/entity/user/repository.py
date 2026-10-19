@@ -7,6 +7,7 @@ from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
+from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
 
 
@@ -27,7 +28,8 @@ class UserRepository(UserInterface):
     def queryset(self) -> QuerySet[User]:
         return User.objects.select_related("profile", "mypage", "notification", "user_plan")
 
-    def get_ids(self, filter: FilterOption, sort: SortOption | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.id:
             q_list.append(Q(id=filter.id))
@@ -43,19 +45,21 @@ class UserRepository(UserInterface):
             order_by_key = field_name if sort.is_asc else f"-{field_name}"
             qs = qs.order_by(order_by_key)
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[UserAllData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[UserAllData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, objs: list[UserAllData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[UserAllData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_user(o.user) for o in objs]
         new_ids = get_new_ids(models, User)
@@ -87,9 +91,10 @@ class UserRepository(UserInterface):
                 update_fields=USER_PLAN_FIELDS,
             )
 
-        return new_ids
+        return Result.ok(new_ids)
 
-    def media_like(self, user_id: int, media_type: MediaType, media_id: int) -> tuple[bool, int]:
+    @Result.shield_exception()
+    def media_like(self, user_id: int, media_type: MediaType, media_id: int) -> Result[tuple[bool, int], FatalError]:
         model_class = get_media_model(media_type)
         obj = model_class.objects.prefetch_related("like").get(id=media_id)
         is_like = obj.like.filter(id=user_id).exists()
@@ -97,13 +102,14 @@ class UserRepository(UserInterface):
             obj.like.remove(user_id)
         else:
             obj.like.add(user_id)
-        return (not is_like, obj.like.count())
+        return Result.ok((not is_like, obj.like.count()))
 
-    def comment_like(self, user_id: int, comment_id: int) -> tuple[bool, int]:
+    @Result.shield_exception()
+    def comment_like(self, user_id: int, comment_id: int) -> Result[tuple[bool, int], FatalError]:
         obj = Comment.objects.prefetch_related("like").get(id=comment_id)
         is_like = obj.like.filter(id=user_id).exists()
         if is_like:
             obj.like.remove(user_id)
         else:
             obj.like.add(user_id)
-        return (not is_like, obj.like.count())
+        return Result.ok((not is_like, obj.like.count()))
