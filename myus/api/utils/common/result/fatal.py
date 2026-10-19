@@ -43,7 +43,7 @@ class ResultFatal[T](ResultErrBase[T, FatalError]):
                 assert_never(message)
 
     @classmethod
-    def new(cls, message: str | FatalError | Exception | ResultFatal[Any]) -> ResultFatal[T]:
+    def err(cls, message: str | FatalError | Exception | ResultFatal[Any]) -> ResultFatal[T]:
         return cls._err(message, loglevel=None)
 
     @classmethod

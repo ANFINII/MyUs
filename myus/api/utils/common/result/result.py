@@ -37,8 +37,10 @@ class Result[T, E: AnyError](ResultErrBase[T, E]):
         return Result(_Result.err(message))
 
     @classmethod
-    def new(cls, message: E | Result[T, E]) -> Result[T, E]:
-        """Err を生成するファクトリ。ログ出力は行わない。"""
+    def err(cls, message: E | Result[T, E]) -> Result[T, E]:
+        """Err を生成する。ログ出力は行わない。
+        ログ出力も行う場合は error / warning / info / debug を使う。
+        """
         return cls._err(message, loglevel=None, log_message_body=None)
 
     @classmethod
