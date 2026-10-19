@@ -15,6 +15,7 @@ from api.src.usecase.notification import get_notification, notification_confirm,
 from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
 from api.src.usecase.user import get_user_data, like_comment, like_media
 from api.src.usecase.userpage import get_userpage_media, is_following
+from api.utils.common.result import FatalError
 from api.utils.functions.index import create_url
 
 
@@ -85,11 +86,10 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        followers_ret = get_followers(user_id, search, 100)
-        if followers_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+        ret = get_followers(user_id, search, 100)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        followers = followers_ret.ok_value
         data = [
             FollowUserOut(
                 ulid=x.ulid,
@@ -99,7 +99,7 @@ class UserAPI:
                 follower_count=x.follower_count,
                 following_count=x.following_count,
             )
-            for x in followers
+            for x in ret.ok_value
         ]
 
         return 200, data
@@ -113,11 +113,10 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        follows_ret = get_follows(user_id, search, 100)
-        if follows_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+        ret = get_follows(user_id, search, 100)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        follows = follows_ret.ok_value
         data = [
             FollowUserOut(
                 ulid=x.ulid,
@@ -127,7 +126,7 @@ class UserAPI:
                 follower_count=x.follower_count,
                 following_count=x.following_count,
             )
-            for x in follows
+            for x in ret.ok_value
         ]
 
         return 200, data
@@ -145,14 +144,13 @@ class UserAPI:
         if follower is None:
             return 400, ErrorOut(message="ユーザーが見つかりません!")
 
-        follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
-        if follow_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+        ret = upsert_follow(follower, input.ulid, input.is_follow)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
-        follow = follow_ret.ok_value
-        if follow is None:
-            return 400, ErrorOut(message="ユーザーが見つかりません!")
-
+        follow = ret.ok_value
         data = FollowOut(is_follow=follow.is_follow, follower_count=follow.follower_count)
         return 200, data
 
@@ -271,11 +269,11 @@ class UserAPI:
         user_id = auth_check(request)
         is_follow = False
         if user_id is not None:
-            is_follow_ret = is_following(user_id, user.user.id)
-            if is_follow_ret.is_err:
-                return 500, ErrorOut(message="Internal Server Error")
+            ret = is_following(user_id, user.user.id)
+            if ret.is_err:
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-            is_follow = is_follow_ret.ok_value
+            is_follow = ret.ok_value
 
         data = UserPageOut(
             avatar=create_url(user.user.avatar),
