@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from api.src.domain.interface.subscribe.data import SubscribeData
+from api.utils.common.result import FatalError, Result
 
 
 class SortType(Enum):
@@ -23,17 +24,17 @@ class SortOption:
 
 class SubscribeInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[SubscribeData]:
+    def bulk_get(self, ids: list[int]) -> Result[list[SubscribeData], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[SubscribeData]) -> list[int]:
+    def bulk_save(self, objs: list[SubscribeData]) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def count(self, filter: FilterOption) -> int:
+    def count(self, filter: FilterOption) -> Result[int, FatalError]:
         ...

@@ -112,14 +112,18 @@ class VideoAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: VideoDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: VideoDetailsOut, 404: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("VideoAPI detail", ulid=ulid, search=search)
 
         user_id = auth_check(request)
-        obj = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
 
         objs, _ = get_videos(search, obj.id)
 
@@ -176,14 +180,18 @@ class MusicAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: MusicDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: MusicDetailsOut, 404: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("MusicAPI detail", ulid=ulid, search=search)
 
         user_id = auth_check(request)
-        obj = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
 
         objs, _ = get_musics(search, obj.id)
 
@@ -240,14 +248,18 @@ class BlogAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: BlogDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: BlogDetailsOut, 404: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("BlogAPI detail", ulid=ulid, search=search)
 
         user_id = auth_check(request)
-        obj = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
 
         objs, _ = get_blogs(search, obj.id)
 
@@ -303,14 +315,18 @@ class ComicAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ComicDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: ComicDetailsOut, 404: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("ComicAPI detail", ulid=ulid, search=search)
 
         user_id = auth_check(request)
-        obj = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
 
         objs, _ = get_comics(search, obj.id)
 
@@ -366,14 +382,18 @@ class PictureAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: PictureDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: PictureDetailsOut, 404: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("PictureAPI detail", ulid=ulid, search=search)
 
         user_id = auth_check(request)
-        obj = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
 
         objs, _ = get_pictures(search, obj.id)
 
@@ -428,14 +448,18 @@ class ChatAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ChatDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: ChatDetailsOut, 404: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("ChatAPI detail", ulid=ulid, search=search)
 
         user_id = auth_check(request)
-        obj = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
 
         objs, _ = get_chats(search, obj.id)
 

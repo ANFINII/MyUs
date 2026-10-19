@@ -5,6 +5,7 @@ from api.src.domain.entity.subscribe._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.subscribe.data import SubscribeData
 from api.src.domain.interface.subscribe.interface import FilterOption, SubscribeInterface, SortOption
+from api.utils.common.result import FatalError, Result
 
 
 SUBSCRIBE_FIELDS = ["user_id", "channel_id", "is_subscribe"]
@@ -14,7 +15,8 @@ class SubscribeRepository(SubscribeInterface):
     def queryset(self) -> QuerySet[Subscribe]:
         return Subscribe.objects.select_related("user", "channel")
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.user_id:
             q_list.append(Q(user_id=filter.user_id))
@@ -30,19 +32,21 @@ class SubscribeRepository(SubscribeInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[SubscribeData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[SubscribeData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, objs: list[SubscribeData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[SubscribeData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, Subscribe)
@@ -53,9 +57,10 @@ class SubscribeRepository(SubscribeInterface):
             update_fields=SUBSCRIBE_FIELDS,
         )
 
-        return new_ids
+        return Result.ok(new_ids)
 
-    def count(self, filter: FilterOption) -> int:
+    @Result.shield_exception()
+    def count(self, filter: FilterOption) -> Result[int, FatalError]:
         q_list: list[Q] = []
         if filter.user_id:
             q_list.append(Q(user_id=filter.user_id))
@@ -64,4 +69,4 @@ class SubscribeRepository(SubscribeInterface):
         if filter.is_subscribe is not None:
             q_list.append(Q(is_subscribe=filter.is_subscribe))
 
-        return Subscribe.objects.filter(*q_list).count()
+        return Result.ok(Subscribe.objects.filter(*q_list).count())

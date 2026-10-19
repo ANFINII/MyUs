@@ -7,6 +7,7 @@ from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import create_user_channel, get_user_channels, update_user_channel
 from api.src.usecase.subscribe import get_subscribe_channels, upsert_subscribe
+from api.utils.common.result import FatalError
 from api.utils.functions.index import create_url
 
 
@@ -41,7 +42,7 @@ class ChannelAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/subscribe", response={200: list[ChannelOut], 401: ErrorOut})
+    @router.get("/subscribe", response={200: list[ChannelOut], 401: ErrorOut, 500: ErrorOut})
     def get_subscribe(request: HttpRequest):
         log.info("ChannelAPI get_subscribe")
 
@@ -49,7 +50,11 @@ class ChannelAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channels = get_subscribe_channels(user_id)
+        ret = get_subscribe_channels(user_id)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        channels = ret.ok_value
         data = [
             ChannelOut(
                 ulid=str(c.ulid),
@@ -66,7 +71,7 @@ class ChannelAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/subscribe", response={200: SubscribeOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("/subscribe", response={200: SubscribeOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post_subscribe(request: HttpRequest, input: SubscribeIn):
         log.info("ChannelAPI post_subscribe", input=input)
 
@@ -74,10 +79,13 @@ class ChannelAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        subscribe = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
-        if subscribe is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません!")
+        ret = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
+        subscribe = ret.ok_value
         data = SubscribeOut(is_subscribe=subscribe.is_subscribe, count=subscribe.count)
         return 200, data
 

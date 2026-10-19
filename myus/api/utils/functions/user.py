@@ -4,15 +4,24 @@ from api.src.domain.interface.subscribe.interface import FilterOption, SortOptio
 from api.src.injectors.container import injector
 from api.src.types.dto.notification import NotificationUserDTO
 from api.src.types.dto.user import MediaUserDTO
+from api.utils.common.result import FatalError, Result
 from api.utils.functions.index import create_url
 
 
-def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> MediaUserDTO:
+@Result.shield_exception()
+def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Result[MediaUserDTO, FatalError]:
     subscribe_repo = injector.get(SubscribeInterface)
     subscribe = None
     if user_id is not None:
-        ids = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption())
-        subscribes = subscribe_repo.bulk_get(ids)
+        ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        subscribes_ret = subscribe_repo.bulk_get(ids_ret.ok_value)
+        if subscribes_ret.is_err:
+            return Result.err(subscribes_ret.err_value)
+
+        subscribes = subscribes_ret.ok_value
         subscribe = subscribes[0] if len(subscribes) > 0 else None
 
     data = MediaUserDTO(
@@ -20,7 +29,7 @@ def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Media
         is_subscribe=subscribe.is_subscribe if subscribe else False,
     )
 
-    return data
+    return Result.ok(data)
 
 
 def get_notification_user(user: User) -> NotificationUserDTO:
