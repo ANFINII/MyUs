@@ -6,6 +6,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.src.domain.interface.ng_word.interface import FilterOption as NgWordFilterOption, NgWordInterface, SortOption as NgWordSortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
+from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.functions.media import get_media_repository
 
@@ -30,39 +31,67 @@ def validate_name(name: str, ng_words: list[str]) -> bool:
     return True
 
 
-def get_master_hashtags() -> list[HashtagDTO]:
+@Result.shield_exception()
+def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
     repo = injector.get(HashtagInterface)
-    ids = repo.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=HashtagSortType.NAME))
-    return [HashtagDTO(ulid=h.ulid, name=h.name) for h in repo.bulk_get(ids)]
+    ids_ret = repo.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=HashtagSortType.NAME))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    hashtags_ret = repo.bulk_get(ids_ret.ok_value)
+    if hashtags_ret.is_err:
+        return Result.err(hashtags_ret.err_value)
+
+    return Result.ok([HashtagDTO(ulid=h.ulid, name=h.name) for h in hashtags_ret.ok_value])
 
 
-def get_ng_words() -> list[str]:
+@Result.shield_exception()
+def get_ng_words() -> Result[list[str], FatalError]:
     repo = injector.get(NgWordInterface)
-    ids = repo.get_ids(NgWordFilterOption(), NgWordSortOption())
-    return [n.word for n in repo.bulk_get(ids)]
+    ids_ret = repo.get_ids(NgWordFilterOption(), NgWordSortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ng_words_ret = repo.bulk_get(ids_ret.ok_value)
+    if ng_words_ret.is_err:
+        return Result.err(ng_words_ret.err_value)
+
+    return Result.ok([n.word for n in ng_words_ret.ok_value])
 
 
-def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> bool:
+@Result.shield_exception()
+def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, NotFoundError | FatalError]:
     media_repo = get_media_repository(media_type)
     hashtag_repo = injector.get(HashtagInterface)
     media_ids = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
     if len(media_ids) == 0:
         log.error("Media not found", media_type=media_type.value, media_ulid=media_ulid)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     media = media_repo.bulk_get(media_ids)[0]
     if media.channel.owner_id != user_id:
         log.error("Media owner mismatch", media_type=media_type.value, media_ulid=media_ulid, user_id=user_id)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     ulids = [h.ulid for h in hashtags if h.ulid]
     ulid_data_map: dict[str, HashtagData] = {}
     if len(ulids) > 0:
-        existing_ids = hashtag_repo.get_ids(HashtagFilterOption(ulids=ulids), HashtagSortOption())
-        for tag in hashtag_repo.bulk_get(existing_ids):
+        existing_ids_ret = hashtag_repo.get_ids(HashtagFilterOption(ulids=ulids), HashtagSortOption())
+        if existing_ids_ret.is_err:
+            return Result.err(existing_ids_ret.err_value)
+
+        existing_hashtags_ret = hashtag_repo.bulk_get(existing_ids_ret.ok_value)
+        if existing_hashtags_ret.is_err:
+            return Result.err(existing_hashtags_ret.err_value)
+
+        for tag in existing_hashtags_ret.ok_value:
             ulid_data_map[tag.ulid] = tag
 
-    ng_words = get_ng_words()
+    ng_words_ret = get_ng_words()
+    if ng_words_ret.is_err:
+        return Result.err(ng_words_ret.err_value)
+
+    ng_words = ng_words_ret.ok_value
     seen_name: set[str] = set()
     update_hashtags: list[HashtagData] = []
 
@@ -83,9 +112,8 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
         seen_name.add(normalized)
         update_hashtags.append(HashtagData(id=0, ulid="", name=normalized))
 
-    try:
-        hashtag_repo.bulk_save(media_type, media.id, update_hashtags)
-        return True
-    except Exception as e:
-        log.error("update_media_hashtags error", exc=e)
-        return False
+    save_ret = hashtag_repo.bulk_save(media_type, media.id, update_hashtags)
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)

@@ -6,6 +6,7 @@ from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.hashtag import HashtagOut, MediaHashtagsUpdateIn
 from api.src.usecase.auth import auth_check
 from api.src.usecase.hashtag import get_master_hashtags, update_media_hashtags
+from api.utils.common.result import FatalError
 
 
 class MediaHashtagAPI:
@@ -14,7 +15,7 @@ class MediaHashtagAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[HashtagOut], 401: ErrorOut})
+    @router.get("", response={200: list[HashtagOut], 401: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("MediaHashtagAPI get")
 
@@ -22,11 +23,15 @@ class MediaHashtagAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        hashtags = get_master_hashtags()
+        ret = get_master_hashtags()
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        hashtags = ret.ok_value
         return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in hashtags]
 
     @staticmethod
-    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: MediaHashtagsUpdateIn):
         log.info("MediaHashtagAPI put", media_type=input.media_type.value, media_ulid=input.media_ulid)
 
@@ -35,7 +40,10 @@ class MediaHashtagAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         hashtags = [HashtagDTO(ulid=h.ulid, name=h.name) for h in input.hashtags]
-        if not update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")

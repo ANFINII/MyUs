@@ -6,6 +6,7 @@ from api.src.domain.entity.hashtag._convert import convert_data, marshal_data, m
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption, HashtagInterface, SortOption
+from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
 
 
@@ -13,7 +14,8 @@ class HashtagRepository(HashtagInterface):
     def queryset(self) -> QuerySet[HashTag]:
         return HashTag.objects.all()
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if len(filter.ulids) > 0:
             q_list.append(Q(ulid__in=filter.ulids))
@@ -27,17 +29,19 @@ class HashtagRepository(HashtagInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[HashtagData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[HashtagData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, media_type: MediaType, media_id: int, objs: list[HashtagData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, media_type: MediaType, media_id: int, objs: list[HashtagData]) -> Result[list[int], FatalError]:
         with transaction.atomic():
             if len(objs) == 0:
                 hashtag_ids: list[int] = []
@@ -58,4 +62,4 @@ class HashtagRepository(HashtagInterface):
                 rows = [marshal_through(media_type, media_id, hid, i) for i, hid in enumerate(hashtag_ids)]
                 ModelClass.objects.bulk_create(rows)
 
-        return hashtag_ids
+        return Result.ok(hashtag_ids)
