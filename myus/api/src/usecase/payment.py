@@ -1,16 +1,49 @@
 import json
 from dataclasses import asdict, replace
 from datetime import datetime, timezone
+from django.db import transaction
 from api.modules.logger import log
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
+from api.src.domain.interface.webhook.inbox.interface import FilterOption as WebhookInboxFilterOption, SortOption as WebhookInboxSortOption, WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.payment import PaymentStatus, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
+
+
+@Result.shield_exception()
+def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
+    repository = injector.get(WebhookInboxInterface)
+    ids_ret = repository.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) > 0:
+        log.info("WebhookInbox already processed", event_id=event.event_id)
+        return Result.ok(False)
+
+    with transaction.atomic():
+        save_ret = repository.bulk_save([event])
+        if save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(save_ret.err_value)
+
+        dispatch_ret = dispatch_webhook_inbox(event)
+        if dispatch_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(dispatch_ret.err_value)
+
+        enqueue_ret = enqueue_webhook_outbox(event)
+        if enqueue_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(enqueue_ret.err_value)
+
+    return Result.ok(True)
 
 
 @Result.shield_exception()

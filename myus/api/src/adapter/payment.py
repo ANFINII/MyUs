@@ -7,12 +7,11 @@ from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, RedirectUrls, WebhookVerified, WebhookVerifyFailed
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
-from api.src.domain.interface.webhook.inbox.interface import FilterOption, SortOption, WebhookInboxInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.payment import dispatch_webhook_inbox, enqueue_webhook_outbox
+from api.src.usecase.payment import receive_webhook_inbox
 from api.src.usecase.user import get_user_data
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
@@ -99,31 +98,13 @@ class PaymentAPI:
             case WebhookVerified(event=event):
                 log.info("PaymentAPI webhook verified", event_id=event.event_id, event_type=event.event_type.value)
 
-                webhook_inbox_repo = injector.get(WebhookInboxInterface)
-                existing_ids_ret = webhook_inbox_repo.get_ids(
-                    FilterOption(provider=event.provider.value, event_id=event.event_id),
-                    SortOption(),
-                    limit=1,
-                )
-                if existing_ids_ret.is_err:
+                receive_ret = receive_webhook_inbox(event)
+                if receive_ret.is_err:
                     return 500, ErrorOut(message="Internal Server Error")
 
-                existing_ids = existing_ids_ret.ok_value
-                if len(existing_ids) > 0:
-                    log.info("PaymentAPI webhook already processed", event_id=event.event_id)
+                is_received = receive_ret.ok_value
+                if not is_received:
                     return 200, PaymentWebhookOut(message="Already processed")
-
-                save_ret = webhook_inbox_repo.bulk_save([event])
-                if save_ret.is_err:
-                    return 500, ErrorOut(message="Internal Server Error")
-
-                dispatch_ret = dispatch_webhook_inbox(event)
-                if dispatch_ret.is_err:
-                    return 500, ErrorOut(message="Internal Server Error")
-
-                enqueue_ret = enqueue_webhook_outbox(event)
-                if enqueue_ret.is_err:
-                    return 500, ErrorOut(message="Internal Server Error")
 
                 return 200, PaymentWebhookOut(message="OK")
 
