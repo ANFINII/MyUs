@@ -69,9 +69,9 @@ class AuthAPI:
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        error_message = ret.ok_value
-        if len(error_message) > 0:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
+        message = ret.ok_value
+        if len(message) > 0:
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         return 200, SuccessOut(message="メールを送信しました!")
 
@@ -100,10 +100,10 @@ class AuthAPI:
             log.warning("Signup email mismatch", token_email=token_email, input_email=input.email)
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailMismatch")
 
-        error_message = signup_check(input)
-        if len(error_message) > 0:
-            log.warning("Signup validation failed", message=error_message)
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
+        message = signup_check(input)
+        if len(message) > 0:
+            log.warning("Signup validation failed", message=message)
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         ret = signup_user(input)
         if ret.is_err:
@@ -167,9 +167,9 @@ class AuthAPI:
         if change_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        error_message = change_ret.ok_value
-        if len(error_message) > 0:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
+        message = change_ret.ok_value
+        if len(message) > 0:
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         tokens_ret = create_auth_tokens(user_id)
         if tokens_ret.is_err:
@@ -194,9 +194,9 @@ class AuthAPI:
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        error_message = ret.ok_value
-        if len(error_message) > 0:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
+        message = ret.ok_value
+        if len(message) > 0:
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         return 200, SuccessOut(message="メールを送信しました!")
 
@@ -225,9 +225,9 @@ class AuthAPI:
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        error_message = ret.ok_value
-        if len(error_message) > 0:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
+        message = ret.ok_value
+        if len(message) > 0:
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         return 200, SuccessOut(message="パスワードをリセットしました!")
 
@@ -248,9 +248,9 @@ class AuthAPI:
         if withdraw_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        error_message = withdraw_ret.ok_value
-        if len(error_message) > 0:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
+        message = withdraw_ret.ok_value
+        if len(message) > 0:
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
