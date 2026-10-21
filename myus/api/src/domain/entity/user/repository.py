@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
@@ -37,6 +38,10 @@ class UserRepository(UserInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.email:
             q_list.append(Q(email=filter.email))
+        if filter.username:
+            q_list.append(Q(username=filter.username))
+        if filter.nickname:
+            q_list.append(Q(nickname=filter.nickname))
 
         qs = User.objects.filter(*q_list)
 
@@ -87,6 +92,14 @@ class UserRepository(UserInterface):
             )
 
         return Result.ok(new_ids)
+
+    @Result.shield_exception()
+    def authenticate(self, login_id: str, password: str) -> Result[int | None, FatalError]:
+        user = authenticate(username=login_id, password=password)
+        if user is None:
+            return Result.ok(None)
+
+        return Result.ok(user.id)
 
     @Result.shield_exception()
     def media_like(self, user_id: int, media_type: MediaType, media_id: int) -> Result[tuple[bool, int], FatalError]:

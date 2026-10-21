@@ -5,8 +5,9 @@ from ninja.throttling import AnonRateThrottle
 from api.modules.logger import log
 from api.src.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from api.src.usecase.auth import auth_check, change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
+from api.src.usecase.auth import change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
 from api.src.usecase.user import signup_check
+from api.utils.common.result import FatalError, Result
 
 
 class LoginThrottle(AnonRateThrottle):
@@ -15,6 +16,19 @@ class LoginThrottle(AnonRateThrottle):
 
 class MailThrottle(AnonRateThrottle):
     scope = "mail"
+
+
+def auth_check(request: HttpRequest) -> Result[int | None, FatalError]:
+    token = request.COOKIES.get("access_token")
+    if token is None:
+        return Result.ok(None)
+
+    ret = verify_token(token, "access")
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    user_id = ret.ok_value
+    return Result.ok(user_id)
 
 
 class AuthAPI:
@@ -109,7 +123,11 @@ class AuthAPI:
             log.warning("Signup email mismatch")
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailMismatch")
 
-        message = signup_check(input)
+        check_ret = signup_check(input)
+        if check_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        message = check_ret.ok_value
         if len(message) > 0:
             log.warning("Signup validation failed", message=message)
             return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
@@ -125,7 +143,11 @@ class AuthAPI:
     def login(request: HttpRequest, response: HttpResponse, input: LoginIn):
         log.info("AuthAPI login", username=input.username)
 
-        user_id = login_user(input.username, input.password)
+        user_id_ret = login_user(input.username, input.password)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.loginFailed")
 
