@@ -12,6 +12,15 @@ export enum FetchError {
   Delete = 'fetchError.delete',
 }
 
+export enum Currency {
+  Jpy = 'JPY',
+  Usd = 'USD',
+  Eur = 'EUR',
+  Gbp = 'GBP',
+  Cny = 'CNY',
+  Krw = 'KRW',
+}
+
 export enum ErrorType {
   Unauthenticated = 'UNAUTHENTICATED',
   Forbidden = 'FORBIDDEN',
