@@ -1,19 +1,20 @@
+import { ApiError } from 'lib/error'
 import Custom404 from './Custom404'
 import Custom500 from './Custom500'
 import Unauthorized from './Unauthorized'
 import Unexpected from './Unexpected'
 
 interface Props {
-  status: number
+  error: ApiError | null
   children: React.ReactNode
 }
 
 export default function ErrorCheck(props: Props): React.JSX.Element {
-  const { status, children } = props
+  const { error, children } = props
 
-  if (status >= 500) return <Custom500 />
-  if (status === 404) return <Custom404 />
-  if (status === 401) return <Unauthorized />
-  if (status >= 400) return <Unexpected />
-  return <>{children}</>
+  if (error === null) return <>{children}</>
+  if (error.type === 'UNAUTHENTICATED') return <Unauthorized />
+  if (error.type === 'NOT_FOUND') return <Custom404 />
+  if (error.type === 'INTERNAL' || (error.type === undefined && error.status >= 500)) return <Custom500 />
+  return <Unexpected />
 }

@@ -17,7 +17,7 @@ export default function QueryCheck<T extends Queries>(props: Props<T>): React.JS
   const { title, queries, fresh = false, children } = props
 
   const results = Object.values(queries)
-  const status = results.find((q) => q.error !== null)?.error?.status ?? 200
+  const error = results.find((q) => q.error !== null)?.error ?? null
   const isReady = results.every((q) => q.data !== undefined && (!fresh || q.isFetchedAfterMount))
 
   const render = (): React.ReactNode => {
@@ -26,5 +26,5 @@ export default function QueryCheck<T extends Queries>(props: Props<T>): React.JS
     return children(data)
   }
 
-  return <ErrorCheck status={status}>{isReady ? render() : <PageLoading title={title} />}</ErrorCheck>
+  return <ErrorCheck error={error}>{isReady ? render() : <PageLoading title={title} />}</ErrorCheck>
 }

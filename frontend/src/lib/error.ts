@@ -2,12 +2,21 @@ import axios, { AxiosResponse } from 'axios'
 import { ok, err } from 'neverthrow'
 import { Result } from 'neverthrow'
 
+export type ErrorType = 'UNAUTHENTICATED' | 'FORBIDDEN' | 'NOT_FOUND' | 'VALIDATION' | 'INTERNAL'
+
+const ERROR_TYPES: ErrorType[] = ['UNAUTHENTICATED', 'FORBIDDEN', 'NOT_FOUND', 'VALIDATION', 'INTERNAL']
+
 export interface ApiError {
   status: number
+  type?: ErrorType
   message?: string
 }
 
 export type ApiOut<T> = Result<T, ApiError>
+
+const toErrorType = (value: unknown): ErrorType | undefined => {
+  return ERROR_TYPES.find((type) => type === value)
+}
 
 export const apiOut = async <T>(apiCall: Promise<AxiosResponse<T>>): Promise<ApiOut<T>> => {
   try {
@@ -16,7 +25,7 @@ export const apiOut = async <T>(apiCall: Promise<AxiosResponse<T>>): Promise<Api
   } catch (e) {
     if (axios.isAxiosError(e)) {
       const data = e.response?.data
-      return err({ status: e.response?.status ?? 500, message: data?.message })
+      return err({ status: e.response?.status ?? 500, type: toErrorType(data?.type), message: data?.message })
     }
     return err({ status: 500, message: 'Unknown Error' })
   }
