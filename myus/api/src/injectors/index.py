@@ -1,4 +1,4 @@
-from injector import Module, provider
+from injector import Module, provider, singleton
 from api.src.adapter.external.payment.stripe.provider import StripeProvider
 from api.src.domain.entity.payment.subscription.repository import SubscriptionRepository
 from api.src.domain.entity.payment.transaction.repository import TransactionRepository
@@ -154,6 +154,7 @@ class AdvertiseModule(Module):
 
 
 class PaymentModule(Module):
+    @singleton
     @provider
     def provide_payment_provider(self) -> PaymentInterface:
         return StripeProvider()
