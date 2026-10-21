@@ -57,7 +57,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 
     channel = channel_ret.ok_value
     if channel is None:
-        return Result.err(NotFoundError("チャンネルが見つかりません"))
+        return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
@@ -146,7 +146,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
 
     channel = channel_ret.ok_value
     if channel is None:
-        return Result.err(NotFoundError("チャンネルが見つかりません"))
+        return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
@@ -213,7 +213,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
 
     channel = channel_ret.ok_value
     if channel is None:
-        return Result.err(NotFoundError("チャンネルが見つかりません"))
+        return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
@@ -279,7 +279,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
 
     channel = channel_ret.ok_value
     if channel is None:
-        return Result.err(NotFoundError("チャンネルが見つかりません"))
+        return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
@@ -345,7 +345,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
 
     channel = channel_ret.ok_value
     if channel is None:
-        return Result.err(NotFoundError("チャンネルが見つかりません"))
+        return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
@@ -406,7 +406,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, AccessErr
 
     channel = channel_ret.ok_value
     if channel is None:
-        return Result.err(NotFoundError("チャンネルが見つかりません"))
+        return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)

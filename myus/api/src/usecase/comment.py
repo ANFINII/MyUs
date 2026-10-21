@@ -119,7 +119,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
     media_ids = media_ids_ret.ok_value
     if len(media_ids) == 0:
         log.warning("メディアが見つかりませんでした")
-        return Result.err(NotFoundError("コメントの作成に失敗しました"))
+        return Result.err(NotFoundError("error.commentCreateFailed"))
 
     parent: CommentData | None = None
     if input.parent_ulid:
@@ -129,7 +129,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
 
         parent_ids = parent_ids_ret.ok_value
         if len(parent_ids) == 0:
-            return Result.err(NotFoundError("コメントの作成に失敗しました"))
+            return Result.err(NotFoundError("error.commentCreateFailed"))
 
         parents_ret = repo.bulk_get(parent_ids)
         if parents_ret.is_err:
@@ -168,7 +168,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
         return Result.err(comments_ret.err_value)
 
     comments = comments_ret.ok_value
-    assert len(comments) > 0, "コメントの作成に失敗しました"
+    assert len(comments) > 0, "error.commentCreateFailed"
     comment = comments[0]
 
     if parent is not None:

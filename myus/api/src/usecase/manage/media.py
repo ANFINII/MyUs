@@ -98,7 +98,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Video not found", ulid=ulid)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -108,7 +108,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(ForbiddenError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -149,7 +149,7 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
         ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Video not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("削除に失敗しました!"))
+            return Result.err(NotFoundError("error.deleteFailed"))
         delete_ids.append(ids[0])
 
     with transaction.atomic():
@@ -221,7 +221,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Music not found", ulid=ulid)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -231,7 +231,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(ForbiddenError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish)
     category_repo = injector.get(CategoryInterface)
@@ -269,7 +269,7 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
         ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Music not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("削除に失敗しました!"))
+            return Result.err(NotFoundError("error.deleteFailed"))
         delete_ids.append(ids[0])
 
     with transaction.atomic():
@@ -345,7 +345,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Blog not found", ulid=ulid)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -355,7 +355,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(ForbiddenError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish)
     if image is not None:
@@ -396,7 +396,7 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
         ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Blog not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("削除に失敗しました!"))
+            return Result.err(NotFoundError("error.deleteFailed"))
         delete_ids.append(ids[0])
 
     with transaction.atomic():
@@ -478,7 +478,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Comic not found", ulid=ulid)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -488,7 +488,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(ForbiddenError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -529,7 +529,7 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
         ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Comic not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("削除に失敗しました!"))
+            return Result.err(NotFoundError("error.deleteFailed"))
         delete_ids.append(ids[0])
 
     with transaction.atomic():
@@ -605,7 +605,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Picture not found", ulid=ulid)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -615,7 +615,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(ForbiddenError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -656,7 +656,7 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindEr
         ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Picture not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("削除に失敗しました!"))
+            return Result.err(NotFoundError("error.deleteFailed"))
         delete_ids.append(ids[0])
 
     with transaction.atomic():
@@ -725,7 +725,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Chat not found", ulid=ulid)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -735,7 +735,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(ForbiddenError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish)
     category_repo = injector.get(CategoryInterface)
@@ -773,7 +773,7 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError
         ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Chat not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("削除に失敗しました!"))
+            return Result.err(NotFoundError("error.deleteFailed"))
         delete_ids.append(ids[0])
 
     message_repo = injector.get(MessageInterface)

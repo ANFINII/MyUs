@@ -105,7 +105,7 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
 
     data = data_ret.ok_value
     if data is None:
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     base = data.user
     avatar = save_upload(avatar_file, ImageUpload.USER, base.ulid) if avatar_file else base.avatar
@@ -152,7 +152,7 @@ def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFil
 
     data = data_ret.ok_value
     if data is None:
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     banner = save_upload(banner_file, ImageUpload.USER, data.user.ulid) if banner_file else data.mypage.banner
 
@@ -181,7 +181,7 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> Result[No
 
     data = data_ret.ok_value
     if data is None:
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     notification = UserNotificationData(
         is_video=input.is_video,
@@ -214,7 +214,7 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        return Result.err(NotFoundError("メディアが見つかりません!"))
+        return Result.err(NotFoundError("error.mediaNotFound"))
 
     like_ret = repo.media_like(user_id, media_type, ids[0])
     if like_ret.is_err:
@@ -234,7 +234,7 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        return Result.err(NotFoundError("コメントが見つかりません!"))
+        return Result.err(NotFoundError("error.commentNotFound"))
 
     like_ret = repo.comment_like(user_id, ids[0])
     if like_ret.is_err:
@@ -262,25 +262,25 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
 
 def profile_check(data: SettingProfileIn) -> str:
     if has_email(data.email):
-        return "メールアドレスの形式が違います!"
+        return "error.emailInvalid"
 
     if has_username(data.username):
-        return "ユーザー名は半角英数字のみ入力できます!"
+        return "error.usernameInvalid"
 
     if has_number(data.last_name):
-        return "姓に数字が含まれております!"
+        return "error.lastNameInvalid"
 
     if has_number(data.first_name):
-        return "名に数字が含まれております!"
+        return "error.firstNameInvalid"
 
     if has_phone(data.phone):
-        return "電話番号の形式が違います!"
+        return "error.phoneInvalid"
 
     if has_postal_code(data.postal_code):
-        return "郵便番号の形式が違います!"
+        return "error.postalCodeInvalid"
 
     if has_birthday(data.year, data.month, data.day):
-        return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
+        return "error.birthdayInvalid"
 
     return ""
 
@@ -290,33 +290,33 @@ def signup_check(data: SignupIn) -> str:
     password2 = data.password2
 
     if has_email(data.email):
-        return "メールアドレスの形式が違います!"
+        return "error.emailInvalid"
 
     if has_username(data.username):
-        return "ユーザー名は半角英数字のみ入力できます!"
+        return "error.usernameInvalid"
 
     if has_number(data.last_name):
-        return "姓に数字が含まれております!"
+        return "error.lastNameInvalid"
 
     if has_number(data.first_name):
-        return "名に数字が含まれております!"
+        return "error.firstNameInvalid"
 
     if has_birthday(int(data.year), int(data.month), int(data.day)):
-        return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
+        return "error.birthdayInvalid"
 
     if password1 != password2:
-        return "パスワードが一致していません!"
+        return "error.passwordMismatch"
 
     if not has_number(password1) and not has_alphabet(password1):
-        return "パスワードは半角8文字以上で英数字を含む必要があります!"
+        return "error.passwordInvalid"
 
     if User.objects.filter(email=data.email).exists():
-        return "メールアドレスは既に登録されています!"
+        return "error.emailTaken"
 
     if User.objects.filter(username=data.username).exists():
-        return "ユーザー名は既に登録されています!"
+        return "error.usernameTaken"
 
     if User.objects.filter(nickname=data.nickname).exists():
-        return "投稿者名は既に登録されています!"
+        return "error.nicknameTaken"
 
     return ""

@@ -155,7 +155,7 @@ class SettingMyPageAPI:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         if has_email(input.email):
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="メールアドレスの形式が違います!")
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailInvalid")
 
         update_ret = update_mypage(user_id, input, banner_file)
         if update_ret.is_err:

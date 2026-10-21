@@ -85,7 +85,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
     count = count_ret.ok_value
     if count >= ADVERTISE_PERSONAL_LIMIT:
         log.error("Advertise limit exceeded", user_id=user_id, count=count)
-        return Result.err(ValidationError("作成に失敗しました!"))
+        return Result.err(ValidationError("error.createFailed"))
 
     user_ret = get_user_data(user_id=user_id)
     if user_ret.is_err:
@@ -94,7 +94,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
     user = user_ret.ok_value
     if user is None:
         log.error("User not found", user_id=user_id)
-        return Result.err(NotFoundError("作成に失敗しました!"))
+        return Result.err(NotFoundError("error.createFailed"))
 
     new_advertise = AdvertiseData(
         id=0,
@@ -144,7 +144,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Advertise not found", ulid=ulid, user_id=user_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -160,7 +160,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
     user = user_ret.ok_value
     if user is None:
         log.error("User not found", user_id=user_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     update_data = replace(obj,
         title=input.title,
@@ -195,7 +195,7 @@ def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, Find
         target = target_ret.ok_value
         if len(target) == 0:
             log.error("Advertise not found", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("削除に失敗しました!"))
+            return Result.err(NotFoundError("error.deleteFailed"))
         ids.extend(target)
 
     delete_ret = repo.bulk_delete(ids)

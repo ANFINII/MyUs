@@ -103,11 +103,11 @@ def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: 
 
     channel = channel_ret.ok_value
     if channel is None:
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(NotFoundError("error.saveFailed"))
 
     if channel.owner_id != user_id:
         log.error("Channel owner mismatch", ulid=ulid, user_id=user_id, owner_id=channel.owner_id)
-        return Result.err(ForbiddenError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("error.saveFailed"))
 
     avatar = save_upload(avatar_file, ImageUpload.CHANNEL, channel.ulid) if avatar_file else channel.avatar
     update_data = replace(channel, avatar=avatar, name=input.name, description=input.description)

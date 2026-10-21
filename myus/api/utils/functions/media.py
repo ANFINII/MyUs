@@ -44,11 +44,11 @@ def validate_uploads(files: list[tuple[UploadedFile | None, UploadType]]) -> Res
         content_type = file.content_type or ""
         if extension not in rule.extensions or not content_type.startswith(rule.content_type_prefix):
             log.warning("Upload rejected: unsupported type", upload_type=upload_type.value, extension=extension, content_type=content_type)
-            return Result.err(ValidationError("対応していないファイル形式です"))
+            return Result.err(ValidationError("error.fileTypeInvalid"))
 
         if file.size is None or file.size > rule.max_size:
             log.warning("Upload rejected: too large", upload_type=upload_type.value, size=file.size)
-            return Result.err(ValidationError("ファイルサイズが大きすぎます"))
+            return Result.err(ValidationError("error.fileTooLarge"))
 
     return Result.ok(None)
 

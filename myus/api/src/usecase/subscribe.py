@@ -46,7 +46,7 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
 
     channel = channel_ret.ok_value
     if channel is None:
-        return Result.err(NotFoundError("チャンネルが見つかりません!"))
+        return Result.err(NotFoundError("error.channelNotFound"))
 
     ids_ret = repo.get_ids(FilterOption(user_id=user_id, channel_id=channel.id), SortOption())
     if ids_ret.is_err:

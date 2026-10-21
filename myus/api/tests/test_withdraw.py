@@ -68,7 +68,7 @@ def test_cancel_failure_keeps_user_active(make_user: Callable[[str], User], fake
     add_subscription(user, "sub_1", SubscriptionStatus.ACTIVE, 9)
     fake_payment.cancel_result = CancelFailed(error=CancelError.NETWORK_ERROR, message="timeout")
 
-    assert withdraw(user) == "解約処理に失敗しました。時間をおいて再度お試しください!"
+    assert withdraw(user) == "error.cancelFailed"
 
     assert is_active(user)
 
@@ -89,7 +89,7 @@ def test_wrong_password_does_not_cancel(make_user: Callable[[str], User], fake_p
     user = make_user("alice")
     add_subscription(user, "sub_1", SubscriptionStatus.ACTIVE, 9)
 
-    assert withdraw(user, "wrong-password") == "パスワードが違います!"
+    assert withdraw(user, "wrong-password") == "error.passwordWrong"
 
     assert fake_payment.canceled_ids == []
     assert is_active(user)
