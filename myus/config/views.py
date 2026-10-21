@@ -24,6 +24,11 @@ def serve_media(request: HttpRequest, path: str) -> HttpResponseBase:
         parsed = _parse_range(range_header, file_size)
         if parsed is not None:
             start, end = parsed
+            if start > end:
+                unsatisfiable = HttpResponse(status=416)
+                unsatisfiable["Content-Range"] = f"bytes */{file_size}"
+                return unsatisfiable
+
             length = end - start + 1
 
             with open(file_path, "rb") as f:
