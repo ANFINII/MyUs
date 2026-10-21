@@ -145,18 +145,14 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
 @Result.shield_exception()
 def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(VideoInterface)
-    delete_ids: list[int] = []
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    for ulid in ulids:
-        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
-        if ids_ret.is_err:
-            return Result.err(ids_ret.err_value)
-
-        ids = ids_ret.ok_value
-        if len(ids) == 0:
-            log.error("Video not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("error.deleteFailed"))
-        delete_ids.append(ids[0])
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Video not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
         delete_ret = repo.bulk_delete(delete_ids)
@@ -271,18 +267,14 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
 @Result.shield_exception()
 def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(MusicInterface)
-    delete_ids: list[int] = []
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    for ulid in ulids:
-        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
-        if ids_ret.is_err:
-            return Result.err(ids_ret.err_value)
-
-        ids = ids_ret.ok_value
-        if len(ids) == 0:
-            log.error("Music not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("error.deleteFailed"))
-        delete_ids.append(ids[0])
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Music not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
         delete_ret = repo.bulk_delete(delete_ids)
@@ -404,18 +396,14 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
 @Result.shield_exception()
 def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(BlogInterface)
-    delete_ids: list[int] = []
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    for ulid in ulids:
-        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
-        if ids_ret.is_err:
-            return Result.err(ids_ret.err_value)
-
-        ids = ids_ret.ok_value
-        if len(ids) == 0:
-            log.error("Blog not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("error.deleteFailed"))
-        delete_ids.append(ids[0])
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Blog not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
         delete_ret = repo.bulk_delete(delete_ids)
@@ -543,18 +531,14 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
 @Result.shield_exception()
 def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(ComicInterface)
-    delete_ids: list[int] = []
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    for ulid in ulids:
-        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
-        if ids_ret.is_err:
-            return Result.err(ids_ret.err_value)
-
-        ids = ids_ret.ok_value
-        if len(ids) == 0:
-            log.error("Comic not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("error.deleteFailed"))
-        delete_ids.append(ids[0])
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Comic not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
         delete_ret = repo.bulk_delete(delete_ids)
@@ -676,18 +660,14 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
 @Result.shield_exception()
 def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(PictureInterface)
-    delete_ids: list[int] = []
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    for ulid in ulids:
-        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
-        if ids_ret.is_err:
-            return Result.err(ids_ret.err_value)
-
-        ids = ids_ret.ok_value
-        if len(ids) == 0:
-            log.error("Picture not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("error.deleteFailed"))
-        delete_ids.append(ids[0])
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Picture not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
         delete_ret = repo.bulk_delete(delete_ids)
@@ -799,18 +779,14 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
 @Result.shield_exception()
 def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(ChatInterface)
-    delete_ids: list[int] = []
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    for ulid in ulids:
-        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
-        if ids_ret.is_err:
-            return Result.err(ids_ret.err_value)
-
-        ids = ids_ret.ok_value
-        if len(ids) == 0:
-            log.error("Chat not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("error.deleteFailed"))
-        delete_ids.append(ids[0])
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Chat not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
 
     message_repo = injector.get(MessageInterface)
     reply_ids: list[int] = []
