@@ -70,7 +70,7 @@ class ColorFormat(coloredlogs.ColoredFormatter):
         if levelname in self.LEVEL_COLORS:
             record.levelname = f"{self.LEVEL_COLORS[levelname]}{levelname}{Color.RESET}"
 
-        result = super().format(record)
+        result: str = super().format(record)
         record.levelname = levelname
         return result
 
@@ -248,6 +248,9 @@ class Log:
                 if tb and tb != "NoneType: None\n":
                     format_msg += f"\nTraceback:\n{tb}"
 
+        if cls._instance is None:
+            return
+
         logger = cls._instance._logger
         if not logger:
             return
@@ -302,7 +305,7 @@ class Log:
 
         if level.upper() in cls.LEVEL_MAP:
             new_level = cls.LEVEL_MAP[level.upper()]
-            if cls._instance._logger:
+            if cls._instance is not None and cls._instance._logger:
                 cls._instance._logger.setLevel(new_level)
                 for handler in cls._instance._logger.handlers:
                     if isinstance(handler, StreamHandler) and not isinstance(handler, FileHandler):

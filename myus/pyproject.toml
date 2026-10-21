@@ -68,6 +68,20 @@ module = ["api.src.adapter.websocket"]
 disallow_subclassing_any = false  # channels の WebsocketConsumer は型情報が無いため継承を許可
 disallow_any_unimported = false   # 同上
 
+[[tool.mypy.overrides]]
+module = ["api.admin"]
+disallow_subclassing_any = false  # import_export の ImportExportModelAdmin は型情報が無いため継承を許可
+disallow_any_unimported = false   # 同上
+
+[[tool.mypy.overrides]]
+module = ["api.modules.logger"]
+disallow_subclassing_any = false  # coloredlogs の ColoredFormatter は型情報が無いため継承を許可
+disallow_any_unimported = false   # 同上
+
+[[tool.mypy.overrides]]
+module = ["wmi"]
+ignore_missing_imports = true     # Windows でだけ使う任意のライブラリ（GPU の検出）
+
 [tool.django-stubs]
 django_settings_module = "config.settings.base"
 

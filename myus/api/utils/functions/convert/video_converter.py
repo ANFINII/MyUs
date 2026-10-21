@@ -5,10 +5,11 @@ import platform
 import shutil
 import subprocess
 import time
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 import psutil
 from api.modules.logger import log
 
@@ -264,7 +265,8 @@ class VideoConverter:
             raise ValueError(f"動画情報取得失敗: {input_path}")
 
         import json
-        return json.loads(result.stdout)
+        metadata: dict[str, Any] = json.loads(result.stdout)
+        return metadata
 
     def _build_command(
         self,
@@ -376,7 +378,7 @@ class VideoConverter:
         output_dir: str,
         profile: OptimizedProfile,
         accelerator: HardwareAccelerator | None = None,
-        progress_callback: Callable[[float], None] | None = None
+        progress_callback: Callable[[str, float], Awaitable[None]] | None = None
     ) -> tuple[str, float, dict]:
         """非同期単一解像度変換（最適化版）"""
 
@@ -436,7 +438,7 @@ class VideoConverter:
         input_path: str,
         output_dir: str,
         resolutions: list[str] | None = None,
-        progress_callback: Callable[[float], None] | None = None
+        progress_callback: Callable[[str, float], Awaitable[None]] | None = None
     ) -> dict:
         """超高速非同期並列変換"""
 
@@ -491,6 +493,7 @@ class VideoConverter:
                 tasks.append(task)
 
         # 並列実行（タイムアウト付き）
+        results: list[tuple[str, float, dict] | BaseException]
         try:
             results = await asyncio.wait_for(
                 asyncio.gather(*tasks, return_exceptions=True),
@@ -501,7 +504,7 @@ class VideoConverter:
             results = []
 
         # 結果集計
-        conversion_stats = {
+        conversion_stats: dict[str, Any] = {
             'resolutions': {},
             'total_time': time.time() - start_time,
             'hardware_used': {},
@@ -509,7 +512,7 @@ class VideoConverter:
         }
 
         for result in results:
-            if isinstance(result, Exception):
+            if isinstance(result, BaseException):
                 conversion_stats['errors'].append(str(result))
             else:
                 resolution, elapsed, stats = result
@@ -645,7 +648,7 @@ class VideoConverter:
         input_path: str,
         output_dir: str,
         resolutions: list[str] | None = None,
-        progress_callback: Callable[[float], None] | None = None
+        progress_callback: Callable[[str, float], Awaitable[None]] | None = None
     ) -> dict:
         """同期インターフェース（後方互換性）"""
         return asyncio.run(self.convert_async(input_path, output_dir, resolutions, progress_callback))
