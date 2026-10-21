@@ -3,7 +3,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.adapter._auth import auth_check
+from api.src.adapter.auth import auth_check
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
