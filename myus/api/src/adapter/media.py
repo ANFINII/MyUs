@@ -646,6 +646,8 @@ class ChatAPI:
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
                     return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
