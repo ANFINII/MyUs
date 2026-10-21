@@ -2,8 +2,8 @@ import stripe
 from datetime import datetime, timezone
 from django.conf import settings
 from api.modules.logger import log
-from api.src.adapter.external.payment.stripe._convert import convert_stripe_event, convert_stripe_params
-from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from api.src.adapter.external.payment.stripe._convert import convert_stripe_event, convert_stripe_params, convert_stripe_subscription, stripe_period_end
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, ProviderSubscriptionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, WebhookVerifyError
@@ -67,8 +67,13 @@ class StripeProvider(PaymentInterface):
             log.error("Stripe cancel error", exc=e)
             return Result.ok(CancelFailed(error=CancelError.PROVIDER_REJECTED, message=str(e)))
 
-        period_end_ts: int = getattr(subscription, "current_period_end", 0)
         return Result.ok(CancelSuccess(
             canceled_at=datetime.now(timezone.utc),
-            period_end=datetime.fromtimestamp(period_end_ts, tz=timezone.utc),
+            period_end=stripe_period_end(subscription),
         ))
+
+    @Result.shield_exception()
+    def get_subscription(self, external_id: str) -> Result[ProviderSubscriptionData, FatalError]:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        subscription = stripe.Subscription.retrieve(external_id)
+        return Result.ok(convert_stripe_subscription(subscription))

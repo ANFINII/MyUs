@@ -1,24 +1,28 @@
 import json
 from dataclasses import asdict, replace
 from datetime import datetime, timezone
+from typing import assert_never
 from django.conf import settings
 from django.db import transaction
 from api.modules.logger import log
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, RedirectUrls, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, ProviderSubscriptionData, RedirectUrls, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
+from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
+from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.src.domain.interface.webhook.inbox.interface import FilterOption as WebhookInboxFilterOption, SortOption as WebhookInboxSortOption, WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
-from api.src.usecase.user import get_user_data
+from api.src.usecase.user import get_user_data, save_user_data
 from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
+from api.utils.enum.user import PlanName
 from api.utils.plan import get_plan
 
 
@@ -42,7 +46,7 @@ def create_checkout(user_id: int, plan_name: str) -> Result[CheckoutResult, Find
         description=plan.description,
         price=Money(amount=plan.price, currency=Currency.JPY),
         payment_type=PaymentType.SUBSCRIPTION,
-        customer=CustomerData(email=user.user.email),
+        customer=CustomerData(user_ulid=user.user.ulid, email=user.user.email),
         redirect=RedirectUrls(
             success_url=f"{settings.FRONTEND_URL}/setting/payment/success",
             cancel_url=f"{settings.FRONTEND_URL}/setting/payment/cancel",
@@ -155,20 +159,14 @@ def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 @Result.shield_exception()
 def dispatch_webhook_inbox(event: WebhookInboxData) -> Result[None, FatalError]:
     match event.event_type:
-        case WebhookEventType.SUBSCRIPTION_CANCELED:
-            ret = update_subscription_canceled(event)
+        case WebhookEventType.SUBSCRIPTION_CREATED | WebhookEventType.SUBSCRIPTION_UPDATED | WebhookEventType.SUBSCRIPTION_CANCELED:
+            ret = update_subscription(event)
         case WebhookEventType.PAYMENT_SUCCEEDED:
             ret = update_transaction_status(event, PaymentStatus.CAPTURED, update_paid_at=True)
         case WebhookEventType.PAYMENT_FAILED:
             ret = update_transaction_status(event, PaymentStatus.FAILED, update_paid_at=False)
         case WebhookEventType.REFUND_ISSUED:
             ret = update_transaction_status(event, PaymentStatus.REFUNDED, update_paid_at=False)
-        case WebhookEventType.SUBSCRIPTION_CREATED:
-            log.info("WebhookInbox SUBSCRIPTION_CREATED noop", external_id=event.external_id)
-            return Result.ok(None)
-        case WebhookEventType.SUBSCRIPTION_UPDATED:
-            log.info("WebhookInbox SUBSCRIPTION_UPDATED noop", external_id=event.external_id)
-            return Result.ok(None)
 
     if ret.is_err:
         return Result.err(ret.err_value)
@@ -208,10 +206,33 @@ def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def update_subscription_canceled(event: WebhookInboxData) -> Result[None, FatalError]:
-    repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(
-        SubscriptionFilterOption(provider=event.provider.value, external_id=event.external_id),
+def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
+    payment = injector.get(PaymentInterface)
+    provider_ret = payment.get_subscription(event.external_id)
+    if provider_ret.is_err:
+        return Result.err(provider_ret.err_value)
+
+    provider_subscription = provider_ret.ok_value
+    if get_plan(provider_subscription.product_code) is None:
+        log.error("Subscription unknown plan", external_id=event.external_id, product_code=provider_subscription.product_code)
+        return Result.ok(None)
+
+    if len(provider_subscription.user_ulid) == 0:
+        log.error("Subscription user_ulid missing", external_id=event.external_id)
+        return Result.ok(None)
+
+    user_ret = get_user_data(ulid=provider_subscription.user_ulid)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    if user is None:
+        log.error("Subscription user not found", external_id=event.external_id, user_ulid=provider_subscription.user_ulid)
+        return Result.ok(None)
+
+    repository = injector.get(SubscriptionInterface)
+    ids_ret = repository.get_ids(
+        SubscriptionFilterOption(provider=provider_subscription.provider.value, external_id=provider_subscription.external_id),
         SubscriptionSortOption(),
         limit=1,
     )
@@ -219,21 +240,68 @@ def update_subscription_canceled(event: WebhookInboxData) -> Result[None, FatalE
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    if len(ids) == 0:
-        log.warning("Subscription not found for cancel", external_id=event.external_id)
-        return Result.ok(None)
+    subscription = SubscriptionData(
+        id=ids[0] if len(ids) > 0 else 0,
+        customer_user_id=user.user.id,
+        seller_id="",
+        provider=provider_subscription.provider,
+        external_id=provider_subscription.external_id,
+        product_code=provider_subscription.product_code,
+        price=provider_subscription.price,
+        status=provider_subscription.status,
+        started_at=provider_subscription.started_at,
+        current_period_end=provider_subscription.current_period_end,
+        canceled_at=provider_subscription.canceled_at,
+    )
+    subscription_ret = save_subscription_data(subscription)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
 
-    subs_ret = repo.bulk_get(ids)
-    if subs_ret.is_err:
-        return Result.err(subs_ret.err_value)
+    user_plan_ret = update_user_plan(user, provider_subscription)
+    if user_plan_ret.is_err:
+        return Result.err(user_plan_ret.err_value)
 
-    subs = subs_ret.ok_value
-    updated = replace(subs[0], status=SubscriptionStatus.CANCELED, canceled_at=event.occurred_at)
-    save_ret = repo.bulk_save([updated])
-    if save_ret.is_err:
-        return Result.err(save_ret.err_value)
+    log.info("Subscription updated", external_id=event.external_id, status=provider_subscription.status.value)
+    return Result.ok(None)
 
-    log.info("Subscription canceled", external_id=event.external_id)
+
+@Result.shield_exception()
+def save_subscription_data(data: SubscriptionData) -> Result[None, FatalError]:
+    repository = injector.get(SubscriptionInterface)
+    ret = repository.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscriptionData) -> Result[None, FatalError]:
+    match provider_subscription.status:
+        case SubscriptionStatus.ACTIVE | SubscriptionStatus.PAST_DUE:
+            user_plan = replace(
+                user.user_plan,
+                plan=provider_subscription.product_code,
+                customer_id=provider_subscription.customer_id,
+                subscription=provider_subscription.external_id,
+                is_paid=True,
+                start_date=provider_subscription.started_at,
+                end_date=provider_subscription.current_period_end,
+            )
+        case SubscriptionStatus.CANCELED | SubscriptionStatus.EXPIRED:
+            if user.user_plan.subscription != provider_subscription.external_id:
+                return Result.ok(None)
+
+            user_plan = replace(user.user_plan, plan=PlanName.FREE, is_paid=False, end_date=provider_subscription.current_period_end)
+        case SubscriptionStatus.INCOMPLETE:
+            return Result.ok(None)
+        case _:
+            assert_never(provider_subscription.status)
+
+    ret = save_user_data(replace(user, user_plan=user_plan))
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
     return Result.ok(None)
 
 

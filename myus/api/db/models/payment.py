@@ -29,9 +29,11 @@ class Subscription(models.Model):
     class Meta:
         db_table = "subscription"
         verbose_name_plural = "001 Subscription"
+        constraints = [
+            models.UniqueConstraint(fields=["provider", "external_id"], name="subscription_provider_external_uniq"),
+        ]
         indexes = [
             models.Index(fields=["customer", "status"], name="customer_status_idx"),
-            models.Index(fields=["provider", "external_id"], name="provider_external_idx"),
         ]
 
 

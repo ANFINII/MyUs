@@ -3,7 +3,7 @@ from datetime import datetime
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.utils.enum.i18n import Locale
-from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
 
 
 @dataclass(frozen=True, slots=True)
@@ -14,6 +14,7 @@ class MarketplaceData:
 
 @dataclass(frozen=True, slots=True)
 class CustomerData:
+    user_ulid: str
     email: str
 
 
@@ -83,3 +84,17 @@ class CancelFailed:
 
 
 type CancelResult = CancelSuccess | CancelFailed
+
+
+@dataclass(frozen=True, slots=True)
+class ProviderSubscriptionData:
+    provider: PaymentProvider
+    external_id: str
+    customer_id: str
+    user_ulid: str
+    product_code: str
+    price: Money
+    status: SubscriptionStatus
+    started_at: datetime
+    current_period_end: datetime
+    canceled_at: datetime
