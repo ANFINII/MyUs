@@ -2,7 +2,7 @@ from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Music
 from api.src.domain.entity.media.music._convert import convert_data, marshal_data
-from api.src.domain.entity.index import save_models, sort_ids
+from api.src.domain.entity.index import insert_new_models, sort_ids
 from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.music.interface import MusicInterface
@@ -41,7 +41,13 @@ class MusicRepository(MusicInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = save_models(models, MUSIC_FIELDS)
+        new_ids = insert_new_models(models)
+
+        Music.objects.bulk_create(
+            models,
+            update_conflicts=True,
+            update_fields=MUSIC_FIELDS,
+        )
 
         return Result.ok(new_ids)
 

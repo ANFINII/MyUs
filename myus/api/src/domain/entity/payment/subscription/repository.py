@@ -1,6 +1,6 @@
 from django.db.models import Q
 from api.db.models.payment import Subscription
-from api.src.domain.entity.index import save_models, sort_ids
+from api.src.domain.entity.index import insert_new_models, sort_ids
 from api.src.domain.entity.payment.subscription._convert import convert_data, marshal_data
 from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption, SortOption, SubscriptionInterface
@@ -45,6 +45,12 @@ class SubscriptionRepository(SubscriptionInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = save_models(models, SUBSCRIPTION_FIELDS)
+        new_ids = insert_new_models(models)
+
+        Subscription.objects.bulk_create(
+            models,
+            update_conflicts=True,
+            update_fields=SUBSCRIPTION_FIELDS,
+        )
 
         return Result.ok(new_ids)

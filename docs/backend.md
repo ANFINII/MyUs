@@ -183,10 +183,22 @@ if ret.is_err:
 - `marshal_data`: dataclass → Django ORM
 
 ### bulk操作
-- `bulk_save`は`save_models(models, UPDATE_FIELDS)`（`api/src/domain/entity/index.py`）で保存し、新しく振られたIDを返す
-  - idが未設定（`pk is None`）の行は`save()`でINSERTし、IDはDBの自動採番に任せる
-  - idがある行は`bulk_create(update_conflicts=True)`でupsertする
+- `bulk_save`: upsert（`bulk_create(update_conflicts=True)`）
+- `insert_new_models`（`api/src/domain/entity/index.py`）でid未設定（`pk is None`）の行を先にINSERTし、新しく振られたIDを返す。IDはDBの自動採番に任せる
 - IDを事前に採番しない（`ALTER TABLE ... AUTO_INCREMENT`はMySQLで暗黙にCOMMITされ、`transaction.atomic()`のロールバックが効かなくなるため）
+
+```python
+models = [marshal_data(o) for o in objs]
+new_ids = insert_new_models(models)
+
+Follow.objects.bulk_create(
+    models,
+    update_conflicts=True,
+    update_fields=FOLLOW_FIELDS,
+)
+
+return Result.ok(new_ids)
+```
 
 ## 層の責務
 
