@@ -18,7 +18,7 @@ from api.utils.enum.notification import NotificationObjectType, NotificationType
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository, save_upload, validate_uploads
-from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
+from api.utils.functions.validation import PASSWORD_MIN_LENGTH, has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
 @Result.shield_exception()
@@ -307,7 +307,7 @@ def signup_check(data: SignupIn) -> str:
     if password1 != password2:
         return "error.passwordMismatch"
 
-    if not has_number(password1) and not has_alphabet(password1):
+    if len(password1) < PASSWORD_MIN_LENGTH or not has_number(password1) or not has_alphabet(password1):
         return "error.passwordInvalid"
 
     if User.objects.filter(email=data.email).exists():

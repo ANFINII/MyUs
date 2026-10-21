@@ -25,7 +25,7 @@ from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.payment import CancelError
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import access_token, password_fingerprint, password_reset_token, refresh_token, signup_token
-from api.utils.functions.validation import has_email
+from api.utils.functions.validation import PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, has_email
 
 
 @Result.shield_exception()
@@ -270,10 +270,6 @@ def signup_user(input: SignupIn) -> Result[None, FatalError]:
             return Result.err(channel_ret.err_value)
 
     return Result.ok(None)
-
-
-PASSWORD_MIN_LENGTH = 8
-PASSWORD_MAX_LENGTH = 16
 
 
 @Result.shield_exception()
