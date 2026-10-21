@@ -68,6 +68,6 @@ class AdvertiseRepository(AdvertiseInterface):
         return Result.ok(Advertise.objects.filter(*_filter_q_list(filter)).count())
 
     @Result.shield_exception()
-    def increment_read(self, media_id: int) -> Result[int, FatalError]:
+    def save_read(self, media_id: int) -> Result[int, FatalError]:
         Advertise.objects.filter(id=media_id).update(read=F("read") + 1)
         return Result.ok(Advertise.objects.values_list("read", flat=True).get(id=media_id))

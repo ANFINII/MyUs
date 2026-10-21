@@ -188,7 +188,7 @@ if ret.is_err:
   - 新しく振られたIDを返す。INSERTとupsertは`get_save_new_ids`の中で`transaction.atomic()`に入る
   - 関連テーブルなどと一緒に保存するときは、`get_save_new_ids`と関連テーブルの保存を`transaction.atomic()`で包む
 - upsertの`update_fields`（`XXX_FIELDS`）
-  - 閲覧数・件数などのカウンタは入れない（読み込んだ時点の古い値で上書きしてしまうため）。カウンタは`increment_read`（`F("read") + 1`）や`save_count`のような専用のメソッドで、その項目だけを`QuerySet.update()`で書く
+  - 閲覧数・件数などのカウンタは入れない（読み込んだ時点の古い値で上書きしてしまうため）。カウンタは`save_read`（`F("read") + 1`）や`save_count`のような専用のメソッドで、その項目だけを`QuerySet.update()`で書く
   - `updated`（`auto_now=True`）は入れる（入れないと、編集しても更新日が変わらない）
 - IDを事前に採番しない（`ALTER TABLE ... AUTO_INCREMENT`はMySQLで暗黙にCOMMITされ、`transaction.atomic()`のロールバックが効かなくなるため）
 

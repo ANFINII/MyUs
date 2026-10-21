@@ -1077,7 +1077,7 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
         if not is_accessed:
             return Result.ok(obj.read)
 
-        read_ret = repository.increment_read(obj.id)
+        read_ret = repository.save_read(obj.id)
         if read_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(read_ret.err_value)
