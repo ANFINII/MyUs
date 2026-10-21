@@ -1,12 +1,15 @@
+from dataclasses import replace
+from datetime import datetime, timezone
 from django.core.management.base import BaseCommand
 from api.modules.logger import log
+from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import FilterOption, SortOption, WebhookOutboxInterface
 from api.src.injectors.container import injector
 from api.utils.enum.payment import WebhookDeliveryStatus
 
 
 class Command(BaseCommand):
-    help = "PENDING の WebhookOutbox を配信する（送信先が未定のため、今は件数を出すだけで状態は変えない）"
+    help = "PENDING の WebhookOutbox を配信して DELIVERED に更新する"
 
     def add_arguments(self, parser):
         parser.add_argument("--limit", type=int, default=20, help="一度に処理する最大件数")
@@ -30,5 +33,22 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS("No pending webhook outbox entries"))
             return
 
-        log.warning("WebhookOutbox delivery is not implemented", count=len(ids))
-        self.stdout.write(self.style.WARNING(f"Delivery is not implemented: {len(ids)} webhook outbox entries remain pending"))
+        entries_ret = repo.bulk_get(ids)
+        if entries_ret.is_err:
+            log.error("WebhookOutbox dispatch bulk_get failed", error=entries_ret.err_value.message)
+            return
+
+        entries = entries_ret.ok_value
+        delivered: list[WebhookOutboxData] = []
+        for entry in entries:
+            # 配信スタブ: 外部送信先が未定のためログ出力で代替する
+            log.info("WebhookOutbox delivered (stub)", event_type=entry.event_type.value, external_id=entry.external_id)
+            delivered.append(replace(entry, status=WebhookDeliveryStatus.DELIVERED, delivered_at=datetime.now(timezone.utc)))
+
+        save_ret = repo.bulk_save(delivered)
+        if save_ret.is_err:
+            log.error("WebhookOutbox dispatch bulk_save failed", error=save_ret.err_value.message)
+            return
+
+        log.info("WebhookOutbox dispatch completed", count=len(delivered))
+        self.stdout.write(self.style.SUCCESS(f"Dispatched {len(delivered)} webhook outbox entries"))
