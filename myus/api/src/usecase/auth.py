@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
+from django.db import transaction
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from api.modules.logger import log
@@ -214,25 +215,28 @@ def signup_user(input: SignupIn) -> Result[None, FatalError]:
     )
 
     repo = injector.get(UserInterface)
-    user_ret = repo.bulk_save(objs=[user_data])
-    if user_ret.is_err:
-        return Result.err(user_ret.err_value)
-
-    user_ids = user_ret.ok_value
     channel_repo = injector.get(ChannelInterface)
-    channel_ret = channel_repo.bulk_save([ChannelData(
-        id=0,
-        ulid=str(ulid.new()),
-        owner_id=user_ids[0],
-        owner_ulid="",
-        avatar="",
-        name=input.nickname,
-        description="",
-        is_default=True,
-        count=0,
-    )])
-    if channel_ret.is_err:
-        log.error("Default channel create error", error=channel_ret.err_value.error_message, user_id=user_ids[0])
+    with transaction.atomic():
+        user_ret = repo.bulk_save(objs=[user_data])
+        if user_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(user_ret.err_value)
+
+        user_ids = user_ret.ok_value
+        channel_ret = channel_repo.bulk_save([ChannelData(
+            id=0,
+            ulid=str(ulid.new()),
+            owner_id=user_ids[0],
+            owner_ulid="",
+            avatar="",
+            name=input.nickname,
+            description="",
+            is_default=True,
+            count=0,
+        )])
+        if channel_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(channel_ret.err_value)
 
     return Result.ok(None)
 
