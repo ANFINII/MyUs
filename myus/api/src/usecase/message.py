@@ -11,7 +11,7 @@ from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
 from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_author_data, get_author_data_map
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
+from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
 
@@ -110,7 +110,7 @@ def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
 
 
 @Result.shield_exception()
-def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> Result[MessageDTO, NotFoundError | FatalError]:
+def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> Result[MessageDTO, FindError]:
     chat_repo = injector.get(ChatInterface)
     chat_ids_ret = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if chat_ids_ret.is_err:
@@ -189,7 +189,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
 
 @Result.shield_exception()
-def update_message(user_id: int, message_ulid: str, text: str) -> Result[MessageDTO, NotFoundError | ForbiddenError | FatalError]:
+def update_message(user_id: int, message_ulid: str, text: str) -> Result[MessageDTO, AccessError]:
     message_ret = get_message_data(message_ulid)
     if message_ret.is_err:
         return Result.err(message_ret.err_value)
@@ -223,7 +223,7 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[Message
 
 
 @Result.shield_exception()
-def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError | ForbiddenError | FatalError]:
+def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
     message_ret = get_message_data(message_ulid)
     if message_ret.is_err:
         return Result.err(message_ret.err_value)

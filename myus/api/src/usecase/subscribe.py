@@ -7,7 +7,7 @@ from api.src.domain.interface.subscribe.interface import FilterOption, SortOptio
 from api.src.injectors.container import injector
 from api.src.types.dto.subscribe import SubscribeDTO
 from api.src.usecase.channel import get_channel_data
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 
 
 @Result.shield_exception()
@@ -37,7 +37,7 @@ def get_subscribe_channels(user_id: int) -> Result[list[ChannelData], FatalError
 
 
 @Result.shield_exception()
-def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Result[SubscribeDTO, NotFoundError | FatalError]:
+def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Result[SubscribeDTO, FindError]:
     channel_repo = injector.get(ChannelInterface)
     subscribe_repo = injector.get(SubscribeInterface)
     channel_ret = get_channel_data(channel_ulid)

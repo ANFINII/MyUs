@@ -16,14 +16,14 @@ from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInter
 from api.src.injectors.container import injector
 from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
 from api.src.usecase.user import get_user_data
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
 from api.utils.plan import get_plan
 
 
 @Result.shield_exception()
-def create_checkout(user_id: int, plan_name: str) -> Result[CheckoutResult, NotFoundError | FatalError]:
+def create_checkout(user_id: int, plan_name: str) -> Result[CheckoutResult, FindError]:
     user_ret = get_user_data(user_id=user_id)
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
@@ -72,7 +72,7 @@ def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult
 
 
 @Result.shield_exception()
-def cancel_subscription(user_id: int) -> Result[CancelResult, NotFoundError | FatalError]:
+def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
     repository = injector.get(SubscriptionInterface)
     ids_ret = repository.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False), limit=1)
     if ids_ret.is_err:

@@ -10,7 +10,7 @@ from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.notification import create_notification, delete_object_notifications
 from api.src.usecase.user import get_author_data, get_author_data_map
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
+from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.media import get_media_repository
@@ -109,7 +109,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 
 
 @Result.shield_exception()
-def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, NotFoundError | FatalError]:
+def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, FindError]:
     comment_repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
     media_ids_ret = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
@@ -191,7 +191,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, N
 
 
 @Result.shield_exception()
-def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, AccessError]:
     comment_ret = get_comment_data(comment_ulid)
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
@@ -212,7 +212,7 @@ def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, N
 
 
 @Result.shield_exception()
-def delete_comment(user_id: int, comment_ulid: str) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def delete_comment(user_id: int, comment_ulid: str) -> Result[None, AccessError]:
     comment_ret = get_comment_data(comment_ulid)
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)

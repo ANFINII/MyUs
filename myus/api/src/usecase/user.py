@@ -12,7 +12,7 @@ from api.src.types.dto.user import AuthorDTO, LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.src.usecase.notification import create_notification
-from api.utils.common.result import FatalError, NotFoundError, Result, ValidationError
+from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
@@ -94,7 +94,7 @@ def get_author_data_map(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalErr
 
 
 @Result.shield_exception()
-def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> Result[None, NotFoundError | ValidationError | FatalError]:
+def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> Result[None, InputError]:
     upload_ret = validate_uploads([(avatar_file, ImageUpload.USER)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -141,7 +141,7 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
 
 
 @Result.shield_exception()
-def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFile) -> Result[None, NotFoundError | ValidationError | FatalError]:
+def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFile) -> Result[None, InputError]:
     upload_ret = validate_uploads([(banner_file, ImageUpload.USER)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -174,7 +174,7 @@ def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFil
 
 
 @Result.shield_exception()
-def update_notification(user_id: int, input: SettingNotificationIn) -> Result[None, NotFoundError | FatalError]:
+def update_notification(user_id: int, input: SettingNotificationIn) -> Result[None, FindError]:
     data_ret = get_user_data(user_id)
     if data_ret.is_err:
         return Result.err(data_ret.err_value)
@@ -205,7 +205,7 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> Result[No
 
 
 @Result.shield_exception()
-def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO, NotFoundError | FatalError]:
+def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO, FindError]:
     repository = injector.get(UserInterface)
     media_repo = get_media_repository(media_type)
     ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
@@ -225,7 +225,7 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO
 
 
 @Result.shield_exception()
-def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, NotFoundError | FatalError]:
+def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
     repository = injector.get(UserInterface)
     comment_repo = injector.get(CommentInterface)
     ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
