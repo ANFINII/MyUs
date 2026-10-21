@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.db.models.query import QuerySet
 from api.db.models.message import Message
 from api.src.domain.entity.index import get_save_new_ids, sort_ids
@@ -13,7 +13,8 @@ MESSAGE_FIELDS = ["author_id", "chat_id", "parent_id", "text", "updated"]
 
 class MessageRepository(MessageInterface):
     def queryset(self) -> QuerySet[Message]:
-        return Message.objects.select_related("author", "chat", "parent")
+        qs: QuerySet[Message] = Message.objects.select_related("author", "chat", "parent").annotate(reply_count=Count("reply"))
+        return qs
 
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
