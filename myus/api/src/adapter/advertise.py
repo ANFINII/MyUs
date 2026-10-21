@@ -7,6 +7,7 @@ from api.src.types.schema.advertise import AdvertiseListOut, AdvertiseOut, Adver
 from api.src.types.schema.common import ErrorOut
 from api.src.usecase.advertise import get_user_advertises, increment_advertise_read
 from api.utils.common.result import FatalError, NotFoundError
+from api.utils.functions.index import get_client_ip
 
 
 class AdvertiseAPI:
@@ -31,7 +32,7 @@ class AdvertiseAPI:
     def post_read(request: HttpRequest, ulid: str):
         log.info("AdvertiseAPI post_read", ulid=ulid)
 
-        ret = increment_advertise_read(ulid)
+        ret = increment_advertise_read(ulid, get_client_ip(request))
         if ret.is_err:
             match ret.err_value:
                 case NotFoundError():

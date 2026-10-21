@@ -5,23 +5,23 @@ from api.src.domain.interface.access_log.data import AccessLogData
 from api.src.domain.interface.access_log.interface import AccessLogInterface, FilterOption, SortOption
 from api.src.injectors.container import injector
 from api.utils.common.result import FatalError, Result
-from api.utils.enum.media import MediaType
+from api.utils.enum.access_log import AccessType
 
 
 ACCESS_INTERVAL = timedelta(hours=2)
 
 
 @Result.shield_exception()
-def record_access(ip_address: str, media_type: MediaType, media_id: int) -> Result[bool, FatalError]:
+def record_access(ip_address: str, access_type: AccessType, type_id: int) -> Result[bool, FatalError]:
     repo = injector.get(AccessLogInterface)
     now = timezone.now()
-    ids_ret = repo.get_ids(FilterOption(ip_address=ip_address, type=media_type, type_id=media_id), SortOption(), limit=1)
+    ids_ret = repo.get_ids(FilterOption(ip_address=ip_address, type=access_type, type_id=type_id), SortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        create_ret = repo.bulk_save([AccessLogData(id=0, ip_address=ip_address, type=media_type, type_id=media_id, updated=now)])
+        create_ret = repo.bulk_save([AccessLogData(id=0, ip_address=ip_address, type=access_type, type_id=type_id, updated=now)])
         if create_ret.is_err:
             return Result.err(create_ret.err_value)
 

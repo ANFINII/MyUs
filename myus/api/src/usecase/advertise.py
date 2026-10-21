@@ -1,14 +1,17 @@
 import random
 from dataclasses import replace
 from datetime import date
+from django.db import transaction
 from django.utils import timezone
 from api.modules.logger import log
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.injectors.container import injector
+from api.src.usecase.access_log import record_access
 from api.src.usecase.user import get_user_data
 from api.utils.common.result import FatalError, FindError, NotFoundError, Result
+from api.utils.enum.access_log import AccessType
 from api.utils.functions.index import create_url
 from api.utils.plan import get_plan
 
@@ -54,7 +57,7 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
 
 
 @Result.shield_exception()
-def increment_advertise_read(ulid: str) -> Result[int, FindError]:
+def increment_advertise_read(ulid: str, ip_address: str) -> Result[int, FindError]:
     repo = injector.get(AdvertiseInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -65,11 +68,29 @@ def increment_advertise_read(ulid: str) -> Result[int, FindError]:
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    read_ret = repo.save_read(ids[0])
-    if read_ret.is_err:
-        return Result.err(read_ret.err_value)
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
 
-    read = read_ret.ok_value
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    with transaction.atomic():
+        access_ret = record_access(ip_address, AccessType.ADVERTISE, obj.id)
+        if access_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(access_ret.err_value)
+
+        is_accessed = access_ret.ok_value
+        if not is_accessed:
+            return Result.ok(obj.read)
+
+        read_ret = repo.save_read(obj.id)
+        if read_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(read_ret.err_value)
+
+        read = read_ret.ok_value
+
     return Result.ok(read)
 
 
