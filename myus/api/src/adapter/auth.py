@@ -147,17 +147,13 @@ class AuthAPI:
         return 200, None
 
     @staticmethod
-    @router.post("/logout", response={200: None, 500: ErrorOut})
+    @router.post("/logout", response={200: None})
     def logout(request: HttpRequest, response: HttpResponse):
         log.info("AuthAPI logout")
 
-        try:
-            response.delete_cookie("access_token")
-            response.delete_cookie("refresh_token")
-            return 200, None
-        except Exception:
-            log.error("Logout error")
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.logoutFailed")
+        response.delete_cookie("access_token")
+        response.delete_cookie("refresh_token")
+        return 200, None
 
     @staticmethod
     @router.post("/password/change", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
