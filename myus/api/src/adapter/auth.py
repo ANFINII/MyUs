@@ -72,7 +72,7 @@ class AuthAPI:
     @staticmethod
     @router.post("/signup/email", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut}, throttle=MailThrottle("5/10m"))
     def signup_email(request: HttpRequest, input: SignupEmailIn):
-        log.info("AuthAPI signup_email", email=input.email)
+        log.info("AuthAPI signup_email")
 
         ret = signup_send_email(input.email)
         if ret.is_err:
@@ -98,7 +98,7 @@ class AuthAPI:
     @staticmethod
     @router.post("/signup", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def signup(request: HttpRequest, input: SignupIn):
-        log.info("AuthAPI signup", email=input.email, username=input.username)
+        log.info("AuthAPI signup", username=input.username)
 
         token_email = signup_verify_token(input.token)
         if token_email is None:
@@ -106,7 +106,7 @@ class AuthAPI:
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.linkExpired")
 
         if token_email != input.email:
-            log.warning("Signup email mismatch", token_email=token_email, input_email=input.email)
+            log.warning("Signup email mismatch")
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailMismatch")
 
         message = signup_check(input)
@@ -197,7 +197,7 @@ class AuthAPI:
     @staticmethod
     @router.post("/password/reset/email", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut}, throttle=MailThrottle("5/10m"))
     def password_reset_email(request: HttpRequest, input: PasswordResetEmailIn):
-        log.info("AuthAPI password_reset_email", email=input.email)
+        log.info("AuthAPI password_reset_email")
 
         ret = password_reset_send_email(input.email)
         if ret.is_err:

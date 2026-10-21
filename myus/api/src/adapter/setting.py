@@ -65,7 +65,7 @@ class SettingProfileAPI:
     @staticmethod
     @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
-        log.info("SettingProfileAPI put", input=input)
+        log.info("SettingProfileAPI put")
 
         message = profile_check(input)
         if len(message) > 0:
@@ -144,7 +144,7 @@ class SettingMyPageAPI:
     @staticmethod
     @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner_file: UploadedFile = File(None)):
-        log.info("SettingMyPageAPI put", input=input)
+        log.info("SettingMyPageAPI put")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
