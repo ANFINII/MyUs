@@ -17,7 +17,7 @@ class PaymentAPI:
     router = Router()
 
     @staticmethod
-    @router.post("/checkout", response={200: PaymentCheckoutOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("/checkout", response={200: PaymentCheckoutOut, 400: ErrorOut, 500: ErrorOut})
     def checkout(request: HttpRequest, input: PaymentCheckoutIn):
         log.info("PaymentAPI checkout", plan=input.plan)
 
@@ -27,13 +27,13 @@ class PaymentAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         checkout_ret = create_checkout(user_id, input.plan)
         if checkout_ret.is_err:
             match checkout_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=checkout_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=checkout_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -79,7 +79,7 @@ class PaymentAPI:
                 return 200, PaymentWebhookOut(message="OK")
 
     @staticmethod
-    @router.post("/cancel", response={200: PaymentCancelOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("/cancel", response={200: PaymentCancelOut, 400: ErrorOut, 500: ErrorOut})
     def cancel(request: HttpRequest):
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -87,13 +87,13 @@ class PaymentAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         cancel_ret = cancel_subscription(user_id)
         if cancel_ret.is_err:
             match cancel_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=cancel_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=cancel_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
