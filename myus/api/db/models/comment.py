@@ -12,7 +12,7 @@ class Comment(models.Model):
     parent    = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", null=True)
     type_no   = models.IntegerField()
     type_name = models.CharField(max_length=7)
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveBigIntegerField()
     text      = models.TextField()
     like      = models.ManyToManyField(User, related_name="comment_like", blank=True)
     deleted   = models.BooleanField(default=False)
