@@ -12,6 +12,14 @@ export enum FetchError {
   Delete = 'fetchError.delete',
 }
 
+export enum ErrorType {
+  Unauthenticated = 'UNAUTHENTICATED',
+  Forbidden = 'FORBIDDEN',
+  NotFound = 'NOT_FOUND',
+  Validation = 'VALIDATION',
+  Internal = 'INTERNAL',
+}
+
 export enum GenderType {
   Male = 'Male',
   Female = 'Female',

@@ -121,6 +121,7 @@ page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
 - `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
 - `QueryCheck`のpropsは`title` → `queries` → `fresh`の順に書く
+- エラー時の画面は`Status/Check`が`ApiError.type`（BEの`ErrorOut.type`）で出し分ける。`status`を見るのは、500画面の判定（nginx等が返したエラー・ネットワークエラーは`type`を持たない）と再試行（`shouldRetry`）だけにする
 
 ```typescript
 export default function ManageVideoEditPage(): React.JSX.Element {
