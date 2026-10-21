@@ -6,9 +6,9 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption, SortType
 from api.src.injectors.container import injector
 from api.src.types.schema.channel import ChannelIn
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidationError
 from api.utils.enum.upload import ImageUpload
-from api.utils.functions.media import save_upload
+from api.utils.functions.media import save_upload, validate_uploads
 
 
 @Result.shield_exception()
@@ -63,7 +63,11 @@ def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
 
 
 @Result.shield_exception()
-def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFile) -> Result[str, FatalError]:
+def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFile) -> Result[str, ValidationError | FatalError]:
+    upload_ret = validate_uploads([(avatar_file, ImageUpload.CHANNEL)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     repository = injector.get(ChannelInterface)
     new_ulid = str(ulid.new())
     avatar = save_upload(avatar_file, ImageUpload.CHANNEL, new_ulid) if avatar_file else ""
@@ -88,7 +92,11 @@ def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFil
 
 
 @Result.shield_exception()
-def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: UploadedFile) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: UploadedFile) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(avatar_file, ImageUpload.CHANNEL)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     channel_ret = get_channel_data(ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)

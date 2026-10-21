@@ -90,10 +90,12 @@ class ManageVideoAPI:
         update_ret = update_manage_video(user_id, ulid, input, image)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -194,10 +196,10 @@ class ManageMusicAPI:
         update_ret = update_manage_music(user_id, ulid, input)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -298,10 +300,12 @@ class ManageBlogAPI:
         update_ret = update_manage_blog(user_id, ulid, input, image)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -402,10 +406,12 @@ class ManageComicAPI:
         update_ret = update_manage_comic(user_id, ulid, input, image)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -506,10 +512,12 @@ class ManagePictureAPI:
         update_ret = update_manage_picture(user_id, ulid, input, image)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -610,10 +618,10 @@ class ManageChatAPI:
         update_ret = update_manage_chat(user_id, ulid, input)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -714,10 +722,10 @@ class ManageAdvertiseAPI:
         create_ret = create_manage_advertise(user_id, input, image, video)
         if create_ret.is_err:
             match create_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=create_ret.err_value.error_message)
                 case ValidationError():
                     return 400, ErrorOut(message=create_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=create_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -742,6 +750,8 @@ class ManageAdvertiseAPI:
         update_ret = update_manage_advertise(user_id, ulid, input, image, video)
         if update_ret.is_err:
             match update_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case NotFoundError():
                     return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():

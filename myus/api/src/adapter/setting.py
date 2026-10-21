@@ -6,7 +6,7 @@ from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.user import get_user_data, profile_check, update_mypage, update_notification, update_profile
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, NotFoundError, ValidationError
 from api.utils.functions.index import create_url
 from api.utils.functions.validation import has_email
 
@@ -82,6 +82,8 @@ class SettingProfileAPI:
         update_ret = update_profile(user_id, input, avatar_file)
         if update_ret.is_err:
             match update_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case NotFoundError():
                     return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
@@ -157,6 +159,8 @@ class SettingMyPageAPI:
         update_ret = update_mypage(user_id, input, banner_file)
         if update_ret.is_err:
             match update_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case NotFoundError():
                     return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():

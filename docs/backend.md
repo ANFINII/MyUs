@@ -98,26 +98,29 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 
 | エラー型 | 使う条件 | HTTPステータス | message |
 |---|---|---|---|
-| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `error_message` |
-| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | 403 | `error_message` |
-| `ValidationError` | 入力や業務ルールに反する（上限超過等） | 400 | `error_message` |
+| `ValidationError` | 入力や業務ルールに反する（上限超過・ファイル形式等） | 400 | `error_message` |
 | `UnauthorizedError` | 認証されていない | 401 | `"Unauthorized"` |
+| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | 403 | `error_message` |
+| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `error_message` |
 | `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `"Internal Server Error"`固定 |
 
 ### adapter
 - `FatalError`以外のエラー型も返すusecaseは、`match` + `assert_never`でエラー型ごとにステータスを決める（`isinstance`で分岐しない）
 - usecaseに新しいエラー型が追加されたとき、adapterの対応漏れを`assert_never`でmypyが検出する
 - `Result[T, FatalError]`だけを返すusecaseは`if ret.is_err: return 500, ...`のままでよい
+- `case`はHTTPステータスの番号が小さい順に並べ、最後を`case _: assert_never(...)`にする
 - BEにしか表示されないメッセージ（500など）は英語にする
 
 ```python
-ret = update_manage_video(user_id, ulid, input)
+ret = update_manage_video(user_id, ulid, input, image)
 if ret.is_err:
     match ret.err_value:
-        case NotFoundError():
-            return 404, ErrorOut(message=ret.err_value.error_message)
+        case ValidationError():
+            return 400, ErrorOut(message=ret.err_value.error_message)
         case ForbiddenError():
             return 403, ErrorOut(message=ret.err_value.error_message)
+        case NotFoundError():
+            return 404, ErrorOut(message=ret.err_value.error_message)
         case FatalError():
             return 500, ErrorOut(message="Internal Server Error")
         case _:

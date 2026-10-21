@@ -116,10 +116,10 @@ class MessageAPI:
             update_ret = update_message(user_id, message_ulid, input.text)
             if update_ret.is_err:
                 match update_ret.err_value:
-                    case NotFoundError():
-                        return 404, ErrorOut(message=update_ret.err_value.error_message)
                     case ForbiddenError():
                         return 403, ErrorOut(message=update_ret.err_value.error_message)
+                    case NotFoundError():
+                        return 404, ErrorOut(message=update_ret.err_value.error_message)
                     case FatalError():
                         return 500, ErrorOut(message="Internal Server Error")
                     case _:
@@ -149,10 +149,10 @@ class MessageAPI:
             delete_ret = delete_message(user_id, message_ulid)
             if delete_ret.is_err:
                 match delete_ret.err_value:
-                    case NotFoundError():
-                        return 404, ErrorOut(message=delete_ret.err_value.error_message)
                     case ForbiddenError():
                         return 403, ErrorOut(message=delete_ret.err_value.error_message)
+                    case NotFoundError():
+                        return 404, ErrorOut(message=delete_ret.err_value.error_message)
                     case FatalError():
                         return 500, ErrorOut(message="Internal Server Error")
                     case _:

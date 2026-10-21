@@ -173,8 +173,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # File upload size limits
 FILE_UPLOAD_PERMISSIONS = 0o644
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024 * 1024  # 5GB (メモリ上でのファイルサイズ上限)
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024 * 1024  # 5GB (POSTデータの上限)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024  # 50MB (ファイル以外のPOSTデータの上限。ブログ本文にbase64の画像が入るため)
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240  # フォームフィールドの最大数
 
 # Stripe API keys

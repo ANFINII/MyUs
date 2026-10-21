@@ -31,7 +31,7 @@ from api.src.usecase.media import create_video, create_music, create_blog, creat
 from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from api.src.usecase.media import increment_media_read
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 
 
 class HomeAPI:
@@ -114,10 +114,12 @@ class VideoAPI:
         obj_ret = create_video(user_id=user_id, input=input, image=image, video=video)
         if obj_ret.is_err:
             match obj_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -217,10 +219,12 @@ class MusicAPI:
         obj_ret = create_music(user_id=user_id, input=input, music=music)
         if obj_ret.is_err:
             match obj_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -320,10 +324,12 @@ class BlogAPI:
         obj_ret = create_blog(user_id=user_id, input=input, image=image)
         if obj_ret.is_err:
             match obj_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -422,10 +428,12 @@ class ComicAPI:
         obj_ret = create_comic(user_id=user_id, input=input, image=image, pages=pages)
         if obj_ret.is_err:
             match obj_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -524,10 +532,12 @@ class PictureAPI:
         obj_ret = create_picture(user_id=user_id, input=input, image=image)
         if obj_ret.is_err:
             match obj_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -625,10 +635,10 @@ class ChatAPI:
         obj_ret = create_chat(user_id=user_id, input=input)
         if obj_ret.is_err:
             match obj_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

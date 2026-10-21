@@ -22,12 +22,12 @@ from api.src.domain.interface.message.interface import FilterOption as MessageFi
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.notification import create_publish_notification, delete_object_notifications
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidationError
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
-from api.utils.functions.media import save_upload
+from api.utils.functions.media import save_upload, validate_uploads
 
 
 @Result.shield_exception()
@@ -85,7 +85,11 @@ def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, NotFoundError
 
 
 @Result.shield_exception()
-def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(image, ImageUpload.VIDEO)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     repository = injector.get(VideoInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -328,7 +332,11 @@ def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, NotFoundError |
 
 
 @Result.shield_exception()
-def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(image, ImageUpload.BLOG)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     repository = injector.get(BlogInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -457,7 +465,11 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, NotFoundError
 
 
 @Result.shield_exception()
-def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(image, ImageUpload.COMIC)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     repository = injector.get(ComicInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -580,7 +592,11 @@ def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, NotFoundE
 
 
 @Result.shield_exception()
-def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(image, ImageUpload.PICTURE)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     repository = injector.get(PictureInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
