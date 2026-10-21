@@ -11,7 +11,6 @@ class CommentListIn(BaseModel):
 
 class CommentCreateIn(BaseModel):
     text: str
-    type_no: CommentTypeNo
     type_name: CommentType
     object_ulid: str
     parent_ulid: str | None = None

@@ -13,6 +13,7 @@ from api.src.usecase.user import get_author_data, get_author_data_map
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.media import get_media_repository
 
 
@@ -121,9 +122,10 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
         log.warning("メディアが見つかりませんでした")
         return Result.err(NotFoundError("error.commentCreateFailed"))
 
+    type_no = comment_type_no_map(input.type_name)
     parent: CommentData | None = None
     if input.parent_ulid:
-        parent_ids_ret = repo.get_ids(FilterOption(ulid=input.parent_ulid, is_parent=True), SortOption())
+        parent_ids_ret = repo.get_ids(FilterOption(ulid=input.parent_ulid, type_no=type_no, object_id=media_ids[0], is_parent=True), SortOption())
         if parent_ids_ret.is_err:
             return Result.err(parent_ids_ret.err_value)
 
@@ -148,7 +150,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
         ulid="",
         author_id=user_id,
         parent_id=parent.id if parent is not None else None,
-        type_no=input.type_no,
+        type_no=type_no,
         type_name=input.type_name,
         object_id=media_ids[0],
         text=input.text,
