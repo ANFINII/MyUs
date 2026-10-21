@@ -1,10 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { ok, err } from 'neverthrow'
 import { Result } from 'neverthrow'
-
-export type ErrorType = 'UNAUTHENTICATED' | 'FORBIDDEN' | 'NOT_FOUND' | 'VALIDATION' | 'INTERNAL'
-
-const ERROR_TYPES: ErrorType[] = ['UNAUTHENTICATED', 'FORBIDDEN', 'NOT_FOUND', 'VALIDATION', 'INTERNAL']
+import { ErrorType } from 'utils/constants/enum'
 
 export interface ApiError {
   status: number
@@ -15,7 +12,7 @@ export interface ApiError {
 export type ApiOut<T> = Result<T, ApiError>
 
 const toErrorType = (value: unknown): ErrorType | undefined => {
-  return ERROR_TYPES.find((type) => type === value)
+  return Object.values(ErrorType).find((type) => type === value)
 }
 
 export const apiOut = async <T>(apiCall: Promise<AxiosResponse<T>>): Promise<ApiOut<T>> => {
