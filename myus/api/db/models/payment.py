@@ -55,9 +55,11 @@ class PaymentTransaction(models.Model):
     class Meta:
         db_table = "payment_transaction"
         verbose_name_plural = "001 PaymentTransaction"
+        constraints = [
+            models.UniqueConstraint(fields=["provider", "external_id"], name="payment_transaction_provider_external_uniq"),
+        ]
         indexes = [
             models.Index(fields=["customer", "-paid_at"], name="customer_paid_idx"),
-            models.Index(fields=["provider", "external_id"], name="pt_external_idx"),
         ]
 
 
