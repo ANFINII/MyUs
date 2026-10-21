@@ -12,6 +12,9 @@ from api.modules.logger import log
 CONVERTIBLE_EXTENSIONS = {".wav", ".flac", ".ogg", ".m4a", ".aac", ".wma", ".aiff"}
 
 
+MP3_TIMEOUT = 600
+
+
 def is_conversion(filename: str) -> bool:
     """MP3以外の変換対象フォーマットかチェック"""
     return Path(filename).suffix.lower() in CONVERTIBLE_EXTENSIONS
@@ -33,9 +36,9 @@ def convert_mp3(input_path: str, output_path: str, bitrate: str = "192k") -> Non
     ]
 
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=MP3_TIMEOUT)
         log.info("MP3変換完了", input_path=input_path, output_path=output_path)
-    except subprocess.CalledProcessError as e:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
         log.error("MP3変換エラー", exc=e, input_path=input_path)
         raise
 
