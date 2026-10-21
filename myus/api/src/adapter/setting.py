@@ -17,7 +17,7 @@ class SettingProfileAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: SettingProfileOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: SettingProfileOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("SettingProfileAPI get")
 
@@ -27,7 +27,7 @@ class SettingProfileAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
@@ -35,7 +35,7 @@ class SettingProfileAPI:
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
 
         user = user_data.user
         profile = user_data.profile
@@ -63,7 +63,7 @@ class SettingProfileAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("SettingProfileAPI put", input=input)
 
@@ -77,7 +77,7 @@ class SettingProfileAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_profile(user_id, input, avatar_file)
         if update_ret.is_err:
@@ -85,7 +85,7 @@ class SettingProfileAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -100,7 +100,7 @@ class SettingMyPageAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: SettingMyPageOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: SettingMyPageOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("SettingMyPageAPI get")
 
@@ -110,7 +110,7 @@ class SettingMyPageAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
@@ -118,7 +118,7 @@ class SettingMyPageAPI:
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
 
         mypage = user_data.mypage
         user_plan = user_data.user_plan
@@ -141,7 +141,7 @@ class SettingMyPageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner_file: UploadedFile = File(None)):
         log.info("SettingMyPageAPI put", input=input)
 
@@ -151,7 +151,7 @@ class SettingMyPageAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         if has_email(input.email):
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="メールアドレスの形式が違います!")
@@ -162,7 +162,7 @@ class SettingMyPageAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -179,7 +179,7 @@ class SettingNotificationAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: SettingNotificationOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: SettingNotificationOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("SettingNotificationAPI get")
 
@@ -189,7 +189,7 @@ class SettingNotificationAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
@@ -197,7 +197,7 @@ class SettingNotificationAPI:
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
 
         notification = user_data.notification
 
@@ -217,7 +217,7 @@ class SettingNotificationAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingNotificationIn):
         log.info("SettingNotificationAPI put", input=input)
 
@@ -227,13 +227,13 @@ class SettingNotificationAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_notification(user_id, input)
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
