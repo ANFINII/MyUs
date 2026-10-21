@@ -5,7 +5,6 @@ import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { postComment, putComment, deleteComment } from 'api/internal/comment'
 import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
-import { commentTypeNoMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
@@ -79,10 +78,9 @@ export default function CommentContent(props: Props): React.JSX.Element {
     handleLoading(true)
     const text = replyText
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
-    const typeNo = commentTypeNoMap[typeName]
     const objectUlid = String(router.query.ulid ?? '')
     const parentUlid = ulid
-    const request: CommnetIn = { text, typeName, typeNo, objectUlid, parentUlid }
+    const request: CommnetIn = { text, typeName, objectUlid, parentUlid }
     const ret = await postComment(request)
     if (ret.isErr()) {
       handleLoading(false)
