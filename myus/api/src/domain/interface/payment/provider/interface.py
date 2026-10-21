@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from api.src.domain.interface.payment.provider.data import CancelResult, CheckoutData, CheckoutResult, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CheckoutData, CheckoutResult, ProviderSubscriptionData, WebhookVerifyResult
 from api.utils.common.result import FatalError, Result
 
 
@@ -14,4 +14,8 @@ class PaymentInterface(ABC):
 
     @abstractmethod
     def cancel_subscription(self, external_id: str) -> Result[CancelResult, FatalError]:
+        ...
+
+    @abstractmethod
+    def get_subscription(self, external_id: str) -> Result[ProviderSubscriptionData, FatalError]:
         ...

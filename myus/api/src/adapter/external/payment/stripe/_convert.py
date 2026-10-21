@@ -14,10 +14,10 @@ from stripe.params.checkout import (
 )
 from api.src.adapter.external.payment.stripe._type import stripe_event_type
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed, WebhookVerifyFailed
+from api.src.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed, ProviderSubscriptionData, WebhookVerifyFailed
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
-from api.utils.enum.i18n import Locale
-from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError
+from api.utils.enum.i18n import Currency, Locale
+from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
 from api.utils.enum.user import PlanName
 
 
@@ -97,23 +97,25 @@ def convert_line_items(input: CheckoutData) -> list[SessionCreateParamsLineItem]
             assert_never(input.payment_type)
 
 
-def convert_marketplace_params(input: CheckoutData) -> SessionCreateParams:
-    if len(input.marketplace.seller_id) == 0:
-        return SessionCreateParams()
+def convert_payment_params(input: CheckoutData) -> SessionCreateParams:
+    metadata = {"user_ulid": input.customer.user_ulid, "product_code": input.product_code}
+    is_marketplace = len(input.marketplace.seller_id) > 0
 
     match input.payment_type:
         case PaymentType.SUBSCRIPTION:
-            sub_transfer = SessionCreateParamsSubscriptionDataTransferData(destination=input.marketplace.seller_id)
-            sub_data = SessionCreateParamsSubscriptionData(transfer_data=sub_transfer)
-            pct = fee_percent(input.marketplace.application_fee, input.price)
-            if pct > 0:
-                sub_data["application_fee_percent"] = pct
+            sub_data = SessionCreateParamsSubscriptionData(metadata=metadata)
+            if is_marketplace:
+                sub_data["transfer_data"] = SessionCreateParamsSubscriptionDataTransferData(destination=input.marketplace.seller_id)
+                pct = fee_percent(input.marketplace.application_fee, input.price)
+                if pct > 0:
+                    sub_data["application_fee_percent"] = pct
             return SessionCreateParams(subscription_data=sub_data)
         case PaymentType.ONE_TIME:
-            pi_transfer = SessionCreateParamsPaymentIntentDataTransferData(destination=input.marketplace.seller_id)
-            pi_data = SessionCreateParamsPaymentIntentData(transfer_data=pi_transfer)
-            if input.marketplace.application_fee.amount > 0:
-                pi_data["application_fee_amount"] = input.marketplace.application_fee.amount
+            pi_data = SessionCreateParamsPaymentIntentData(metadata=metadata)
+            if is_marketplace:
+                pi_data["transfer_data"] = SessionCreateParamsPaymentIntentDataTransferData(destination=input.marketplace.seller_id)
+                if input.marketplace.application_fee.amount > 0:
+                    pi_data["application_fee_amount"] = input.marketplace.application_fee.amount
             return SessionCreateParams(payment_intent_data=pi_data)
         case _:
             assert_never(input.payment_type)
@@ -129,7 +131,64 @@ def convert_stripe_params(input: CheckoutData) -> SessionCreateParams | Checkout
         line_items=line_items,
         success_url=input.redirect.success_url,
         cancel_url=input.redirect.cancel_url,
+        client_reference_id=input.customer.user_ulid,
         customer_email=input.customer.email,
         locale=stripe_locale(input.locale),
-        **convert_marketplace_params(input),
+        **convert_payment_params(input),
+    )
+
+
+def stripe_subscription_status(status: str) -> SubscriptionStatus:
+    match status:
+        case "active" | "trialing":
+            return SubscriptionStatus.ACTIVE
+        case "past_due" | "unpaid":
+            return SubscriptionStatus.PAST_DUE
+        case "canceled":
+            return SubscriptionStatus.CANCELED
+        case "incomplete":
+            return SubscriptionStatus.INCOMPLETE
+        case _:
+            return SubscriptionStatus.EXPIRED
+
+
+def stripe_datetime(timestamp: int | None) -> datetime:
+    if timestamp is None:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    return datetime.fromtimestamp(timestamp, tz=timezone.utc)
+
+
+def stripe_period_end(subscription: stripe.Subscription) -> datetime:
+    items = subscription["items"].data
+    if len(items) == 0:
+        return stripe_datetime(None)
+    return stripe_datetime(items[0].current_period_end)
+
+
+def stripe_price(subscription: stripe.Subscription) -> Money:
+    items = subscription["items"].data
+    if len(items) == 0:
+        return Money(amount=0, currency=Currency.JPY)
+    price = items[0].price
+    return Money(amount=price.unit_amount or 0, currency=Currency(price.currency.capitalize()))
+
+
+def stripe_metadata(subscription: stripe.Subscription, key: str) -> str:
+    metadata = subscription.metadata
+    return metadata[key] if key in metadata else ""
+
+
+def convert_stripe_subscription(subscription: stripe.Subscription) -> ProviderSubscriptionData:
+    customer = subscription.customer
+    return ProviderSubscriptionData(
+        provider=PaymentProvider.STRIPE,
+        external_id=subscription.id,
+        customer_id=customer if isinstance(customer, str) else customer.id,
+        user_ulid=stripe_metadata(subscription, "user_ulid"),
+        product_code=stripe_metadata(subscription, "product_code"),
+        price=stripe_price(subscription),
+        status=stripe_subscription_status(subscription.status),
+        started_at=stripe_datetime(subscription.start_date),
+        current_period_end=stripe_period_end(subscription),
+        canceled_at=stripe_datetime(subscription.canceled_at),
     )
