@@ -54,11 +54,6 @@ class ChannelRepository(ChannelInterface):
         return Result.ok(new_ids)
 
     @Result.shield_exception()
-    def delete(self, id: int) -> Result[None, FatalError]:
-        Channel.objects.filter(id=id).delete()
-        return Result.ok(None)
-
-    @Result.shield_exception()
     def save_count(self, id: int, count: int) -> Result[None, FatalError]:
         Channel.objects.filter(id=id).update(count=count)
         return Result.ok(None)

@@ -58,6 +58,6 @@ class MessageRepository(MessageInterface):
         return Result.ok(new_ids)
 
     @Result.shield_exception()
-    def delete(self, message_id: int) -> Result[None, FatalError]:
-        Message.objects.filter(id=message_id).delete()
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
+        Message.objects.filter(id__in=ids).delete()
         return Result.ok(None)
