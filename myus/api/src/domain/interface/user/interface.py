@@ -46,9 +46,5 @@ class UserInterface(ABC):
         ...
 
     @abstractmethod
-    def update_follower_count(self, user_id: int, count: int) -> Result[None, FatalError]:
-        ...
-
-    @abstractmethod
-    def update_following_count(self, user_id: int, count: int) -> Result[None, FatalError]:
+    def update_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
         ...
