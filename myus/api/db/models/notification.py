@@ -13,7 +13,7 @@ class Notification(models.Model):
     user_to     = models.ForeignKey(User, related_name="user_to", on_delete=models.CASCADE, null=True)
     type_no     = models.IntegerField()
     type_name   = models.CharField(max_length=7)
-    object_id   = models.PositiveIntegerField()
+    object_id   = models.PositiveBigIntegerField()
     object_type = models.CharField(max_length=7)
     confirmed   = models.ManyToManyField(User, related_name="confirmed", blank=True)
     deleted     = models.ManyToManyField(User, related_name="deleted", blank=True)
