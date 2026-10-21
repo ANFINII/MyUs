@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Literal
 from pydantic import BaseModel
 
 
@@ -11,6 +12,7 @@ class ErrorType(StrEnum):
 
 
 class ErrorOut(BaseModel):
+    status: Literal[400, 500]
     type: ErrorType
     message: str
 

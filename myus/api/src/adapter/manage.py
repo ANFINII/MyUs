@@ -35,15 +35,15 @@ class ManageVideoAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         videos_ret = get_manage_videos(user_id, search, channel, limit, offset)
         if videos_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, total = videos_ret.ok_value
         return 200, VideoListOut(items=convert_videos(objs), total=total)
@@ -55,20 +55,20 @@ class ManageVideoAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         video_ret = get_manage_video(user_id, ulid)
         if video_ret.is_err:
             message = video_ret.err_value.message
             match video_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(video_ret.err_value)
 
@@ -82,24 +82,24 @@ class ManageVideoAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_video(user_id, ulid, input, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -112,20 +112,20 @@ class ManageVideoAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_video(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(delete_ret.err_value)
 
@@ -144,15 +144,15 @@ class ManageMusicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         musics_ret = get_manage_musics(user_id, search, channel, limit, offset)
         if musics_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, total = musics_ret.ok_value
         return 200, MusicListOut(items=convert_musics(objs), total=total)
@@ -164,20 +164,20 @@ class ManageMusicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         music_ret = get_manage_music(user_id, ulid)
         if music_ret.is_err:
             message = music_ret.err_value.message
             match music_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(music_ret.err_value)
 
@@ -191,22 +191,22 @@ class ManageMusicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_music(user_id, ulid, input)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ForbiddenError():
-                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -219,20 +219,20 @@ class ManageMusicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_music(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(delete_ret.err_value)
 
@@ -251,15 +251,15 @@ class ManageBlogAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         blogs_ret = get_manage_blogs(user_id, search, channel, limit, offset)
         if blogs_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, total = blogs_ret.ok_value
         return 200, BlogListOut(items=convert_blogs(objs), total=total)
@@ -271,20 +271,20 @@ class ManageBlogAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         blog_ret = get_manage_blog(user_id, ulid)
         if blog_ret.is_err:
             message = blog_ret.err_value.message
             match blog_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(blog_ret.err_value)
 
@@ -298,24 +298,24 @@ class ManageBlogAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_blog(user_id, ulid, input, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -328,20 +328,20 @@ class ManageBlogAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_blog(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(delete_ret.err_value)
 
@@ -360,15 +360,15 @@ class ManageComicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         comics_ret = get_manage_comics(user_id, search, channel, limit, offset)
         if comics_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, total = comics_ret.ok_value
         return 200, ComicListOut(items=convert_comics(objs), total=total)
@@ -380,20 +380,20 @@ class ManageComicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         comic_ret = get_manage_comic(user_id, ulid)
         if comic_ret.is_err:
             message = comic_ret.err_value.message
             match comic_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(comic_ret.err_value)
 
@@ -407,24 +407,24 @@ class ManageComicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_comic(user_id, ulid, input, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -437,20 +437,20 @@ class ManageComicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_comic(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(delete_ret.err_value)
 
@@ -469,15 +469,15 @@ class ManagePictureAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         pictures_ret = get_manage_pictures(user_id, search, channel, limit, offset)
         if pictures_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, total = pictures_ret.ok_value
         return 200, PictureListOut(items=convert_pictures(objs), total=total)
@@ -489,20 +489,20 @@ class ManagePictureAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         picture_ret = get_manage_picture(user_id, ulid)
         if picture_ret.is_err:
             message = picture_ret.err_value.message
             match picture_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(picture_ret.err_value)
 
@@ -516,24 +516,24 @@ class ManagePictureAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_picture(user_id, ulid, input, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -546,20 +546,20 @@ class ManagePictureAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_picture(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(delete_ret.err_value)
 
@@ -578,15 +578,15 @@ class ManageChatAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         chats_ret = get_manage_chats(user_id, search, channel, limit, offset)
         if chats_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, total = chats_ret.ok_value
         return 200, ChatListOut(items=convert_chats(objs), total=total)
@@ -598,20 +598,20 @@ class ManageChatAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         chat_ret = get_manage_chat(user_id, ulid)
         if chat_ret.is_err:
             message = chat_ret.err_value.message
             match chat_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(chat_ret.err_value)
 
@@ -625,22 +625,22 @@ class ManageChatAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_chat(user_id, ulid, input)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ForbiddenError():
-                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -653,20 +653,20 @@ class ManageChatAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_chat(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(delete_ret.err_value)
 
@@ -685,15 +685,15 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         advertises_ret = get_manage_advertises(user_id, search, limit, offset)
         if advertises_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, total = advertises_ret.ok_value
         return 200, AdvertiseListOut(items=convert_advertises(objs), total=total)
@@ -705,20 +705,20 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         advertise_ret = get_manage_advertise(user_id, ulid)
         if advertise_ret.is_err:
             message = advertise_ret.err_value.message
             match advertise_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(advertise_ret.err_value)
 
@@ -732,22 +732,22 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         create_ret = create_manage_advertise(user_id, input, image, video)
         if create_ret.is_err:
             message = create_ret.err_value.message
             match create_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(create_ret.err_value)
 
@@ -761,22 +761,22 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_advertise(user_id, ulid, input, image, video)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -789,20 +789,20 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_advertise(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(delete_ret.err_value)
 

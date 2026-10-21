@@ -23,19 +23,19 @@ class SettingProfileAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message="Not Found")
 
         user = user_data.user
         profile = user_data.profile
@@ -69,26 +69,26 @@ class SettingProfileAPI:
 
         error_message = profile_check(input)
         if len(error_message) > 0:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
+            return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=error_message)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_profile(user_id, input, avatar_file)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -107,19 +107,19 @@ class SettingMyPageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message="Not Found")
 
         mypage = user_data.mypage
         user_plan = user_data.user_plan
@@ -148,25 +148,25 @@ class SettingMyPageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         if has_email(input.email):
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="メールアドレスの形式が違います!")
+            return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message="メールアドレスの形式が違います!")
 
         update_ret = update_mypage(user_id, input, banner_file)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -187,19 +187,19 @@ class SettingNotificationAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message="Not Found")
 
         notification = user_data.notification
 
@@ -225,20 +225,20 @@ class SettingNotificationAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_notification(user_id, input)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 

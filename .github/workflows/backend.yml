@@ -71,6 +71,9 @@ jobs:
       - name: Django check
         run: uv run python manage.py check
 
+      - name: API status check
+        run: uv run python manage.py check_api_status
+
       - name: pytest
         env:
           MYSQL_USER: root
