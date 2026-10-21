@@ -194,6 +194,13 @@ if ret.is_err:
 - メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
 - 「使わないから書く」「使うから簡略化する」のどちらも禁止：使う分だけ既存の形で書く
 - private メソッド（`_` プレフィックス）を Interface に宣言しない（抽象化は公開 API のみ。private ヘルパーは Repository 実装側に置く）
+- 雛形と違う形を認めるのは次の場合だけ（新しく足すときも、同じ種類の既存の形に合わせる）
+  - `bulk_save`で表せない更新：加算・切り替え・既読など（`save_read`・`save_count`・`save_follow_count`・`media_like`・`comment_like`、通知の`delete`・`delete_by_user`・`confirm`）
+  - 一覧に付ける判定：`is_liked`・`get_liked_ids`
+  - 認証：`UserInterface.authenticate`
+  - メディア・広告の`get_ids(filter, exclude, sort, page, user_id)`：ページング（`PageOption`）とスコア順の`user_id`が要るメディア共通の形
+  - カテゴリ・ハッシュタグの`bulk_save(media_type, media_id, objs)`：メディアへの紐づけの保存
+  - 外部サービスの窓口（`PaymentInterface`）：DBのリポジトリではないため`get_ids`・`bulk_get`を持たない
 
 ### Converterパターン
 - `_convert.py`に変換関数を定義
@@ -266,3 +273,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-10-21: HTTPステータスを成功は200、エラーは400 / 500にまとめた
 - 2026-10-21: 画面に出るエラーの文言をFEのi18nのキーで返すようにした
 - 2026-10-21: CSRF対策として`OriginCheckMiddleware`を追加
+- 2026-10-22: Interfaceで雛形と違う形を認める場合を追記
