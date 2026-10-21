@@ -25,7 +25,9 @@ class VideoHashtag(models.Model):
 
     class Meta:
         db_table = "video_hashtag"
-        unique_together = [("video", "hashtag")]
+        constraints = [
+            models.UniqueConstraint(fields=["video", "hashtag"], name="video_hashtag_uniq"),
+        ]
         ordering = ["sequence"]
 
 
@@ -38,7 +40,9 @@ class MusicHashtag(models.Model):
 
     class Meta:
         db_table = "music_hashtag"
-        unique_together = [("music", "hashtag")]
+        constraints = [
+            models.UniqueConstraint(fields=["music", "hashtag"], name="music_hashtag_uniq"),
+        ]
         ordering = ["sequence"]
 
 
@@ -51,7 +55,9 @@ class BlogHashtag(models.Model):
 
     class Meta:
         db_table = "blog_hashtag"
-        unique_together = [("blog", "hashtag")]
+        constraints = [
+            models.UniqueConstraint(fields=["blog", "hashtag"], name="blog_hashtag_uniq"),
+        ]
         ordering = ["sequence"]
 
 
@@ -64,7 +70,9 @@ class ComicHashtag(models.Model):
 
     class Meta:
         db_table = "comic_hashtag"
-        unique_together = [("comic", "hashtag")]
+        constraints = [
+            models.UniqueConstraint(fields=["comic", "hashtag"], name="comic_hashtag_uniq"),
+        ]
         ordering = ["sequence"]
 
 
@@ -77,7 +85,9 @@ class PictureHashtag(models.Model):
 
     class Meta:
         db_table = "picture_hashtag"
-        unique_together = [("picture", "hashtag")]
+        constraints = [
+            models.UniqueConstraint(fields=["picture", "hashtag"], name="picture_hashtag_uniq"),
+        ]
         ordering = ["sequence"]
 
 
@@ -90,5 +100,7 @@ class ChatHashtag(models.Model):
 
     class Meta:
         db_table = "chat_hashtag"
-        unique_together = [("chat", "hashtag")]
+        constraints = [
+            models.UniqueConstraint(fields=["chat", "hashtag"], name="chat_hashtag_uniq"),
+        ]
         ordering = ["sequence"]
