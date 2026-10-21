@@ -52,10 +52,10 @@ class MediaHashtagAPI:
         update_ret = update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

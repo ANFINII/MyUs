@@ -82,10 +82,10 @@ class SettingProfileAPI:
         update_ret = update_profile(user_id, input, avatar_file)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case ValidationError():
                     return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -159,10 +159,10 @@ class SettingMyPageAPI:
         update_ret = update_mypage(user_id, input, banner_file)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case ValidationError():
                     return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

@@ -152,12 +152,12 @@ class ChannelAPI:
         update_ret = update_user_channel(user_id, ulid, input, avatar_file)
         if update_ret.is_err:
             match update_ret.err_value:
-                case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
-                case ForbiddenError():
-                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case ValidationError():
                     return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case NotFoundError():
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
