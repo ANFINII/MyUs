@@ -111,7 +111,7 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
 - `auth_check`の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
-- `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く。ほかのステータスが無いことは`manage.py check_api_status`（CIで実行）が確かめる。`response={...}`に無いステータスを返すとNinjaが実行時に例外にする
+- `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く（`response={...}`に無いステータスを返すとNinjaが実行時に例外にする）
 - 成功で返すものが無いときは`200: None`・`return 200, None`にする
 
 ### エラー型の組み合わせ
@@ -258,4 +258,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-02-22: 全体整備、domain interface初期値禁止ルール追加
 - 2026-04-16: docs/に一元化、構成整理
 - 2026-10-20: エラーハンドリング（Result型・エラー型とHTTPステータスの対応・adapterのmatch + assert_never）を追加
-- 2026-10-21: HTTPステータスを成功は200、エラーは400 / 500にまとめ、`check_api_status`を追加
+- 2026-10-21: HTTPステータスを成功は200、エラーは400 / 500にまとめた
