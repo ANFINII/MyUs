@@ -10,7 +10,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.utils.common.result import FatalError, Result
 
 
-VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "read", "publish"]
+VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "publish", "updated"]
 
 
 class VideoRepository(VideoInterface):

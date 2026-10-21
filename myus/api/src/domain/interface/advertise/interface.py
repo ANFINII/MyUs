@@ -24,3 +24,7 @@ class AdvertiseInterface(ABC):
     @abstractmethod
     def count(self, filter: FilterOption) -> Result[int, FatalError]:
         ...
+
+    @abstractmethod
+    def increment_read(self, media_id: int) -> Result[int, FatalError]:
+        ...

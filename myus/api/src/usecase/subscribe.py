@@ -82,10 +82,9 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
             return Result.err(count_ret.err_value)
 
         count = count_ret.ok_value
-        updated_channel = replace(channel, count=count)
-        channel_save_ret = channel_repo.bulk_save([updated_channel])
-        if channel_save_ret.is_err:
+        channel_count_ret = channel_repo.save_count(channel.id, count)
+        if channel_count_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(channel_save_ret.err_value)
+            return Result.err(channel_count_ret.err_value)
 
     return Result.ok(SubscribeDTO(is_subscribe=is_subscribe, count=count))

@@ -16,7 +16,7 @@ PROFILE_FIELDS = [
     "last_name", "first_name", "birthday", "gender", "phone",
     "country_code", "postal_code", "prefecture", "city", "street", "introduction",
 ]
-MYPAGE_FIELDS = ["banner", "email", "content", "follower_count", "following_count", "tag_manager_id", "is_advertise"]
+MYPAGE_FIELDS = ["banner", "email", "content", "tag_manager_id", "is_advertise"]
 NOTIFICATION_FIELDS = [
     "is_video", "is_music", "is_blog", "is_comic", "is_picture",
     "is_chat", "is_follow", "is_reply", "is_like", "is_views",
@@ -108,3 +108,11 @@ class UserRepository(UserInterface):
         else:
             obj.like.add(user_id)
         return Result.ok((not is_like, obj.like.count()))
+
+    @Result.shield_exception()
+    def save_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
+        with transaction.atomic():
+            MyPage.objects.filter(user_id=follower_id).update(following_count=following_count)
+            MyPage.objects.filter(user_id=following_id).update(follower_count=follower_count)
+
+        return Result.ok(None)
