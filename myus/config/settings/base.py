@@ -14,7 +14,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 # See https://docs.djangoproject.com/ja/5.2/howto/deployment/checklist/
 
 import os
-from datetime import timedelta
 from config.env import BASE_DIR, env
 
 
@@ -82,14 +81,6 @@ MIDDLEWARE = [
     "ninja.compatibility.files.fix_request_files_middleware",
     "config.middleware.ErrorResponseLogMiddleware",
 ]
-
-SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("JWT",),
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=365),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
-}
 
 TEMPLATES = [{
     "BACKEND": "django.template.backends.django.DjangoTemplates",

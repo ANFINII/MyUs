@@ -2,11 +2,11 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.comment import CommentCreateIn, CommentListIn, CommentOut, CommentUpdateIn, ReplyOut
+from api.src.types.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn, ReplyOut
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.comment import create_comment, delete_comment, get_comments, update_comment
+from api.src.usecase.comment import create_comment, delete_comment, update_comment
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
 
 
@@ -14,61 +14,6 @@ class CommentAPI:
     """コメントAPI"""
 
     router = Router()
-
-    @staticmethod
-    @router.get("", response={200: list[CommentOut], 400: ErrorOut, 500: ErrorOut})
-    def get(request: HttpRequest, input: CommentListIn):
-        log.info("CommentAPI get", type_no=input.type_no, object_id=input.object_id)
-
-        user_id_ret = auth_check(request)
-        if user_id_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
-
-        user_id = user_id_ret.ok_value
-        if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
-
-        comments_ret = get_comments(type_no=input.type_no, object_id=input.object_id, user_id=user_id)
-        if comments_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
-
-        comments = comments_ret.ok_value
-        data = [
-            CommentOut(
-                ulid=x.ulid,
-                text=x.text,
-                created=x.created,
-                updated=x.updated,
-                is_comment_like=x.is_comment_like,
-                like_count=x.like_count,
-                author=AuthorOut(
-                    avatar=x.author.avatar,
-                    ulid=x.author.ulid,
-                    nickname=x.author.nickname,
-                    follower_count=x.author.follower_count,
-                ),
-                replys=[
-                    ReplyOut(
-                        ulid=r.ulid,
-                        text=r.text,
-                        created=r.created,
-                        updated=r.updated,
-                        is_comment_like=r.is_comment_like,
-                        like_count=r.like_count,
-                        author=AuthorOut(
-                            avatar=r.author.avatar,
-                            ulid=r.author.ulid,
-                            nickname=r.author.nickname,
-                            follower_count=r.author.follower_count,
-                        ),
-                    )
-                    for r in x.replys
-                ],
-            )
-            for x in comments
-        ]
-
-        return 200, data
 
     @staticmethod
     @router.post("", response={200: CommentOut, 400: ErrorOut, 500: ErrorOut})
