@@ -55,7 +55,7 @@ def distinct_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
 
 def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False, user_id: int | None = None) -> tuple[QuerySet[T], str]:
     if sort.sort_type == SortType.SCORE:
-        like_count = Count("like")
+        like_count = Count("like", distinct=True)
         if is_recommend:
             days_since = DaysSince(F("created"), Now())
             score_expr = ExpressionWrapper(like_count * 1000.0 / (F("read") + 1) / days_since, output_field=FloatField())
