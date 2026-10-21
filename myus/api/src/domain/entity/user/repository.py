@@ -110,7 +110,7 @@ class UserRepository(UserInterface):
         return Result.ok((not is_like, obj.like.count()))
 
     @Result.shield_exception()
-    def update_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
+    def save_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
         with transaction.atomic():
             MyPage.objects.filter(user_id=follower_id).update(following_count=following_count)
             MyPage.objects.filter(user_id=following_id).update(follower_count=follower_count)

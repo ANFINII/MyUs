@@ -82,7 +82,7 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
             return Result.err(count_ret.err_value)
 
         count = count_ret.ok_value
-        channel_count_ret = channel_repo.update_count(channel.id, count)
+        channel_count_ret = channel_repo.save_count(channel.id, count)
         if channel_count_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(channel_count_ret.err_value)

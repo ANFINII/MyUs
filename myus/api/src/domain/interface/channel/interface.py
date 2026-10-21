@@ -40,5 +40,5 @@ class ChannelInterface(ABC):
         ...
 
     @abstractmethod
-    def update_count(self, id: int, count: int) -> Result[None, FatalError]:
+    def save_count(self, id: int, count: int) -> Result[None, FatalError]:
         ...

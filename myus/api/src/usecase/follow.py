@@ -142,7 +142,7 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
         follower_count = follower_count_ret.ok_value
         following_count = following_count_ret.ok_value
 
-        follow_count_ret = user_repo.update_follow_count(follower.user.id, following.user.id, follower_count, following_count)
+        follow_count_ret = user_repo.save_follow_count(follower.user.id, following.user.id, follower_count, following_count)
         if follow_count_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(follow_count_ret.err_value)

@@ -46,5 +46,5 @@ class UserInterface(ABC):
         ...
 
     @abstractmethod
-    def update_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
+    def save_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
         ...
