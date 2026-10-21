@@ -126,6 +126,18 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # Proxy
 NINJA_NUM_PROXIES = 0
 
+# Logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "loggers": {
+        "django": {"handlers": ["console"], "level": "ERROR"},
+    },
+}
+
 # CORS
 CSRF_TRUSTED_ORIGINS = env.csrf_trusted_origins
 CORS_ALLOWED_ORIGINS = env.cors_allowed_origins
