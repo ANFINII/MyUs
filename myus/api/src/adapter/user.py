@@ -6,7 +6,7 @@ from api.src.adapter.advertise import convert_advertises
 from api.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from api.src.types.schema.advertise import AdvertiseListOut
 from api.src.types.schema.channel import ChannelOut
-from api.src.types.schema.common import ErrorOut
+from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationIn, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
@@ -34,19 +34,19 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 404, ErrorOut(message="Not Found")
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
 
         user = user_data.user
 
@@ -67,15 +67,15 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         tags_ret = get_search_tag_data(user_id)
         if tags_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         tags = tags_ret.ok_value
         data = [SearchTagOut(sequence=x.sequence, name=x.name) for x in tags]
@@ -88,15 +88,15 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_search_tags(user_id, input)
         if update_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         return 200, ErrorOut(message="更新しました")
 
@@ -107,15 +107,15 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         followers_ret = get_followers(user_id, search, 100)
         if followers_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         followers = followers_ret.ok_value
         data = [
@@ -139,15 +139,15 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         follows_ret = get_follows(user_id, search, 100)
         if follows_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         follows = follows_ret.ok_value
         data = [
@@ -171,29 +171,29 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         follower_ret = get_user_data(user_id=user_id)
         if follower_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         follower = follower_ret.ok_value
         if follower is None:
-            return 400, ErrorOut(message="ユーザーが見つかりません!")
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません!")
 
         follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
         if follow_ret.is_err:
             match follow_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(message=follow_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=follow_ret.err_value.error_message)
                 case NotFoundError():
-                    return 404, ErrorOut(message=follow_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=follow_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(follow_ret.err_value)
 
@@ -208,19 +208,19 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         like_ret = like_media(user_id, input.media_type, input.ulid)
         if like_ret.is_err:
             match like_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(message=like_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(like_ret.err_value)
 
@@ -235,19 +235,19 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         like_ret = like_comment(user_id, input.ulid)
         if like_ret.is_err:
             match like_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(message=like_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(like_ret.err_value)
 
@@ -262,15 +262,15 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         notification_ret = get_notification(user_id)
         if notification_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         notification = notification_ret.ok_value
         data = NotificationOut(
@@ -316,15 +316,15 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         confirm_ret = notification_confirm(user_id, input.ulid)
         if confirm_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         return 200, ErrorOut(message="OK")
 
@@ -335,15 +335,15 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = notification_delete(user_id, input.ulid)
         if delete_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         return 200, ErrorOut(message="OK")
 
@@ -354,27 +354,27 @@ class UserAPI:
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user = user_ret.ok_value
         if user is None:
-            return 404, ErrorOut(message="ユーザーが見つかりません")
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
 
         channels_ret = get_user_channels(user.user.id)
         if channels_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         channels = channels_ret.ok_value
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         is_follow = False
         if user_id is not None:
             follow_ret = is_following(user_id, user.user.id)
             if follow_ret.is_err:
-                return 500, ErrorOut(message="Internal Server Error")
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
             is_follow = follow_ret.ok_value
 
@@ -411,26 +411,26 @@ class UserAPI:
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user = user_ret.ok_value
         if user is None:
-            return 404, ErrorOut(message="ユーザーが見つかりません")
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
 
         channel_id = 0
         if channel_ulid:
             channel_ret = get_channel_data(channel_ulid)
             if channel_ret.is_err:
-                return 500, ErrorOut(message="Internal Server Error")
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
             channel = channel_ret.ok_value
             if channel is None:
-                return 404, ErrorOut(message="チャンネルが見つかりません")
+                return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="チャンネルが見つかりません")
             channel_id = channel.id
 
         media_ret = get_userpage_media(8, search, owner_id=user.user.id, channel_id=channel_id)
         if media_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         media = media_ret.ok_value
         data = UserPageMediaOut(
@@ -451,15 +451,15 @@ class UserAPI:
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user = user_ret.ok_value
         if user is None:
-            return 404, ErrorOut(message="ユーザーが見つかりません")
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
 
         advertises_ret = get_userpage_advertises(search, owner_id=user.user.id)
         if advertises_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         advertises = advertises_ret.ok_value
         return 200, AdvertiseListOut(items=convert_advertises(advertises), total=len(advertises))
