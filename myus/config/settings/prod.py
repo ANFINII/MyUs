@@ -12,4 +12,5 @@ SESSION_COOKIE_SAMESITE = "Lax"
 # Security
 # https://docs.djangoproject.com/ja/5.0/ref/settings/
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+NINJA_NUM_PROXIES = 1
 SECURE_SSL_REDIRECT = True
