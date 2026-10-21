@@ -43,10 +43,10 @@ class ComicRepository(ComicInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Comic)
-        new_id_set = set(new_ids)
 
         with transaction.atomic():
+            new_ids = get_new_ids(models)
+            new_id_set = set(new_ids)
             Comic.objects.bulk_create(
                 models,
                 update_conflicts=True,

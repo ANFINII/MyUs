@@ -45,7 +45,7 @@ class ChatRepository(ChatInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Chat)
+        new_ids = get_new_ids(models)
 
         Chat.objects.bulk_create(
             models,

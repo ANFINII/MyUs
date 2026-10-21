@@ -45,7 +45,7 @@ class SearchTagRepository(SearchTagInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, SearchTag)
+        new_ids = get_new_ids(models)
 
         SearchTag.objects.bulk_create(
             models,

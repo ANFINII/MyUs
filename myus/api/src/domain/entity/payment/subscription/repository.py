@@ -45,7 +45,7 @@ class SubscriptionRepository(SubscriptionInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Subscription)
+        new_ids = get_new_ids(models)
 
         Subscription.objects.bulk_create(
             models,

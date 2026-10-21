@@ -54,7 +54,7 @@ class AdvertiseRepository(AdvertiseInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Advertise)
+        new_ids = get_new_ids(models)
 
         Advertise.objects.bulk_create(
             models,

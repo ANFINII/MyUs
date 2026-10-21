@@ -49,7 +49,7 @@ class SubscribeRepository(SubscribeInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Subscribe)
+        new_ids = get_new_ids(models)
 
         Subscribe.objects.bulk_create(
             models,

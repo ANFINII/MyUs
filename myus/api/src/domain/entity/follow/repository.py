@@ -51,7 +51,7 @@ class FollowRepository(FollowInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Follow)
+        new_ids = get_new_ids(models)
 
         Follow.objects.bulk_create(
             models,

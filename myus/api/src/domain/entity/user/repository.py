@@ -62,9 +62,9 @@ class UserRepository(UserInterface):
             return Result.ok([])
 
         models = [marshal_user(o.user) for o in objs]
-        new_ids = get_new_ids(models, User)
 
         with transaction.atomic():
+            new_ids = get_new_ids(models)
             User.objects.bulk_create(
                 models,
                 update_conflicts=True,

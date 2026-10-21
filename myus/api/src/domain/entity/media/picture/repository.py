@@ -41,7 +41,7 @@ class PictureRepository(PictureInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Picture)
+        new_ids = get_new_ids(models)
 
         Picture.objects.bulk_create(
             models,

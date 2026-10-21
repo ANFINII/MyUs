@@ -53,7 +53,7 @@ class CommentRepository(CommentInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Comment)
+        new_ids = get_new_ids(models)
 
         Comment.objects.bulk_create(
             models,

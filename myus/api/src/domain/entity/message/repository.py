@@ -53,7 +53,7 @@ class MessageRepository(MessageInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Message)
+        new_ids = get_new_ids(models)
 
         Message.objects.bulk_create(
             models,

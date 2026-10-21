@@ -47,7 +47,7 @@ class TransactionRepository(TransactionInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, PaymentTransaction)
+        new_ids = get_new_ids(models)
 
         PaymentTransaction.objects.bulk_create(
             models,

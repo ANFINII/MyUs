@@ -184,7 +184,22 @@ if ret.is_err:
 
 ### bulk操作
 - `bulk_save`: upsert（`bulk_create(update_conflicts=True)`）
-- `get_new_ids`でid未設定オブジェクトに新規ID割り当て
+- `get_new_ids`（`api/src/domain/entity/index.py`）でid未設定（`pk is None`）の行を先にINSERTし、新しく振られたIDを返す。IDはDBの自動採番に任せる
+  - 名前は`get`だが、呼ぶと行がINSERTされる。関連テーブルなどと一緒に保存するときは`transaction.atomic()`の中で呼ぶ
+- IDを事前に採番しない（`ALTER TABLE ... AUTO_INCREMENT`はMySQLで暗黙にCOMMITされ、`transaction.atomic()`のロールバックが効かなくなるため）
+
+```python
+models = [marshal_data(o) for o in objs]
+new_ids = get_new_ids(models)
+
+Follow.objects.bulk_create(
+    models,
+    update_conflicts=True,
+    update_fields=FOLLOW_FIELDS,
+)
+
+return Result.ok(new_ids)
+```
 
 ## 層の責務
 

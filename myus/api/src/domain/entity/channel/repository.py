@@ -49,7 +49,7 @@ class ChannelRepository(ChannelInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Channel)
+        new_ids = get_new_ids(models)
 
         Channel.objects.bulk_create(
             models,

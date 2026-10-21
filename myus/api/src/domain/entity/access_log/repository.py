@@ -49,7 +49,7 @@ class AccessLogRepository(AccessLogInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, AccessLog)
+        new_ids = get_new_ids(models)
 
         AccessLog.objects.bulk_create(
             models,

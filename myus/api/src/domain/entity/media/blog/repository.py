@@ -41,7 +41,7 @@ class BlogRepository(BlogInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Blog)
+        new_ids = get_new_ids(models)
 
         Blog.objects.bulk_create(
             models,

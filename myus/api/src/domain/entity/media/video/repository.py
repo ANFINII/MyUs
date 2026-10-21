@@ -41,7 +41,7 @@ class VideoRepository(VideoInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Video)
+        new_ids = get_new_ids(models)
 
         Video.objects.bulk_create(
             models,
