@@ -125,7 +125,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
     parent_id: int | None = None
     if parent_ulid:
-        parent_ids_ret = repo.get_ids(FilterOption(message_ulid=parent_ulid, is_parent=True), SortOption())
+        parent_ids_ret = repo.get_ids(FilterOption(chat_id=chat_ids[0], message_ulid=parent_ulid, is_parent=True), SortOption())
         if parent_ids_ret.is_err:
             return Result.err(parent_ids_ret.err_value)
 
