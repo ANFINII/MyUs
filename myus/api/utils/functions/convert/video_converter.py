@@ -44,6 +44,10 @@ class HardwareAccelerator:
 class VideoConverter:
     """最速動画変換クラス"""
 
+    ENCODER_CHECK_TIMEOUT = 5
+    PROBE_TIMEOUT = 60
+    MP4_TIMEOUT = 600
+
     # 最適化プロファイル（品質と速度のバランス調整）
     PROFILES = {
         '240p': OptimizedProfile('240p', 426, 240, '350k', '500k', '700k', '48k', 'p7', 30, 48),
@@ -189,7 +193,8 @@ class VideoConverter:
                 nvenc_check = subprocess.run(
                     [self.ffmpeg_path, '-hide_banner', '-encoders'],
                     capture_output=True,
-                    text=True
+                    text=True,
+                    timeout=self.ENCODER_CHECK_TIMEOUT
                 )
                 if 'h264_nvenc' in nvenc_check.stdout:
                     return True
@@ -208,7 +213,8 @@ class VideoConverter:
             result = subprocess.run(
                 [self.ffmpeg_path, '-hide_banner', '-encoders'],
                 capture_output=True,
-                text=True
+                text=True,
+                timeout=self.ENCODER_CHECK_TIMEOUT
             )
             return 'h264_qsv' in result.stdout
         except Exception:
@@ -260,7 +266,7 @@ class VideoConverter:
             input_path
         ]
 
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=self.PROBE_TIMEOUT)
         if result.returncode != 0:
             raise ValueError(f"動画情報取得失敗: {input_path}")
 
@@ -413,7 +419,12 @@ class VideoConverter:
             )
 
             # 非ブロッキング待機
-            await process.wait()
+            try:
+                await process.wait()
+            except asyncio.CancelledError:
+                process.kill()
+                await process.wait()
+                raise
 
             if process.returncode != 0:
                 raise RuntimeError(f"Video conversion failed: {profile.resolution}")
@@ -602,7 +613,12 @@ class VideoConverter:
             stdout=asyncio.subprocess.DEVNULL,
             stderr=asyncio.subprocess.DEVNULL
         )
-        await process.wait()
+        try:
+            await asyncio.wait_for(process.wait(), timeout=self.MP4_TIMEOUT)
+        except asyncio.TimeoutError:
+            process.kill()
+            await process.wait()
+            raise
 
         if process.returncode != 0:
             # エラー時は元ファイルコピー
