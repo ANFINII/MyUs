@@ -23,6 +23,7 @@ from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
 from api.utils.enum.user import PlanName
+from api.utils.functions.map import payment_status_rank
 from api.utils.plan import get_plan
 
 
@@ -327,6 +328,10 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
 
     transactions = transactions_ret.ok_value
     payment_transaction = transactions[0]
+    if payment_status_rank(status) < payment_status_rank(payment_transaction.status):
+        log.info("Transaction status not downgraded", external_id=event.external_id, current=payment_transaction.status.value, status=status.value)
+        return Result.ok(None)
+
     updated = replace(payment_transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(payment_transaction, status=status)
     save_ret = repo.bulk_save([updated])
     if save_ret.is_err:
