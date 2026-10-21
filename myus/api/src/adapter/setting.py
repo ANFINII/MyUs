@@ -67,9 +67,9 @@ class SettingProfileAPI:
     def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("SettingProfileAPI put", input=input)
 
-        error_message = profile_check(input)
-        if len(error_message) > 0:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
+        message = profile_check(input)
+        if len(message) > 0:
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:

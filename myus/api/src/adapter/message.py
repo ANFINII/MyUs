@@ -32,31 +32,31 @@ class MessageAPI:
         try:
             message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
             if message_ret.is_err:
-                error_message = message_ret.err_value.message
+                message = message_ret.err_value.message
                 match message_ret.err_value:
                     case NotFoundError():
-                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=error_message)
+                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
                         assert_never(message_ret.err_value)
 
-            message = message_ret.ok_value
+            obj = message_ret.ok_value
             data = MessageOut(
-                ulid=message.ulid,
-                text=message.text,
+                ulid=obj.ulid,
+                text=obj.text,
                 reply_count=0,
-                created=message.created,
-                updated=message.updated,
+                created=obj.created,
+                updated=obj.updated,
                 author=AuthorOut(
-                    avatar=message.author.avatar,
-                    ulid=message.author.ulid,
-                    nickname=message.author.nickname,
-                    follower_count=message.author.follower_count,
+                    avatar=obj.author.avatar,
+                    ulid=obj.author.ulid,
+                    nickname=obj.author.nickname,
+                    follower_count=obj.author.follower_count,
                 ),
             )
 
-            broadcast_create_message(input.chat_ulid, message, input.parent_ulid)
+            broadcast_create_message(input.chat_ulid, obj, input.parent_ulid)
 
             return 200, data
         except Exception as e:
