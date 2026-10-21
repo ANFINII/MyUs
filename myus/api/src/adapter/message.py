@@ -127,7 +127,8 @@ class MessageAPI:
                     case _:
                         assert_never(update_ret.err_value)
 
-            broadcast_update_message(input.chat_ulid, message_ulid, input.text)
+            chat_ulid = update_ret.ok_value
+            broadcast_update_message(chat_ulid, message_ulid, input.text)
 
             return 200, SuccessOut(message="メッセージを更新しました")
         except Exception as e:

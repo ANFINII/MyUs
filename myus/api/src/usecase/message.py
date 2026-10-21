@@ -189,7 +189,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
 
 @Result.shield_exception()
-def update_message(user_id: int, message_ulid: str, text: str) -> Result[MessageDTO, AccessError]:
+def update_message(user_id: int, message_ulid: str, text: str) -> Result[str, AccessError]:
     message_ret = get_message_data(message_ulid)
     if message_ret.is_err:
         return Result.err(message_ret.err_value)
@@ -202,24 +202,21 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[Message
         log.warning("メッセージの編集権限がありません", message_ulid=message_ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
+    chat_repo = injector.get(ChatInterface)
+    chats_ret = chat_repo.bulk_get([message.chat_id])
+    if chats_ret.is_err:
+        return Result.err(chats_ret.err_value)
+
+    chats = chats_ret.ok_value
+    if len(chats) == 0:
+        log.warning("チャットが見つかりませんでした", chat_id=message.chat_id)
+        return Result.err(NotFoundError("Not Found"))
+
     save_ret = save_message_data(replace(message, text=text))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    author_ret = get_author_data(message.author_id)
-    if author_ret.is_err:
-        return Result.err(author_ret.err_value)
-
-    author = author_ret.ok_value
-    data = MessageDTO(
-        ulid=message.ulid,
-        text=text,
-        reply_count=message.reply_count,
-        created=message.created,
-        updated=message.updated,
-        author=author,
-    )
-    return Result.ok(data)
+    return Result.ok(chats[0].ulid)
 
 
 @Result.shield_exception()
