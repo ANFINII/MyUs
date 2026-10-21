@@ -1,13 +1,11 @@
-import jwt
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
 from api.src.types.schema.auth import LoginIn, LoginOut, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut
-from api.src.usecase.auth import auth_check, change_password, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_user, withdraw_user
+from api.src.usecase.auth import auth_check, change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
 from api.src.usecase.user import signup_check
-from api.utils.functions.token import access_token, refresh_token
 
 
 class AuthAPI:
@@ -20,32 +18,15 @@ class AuthAPI:
     def auth(request: HttpRequest):
         log.info("AuthAPI auth")
 
-        token = request.COOKIES.get("access_token")
-        if not token:
+        ret = auth_check(request)
+        if ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
+
+        user_id = ret.ok_value
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        key = settings.SECRET_KEY
-        try:
-            payload = jwt.decode(jwt=token, key=key, algorithms=["HS256"])
-            user_id = payload.get("user_id")
-            if not user_id:
-                return 401, ErrorOut(message="Invalid token")
-
-            ret = verify_user(user_id)
-            if ret.is_err:
-                return 500, ErrorOut(message="Internal Server Error")
-
-            is_verified = ret.ok_value
-            if not is_verified:
-                return 401, ErrorOut(message="Unauthorized")
-
-            return 200, ErrorOut(message="認証済みです!")
-        except jwt.ExpiredSignatureError:
-            log.warning("Token expired")
-            return 401, ErrorOut(message="Token expired")
-        except jwt.exceptions.DecodeError:
-            log.warning("Token decode error")
-            return 401, ErrorOut(message="Invalid token")
+        return 200, ErrorOut(message="認証済みです!")
 
     @staticmethod
     @router.post("refresh", response={200: RefreshOut, 401: ErrorOut, 500: ErrorOut})
@@ -53,47 +34,27 @@ class AuthAPI:
         log.info("AuthAPI refresh")
 
         token = request.COOKIES.get("refresh_token")
-        if not token:
+        if token is None:
             log.warning("No refresh token in cookies")
             return 401, ErrorOut(message="Refresh token not found")
 
-        try:
-            payload = jwt.decode(
-                jwt=token,
-                key=settings.SECRET_KEY,
-                algorithms=["HS256"]
-            )
+        user_id_ret = verify_token(token, "refresh")
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
 
-            if payload.get("type") != "refresh":
-                log.warning("Invalid token type")
-                return 401, ErrorOut(message="Invalid token type")
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
 
-            user_id = payload.get("user_id")
-            if not user_id:
-                log.warning("No user_id in token")
-                return 401, ErrorOut(message="Invalid token")
+        tokens_ret = create_auth_tokens(user_id)
+        if tokens_ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
 
-            ret = verify_user(user_id)
-            if ret.is_err:
-                return 500, ErrorOut(message="Internal Server Error")
+        tokens = tokens_ret.ok_value
+        if tokens is None:
+            return 401, ErrorOut(message="Unauthorized")
 
-            is_verified = ret.ok_value
-            if not is_verified:
-                log.warning("User verification failed", user_id=user_id)
-                return 401, ErrorOut(message="Unauthorized")
-
-            access = access_token(user_id)
-
-        except jwt.ExpiredSignatureError:
-            log.warning("Refresh token expired")
-            return 401, ErrorOut(message="Refresh token expired")
-        except jwt.exceptions.DecodeError:
-            log.warning("Token decode error")
-            return 401, ErrorOut(message="Invalid token")
-        except Exception:
-            log.error("Unexpected error during token refresh")
-            return 500, ErrorOut(message="トークンリフレッシュに失敗しました!")
-
+        access, _ = tokens
         response.delete_cookie("access_token")
         response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
 
@@ -159,12 +120,15 @@ class AuthAPI:
         if user_id is None:
             return 400, ErrorOut(message="ID又はパスワードが違います!")
 
-        try:
-            access = access_token(user_id)
-            refresh = refresh_token(user_id)
-        except Exception:
-            log.error("Token generation error")
+        tokens_ret = create_auth_tokens(user_id)
+        if tokens_ret.is_err:
             return 500, ErrorOut(message="認証トークンの生成に失敗しました!")
+
+        tokens = tokens_ret.ok_value
+        if tokens is None:
+            return 400, ErrorOut(message="ID又はパスワードが違います!")
+
+        access, refresh = tokens
 
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
@@ -188,7 +152,7 @@ class AuthAPI:
 
     @staticmethod
     @router.post("/password/change", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
-    def password_change(request: HttpRequest, input: PasswordChangeIn):
+    def password_change(request: HttpRequest, response: HttpResponse, input: PasswordChangeIn):
         log.info("AuthAPI password_change")
 
         user_id_ret = auth_check(request)
@@ -206,6 +170,18 @@ class AuthAPI:
         error_message = change_ret.ok_value
         if len(error_message) > 0:
             return 400, ErrorOut(message=error_message)
+
+        tokens_ret = create_auth_tokens(user_id)
+        if tokens_ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
+
+        tokens = tokens_ret.ok_value
+        if tokens is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        access, refresh = tokens
+        response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
+        response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
 
         return 204, ErrorOut(message="パスワードを変更しました!")
 
@@ -225,15 +201,19 @@ class AuthAPI:
         return 200, ErrorOut(message="メールを送信しました!")
 
     @staticmethod
-    @router.get("/password/reset/verify", response={200: PasswordResetVerifyOut, 401: ErrorOut})
+    @router.get("/password/reset/verify", response={200: PasswordResetVerifyOut, 401: ErrorOut, 500: ErrorOut})
     def password_reset_verify(request: HttpRequest, token: str):
         log.info("AuthAPI password_reset_verify")
 
-        result = password_reset_verify_token(token)
-        if result is None:
+        ret = password_reset_verify_token(token)
+        if ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
+
+        verified = ret.ok_value
+        if verified is None:
             return 401, ErrorOut(message="リンクの有効期限が切れています!")
 
-        _, email = result
+        _, email = verified
         return 200, PasswordResetVerifyOut(email=email)
 
     @staticmethod

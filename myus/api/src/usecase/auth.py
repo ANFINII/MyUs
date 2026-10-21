@@ -1,3 +1,4 @@
+import hmac
 import jwt
 from dataclasses import replace
 from datetime import date, datetime
@@ -23,7 +24,7 @@ from api.src.usecase.payment import cancel_subscription
 from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.payment import CancelError
 from api.utils.functions.encrypt import decrypt
-from api.utils.functions.token import password_reset_token, signup_token
+from api.utils.functions.token import access_token, password_fingerprint, password_reset_token, refresh_token, signup_token
 from api.utils.functions.validation import has_email
 
 
@@ -33,49 +34,79 @@ def auth_check(request: HttpRequest) -> Result[int | None, FatalError]:
     if token is None:
         return Result.ok(None)
 
-    key = settings.SECRET_KEY
+    ret = verify_token(token, "access")
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    user_id = ret.ok_value
+    return Result.ok(user_id)
+
+
+@Result.shield_exception()
+def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
     try:
-        payload = jwt.decode(jwt=token, key=key, algorithms=["HS256"])
+        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return Result.ok(None)
     except jwt.exceptions.DecodeError:
         return Result.ok(None)
 
-    if payload.get("type") != "access":
-        log.warning("アクセストークンのタイプが不正です")
+    if payload.get("type") != token_type:
+        log.warning("トークンのタイプが不正です", token_type=token_type)
         return Result.ok(None)
 
     user_id = payload.get("user_id")
-    if user_id is None:
+    if not isinstance(user_id, int):
         return Result.ok(None)
 
-    ret = verify_user(user_id)
+    ret = get_active_user(user_id)
     if ret.is_err:
         return Result.err(ret.err_value)
 
-    is_verified = ret.ok_value
-    if not is_verified:
+    user = ret.ok_value
+    if user is None:
         log.warning("無効なユーザーのトークンです", user_id=user_id)
+        return Result.ok(None)
+
+    if not is_same_password(payload.get("pwd"), user.user.password):
+        log.warning("パスワードが変わったため無効なトークンです", user_id=user_id)
         return Result.ok(None)
 
     return Result.ok(user_id)
 
 
 @Result.shield_exception()
-def verify_user(user_id: int) -> Result[bool, FatalError]:
+def get_active_user(user_id: int) -> Result[UserAllData | None, FatalError]:
     repo = injector.get(UserInterface)
     ret = repo.bulk_get([user_id])
     if ret.is_err:
         return Result.err(ret.err_value)
 
     users = ret.ok_value
-    if len(users) == 0:
-        return Result.ok(False)
+    if len(users) == 0 or not users[0].user.is_active:
+        return Result.ok(None)
 
-    if not users[0].user.is_active:
-        return Result.ok(False)
+    return Result.ok(users[0])
 
-    return Result.ok(True)
+
+def is_same_password(fingerprint: object, password_hash: str) -> bool:
+    if not isinstance(fingerprint, str):
+        return False
+    return hmac.compare_digest(fingerprint, password_fingerprint(password_hash))
+
+
+@Result.shield_exception()
+def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalError]:
+    ret = get_active_user(user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    user = ret.ok_value
+    if user is None:
+        return Result.ok(None)
+
+    password_hash = user.user.password
+    return Result.ok((access_token(user_id, password_hash), refresh_token(user_id, password_hash)))
 
 
 def login_user(username: str, password: str) -> int | None:
@@ -308,7 +339,7 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
     if not user_data.user.is_active:
         return Result.ok("")
 
-    token = password_reset_token(user_data.user.id, email)
+    token = password_reset_token(user_data.user.id, email, user_data.user.password)
     subject = render_to_string("registration/email/reset/subject.txt").strip()
     message = render_to_string(
         "registration/email/reset/message.txt",
@@ -328,39 +359,57 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
     return Result.ok("")
 
 
-def password_reset_verify_token(token: str) -> tuple[int, str] | None:
+@Result.shield_exception()
+def password_reset_verify_token(token: str) -> Result[tuple[int, str] | None, FatalError]:
     try:
         payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         log.warning("Password reset token expired")
-        return None
+        return Result.ok(None)
     except jwt.exceptions.DecodeError:
         log.warning("Password reset token decode error")
-        return None
+        return Result.ok(None)
 
     if payload.get("type") != "password_reset":
         log.warning("Invalid password reset token type")
-        return None
+        return Result.ok(None)
 
     user_id = payload.get("user_id")
     if not isinstance(user_id, int):
         log.warning("Invalid password reset token user_id")
-        return None
+        return Result.ok(None)
 
     email = payload.get("email")
     if not isinstance(email, str) or len(email) == 0:
         log.warning("Invalid password reset token email")
-        return None
+        return Result.ok(None)
 
-    return (user_id, email)
+    ret = get_active_user(user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    user = ret.ok_value
+    if user is None:
+        log.warning("Password reset token user not found", user_id=user_id)
+        return Result.ok(None)
+
+    if not is_same_password(payload.get("pwd"), user.user.password):
+        log.warning("Password reset token already used", user_id=user_id)
+        return Result.ok(None)
+
+    return Result.ok((user_id, email))
 
 
 @Result.shield_exception()
 def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
-    result = password_reset_verify_token(input.token)
-    if result is None:
+    verify_ret = password_reset_verify_token(input.token)
+    if verify_ret.is_err:
+        return Result.err(verify_ret.err_value)
+
+    verified = verify_ret.ok_value
+    if verified is None:
         return Result.ok("リンクの有効期限が切れています!")
-    user_id, _ = result
+    user_id, _ = verified
 
     try:
         password1 = decrypt(input.password1)
