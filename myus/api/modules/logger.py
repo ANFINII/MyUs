@@ -1,9 +1,10 @@
 import coloredlogs
 import inspect
+import re
 import traceback
-from datetime import datetime
 from enum import Enum
 from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING, FileHandler, Formatter, Logger, LogRecord, StreamHandler, getLogger
+from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from typing import Any, ClassVar, Self
 
@@ -75,6 +76,15 @@ class ColorFormat(coloredlogs.ColoredFormatter):
         return result
 
 
+class PlainFormatter(Formatter):
+    """ファイル用：ANSIの色コードを取り除く"""
+
+    ANSI_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"\x1b\[[0-9;]*m")
+
+    def format(self, record: LogRecord) -> str:
+        return self.ANSI_PATTERN.sub("", super().format(record))
+
+
 class Log:
     """ログクラス - 自動呼び出し元検出とスタックトレース対応"""
 
@@ -129,12 +139,14 @@ class Log:
         log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
 
-        error_file_handler = FileHandler(
-            log_dir / f"error_{datetime.now().strftime('%Y%m%d')}.log",
+        error_file_handler = TimedRotatingFileHandler(
+            log_dir / "error.log",
+            when="midnight",
+            backupCount=30,
             encoding="utf-8"
         )
         error_file_handler.setLevel(ERROR)
-        error_file_handler.setFormatter(Formatter(self.LOG_FORMAT, self.DATE_FORMAT))
+        error_file_handler.setFormatter(PlainFormatter(self.LOG_FORMAT, self.DATE_FORMAT))
         self._logger.addHandler(error_file_handler)
 
         # coloredlogsを使用して色を設定
@@ -290,7 +302,7 @@ class Log:
     @classmethod
     def error(cls, msg: str = "", exc: Exception | None = None, **kwargs: Any) -> None:
         """エラーレベルログ（スタックトレース付き）"""
-        cls._log("ERROR", msg, exc=exc, **kwargs)
+        cls._log("ERROR", msg, exc=exc, is_traceback=exc is not None, **kwargs)
 
     @classmethod
     def critical(cls, msg: str = "", exc: Exception | None = None, **kwargs: Any) -> None:
