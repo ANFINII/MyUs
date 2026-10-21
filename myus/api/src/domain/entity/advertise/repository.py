@@ -16,6 +16,8 @@ def _filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) -
     q_list: list[Q] = []
     if filter.ulid:
         q_list.append(Q(ulid=filter.ulid))
+    if len(filter.ulids) > 0:
+        q_list.append(Q(ulid__in=filter.ulids))
     if filter.publish is not None:
         q_list.append(Q(publish=filter.publish))
     if filter.owner_id:

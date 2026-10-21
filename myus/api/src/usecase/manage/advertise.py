@@ -186,17 +186,14 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
 @Result.shield_exception()
 def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(AdvertiseInterface)
-    ids: list[int] = []
-    for ulid in ulids:
-        target_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
-        if target_ret.is_err:
-            return Result.err(target_ret.err_value)
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-        target = target_ret.ok_value
-        if len(target) == 0:
-            log.error("Advertise not found", ulid=ulid, user_id=user_id)
-            return Result.err(NotFoundError("error.deleteFailed"))
-        ids.extend(target)
+    ids = ids_ret.ok_value
+    if len(ids) != len(set(ulids)):
+        log.error("Advertise not found", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:

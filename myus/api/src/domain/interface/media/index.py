@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
 
 
@@ -17,6 +17,7 @@ class SortType(Enum):
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     ulid: str = ""
+    ulids: list[str] = field(default_factory=list)
     publish: bool | None = None
     owner_id: int = 0
     channel_id: int = 0
