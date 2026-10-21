@@ -16,7 +16,7 @@ class MediaHashtagAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[HashtagOut], 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: list[HashtagOut], 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("MediaHashtagAPI get")
 
@@ -26,7 +26,7 @@ class MediaHashtagAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         hashtags_ret = get_master_hashtags()
         if hashtags_ret.is_err:
@@ -36,7 +36,7 @@ class MediaHashtagAPI:
         return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in hashtags]
 
     @staticmethod
-    @router.put("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: MediaHashtagsUpdateIn):
         log.info("MediaHashtagAPI put", media_type=input.media_type.value, media_ulid=input.media_ulid)
 
@@ -46,7 +46,7 @@ class MediaHashtagAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         hashtags = [HashtagDTO(ulid=h.ulid, name=h.name) for h in input.hashtags]
         update_ret = update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags)
@@ -54,9 +54,9 @@ class MediaHashtagAPI:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

@@ -13,7 +13,7 @@ class CategoryAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[CategoryOut], 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: list[CategoryOut], 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("CategoryAPI get")
 
@@ -23,7 +23,7 @@ class CategoryAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         categories_ret = get_categories()
         if categories_ret.is_err:
