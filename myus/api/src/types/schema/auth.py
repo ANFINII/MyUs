@@ -7,15 +7,6 @@ class LoginIn(BaseModel):
     password: str
 
 
-class LoginOut(BaseModel):
-    access: str
-    refresh: str
-
-
-class RefreshOut(BaseModel):
-    access: str
-
-
 class SignupEmailIn(BaseModel):
     email: str
 
