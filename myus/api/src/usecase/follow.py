@@ -8,7 +8,7 @@ from api.src.injectors.container import injector
 from api.src.types.dto.follow import FollowDTO, FollowUserDTO
 from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_user_data
-from api.utils.common.result import FatalError, FindError, NotFoundError, Result
+from api.utils.common.result import FatalError, InputError, NotFoundError, Result, ValidationError
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.index import create_url
 
@@ -78,7 +78,7 @@ def get_followers(user_id: int, search: str, limit: int) -> Result[list[FollowUs
 
 
 @Result.shield_exception()
-def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[FollowDTO, FindError]:
+def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[FollowDTO, InputError]:
     user_repo = injector.get(UserInterface)
     repo = injector.get(FollowInterface)
     following_ret = get_user_data(ulid=ulid)
@@ -91,6 +91,8 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
 
     follower_id = follower.user.id
     following_id = following.user.id
+    if follower_id == following_id:
+        return Result.err(ValidationError("自分自身はフォローできません!"))
 
     follow_ids_ret = repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
     if follow_ids_ret.is_err:
