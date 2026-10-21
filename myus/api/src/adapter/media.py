@@ -113,13 +113,14 @@ class VideoAPI:
 
         obj_ret = create_video(user_id=user_id, input=input, image=image, video=video)
         if obj_ret.is_err:
+            message = obj_ret.err_value.message
             match obj_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=obj_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=obj_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=obj_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -158,9 +159,10 @@ class VideoAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
+            message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=detail_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -218,13 +220,14 @@ class MusicAPI:
 
         obj_ret = create_music(user_id=user_id, input=input, music=music)
         if obj_ret.is_err:
+            message = obj_ret.err_value.message
             match obj_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=obj_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=obj_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=obj_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -263,9 +266,10 @@ class MusicAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
+            message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=detail_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -323,13 +327,14 @@ class BlogAPI:
 
         obj_ret = create_blog(user_id=user_id, input=input, image=image)
         if obj_ret.is_err:
+            message = obj_ret.err_value.message
             match obj_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=obj_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=obj_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=obj_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -368,9 +373,10 @@ class BlogAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
+            message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=detail_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -427,13 +433,14 @@ class ComicAPI:
 
         obj_ret = create_comic(user_id=user_id, input=input, image=image, pages=pages)
         if obj_ret.is_err:
+            message = obj_ret.err_value.message
             match obj_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=obj_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=obj_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=obj_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -472,9 +479,10 @@ class ComicAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
+            message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=detail_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -531,13 +539,14 @@ class PictureAPI:
 
         obj_ret = create_picture(user_id=user_id, input=input, image=image)
         if obj_ret.is_err:
+            message = obj_ret.err_value.message
             match obj_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=obj_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=obj_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=obj_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -576,9 +585,10 @@ class PictureAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
+            message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=detail_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -634,11 +644,12 @@ class ChatAPI:
 
         obj_ret = create_chat(user_id=user_id, input=input)
         if obj_ret.is_err:
+            message = obj_ret.err_value.message
             match obj_ret.err_value:
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=obj_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=obj_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -677,9 +688,10 @@ class ChatAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
+            message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=detail_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -729,9 +741,10 @@ class MediaReadAPI:
 
         ret = increment_media_read(input.media_type, input.ulid, get_client_ip(request))
         if ret.is_err:
+            message = ret.err_value.message
             match ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

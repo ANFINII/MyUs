@@ -98,9 +98,10 @@ class ChannelAPI:
 
         subscribe_ret = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
         if subscribe_ret.is_err:
+            message = subscribe_ret.err_value.message
             match subscribe_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=subscribe_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -125,9 +126,10 @@ class ChannelAPI:
 
         create_ret = create_user_channel(user_id, input, avatar_file)
         if create_ret.is_err:
+            message = create_ret.err_value.message
             match create_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=create_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -151,13 +153,14 @@ class ChannelAPI:
 
         update_ret = update_user_channel(user_id, ulid, input, avatar_file)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

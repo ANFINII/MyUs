@@ -32,9 +32,10 @@ class MessageAPI:
         try:
             message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
             if message_ret.is_err:
+                error_message = message_ret.err_value.message
                 match message_ret.err_value:
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=error_message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -115,11 +116,12 @@ class MessageAPI:
         try:
             update_ret = update_message(user_id, message_ulid, input.text)
             if update_ret.is_err:
+                message = update_ret.err_value.message
                 match update_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -148,11 +150,12 @@ class MessageAPI:
         try:
             delete_ret = delete_message(user_id, message_ulid)
             if delete_ret.is_err:
+                message = delete_ret.err_value.message
                 match delete_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=delete_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:

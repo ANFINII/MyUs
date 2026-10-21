@@ -86,9 +86,10 @@ class CommentAPI:
         try:
             comment_ret = create_comment(user_id, input)
             if comment_ret.is_err:
+                message = comment_ret.err_value.message
                 match comment_ret.err_value:
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=comment_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -132,11 +133,12 @@ class CommentAPI:
         try:
             update_ret = update_comment(user_id, comment_ulid, input.text)
             if update_ret.is_err:
+                message = update_ret.err_value.message
                 match update_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -163,11 +165,12 @@ class CommentAPI:
         try:
             delete_ret = delete_comment(user_id, comment_ulid)
             if delete_ret.is_err:
+                message = delete_ret.err_value.message
                 match delete_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=delete_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:

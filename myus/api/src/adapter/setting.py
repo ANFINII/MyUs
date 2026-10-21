@@ -81,11 +81,12 @@ class SettingProfileAPI:
 
         update_ret = update_profile(user_id, input, avatar_file)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -158,11 +159,12 @@ class SettingMyPageAPI:
 
         update_ret = update_mypage(user_id, input, banner_file)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -231,9 +233,10 @@ class SettingNotificationAPI:
 
         update_ret = update_notification(user_id, input)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

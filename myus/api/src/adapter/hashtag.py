@@ -51,11 +51,12 @@ class MediaHashtagAPI:
         hashtags = [HashtagDTO(ulid=h.ulid, name=h.name) for h in input.hashtags]
         update_ret = update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

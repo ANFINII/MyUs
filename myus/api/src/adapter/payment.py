@@ -31,9 +31,10 @@ class PaymentAPI:
 
         checkout_ret = create_checkout(user_id, input.plan)
         if checkout_ret.is_err:
+            message = checkout_ret.err_value.message
             match checkout_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=checkout_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -91,9 +92,10 @@ class PaymentAPI:
 
         cancel_ret = cancel_subscription(user_id)
         if cancel_ret.is_err:
+            message = cancel_ret.err_value.message
             match cancel_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=cancel_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

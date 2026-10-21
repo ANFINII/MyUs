@@ -8,7 +8,7 @@ from typing import Self
 class AnyError:
     """Result型のE型パラメータに使うための基底エラー型"""
 
-    error_message: str
+    message: str
 
     @classmethod
     def from_exception(cls, exception: Exception) -> Self:

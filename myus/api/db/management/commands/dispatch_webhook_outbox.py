@@ -24,7 +24,7 @@ class Command(BaseCommand):
             limit=limit,
         )
         if ids_ret.is_err:
-            log.error("WebhookOutbox dispatch get_ids failed", error=ids_ret.err_value.error_message)
+            log.error("WebhookOutbox dispatch get_ids failed", error=ids_ret.err_value.message)
             return
 
         ids = ids_ret.ok_value
@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
         entries_ret = repo.bulk_get(ids)
         if entries_ret.is_err:
-            log.error("WebhookOutbox dispatch bulk_get failed", error=entries_ret.err_value.error_message)
+            log.error("WebhookOutbox dispatch bulk_get failed", error=entries_ret.err_value.message)
             return
 
         entries = entries_ret.ok_value
@@ -47,7 +47,7 @@ class Command(BaseCommand):
 
         save_ret = repo.bulk_save(delivered)
         if save_ret.is_err:
-            log.error("WebhookOutbox dispatch bulk_save failed", error=save_ret.err_value.error_message)
+            log.error("WebhookOutbox dispatch bulk_save failed", error=save_ret.err_value.message)
             return
 
         log.info("WebhookOutbox dispatch completed", count=len(delivered))

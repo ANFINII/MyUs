@@ -187,11 +187,12 @@ class UserAPI:
 
         follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
         if follow_ret.is_err:
+            message = follow_ret.err_value.message
             match follow_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=follow_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=follow_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -216,9 +217,10 @@ class UserAPI:
 
         like_ret = like_media(user_id, input.media_type, input.ulid)
         if like_ret.is_err:
+            message = like_ret.err_value.message
             match like_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -243,9 +245,10 @@ class UserAPI:
 
         like_ret = like_comment(user_id, input.ulid)
         if like_ret.is_err:
+            message = like_ret.err_value.message
             match like_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

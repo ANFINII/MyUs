@@ -101,10 +101,10 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 
 | エラー型 | 使う条件 | HTTPステータス | `type`（`ErrorType`） | message |
 |---|---|---|---|---|
-| `ValidationError` | 入力や業務ルールに反する（上限超過・ファイル形式等） | 400 | `VALIDATION` | `error_message` |
+| `ValidationError` | 入力や業務ルールに反する（上限超過・ファイル形式等） | 400 | `VALIDATION` | `message` |
 | `UnauthorizedError` | 認証されていない | 401 | `UNAUTHENTICATED` | `"Unauthorized"` |
-| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | 403 | `FORBIDDEN` | `error_message` |
-| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `NOT_FOUND` | `error_message` |
+| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | 403 | `FORBIDDEN` | `message` |
+| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `NOT_FOUND` | `message` |
 | `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `INTERNAL` | `"Internal Server Error"`固定 |
 
 - エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`api/src/types/schema/common.py`）。`type`は必須
@@ -137,17 +137,19 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 - `Result[T, FatalError]`だけを返すusecaseは`if ret.is_err: return 500, ...`のままでよい
 - `case`はHTTPステータスの番号が小さい順に並べ、最後を`case _: assert_never(...)`にする
 - BEにしか表示されないメッセージ（500など）は英語にする
+- エラー型の`message`は`match`の前で`message = ret.err_value.message`と変数に取り出し、`ErrorOut(..., message=message)`で渡す（`message`が他の変数と被るときは`error_message`にする）
 
 ```python
 ret = update_manage_video(user_id, ulid, input, image)
 if ret.is_err:
+    message = ret.err_value.message
     match ret.err_value:
         case ValidationError():
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=ret.err_value.error_message)
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
         case ForbiddenError():
-            return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=ret.err_value.error_message)
+            return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
         case NotFoundError():
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=ret.err_value.error_message)
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
         case FatalError():
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
         case _:
