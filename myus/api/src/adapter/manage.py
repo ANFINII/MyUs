@@ -29,7 +29,7 @@ class ManageVideoAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: VideoListOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: VideoListOut, 400: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageVideoAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -39,7 +39,7 @@ class ManageVideoAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         videos_ret = get_manage_videos(user_id, search, channel, limit, offset)
         if videos_ret.is_err:
@@ -49,7 +49,7 @@ class ManageVideoAPI:
         return 200, VideoListOut(items=convert_videos(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: VideoOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: VideoOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageVideoAPI get", ulid=ulid)
 
@@ -59,14 +59,14 @@ class ManageVideoAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         video_ret = get_manage_video(user_id, ulid)
         if video_ret.is_err:
             message = video_ret.err_value.message
             match video_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -76,7 +76,7 @@ class ManageVideoAPI:
         return 200, convert_videos([video])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: VideoUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageVideoAPI put", ulid=ulid, input=input, image=image)
 
@@ -86,7 +86,7 @@ class ManageVideoAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_video(user_id, ulid, input, image)
         if update_ret.is_err:
@@ -95,9 +95,9 @@ class ManageVideoAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -106,7 +106,7 @@ class ManageVideoAPI:
         return 204, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageVideoAPI delete", ulids=input.ulids)
 
@@ -116,14 +116,14 @@ class ManageVideoAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_video(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -138,7 +138,7 @@ class ManageMusicAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: MusicListOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: MusicListOut, 400: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageMusicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -148,7 +148,7 @@ class ManageMusicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         musics_ret = get_manage_musics(user_id, search, channel, limit, offset)
         if musics_ret.is_err:
@@ -158,7 +158,7 @@ class ManageMusicAPI:
         return 200, MusicListOut(items=convert_musics(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: MusicOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: MusicOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageMusicAPI get", ulid=ulid)
 
@@ -168,14 +168,14 @@ class ManageMusicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         music_ret = get_manage_music(user_id, ulid)
         if music_ret.is_err:
             message = music_ret.err_value.message
             match music_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -185,7 +185,7 @@ class ManageMusicAPI:
         return 200, convert_musics([music])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: MusicUpdateIn):
         log.info("ManageMusicAPI put", ulid=ulid, input=input)
 
@@ -195,16 +195,16 @@ class ManageMusicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_music(user_id, ulid, input)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -213,7 +213,7 @@ class ManageMusicAPI:
         return 204, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageMusicAPI delete", ulids=input.ulids)
 
@@ -223,14 +223,14 @@ class ManageMusicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_music(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -245,7 +245,7 @@ class ManageBlogAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: BlogListOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: BlogListOut, 400: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageBlogAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -255,7 +255,7 @@ class ManageBlogAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         blogs_ret = get_manage_blogs(user_id, search, channel, limit, offset)
         if blogs_ret.is_err:
@@ -265,7 +265,7 @@ class ManageBlogAPI:
         return 200, BlogListOut(items=convert_blogs(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: BlogOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: BlogOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageBlogAPI get", ulid=ulid)
 
@@ -275,14 +275,14 @@ class ManageBlogAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         blog_ret = get_manage_blog(user_id, ulid)
         if blog_ret.is_err:
             message = blog_ret.err_value.message
             match blog_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -292,7 +292,7 @@ class ManageBlogAPI:
         return 200, convert_blogs([blog])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: BlogUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageBlogAPI put", ulid=ulid, input=input, image=image)
 
@@ -302,7 +302,7 @@ class ManageBlogAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_blog(user_id, ulid, input, image)
         if update_ret.is_err:
@@ -311,9 +311,9 @@ class ManageBlogAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -322,7 +322,7 @@ class ManageBlogAPI:
         return 204, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageBlogAPI delete", ulids=input.ulids)
 
@@ -332,14 +332,14 @@ class ManageBlogAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_blog(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -354,7 +354,7 @@ class ManageComicAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: ComicListOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: ComicListOut, 400: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageComicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -364,7 +364,7 @@ class ManageComicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         comics_ret = get_manage_comics(user_id, search, channel, limit, offset)
         if comics_ret.is_err:
@@ -374,7 +374,7 @@ class ManageComicAPI:
         return 200, ComicListOut(items=convert_comics(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ComicOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: ComicOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageComicAPI get", ulid=ulid)
 
@@ -384,14 +384,14 @@ class ManageComicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         comic_ret = get_manage_comic(user_id, ulid)
         if comic_ret.is_err:
             message = comic_ret.err_value.message
             match comic_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -401,7 +401,7 @@ class ManageComicAPI:
         return 200, convert_comics([comic])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ComicUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageComicAPI put", ulid=ulid, input=input, image=image)
 
@@ -411,7 +411,7 @@ class ManageComicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_comic(user_id, ulid, input, image)
         if update_ret.is_err:
@@ -420,9 +420,9 @@ class ManageComicAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -431,7 +431,7 @@ class ManageComicAPI:
         return 204, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageComicAPI delete", ulids=input.ulids)
 
@@ -441,14 +441,14 @@ class ManageComicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_comic(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -463,7 +463,7 @@ class ManagePictureAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: PictureListOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: PictureListOut, 400: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManagePictureAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -473,7 +473,7 @@ class ManagePictureAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         pictures_ret = get_manage_pictures(user_id, search, channel, limit, offset)
         if pictures_ret.is_err:
@@ -483,7 +483,7 @@ class ManagePictureAPI:
         return 200, PictureListOut(items=convert_pictures(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: PictureOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: PictureOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManagePictureAPI get", ulid=ulid)
 
@@ -493,14 +493,14 @@ class ManagePictureAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         picture_ret = get_manage_picture(user_id, ulid)
         if picture_ret.is_err:
             message = picture_ret.err_value.message
             match picture_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -510,7 +510,7 @@ class ManagePictureAPI:
         return 200, convert_pictures([picture])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: PictureUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManagePictureAPI put", ulid=ulid, input=input, image=image)
 
@@ -520,7 +520,7 @@ class ManagePictureAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_picture(user_id, ulid, input, image)
         if update_ret.is_err:
@@ -529,9 +529,9 @@ class ManagePictureAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -540,7 +540,7 @@ class ManagePictureAPI:
         return 204, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManagePictureAPI delete", ulids=input.ulids)
 
@@ -550,14 +550,14 @@ class ManagePictureAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_picture(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -572,7 +572,7 @@ class ManageChatAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: ChatListOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: ChatListOut, 400: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageChatAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -582,7 +582,7 @@ class ManageChatAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         chats_ret = get_manage_chats(user_id, search, channel, limit, offset)
         if chats_ret.is_err:
@@ -592,7 +592,7 @@ class ManageChatAPI:
         return 200, ChatListOut(items=convert_chats(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ChatOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: ChatOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageChatAPI get", ulid=ulid)
 
@@ -602,14 +602,14 @@ class ManageChatAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         chat_ret = get_manage_chat(user_id, ulid)
         if chat_ret.is_err:
             message = chat_ret.err_value.message
             match chat_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -619,7 +619,7 @@ class ManageChatAPI:
         return 200, convert_chats([chat])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChatUpdateIn):
         log.info("ManageChatAPI put", ulid=ulid, input=input)
 
@@ -629,16 +629,16 @@ class ManageChatAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_chat(user_id, ulid, input)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -647,7 +647,7 @@ class ManageChatAPI:
         return 204, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageChatAPI delete", ulids=input.ulids)
 
@@ -657,14 +657,14 @@ class ManageChatAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_chat(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -679,7 +679,7 @@ class ManageAdvertiseAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: AdvertiseListOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: AdvertiseListOut, 400: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageAdvertiseAPI list", search=search, limit=limit, offset=offset)
 
@@ -689,7 +689,7 @@ class ManageAdvertiseAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         advertises_ret = get_manage_advertises(user_id, search, limit, offset)
         if advertises_ret.is_err:
@@ -699,7 +699,7 @@ class ManageAdvertiseAPI:
         return 200, AdvertiseListOut(items=convert_advertises(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: AdvertiseOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: AdvertiseOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageAdvertiseAPI get", ulid=ulid)
 
@@ -709,14 +709,14 @@ class ManageAdvertiseAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         advertise_ret = get_manage_advertise(user_id, ulid)
         if advertise_ret.is_err:
             message = advertise_ret.err_value.message
             match advertise_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -726,7 +726,7 @@ class ManageAdvertiseAPI:
         return 200, convert_advertises([advertise])[0]
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: AdvertiseIn = Form(...), image: UploadedFile = File(...), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI post", input=input, image=image, video=video)
 
@@ -736,7 +736,7 @@ class ManageAdvertiseAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         create_ret = create_manage_advertise(user_id, input, image, video)
         if create_ret.is_err:
@@ -745,7 +745,7 @@ class ManageAdvertiseAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -755,7 +755,7 @@ class ManageAdvertiseAPI:
         return 201, MediaCreateOut(ulid=advertise.ulid)
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: AdvertiseUpdateIn = Form(...), image: UploadedFile | None = File(None), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI put", ulid=ulid, input=input, image=image, video=video)
 
@@ -765,7 +765,7 @@ class ManageAdvertiseAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_manage_advertise(user_id, ulid, input, image, video)
         if update_ret.is_err:
@@ -774,7 +774,7 @@ class ManageAdvertiseAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -783,7 +783,7 @@ class ManageAdvertiseAPI:
         return 204, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageAdvertiseAPI delete", ulids=input.ulids)
 
@@ -793,14 +793,14 @@ class ManageAdvertiseAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_advertise(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
