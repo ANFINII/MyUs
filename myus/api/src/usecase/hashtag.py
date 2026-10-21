@@ -66,7 +66,7 @@ def get_ng_words() -> Result[list[str], FatalError]:
 @Result.shield_exception()
 def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, AccessError]:
     media_repo = get_media_repository(media_type)
-    hashtag_repo = injector.get(HashtagInterface)
+    repo = injector.get(HashtagInterface)
     media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
     if media_ids_ret.is_err:
         return Result.err(media_ids_ret.err_value)
@@ -89,12 +89,12 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
     ulids = [h.ulid for h in hashtags if h.ulid]
     ulid_data_map: dict[str, HashtagData] = {}
     if len(ulids) > 0:
-        existing_ids_ret = hashtag_repo.get_ids(HashtagFilterOption(ulids=ulids), HashtagSortOption())
+        existing_ids_ret = repo.get_ids(HashtagFilterOption(ulids=ulids), HashtagSortOption())
         if existing_ids_ret.is_err:
             return Result.err(existing_ids_ret.err_value)
 
         existing_ids = existing_ids_ret.ok_value
-        existing_hashtags_ret = hashtag_repo.bulk_get(existing_ids)
+        existing_hashtags_ret = repo.bulk_get(existing_ids)
         if existing_hashtags_ret.is_err:
             return Result.err(existing_hashtags_ret.err_value)
 
@@ -127,7 +127,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
         seen_name.add(normalized)
         update_hashtags.append(HashtagData(id=0, ulid="", name=normalized))
 
-    save_ret = hashtag_repo.bulk_save(media_type, media.id, update_hashtags)
+    save_ret = repo.bulk_save(media_type, media.id, update_hashtags)
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 

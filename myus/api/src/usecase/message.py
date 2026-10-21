@@ -121,11 +121,11 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         log.warning("チャットが見つかりませんでした", chat_ulid=chat_ulid)
         return Result.err(NotFoundError("メッセージの作成に失敗しました"))
 
-    message_repo = injector.get(MessageInterface)
+    repo = injector.get(MessageInterface)
 
     parent_id: int | None = None
     if parent_ulid:
-        parent_ids_ret = message_repo.get_ids(FilterOption(message_ulid=parent_ulid, is_parent=True), SortOption())
+        parent_ids_ret = repo.get_ids(FilterOption(message_ulid=parent_ulid, is_parent=True), SortOption())
         if parent_ids_ret.is_err:
             return Result.err(parent_ids_ret.err_value)
 
@@ -153,12 +153,12 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         updated=datetime.min,
     )
 
-    new_ids_ret = message_repo.bulk_save([new_message])
+    new_ids_ret = repo.bulk_save([new_message])
     if new_ids_ret.is_err:
         return Result.err(new_ids_ret.err_value)
 
     new_ids = new_ids_ret.ok_value
-    messages_ret = message_repo.bulk_get(new_ids)
+    messages_ret = repo.bulk_get(new_ids)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
@@ -167,7 +167,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
     message = messages[0]
 
     if parent_id is not None:
-        parent_messages_ret = message_repo.bulk_get([parent_id])
+        parent_messages_ret = repo.bulk_get([parent_id])
         if parent_messages_ret.is_err:
             return Result.err(parent_messages_ret.err_value)
 
@@ -255,8 +255,8 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
                 transaction.set_rollback(True)
                 return Result.err(notification_ret.err_value)
 
-        message_repo = injector.get(MessageInterface)
-        delete_ret = message_repo.bulk_delete([message.id])
+        repo = injector.get(MessageInterface)
+        delete_ret = repo.bulk_delete([message.id])
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)

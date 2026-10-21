@@ -82,12 +82,12 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
         hashtags=[],
     )
 
-    video_repo = injector.get(VideoInterface)
+    repo = injector.get(VideoInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = video_repo.bulk_save([new_video])
+        ids_ret = repo.bulk_save([new_video])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -99,7 +99,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = video_repo.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -108,7 +108,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 
     def encode_task() -> None:
         result = convert_video(video_path)
-        videos_ret = video_repo.bulk_get([obj.id])
+        videos_ret = repo.bulk_get([obj.id])
         if videos_ret.is_err:
             log.error("動画の取得に失敗しました", error=videos_ret.err_value.error_message, video_id=obj.id)
             return
@@ -118,7 +118,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
             log.warning("動画が見つかりません", video_id=obj.id)
             return
         updated = replace(videos[0], video=result.video, convert=result.convert, publish=input.publish)
-        save_ret = video_repo.bulk_save([updated])
+        save_ret = repo.bulk_save([updated])
         if save_ret.is_err:
             log.error("動画の保存に失敗しました", error=save_ret.err_value.error_message, video_id=obj.id)
             return
@@ -169,12 +169,12 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
         hashtags=[],
     )
 
-    music_repo = injector.get(MusicInterface)
+    repo = injector.get(MusicInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = music_repo.bulk_save([new_music])
+        ids_ret = repo.bulk_save([new_music])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -186,7 +186,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = music_repo.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -235,12 +235,12 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
         hashtags=[],
     )
 
-    blog_repo = injector.get(BlogInterface)
+    repo = injector.get(BlogInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = blog_repo.bulk_save([new_blog])
+        ids_ret = repo.bulk_save([new_blog])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -252,7 +252,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = blog_repo.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -301,12 +301,12 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
         hashtags=[],
     )
 
-    comic_repo = injector.get(ComicInterface)
+    repo = injector.get(ComicInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = comic_repo.bulk_save([new_comic])
+        ids_ret = repo.bulk_save([new_comic])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -318,7 +318,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = comic_repo.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -366,12 +366,12 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
         hashtags=[],
     )
 
-    picture_repo = injector.get(PictureInterface)
+    repo = injector.get(PictureInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = picture_repo.bulk_save([new_picture])
+        ids_ret = repo.bulk_save([new_picture])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -383,7 +383,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = picture_repo.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -429,12 +429,12 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, AccessErr
         hashtags=[],
     )
 
-    chat_repo = injector.get(ChatInterface)
+    repo = injector.get(ChatInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = chat_repo.bulk_save([new_chat])
+        ids_ret = repo.bulk_save([new_chat])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -446,7 +446,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, AccessErr
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = chat_repo.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 

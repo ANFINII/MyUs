@@ -55,8 +55,8 @@ def create_checkout(user_id: int, plan_name: str) -> Result[CheckoutResult, Find
         locale=Locale.JA,
     )
 
-    payment_repo = injector.get(PaymentInterface)
-    checkout_ret = payment_repo.create_checkout(data)
+    repo = injector.get(PaymentInterface)
+    checkout_ret = repo.create_checkout(data)
     if checkout_ret.is_err:
         return Result.err(checkout_ret.err_value)
 
@@ -66,8 +66,8 @@ def create_checkout(user_id: int, plan_name: str) -> Result[CheckoutResult, Find
 
 @Result.shield_exception()
 def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult, FatalError]:
-    payment_repo = injector.get(PaymentInterface)
-    ret = payment_repo.verify_webhook(payload, signature)
+    repo = injector.get(PaymentInterface)
+    ret = repo.verify_webhook(payload, signature)
     if ret.is_err:
         return Result.err(ret.err_value)
 

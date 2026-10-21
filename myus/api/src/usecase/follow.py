@@ -15,14 +15,14 @@ from api.utils.functions.index import create_url
 
 @Result.shield_exception()
 def get_follows(user_id: int, search: str, limit: int) -> Result[list[FollowUserDTO], FatalError]:
-    follow_repo = injector.get(FollowInterface)
+    repo = injector.get(FollowInterface)
     user_repo = injector.get(UserInterface)
-    ids_ret = follow_repo.get_ids(FilterOption(follower_id=user_id, search=search), SortOption(), limit)
+    ids_ret = repo.get_ids(FilterOption(follower_id=user_id, search=search), SortOption(), limit)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    follows_ret = follow_repo.bulk_get(ids)
+    follows_ret = repo.bulk_get(ids)
     if follows_ret.is_err:
         return Result.err(follows_ret.err_value)
 
@@ -47,14 +47,14 @@ def get_follows(user_id: int, search: str, limit: int) -> Result[list[FollowUser
 
 @Result.shield_exception()
 def get_followers(user_id: int, search: str, limit: int) -> Result[list[FollowUserDTO], FatalError]:
-    follow_repo = injector.get(FollowInterface)
+    repo = injector.get(FollowInterface)
     user_repo = injector.get(UserInterface)
-    ids_ret = follow_repo.get_ids(FilterOption(following_id=user_id, search=search), SortOption(), limit)
+    ids_ret = repo.get_ids(FilterOption(following_id=user_id, search=search), SortOption(), limit)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    follows_ret = follow_repo.bulk_get(ids)
+    follows_ret = repo.bulk_get(ids)
     if follows_ret.is_err:
         return Result.err(follows_ret.err_value)
 
@@ -80,7 +80,7 @@ def get_followers(user_id: int, search: str, limit: int) -> Result[list[FollowUs
 @Result.shield_exception()
 def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[FollowDTO, FindError]:
     user_repo = injector.get(UserInterface)
-    follow_repo = injector.get(FollowInterface)
+    repo = injector.get(FollowInterface)
     following_ret = get_user_data(ulid=ulid)
     if following_ret.is_err:
         return Result.err(following_ret.err_value)
@@ -92,12 +92,12 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
     follower_id = follower.user.id
     following_id = following.user.id
 
-    follow_ids_ret = follow_repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
+    follow_ids_ret = repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
     if follow_ids_ret.is_err:
         return Result.err(follow_ids_ret.err_value)
 
     follow_ids = follow_ids_ret.ok_value
-    follows_ret = follow_repo.bulk_get(follow_ids)
+    follows_ret = repo.bulk_get(follow_ids)
     if follows_ret.is_err:
         return Result.err(follows_ret.err_value)
 
@@ -106,7 +106,7 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
 
     with transaction.atomic():
         if follow is None:
-            new_ids_ret = follow_repo.bulk_save([FollowData(
+            new_ids_ret = repo.bulk_save([FollowData(
                 id=0,
                 follower_id=follower_id,
                 following_id=following_id,
@@ -124,17 +124,17 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
                     return Result.err(notification_ret.err_value)
         else:
             updated_follow = replace(follow, is_follow=is_follow)
-            save_ret = follow_repo.bulk_save([updated_follow])
+            save_ret = repo.bulk_save([updated_follow])
             if save_ret.is_err:
                 transaction.set_rollback(True)
                 return Result.err(save_ret.err_value)
 
-        follower_count_ret = follow_repo.count(FilterOption(following_id=following.user.id, is_follow=True))
+        follower_count_ret = repo.count(FilterOption(following_id=following.user.id, is_follow=True))
         if follower_count_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(follower_count_ret.err_value)
 
-        following_count_ret = follow_repo.count(FilterOption(follower_id=follower.user.id, is_follow=True))
+        following_count_ret = repo.count(FilterOption(follower_id=follower.user.id, is_follow=True))
         if following_count_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(following_count_ret.err_value)

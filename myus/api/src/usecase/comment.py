@@ -110,7 +110,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 
 @Result.shield_exception()
 def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, FindError]:
-    comment_repo = injector.get(CommentInterface)
+    repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
     media_ids_ret = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if media_ids_ret.is_err:
@@ -123,7 +123,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
 
     parent: CommentData | None = None
     if input.parent_ulid:
-        parent_ids_ret = comment_repo.get_ids(FilterOption(ulid=input.parent_ulid, is_parent=True), SortOption())
+        parent_ids_ret = repo.get_ids(FilterOption(ulid=input.parent_ulid, is_parent=True), SortOption())
         if parent_ids_ret.is_err:
             return Result.err(parent_ids_ret.err_value)
 
@@ -131,7 +131,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
         if len(parent_ids) == 0:
             return Result.err(NotFoundError("コメントの作成に失敗しました"))
 
-        parents_ret = comment_repo.bulk_get(parent_ids)
+        parents_ret = repo.bulk_get(parent_ids)
         if parents_ret.is_err:
             return Result.err(parents_ret.err_value)
 
@@ -158,12 +158,12 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
         like_count=0,
     )
 
-    new_ids_ret = comment_repo.bulk_save([new_comment])
+    new_ids_ret = repo.bulk_save([new_comment])
     if new_ids_ret.is_err:
         return Result.err(new_ids_ret.err_value)
 
     new_ids = new_ids_ret.ok_value
-    comments_ret = comment_repo.bulk_get(new_ids)
+    comments_ret = repo.bulk_get(new_ids)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
