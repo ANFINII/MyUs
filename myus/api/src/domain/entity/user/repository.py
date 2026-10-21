@@ -30,7 +30,7 @@ class UserRepository(UserInterface):
         return User.objects.select_related("profile", "mypage", "notification", "user_plan")
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption | None = None, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.id:
             q_list.append(Q(id=filter.id))
@@ -49,6 +49,9 @@ class UserRepository(UserInterface):
             field_name = sort_field(sort.sort_type)
             order_by_key = field_name if sort.is_asc else f"-{field_name}"
             qs = qs.order_by(order_by_key)
+
+        if limit is not None:
+            qs = qs[:limit]
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 
