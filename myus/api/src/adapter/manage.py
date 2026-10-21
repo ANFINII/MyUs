@@ -5,7 +5,7 @@ from api.modules.logger import log
 from api.src.adapter.advertise import convert_advertises
 from api.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from api.src.types.schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
-from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
+from api.src.types.schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
 from api.src.types.schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.types.schema.media.output import MediaCreateOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
 from api.src.types.schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
@@ -30,7 +30,7 @@ class ManageVideoAPI:
 
     @staticmethod
     @router.get("", response={200: VideoListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ManageVideoAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -139,7 +139,7 @@ class ManageMusicAPI:
 
     @staticmethod
     @router.get("", response={200: MusicListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ManageMusicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -246,7 +246,7 @@ class ManageBlogAPI:
 
     @staticmethod
     @router.get("", response={200: BlogListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ManageBlogAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -355,7 +355,7 @@ class ManageComicAPI:
 
     @staticmethod
     @router.get("", response={200: ComicListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ManageComicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -464,7 +464,7 @@ class ManagePictureAPI:
 
     @staticmethod
     @router.get("", response={200: PictureListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ManagePictureAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -573,7 +573,7 @@ class ManageChatAPI:
 
     @staticmethod
     @router.get("", response={200: ChatListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ManageChatAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -680,7 +680,7 @@ class ManageAdvertiseAPI:
 
     @staticmethod
     @router.get("", response={200: AdvertiseListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ManageAdvertiseAPI list", search=search, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)

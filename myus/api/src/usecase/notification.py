@@ -9,10 +9,13 @@ from api.utils.enum.notification import NotificationObjectType, NotificationType
 from api.utils.functions.index import create_url
 
 
+NOTIFICATION_LIMIT = 50
+
+
 @Result.shield_exception()
 def get_notification_data(receiver_id: int, enabled_types: tuple[NotificationTypeNo, ...]) -> Result[list[NotificationData], FatalError]:
     repo = injector.get(NotificationInterface)
-    ids_ret = repo.get_ids(FilterOption(receiver_id=receiver_id, enabled_types=enabled_types, exclude_user_id=receiver_id), SortOption())
+    ids_ret = repo.get_ids(FilterOption(receiver_id=receiver_id, enabled_types=enabled_types, exclude_user_id=receiver_id), SortOption(), NOTIFICATION_LIMIT)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

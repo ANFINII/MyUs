@@ -1,5 +1,7 @@
 from enum import StrEnum
-from pydantic import BaseModel
+from typing import Annotated
+from pydantic import BaseModel, Field
+from api.src.domain.interface.media.index import PAGE_SIZE
 
 
 class ErrorType(StrEnum):
@@ -17,3 +19,9 @@ class ErrorOut(BaseModel):
 
 class SuccessOut(BaseModel):
     message: str
+
+
+MAX_OFFSET = 10000
+
+Limit = Annotated[int, Field(ge=1, le=PAGE_SIZE)]
+Offset = Annotated[int, Field(ge=0, le=MAX_OFFSET)]
