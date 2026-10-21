@@ -8,7 +8,7 @@ T = TypeVar("T", bound=Model)
 
 def sort_ids(objs: list[T], ids: list[int]) -> list[T]:
     obj_map = {obj.pk: obj for obj in objs}
-    return [obj_map[id] for id in ids]
+    return [obj_map[id] for id in ids if id in obj_map]
 
 
 def get_save_new_ids(models: list[T], update_fields: list[str]) -> list[int]:
