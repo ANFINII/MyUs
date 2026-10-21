@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.auth import LoginIn, LoginOut, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
+from api.src.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut
 from api.src.usecase.auth import auth_check, change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
 from api.src.usecase.user import signup_check
@@ -29,7 +29,7 @@ class AuthAPI:
         return 200, ErrorOut(message="認証済みです!")
 
     @staticmethod
-    @router.post("refresh", response={200: RefreshOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("refresh", response={204: None, 401: ErrorOut, 500: ErrorOut})
     def refresh(request: HttpRequest, response: HttpResponse):
         log.info("AuthAPI refresh")
 
@@ -58,7 +58,7 @@ class AuthAPI:
         response.delete_cookie("access_token")
         response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
 
-        return 200, RefreshOut(access=access)
+        return 204, None
 
     @staticmethod
     @router.post("/signup/email", response={200: ErrorOut, 400: ErrorOut, 500: ErrorOut})
@@ -112,7 +112,7 @@ class AuthAPI:
         return 201, ErrorOut(message="アカウント登録が完了しました!")
 
     @staticmethod
-    @router.post("/login", response={200: LoginOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("/login", response={204: None, 400: ErrorOut, 500: ErrorOut})
     def login(request: HttpRequest, response: HttpResponse, input: LoginIn):
         log.info("AuthAPI login", username=input.username)
 
@@ -135,7 +135,7 @@ class AuthAPI:
         response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
         response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
 
-        return 200, LoginOut(access=access, refresh=refresh)
+        return 204, None
 
     @staticmethod
     @router.post("/logout", response={204: None, 500: ErrorOut})
