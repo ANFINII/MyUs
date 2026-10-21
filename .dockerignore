@@ -8,7 +8,9 @@ docker-compose.yml
 docs
 image
 logs
-mysql/data
+mysql
+myus/media
+myus/logs
 nginx
 readme.md
 
