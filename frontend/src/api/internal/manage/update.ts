@@ -4,6 +4,7 @@ import { AdvertiseUpdateIn } from 'types/internal/advertise'
 import { VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn } from 'types/internal/media/input'
 import { ErrorOut } from 'types/internal/other'
 import { apiManageVideo, apiManageMusic, apiManageBlog, apiManageComic, apiManagePicture, apiManageChat, apiManageAdvertise } from 'api/uri'
+import { omitNull } from 'utils/functions/common'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const putManageVideo = async (ulid: string, request: VideoUpdateIn): Promise<ApiOut<ErrorOut>> => {
@@ -31,5 +32,5 @@ export const putManageChat = async (ulid: string, request: ChatUpdateIn): Promis
 }
 
 export const putManageAdvertise = async (ulid: string, request: AdvertiseUpdateIn): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('form').put(apiManageAdvertise(ulid), camelSnake(request)))
+  return await apiOut(apiClient('form').put(apiManageAdvertise(ulid), camelSnake(omitNull(request))))
 }
