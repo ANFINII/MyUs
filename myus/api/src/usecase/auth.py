@@ -209,14 +209,14 @@ def signup_user(input: SignupIn) -> Result[None, FatalError]:
         ),
     )
 
-    user_repository = injector.get(UserInterface)
-    user_ret = user_repository.bulk_save(objs=[user_data])
+    user_repo = injector.get(UserInterface)
+    user_ret = user_repo.bulk_save(objs=[user_data])
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
 
     user_ids = user_ret.ok_value
-    channel_repository = injector.get(ChannelInterface)
-    channel_ret = channel_repository.bulk_save([ChannelData(
+    channel_repo = injector.get(ChannelInterface)
+    channel_ret = channel_repo.bulk_save([ChannelData(
         id=0,
         ulid=str(ulid.new()),
         owner_id=user_ids[0],

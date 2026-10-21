@@ -33,13 +33,13 @@ def validate_name(name: str, ng_words: list[str]) -> bool:
 
 @Result.shield_exception()
 def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
-    repo = injector.get(HashtagInterface)
-    ids_ret = repo.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=HashtagSortType.NAME))
+    repository = injector.get(HashtagInterface)
+    ids_ret = repository.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=HashtagSortType.NAME))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    hashtags_ret = repo.bulk_get(ids)
+    hashtags_ret = repository.bulk_get(ids)
     if hashtags_ret.is_err:
         return Result.err(hashtags_ret.err_value)
 
@@ -49,13 +49,13 @@ def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
 
 @Result.shield_exception()
 def get_ng_words() -> Result[list[str], FatalError]:
-    repo = injector.get(NgWordInterface)
-    ids_ret = repo.get_ids(NgWordFilterOption(), NgWordSortOption())
+    repository = injector.get(NgWordInterface)
+    ids_ret = repository.get_ids(NgWordFilterOption(), NgWordSortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    ng_words_ret = repo.bulk_get(ids)
+    ng_words_ret = repository.bulk_get(ids)
     if ng_words_ret.is_err:
         return Result.err(ng_words_ret.err_value)
 

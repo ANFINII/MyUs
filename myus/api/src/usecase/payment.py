@@ -176,7 +176,7 @@ def dispatch_webhook_inbox(event: WebhookInboxData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
-    repo = injector.get(WebhookOutboxInterface)
+    repository = injector.get(WebhookOutboxInterface)
 
     payload = WebhookOutboxPayloadDTO(
         provider=event.provider.value,
@@ -197,7 +197,7 @@ def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
         delivered_at=datetime.min.replace(tzinfo=timezone.utc),
     )
 
-    ret = repo.bulk_save([data])
+    ret = repository.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -307,8 +307,8 @@ def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscript
 
 @Result.shield_exception()
 def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, update_paid_at: bool) -> Result[None, FatalError]:
-    repo = injector.get(TransactionInterface)
-    ids_ret = repo.get_ids(
+    repository = injector.get(TransactionInterface)
+    ids_ret = repository.get_ids(
         TransactionFilterOption(provider=event.provider.value, external_id=event.external_id),
         TransactionSortOption(),
         limit=1,
@@ -321,14 +321,14 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
         log.warning("Transaction not found for status update", external_id=event.external_id, status=status.value)
         return Result.ok(None)
 
-    transactions_ret = repo.bulk_get(ids)
+    transactions_ret = repository.bulk_get(ids)
     if transactions_ret.is_err:
         return Result.err(transactions_ret.err_value)
 
     transactions = transactions_ret.ok_value
     payment_transaction = transactions[0]
     updated = replace(payment_transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(payment_transaction, status=status)
-    save_ret = repo.bulk_save([updated])
+    save_ret = repository.bulk_save([updated])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
