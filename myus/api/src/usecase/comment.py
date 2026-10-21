@@ -18,8 +18,8 @@ from api.utils.functions.media import get_media_repository
 
 @Result.shield_exception()
 def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError]:
-    repository = injector.get(CommentInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=comment_ulid), SortOption())
+    repo = injector.get(CommentInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=comment_ulid), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -28,7 +28,7 @@ def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError
         log.warning("コメントが見つかりませんでした")
         return Result.ok(None)
 
-    comments_ret = repository.bulk_get(ids)
+    comments_ret = repo.bulk_get(ids)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
@@ -38,8 +38,8 @@ def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError
 
 @Result.shield_exception()
 def save_comment_data(data: CommentData) -> Result[None, FatalError]:
-    repository = injector.get(CommentInterface)
-    ret = repository.bulk_save([data])
+    repo = injector.get(CommentInterface)
+    ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -225,9 +225,9 @@ def delete_comment(user_id: int, comment_ulid: str) -> Result[None, AccessError]
         log.warning("コメントの削除権限がありません", comment_ulid=comment_ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
-    repository = injector.get(CommentInterface)
+    repo = injector.get(CommentInterface)
     with transaction.atomic():
-        save_ret = repository.bulk_save([replace(comment, deleted=True)])
+        save_ret = repo.bulk_save([replace(comment, deleted=True)])
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)

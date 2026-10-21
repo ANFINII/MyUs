@@ -82,12 +82,12 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
         hashtags=[],
     )
 
-    repository = injector.get(VideoInterface)
+    repo = injector.get(VideoInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = repository.bulk_save([new_video])
+        ids_ret = repo.bulk_save([new_video])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -99,7 +99,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = repository.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -108,7 +108,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 
     def encode_task() -> None:
         result = convert_video(video_path)
-        videos_ret = repository.bulk_get([obj.id])
+        videos_ret = repo.bulk_get([obj.id])
         if videos_ret.is_err:
             log.error("動画の取得に失敗しました", error=videos_ret.err_value.error_message, video_id=obj.id)
             return
@@ -118,7 +118,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
             log.warning("動画が見つかりません", video_id=obj.id)
             return
         updated = replace(videos[0], video=result.video, convert=result.convert, publish=input.publish)
-        save_ret = repository.bulk_save([updated])
+        save_ret = repo.bulk_save([updated])
         if save_ret.is_err:
             log.error("動画の保存に失敗しました", error=save_ret.err_value.error_message, video_id=obj.id)
             return
@@ -169,12 +169,12 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
         hashtags=[],
     )
 
-    repository = injector.get(MusicInterface)
+    repo = injector.get(MusicInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = repository.bulk_save([new_music])
+        ids_ret = repo.bulk_save([new_music])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -186,7 +186,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = repository.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -235,12 +235,12 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
         hashtags=[],
     )
 
-    repository = injector.get(BlogInterface)
+    repo = injector.get(BlogInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = repository.bulk_save([new_blog])
+        ids_ret = repo.bulk_save([new_blog])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -252,7 +252,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = repository.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -301,12 +301,12 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
         hashtags=[],
     )
 
-    repository = injector.get(ComicInterface)
+    repo = injector.get(ComicInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = repository.bulk_save([new_comic])
+        ids_ret = repo.bulk_save([new_comic])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -318,7 +318,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = repository.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -366,12 +366,12 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
         hashtags=[],
     )
 
-    repository = injector.get(PictureInterface)
+    repo = injector.get(PictureInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = repository.bulk_save([new_picture])
+        ids_ret = repo.bulk_save([new_picture])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -383,7 +383,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = repository.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -429,12 +429,12 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, AccessErr
         hashtags=[],
     )
 
-    repository = injector.get(ChatInterface)
+    repo = injector.get(ChatInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        ids_ret = repository.bulk_save([new_chat])
+        ids_ret = repo.bulk_save([new_chat])
         if ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(ids_ret.err_value)
@@ -446,7 +446,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, AccessErr
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
 
-    objs_ret = repository.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -532,20 +532,20 @@ def get_recommend(limit: int, search: str) -> Result[HomeDTO, FatalError]:
 
 @Result.shield_exception()
 def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
-    repository = injector.get(VideoInterface)
+    repo = injector.get(VideoInterface)
     filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -562,20 +562,20 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 @Result.shield_exception()
 def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
-    repository = injector.get(MusicInterface)
+    repo = injector.get(MusicInterface)
     filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -586,20 +586,20 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 @Result.shield_exception()
 def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
-    repository = injector.get(BlogInterface)
+    repo = injector.get(BlogInterface)
     filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -610,20 +610,20 @@ def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
 
 @Result.shield_exception()
 def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
-    repository = injector.get(ComicInterface)
+    repo = injector.get(ComicInterface)
     filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -639,20 +639,20 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 @Result.shield_exception()
 def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
-    repository = injector.get(PictureInterface)
+    repo = injector.get(PictureInterface)
     filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -663,20 +663,20 @@ def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 
 
 @Result.shield_exception()
 def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
-    repository = injector.get(ChatInterface)
+    repo = injector.get(ChatInterface)
     filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -686,8 +686,8 @@ def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
 
 @Result.shield_exception()
 def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[VideoDetailDTO, FindError]:
-    repository = injector.get(VideoInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
+    repo = injector.get(VideoInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -696,7 +696,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -711,7 +711,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
-        like_ret = repository.is_liked(obj.id, user_id)
+        like_ret = repo.is_liked(obj.id, user_id)
         if like_ret.is_err:
             return Result.err(like_ret.err_value)
 
@@ -746,8 +746,8 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
 @Result.shield_exception()
 def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[MusicDetailDTO, FindError]:
-    repository = injector.get(MusicInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -756,7 +756,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -771,7 +771,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
-        like_ret = repository.is_liked(obj.id, user_id)
+        like_ret = repo.is_liked(obj.id, user_id)
         if like_ret.is_err:
             return Result.err(like_ret.err_value)
 
@@ -816,8 +816,8 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
 @Result.shield_exception()
 def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[BlogDetailDTO, FindError]:
-    repository = injector.get(BlogInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
+    repo = injector.get(BlogInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -826,7 +826,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -841,7 +841,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
-        like_ret = repository.is_liked(obj.id, user_id)
+        like_ret = repo.is_liked(obj.id, user_id)
         if like_ret.is_err:
             return Result.err(like_ret.err_value)
 
@@ -875,8 +875,8 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
 
 @Result.shield_exception()
 def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[ComicDetailDTO, FindError]:
-    repository = injector.get(ComicInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
+    repo = injector.get(ComicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -885,7 +885,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -900,7 +900,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
-        like_ret = repository.is_liked(obj.id, user_id)
+        like_ret = repo.is_liked(obj.id, user_id)
         if like_ret.is_err:
             return Result.err(like_ret.err_value)
 
@@ -934,8 +934,8 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
 @Result.shield_exception()
 def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[PictureDetailDTO, FindError]:
-    repository = injector.get(PictureInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
+    repo = injector.get(PictureInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -944,7 +944,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -959,7 +959,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
-        like_ret = repository.is_liked(obj.id, user_id)
+        like_ret = repo.is_liked(obj.id, user_id)
         if like_ret.is_err:
             return Result.err(like_ret.err_value)
 
@@ -992,8 +992,8 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
 
 @Result.shield_exception()
 def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[ChatDetailDTO, FindError]:
-    repository = injector.get(ChatInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
+    repo = injector.get(ChatInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -1002,7 +1002,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -1016,7 +1016,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     messages = messages_ret.ok_value
     is_like = False
     if user_id is not None:
-        like_ret = repository.is_liked(obj.id, user_id)
+        like_ret = repo.is_liked(obj.id, user_id)
         if like_ret.is_err:
             return Result.err(like_ret.err_value)
 
@@ -1051,8 +1051,8 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
 
 @Result.shield_exception()
 def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> Result[int, FindError]:
-    repository = get_media_repository(media_type)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption(limit=1))
+    repo = get_media_repository(media_type)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -1061,7 +1061,7 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -1077,7 +1077,7 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
         if not is_accessed:
             return Result.ok(obj.read)
 
-        read_ret = repository.save_read(obj.id)
+        read_ret = repo.save_read(obj.id)
         if read_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(read_ret.err_value)

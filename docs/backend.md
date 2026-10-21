@@ -74,6 +74,7 @@
 - 公開メソッド・usecase関数には`@Result.shield_exception()`を付け、想定外の例外を`FatalError`に変換する
 - Resultを受けたらその場で`is_err`を確認し、Errならそのまま返す
 - 受け取る変数名: 関数内で受けるResultが1つなら`ret`、複数なら`ids_ret`・`follows_ret`のように`<名前>_ret`
+- `injector.get`で取るRepositoryの変数名: 関数内で1つなら`repo`、複数なら`user_repo`・`follow_repo`のように`<名前>_repo`
 - `ok_value`は直接使わず、`ids = ids_ret.ok_value`のように1行で変数に取り出してから使う
 - `transaction.atomic()`の中でErrを返すときは、直前に`transaction.set_rollback(True)`を呼ぶ（Errは例外ではないためロールバックされない）
 

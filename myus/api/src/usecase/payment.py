@@ -77,13 +77,13 @@ def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult
 
 @Result.shield_exception()
 def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
-    repository = injector.get(SubscriptionInterface)
-    ids_ret = repository.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False))
+    repo = injector.get(SubscriptionInterface)
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    subscriptions_ret = repository.bulk_get(ids)
+    subscriptions_ret = repo.bulk_get(ids)
     if subscriptions_ret.is_err:
         return Result.err(subscriptions_ret.err_value)
 
@@ -102,7 +102,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
     cancellation = cancel_ret.ok_value
     if isinstance(cancellation, CancelSuccess):
         updated = replace(subscription, canceled_at=cancellation.canceled_at, current_period_end=cancellation.period_end)
-        save_ret = repository.bulk_save([updated])
+        save_ret = repo.bulk_save([updated])
         if save_ret.is_err:
             return Result.err(save_ret.err_value)
 
@@ -138,8 +138,8 @@ def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 
 @Result.shield_exception()
 def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
-    repository = injector.get(WebhookInboxInterface)
-    ids_ret = repository.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
+    repo = injector.get(WebhookInboxInterface)
+    ids_ret = repo.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -148,7 +148,7 @@ def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
         log.info("WebhookInbox already processed", event_id=event.event_id)
         return Result.ok(False)
 
-    save_ret = repository.bulk_save([event])
+    save_ret = repo.bulk_save([event])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -229,8 +229,8 @@ def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
         log.error("Subscription user not found", external_id=event.external_id, user_ulid=provider_subscription.user_ulid)
         return Result.ok(None)
 
-    repository = injector.get(SubscriptionInterface)
-    ids_ret = repository.get_ids(
+    repo = injector.get(SubscriptionInterface)
+    ids_ret = repo.get_ids(
         SubscriptionFilterOption(provider=provider_subscription.provider.value, external_id=provider_subscription.external_id),
         SubscriptionSortOption(),
         limit=1,
@@ -266,8 +266,8 @@ def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def save_subscription_data(data: SubscriptionData) -> Result[None, FatalError]:
-    repository = injector.get(SubscriptionInterface)
-    ret = repository.bulk_save([data])
+    repo = injector.get(SubscriptionInterface)
+    ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 

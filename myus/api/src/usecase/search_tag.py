@@ -8,13 +8,13 @@ from api.utils.common.result import FatalError, Result
 
 @Result.shield_exception()
 def get_search_tag_data(author_id: int) -> Result[list[SearchTagData], FatalError]:
-    repository = injector.get(SearchTagInterface)
-    ids_ret = repository.get_ids(FilterOption(author_id=author_id), SortOption())
+    repo = injector.get(SearchTagInterface)
+    ids_ret = repo.get_ids(FilterOption(author_id=author_id), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    tags_ret = repository.bulk_get(ids)
+    tags_ret = repo.bulk_get(ids)
     if tags_ret.is_err:
         return Result.err(tags_ret.err_value)
 
@@ -24,14 +24,14 @@ def get_search_tag_data(author_id: int) -> Result[list[SearchTagData], FatalErro
 
 @Result.shield_exception()
 def save_search_tag_data(delete_ids: list[int], save_objs: list[SearchTagData]) -> Result[None, FatalError]:
-    repository = injector.get(SearchTagInterface)
+    repo = injector.get(SearchTagInterface)
     with transaction.atomic():
-        delete_ret = repository.bulk_delete(delete_ids)
+        delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)
 
-        save_ret = repository.bulk_save(save_objs)
+        save_ret = repo.bulk_save(save_objs)
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)

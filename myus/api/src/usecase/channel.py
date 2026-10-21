@@ -13,8 +13,8 @@ from api.utils.functions.media import save_upload, validate_uploads
 
 @Result.shield_exception()
 def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
-    repository = injector.get(ChannelInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid), SortOption())
+    repo = injector.get(ChannelInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -23,7 +23,7 @@ def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
         log.error("Channel not found", ulid=ulid)
         return Result.ok(None)
 
-    channels_ret = repository.bulk_get(ids)
+    channels_ret = repo.bulk_get(ids)
     if channels_ret.is_err:
         return Result.err(channels_ret.err_value)
 
@@ -34,8 +34,8 @@ def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
 
 @Result.shield_exception()
 def save_channel_data(data: ChannelData) -> Result[None, FatalError]:
-    repository = injector.get(ChannelInterface)
-    ret = repository.bulk_save([data])
+    repo = injector.get(ChannelInterface)
+    ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -44,8 +44,8 @@ def save_channel_data(data: ChannelData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
-    repository = injector.get(ChannelInterface)
-    ids_ret = repository.get_ids(FilterOption(owner_id=owner_id), SortOption())
+    repo = injector.get(ChannelInterface)
+    ids_ret = repo.get_ids(FilterOption(owner_id=owner_id), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -54,7 +54,7 @@ def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
         log.warning("Channel not found", owner_id=owner_id)
         return Result.ok([])
 
-    channels_ret = repository.bulk_get(ids)
+    channels_ret = repo.bulk_get(ids)
     if channels_ret.is_err:
         return Result.err(channels_ret.err_value)
 
@@ -68,7 +68,7 @@ def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFil
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repository = injector.get(ChannelInterface)
+    repo = injector.get(ChannelInterface)
     new_ulid = str(ulid.new())
     avatar = save_upload(avatar_file, ImageUpload.CHANNEL, new_ulid) if avatar_file else ""
 
@@ -84,7 +84,7 @@ def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFil
         count=0,
     )
 
-    ret = repository.bulk_save([data])
+    ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 

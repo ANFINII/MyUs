@@ -32,19 +32,19 @@ from api.utils.functions.media import save_upload, validate_uploads
 
 @Result.shield_exception()
 def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
-    repository = injector.get(VideoInterface)
+    repo = injector.get(VideoInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -61,8 +61,8 @@ def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 @Result.shield_exception()
 def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, FindError]:
-    repository = injector.get(VideoInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(VideoInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -71,7 +71,7 @@ def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, FindError]:
         log.info("data not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -90,8 +90,8 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repository = injector.get(VideoInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(VideoInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -100,7 +100,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
         log.error("Video not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -118,7 +118,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        save_ret = repository.bulk_save([update_data])
+        save_ret = repo.bulk_save([update_data])
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
@@ -138,11 +138,11 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
 
 @Result.shield_exception()
 def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindError]:
-    repository = injector.get(VideoInterface)
+    repo = injector.get(VideoInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -153,7 +153,7 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
         delete_ids.append(ids[0])
 
     with transaction.atomic():
-        delete_ret = repository.bulk_delete(delete_ids)
+        delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)
@@ -168,19 +168,19 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
 @Result.shield_exception()
 def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
-    repository = injector.get(MusicInterface)
+    repo = injector.get(MusicInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -192,8 +192,8 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 @Result.shield_exception()
 def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
-    repository = injector.get(MusicInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -202,7 +202,7 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
         log.info("data not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -213,8 +213,8 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
 
 @Result.shield_exception()
 def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, AccessError]:
-    repository = injector.get(MusicInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -223,7 +223,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
         log.error("Music not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -238,7 +238,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        save_ret = repository.bulk_save([update_data])
+        save_ret = repo.bulk_save([update_data])
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
@@ -258,11 +258,11 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
 
 @Result.shield_exception()
 def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindError]:
-    repository = injector.get(MusicInterface)
+    repo = injector.get(MusicInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -273,7 +273,7 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
         delete_ids.append(ids[0])
 
     with transaction.atomic():
-        delete_ret = repository.bulk_delete(delete_ids)
+        delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)
@@ -288,19 +288,19 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
 @Result.shield_exception()
 def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
-    repository = injector.get(BlogInterface)
+    repo = injector.get(BlogInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -312,8 +312,8 @@ def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: i
 
 @Result.shield_exception()
 def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
-    repository = injector.get(BlogInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(BlogInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -322,7 +322,7 @@ def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
         log.info("data not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -337,8 +337,8 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repository = injector.get(BlogInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(BlogInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -347,7 +347,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
         log.error("Blog not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -365,7 +365,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        save_ret = repository.bulk_save([update_data])
+        save_ret = repo.bulk_save([update_data])
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
@@ -385,11 +385,11 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
 
 @Result.shield_exception()
 def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError]:
-    repository = injector.get(BlogInterface)
+    repo = injector.get(BlogInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -400,7 +400,7 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
         delete_ids.append(ids[0])
 
     with transaction.atomic():
-        delete_ret = repository.bulk_delete(delete_ids)
+        delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)
@@ -415,19 +415,19 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
 
 @Result.shield_exception()
 def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
-    repository = injector.get(ComicInterface)
+    repo = injector.get(ComicInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -442,8 +442,8 @@ def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 @Result.shield_exception()
 def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
-    repository = injector.get(ComicInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(ComicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -452,7 +452,7 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
         log.info("data not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -470,8 +470,8 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repository = injector.get(ComicInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(ComicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -480,7 +480,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
         log.error("Comic not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -498,7 +498,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        save_ret = repository.bulk_save([update_data])
+        save_ret = repo.bulk_save([update_data])
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
@@ -518,11 +518,11 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
 
 @Result.shield_exception()
 def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindError]:
-    repository = injector.get(ComicInterface)
+    repo = injector.get(ComicInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -533,7 +533,7 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
         delete_ids.append(ids[0])
 
     with transaction.atomic():
-        delete_ret = repository.bulk_delete(delete_ids)
+        delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)
@@ -548,19 +548,19 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
 @Result.shield_exception()
 def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
-    repository = injector.get(PictureInterface)
+    repo = injector.get(PictureInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -572,8 +572,8 @@ def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit
 
 @Result.shield_exception()
 def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, FindError]:
-    repository = injector.get(PictureInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(PictureInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -582,7 +582,7 @@ def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, FindError
         log.info("data not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -597,8 +597,8 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repository = injector.get(PictureInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(PictureInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -607,7 +607,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
         log.error("Picture not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -625,7 +625,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        save_ret = repository.bulk_save([update_data])
+        save_ret = repo.bulk_save([update_data])
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
@@ -645,11 +645,11 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
 
 @Result.shield_exception()
 def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindError]:
-    repository = injector.get(PictureInterface)
+    repo = injector.get(PictureInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -660,7 +660,7 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindEr
         delete_ids.append(ids[0])
 
     with transaction.atomic():
-        delete_ret = repository.bulk_delete(delete_ids)
+        delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)
@@ -675,19 +675,19 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindEr
 
 @Result.shield_exception()
 def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
-    repository = injector.get(ChatInterface)
+    repo = injector.get(ChatInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    count_ret = repository.count(filter)
+    count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -697,8 +697,8 @@ def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: i
 
 @Result.shield_exception()
 def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
-    repository = injector.get(ChatInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(ChatInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -707,7 +707,7 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
         log.info("data not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -717,8 +717,8 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
 
 @Result.shield_exception()
 def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, AccessError]:
-    repository = injector.get(ChatInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(ChatInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -727,7 +727,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
         log.error("Chat not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -742,7 +742,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        save_ret = repository.bulk_save([update_data])
+        save_ret = repo.bulk_save([update_data])
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
@@ -762,11 +762,11 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
 
 @Result.shield_exception()
 def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError]:
-    repository = injector.get(ChatInterface)
+    repo = injector.get(ChatInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -787,7 +787,7 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError
         reply_ids += chat_reply_ids
 
     with transaction.atomic():
-        delete_ret = repository.bulk_delete(delete_ids)
+        delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)

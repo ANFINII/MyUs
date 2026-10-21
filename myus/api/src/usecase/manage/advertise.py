@@ -21,19 +21,19 @@ ADVERTISE_PERSONAL_LIMIT = 5
 
 @Result.shield_exception()
 def get_manage_advertises(user_id: int, search: str, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[AdvertiseData], int], FatalError]:
-    repository = injector.get(AdvertiseInterface)
+    repo = injector.get(AdvertiseInterface)
     filter = FilterOption(search=search, owner_id=user_id)
-    total_ret = repository.count(filter)
+    total_ret = repo.count(filter)
     if total_ret.is_err:
         return Result.err(total_ret.err_value)
 
     total = total_ret.ok_value
-    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids=ids)
+    objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -48,8 +48,8 @@ def get_manage_advertises(user_id: int, search: str, limit: int = PAGE_SIZE, off
 
 @Result.shield_exception()
 def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, FindError]:
-    repository = injector.get(AdvertiseInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(AdvertiseInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -58,7 +58,7 @@ def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, FindE
         log.info("data not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -76,9 +76,9 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repository = injector.get(AdvertiseInterface)
+    repo = injector.get(AdvertiseInterface)
 
-    count_ret = repository.count(FilterOption(owner_id=user_id))
+    count_ret = repo.count(FilterOption(owner_id=user_id))
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
@@ -114,7 +114,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
     )
 
     with transaction.atomic():
-        new_ids_ret = repository.bulk_save([new_advertise])
+        new_ids_ret = repo.bulk_save([new_advertise])
         if new_ids_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(new_ids_ret.err_value)
@@ -122,7 +122,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
         new_ids = new_ids_ret.ok_value
         assert len(new_ids) == 1, "作成に失敗しました"
 
-    objs_ret = repository.bulk_get(new_ids)
+    objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -136,8 +136,8 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repository = injector.get(AdvertiseInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(AdvertiseInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -146,7 +146,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
         log.error("Advertise not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -175,7 +175,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
         update_data = replace(update_data, video=save_upload(video, MediaUpload.ADVERTISE, user.user.ulid))
 
     with transaction.atomic():
-        save_ret = repository.bulk_save([update_data])
+        save_ret = repo.bulk_save([update_data])
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
@@ -185,10 +185,10 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
 
 @Result.shield_exception()
 def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, FindError]:
-    repository = injector.get(AdvertiseInterface)
+    repo = injector.get(AdvertiseInterface)
     ids: list[int] = []
     for ulid in ulids:
-        target_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        target_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
         if target_ret.is_err:
             return Result.err(target_ret.err_value)
 
@@ -198,7 +198,7 @@ def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, Find
             return Result.err(NotFoundError("削除に失敗しました!"))
         ids.extend(target)
 
-    delete_ret = repository.bulk_delete(ids)
+    delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
