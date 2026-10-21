@@ -37,5 +37,5 @@ class MessageInterface(ABC):
         ...
 
     @abstractmethod
-    def delete(self, message_id: int) -> Result[None, FatalError]:
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
         ...

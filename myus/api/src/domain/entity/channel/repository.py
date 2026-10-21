@@ -52,8 +52,3 @@ class ChannelRepository(ChannelInterface):
         new_ids = get_save_new_ids(models, CHANNEL_FIELDS)
 
         return Result.ok(new_ids)
-
-    @Result.shield_exception()
-    def delete(self, id: int) -> Result[None, FatalError]:
-        Channel.objects.filter(id=id).delete()
-        return Result.ok(None)

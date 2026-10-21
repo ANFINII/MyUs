@@ -256,7 +256,7 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
                 return Result.err(notification_ret.err_value)
 
         message_repo = injector.get(MessageInterface)
-        delete_ret = message_repo.delete(message.id)
+        delete_ret = message_repo.bulk_delete([message.id])
         if delete_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(delete_ret.err_value)
