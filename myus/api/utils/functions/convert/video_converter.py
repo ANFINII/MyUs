@@ -416,8 +416,7 @@ class VideoConverter:
             await process.wait()
 
             if process.returncode != 0:
-                # エラーでも続行（部分的な成功を許容）
-                log.warning(f"変換警告: {profile.resolution}")
+                raise RuntimeError(f"Video conversion failed: {profile.resolution}")
 
             elapsed = time.time() - start_time
             stats['time'] = elapsed
