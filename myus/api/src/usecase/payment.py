@@ -12,14 +12,13 @@ from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.user.data import UserAllData
-from api.src.domain.interface.user.interface import UserInterface
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.src.domain.interface.webhook.inbox.interface import FilterOption as WebhookInboxFilterOption, SortOption as WebhookInboxSortOption, WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
-from api.src.usecase.user import get_user_data
+from api.src.usecase.user import get_user_data, save_user_data
 from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
@@ -161,7 +160,7 @@ def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 def dispatch_webhook_inbox(event: WebhookInboxData) -> Result[None, FatalError]:
     match event.event_type:
         case WebhookEventType.SUBSCRIPTION_CREATED | WebhookEventType.SUBSCRIPTION_UPDATED | WebhookEventType.SUBSCRIPTION_CANCELED:
-            ret = sync_subscription(event)
+            ret = update_subscription(event)
         case WebhookEventType.PAYMENT_SUCCEEDED:
             ret = update_transaction_status(event, PaymentStatus.CAPTURED, update_paid_at=True)
         case WebhookEventType.PAYMENT_FAILED:
@@ -207,7 +206,7 @@ def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def sync_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
+def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
     payment = injector.get(PaymentInterface)
     provider_ret = payment.get_subscription(event.external_id)
     if provider_ret.is_err:
@@ -231,20 +230,6 @@ def sync_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
         log.error("Subscription user not found", external_id=event.external_id, user_ulid=provider_subscription.user_ulid)
         return Result.ok(None)
 
-    subscription_ret = save_subscription(user.user.id, provider_subscription)
-    if subscription_ret.is_err:
-        return Result.err(subscription_ret.err_value)
-
-    user_plan_ret = save_user_plan(user, provider_subscription)
-    if user_plan_ret.is_err:
-        return Result.err(user_plan_ret.err_value)
-
-    log.info("Subscription synced", external_id=event.external_id, status=provider_subscription.status.value)
-    return Result.ok(None)
-
-
-@Result.shield_exception()
-def save_subscription(user_id: int, provider_subscription: ProviderSubscriptionData) -> Result[None, FatalError]:
     repository = injector.get(SubscriptionInterface)
     ids_ret = repository.get_ids(
         SubscriptionFilterOption(provider=provider_subscription.provider.value, external_id=provider_subscription.external_id),
@@ -255,14 +240,9 @@ def save_subscription(user_id: int, provider_subscription: ProviderSubscriptionD
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    subscriptions_ret = repository.bulk_get(ids)
-    if subscriptions_ret.is_err:
-        return Result.err(subscriptions_ret.err_value)
-
-    subscriptions = subscriptions_ret.ok_value
-    data = SubscriptionData(
-        id=subscriptions[0].id if len(subscriptions) > 0 else 0,
-        customer_user_id=user_id,
+    subscription = SubscriptionData(
+        id=ids[0] if len(ids) > 0 else 0,
+        customer_user_id=user.user.id,
         seller_id="",
         provider=provider_subscription.provider,
         external_id=provider_subscription.external_id,
@@ -273,15 +253,30 @@ def save_subscription(user_id: int, provider_subscription: ProviderSubscriptionD
         current_period_end=provider_subscription.current_period_end,
         canceled_at=provider_subscription.canceled_at,
     )
-    save_ret = repository.bulk_save([data])
-    if save_ret.is_err:
-        return Result.err(save_ret.err_value)
+    subscription_ret = save_subscription_data(subscription)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
+
+    user_plan_ret = update_user_plan(user, provider_subscription)
+    if user_plan_ret.is_err:
+        return Result.err(user_plan_ret.err_value)
+
+    log.info("Subscription updated", external_id=event.external_id, status=provider_subscription.status.value)
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_subscription_data(data: SubscriptionData) -> Result[None, FatalError]:
+    repository = injector.get(SubscriptionInterface)
+    ret = repository.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
     return Result.ok(None)
 
 
 @Result.shield_exception()
-def save_user_plan(user: UserAllData, provider_subscription: ProviderSubscriptionData) -> Result[None, FatalError]:
+def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscriptionData) -> Result[None, FatalError]:
     match provider_subscription.status:
         case SubscriptionStatus.ACTIVE | SubscriptionStatus.PAST_DUE:
             user_plan = replace(
@@ -303,10 +298,9 @@ def save_user_plan(user: UserAllData, provider_subscription: ProviderSubscriptio
         case _:
             assert_never(provider_subscription.status)
 
-    repository = injector.get(UserInterface)
-    save_ret = repository.bulk_save([replace(user, user_plan=user_plan)])
-    if save_ret.is_err:
-        return Result.err(save_ret.err_value)
+    ret = save_user_data(replace(user, user_plan=user_plan))
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
     return Result.ok(None)
 
