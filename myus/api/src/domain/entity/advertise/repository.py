@@ -1,7 +1,7 @@
 from django.db.models import F, Q
 from django.db.models.query import QuerySet
 from api.db.models.common import Advertise
-from api.src.domain.entity.advertise._convert import convert_data, marshal_data
+from api.src.domain.entity.advertise._convert import convert_data, marshal_data, sort_field
 from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.domain.interface.advertise.interface import AdvertiseInterface
@@ -34,7 +34,8 @@ class AdvertiseRepository(AdvertiseInterface):
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
         qs = Advertise.objects.filter(*_filter_q_list(filter, exclude))
-        order_by_key = "id" if sort.is_asc else "-id"
+        field_name = sort_field(sort.sort_type)
+        order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = qs.order_by(order_by_key)
         qs = qs[page.offset:page.offset + page.limit]
         return Result.ok(list(qs.values_list("id", flat=True)))

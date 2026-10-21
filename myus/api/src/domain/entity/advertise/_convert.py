@@ -1,6 +1,8 @@
+from typing import assert_never
 from django_ulid.models import ulid
 from api.db.models.common import Advertise
 from api.src.domain.interface.advertise.data import AdvertiseData
+from api.src.domain.interface.media.index import SortType
 
 
 def convert_data(obj: Advertise) -> AdvertiseData:
@@ -37,3 +39,15 @@ def marshal_data(data: AdvertiseData) -> Advertise:
         period=data.period,
         publish=data.publish,
     )
+
+
+def sort_field(sort_type: SortType) -> str:
+    match sort_type:
+        case SortType.ID:
+            return "id"
+        case SortType.CREATED:
+            return "created"
+        case SortType.SCORE:
+            return "read"
+        case _:
+            assert_never(sort_type)
