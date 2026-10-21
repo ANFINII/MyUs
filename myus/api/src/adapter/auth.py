@@ -1,11 +1,20 @@
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
+from ninja.throttling import AnonRateThrottle
 from api.modules.logger import log
 from api.src.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.usecase.auth import auth_check, change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
 from api.src.usecase.user import signup_check
+
+
+class LoginThrottle(AnonRateThrottle):
+    scope = "login"
+
+
+class MailThrottle(AnonRateThrottle):
+    scope = "mail"
 
 
 class AuthAPI:
@@ -61,7 +70,7 @@ class AuthAPI:
         return 200, None
 
     @staticmethod
-    @router.post("/signup/email", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("/signup/email", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut}, throttle=MailThrottle("5/10m"))
     def signup_email(request: HttpRequest, input: SignupEmailIn):
         log.info("AuthAPI signup_email", email=input.email)
 
@@ -112,7 +121,7 @@ class AuthAPI:
         return 200, SuccessOut(message="アカウント登録が完了しました!")
 
     @staticmethod
-    @router.post("/login", response={200: None, 400: ErrorOut, 500: ErrorOut})
+    @router.post("/login", response={200: None, 400: ErrorOut, 500: ErrorOut}, throttle=LoginThrottle("10/m"))
     def login(request: HttpRequest, response: HttpResponse, input: LoginIn):
         log.info("AuthAPI login", username=input.username)
 
@@ -186,7 +195,7 @@ class AuthAPI:
         return 200, SuccessOut(message="パスワードを変更しました!")
 
     @staticmethod
-    @router.post("/password/reset/email", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("/password/reset/email", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut}, throttle=MailThrottle("5/10m"))
     def password_reset_email(request: HttpRequest, input: PasswordResetEmailIn):
         log.info("AuthAPI password_reset_email", email=input.email)
 
