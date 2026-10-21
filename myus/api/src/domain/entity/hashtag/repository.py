@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.hashtag import HashTag
 from api.src.domain.entity.hashtag._convert import convert_data, marshal_data, marshal_through, through_model
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption, HashtagInterface, SortOption
 from api.utils.common.result import FatalError, Result
@@ -49,11 +49,9 @@ class HashtagRepository(HashtagInterface):
                 names = [o.name for o in objs]
                 existing_map = {h.name: h.id for h in HashTag.objects.filter(name__in=names)}
                 new_models = [marshal_data(o) for o in objs if o.name not in existing_map]
-                if len(new_models) > 0:
-                    get_new_ids(new_models, HashTag)
-                    HashTag.objects.bulk_create(new_models, ignore_conflicts=True)
-                    for m in new_models:
-                        existing_map[m.name] = m.id
+                for m in new_models:
+                    m.save(force_insert=True)
+                    existing_map[m.name] = m.id
                 hashtag_ids = [existing_map[o.name] for o in objs]
 
             ModelClass, fk_name = through_model(media_type)

@@ -1,5 +1,4 @@
 from typing import TypeVar
-from django.db import connection
 from django.db.models import Model
 
 
@@ -11,24 +10,14 @@ def sort_ids(objs: list[T], ids: list[int]) -> list[T]:
     return [obj_map[id] for id in ids]
 
 
-def allocate_ids(model: type[Model], num: int) -> list[int]:
-    table = model._meta.db_table
-    with connection.cursor() as cursor:
-        cursor.execute(f"SELECT COALESCE(MAX(id), 0) + 1 FROM `{table}`")
-        row = cursor.fetchone()
-        assert row is not None
-        first_id: int = row[0]
-        cursor.execute(f"ALTER TABLE `{table}` AUTO_INCREMENT = {first_id + num}")
-        return list(range(first_id, first_id + num))
+def save_models(models: list[T], update_fields: list[str]) -> list[int]:
+    new_models = [m for m in models if m.pk is None]
+    existing_models = [m for m in models if m.pk is not None]
 
+    for m in new_models:
+        m.save(force_insert=True)
 
-def get_new_ids(objs: list[T], model: type[Model]) -> list[int]:
-    new_objs = [o for o in objs if o.pk is None]
-    if len(new_objs) == 0:
-        return []
+    if len(existing_models) > 0:
+        type(existing_models[0])._default_manager.bulk_create(existing_models, update_conflicts=True, update_fields=update_fields)
 
-    ids = allocate_ids(model, len(new_objs))
-    for o, new_id in zip(new_objs, ids):
-        o.pk = new_id
-
-    return ids
+    return [m.pk for m in new_models]

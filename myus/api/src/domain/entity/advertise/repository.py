@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.common import Advertise
 from api.src.domain.entity.advertise._convert import convert_data, marshal_data
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import save_models, sort_ids
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
@@ -54,13 +54,7 @@ class AdvertiseRepository(AdvertiseInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Advertise)
-
-        Advertise.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=ADVERTISE_FIELDS,
-        )
+        new_ids = save_models(models, ADVERTISE_FIELDS)
 
         return Result.ok(new_ids)
 

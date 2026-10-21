@@ -2,7 +2,7 @@ from django.db.models import Count, Q, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Chat
 from api.src.domain.entity.media.chat._convert import convert_data, marshal_data
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import save_models, sort_ids
 from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.chat.interface import ChatInterface
@@ -45,13 +45,7 @@ class ChatRepository(ChatInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models, Chat)
-
-        Chat.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=CHAT_FIELDS,
-        )
+        new_ids = save_models(models, CHAT_FIELDS)
 
         return Result.ok(new_ids)
 
