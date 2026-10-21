@@ -1,11 +1,14 @@
 import { useTranslation } from 'react-i18next'
+import { Currency } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
+import { formatPrice } from 'utils/functions/price'
 import Button from 'components/parts/Button'
 import style from './PlanCard.module.scss'
 
 export interface Plan {
   name: string
   price: number
+  currency: Currency
   features: PlanFeature[]
 }
 
@@ -27,9 +30,9 @@ interface Props {
 
 export default function PlanCard(props: Props): React.JSX.Element {
   const { plan, active, onClick, onPurchase, current = false, showPurchase = true, disabled = false, loading = false } = props
-  const { name, price, features } = plan
+  const { name, price, currency, features } = plan
 
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const handleClick = current ? undefined : onClick
   const handlePurchase = () => onPurchase?.(name)
@@ -41,7 +44,7 @@ export default function PlanCard(props: Props): React.JSX.Element {
         {current && <span className={style.current_label}>{t('setting.payment.current')}</span>}
       </div>
       <div className={style.price}>
-        <span>¥{price.toLocaleString()}</span>
+        <span>{formatPrice(price, currency, i18n.language)}</span>
         <span className={style.price_unit}>{t('setting.payment.perMonth')}</span>
       </div>
       <ul className={style.features}>

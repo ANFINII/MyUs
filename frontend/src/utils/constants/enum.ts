@@ -26,6 +26,15 @@ export enum GenderType {
   Secret = 'Secret',
 }
 
+export enum Currency {
+  Jpy = 'JPY',
+  Usd = 'USD',
+  Eur = 'EUR',
+  Gbp = 'GBP',
+  Cny = 'CNY',
+  Krw = 'KRW',
+}
+
 export enum MediaType {
   Video = 'Video',
   Music = 'Music',
