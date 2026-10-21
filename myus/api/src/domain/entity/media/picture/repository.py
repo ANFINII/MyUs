@@ -10,7 +10,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.utils.common.result import FatalError, Result
 
 
-PICTURE_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
+PICTURE_FIELDS = ["channel_id", "title", "content", "image", "publish", "updated"]
 
 
 class PictureRepository(PictureInterface):

@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import F, Q
 from django.db.models.query import QuerySet
 from api.db.models.common import Advertise
 from api.src.domain.entity.advertise._convert import convert_data, marshal_data
@@ -9,7 +9,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.utils.common.result import FatalError, Result
 
 
-ADVERTISE_FIELDS = ["author_id", "title", "url", "content", "image", "video", "read", "type", "period", "publish"]
+ADVERTISE_FIELDS = ["author_id", "title", "url", "content", "image", "video", "type", "period", "publish", "updated"]
 
 
 def _filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) -> list[Q]:
@@ -66,3 +66,8 @@ class AdvertiseRepository(AdvertiseInterface):
     @Result.shield_exception()
     def count(self, filter: FilterOption) -> Result[int, FatalError]:
         return Result.ok(Advertise.objects.filter(*_filter_q_list(filter)).count())
+
+    @Result.shield_exception()
+    def increment_read(self, media_id: int) -> Result[int, FatalError]:
+        Advertise.objects.filter(id=media_id).update(read=F("read") + 1)
+        return Result.ok(Advertise.objects.values_list("read", flat=True).get(id=media_id))

@@ -65,18 +65,12 @@ def increment_advertise_read(ulid: str) -> Result[int, FindError]:
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    objs_ret = repository.bulk_get(ids)
-    if objs_ret.is_err:
-        return Result.err(objs_ret.err_value)
+    read_ret = repository.increment_read(ids[0])
+    if read_ret.is_err:
+        return Result.err(read_ret.err_value)
 
-    objs = objs_ret.ok_value
-    obj = objs[0]
-    updated = replace(obj, read=obj.read + 1)
-    save_ret = repository.bulk_save([updated])
-    if save_ret.is_err:
-        return Result.err(save_ret.err_value)
-
-    return Result.ok(updated.read)
+    read = read_ret.ok_value
+    return Result.ok(read)
 
 
 def is_active(ad: AdvertiseData, today: date) -> bool:

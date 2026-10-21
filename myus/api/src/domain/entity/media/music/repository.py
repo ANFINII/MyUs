@@ -10,7 +10,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.utils.common.result import FatalError, Result
 
 
-MUSIC_FIELDS = ["channel_id", "title", "content", "lyric", "music", "read", "download", "publish"]
+MUSIC_FIELDS = ["channel_id", "title", "content", "lyric", "music", "download", "publish", "updated"]
 
 
 class MusicRepository(MusicInterface):

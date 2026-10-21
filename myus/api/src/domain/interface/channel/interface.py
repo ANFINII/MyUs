@@ -38,3 +38,7 @@ class ChannelInterface(ABC):
     @abstractmethod
     def delete(self, id: int) -> Result[None, FatalError]:
         ...
+
+    @abstractmethod
+    def update_count(self, id: int, count: int) -> Result[None, FatalError]:
+        ...

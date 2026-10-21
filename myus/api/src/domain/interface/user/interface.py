@@ -44,3 +44,11 @@ class UserInterface(ABC):
     @abstractmethod
     def comment_like(self, user_id: int, comment_id: int) -> Result[tuple[bool, int], FatalError]:
         ...
+
+    @abstractmethod
+    def update_follower_count(self, user_id: int, count: int) -> Result[None, FatalError]:
+        ...
+
+    @abstractmethod
+    def update_following_count(self, user_id: int, count: int) -> Result[None, FatalError]:
+        ...

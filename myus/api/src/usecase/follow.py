@@ -142,14 +142,14 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
         follower_count = follower_count_ret.ok_value
         following_count = following_count_ret.ok_value
 
-        follower_mypage = replace(follower.mypage, following_count=following_count)
-        following_mypage = replace(following.mypage, follower_count=follower_count)
-
-        updated_follower = replace(follower, mypage=follower_mypage)
-        updated_following = replace(following, mypage=following_mypage)
-        users_save_ret = user_repo.bulk_save([updated_follower, updated_following])
-        if users_save_ret.is_err:
+        following_update_ret = user_repo.update_following_count(follower.user.id, following_count)
+        if following_update_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(users_save_ret.err_value)
+            return Result.err(following_update_ret.err_value)
+
+        follower_update_ret = user_repo.update_follower_count(following.user.id, follower_count)
+        if follower_update_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(follower_update_ret.err_value)
 
     return Result.ok(FollowDTO(is_follow=is_follow, follower_count=follower_count))

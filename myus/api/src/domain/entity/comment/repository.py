@@ -8,7 +8,7 @@ from api.src.domain.interface.comment.interface import CommentInterface, FilterO
 from api.utils.common.result import FatalError, Result
 
 
-COMMENT_FIELDS = ["author_id", "parent_id", "type_no", "type_name", "object_id", "text", "deleted"]
+COMMENT_FIELDS = ["author_id", "parent_id", "type_no", "type_name", "object_id", "text", "deleted", "updated"]
 
 
 class CommentRepository(CommentInterface):
