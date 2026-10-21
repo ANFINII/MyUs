@@ -224,6 +224,7 @@ return Result.ok(new_ids)
 ## テスト
 
 - pytestを使用（Django TestCase不可）
+- 今は決済など絶対に失敗できない箇所だけテストを書く（webhook・Stripeの署名の検証・退会時のサブスク解約・outboxの配信）
 - `@pytest.mark.django_db`でDB接続
 - 実行: `uv run pytest`（`api/tests/`。CIでも実行する）
 - テスト用DBは`--nomigrations`でモデルから直接作る（マイグレーションはgit管理外のため）。DBを作る権限のあるユーザーで実行する
