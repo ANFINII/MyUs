@@ -28,7 +28,7 @@ class UserAPI:
     router = Router()
 
     @staticmethod
-    @router.get("/me", response={200: UserOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/me", response={200: UserOut, 400: ErrorOut, 500: ErrorOut})
     def get_user_me(request: HttpRequest):
         log.info("UserAPI get_user_me")
 
@@ -38,7 +38,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
@@ -46,7 +46,7 @@ class UserAPI:
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
 
         user = user_data.user
 
@@ -61,7 +61,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/search_tag", response={200: list[SearchTagOut], 401: ErrorOut, 500: ErrorOut})
+    @router.get("/search_tag", response={200: list[SearchTagOut], 400: ErrorOut, 500: ErrorOut})
     def get_search_tag(request: HttpRequest):
         log.info("UserAPI search_tag")
 
@@ -71,7 +71,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         tags_ret = get_search_tag_data(user_id)
         if tags_ret.is_err:
@@ -82,7 +82,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/search_tag", response={200: SuccessOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/search_tag", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put_search_tag(request: HttpRequest, input: list[SearchTagIn]):
         log.info("UserAPI put_search_tag")
 
@@ -92,7 +92,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_search_tags(user_id, input)
         if update_ret.is_err:
@@ -101,7 +101,7 @@ class UserAPI:
         return 200, SuccessOut(message="更新しました")
 
     @staticmethod
-    @router.get("/follower", response={200: list[FollowUserOut], 401: ErrorOut, 500: ErrorOut})
+    @router.get("/follower", response={200: list[FollowUserOut], 400: ErrorOut, 500: ErrorOut})
     def get_followers(request: HttpRequest, search: str = ""):
         log.info("UserAPI get_followers", search=search)
 
@@ -111,7 +111,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         followers_ret = get_followers(user_id, search, 100)
         if followers_ret.is_err:
@@ -133,7 +133,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/follow", response={200: list[FollowUserOut], 401: ErrorOut, 500: ErrorOut})
+    @router.get("/follow", response={200: list[FollowUserOut], 400: ErrorOut, 500: ErrorOut})
     def get_follows(request: HttpRequest, search: str = ""):
         log.info("UserAPI get_follows", search=search)
 
@@ -143,7 +143,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         follows_ret = get_follows(user_id, search, 100)
         if follows_ret.is_err:
@@ -165,7 +165,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/follow/user", response={200: FollowOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("/follow/user", response={200: FollowOut, 400: ErrorOut, 500: ErrorOut})
     def follow_user(request: HttpRequest, input: FollowIn):
         log.info("UserAPI follow_user", input=input)
 
@@ -175,7 +175,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         follower_ret = get_user_data(user_id=user_id)
         if follower_ret.is_err:
@@ -183,7 +183,7 @@ class UserAPI:
 
         follower = follower_ret.ok_value
         if follower is None:
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません!")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません!")
 
         follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
         if follow_ret.is_err:
@@ -191,7 +191,7 @@ class UserAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=follow_ret.err_value.error_message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=follow_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=follow_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -202,7 +202,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/like/media", response={200: LikeOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("/like/media", response={200: LikeOut, 400: ErrorOut, 500: ErrorOut})
     def post_like_media(request: HttpRequest, input: LikeMediaIn):
         log.info("UserAPI like_media", input=input)
 
@@ -212,13 +212,13 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         like_ret = like_media(user_id, input.media_type, input.ulid)
         if like_ret.is_err:
             match like_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -229,7 +229,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/like/comment", response={200: LikeOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("/like/comment", response={200: LikeOut, 400: ErrorOut, 500: ErrorOut})
     def post_like_comment(request: HttpRequest, input: LikeCommentIn):
         log.info("UserAPI like_comment", input=input)
 
@@ -239,13 +239,13 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         like_ret = like_comment(user_id, input.ulid)
         if like_ret.is_err:
             match like_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -256,7 +256,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/notification", response={200: NotificationOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("/notification", response={200: NotificationOut, 400: ErrorOut, 500: ErrorOut})
     def get_notifications(request: HttpRequest):
         log.info("UserAPI get_notifications")
 
@@ -266,7 +266,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         notification_ret = get_notification(user_id)
         if notification_ret.is_err:
@@ -310,7 +310,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/notification/confirmed", response={200: SuccessOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/notification/confirmed", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def post_notification_confirmed(request: HttpRequest, input: NotificationIn):
         log.info("UserAPI post_notification_confirmed", ulid=input.ulid)
 
@@ -320,7 +320,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         confirm_ret = notification_confirm(user_id, input.ulid)
         if confirm_ret.is_err:
@@ -329,7 +329,7 @@ class UserAPI:
         return 200, SuccessOut(message="OK")
 
     @staticmethod
-    @router.post("/notification/deleted", response={200: SuccessOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/notification/deleted", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def post_notification_deleted(request: HttpRequest, input: NotificationIn):
         log.info("UserAPI post_notification_deleted", ulid=input.ulid)
 
@@ -339,7 +339,7 @@ class UserAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = notification_delete(user_id, input.ulid)
         if delete_ret.is_err:
@@ -348,7 +348,7 @@ class UserAPI:
         return 200, SuccessOut(message="OK")
 
     @staticmethod
-    @router.get("/userpage/{ulid}", response={200: UserPageOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/userpage/{ulid}", response={200: UserPageOut, 400: ErrorOut, 500: ErrorOut})
     def get_userpage(request: HttpRequest, ulid: str):
         log.info("UserAPI get_userpage", ulid=ulid)
 
@@ -358,7 +358,7 @@ class UserAPI:
 
         user = user_ret.ok_value
         if user is None:
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
 
         channels_ret = get_user_channels(user.user.id)
         if channels_ret.is_err:
@@ -405,7 +405,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/userpage/{ulid}/media", response={200: UserPageMediaOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/userpage/{ulid}/media", response={200: UserPageMediaOut, 400: ErrorOut, 500: ErrorOut})
     def get_userpage_media(request: HttpRequest, ulid: str, channel_ulid: str = "", search: str = ""):
         log.info("UserAPI get_userpage_media", ulid=ulid, channel_ulid=channel_ulid, search=search)
 
@@ -415,7 +415,7 @@ class UserAPI:
 
         user = user_ret.ok_value
         if user is None:
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
 
         channel_id = 0
         if channel_ulid:
@@ -425,7 +425,7 @@ class UserAPI:
 
             channel = channel_ret.ok_value
             if channel is None:
-                return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="チャンネルが見つかりません")
+                return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="チャンネルが見つかりません")
             channel_id = channel.id
 
         media_ret = get_userpage_media(8, search, owner_id=user.user.id, channel_id=channel_id)
@@ -445,7 +445,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/userpage/{ulid}/advertise", response={200: AdvertiseListOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/userpage/{ulid}/advertise", response={200: AdvertiseListOut, 400: ErrorOut, 500: ErrorOut})
     def get_userpage_advertise(request: HttpRequest, ulid: str, search: str = ""):
         log.info("UserAPI get_userpage_advertise", ulid=ulid, search=search)
 
@@ -455,7 +455,7 @@ class UserAPI:
 
         user = user_ret.ok_value
         if user is None:
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
 
         advertises_ret = get_userpage_advertises(search, owner_id=user.user.id)
         if advertises_ret.is_err:
