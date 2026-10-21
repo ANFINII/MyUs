@@ -161,6 +161,7 @@ if ret.is_err:
 ```
 
 - 400以上のレスポンスは、ミドルウェア（`config/middleware.py`の`ErrorResponseLogMiddleware`）が`path`・`status`・`type`をログに出す
+- Django本体のログは、`config/settings/base.py`の`LOGGING`でERROR以上（捕まえていない例外の500とトレースバック等）をコンソールに出す。400はミドルウェアが出すため、Django本体の`Bad Request`の警告は出さない
 - `/api/`へのPOST・PUT・PATCH・DELETEは、ミドルウェア（`config/middleware.py`の`OriginCheckMiddleware`）が`Origin`ヘッダーを確かめ、`CSRF_TRUSTED_ORIGINS`に無いときは400（`FORBIDDEN`）を返す（CSRF対策。`Origin`が無いサーバー間の通信は通す）。FEのURLを変えたら`CSRF_TRUSTED_ORIGINS`も変える
 
 ## 文字列
