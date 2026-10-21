@@ -9,7 +9,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PA
 from api.src.injectors.container import injector
 from api.src.types.schema.advertise import AdvertiseIn, AdvertiseUpdateIn
 from api.src.usecase.user import get_user_data
-from api.utils.common.result import FatalError, NotFoundError, Result, ValidationError
+from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
 from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload, validate_uploads
@@ -47,7 +47,7 @@ def get_manage_advertises(user_id: int, search: str, limit: int = PAGE_SIZE, off
 
 
 @Result.shield_exception()
-def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, NotFoundError | FatalError]:
+def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, FindError]:
     repository = injector.get(AdvertiseInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -71,7 +71,7 @@ def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, NotFo
 
 
 @Result.shield_exception()
-def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFile, video: UploadedFile | None) -> Result[AdvertiseData, NotFoundError | ValidationError | FatalError]:
+def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFile, video: UploadedFile | None) -> Result[AdvertiseData, InputError]:
     upload_ret = validate_uploads([(image, ImageUpload.ADVERTISE), (video, MediaUpload.ADVERTISE)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -131,7 +131,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
 
 
 @Result.shield_exception()
-def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, image: UploadedFile | None, video: UploadedFile | None) -> Result[None, NotFoundError | ValidationError | FatalError]:
+def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, image: UploadedFile | None, video: UploadedFile | None) -> Result[None, InputError]:
     upload_ret = validate_uploads([(image, ImageUpload.ADVERTISE), (video, MediaUpload.ADVERTISE)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -184,7 +184,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
 
 
 @Result.shield_exception()
-def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
+def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repository = injector.get(AdvertiseInterface)
     ids: list[int] = []
     for ulid in ulids:

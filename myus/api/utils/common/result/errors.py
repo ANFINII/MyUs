@@ -38,3 +38,10 @@ class ForbiddenError(AnyError):
 @dataclass(frozen=True)
 class ValidationError(AnyError):
     pass
+
+
+type FindError = NotFoundError | FatalError
+type AccessError = NotFoundError | ForbiddenError | FatalError
+type InputError = NotFoundError | ValidationError | FatalError
+type WriteError = NotFoundError | ForbiddenError | ValidationError | FatalError
+type ValidateError = ValidationError | FatalError

@@ -104,6 +104,25 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `error_message` |
 | `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `"Internal Server Error"`固定 |
 
+### エラー型の組み合わせ
+- 複数のエラー型を返すときは、`NotFoundError | FatalError`のように直接書かず、`errors.py`の別名を使う
+- `FatalError`だけのときは`Result[T, FatalError]`のまま書く
+- 返すエラーが増減したら、合う別名に付け替える（付け替え忘れはadapterの`assert_never`でmypyが検出する）
+
+| 別名 | 中身 | 使う場面 |
+|---|---|---|
+| `FindError` | `NotFoundError \| FatalError` | 対象を探す（見つからないことがある） |
+| `AccessError` | `NotFoundError \| ForbiddenError \| FatalError` | 対象を探し、権限を確かめる |
+| `InputError` | `NotFoundError \| ValidationError \| FatalError` | 対象を探し、入力を確かめる |
+| `WriteError` | `NotFoundError \| ForbiddenError \| ValidationError \| FatalError` | 対象・権限・入力をすべて確かめて書き込む |
+| `ValidateError` | `ValidationError \| FatalError` | 入力だけを確かめる |
+
+```python
+@Result.shield_exception()
+def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
+    ...
+```
+
 ### adapter
 - `FatalError`以外のエラー型も返すusecaseは、`match` + `assert_never`でエラー型ごとにステータスを決める（`isinstance`で分岐しない）
 - usecaseに新しいエラー型が追加されたとき、adapterの対応漏れを`assert_never`でmypyが検出する

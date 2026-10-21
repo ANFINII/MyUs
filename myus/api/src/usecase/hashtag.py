@@ -6,7 +6,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.src.domain.interface.ng_word.interface import FilterOption as NgWordFilterOption, NgWordInterface, SortOption as NgWordSortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
+from api.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.functions.media import get_media_repository
 
@@ -64,7 +64,7 @@ def get_ng_words() -> Result[list[str], FatalError]:
 
 
 @Result.shield_exception()
-def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, AccessError]:
     media_repo = get_media_repository(media_type)
     hashtag_repo = injector.get(HashtagInterface)
     media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())

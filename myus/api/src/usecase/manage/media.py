@@ -22,7 +22,7 @@ from api.src.domain.interface.message.interface import FilterOption as MessageFi
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.notification import create_publish_notification, delete_object_notifications
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidationError
+from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, WriteError
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
@@ -60,7 +60,7 @@ def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 
 @Result.shield_exception()
-def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, NotFoundError | FatalError]:
+def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, FindError]:
     repository = injector.get(VideoInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -85,7 +85,7 @@ def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, NotFoundError
 
 
 @Result.shield_exception()
-def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.VIDEO)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -137,7 +137,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
 
 
 @Result.shield_exception()
-def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
+def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repository = injector.get(VideoInterface)
     delete_ids: list[int] = []
 
@@ -191,7 +191,7 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 
 @Result.shield_exception()
-def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, NotFoundError | FatalError]:
+def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
     repository = injector.get(MusicInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -212,7 +212,7 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, NotFoundError
 
 
 @Result.shield_exception()
-def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, AccessError]:
     repository = injector.get(MusicInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -257,7 +257,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
 
 
 @Result.shield_exception()
-def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
+def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repository = injector.get(MusicInterface)
     delete_ids: list[int] = []
 
@@ -311,7 +311,7 @@ def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: i
 
 
 @Result.shield_exception()
-def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, NotFoundError | FatalError]:
+def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
     repository = injector.get(BlogInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -332,7 +332,7 @@ def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, NotFoundError |
 
 
 @Result.shield_exception()
-def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.BLOG)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -384,7 +384,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
 
 
 @Result.shield_exception()
-def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
+def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repository = injector.get(BlogInterface)
     delete_ids: list[int] = []
 
@@ -441,7 +441,7 @@ def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 
 @Result.shield_exception()
-def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, NotFoundError | FatalError]:
+def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
     repository = injector.get(ComicInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -465,7 +465,7 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, NotFoundError
 
 
 @Result.shield_exception()
-def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.COMIC)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -517,7 +517,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
 
 
 @Result.shield_exception()
-def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
+def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repository = injector.get(ComicInterface)
     delete_ids: list[int] = []
 
@@ -571,7 +571,7 @@ def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit
 
 
 @Result.shield_exception()
-def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, NotFoundError | FatalError]:
+def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, FindError]:
     repository = injector.get(PictureInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -592,7 +592,7 @@ def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, NotFoundE
 
 
 @Result.shield_exception()
-def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.PICTURE)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -644,7 +644,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
 
 
 @Result.shield_exception()
-def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
+def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repository = injector.get(PictureInterface)
     delete_ids: list[int] = []
 
@@ -696,7 +696,7 @@ def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: i
 
 
 @Result.shield_exception()
-def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, NotFoundError | FatalError]:
+def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
     repository = injector.get(ChatInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -716,7 +716,7 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, NotFoundError |
 
 
 @Result.shield_exception()
-def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
+def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, AccessError]:
     repository = injector.get(ChatInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -761,7 +761,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
 
 
 @Result.shield_exception()
-def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
+def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repository = injector.get(ChatInterface)
     delete_ids: list[int] = []
 

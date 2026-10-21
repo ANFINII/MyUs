@@ -8,7 +8,7 @@ from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.injectors.container import injector
 from api.src.usecase.user import get_user_data
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.functions.index import create_url
 from api.utils.plan import get_plan
 
@@ -54,7 +54,7 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
 
 
 @Result.shield_exception()
-def increment_advertise_read(ulid: str) -> Result[int, NotFoundError | FatalError]:
+def increment_advertise_read(ulid: str) -> Result[int, FindError]:
     repository = injector.get(AdvertiseInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
