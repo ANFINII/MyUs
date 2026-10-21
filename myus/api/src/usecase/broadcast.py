@@ -39,16 +39,19 @@ def _send_to_group(group_name: str, command: str, message: dict[str, object]) ->
         log.warning("channel_layer is None")
         return
 
-    async_to_sync(channel_layer.group_send)(
-        group_name,
-        {
-            "type": "chat_message",
-            "message": {
-                "command": command,
-                "message": message,
+    try:
+        async_to_sync(channel_layer.group_send)(
+            group_name,
+            {
+                "type": "chat_message",
+                "message": {
+                    "command": command,
+                    "message": message,
+                },
             },
-        },
-    )
+        )
+    except Exception as e:
+        log.error("WebSocket broadcast failed", exc=e, group_name=group_name, command=command)
 
 
 def _build_message_payload(data: MessageDTO) -> MessagePayload:

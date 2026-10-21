@@ -29,39 +29,35 @@ class MessageAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        try:
-            message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
-            if message_ret.is_err:
-                message = message_ret.err_value.message
-                match message_ret.err_value:
-                    case NotFoundError():
-                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
-                    case FatalError():
-                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
-                    case _:
-                        assert_never(message_ret.err_value)
+        message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
+        if message_ret.is_err:
+            message = message_ret.err_value.message
+            match message_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(message_ret.err_value)
 
-            obj = message_ret.ok_value
-            data = MessageOut(
-                ulid=obj.ulid,
-                text=obj.text,
-                reply_count=0,
-                created=obj.created,
-                updated=obj.updated,
-                author=AuthorOut(
-                    avatar=obj.author.avatar,
-                    ulid=obj.author.ulid,
-                    nickname=obj.author.nickname,
-                    follower_count=obj.author.follower_count,
-                ),
-            )
+        obj = message_ret.ok_value
+        data = MessageOut(
+            ulid=obj.ulid,
+            text=obj.text,
+            reply_count=0,
+            created=obj.created,
+            updated=obj.updated,
+            author=AuthorOut(
+                avatar=obj.author.avatar,
+                ulid=obj.author.ulid,
+                nickname=obj.author.nickname,
+                follower_count=obj.author.follower_count,
+            ),
+        )
 
-            broadcast_create_message(input.chat_ulid, obj, input.parent_ulid)
+        broadcast_create_message(input.chat_ulid, obj, input.parent_ulid)
 
-            return 200, data
-        except Exception as e:
-            log.error("MessageAPI post error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.messageCreateFailed")
+        return 200, data
 
     @staticmethod
     @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 400: ErrorOut, 500: ErrorOut})
@@ -113,27 +109,23 @@ class MessageAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        try:
-            update_ret = update_message(user_id, message_ulid, input.text)
-            if update_ret.is_err:
-                message = update_ret.err_value.message
-                match update_ret.err_value:
-                    case ForbiddenError():
-                        return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
-                    case NotFoundError():
-                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
-                    case FatalError():
-                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
-                    case _:
-                        assert_never(update_ret.err_value)
+        update_ret = update_message(user_id, message_ulid, input.text)
+        if update_ret.is_err:
+            message = update_ret.err_value.message
+            match update_ret.err_value:
+                case ForbiddenError():
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
-            chat_ulid = update_ret.ok_value
-            broadcast_update_message(chat_ulid, message_ulid, input.text)
+        chat_ulid = update_ret.ok_value
+        broadcast_update_message(chat_ulid, message_ulid, input.text)
 
-            return 200, SuccessOut(message="メッセージを更新しました")
-        except Exception as e:
-            log.error("MessageAPI put error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.messageUpdateFailed")
+        return 200, SuccessOut(message="メッセージを更新しました")
 
     @staticmethod
     @router.delete("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -148,24 +140,20 @@ class MessageAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        try:
-            delete_ret = delete_message(user_id, message_ulid)
-            if delete_ret.is_err:
-                message = delete_ret.err_value.message
-                match delete_ret.err_value:
-                    case ForbiddenError():
-                        return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
-                    case NotFoundError():
-                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
-                    case FatalError():
-                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
-                    case _:
-                        assert_never(delete_ret.err_value)
+        delete_ret = delete_message(user_id, message_ulid)
+        if delete_ret.is_err:
+            message = delete_ret.err_value.message
+            match delete_ret.err_value:
+                case ForbiddenError():
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
 
-            chat_ulid = delete_ret.ok_value
-            broadcast_delete_message(chat_ulid, message_ulid)
+        chat_ulid = delete_ret.ok_value
+        broadcast_delete_message(chat_ulid, message_ulid)
 
-            return 200, SuccessOut(message="メッセージを削除しました")
-        except Exception as e:
-            log.error("MessageAPI delete error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.messageDeleteFailed")
+        return 200, SuccessOut(message="メッセージを削除しました")
