@@ -29,6 +29,7 @@ from api.src.usecase.message import get_messages
 from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_user_data
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, WriteError
+from api.utils.enum.access_log import AccessType
 from api.utils.enum.media import CommentType, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload, MediaUpload
@@ -1068,7 +1069,7 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
     objs = objs_ret.ok_value
     obj = objs[0]
     with transaction.atomic():
-        access_ret = record_access(ip_address, media_type, obj.id)
+        access_ret = record_access(ip_address, AccessType(media_type.value), obj.id)
         if access_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(access_ret.err_value)

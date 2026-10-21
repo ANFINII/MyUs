@@ -1,13 +1,13 @@
 from api.db.models.common import AccessLog
 from api.src.domain.interface.access_log.data import AccessLogData
-from api.utils.enum.media import MediaType
+from api.utils.enum.access_log import AccessType
 
 
 def convert_data(obj: AccessLog) -> AccessLogData:
     return AccessLogData(
         id=obj.id,
         ip_address=obj.ip_address,
-        type=MediaType(obj.type),
+        type=AccessType(obj.type),
         type_id=obj.type_id,
         updated=obj.updated,
     )

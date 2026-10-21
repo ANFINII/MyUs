@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from api.src.domain.interface.access_log.data import AccessLogData
 from api.utils.common.result import FatalError, Result
-from api.utils.enum.media import MediaType
+from api.utils.enum.access_log import AccessType
 
 
 class SortType(Enum):
@@ -13,7 +13,7 @@ class SortType(Enum):
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     ip_address: str = ""
-    type: MediaType | None = None
+    type: AccessType | None = None
     type_id: int = 0
 
 
