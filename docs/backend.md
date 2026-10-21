@@ -225,6 +225,11 @@ return Result.ok(new_ids)
 
 - pytestを使用（Django TestCase不可）
 - `@pytest.mark.django_db`でDB接続
+- 実行: `uv run pytest`（`api/tests/`。CIでも実行する）
+- テスト用DBは`--nomigrations`でモデルから直接作る（マイグレーションはgit管理外のため）。DBを作る権限のあるユーザーで実行する
+- 共通のfixtureは`api/tests/conftest.py`
+  - `make_user`: User・Profile・MyPage・UserNotification・UserPlanをまとめて作る
+  - `fake_payment`: `PaymentInterface`を`api/tests/fakes.py`の`FakePayment`に差し替える（Stripeを呼ばない。テストごとに元に戻る）
 
 ## リンターチェック（必須）
 

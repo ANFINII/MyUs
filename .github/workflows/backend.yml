@@ -70,3 +70,9 @@ jobs:
 
       - name: Django check
         run: uv run python manage.py check
+
+      - name: pytest
+        env:
+          MYSQL_USER: root
+          MYSQL_PASSWORD: password
+        run: uv run pytest
