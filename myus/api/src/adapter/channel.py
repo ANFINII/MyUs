@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
 from api.src.types.schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
-from api.src.types.schema.common import ErrorOut
+from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import create_user_channel, get_user_channels, update_user_channel
@@ -24,15 +24,15 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         channels_ret = get_user_channels(user_id)
         if channels_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         channels = channels_ret.ok_value
         data = [
@@ -57,15 +57,15 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         channels_ret = get_subscribe_channels(user_id)
         if channels_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         channels = channels_ret.ok_value
         data = [
@@ -90,19 +90,19 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         subscribe_ret = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
         if subscribe_ret.is_err:
             match subscribe_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(message=subscribe_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=subscribe_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(subscribe_ret.err_value)
 
@@ -117,19 +117,19 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         create_ret = create_user_channel(user_id, input, avatar_file)
         if create_ret.is_err:
             match create_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(message=create_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=create_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(create_ret.err_value)
 
@@ -143,23 +143,23 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_user_channel(user_id, ulid, input, avatar_file)
         if update_ret.is_err:
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.error_message)
                 case ForbiddenError():
-                    return 403, ErrorOut(message=update_ret.err_value.error_message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.error_message)
                 case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
