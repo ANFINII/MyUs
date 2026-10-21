@@ -448,9 +448,9 @@ class SearchTagAdminSite(admin.ModelAdmin):
         obj.author = request.user
         super(SearchTagAdminSite, self).save_model(request, obj, form, change)
 
+    @admin.action(description="削除する")
     def delete_action(self, request, queryset):
         queryset.delete()
-    delete_action.short_description = "削除する"
 manage_site.register(SearchTag, SearchTagAdminSite)
 
 
@@ -476,13 +476,13 @@ manage_site.register(HashTag, HashTagAdminSite)
 
 
 class PublishMixin:
+    @admin.action(description="公開する")
     def published(self, request, queryset):
         queryset.update(publish=True)
-    published.short_description = "公開する"
 
+    @admin.action(description="非公開にする")
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
-    unpublished.short_description = "非公開にする"
 
 
 class VideoAdminSite(admin.ModelAdmin, PublishMixin):
@@ -680,13 +680,13 @@ class FollowAdminSite(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
+    @admin.action(description="削除する")
     def delete_action(self, request, queryset):
         queryset.delete()
-    delete_action.short_description = "削除する"
 
+    @admin.display(description="Introduction")
     def following_introduction(self, obj):
         return obj.following.introduction
-    following_introduction.short_description = "Introduction"
 manage_site.register(Follow, FollowAdminSite)
 
 
@@ -715,16 +715,16 @@ class NotificationAdminSite(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+    @admin.display(description="confirmed")
     def confirmed_count(self, obj):
         return obj.confirmed.count()
-    confirmed_count.short_description = "confirmed"
 
-    def title(self):
-        class_name = self.type_name.lower()
+    @admin.display(description="title")
+    def title(self, obj):
+        class_name = obj.type_name.lower()
         model = model_media_comment_dict[class_name]
-        obj = model.objects.get(id=self.object_id)
-        return obj.title
-    title.short_description = "title"
+        target = model._default_manager.get(id=obj.object_id)
+        return target.title
 manage_site.register(Notification, NotificationAdminSite)
 
 
