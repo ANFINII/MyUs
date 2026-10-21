@@ -240,21 +240,3 @@ def delete_comment(user_id: int, comment_ulid: str) -> Result[None, AccessError]
             return Result.err(notification_ret.err_value)
 
     return Result.ok(None)
-
-
-@Result.shield_exception()
-def delete_comment_notifications(type_no: CommentTypeNo, object_ids: list[int]) -> Result[None, FatalError]:
-    if len(object_ids) == 0:
-        return Result.ok(None)
-
-    repo = injector.get(CommentInterface)
-    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_ids=object_ids), SortOption())
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
-
-    ids = ids_ret.ok_value
-    delete_ret = delete_object_notifications(NotificationObjectType.COMMENT, ids)
-    if delete_ret.is_err:
-        return Result.err(delete_ret.err_value)
-
-    return Result.ok(None)

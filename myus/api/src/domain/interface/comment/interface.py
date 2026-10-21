@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, auto
 from api.src.domain.interface.comment.data import CommentData
 from api.utils.common.result import FatalError, Result
@@ -16,7 +16,6 @@ class FilterOption:
     ulid: str = ""
     type_no: CommentTypeNo | None = None
     object_id: int = 0
-    object_ids: list[int] = field(default_factory=list)
     user_id: int = 0
     is_parent: bool | None = None
 

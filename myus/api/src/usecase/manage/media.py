@@ -21,11 +21,9 @@ from api.src.domain.interface.message.interface import FilterOption as MessageFi
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.category import get_category_data
-from api.src.usecase.comment import delete_comment_notifications
-from api.src.usecase.message import delete_message_notifications
 from api.src.usecase.notification import create_publish_notification, delete_object_notifications
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
-from api.utils.enum.media import CommentTypeNo, MediaType
+from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
@@ -157,11 +155,6 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
         return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
-        related_ret = delete_comment_notifications(CommentTypeNo.VIDEO, delete_ids)
-        if related_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(related_ret.err_value)
-
         delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
@@ -284,11 +277,6 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
         return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
-        related_ret = delete_comment_notifications(CommentTypeNo.MUSIC, delete_ids)
-        if related_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(related_ret.err_value)
-
         delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
@@ -418,11 +406,6 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
         return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
-        related_ret = delete_comment_notifications(CommentTypeNo.BLOG, delete_ids)
-        if related_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(related_ret.err_value)
-
         delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
@@ -558,11 +541,6 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
         return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
-        related_ret = delete_comment_notifications(CommentTypeNo.COMIC, delete_ids)
-        if related_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(related_ret.err_value)
-
         delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
@@ -692,11 +670,6 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindEr
         return Result.err(NotFoundError("error.deleteFailed"))
 
     with transaction.atomic():
-        related_ret = delete_comment_notifications(CommentTypeNo.PICTURE, delete_ids)
-        if related_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(related_ret.err_value)
-
         delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)
@@ -826,11 +799,6 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError
         reply_ids += chat_reply_ids
 
     with transaction.atomic():
-        related_ret = delete_message_notifications(delete_ids)
-        if related_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(related_ret.err_value)
-
         delete_ret = repo.bulk_delete(delete_ids)
         if delete_ret.is_err:
             transaction.set_rollback(True)

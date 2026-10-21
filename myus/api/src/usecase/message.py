@@ -9,7 +9,7 @@ from api.src.domain.interface.message.interface import FilterOption, MessageInte
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
-from api.src.usecase.notification import create_notification, delete_object_notifications
+from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_author_data, get_author_data_map
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -259,21 +259,3 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
             return Result.err(delete_ret.err_value)
 
     return Result.ok(chats[0].ulid)
-
-
-@Result.shield_exception()
-def delete_message_notifications(chat_ids: list[int]) -> Result[None, FatalError]:
-    if len(chat_ids) == 0:
-        return Result.ok(None)
-
-    repo = injector.get(MessageInterface)
-    ids_ret = repo.get_ids(FilterOption(chat_ids=chat_ids, is_parent=None), SortOption())
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
-
-    ids = ids_ret.ok_value
-    delete_ret = delete_object_notifications(NotificationObjectType.MESSAGE, ids)
-    if delete_ret.is_err:
-        return Result.err(delete_ret.err_value)
-
-    return Result.ok(None)
