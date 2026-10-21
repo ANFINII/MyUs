@@ -11,7 +11,7 @@ def sort_ids(objs: list[T], ids: list[int]) -> list[T]:
     return [obj_map[id] for id in ids]
 
 
-def save_models(models: list[T], update_fields: list[str]) -> list[int]:
+def get_save_new_ids(models: list[T], update_fields: list[str]) -> list[int]:
     new_models = [m for m in models if m.pk is None]
     existing_models = [m for m in models if m.pk is not None]
 

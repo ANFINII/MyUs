@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.subscribe import Subscribe
 from api.src.domain.entity.subscribe._convert import convert_data, marshal_data
-from api.src.domain.entity.index import save_models, sort_ids
+from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.interface.subscribe.data import SubscribeData
 from api.src.domain.interface.subscribe.interface import FilterOption, SubscribeInterface, SortOption
 from api.utils.common.result import FatalError, Result
@@ -49,7 +49,7 @@ class SubscribeRepository(SubscribeInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = save_models(models, SUBSCRIBE_FIELDS)
+        new_ids = get_save_new_ids(models, SUBSCRIBE_FIELDS)
 
         return Result.ok(new_ids)
 
