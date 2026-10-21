@@ -11,5 +11,9 @@ class ErrorType(StrEnum):
 
 
 class ErrorOut(BaseModel):
-    type: ErrorType | None = None
+    type: ErrorType
+    message: str
+
+
+class SuccessOut(BaseModel):
     message: str

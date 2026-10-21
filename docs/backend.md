@@ -107,7 +107,8 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `NOT_FOUND` | `error_message` |
 | `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `INTERNAL` | `"Internal Server Error"`固定 |
 
-- エラーレスポンスは`ErrorOut`（`type`・`message`）で返し、`type`を必ず入れる（`api/src/types/schema/common.py`）。`type`の初期値`None`は移行中だけのもので、全adapterを置き換えたら必須にする
+- エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`api/src/types/schema/common.py`）。`type`は必須
+- 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
 - `auth_check`の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - 移行の計画は`roadmap_error_status.md`（ステータスは今は上の表のまま。後で400 / 500にまとめる）
 
