@@ -16,6 +16,6 @@ export default function ErrorCheck(props: Props): React.JSX.Element {
   if (error === null) return <>{children}</>
   if (error.type === ErrorType.Unauthenticated) return <Unauthorized />
   if (error.type === ErrorType.NotFound) return <Custom404 />
-  if (error.type === ErrorType.Internal || (error.type === undefined && error.status >= 500)) return <Custom500 />
+  if (error.type === ErrorType.Internal || error.status >= 500) return <Custom500 />
   return <Unexpected />
 }
