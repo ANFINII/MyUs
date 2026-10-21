@@ -2,7 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.common import ErrorOut, ErrorType
+from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.message import MessageOut, MessageReplyOut, MessageCreateIn, MessageUpdateIn
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
@@ -100,7 +100,7 @@ class MessageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, message_ulid: str, input: MessageUpdateIn):
         log.info("MessageAPI put", message_ulid=message_ulid, input=input)
 
@@ -127,13 +127,13 @@ class MessageAPI:
 
             broadcast_update_message(input.chat_ulid, message_ulid, input.text)
 
-            return 200, ErrorOut(message="メッセージを更新しました")
+            return 200, SuccessOut(message="メッセージを更新しました")
         except Exception as e:
             log.error("MessageAPI put error", exc=e)
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI delete", message_ulid=message_ulid)
 
@@ -161,7 +161,7 @@ class MessageAPI:
             chat_ulid = delete_ret.ok_value
             broadcast_delete_message(chat_ulid, message_ulid)
 
-            return 200, ErrorOut(message="メッセージを削除しました")
+            return 200, SuccessOut(message="メッセージを削除しました")
         except Exception as e:
             log.error("MessageAPI delete error", exc=e)
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの削除に失敗しました")

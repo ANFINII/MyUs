@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
 from api.src.types.schema.comment import CommentCreateIn, CommentListIn, CommentOut, CommentUpdateIn, ReplyOut
-from api.src.types.schema.common import ErrorOut, ErrorType
+from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import create_comment, delete_comment, get_comments, update_comment
@@ -117,7 +117,7 @@ class CommentAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの作成に失敗しました")
 
     @staticmethod
-    @router.put("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
@@ -142,13 +142,13 @@ class CommentAPI:
                     case _:
                         assert_never(update_ret.err_value)
 
-            return 200, ErrorOut(message="コメントを更新しました")
+            return 200, SuccessOut(message="コメントを更新しました")
         except Exception as e:
             log.error("CommentAPI put error", exc=e)
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
@@ -173,7 +173,7 @@ class CommentAPI:
                     case _:
                         assert_never(delete_ret.err_value)
 
-            return 200, ErrorOut(message="コメントを削除しました")
+            return 200, SuccessOut(message="コメントを削除しました")
         except Exception as e:
             log.error("CommentAPI delete error", exc=e)
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの削除に失敗しました")

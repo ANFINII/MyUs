@@ -2,7 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.types.schema.common import ErrorOut, ErrorType
+from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.user import get_user_data, profile_check, update_mypage, update_notification, update_profile
@@ -63,7 +63,7 @@ class SettingProfileAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("SettingProfileAPI put", input=input)
 
@@ -91,7 +91,7 @@ class SettingProfileAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, ErrorOut(message="保存しました!")
+        return 204, SuccessOut(message="保存しました!")
 
 
 class SettingMyPageAPI:
@@ -141,7 +141,7 @@ class SettingMyPageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner_file: UploadedFile = File(None)):
         log.info("SettingMyPageAPI put", input=input)
 
@@ -168,7 +168,7 @@ class SettingMyPageAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, ErrorOut(message="保存しました!")
+        return 204, SuccessOut(message="保存しました!")
 
 
 
@@ -217,7 +217,7 @@ class SettingNotificationAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingNotificationIn):
         log.info("SettingNotificationAPI put", input=input)
 
@@ -239,4 +239,4 @@ class SettingNotificationAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, ErrorOut(message="保存しました!")
+        return 204, SuccessOut(message="保存しました!")

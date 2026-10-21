@@ -3,7 +3,7 @@ from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
 from api.src.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
-from api.src.types.schema.common import ErrorOut, ErrorType
+from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.usecase.auth import auth_check, change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
 from api.src.usecase.user import signup_check
 
@@ -14,7 +14,7 @@ class AuthAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def auth(request: HttpRequest):
         log.info("AuthAPI auth")
 
@@ -26,7 +26,7 @@ class AuthAPI:
         if user_id is None:
             return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        return 200, ErrorOut(message="認証済みです!")
+        return 200, SuccessOut(message="認証済みです!")
 
     @staticmethod
     @router.post("refresh", response={204: None, 401: ErrorOut, 500: ErrorOut})
@@ -61,7 +61,7 @@ class AuthAPI:
         return 204, None
 
     @staticmethod
-    @router.post("/signup/email", response={200: ErrorOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("/signup/email", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def signup_email(request: HttpRequest, input: SignupEmailIn):
         log.info("AuthAPI signup_email", email=input.email)
 
@@ -73,7 +73,7 @@ class AuthAPI:
         if len(error_message) > 0:
             return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
 
-        return 200, ErrorOut(message="メールを送信しました!")
+        return 200, SuccessOut(message="メールを送信しました!")
 
     @staticmethod
     @router.get("/signup/verify", response={200: SignupVerifyOut, 400: ErrorOut})
@@ -87,7 +87,7 @@ class AuthAPI:
         return 200, SignupVerifyOut(email=email)
 
     @staticmethod
-    @router.post("/signup", response={201: ErrorOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("/signup", response={201: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def signup(request: HttpRequest, input: SignupIn):
         log.info("AuthAPI signup", email=input.email, username=input.username)
 
@@ -109,7 +109,7 @@ class AuthAPI:
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="アカウント登録に失敗しました!")
 
-        return 201, ErrorOut(message="アカウント登録が完了しました!")
+        return 201, SuccessOut(message="アカウント登録が完了しました!")
 
     @staticmethod
     @router.post("/login", response={204: None, 400: ErrorOut, 500: ErrorOut})
@@ -151,7 +151,7 @@ class AuthAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="ログアウトに失敗しました!")
 
     @staticmethod
-    @router.post("/password/change", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/password/change", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def password_change(request: HttpRequest, response: HttpResponse, input: PasswordChangeIn):
         log.info("AuthAPI password_change")
 
@@ -183,10 +183,10 @@ class AuthAPI:
         response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
         response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
 
-        return 204, ErrorOut(message="パスワードを変更しました!")
+        return 204, SuccessOut(message="パスワードを変更しました!")
 
     @staticmethod
-    @router.post("/password/reset/email", response={200: ErrorOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("/password/reset/email", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def password_reset_email(request: HttpRequest, input: PasswordResetEmailIn):
         log.info("AuthAPI password_reset_email", email=input.email)
 
@@ -198,7 +198,7 @@ class AuthAPI:
         if len(error_message) > 0:
             return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
 
-        return 200, ErrorOut(message="メールを送信しました!")
+        return 200, SuccessOut(message="メールを送信しました!")
 
     @staticmethod
     @router.get("/password/reset/verify", response={200: PasswordResetVerifyOut, 400: ErrorOut, 500: ErrorOut})
@@ -217,7 +217,7 @@ class AuthAPI:
         return 200, PasswordResetVerifyOut(email=email)
 
     @staticmethod
-    @router.post("/password/reset", response={204: ErrorOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("/password/reset", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def password_reset(request: HttpRequest, input: PasswordResetIn):
         log.info("AuthAPI password_reset")
 
@@ -229,10 +229,10 @@ class AuthAPI:
         if len(error_message) > 0:
             return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
 
-        return 204, ErrorOut(message="パスワードをリセットしました!")
+        return 204, SuccessOut(message="パスワードをリセットしました!")
 
     @staticmethod
-    @router.post("/withdrawal", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/withdrawal", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def withdrawal(request: HttpRequest, response: HttpResponse, input: WithdrawalIn):
         log.info("AuthAPI withdrawal")
 
@@ -254,4 +254,4 @@ class AuthAPI:
 
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
-        return 204, ErrorOut(message="退会しました!")
+        return 204, SuccessOut(message="退会しました!")

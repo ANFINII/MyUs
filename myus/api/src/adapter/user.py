@@ -6,7 +6,7 @@ from api.src.adapter.advertise import convert_advertises
 from api.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from api.src.types.schema.advertise import AdvertiseListOut
 from api.src.types.schema.channel import ChannelOut
-from api.src.types.schema.common import ErrorOut, ErrorType
+from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationIn, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
@@ -82,7 +82,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/search_tag", response={200: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/search_tag", response={200: SuccessOut, 401: ErrorOut, 500: ErrorOut})
     def put_search_tag(request: HttpRequest, input: list[SearchTagIn]):
         log.info("UserAPI put_search_tag")
 
@@ -98,7 +98,7 @@ class UserAPI:
         if update_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        return 200, ErrorOut(message="更新しました")
+        return 200, SuccessOut(message="更新しました")
 
     @staticmethod
     @router.get("/follower", response={200: list[FollowUserOut], 401: ErrorOut, 500: ErrorOut})
@@ -310,7 +310,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/notification/confirmed", response={200: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/notification/confirmed", response={200: SuccessOut, 401: ErrorOut, 500: ErrorOut})
     def post_notification_confirmed(request: HttpRequest, input: NotificationIn):
         log.info("UserAPI post_notification_confirmed", ulid=input.ulid)
 
@@ -326,10 +326,10 @@ class UserAPI:
         if confirm_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        return 200, ErrorOut(message="OK")
+        return 200, SuccessOut(message="OK")
 
     @staticmethod
-    @router.post("/notification/deleted", response={200: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/notification/deleted", response={200: SuccessOut, 401: ErrorOut, 500: ErrorOut})
     def post_notification_deleted(request: HttpRequest, input: NotificationIn):
         log.info("UserAPI post_notification_deleted", ulid=input.ulid)
 
@@ -345,7 +345,7 @@ class UserAPI:
         if delete_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        return 200, ErrorOut(message="OK")
+        return 200, SuccessOut(message="OK")
 
     @staticmethod
     @router.get("/userpage/{ulid}", response={200: UserPageOut, 404: ErrorOut, 500: ErrorOut})
