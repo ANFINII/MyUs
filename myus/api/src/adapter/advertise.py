@@ -4,7 +4,7 @@ from ninja import Router
 from api.modules.logger import log
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.types.schema.advertise import AdvertiseListOut, AdvertiseOut, AdvertiseReadOut
-from api.src.types.schema.common import ErrorOut
+from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.usecase.advertise import get_user_advertises, increment_advertise_read
 from api.utils.common.result import FatalError, NotFoundError
 from api.utils.functions.index import get_client_ip
@@ -22,7 +22,7 @@ class AdvertiseAPI:
 
         ret = get_user_advertises(user_ulid)
         if ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs = ret.ok_value
         return 200, AdvertiseListOut(items=convert_advertises(objs), total=len(objs))
@@ -36,9 +36,9 @@ class AdvertiseAPI:
         if ret.is_err:
             match ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(message=ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(ret.err_value)
 

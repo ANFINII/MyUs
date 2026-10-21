@@ -2,7 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.common import ErrorOut
+from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.message import MessageOut, MessageReplyOut, MessageCreateIn, MessageUpdateIn
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
@@ -23,20 +23,20 @@ class MessageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
             if message_ret.is_err:
                 match message_ret.err_value:
                     case NotFoundError():
-                        return 404, ErrorOut(message=message_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message_ret.err_value.error_message)
                     case FatalError():
-                        return 500, ErrorOut(message="Internal Server Error")
+                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
                         assert_never(message_ret.err_value)
 
@@ -60,7 +60,7 @@ class MessageAPI:
             return 201, data
         except Exception as e:
             log.error("MessageAPI post error", exc=e)
-            return 500, ErrorOut(message="メッセージの作成に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの作成に失敗しました")
 
     @staticmethod
     @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 401: ErrorOut, 500: ErrorOut})
@@ -69,15 +69,15 @@ class MessageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         replies_ret = get_replies(message_ulid)
         if replies_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         replies = replies_ret.ok_value
         data = [
@@ -106,22 +106,22 @@ class MessageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             update_ret = update_message(user_id, message_ulid, input.text)
             if update_ret.is_err:
                 match update_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(message=update_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.error_message)
                     case NotFoundError():
-                        return 404, ErrorOut(message=update_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
                     case FatalError():
-                        return 500, ErrorOut(message="Internal Server Error")
+                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
                         assert_never(update_ret.err_value)
 
@@ -130,7 +130,7 @@ class MessageAPI:
             return 200, ErrorOut(message="メッセージを更新しました")
         except Exception as e:
             log.error("MessageAPI put error", exc=e)
-            return 500, ErrorOut(message="メッセージの更新に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの更新に失敗しました")
 
     @staticmethod
     @router.delete("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
@@ -139,22 +139,22 @@ class MessageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             delete_ret = delete_message(user_id, message_ulid)
             if delete_ret.is_err:
                 match delete_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(message=delete_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=delete_ret.err_value.error_message)
                     case NotFoundError():
-                        return 404, ErrorOut(message=delete_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.error_message)
                     case FatalError():
-                        return 500, ErrorOut(message="Internal Server Error")
+                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
                         assert_never(delete_ret.err_value)
 
@@ -164,4 +164,4 @@ class MessageAPI:
             return 200, ErrorOut(message="メッセージを削除しました")
         except Exception as e:
             log.error("MessageAPI delete error", exc=e)
-            return 500, ErrorOut(message="メッセージの削除に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの削除に失敗しました")
