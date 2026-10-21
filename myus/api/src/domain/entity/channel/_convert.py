@@ -4,6 +4,7 @@ from api.src.domain.interface.channel.data import ChannelData
 
 
 def convert_data(obj: Channel) -> ChannelData:
+    assert hasattr(obj, "subscribe_count"), "subscribe_count is required"
     return ChannelData(
         id=obj.id,
         ulid=obj.ulid,
@@ -13,7 +14,7 @@ def convert_data(obj: Channel) -> ChannelData:
         name=obj.name,
         description=obj.description,
         is_default=obj.is_default,
-        count=obj.count,
+        count=obj.subscribe_count,
     )
 
 
@@ -26,5 +27,4 @@ def marshal_data(data: ChannelData) -> Channel:
         name=data.name,
         description=data.description,
         is_default=data.is_default,
-        count=data.count,
     )

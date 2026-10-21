@@ -7,6 +7,7 @@ from api.src.domain.interface.media.music.data import MusicData
 
 def convert_data(obj: Music) -> MusicData:
     assert hasattr(obj, "like_count"), "like_count is required"
+    assert hasattr(obj, "channel_subscribe_count"), "channel_subscribe_count is required"
     category = next(iter(obj.category.all()), None)
     assert category is not None, "Category is required"
     return MusicData(
@@ -32,7 +33,7 @@ def convert_data(obj: Music) -> MusicData:
             name=obj.channel.name,
             description=obj.channel.description,
             is_default=obj.channel.is_default,
-            count=obj.channel.count,
+            count=obj.channel_subscribe_count,
         ),
         hashtags=[HashtagData(id=t.id, ulid=t.ulid, name=t.name) for t in obj.hashtag.all()],
     )

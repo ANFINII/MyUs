@@ -2,7 +2,7 @@ from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Video
 from api.src.domain.entity.media.video._convert import convert_data, marshal_data
-from api.src.domain.entity.index import get_save_new_ids, sort_ids
+from api.src.domain.entity.index import get_save_new_ids, sort_ids, subscribe_count
 from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.video.interface import VideoInterface
@@ -15,7 +15,7 @@ VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "
 
 class VideoRepository(VideoInterface):
     def queryset(self) -> QuerySet[Video]:
-        return Video.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
+        return Video.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"), channel_subscribe_count=subscribe_count("channel_id"))
 
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:

@@ -38,4 +38,6 @@ class Follow(models.Model):
             models.Index(fields=["follower"], name="follower_idx"),
             models.Index(fields=["following"], name="following_idx"),
             models.Index(fields=["follower", "following"], name="follower_following_idx"),
+            models.Index(fields=["follower", "is_follow"], name="follower_is_follow_idx"),
+            models.Index(fields=["following", "is_follow"], name="following_is_follow_idx"),
         ]

@@ -8,7 +8,7 @@ from api.utils.enum.user import PlanName
 from api.utils.functions.file import avatar_upload
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager["User"]):
     def create_user(self, email: str, username: str, nickname: str, password: str | None = None) -> "User":
         if not email:
             raise ValueError("Users must have an email")
@@ -95,8 +95,6 @@ class MyPage(models.Model):
     banner          = models.ImageField(upload_to=avatar_upload, max_length=255, default=img, blank=True)
     email           = models.EmailField(max_length=255, blank=True)
     content         = models.TextField()
-    follower_count  = models.IntegerField(verbose_name="follower", default=0)
-    following_count = models.IntegerField(verbose_name="follow", default=0)
     tag_manager_id  = models.CharField(max_length=10, blank=True)
     is_advertise    = models.BooleanField(default=True)
 

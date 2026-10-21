@@ -13,11 +13,13 @@ def convert_data(user: User) -> UserAllData:
     assert hasattr(user, "mypage"), "Mypage is required"
     assert hasattr(user, "notification"), "Notification is required"
     assert hasattr(user, "user_plan"), "User plan is required"
+    assert hasattr(user, "follower_count"), "follower_count is required"
+    assert hasattr(user, "following_count"), "following_count is required"
 
     return UserAllData(
         user=user_data(user),
         profile=profile_data(user.profile),
-        mypage=mypage_data(user.mypage),
+        mypage=mypage_data(user.mypage, user.follower_count, user.following_count),
         notification=user_notification_data(user.notification),
         user_plan=user_plan_data(user.user_plan),
     )
@@ -54,13 +56,13 @@ def profile_data(profile: Profile) -> ProfileData:
     )
 
 
-def mypage_data(mypage: MyPage) -> MyPageData:
+def mypage_data(mypage: MyPage, follower_count: int, following_count: int) -> MyPageData:
     return MyPageData(
         banner=mypage.banner.name or "",
         email=mypage.email,
         content=mypage.content,
-        follower_count=mypage.follower_count,
-        following_count=mypage.following_count,
+        follower_count=follower_count,
+        following_count=following_count,
         tag_manager_id=mypage.tag_manager_id,
         is_advertise=mypage.is_advertise,
     )
@@ -149,8 +151,6 @@ def marshal_mypage(user: User, data: UserAllData) -> MyPage:
         banner=mypage.banner,
         email=mypage.email,
         content=mypage.content,
-        follower_count=mypage.follower_count,
-        following_count=mypage.following_count,
         tag_manager_id=mypage.tag_manager_id,
         is_advertise=mypage.is_advertise,
     )

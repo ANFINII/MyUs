@@ -7,6 +7,7 @@ from api.src.domain.interface.media.chat.data import ChatData
 
 def convert_data(obj: Chat) -> ChatData:
     assert hasattr(obj, "like_count"), "like_count is required"
+    assert hasattr(obj, "channel_subscribe_count"), "channel_subscribe_count is required"
     assert hasattr(obj, "thread_total"), "thread_total is required"
     assert hasattr(obj, "joined_total"), "joined_total is required"
     category = next(iter(obj.category.all()), None)
@@ -34,7 +35,7 @@ def convert_data(obj: Chat) -> ChatData:
             name=obj.channel.name,
             description=obj.channel.description,
             is_default=obj.channel.is_default,
-            count=obj.channel.count,
+            count=obj.channel_subscribe_count,
         ),
         hashtags=[HashtagData(id=t.id, ulid=t.ulid, name=t.name) for t in obj.hashtag.all()],
     )

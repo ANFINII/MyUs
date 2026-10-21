@@ -2,7 +2,7 @@ from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Blog
 from api.src.domain.entity.media.blog._convert import convert_data, marshal_data
-from api.src.domain.entity.index import get_save_new_ids, sort_ids
+from api.src.domain.entity.index import get_save_new_ids, sort_ids, subscribe_count
 from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.blog.interface import BlogInterface
@@ -15,7 +15,7 @@ BLOG_FIELDS = ["channel_id", "title", "content", "richtext", "image", "publish",
 
 class BlogRepository(BlogInterface):
     def queryset(self) -> QuerySet[Blog]:
-        return Blog.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
+        return Blog.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"), channel_subscribe_count=subscribe_count("channel_id"))
 
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:

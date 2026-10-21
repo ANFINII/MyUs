@@ -38,7 +38,6 @@ def get_subscribe_channels(user_id: int) -> Result[list[ChannelData], FatalError
 
 @Result.shield_exception()
 def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Result[SubscribeDTO, FindError]:
-    channel_repo = injector.get(ChannelInterface)
     subscribe_repo = injector.get(SubscribeInterface)
     channel_ret = get_channel_data(channel_ulid)
     if channel_ret.is_err:
@@ -82,9 +81,5 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
             return Result.err(count_ret.err_value)
 
         count = count_ret.ok_value
-        channel_count_ret = channel_repo.save_count(channel.id, count)
-        if channel_count_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(channel_count_ret.err_value)
 
     return Result.ok(SubscribeDTO(is_subscribe=is_subscribe, count=count))

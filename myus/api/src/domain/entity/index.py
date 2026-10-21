@@ -1,6 +1,9 @@
 from typing import TypeVar
 from django.db import transaction
-from django.db.models import Model
+from django.db.models import Count, IntegerField, Model, OuterRef, Subquery
+from django.db.models.functions import Coalesce
+from api.db.models.subscribe import Subscribe
+from api.db.models.users import Follow
 
 
 T = TypeVar("T", bound=Model)
@@ -23,3 +26,18 @@ def get_save_new_ids(models: list[T], update_fields: list[str]) -> list[int]:
             type(existing_models[0])._default_manager.bulk_create(existing_models, update_conflicts=True, update_fields=update_fields)
 
     return [m.pk for m in new_models]
+
+
+def subscribe_count(channel_ref: str) -> Coalesce:
+    qs = Subscribe.objects.filter(channel_id=OuterRef(channel_ref), is_subscribe=True).order_by().values("channel_id").annotate(count=Count("id")).values("count")
+    return Coalesce(Subquery(qs), 0, output_field=IntegerField())
+
+
+def follower_count(user_ref: str) -> Coalesce:
+    qs = Follow.objects.filter(following_id=OuterRef(user_ref), is_follow=True).order_by().values("following_id").annotate(count=Count("id")).values("count")
+    return Coalesce(Subquery(qs), 0, output_field=IntegerField())
+
+
+def following_count(user_ref: str) -> Coalesce:
+    qs = Follow.objects.filter(follower_id=OuterRef(user_ref), is_follow=True).order_by().values("follower_id").annotate(count=Count("id")).values("count")
+    return Coalesce(Subquery(qs), 0, output_field=IntegerField())

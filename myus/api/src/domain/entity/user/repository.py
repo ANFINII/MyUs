@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from api.src.domain.entity.index import get_save_new_ids, sort_ids
+from api.src.domain.entity.index import follower_count, following_count, get_save_new_ids, sort_ids
 from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
@@ -26,7 +26,8 @@ USER_PLAN_FIELDS = ["customer_id", "subscription", "is_paid", "start_date", "end
 
 class UserRepository(UserInterface):
     def queryset(self) -> QuerySet[User]:
-        return User.objects.select_related("profile", "mypage", "notification", "user_plan")
+        qs = User.objects.select_related("profile", "mypage", "notification", "user_plan")
+        return qs.annotate(follower_count=follower_count("pk"), following_count=following_count("pk"))
 
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, sort: SortOption | None = None) -> Result[list[int], FatalError]:
@@ -108,11 +109,3 @@ class UserRepository(UserInterface):
         else:
             obj.like.add(user_id)
         return Result.ok((not is_like, obj.like.count()))
-
-    @Result.shield_exception()
-    def save_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
-        with transaction.atomic():
-            MyPage.objects.filter(user_id=follower_id).update(following_count=following_count)
-            MyPage.objects.filter(user_id=following_id).update(follower_count=follower_count)
-
-        return Result.ok(None)

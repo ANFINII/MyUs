@@ -44,7 +44,3 @@ class UserInterface(ABC):
     @abstractmethod
     def comment_like(self, user_id: int, comment_id: int) -> Result[tuple[bool, int], FatalError]:
         ...
-
-    @abstractmethod
-    def save_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
-        ...

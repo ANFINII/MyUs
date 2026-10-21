@@ -21,4 +21,5 @@ class Subscribe(models.Model):
             models.Index(fields=["user"], name="subscribe_user_idx"),
             models.Index(fields=["channel"], name="subscribe_channel_idx"),
             models.Index(fields=["user", "channel"], name="subscribe_user_channel_idx"),
+            models.Index(fields=["channel", "is_subscribe"], name="subscribe_channel_is_sub_idx"),
         ]
