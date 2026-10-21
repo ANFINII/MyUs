@@ -20,5 +20,7 @@ class Subscribe(models.Model):
         indexes = [
             models.Index(fields=["user"], name="subscribe_user_idx"),
             models.Index(fields=["channel"], name="subscribe_channel_idx"),
-            models.Index(fields=["user", "channel"], name="subscribe_user_channel_idx"),
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "channel"], name="subscribe_user_channel_uniq"),
         ]

@@ -1,4 +1,3 @@
-from dataclasses import replace
 from django.db import transaction
 from api.src.domain.interface.follow.data import FollowData
 from api.src.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
@@ -122,29 +121,24 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
                 if notification_ret.is_err:
                     transaction.set_rollback(True)
                     return Result.err(notification_ret.err_value)
-        else:
-            updated_follow = replace(follow, is_follow=is_follow)
-            save_ret = follow_repo.bulk_save([updated_follow])
-            if save_ret.is_err:
-                transaction.set_rollback(True)
-                return Result.err(save_ret.err_value)
 
-        follower_count_ret = follow_repo.count(FilterOption(following_id=following.user.id, is_follow=True))
+            is_changed = is_follow
+        else:
+            changed_ret = follow_repo.save_is_follow(follow.id, is_follow)
+            if changed_ret.is_err:
+                transaction.set_rollback(True)
+                return Result.err(changed_ret.err_value)
+
+            is_changed = changed_ret.ok_value
+
+        if not is_changed:
+            return Result.ok(FollowDTO(is_follow=is_follow, follower_count=following.mypage.follower_count))
+
+        follower_count_ret = user_repo.save_follow_count(follower_id, following_id, 1 if is_follow else -1)
         if follower_count_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(follower_count_ret.err_value)
 
-        following_count_ret = follow_repo.count(FilterOption(follower_id=follower.user.id, is_follow=True))
-        if following_count_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(following_count_ret.err_value)
-
         follower_count = follower_count_ret.ok_value
-        following_count = following_count_ret.ok_value
-
-        follow_count_ret = user_repo.save_follow_count(follower.user.id, following.user.id, follower_count, following_count)
-        if follow_count_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(follow_count_ret.err_value)
 
     return Result.ok(FollowDTO(is_follow=is_follow, follower_count=follower_count))

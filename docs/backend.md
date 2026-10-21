@@ -190,6 +190,9 @@ if ret.is_err:
 - upsertの`update_fields`（`XXX_FIELDS`）
   - 閲覧数・件数などのカウンタは入れない（読み込んだ時点の古い値で上書きしてしまうため）。カウンタは`save_read`（`F("read") + 1`）や`save_count`のような専用のメソッドで、その項目だけを`QuerySet.update()`で書く
   - `updated`（`auto_now=True`）は入れる（入れないと、編集しても更新日が変わらない）
+- 登録者数・フォロワー数などの件数は、数え直して上書きせず、`F()`で増減する（`save_count(id, diff)`・`save_follow_count(follower_id, following_id, diff)`）
+  - 状態が実際に変わった時だけ増減する。`save_is_follow`・`save_is_subscribe`は「今と逆の状態の時だけ」更新し、変わったかどうかを返す（同時に操作されても二重に数えない）
+  - 増減は、元の行の保存と同じ`transaction.atomic()`の中で行う
 - IDを事前に採番しない（`ALTER TABLE ... AUTO_INCREMENT`はMySQLで暗黙にCOMMITされ、`transaction.atomic()`のロールバックが効かなくなるため）
 
 ```python

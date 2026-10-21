@@ -39,3 +39,7 @@ class FollowInterface(ABC):
     @abstractmethod
     def count(self, filter: FilterOption) -> Result[int, FatalError]:
         ...
+
+    @abstractmethod
+    def save_is_follow(self, id: int, is_follow: bool) -> Result[bool, FatalError]:
+        ...

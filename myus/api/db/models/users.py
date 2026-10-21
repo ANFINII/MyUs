@@ -37,5 +37,7 @@ class Follow(models.Model):
         indexes = [
             models.Index(fields=["follower"], name="follower_idx"),
             models.Index(fields=["following"], name="following_idx"),
-            models.Index(fields=["follower", "following"], name="follower_following_idx"),
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=["follower", "following"], name="follower_following_uniq"),
         ]

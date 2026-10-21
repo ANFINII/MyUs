@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import F, Q
 from django.db.models.query import QuerySet
 from api.db.models.channel import Channel
 from api.src.domain.entity.channel._convert import convert_data, marshal_data
@@ -54,6 +54,6 @@ class ChannelRepository(ChannelInterface):
         return Result.ok(new_ids)
 
     @Result.shield_exception()
-    def save_count(self, id: int, count: int) -> Result[None, FatalError]:
-        Channel.objects.filter(id=id).update(count=count)
-        return Result.ok(None)
+    def save_count(self, id: int, diff: int) -> Result[int, FatalError]:
+        Channel.objects.filter(id=id).update(count=F("count") + diff)
+        return Result.ok(Channel.objects.values_list("count", flat=True).get(id=id))

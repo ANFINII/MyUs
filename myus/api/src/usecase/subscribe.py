@@ -1,4 +1,3 @@
-from dataclasses import replace
 from django.db import transaction
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface
@@ -68,23 +67,27 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
                 channel_id=channel.id,
                 is_subscribe=is_subscribe,
             )])
+            if save_ret.is_err:
+                transaction.set_rollback(True)
+                return Result.err(save_ret.err_value)
+
+            is_changed = is_subscribe
         else:
-            updated_subscribe = replace(subscribe, is_subscribe=is_subscribe)
-            save_ret = subscribe_repo.bulk_save([updated_subscribe])
+            changed_ret = subscribe_repo.save_is_subscribe(subscribe.id, is_subscribe)
+            if changed_ret.is_err:
+                transaction.set_rollback(True)
+                return Result.err(changed_ret.err_value)
 
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
+            is_changed = changed_ret.ok_value
 
-        count_ret = subscribe_repo.count(FilterOption(channel_id=channel.id, is_subscribe=True))
+        if not is_changed:
+            return Result.ok(SubscribeDTO(is_subscribe=is_subscribe, count=channel.count))
+
+        count_ret = channel_repo.save_count(channel.id, 1 if is_subscribe else -1)
         if count_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(count_ret.err_value)
 
         count = count_ret.ok_value
-        channel_count_ret = channel_repo.save_count(channel.id, count)
-        if channel_count_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(channel_count_ret.err_value)
 
     return Result.ok(SubscribeDTO(is_subscribe=is_subscribe, count=count))

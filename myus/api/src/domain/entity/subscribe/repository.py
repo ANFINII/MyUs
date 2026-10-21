@@ -64,3 +64,8 @@ class SubscribeRepository(SubscribeInterface):
             q_list.append(Q(is_subscribe=filter.is_subscribe))
 
         return Result.ok(Subscribe.objects.filter(*q_list).count())
+
+    @Result.shield_exception()
+    def save_is_subscribe(self, id: int, is_subscribe: bool) -> Result[bool, FatalError]:
+        updated_rows = Subscribe.objects.filter(id=id, is_subscribe=not is_subscribe).update(is_subscribe=is_subscribe)
+        return Result.ok(updated_rows > 0)
