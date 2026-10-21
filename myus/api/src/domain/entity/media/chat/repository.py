@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Count, Q, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Chat
@@ -45,13 +46,14 @@ class ChatRepository(ChatInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
 
-        Chat.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=CHAT_FIELDS,
-        )
+        with transaction.atomic():
+            new_ids = get_new_ids(models)
+            Chat.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=CHAT_FIELDS,
+            )
 
         return Result.ok(new_ids)
 

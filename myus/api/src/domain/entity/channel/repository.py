@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.channel import Channel
@@ -49,13 +50,14 @@ class ChannelRepository(ChannelInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
 
-        Channel.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=CHANNEL_FIELDS,
-        )
+        with transaction.atomic():
+            new_ids = get_new_ids(models)
+            Channel.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=CHANNEL_FIELDS,
+            )
 
         return Result.ok(new_ids)
 

@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Count, Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
@@ -53,13 +54,14 @@ class CommentRepository(CommentInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
 
-        Comment.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=COMMENT_FIELDS,
-        )
+        with transaction.atomic():
+            new_ids = get_new_ids(models)
+            Comment.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=COMMENT_FIELDS,
+            )
 
         return Result.ok(new_ids)
 

@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.subscribe import Subscribe
@@ -49,13 +50,14 @@ class SubscribeRepository(SubscribeInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
 
-        Subscribe.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=SUBSCRIBE_FIELDS,
-        )
+        with transaction.atomic():
+            new_ids = get_new_ids(models)
+            Subscribe.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=SUBSCRIBE_FIELDS,
+            )
 
         return Result.ok(new_ids)
 

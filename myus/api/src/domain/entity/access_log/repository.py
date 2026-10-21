@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.common import AccessLog
@@ -49,12 +50,13 @@ class AccessLogRepository(AccessLogInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
 
-        AccessLog.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=ACCESS_LOG_FIELDS,
-        )
+        with transaction.atomic():
+            new_ids = get_new_ids(models)
+            AccessLog.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=ACCESS_LOG_FIELDS,
+            )
 
         return Result.ok(new_ids)

@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Picture
@@ -41,13 +42,14 @@ class PictureRepository(PictureInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
 
-        Picture.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=PICTURE_FIELDS,
-        )
+        with transaction.atomic():
+            new_ids = get_new_ids(models)
+            Picture.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=PICTURE_FIELDS,
+            )
 
         return Result.ok(new_ids)
 

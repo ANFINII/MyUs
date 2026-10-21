@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.message import Message
@@ -53,13 +54,14 @@ class MessageRepository(MessageInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
 
-        Message.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=MESSAGE_FIELDS,
-        )
+        with transaction.atomic():
+            new_ids = get_new_ids(models)
+            Message.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=MESSAGE_FIELDS,
+            )
 
         return Result.ok(new_ids)
 

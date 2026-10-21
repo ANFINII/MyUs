@@ -1,5 +1,6 @@
 from typing import Any, assert_never
 
+from django.db import transaction
 from django.db.models import Exists, OuterRef, Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
@@ -123,13 +124,14 @@ class NotificationRepository(NotificationInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
 
-        Notification.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=NOTIFICATION_FIELDS,
-        )
+        with transaction.atomic():
+            new_ids = get_new_ids(models)
+            Notification.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=NOTIFICATION_FIELDS,
+            )
 
         return Result.ok(new_ids)
 
