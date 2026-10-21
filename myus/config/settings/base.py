@@ -132,6 +132,9 @@ AUTH_USER_MODEL = "db.User"
 AUTHENTICATION_BACKENDS = ["api.backends.MyBackend"]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+# Proxy
+NINJA_NUM_PROXIES = 0
+
 # CORS
 CSRF_TRUSTED_ORIGINS = env.csrf_trusted_origins
 CORS_ALLOWED_ORIGINS = env.cors_allowed_origins

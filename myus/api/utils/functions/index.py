@@ -1,4 +1,5 @@
 from django_ulid.models import ulid
+from django.conf import settings
 from django.http import HttpRequest
 from config.settings.base import DOMAIN_URL, MEDIA_URL
 
@@ -16,7 +17,11 @@ def message(error: bool, message: str) -> dict[str, str | bool]:
 
 
 def get_client_ip(request: HttpRequest) -> str:
+    remote_addr = str(request.META.get("REMOTE_ADDR", ""))
     forwarded_for = str(request.META.get("HTTP_X_FORWARDED_FOR", ""))
-    if forwarded_for:
-        return forwarded_for.split(",")[0].strip()
-    return str(request.META.get("REMOTE_ADDR", ""))
+    num_proxies = settings.NINJA_NUM_PROXIES
+    if num_proxies == 0 or not forwarded_for:
+        return remote_addr
+
+    addrs = [addr.strip() for addr in forwarded_for.split(",")]
+    return addrs[-min(num_proxies, len(addrs))]
