@@ -118,10 +118,10 @@ def login_user(username: str, password: str) -> int | None:
         return None
 
     user = authenticate(username=decrypted_username, password=decrypted_password)
-    if not user:
+    if user is None:
         user = authenticate(email=decrypted_username, password=decrypted_password)
 
-    if not user:
+    if user is None:
         return None
 
     if not user.is_active:
