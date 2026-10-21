@@ -2,7 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.types.schema.common import ErrorOut
+from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.user import get_user_data, profile_check, update_mypage, update_notification, update_profile
@@ -23,19 +23,19 @@ class SettingProfileAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 404, ErrorOut(message="Not Found")
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
 
         user = user_data.user
         profile = user_data.profile
@@ -69,25 +69,25 @@ class SettingProfileAPI:
 
         error_message = profile_check(input)
         if len(error_message) > 0:
-            return 400, ErrorOut(message=error_message)
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=error_message)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_profile(user_id, input, avatar_file)
         if update_ret.is_err:
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.error_message)
                 case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -106,19 +106,19 @@ class SettingMyPageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 404, ErrorOut(message="Not Found")
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
 
         mypage = user_data.mypage
         user_plan = user_data.user_plan
@@ -147,24 +147,24 @@ class SettingMyPageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         if has_email(input.email):
-            return 400, ErrorOut(message="メールアドレスの形式が違います!")
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message="メールアドレスの形式が違います!")
 
         update_ret = update_mypage(user_id, input, banner_file)
         if update_ret.is_err:
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.error_message)
                 case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
@@ -185,19 +185,19 @@ class SettingNotificationAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 404, ErrorOut(message="Not Found")
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
 
         notification = user_data.notification
 
@@ -223,19 +223,19 @@ class SettingNotificationAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         update_ret = update_notification(user_id, input)
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
                 case FatalError():
-                    return 500, ErrorOut(message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(update_ret.err_value)
 
