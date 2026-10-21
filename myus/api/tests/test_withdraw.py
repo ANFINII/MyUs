@@ -6,6 +6,7 @@ from api.db.models.user import User
 from api.src.domain.interface.payment.provider.data import CancelFailed
 from api.src.types.schema.auth import WithdrawalIn
 from api.src.usecase.auth import withdraw_user
+from api.src.usecase.payment import cancel_subscription
 from api.tests.conftest import PASSWORD
 from api.tests.fakes import FakePayment
 from api.utils.enum.payment import CancelError, PaymentProvider, SubscriptionStatus
@@ -105,3 +106,21 @@ def test_latest_cancelable_subscription_is_canceled(make_user: Callable[[str], U
     assert withdraw(user) == ""
 
     assert fake_payment.canceled_ids == ["sub_due"]
+
+
+@pytest.mark.django_db
+def test_scheduled_cancel_is_not_canceled_again(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
+    user = make_user("alice")
+    add_subscription(user, "sub_1", SubscriptionStatus.ACTIVE, 9)
+
+    first_ret = cancel_subscription(user.id)
+    second_ret = cancel_subscription(user.id)
+
+    assert first_ret.is_ok
+    assert second_ret.is_err
+    assert fake_payment.canceled_ids == ["sub_1"]
+
+    assert withdraw(user) == ""
+
+    assert fake_payment.canceled_ids == ["sub_1"]
+    assert not is_active(user)

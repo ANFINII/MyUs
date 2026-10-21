@@ -88,7 +88,8 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
         return Result.err(subscriptions_ret.err_value)
 
     subscriptions = subscriptions_ret.ok_value
-    cancelable_subscriptions = [s for s in subscriptions if s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE)]
+    not_canceled_at = datetime.min.replace(tzinfo=timezone.utc)
+    cancelable_subscriptions = [s for s in subscriptions if s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE) and s.canceled_at == not_canceled_at]
     if len(cancelable_subscriptions) == 0:
         return Result.err(NotFoundError("error.subscriptionNotFound"))
 
