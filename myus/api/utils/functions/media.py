@@ -1,5 +1,4 @@
 import os
-from dataclasses import dataclass
 from typing import assert_never
 from django.core.files.storage import default_storage
 from ninja import UploadedFile
@@ -12,38 +11,25 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.injectors.container import injector
 from api.utils.common.result import Result, ValidationError
+from api.utils.constants.upload import IMAGE_EXTENSIONS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_MAX_SIZE, UploadRuleData
 from api.utils.enum.media import MediaType
 from api.utils.enum.upload import ImageUpload, MediaUpload
-from api.utils.functions.convert.audio_converter import CONVERTIBLE_EXTENSIONS, is_conversion, save_converted_mp3
+from api.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
 from api.utils.functions.file import advertise_image_path, advertise_video_path, avatar_path, comic_path, image_path, musics_path, video_path
 
 
 type MediaInterfaceType = VideoInterface | MusicInterface | BlogInterface | ComicInterface | PictureInterface | ChatInterface
 type UploadType = ImageUpload | MediaUpload
 
-IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
-VIDEO_EXTENSIONS = {".mp4", ".mov", ".m4v", ".webm", ".mkv", ".avi"}
-MUSIC_EXTENSIONS = {".mp3"} | CONVERTIBLE_EXTENSIONS
-IMAGE_MAX_SIZE = 20 * 1024 * 1024
-VIDEO_MAX_SIZE = 5 * 1024 * 1024 * 1024
-MUSIC_MAX_SIZE = 500 * 1024 * 1024
 
-
-@dataclass(frozen=True, slots=True)
-class UploadRule:
-    extensions: set[str]
-    content_type_prefix: str
-    max_size: int
-
-
-def upload_rule(upload_type: UploadType) -> UploadRule:
+def upload_rule(upload_type: UploadType) -> UploadRuleData:
     match upload_type:
         case ImageUpload():
-            return UploadRule(extensions=IMAGE_EXTENSIONS, content_type_prefix="image/", max_size=IMAGE_MAX_SIZE)
+            return UploadRuleData(extensions=IMAGE_EXTENSIONS, content_type_prefix="image/", max_size=IMAGE_MAX_SIZE)
         case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
-            return UploadRule(extensions=VIDEO_EXTENSIONS, content_type_prefix="video/", max_size=VIDEO_MAX_SIZE)
+            return UploadRuleData(extensions=VIDEO_EXTENSIONS, content_type_prefix="video/", max_size=VIDEO_MAX_SIZE)
         case MediaUpload.MUSIC:
-            return UploadRule(extensions=MUSIC_EXTENSIONS, content_type_prefix="audio/", max_size=MUSIC_MAX_SIZE)
+            return UploadRuleData(extensions=MUSIC_EXTENSIONS, content_type_prefix="audio/", max_size=MUSIC_MAX_SIZE)
         case _:
             assert_never(upload_type)
 
