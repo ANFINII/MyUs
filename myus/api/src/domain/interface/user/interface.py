@@ -28,7 +28,7 @@ class SortOption:
 
 class UserInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption | None = None, limit: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
