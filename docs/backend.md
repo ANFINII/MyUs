@@ -137,17 +137,19 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 - `Result[T, FatalError]`だけを返すusecaseは`if ret.is_err: return 500, ...`のままでよい
 - `case`はHTTPステータスの番号が小さい順に並べ、最後を`case _: assert_never(...)`にする
 - BEにしか表示されないメッセージ（500など）は英語にする
+- エラー型の`message`は`match`の前で`message = ret.err_value.message`と変数に取り出し、`ErrorOut(..., message=message)`で渡す（`message`が他の変数と被るときは`error_message`にする）
 
 ```python
 ret = update_manage_video(user_id, ulid, input, image)
 if ret.is_err:
+    message = ret.err_value.message
     match ret.err_value:
         case ValidationError():
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message=ret.err_value.message)
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
         case ForbiddenError():
-            return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=ret.err_value.message)
+            return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
         case NotFoundError():
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=ret.err_value.message)
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
         case FatalError():
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
         case _:

@@ -63,9 +63,10 @@ class ManageVideoAPI:
 
         video_ret = get_manage_video(user_id, ulid)
         if video_ret.is_err:
+            message = video_ret.err_value.message
             match video_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=video_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -89,13 +90,14 @@ class ManageVideoAPI:
 
         update_ret = update_manage_video(user_id, ulid, input, image)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -118,9 +120,10 @@ class ManageVideoAPI:
 
         delete_ret = delete_manage_video(user_id, input.ulids)
         if delete_ret.is_err:
+            message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -169,9 +172,10 @@ class ManageMusicAPI:
 
         music_ret = get_manage_music(user_id, ulid)
         if music_ret.is_err:
+            message = music_ret.err_value.message
             match music_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=music_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -195,11 +199,12 @@ class ManageMusicAPI:
 
         update_ret = update_manage_music(user_id, ulid, input)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -222,9 +227,10 @@ class ManageMusicAPI:
 
         delete_ret = delete_manage_music(user_id, input.ulids)
         if delete_ret.is_err:
+            message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -273,9 +279,10 @@ class ManageBlogAPI:
 
         blog_ret = get_manage_blog(user_id, ulid)
         if blog_ret.is_err:
+            message = blog_ret.err_value.message
             match blog_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=blog_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -299,13 +306,14 @@ class ManageBlogAPI:
 
         update_ret = update_manage_blog(user_id, ulid, input, image)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -328,9 +336,10 @@ class ManageBlogAPI:
 
         delete_ret = delete_manage_blog(user_id, input.ulids)
         if delete_ret.is_err:
+            message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -379,9 +388,10 @@ class ManageComicAPI:
 
         comic_ret = get_manage_comic(user_id, ulid)
         if comic_ret.is_err:
+            message = comic_ret.err_value.message
             match comic_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=comic_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -405,13 +415,14 @@ class ManageComicAPI:
 
         update_ret = update_manage_comic(user_id, ulid, input, image)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -434,9 +445,10 @@ class ManageComicAPI:
 
         delete_ret = delete_manage_comic(user_id, input.ulids)
         if delete_ret.is_err:
+            message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -485,9 +497,10 @@ class ManagePictureAPI:
 
         picture_ret = get_manage_picture(user_id, ulid)
         if picture_ret.is_err:
+            message = picture_ret.err_value.message
             match picture_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=picture_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -511,13 +524,14 @@ class ManagePictureAPI:
 
         update_ret = update_manage_picture(user_id, ulid, input, image)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -540,9 +554,10 @@ class ManagePictureAPI:
 
         delete_ret = delete_manage_picture(user_id, input.ulids)
         if delete_ret.is_err:
+            message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -591,9 +606,10 @@ class ManageChatAPI:
 
         chat_ret = get_manage_chat(user_id, ulid)
         if chat_ret.is_err:
+            message = chat_ret.err_value.message
             match chat_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=chat_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -617,11 +633,12 @@ class ManageChatAPI:
 
         update_ret = update_manage_chat(user_id, ulid, input)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.message)
+                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -644,9 +661,10 @@ class ManageChatAPI:
 
         delete_ret = delete_manage_chat(user_id, input.ulids)
         if delete_ret.is_err:
+            message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -695,9 +713,10 @@ class ManageAdvertiseAPI:
 
         advertise_ret = get_manage_advertise(user_id, ulid)
         if advertise_ret.is_err:
+            message = advertise_ret.err_value.message
             match advertise_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=advertise_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -721,11 +740,12 @@ class ManageAdvertiseAPI:
 
         create_ret = create_manage_advertise(user_id, input, image, video)
         if create_ret.is_err:
+            message = create_ret.err_value.message
             match create_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=create_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=create_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -749,11 +769,12 @@ class ManageAdvertiseAPI:
 
         update_ret = update_manage_advertise(user_id, ulid, input, image, video)
         if update_ret.is_err:
+            message = update_ret.err_value.message
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -776,9 +797,10 @@ class ManageAdvertiseAPI:
 
         delete_ret = delete_manage_advertise(user_id, input.ulids)
         if delete_ret.is_err:
+            message = delete_ret.err_value.message
             match delete_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

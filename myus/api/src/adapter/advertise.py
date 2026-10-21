@@ -34,9 +34,10 @@ class AdvertiseAPI:
 
         ret = increment_advertise_read(ulid, get_client_ip(request))
         if ret.is_err:
+            message = ret.err_value.message
             match ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=ret.err_value.message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
