@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.db import models
-from django.db.models import Count
 from django_ulid.models import ulid
 from api.db.models.media import Chat
 from api.db.models.user import User
@@ -8,8 +7,7 @@ from api.db.models.user import User
 
 class MessageManager(models.Manager):
     def get_queryset(self):
-        qs = super(MessageManager,self).get_queryset().annotate(reply_count=Count("reply"))
-        return qs.select_related("author", "parent", "chat")
+        return super().get_queryset().select_related("author", "parent", "chat")
 
 
 class Message(models.Model):
