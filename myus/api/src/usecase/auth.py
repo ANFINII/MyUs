@@ -1,6 +1,7 @@
 import jwt
 from dataclasses import replace
 from datetime import date, datetime
+from typing import assert_never
 from django_ulid.models import ulid
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -11,12 +12,15 @@ from django.template.loader import render_to_string
 from api.modules.logger import log
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.utils.enum.user import PlanName
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
-from api.utils.common.result import FatalError, Result
+from api.src.usecase.payment import cancel_subscription
+from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.enum.payment import CancelError
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import password_reset_token, signup_token
 from api.utils.functions.validation import has_email
@@ -409,6 +413,26 @@ def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
     user_data = users[0]
     if not check_password(password, user_data.user.password):
         return Result.ok("パスワードが違います!")
+
+    cancel_ret = cancel_subscription(user_id)
+    if cancel_ret.is_err:
+        match cancel_ret.err_value:
+            case NotFoundError():
+                log.info("Withdraw without active subscription", user_id=user_id)
+            case FatalError():
+                return Result.err(cancel_ret.err_value)
+            case _:
+                assert_never(cancel_ret.err_value)
+    else:
+        cancellation = cancel_ret.ok_value
+        match cancellation:
+            case CancelSuccess() | CancelFailed(error=CancelError.NOT_FOUND):
+                log.info("Withdraw subscription canceled", user_id=user_id)
+            case CancelFailed(error=error, message=message):
+                log.error("Withdraw subscription cancel failed", user_id=user_id, error=error.value, message=message)
+                return Result.ok("解約処理に失敗しました。時間をおいて再度お試しください!")
+            case _:
+                assert_never(cancellation)
 
     new_user = replace(user_data.user, is_active=False)
     new_data = replace(user_data, user=new_user)
