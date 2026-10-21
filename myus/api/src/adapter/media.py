@@ -94,7 +94,7 @@ class VideoAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(
         request: HttpRequest,
         input: VideoIn = Form(...),
@@ -109,7 +109,7 @@ class VideoAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         obj_ret = create_video(user_id=user_id, input=input, image=image, video=video)
         if obj_ret.is_err:
@@ -118,9 +118,9 @@ class VideoAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -148,7 +148,7 @@ class VideoAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: VideoDetailsOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: VideoDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("VideoAPI detail", ulid=ulid, search=search)
 
@@ -162,7 +162,7 @@ class VideoAPI:
             message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -206,7 +206,7 @@ class MusicAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...)):
         log.info("MusicAPI create", input=input, music=music)
 
@@ -216,7 +216,7 @@ class MusicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         obj_ret = create_music(user_id=user_id, input=input, music=music)
         if obj_ret.is_err:
@@ -225,9 +225,9 @@ class MusicAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -255,7 +255,7 @@ class MusicAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: MusicDetailsOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: MusicDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("MusicAPI detail", ulid=ulid, search=search)
 
@@ -269,7 +269,7 @@ class MusicAPI:
             message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -313,7 +313,7 @@ class BlogAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
         log.info("BlogAPI create", input=input, image=image)
 
@@ -323,7 +323,7 @@ class BlogAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         obj_ret = create_blog(user_id=user_id, input=input, image=image)
         if obj_ret.is_err:
@@ -332,9 +332,9 @@ class BlogAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -362,7 +362,7 @@ class BlogAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: BlogDetailsOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: BlogDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("BlogAPI detail", ulid=ulid, search=search)
 
@@ -376,7 +376,7 @@ class BlogAPI:
             message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -419,7 +419,7 @@ class ComicAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), pages: list[UploadedFile] = File(...)):
         log.info("ComicAPI create", input=input, image=image, pages=pages)
 
@@ -429,7 +429,7 @@ class ComicAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         obj_ret = create_comic(user_id=user_id, input=input, image=image, pages=pages)
         if obj_ret.is_err:
@@ -438,9 +438,9 @@ class ComicAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -468,7 +468,7 @@ class ComicAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ComicDetailsOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: ComicDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("ComicAPI detail", ulid=ulid, search=search)
 
@@ -482,7 +482,7 @@ class ComicAPI:
             message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -525,7 +525,7 @@ class PictureAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: PictureIn = Form(...), image: UploadedFile = File(...)):
         log.info("PictureAPI create", input=input, image=image)
 
@@ -535,7 +535,7 @@ class PictureAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         obj_ret = create_picture(user_id=user_id, input=input, image=image)
         if obj_ret.is_err:
@@ -544,9 +544,9 @@ class PictureAPI:
                 case ValidationError():
                     return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -574,7 +574,7 @@ class PictureAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: PictureDetailsOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: PictureDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("PictureAPI detail", ulid=ulid, search=search)
 
@@ -588,7 +588,7 @@ class PictureAPI:
             message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -630,7 +630,7 @@ class ChatAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: ChatIn = Form(...)):
         log.info("ChatAPI create", input=input)
 
@@ -640,16 +640,16 @@ class ChatAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         obj_ret = create_chat(user_id=user_id, input=input)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
                 case ForbiddenError():
-                    return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -677,7 +677,7 @@ class ChatAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ChatDetailsOut, 404: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: ChatDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("ChatAPI detail", ulid=ulid, search=search)
 
@@ -691,7 +691,7 @@ class ChatAPI:
             message = detail_ret.err_value.message
             match detail_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -735,7 +735,7 @@ class MediaReadAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={200: MediaReadOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MediaReadOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MediaReadIn):
         log.info("MediaReadAPI post", input=input)
 
@@ -744,7 +744,7 @@ class MediaReadAPI:
             message = ret.err_value.message
             match ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
