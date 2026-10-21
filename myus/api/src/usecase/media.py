@@ -1051,6 +1051,17 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
 
 
 @Result.shield_exception()
+def is_public_chat(ulid: str) -> Result[bool, FatalError]:
+    repo = injector.get(ChatInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption(limit=1))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    return Result.ok(len(ids) > 0)
+
+
+@Result.shield_exception()
 def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> Result[int, FindError]:
     repo = get_media_repository(media_type)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption(limit=1))
