@@ -161,6 +161,7 @@ if ret.is_err:
 ```
 
 - 400以上のレスポンスは、ミドルウェア（`config/middleware.py`の`ErrorResponseLogMiddleware`）が`path`・`status`・`type`をログに出す
+- `/api/`へのPOST・PUT・PATCH・DELETEは、ミドルウェア（`config/middleware.py`の`OriginCheckMiddleware`）が`Origin`ヘッダーを確かめ、`CSRF_TRUSTED_ORIGINS`に無いときは400（`FORBIDDEN`）を返す（CSRF対策。`Origin`が無いサーバー間の通信は通す）。FEのURLを変えたら`CSRF_TRUSTED_ORIGINS`も変える
 
 ## 文字列
 
@@ -262,3 +263,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-10-20: エラーハンドリング（Result型・エラー型とHTTPステータスの対応・adapterのmatch + assert_never）を追加
 - 2026-10-21: HTTPステータスを成功は200、エラーは400 / 500にまとめた
 - 2026-10-21: 画面に出るエラーの文言をFEのi18nのキーで返すようにした
+- 2026-10-21: CSRF対策として`OriginCheckMiddleware`を追加
