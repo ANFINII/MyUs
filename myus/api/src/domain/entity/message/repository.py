@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.message import Message
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.message._convert import convert_data, marshal_data
 from api.src.domain.interface.message.data import MessageData
 from api.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
@@ -53,13 +53,7 @@ class MessageRepository(MessageInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
-
-        Message.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=MESSAGE_FIELDS,
-        )
+        new_ids = get_save_new_ids(models, MESSAGE_FIELDS)
 
         return Result.ok(new_ids)
 

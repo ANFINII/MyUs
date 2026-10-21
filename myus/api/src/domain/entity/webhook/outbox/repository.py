@@ -1,6 +1,6 @@
 from django.db.models import Q
 from api.db.models.payment import WebhookOutbox
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.webhook.outbox._convert import convert_data, marshal_data
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import FilterOption, SortOption, WebhookOutboxInterface
@@ -45,12 +45,6 @@ class WebhookOutboxRepository(WebhookOutboxInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
-
-        WebhookOutbox.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=WEBHOOK_OUTBOX_FIELDS,
-        )
+        new_ids = get_save_new_ids(models, WEBHOOK_OUTBOX_FIELDS)
 
         return Result.ok(new_ids)

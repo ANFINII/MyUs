@@ -2,7 +2,7 @@ from django.db.models import Count, Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.src.domain.entity.comment._convert import convert_data, marshal_data
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from api.utils.common.result import FatalError, Result
@@ -53,13 +53,7 @@ class CommentRepository(CommentInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_new_ids(models)
-
-        Comment.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=COMMENT_FIELDS,
-        )
+        new_ids = get_save_new_ids(models, COMMENT_FIELDS)
 
         return Result.ok(new_ids)
 
