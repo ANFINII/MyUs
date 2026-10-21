@@ -8,7 +8,6 @@ from api.src.domain.interface.media.blog.data import BlogData
 def convert_data(obj: Blog) -> BlogData:
     assert hasattr(obj, "like_count"), "like_count is required"
     category = next(iter(obj.category.all()), None)
-    assert category is not None, "Category is required"
     return BlogData(
         id=obj.id,
         ulid=obj.ulid,
@@ -21,7 +20,7 @@ def convert_data(obj: Blog) -> BlogData:
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        category_ulid=category.ulid,
+        category_ulid=category.ulid if category is not None else "",
         channel=ChannelData(
             id=obj.channel.id,
             ulid=obj.channel.ulid,

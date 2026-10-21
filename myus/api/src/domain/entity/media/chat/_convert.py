@@ -10,7 +10,6 @@ def convert_data(obj: Chat) -> ChatData:
     assert hasattr(obj, "thread_total"), "thread_total is required"
     assert hasattr(obj, "joined_total"), "joined_total is required"
     category = next(iter(obj.category.all()), None)
-    assert category is not None, "Category is required"
     return ChatData(
         id=obj.id,
         ulid=obj.ulid,
@@ -24,7 +23,7 @@ def convert_data(obj: Chat) -> ChatData:
         updated=obj.updated,
         thread_count=obj.thread_total,
         joined_count=obj.joined_total,
-        category_ulid=category.ulid,
+        category_ulid=category.ulid if category is not None else "",
         channel=ChannelData(
             id=obj.channel.id,
             ulid=obj.channel.ulid,
