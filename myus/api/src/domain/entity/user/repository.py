@@ -91,7 +91,7 @@ class UserRepository(UserInterface):
     @Result.shield_exception()
     def media_like(self, user_id: int, media_type: MediaType, media_id: int) -> Result[tuple[bool, int], FatalError]:
         model_class = get_media_model(media_type)
-        obj = model_class.objects.prefetch_related("like").get(id=media_id)
+        obj = model_class.objects.only("id").get(id=media_id)
         is_like = obj.like.filter(id=user_id).exists()
         if is_like:
             obj.like.remove(user_id)
@@ -101,7 +101,7 @@ class UserRepository(UserInterface):
 
     @Result.shield_exception()
     def comment_like(self, user_id: int, comment_id: int) -> Result[tuple[bool, int], FatalError]:
-        obj = Comment.objects.prefetch_related("like").get(id=comment_id)
+        obj = Comment.objects.only("id").get(id=comment_id)
         is_like = obj.like.filter(id=user_id).exists()
         if is_like:
             obj.like.remove(user_id)
