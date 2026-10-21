@@ -1,12 +1,12 @@
 from collections.abc import Callable
 from datetime import datetime, timezone
 import pytest
-from api.db.models.payment import Subscription, WebhookInbox, WebhookOutbox
+from api.db.models.payment import PaymentTransaction, Subscription, WebhookInbox, WebhookOutbox
 from api.db.models.user import User, UserPlan
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.src.usecase.payment import receive_webhook_inbox
 from api.tests.fakes import FakePayment, provider_subscription
-from api.utils.enum.payment import PaymentProvider, SubscriptionStatus, WebhookEventType
+from api.utils.enum.payment import PaymentProvider, PaymentStatus, SubscriptionStatus, WebhookEventType
 from api.utils.enum.user import PlanName
 
 
@@ -112,3 +112,34 @@ def test_same_event_is_processed_once(make_user: Callable[[str], User], fake_pay
 
     assert WebhookInbox.objects.filter(event_id="evt_dup").count() == 1
     assert WebhookOutbox.objects.count() == 1
+
+
+def transaction_status(external_id: str) -> str:
+    transaction: PaymentTransaction = PaymentTransaction.objects.get(external_id=external_id)
+    return transaction.status
+
+
+@pytest.mark.django_db
+def test_late_failed_does_not_overwrite_captured(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
+    user = make_user("alice")
+    PaymentTransaction.objects.create(customer=user, provider=PaymentProvider.STRIPE, external_id="pi_1")
+
+    assert send(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_1")
+    assert send(WebhookEventType.PAYMENT_FAILED, "pi_1", "evt_2")
+    assert transaction_status("pi_1") == PaymentStatus.CAPTURED
+
+    assert send(WebhookEventType.REFUND_ISSUED, "pi_1", "evt_3")
+    assert send(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_4")
+    assert transaction_status("pi_1") == PaymentStatus.REFUNDED
+
+
+@pytest.mark.django_db
+def test_retry_succeeded_after_failed_is_captured(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
+    user = make_user("alice")
+    PaymentTransaction.objects.create(customer=user, provider=PaymentProvider.STRIPE, external_id="pi_1")
+
+    assert send(WebhookEventType.PAYMENT_FAILED, "pi_1", "evt_1")
+    assert transaction_status("pi_1") == PaymentStatus.FAILED
+
+    assert send(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_2")
+    assert transaction_status("pi_1") == PaymentStatus.CAPTURED

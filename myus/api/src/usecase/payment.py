@@ -305,6 +305,16 @@ def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscript
     return Result.ok(None)
 
 
+TRANSACTION_STATUS_RANK = {
+    PaymentStatus.PENDING: 0,
+    PaymentStatus.AUTHORIZED: 0,
+    PaymentStatus.FAILED: 0,
+    PaymentStatus.CAPTURED: 1,
+    PaymentStatus.REFUNDED: 2,
+    PaymentStatus.CANCELED: 2,
+}
+
+
 @Result.shield_exception()
 def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, update_paid_at: bool) -> Result[None, FatalError]:
     repo = injector.get(TransactionInterface)
@@ -327,6 +337,10 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
 
     transactions = transactions_ret.ok_value
     payment_transaction = transactions[0]
+    if TRANSACTION_STATUS_RANK[status] < TRANSACTION_STATUS_RANK[payment_transaction.status]:
+        log.info("Transaction status not downgraded", external_id=event.external_id, current=payment_transaction.status.value, status=status.value)
+        return Result.ok(None)
+
     updated = replace(payment_transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(payment_transaction, status=status)
     save_ret = repo.bulk_save([updated])
     if save_ret.is_err:
