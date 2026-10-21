@@ -65,6 +65,8 @@ def encode_video(convert_path: str, output_dir: str, save_log: bool = True) -> d
     # 動画変換実行
     converter = VideoConverter()
     conversion_stats = converter.transcode(input_path=convert_path, output_dir=output_dir, resolutions=None)
+    if conversion_stats.get("hls_path") is None:
+        raise ValueError(f"No resolution was converted: {conversion_stats.get('errors', [])}")
 
     # エンコード終了時刻を記録
     encode_end_time = time.time()

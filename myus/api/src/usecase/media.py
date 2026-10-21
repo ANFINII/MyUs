@@ -109,6 +109,10 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 
     def encode_task() -> None:
         result = convert_video(video_path)
+        if result.video == "":
+            log.error("動画のエンコードに失敗しました", video_id=obj.id)
+            return
+
         videos_ret = repo.bulk_get([obj.id])
         if videos_ret.is_err:
             log.error("動画の取得に失敗しました", error=videos_ret.err_value.message, video_id=obj.id)
@@ -118,13 +122,15 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
         if len(videos) == 0:
             log.warning("動画が見つかりません", video_id=obj.id)
             return
-        updated = replace(videos[0], video=result.video, convert=result.convert, publish=input.publish)
+        video = videos[0]
+        publish = input.publish if video.updated == obj.updated else video.publish
+        updated = replace(video, video=result.video, convert=result.convert, publish=publish)
         save_ret = repo.bulk_save([updated])
         if save_ret.is_err:
             log.error("動画の保存に失敗しました", error=save_ret.err_value.message, video_id=obj.id)
             return
 
-        if input.publish:
+        if publish:
             notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
             if notification_ret.is_err:
                 log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, video_id=obj.id)
