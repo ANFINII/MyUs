@@ -22,7 +22,7 @@ from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.category import get_category_data
 from api.src.usecase.notification import create_publish_notification, delete_object_notifications
-from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, WriteError
+from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
@@ -115,11 +115,13 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
         update_data = replace(update_data, image=save_upload(image, ImageUpload.VIDEO, obj.channel.ulid))
 
     category_repo = injector.get(CategoryInterface)
-    categories_ret = get_category_data(input.category_ulid)
-    if categories_ret.is_err:
-        return Result.err(categories_ret.err_value)
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
 
-    categories = categories_ret.ok_value
+    category_data = category_data_ret.ok_value
+    if category_data is None:
+        return Result.err(ValidationError("error.categoryRequired"))
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -127,7 +129,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
 
-        category_ret = category_repo.bulk_save(MediaType.VIDEO, obj.id, categories)
+        category_ret = category_repo.bulk_save(MediaType.VIDEO, obj.id, [category_data])
         if category_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
@@ -239,11 +241,13 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish)
     category_repo = injector.get(CategoryInterface)
-    categories_ret = get_category_data(input.category_ulid)
-    if categories_ret.is_err:
-        return Result.err(categories_ret.err_value)
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
 
-    categories = categories_ret.ok_value
+    category_data = category_data_ret.ok_value
+    if category_data is None:
+        return Result.err(ValidationError("error.categoryRequired"))
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -251,7 +255,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
 
-        category_ret = category_repo.bulk_save(MediaType.MUSIC, obj.id, categories)
+        category_ret = category_repo.bulk_save(MediaType.MUSIC, obj.id, [category_data])
         if category_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
@@ -370,11 +374,13 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
         update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
 
     category_repo = injector.get(CategoryInterface)
-    categories_ret = get_category_data(input.category_ulid)
-    if categories_ret.is_err:
-        return Result.err(categories_ret.err_value)
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
 
-    categories = categories_ret.ok_value
+    category_data = category_data_ret.ok_value
+    if category_data is None:
+        return Result.err(ValidationError("error.categoryRequired"))
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -382,7 +388,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
 
-        category_ret = category_repo.bulk_save(MediaType.BLOG, obj.id, categories)
+        category_ret = category_repo.bulk_save(MediaType.BLOG, obj.id, [category_data])
         if category_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
@@ -507,11 +513,13 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
         update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
 
     category_repo = injector.get(CategoryInterface)
-    categories_ret = get_category_data(input.category_ulid)
-    if categories_ret.is_err:
-        return Result.err(categories_ret.err_value)
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
 
-    categories = categories_ret.ok_value
+    category_data = category_data_ret.ok_value
+    if category_data is None:
+        return Result.err(ValidationError("error.categoryRequired"))
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -519,7 +527,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
 
-        category_ret = category_repo.bulk_save(MediaType.COMIC, obj.id, categories)
+        category_ret = category_repo.bulk_save(MediaType.COMIC, obj.id, [category_data])
         if category_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
@@ -638,11 +646,13 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
         update_data = replace(update_data, image=save_upload(image, ImageUpload.PICTURE, obj.channel.ulid))
 
     category_repo = injector.get(CategoryInterface)
-    categories_ret = get_category_data(input.category_ulid)
-    if categories_ret.is_err:
-        return Result.err(categories_ret.err_value)
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
 
-    categories = categories_ret.ok_value
+    category_data = category_data_ret.ok_value
+    if category_data is None:
+        return Result.err(ValidationError("error.categoryRequired"))
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -650,7 +660,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
 
-        category_ret = category_repo.bulk_save(MediaType.PICTURE, obj.id, categories)
+        category_ret = category_repo.bulk_save(MediaType.PICTURE, obj.id, [category_data])
         if category_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
@@ -759,11 +769,13 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
 
     update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish)
     category_repo = injector.get(CategoryInterface)
-    categories_ret = get_category_data(input.category_ulid)
-    if categories_ret.is_err:
-        return Result.err(categories_ret.err_value)
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
 
-    categories = categories_ret.ok_value
+    category_data = category_data_ret.ok_value
+    if category_data is None:
+        return Result.err(ValidationError("error.categoryRequired"))
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -771,7 +783,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
 
-        category_ret = category_repo.bulk_save(MediaType.CHAT, obj.id, categories)
+        category_ret = category_repo.bulk_save(MediaType.CHAT, obj.id, [category_data])
         if category_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(category_ret.err_value)
