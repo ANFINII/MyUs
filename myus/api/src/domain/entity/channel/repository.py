@@ -8,7 +8,7 @@ from api.src.domain.interface.channel.interface import ChannelInterface, FilterO
 from api.utils.common.result import FatalError, Result
 
 
-CHANNEL_FIELDS = ["owner_id", "avatar", "name", "description", "is_default", "count"]
+CHANNEL_FIELDS = ["owner_id", "avatar", "name", "description", "is_default", "updated"]
 
 
 class ChannelRepository(ChannelInterface):
@@ -52,3 +52,8 @@ class ChannelRepository(ChannelInterface):
         new_ids = get_save_new_ids(models, CHANNEL_FIELDS)
 
         return Result.ok(new_ids)
+
+    @Result.shield_exception()
+    def save_count(self, id: int, count: int) -> Result[None, FatalError]:
+        Channel.objects.filter(id=id).update(count=count)
+        return Result.ok(None)

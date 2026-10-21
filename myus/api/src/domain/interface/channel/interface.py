@@ -34,3 +34,7 @@ class ChannelInterface(ABC):
     @abstractmethod
     def bulk_save(self, objs: list[ChannelData]) -> Result[list[int], FatalError]:
         ...
+
+    @abstractmethod
+    def save_count(self, id: int, count: int) -> Result[None, FatalError]:
+        ...

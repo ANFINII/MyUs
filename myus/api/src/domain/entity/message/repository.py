@@ -8,7 +8,7 @@ from api.src.domain.interface.message.interface import FilterOption, MessageInte
 from api.utils.common.result import FatalError, Result
 
 
-MESSAGE_FIELDS = ["author_id", "chat_id", "parent_id", "text"]
+MESSAGE_FIELDS = ["author_id", "chat_id", "parent_id", "text", "updated"]
 
 
 class MessageRepository(MessageInterface):
