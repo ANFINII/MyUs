@@ -4,7 +4,7 @@ from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.entity.index import get_save_new_ids, sort_ids
-from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan
+from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan, sort_field
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
 from api.utils.common.result import FatalError, Result
@@ -41,7 +41,7 @@ class UserRepository(UserInterface):
         qs = User.objects.filter(*q_list)
 
         if sort is not None:
-            field_name = sort.sort_type.name
+            field_name = sort_field(sort.sort_type)
             order_by_key = field_name if sort.is_asc else f"-{field_name}"
             qs = qs.order_by(order_by_key)
 

@@ -4,6 +4,7 @@ from django_ulid.models import ulid
 from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
+from api.src.domain.interface.user.interface import SortType
 from api.utils.enum.media import MediaType
 
 
@@ -184,3 +185,13 @@ def marshal_user_plan(user: User, data: UserAllData) -> UserPlan:
         start_date=user_plan.start_date,
         end_date=user_plan.end_date,
     )
+
+
+def sort_field(sort_type: SortType) -> str:
+    match sort_type:
+        case SortType.CREATED:
+            return "date_joined"
+        case SortType.NICKNAME:
+            return "nickname"
+        case _:
+            assert_never(sort_type)
