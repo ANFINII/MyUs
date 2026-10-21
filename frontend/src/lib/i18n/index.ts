@@ -1,5 +1,5 @@
 import { initReactI18next } from 'react-i18next'
-import { createInstance, i18n } from 'i18next'
+import { createInstance, i18n, ParseKeys } from 'i18next'
 import en from './locales/en/common.json'
 import ja from './locales/ja/common.json'
 
@@ -28,3 +28,5 @@ export const createI18n = (locale: string): i18n => {
   })
   return instance
 }
+
+export const isTranslationKey = (instance: i18n, content: string): content is ParseKeys => instance.exists(content)
