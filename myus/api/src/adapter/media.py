@@ -1,3 +1,4 @@
+from datetime import datetime, time
 from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
@@ -677,7 +678,7 @@ class ChatAPI:
                 content=obj.content,
                 thread=obj.thread,
                 joined=obj.joined,
-                period=obj.period,
+                period=datetime.combine(obj.period, time()),
                 messages=convert_messages(obj.messages),
                 hashtags=convert_hashtags(obj.hashtags),
                 read=obj.read,
@@ -826,7 +827,7 @@ def convert_chats(objs: list[ChatData]) -> list[ChatOut]:
             content=x.content,
             thread=x.thread_count,
             joined=x.joined_count,
-            period=x.period,
+            period=datetime.combine(x.period, time()),
             read=x.read,
             like=x.like,
             publish=x.publish,

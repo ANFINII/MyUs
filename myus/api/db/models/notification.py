@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 from django_ulid.models import ulid
 from api.db.models.user import User
@@ -21,20 +22,20 @@ class Notification(models.Model):
     def __str__(self):
         return str(self.type_name)
 
+    @admin.display(description="title")
     def title(self):
         object_type = self.object_type.lower()
         model = notification_type_model[object_type]
-        obj = model.objects.get(id=self.object_id)
+        obj = model._default_manager.get(id=self.object_id)
         return obj
-    title.short_description = "title"
 
+    @admin.display(description="confirmed")
     def confirmed_count(self):
         return self.confirmed.count()
-    confirmed_count.short_description = "confirmed"
 
+    @admin.display(description="deleted")
     def deleted_count(self):
         return self.deleted.count()
-    deleted_count.short_description = "deleted"
 
     class Meta:
         db_table = "notification"
