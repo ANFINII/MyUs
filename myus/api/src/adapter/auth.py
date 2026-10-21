@@ -82,7 +82,7 @@ class AuthAPI:
 
         email = signup_verify_token(token)
         if email is None:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="リンクの有効期限が切れています!")
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.linkExpired")
 
         return 200, SignupVerifyOut(email=email)
 
@@ -94,11 +94,11 @@ class AuthAPI:
         token_email = signup_verify_token(input.token)
         if token_email is None:
             log.warning("Signup token invalid")
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="リンクの有効期限が切れています!")
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.linkExpired")
 
         if token_email != input.email:
             log.warning("Signup email mismatch", token_email=token_email, input_email=input.email)
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="メールアドレスが一致しません!")
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailMismatch")
 
         error_message = signup_check(input)
         if len(error_message) > 0:
@@ -107,7 +107,7 @@ class AuthAPI:
 
         ret = signup_user(input)
         if ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="アカウント登録に失敗しました!")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.signupFailed")
 
         return 200, SuccessOut(message="アカウント登録が完了しました!")
 
@@ -118,15 +118,15 @@ class AuthAPI:
 
         user_id = login_user(input.username, input.password)
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="ID又はパスワードが違います!")
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.loginFailed")
 
         tokens_ret = create_auth_tokens(user_id)
         if tokens_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="認証トークンの生成に失敗しました!")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.tokenCreateFailed")
 
         tokens = tokens_ret.ok_value
         if tokens is None:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="ID又はパスワードが違います!")
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.loginFailed")
 
         access, refresh = tokens
 
@@ -148,7 +148,7 @@ class AuthAPI:
             return 200, None
         except Exception:
             log.error("Logout error")
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="ログアウトに失敗しました!")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.logoutFailed")
 
     @staticmethod
     @router.post("/password/change", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -211,7 +211,7 @@ class AuthAPI:
 
         verified = ret.ok_value
         if verified is None:
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="リンクの有効期限が切れています!")
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.linkExpired")
 
         _, email = verified
         return 200, PasswordResetVerifyOut(email=email)

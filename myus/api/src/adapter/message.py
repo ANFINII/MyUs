@@ -61,7 +61,7 @@ class MessageAPI:
             return 200, data
         except Exception as e:
             log.error("MessageAPI post error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの作成に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.messageCreateFailed")
 
     @staticmethod
     @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 400: ErrorOut, 500: ErrorOut})
@@ -132,7 +132,7 @@ class MessageAPI:
             return 200, SuccessOut(message="メッセージを更新しました")
         except Exception as e:
             log.error("MessageAPI put error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの更新に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.messageUpdateFailed")
 
     @staticmethod
     @router.delete("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -167,4 +167,4 @@ class MessageAPI:
             return 200, SuccessOut(message="メッセージを削除しました")
         except Exception as e:
             log.error("MessageAPI delete error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの削除に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.messageDeleteFailed")

@@ -90,7 +90,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
     subscriptions = subscriptions_ret.ok_value
     cancelable_subscriptions = [s for s in subscriptions if s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE)]
     if len(cancelable_subscriptions) == 0:
-        return Result.err(NotFoundError("アクティブなサブスクリプションが見つかりません"))
+        return Result.err(NotFoundError("error.subscriptionNotFound"))
 
     subscription = cancelable_subscriptions[0]
 

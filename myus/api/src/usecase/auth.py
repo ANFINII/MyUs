@@ -133,7 +133,7 @@ def login_user(username: str, password: str) -> int | None:
 @Result.shield_exception()
 def signup_send_email(email: str) -> Result[str, FatalError]:
     if has_email(email):
-        return Result.ok("メールアドレスの形式が違います!")
+        return Result.ok("error.emailInvalid")
 
     repo = injector.get(UserInterface)
     ret = repo.get_ids(FilterOption(email=email))
@@ -142,7 +142,7 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
 
     user_ids = ret.ok_value
     if len(user_ids) > 0:
-        return Result.ok("メールアドレスは既に登録されています!")
+        return Result.ok("error.emailTaken")
 
     token = signup_token(email)
     subject = render_to_string("registration/email/account/subject.txt").strip()
@@ -155,7 +155,7 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
         send_mail(subject, message, None, [email])
     except Exception as e:
         log.error("Signup email send error", exc=e)
-        return Result.ok("メールの送信に失敗しました!")
+        return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
         url = f"{settings.FRONTEND_URL}/account/signup?token={token}"
@@ -284,13 +284,13 @@ def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalE
         password2 = decrypt(input.password2)
     except Exception:
         log.error("Decrypt error")
-        return Result.ok("復号に失敗しました!")
+        return Result.ok("error.decryptFailed")
 
     if password1 != password2:
-        return Result.ok("新規パスワードが一致しません!")
+        return Result.ok("error.newPasswordMismatch")
 
     if len(password1) < PASSWORD_MIN_LENGTH or len(password1) > PASSWORD_MAX_LENGTH:
-        return Result.ok("新規パスワードは英数字8~16文字で入力してください!")
+        return Result.ok("error.newPasswordInvalid")
 
     repo = injector.get(UserInterface)
     users_ret = repo.bulk_get([user_id])
@@ -300,11 +300,11 @@ def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalE
     users = users_ret.ok_value
     if len(users) == 0:
         log.error("User not found", user_id=user_id)
-        return Result.ok("ユーザーが見つかりません!")
+        return Result.ok("error.userNotFound")
 
     user_data = users[0]
     if not check_password(old_password, user_data.user.password):
-        return Result.ok("現在のパスワードが違います!")
+        return Result.ok("error.currentPasswordWrong")
 
     new_user = replace(user_data.user, password=make_password(password1))
     new_data = replace(user_data, user=new_user)
@@ -319,7 +319,7 @@ def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalE
 @Result.shield_exception()
 def password_reset_send_email(email: str) -> Result[str, FatalError]:
     if has_email(email):
-        return Result.ok("メールアドレスの形式が違います!")
+        return Result.ok("error.emailInvalid")
 
     repo = injector.get(UserInterface)
     ids_ret = repo.get_ids(FilterOption(email=email))
@@ -350,7 +350,7 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
         send_mail(subject, message, None, [email])
     except Exception as e:
         log.error("Password reset email send error", exc=e)
-        return Result.ok("メールの送信に失敗しました!")
+        return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
         url = f"{settings.FRONTEND_URL}/account/reset/confirm?token={token}"
@@ -408,7 +408,7 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
 
     verified = verify_ret.ok_value
     if verified is None:
-        return Result.ok("リンクの有効期限が切れています!")
+        return Result.ok("error.linkExpired")
     user_id, _ = verified
 
     try:
@@ -416,13 +416,13 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
         password2 = decrypt(input.password2)
     except Exception:
         log.error("Decrypt error")
-        return Result.ok("復号に失敗しました!")
+        return Result.ok("error.decryptFailed")
 
     if password1 != password2:
-        return Result.ok("新規パスワードが一致しません!")
+        return Result.ok("error.newPasswordMismatch")
 
     if len(password1) < PASSWORD_MIN_LENGTH or len(password1) > PASSWORD_MAX_LENGTH:
-        return Result.ok("新規パスワードは英数字8~16文字で入力してください!")
+        return Result.ok("error.newPasswordInvalid")
 
     repo = injector.get(UserInterface)
     users_ret = repo.bulk_get([user_id])
@@ -432,7 +432,7 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
     users = users_ret.ok_value
     if len(users) == 0:
         log.error("User not found", user_id=user_id)
-        return Result.ok("ユーザーが見つかりません!")
+        return Result.ok("error.userNotFound")
 
     user_data = users[0]
     new_user = replace(user_data.user, password=make_password(password1))
@@ -451,7 +451,7 @@ def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
         password = decrypt(input.password)
     except Exception:
         log.error("Decrypt error")
-        return Result.ok("復号に失敗しました!")
+        return Result.ok("error.decryptFailed")
 
     repo = injector.get(UserInterface)
     users_ret = repo.bulk_get([user_id])
@@ -461,11 +461,11 @@ def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
     users = users_ret.ok_value
     if len(users) == 0:
         log.error("User not found", user_id=user_id)
-        return Result.ok("ユーザーが見つかりません!")
+        return Result.ok("error.userNotFound")
 
     user_data = users[0]
     if not check_password(password, user_data.user.password):
-        return Result.ok("パスワードが違います!")
+        return Result.ok("error.passwordWrong")
 
     cancel_ret = cancel_subscription(user_id)
     if cancel_ret.is_err:
@@ -483,7 +483,7 @@ def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
                 log.info("Withdraw subscription canceled", user_id=user_id)
             case CancelFailed(error=error, message=message):
                 log.error("Withdraw subscription cancel failed", user_id=user_id, error=error.value, message=message)
-                return Result.ok("解約処理に失敗しました。時間をおいて再度お試しください!")
+                return Result.ok("error.cancelFailed")
             case _:
                 assert_never(cancellation)
 

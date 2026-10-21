@@ -46,7 +46,7 @@ class PaymentAPI:
                 return 200, PaymentCheckoutOut(url=session.redirect_url)
             case CheckoutFailed(error=error, message=message):
                 log.error("Payment checkout failed", error=error.value, message=message)
-                return 500, ErrorOut(type=ErrorType.INTERNAL, message="決済セッションの作成に失敗しました!")
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.checkoutFailed")
 
     @staticmethod
     @router.post("/webhook", response={200: PaymentWebhookOut, 400: ErrorOut, 500: ErrorOut})
@@ -107,4 +107,4 @@ class PaymentAPI:
                 return 200, PaymentCancelOut(canceled_at=canceled_at, period_end=period_end)
             case CancelFailed(error=error, message=message):
                 log.error("Payment cancel failed", error=error.value, message=message)
-                return 500, ErrorOut(type=ErrorType.INTERNAL, message="解約処理に失敗しました")
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.cancelFailed")

@@ -139,6 +139,8 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 - `Result[T, FatalError]`だけを返すusecaseは`if ret.is_err: return 500, ...`のままでよい
 - `case`はエラー型の表の上から順に並べ、最後を`case _: assert_never(...)`にする
 - BEにしか表示されないメッセージ（500など）は英語にする
+- 画面に出るエラーの文言は、日本語で書かずにFEのi18nのキー（`"error.loginFailed"`等）で返す（`ErrorOut`の`message`、エラー型の`message`とも）。FEが表示中の言語に翻訳する
+- 新しいキーを使うときは、FEの`frontend/src/lib/i18n/locales/{ja,en}/common.json`の`error`に同じキーを追加する（無いキーはそのまま画面に出る）
 - エラー型の`message`は`match`の前で`message = ret.err_value.message`と変数に取り出し、`ErrorOut(..., message=message)`で渡す（`message`が他の変数と被るときは`error_message`にする）
 
 ```python
@@ -259,3 +261,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-04-16: docs/に一元化、構成整理
 - 2026-10-20: エラーハンドリング（Result型・エラー型とHTTPステータスの対応・adapterのmatch + assert_never）を追加
 - 2026-10-21: HTTPステータスを成功は200、エラーは400 / 500にまとめた
+- 2026-10-21: 画面に出るエラーの文言をFEのi18nのキーで返すようにした

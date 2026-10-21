@@ -115,7 +115,7 @@ class CommentAPI:
             return 200, data
         except Exception as e:
             log.error("CommentAPI post error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの作成に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.commentCreateFailed")
 
     @staticmethod
     @router.put("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -147,7 +147,7 @@ class CommentAPI:
             return 200, SuccessOut(message="コメントを更新しました")
         except Exception as e:
             log.error("CommentAPI put error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの更新に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.commentUpdateFailed")
 
     @staticmethod
     @router.delete("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -179,4 +179,4 @@ class CommentAPI:
             return 200, SuccessOut(message="コメントを削除しました")
         except Exception as e:
             log.error("CommentAPI delete error", exc=e)
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの削除に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.commentDeleteFailed")

@@ -183,7 +183,7 @@ class UserAPI:
 
         follower = follower_ret.ok_value
         if follower is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません!")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.userNotFound")
 
         follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
         if follow_ret.is_err:
@@ -361,7 +361,7 @@ class UserAPI:
 
         user = user_ret.ok_value
         if user is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.userNotFound")
 
         channels_ret = get_user_channels(user.user.id)
         if channels_ret.is_err:
@@ -418,7 +418,7 @@ class UserAPI:
 
         user = user_ret.ok_value
         if user is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.userNotFound")
 
         channel_id = 0
         if channel_ulid:
@@ -428,7 +428,7 @@ class UserAPI:
 
             channel = channel_ret.ok_value
             if channel is None:
-                return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="チャンネルが見つかりません")
+                return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.channelNotFound")
             channel_id = channel.id
 
         media_ret = get_userpage_media(8, search, owner_id=user.user.id, channel_id=channel_id)
@@ -458,7 +458,7 @@ class UserAPI:
 
         user = user_ret.ok_value
         if user is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="ユーザーが見つかりません")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.userNotFound")
 
         advertises_ret = get_userpage_advertises(search, owner_id=user.user.id)
         if advertises_ret.is_err:

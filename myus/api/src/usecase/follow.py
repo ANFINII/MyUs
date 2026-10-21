@@ -87,12 +87,12 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
 
     following = following_ret.ok_value
     if following is None:
-        return Result.err(NotFoundError("ユーザーが見つかりません!"))
+        return Result.err(NotFoundError("error.userNotFound"))
 
     follower_id = follower.user.id
     following_id = following.user.id
     if follower_id == following_id:
-        return Result.err(ValidationError("自分自身はフォローできません!"))
+        return Result.err(ValidationError("error.followSelf"))
 
     follow_ids_ret = repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
     if follow_ids_ret.is_err:

@@ -119,7 +119,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
     chat_ids = chat_ids_ret.ok_value
     if len(chat_ids) == 0:
         log.warning("チャットが見つかりませんでした", chat_ulid=chat_ulid)
-        return Result.err(NotFoundError("メッセージの作成に失敗しました"))
+        return Result.err(NotFoundError("error.messageCreateFailed"))
 
     repo = injector.get(MessageInterface)
 
@@ -132,7 +132,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         parent_ids = parent_ids_ret.ok_value
         if len(parent_ids) == 0:
             log.warning("親メッセージが見つかりませんでした", parent_ulid=parent_ulid)
-            return Result.err(NotFoundError("メッセージの作成に失敗しました"))
+            return Result.err(NotFoundError("error.messageCreateFailed"))
         parent_id = parent_ids[0]
 
     author_ret = get_author_data(user_id)
@@ -163,7 +163,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         return Result.err(messages_ret.err_value)
 
     messages = messages_ret.ok_value
-    assert len(messages) > 0, "メッセージの作成に失敗しました"
+    assert len(messages) > 0, "error.messageCreateFailed"
     message = messages[0]
 
     if parent_id is not None:
