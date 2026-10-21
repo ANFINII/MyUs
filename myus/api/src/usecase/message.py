@@ -175,7 +175,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         if len(parent_messages) > 0:
             notification_ret = create_notification(user_id, parent_messages[0].author_id, NotificationTypeNo.REPLY, message.id, NotificationObjectType.MESSAGE)
             if notification_ret.is_err:
-                return Result.err(notification_ret.err_value)
+                log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, message_id=message.id)
 
     data = MessageDTO(
         ulid=message.ulid,
