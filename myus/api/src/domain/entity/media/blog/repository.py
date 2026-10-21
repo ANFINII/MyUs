@@ -60,6 +60,6 @@ class BlogRepository(BlogInterface):
         return Result.ok(Blog.objects.filter(id=media_id, like__id=user_id).exists())
 
     @Result.shield_exception()
-    def increment_read(self, media_id: int) -> Result[int, FatalError]:
+    def save_read(self, media_id: int) -> Result[int, FatalError]:
         Blog.objects.filter(id=media_id).update(read=F("read") + 1)
         return Result.ok(Blog.objects.values_list("read", flat=True).get(id=media_id))

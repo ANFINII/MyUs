@@ -30,5 +30,5 @@ class VideoInterface(ABC):
         ...
 
     @abstractmethod
-    def increment_read(self, media_id: int) -> Result[int, FatalError]:
+    def save_read(self, media_id: int) -> Result[int, FatalError]:
         ...

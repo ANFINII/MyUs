@@ -65,7 +65,7 @@ def increment_advertise_read(ulid: str) -> Result[int, FindError]:
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    read_ret = repository.increment_read(ids[0])
+    read_ret = repository.save_read(ids[0])
     if read_ret.is_err:
         return Result.err(read_ret.err_value)
 
