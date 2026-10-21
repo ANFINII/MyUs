@@ -12,13 +12,13 @@ export const plans: Plan[] = [
     name: 'Standard',
     price: 880,
     currency: Currency.Jpy,
-    features: [{ key: 'individualAds', count: 3 }, { key: 'hideGlobalAds' }],
+    features: [{ key: 'individualAds', count: 2 }, { key: 'hideGlobalAds' }],
   },
   {
     name: 'Premium',
     price: 1200,
     currency: Currency.Jpy,
-    features: [{ key: 'individualAds', count: 4 }, { key: 'hideGlobalAds' }, { key: 'musicDownload' }],
+    features: [{ key: 'individualAds', count: 3 }, { key: 'hideGlobalAds' }, { key: 'musicDownload' }],
   },
   {
     name: 'Free',
