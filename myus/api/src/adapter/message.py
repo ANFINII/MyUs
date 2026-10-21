@@ -17,7 +17,7 @@ class MessageAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MessageOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MessageOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MessageCreateIn):
         log.info("MessageAPI post", input=input)
 
@@ -27,7 +27,7 @@ class MessageAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
@@ -35,7 +35,7 @@ class MessageAPI:
                 error_message = message_ret.err_value.message
                 match message_ret.err_value:
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=error_message)
+                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=error_message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -64,7 +64,7 @@ class MessageAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの作成に失敗しました")
 
     @staticmethod
-    @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 401: ErrorOut, 500: ErrorOut})
+    @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI get", message_ulid=message_ulid)
 
@@ -74,7 +74,7 @@ class MessageAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         replies_ret = get_replies(message_ulid)
         if replies_ret.is_err:
@@ -101,7 +101,7 @@ class MessageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, message_ulid: str, input: MessageUpdateIn):
         log.info("MessageAPI put", message_ulid=message_ulid, input=input)
 
@@ -111,7 +111,7 @@ class MessageAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             update_ret = update_message(user_id, message_ulid, input.text)
@@ -119,9 +119,9 @@ class MessageAPI:
                 message = update_ret.err_value.message
                 match update_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                        return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -135,7 +135,7 @@ class MessageAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI delete", message_ulid=message_ulid)
 
@@ -145,7 +145,7 @@ class MessageAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             delete_ret = delete_message(user_id, message_ulid)
@@ -153,9 +153,9 @@ class MessageAPI:
                 message = delete_ret.err_value.message
                 match delete_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                        return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:

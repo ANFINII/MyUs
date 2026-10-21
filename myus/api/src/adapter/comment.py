@@ -16,7 +16,7 @@ class CommentAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[CommentOut], 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: list[CommentOut], 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, input: CommentListIn):
         log.info("CommentAPI get", type_no=input.type_no, object_id=input.object_id)
 
@@ -26,7 +26,7 @@ class CommentAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         comments_ret = get_comments(type_no=input.type_no, object_id=input.object_id, user_id=user_id)
         if comments_ret.is_err:
@@ -71,7 +71,7 @@ class CommentAPI:
         return 200, data
 
     @staticmethod
-    @router.post("", response={201: CommentOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: CommentOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: CommentCreateIn):
         log.info("CommentAPI post", input=input)
 
@@ -81,7 +81,7 @@ class CommentAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             comment_ret = create_comment(user_id, input)
@@ -89,7 +89,7 @@ class CommentAPI:
                 message = comment_ret.err_value.message
                 match comment_ret.err_value:
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -118,7 +118,7 @@ class CommentAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの作成に失敗しました")
 
     @staticmethod
-    @router.put("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.put("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
@@ -128,7 +128,7 @@ class CommentAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             update_ret = update_comment(user_id, comment_ulid, input.text)
@@ -136,9 +136,9 @@ class CommentAPI:
                 message = update_ret.err_value.message
                 match update_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                        return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -150,7 +150,7 @@ class CommentAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    @router.delete("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
@@ -160,7 +160,7 @@ class CommentAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             delete_ret = delete_comment(user_id, comment_ulid)
@@ -168,9 +168,9 @@ class CommentAPI:
                 message = delete_ret.err_value.message
                 match delete_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                        return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                        return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:

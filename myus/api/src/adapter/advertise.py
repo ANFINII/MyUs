@@ -28,7 +28,7 @@ class AdvertiseAPI:
         return 200, AdvertiseListOut(items=convert_advertises(objs), total=len(objs))
 
     @staticmethod
-    @router.post("/{ulid}/read", response={200: AdvertiseReadOut, 404: ErrorOut, 500: ErrorOut})
+    @router.post("/{ulid}/read", response={200: AdvertiseReadOut, 400: ErrorOut, 500: ErrorOut})
     def post_read(request: HttpRequest, ulid: str):
         log.info("AdvertiseAPI post_read", ulid=ulid)
 
@@ -37,7 +37,7 @@ class AdvertiseAPI:
             message = ret.err_value.message
             match ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
