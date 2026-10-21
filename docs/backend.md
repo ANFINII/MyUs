@@ -99,13 +99,17 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 - 条件の意味で型を選ぶ（エンドポイントの種類では決めない）
 - エラー型に`@final`は付けない
 
-| エラー型 | 使う条件 | HTTPステータス | message |
-|---|---|---|---|
-| `ValidationError` | 入力や業務ルールに反する（上限超過・ファイル形式等） | 400 | `error_message` |
-| `UnauthorizedError` | 認証されていない | 401 | `"Unauthorized"` |
-| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | 403 | `error_message` |
-| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `error_message` |
-| `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `"Internal Server Error"`固定 |
+| エラー型 | 使う条件 | HTTPステータス | `type`（`ErrorType`） | message |
+|---|---|---|---|---|
+| `ValidationError` | 入力や業務ルールに反する（上限超過・ファイル形式等） | 400 | `VALIDATION` | `error_message` |
+| `UnauthorizedError` | 認証されていない | 401 | `UNAUTHENTICATED` | `"Unauthorized"` |
+| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | 403 | `FORBIDDEN` | `error_message` |
+| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `NOT_FOUND` | `error_message` |
+| `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `INTERNAL` | `"Internal Server Error"`固定 |
+
+- エラーレスポンスは`ErrorOut`（`type`・`message`）で返し、`type`を必ず入れる（`api/src/types/schema/common.py`）。`type`の初期値`None`は移行中だけのもので、全adapterを置き換えたら必須にする
+- `auth_check`の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
+- 移行の計画は`roadmap_error_status.md`（ステータスは今は上の表のまま。後で400 / 500にまとめる）
 
 ### エラー型の組み合わせ
 - 複数のエラー型を返すときは、`NotFoundError | FatalError`のように直接書かず、`errors.py`の別名を使う
@@ -138,16 +142,18 @@ ret = update_manage_video(user_id, ulid, input, image)
 if ret.is_err:
     match ret.err_value:
         case ValidationError():
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=ret.err_value.error_message)
         case ForbiddenError():
-            return 403, ErrorOut(message=ret.err_value.error_message)
+            return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=ret.err_value.error_message)
         case NotFoundError():
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=ret.err_value.error_message)
         case FatalError():
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
         case _:
             assert_never(ret.err_value)
 ```
+
+- 400以上のレスポンスは、ミドルウェア（`config/middleware.py`の`ErrorResponseLogMiddleware`）が`path`・`status`・`type`をログに出す
 
 ## 文字列
 
