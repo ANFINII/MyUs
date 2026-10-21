@@ -18,7 +18,7 @@ from api.src.usecase.notification import get_notification, notification_confirm,
 from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
 from api.src.usecase.user import get_user_data, like_comment, like_media
 from api.src.usecase.userpage import get_userpage_advertises, get_userpage_media, is_following
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, NotFoundError, ValidationError
 from api.utils.functions.index import create_url
 
 
@@ -188,6 +188,8 @@ class UserAPI:
         follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
         if follow_ret.is_err:
             match follow_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(message=follow_ret.err_value.error_message)
                 case NotFoundError():
                     return 404, ErrorOut(message=follow_ret.err_value.error_message)
                 case FatalError():
