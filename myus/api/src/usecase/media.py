@@ -28,7 +28,7 @@ from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_user_data
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import CommentType, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload, MediaUpload
@@ -45,7 +45,7 @@ VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 
 
 @Result.shield_exception()
-def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -53,6 +53,10 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Re
     channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
+
+    if channel.owner_id != user_id:
+        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        return Result.err(ForbiddenError("Forbidden"))
 
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
 
@@ -126,7 +130,7 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Re
 
 
 @Result.shield_exception()
-def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -134,6 +138,10 @@ def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, 
     channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
+
+    if channel.owner_id != user_id:
+        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        return Result.err(ForbiddenError("Forbidden"))
 
     new_music = MusicData(
         id=0,
@@ -185,7 +193,7 @@ def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, 
 
 
 @Result.shield_exception()
-def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -193,6 +201,10 @@ def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, No
     channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
+
+    if channel.owner_id != user_id:
+        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        return Result.err(ForbiddenError("Forbidden"))
 
     new_blog = BlogData(
         id=0,
@@ -243,7 +255,7 @@ def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, No
 
 
 @Result.shield_exception()
-def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -251,6 +263,10 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
     channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
+
+    if channel.owner_id != user_id:
+        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        return Result.err(ForbiddenError("Forbidden"))
 
     new_comic = ComicData(
         id=0,
@@ -301,7 +317,7 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
 
 
 @Result.shield_exception()
-def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -309,6 +325,10 @@ def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateD
     channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
+
+    if channel.owner_id != user_id:
+        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        return Result.err(ForbiddenError("Forbidden"))
 
     new_picture = PictureData(
         id=0,
@@ -358,7 +378,7 @@ def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateD
 
 
 @Result.shield_exception()
-def create_chat(input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -366,6 +386,10 @@ def create_chat(input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | FatalEr
     channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
+
+    if channel.owner_id != user_id:
+        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        return Result.err(ForbiddenError("Forbidden"))
 
     new_chat = ChatData(
         id=0,
