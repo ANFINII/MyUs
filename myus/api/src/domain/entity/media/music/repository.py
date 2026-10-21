@@ -62,4 +62,5 @@ class MusicRepository(MusicInterface):
     @Result.shield_exception()
     def save_read(self, media_id: int) -> Result[int, FatalError]:
         Music.objects.filter(id=media_id).update(read=F("read") + 1)
-        return Result.ok(Music.objects.values_list("read", flat=True).get(id=media_id))
+        read = Music.objects.filter(id=media_id).values_list("read", flat=True).first()
+        return Result.ok(read if read is not None else 0)
