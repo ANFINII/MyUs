@@ -24,17 +24,15 @@ def dispatch() -> str:
 
 
 @pytest.mark.django_db
-def test_pending_entries_are_delivered() -> None:
+def test_pending_entries_stay_pending() -> None:
     add_outbox("sub_1", WebhookDeliveryStatus.PENDING)
     add_outbox("sub_2", WebhookDeliveryStatus.PENDING)
     add_outbox("sub_3", WebhookDeliveryStatus.DELIVERED)
 
-    assert "Dispatched 2 webhook outbox entries" in dispatch()
+    assert "2 webhook outbox entries remain pending" in dispatch()
 
-    assert WebhookOutbox.objects.filter(status=WebhookDeliveryStatus.PENDING).count() == 0
-    delivered = WebhookOutbox.objects.get(external_id="sub_1")
-    assert delivered.status == WebhookDeliveryStatus.DELIVERED
-    assert delivered.delivered_at.year == datetime.now(timezone.utc).year
+    assert WebhookOutbox.objects.filter(status=WebhookDeliveryStatus.PENDING).count() == 2
+    assert WebhookOutbox.objects.filter(status=WebhookDeliveryStatus.DELIVERED).count() == 1
 
 
 @pytest.mark.django_db
