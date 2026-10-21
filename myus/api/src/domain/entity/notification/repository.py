@@ -1,6 +1,5 @@
 from typing import Any, assert_never
 
-from django.db import transaction
 from django.db.models import Exists, OuterRef, Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
@@ -9,7 +8,7 @@ from api.db.models.message import Message
 from api.db.models.notification import Notification
 from api.db.models.users import Follow
 from api.src.domain.entity.notification._convert import convert_data, get_media_model, marshal_data
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import save_models, sort_ids
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.utils.common.result import FatalError, Result
@@ -124,14 +123,7 @@ class NotificationRepository(NotificationInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-
-        with transaction.atomic():
-            new_ids = get_new_ids(models)
-            Notification.objects.bulk_create(
-                models,
-                update_conflicts=True,
-                update_fields=NOTIFICATION_FIELDS,
-            )
+        new_ids = save_models(models, NOTIFICATION_FIELDS)
 
         return Result.ok(new_ids)
 

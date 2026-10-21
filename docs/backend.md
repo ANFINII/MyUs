@@ -183,22 +183,15 @@ if ret.is_err:
 - `marshal_data`: dataclass → Django ORM
 
 ### bulk操作
-- `bulk_save`: upsert（`bulk_create(update_conflicts=True)`）
-- `get_new_ids`（`api/src/domain/entity/index.py`）でid未設定（`pk is None`）の行を先にINSERTし、新しく振られたIDを返す。IDはDBの自動採番に任せる
-  - 名前は`get`だが、呼ぶと行がINSERTされる
-- `get_new_ids`と続く`bulk_create`（関連テーブルも含む）は、必ず`transaction.atomic()`の中で呼ぶ（後の`bulk_create`が失敗したときにINSERTした行だけが残らないようにするため）
+- `bulk_save`は`save_models`（`api/src/domain/entity/index.py`）で保存する
+  - id未設定（`pk is None`）の行は`save(force_insert=True)`でINSERTし（IDはDBの自動採番）、既存の行は`bulk_create(update_conflicts=True)`でupsertする
+  - 新しく振られたIDを返す。INSERTとupsertは`save_models`の中で`transaction.atomic()`に入る
+  - 関連テーブルなどと一緒に保存するときは、`save_models`と関連テーブルの保存を`transaction.atomic()`で包む
 - IDを事前に採番しない（`ALTER TABLE ... AUTO_INCREMENT`はMySQLで暗黙にCOMMITされ、`transaction.atomic()`のロールバックが効かなくなるため）
 
 ```python
 models = [marshal_data(o) for o in objs]
-
-with transaction.atomic():
-    new_ids = get_new_ids(models)
-    Follow.objects.bulk_create(
-        models,
-        update_conflicts=True,
-        update_fields=FOLLOW_FIELDS,
-    )
+new_ids = save_models(models, FOLLOW_FIELDS)
 
 return Result.ok(new_ids)
 ```

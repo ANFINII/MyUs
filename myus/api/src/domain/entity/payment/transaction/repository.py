@@ -1,7 +1,6 @@
-from django.db import transaction
 from django.db.models import Q
 from api.db.models.payment import PaymentTransaction
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import save_models, sort_ids
 from api.src.domain.entity.payment.transaction._convert import convert_data, marshal_data
 from api.src.domain.interface.payment.transaction.data import TransactionData
 from api.src.domain.interface.payment.transaction.interface import FilterOption, SortOption, TransactionInterface
@@ -48,13 +47,6 @@ class TransactionRepository(TransactionInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-
-        with transaction.atomic():
-            new_ids = get_new_ids(models)
-            PaymentTransaction.objects.bulk_create(
-                models,
-                update_conflicts=True,
-                update_fields=TRANSACTION_FIELDS,
-            )
+        new_ids = save_models(models, TRANSACTION_FIELDS)
 
         return Result.ok(new_ids)

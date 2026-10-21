@@ -1,9 +1,8 @@
-from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.users import SearchTag
 from api.src.domain.entity.search_tag._convert import convert_data, marshal_data
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import save_models, sort_ids
 from api.src.domain.interface.search_tag.data import SearchTagData
 from api.src.domain.interface.search_tag.interface import FilterOption, SearchTagInterface, SortOption
 from api.utils.common.result import FatalError, Result
@@ -46,14 +45,7 @@ class SearchTagRepository(SearchTagInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-
-        with transaction.atomic():
-            new_ids = get_new_ids(models)
-            SearchTag.objects.bulk_create(
-                models,
-                update_conflicts=True,
-                update_fields=SEARCH_TAG_FIELDS,
-            )
+        new_ids = save_models(models, SEARCH_TAG_FIELDS)
 
         return Result.ok(new_ids)
 

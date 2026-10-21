@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import save_models, sort_ids
 from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
@@ -64,12 +64,7 @@ class UserRepository(UserInterface):
         models = [marshal_user(o.user) for o in objs]
 
         with transaction.atomic():
-            new_ids = get_new_ids(models)
-            User.objects.bulk_create(
-                models,
-                update_conflicts=True,
-                update_fields=USER_FIELDS,
-            )
+            new_ids = save_models(models, USER_FIELDS)
             Profile.objects.bulk_create(
                 [marshal_profile(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
