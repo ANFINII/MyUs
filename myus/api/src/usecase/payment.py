@@ -55,8 +55,8 @@ def create_checkout(user_id: int, plan_name: str) -> Result[CheckoutResult, Find
         locale=Locale.JA,
     )
 
-    payment = injector.get(PaymentInterface)
-    checkout_ret = payment.create_checkout(data)
+    repo = injector.get(PaymentInterface)
+    checkout_ret = repo.create_checkout(data)
     if checkout_ret.is_err:
         return Result.err(checkout_ret.err_value)
 
@@ -66,8 +66,8 @@ def create_checkout(user_id: int, plan_name: str) -> Result[CheckoutResult, Find
 
 @Result.shield_exception()
 def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult, FatalError]:
-    payment = injector.get(PaymentInterface)
-    ret = payment.verify_webhook(payload, signature)
+    repo = injector.get(PaymentInterface)
+    ret = repo.verify_webhook(payload, signature)
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -94,8 +94,8 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
 
     subscription = cancelable_subscriptions[0]
 
-    payment = injector.get(PaymentInterface)
-    cancel_ret = payment.cancel_subscription(subscription.external_id)
+    payment_repo = injector.get(PaymentInterface)
+    cancel_ret = payment_repo.cancel_subscription(subscription.external_id)
     if cancel_ret.is_err:
         return Result.err(cancel_ret.err_value)
 
@@ -206,8 +206,8 @@ def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
-    payment = injector.get(PaymentInterface)
-    provider_ret = payment.get_subscription(event.external_id)
+    payment_repo = injector.get(PaymentInterface)
+    provider_ret = payment_repo.get_subscription(event.external_id)
     if provider_ret.is_err:
         return Result.err(provider_ret.err_value)
 

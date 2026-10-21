@@ -13,8 +13,8 @@ from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 @Result.shield_exception()
 def get_subscribe_channels(user_id: int) -> Result[list[ChannelData], FatalError]:
     channel_repo = injector.get(ChannelInterface)
-    subscribe_repo = injector.get(SubscribeInterface)
-    ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, is_subscribe=True), SortOption())
+    repo = injector.get(SubscribeInterface)
+    ids_ret = repo.get_ids(FilterOption(user_id=user_id, is_subscribe=True), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -22,7 +22,7 @@ def get_subscribe_channels(user_id: int) -> Result[list[ChannelData], FatalError
     if len(subscribe_ids) == 0:
         return Result.ok([])
 
-    subscribes_ret = subscribe_repo.bulk_get(subscribe_ids)
+    subscribes_ret = repo.bulk_get(subscribe_ids)
     if subscribes_ret.is_err:
         return Result.err(subscribes_ret.err_value)
 
@@ -39,7 +39,7 @@ def get_subscribe_channels(user_id: int) -> Result[list[ChannelData], FatalError
 @Result.shield_exception()
 def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Result[SubscribeDTO, FindError]:
     channel_repo = injector.get(ChannelInterface)
-    subscribe_repo = injector.get(SubscribeInterface)
+    repo = injector.get(SubscribeInterface)
     channel_ret = get_channel_data(channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -48,12 +48,12 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません!"))
 
-    ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel.id), SortOption())
+    ids_ret = repo.get_ids(FilterOption(user_id=user_id, channel_id=channel.id), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    subscribes_ret = subscribe_repo.bulk_get(ids)
+    subscribes_ret = repo.bulk_get(ids)
     if subscribes_ret.is_err:
         return Result.err(subscribes_ret.err_value)
 
@@ -62,7 +62,7 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
 
     with transaction.atomic():
         if subscribe is None:
-            save_ret = subscribe_repo.bulk_save([SubscribeData(
+            save_ret = repo.bulk_save([SubscribeData(
                 id=0,
                 user_id=user_id,
                 channel_id=channel.id,
@@ -70,13 +70,13 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
             )])
         else:
             updated_subscribe = replace(subscribe, is_subscribe=is_subscribe)
-            save_ret = subscribe_repo.bulk_save([updated_subscribe])
+            save_ret = repo.bulk_save([updated_subscribe])
 
         if save_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(save_ret.err_value)
 
-        count_ret = subscribe_repo.count(FilterOption(channel_id=channel.id, is_subscribe=True))
+        count_ret = repo.count(FilterOption(channel_id=channel.id, is_subscribe=True))
         if count_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(count_ret.err_value)

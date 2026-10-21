@@ -1094,8 +1094,8 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
 
 @Result.shield_exception()
 def create_views_notification(owner_id: int, object_type: NotificationObjectType, object_id: int) -> Result[None, FatalError]:
-    notification_repo = injector.get(NotificationInterface)
-    delete_ret = notification_repo.delete(NotificationTypeNo.VIEWS, object_type, object_id, owner_id)
+    repo = injector.get(NotificationInterface)
+    delete_ret = repo.delete(NotificationTypeNo.VIEWS, object_type, object_id, owner_id)
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
