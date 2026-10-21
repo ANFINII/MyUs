@@ -42,7 +42,7 @@ class Command(BaseCommand):
         delivered: list[WebhookOutboxData] = []
         for entry in entries:
             # 配信スタブ: 外部送信先が未定のためログ出力で代替する
-            log.info("WebhookOutbox delivered (stub)", event_type=entry.event_type.value, external_id=entry.external_id, payload=entry.payload)
+            log.info("WebhookOutbox delivered (stub)", event_type=entry.event_type.value, external_id=entry.external_id)
             delivered.append(replace(entry, status=WebhookDeliveryStatus.DELIVERED, delivered_at=datetime.now(timezone.utc)))
 
         save_ret = repo.bulk_save(delivered)
