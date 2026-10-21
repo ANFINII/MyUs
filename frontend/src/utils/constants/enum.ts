@@ -12,15 +12,6 @@ export enum FetchError {
   Delete = 'fetchError.delete',
 }
 
-export enum Currency {
-  Jpy = 'JPY',
-  Usd = 'USD',
-  Eur = 'EUR',
-  Gbp = 'GBP',
-  Cny = 'CNY',
-  Krw = 'KRW',
-}
-
 export enum ErrorType {
   Unauthenticated = 'UNAUTHENTICATED',
   Forbidden = 'FORBIDDEN',
@@ -33,6 +24,15 @@ export enum GenderType {
   Male = 'Male',
   Female = 'Female',
   Secret = 'Secret',
+}
+
+export enum Currency {
+  Jpy = 'JPY',
+  Usd = 'USD',
+  Eur = 'EUR',
+  Gbp = 'GBP',
+  Cny = 'CNY',
+  Krw = 'KRW',
 }
 
 export enum MediaType {
