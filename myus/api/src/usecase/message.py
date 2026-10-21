@@ -17,8 +17,8 @@ from api.utils.enum.notification import NotificationObjectType, NotificationType
 
 @Result.shield_exception()
 def get_message_data(message_ulid: str) -> Result[MessageDomainData | None, FatalError]:
-    message_repo = injector.get(MessageInterface)
-    ids_ret = message_repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption())
+    repo = injector.get(MessageInterface)
+    ids_ret = repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -27,7 +27,7 @@ def get_message_data(message_ulid: str) -> Result[MessageDomainData | None, Fata
         log.warning("メッセージが見つかりませんでした", message_ulid=message_ulid)
         return Result.ok(None)
 
-    messages_ret = message_repo.bulk_get(ids)
+    messages_ret = repo.bulk_get(ids)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
@@ -37,8 +37,8 @@ def get_message_data(message_ulid: str) -> Result[MessageDomainData | None, Fata
 
 @Result.shield_exception()
 def save_message_data(data: MessageDomainData) -> Result[None, FatalError]:
-    message_repo = injector.get(MessageInterface)
-    ret = message_repo.bulk_save([data])
+    repo = injector.get(MessageInterface)
+    ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -47,13 +47,13 @@ def save_message_data(data: MessageDomainData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def get_messages(chat_id: int) -> Result[list[MessageDTO], FatalError]:
-    message_repo = injector.get(MessageInterface)
-    ids_ret = message_repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True))
+    repo = injector.get(MessageInterface)
+    ids_ret = repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    messages_ret = message_repo.bulk_get(ids)
+    messages_ret = repo.bulk_get(ids)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
@@ -79,13 +79,13 @@ def get_messages(chat_id: int) -> Result[list[MessageDTO], FatalError]:
 
 @Result.shield_exception()
 def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
-    message_repo = injector.get(MessageInterface)
-    ids_ret = message_repo.get_ids(FilterOption(parent_ulid=message_ulid, is_parent=False), SortOption(is_asc=True))
+    repo = injector.get(MessageInterface)
+    ids_ret = repo.get_ids(FilterOption(parent_ulid=message_ulid, is_parent=False), SortOption(is_asc=True))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    messages_ret = message_repo.bulk_get(ids)
+    messages_ret = repo.bulk_get(ids)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 

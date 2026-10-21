@@ -48,13 +48,13 @@ def save_comment_data(data: CommentData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> Result[list[CommentDTO], FatalError]:
-    comment_repo = injector.get(CommentInterface)
-    ids_ret = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption())
+    repo = injector.get(CommentInterface)
+    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    all_comments_ret = comment_repo.bulk_get(ids)
+    all_comments_ret = repo.bulk_get(ids)
     if all_comments_ret.is_err:
         return Result.err(all_comments_ret.err_value)
 
@@ -75,7 +75,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 
     liked_ids: set[int] = set()
     if user_id is not None:
-        liked_ids_ret = comment_repo.get_liked_ids(ids, user_id)
+        liked_ids_ret = repo.get_liked_ids(ids, user_id)
         if liked_ids_ret.is_err:
             return Result.err(liked_ids_ret.err_value)
 
