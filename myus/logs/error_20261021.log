@@ -1,6 +1,0 @@
-[2026-10-21 01:29:37] - MyUs - ERROR - [31m[95m[api/utils/common/result/_log.py:15 > emit_log][0m - [31mUnhandled Exception Occurred![0m
-Exception: AttributeError: 'types.SimpleNamespace' object has no attribute 'title'[0m
-[2026-10-21 16:10:18] - MyUs - ERROR - [31m[95m[api/utils/common/result/_log.py:15 > emit_log][0m - [31mUnhandled Exception Occurred![0m
-Exception: RuntimeError: upsert failed[0m
-[2026-10-21 16:10:18] - MyUs - ERROR - [31m[95m[api/utils/common/result/_log.py:15 > emit_log][0m - [31mUnhandled Exception Occurred![0m
-Exception: RuntimeError: upsert failed[0m

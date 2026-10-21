@@ -1,2 +1,0 @@
-[2026-10-20 02:42:54] - MyUs - ERROR - [31m[95m[api/src/adapter/payment.py:47 > checkout][0m - [31mPayment checkout failed - {'error': 'ERR', 'message': 'm'}[0m[0m
-[2026-10-20 02:42:54] - MyUs - ERROR - [31m[95m[api/src/adapter/payment.py:107 > cancel][0m - [31mPayment cancel failed - {'error': 'ERR', 'message': 'm'}[0m[0m
