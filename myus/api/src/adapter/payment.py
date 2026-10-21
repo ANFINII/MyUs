@@ -2,10 +2,10 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.adapter._auth import auth_check
 from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, WebhookVerified, WebhookVerifyFailed
 from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
-from api.src.usecase.auth import auth_check
 from api.src.usecase.payment import cancel_subscription, create_checkout, receive_webhook_inbox, verify_webhook
 from api.utils.common.result import FatalError, NotFoundError
 from api.utils.enum.payment import WebhookVerifyError

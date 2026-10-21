@@ -5,11 +5,9 @@ from datetime import date, datetime
 from typing import assert_never
 from django_ulid.models import ulid
 from django.conf import settings
-from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.db import transaction
-from django.http import HttpRequest
 from django.template.loader import render_to_string
 from api.modules.logger import log
 from api.src.domain.interface.channel.data import ChannelData
@@ -26,20 +24,6 @@ from api.utils.enum.payment import CancelError
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import access_token, password_fingerprint, password_reset_token, refresh_token, signup_token
 from api.utils.functions.validation import PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, has_email
-
-
-@Result.shield_exception()
-def auth_check(request: HttpRequest) -> Result[int | None, FatalError]:
-    token = request.COOKIES.get("access_token")
-    if token is None:
-        return Result.ok(None)
-
-    ret = verify_token(token, "access")
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    user_id = ret.ok_value
-    return Result.ok(user_id)
 
 
 @Result.shield_exception()
@@ -109,25 +93,33 @@ def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalErro
     return Result.ok((access_token(user_id, password_hash), refresh_token(user_id, password_hash)))
 
 
-def login_user(username: str, password: str) -> int | None:
+@Result.shield_exception()
+def login_user(username: str, password: str) -> Result[int | None, FatalError]:
     try:
         decrypted_username = decrypt(username)
         decrypted_password = decrypt(password)
     except Exception:
         log.error("Decrypt error")
-        return None
+        return Result.ok(None)
 
-    user = authenticate(username=decrypted_username, password=decrypted_password)
+    repo = injector.get(UserInterface)
+    user_id_ret = repo.authenticate(decrypted_username, decrypted_password)
+    if user_id_ret.is_err:
+        return Result.err(user_id_ret.err_value)
+
+    user_id = user_id_ret.ok_value
+    if user_id is None:
+        return Result.ok(None)
+
+    user_ret = get_active_user(user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
     if user is None:
-        user = authenticate(email=decrypted_username, password=decrypted_password)
+        return Result.ok(None)
 
-    if user is None:
-        return None
-
-    if not user.is_active:
-        return None
-
-    return user.id
+    return Result.ok(user_id)
 
 
 @Result.shield_exception()

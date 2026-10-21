@@ -1,9 +1,9 @@
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.adapter._auth import auth_check
 from api.src.types.schema.category import CategoryOut
 from api.src.types.schema.common import ErrorOut, ErrorType
-from api.src.usecase.auth import auth_check
 from api.src.usecase.category import get_categories
 
 

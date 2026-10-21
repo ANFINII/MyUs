@@ -3,6 +3,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
+from api.src.adapter._auth import auth_check
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
@@ -26,7 +27,6 @@ from api.src.types.schema.message import MessageOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
 from api.src.domain.interface.media.index import PAGE_SIZE
-from api.src.usecase.auth import auth_check
 from api.src.usecase.media import create_video, create_music, create_blog, create_comic, create_picture, create_chat
 from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail

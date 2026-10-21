@@ -2,6 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.adapter._auth import auth_check
 from api.src.adapter.advertise import convert_advertises
 from api.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from api.src.types.schema.advertise import AdvertiseListOut
@@ -11,7 +12,6 @@ from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationIn, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
 from api.src.types.schema.userpage import UserPageMediaOut, UserPageOut
-from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_channel_data, get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_notification, notification_confirm, notification_delete

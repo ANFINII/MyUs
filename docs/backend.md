@@ -109,7 +109,7 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 
 - エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`api/src/types/schema/common.py`）。`type`は必須
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
-- `auth_check`の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
+- `auth_check`（`api/src/adapter/_auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
 - `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く（`response={...}`に無いステータスを返すとNinjaが実行時に例外にする）
 - 成功で返すものが無いときは`200: None`・`return 200, None`にする
@@ -228,6 +228,7 @@ return Result.ok(new_ids)
 
 - adapter → usecase → interface の方向にのみ依存する
 - usecase層からadapter層の型（`HttpRequest`等）をインポートしない
+- usecase層からDjangoのモデル（`User.objects`等）や`authenticate`を直接使わない。リポジトリ（Interface）のメソッドを通す
 - domain/interface層は他の層に依存しない（純粋なPython）
 
 ## パフォーマンス

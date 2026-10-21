@@ -2,10 +2,10 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.adapter._auth import auth_check
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.message import MessageOut, MessageReplyOut, MessageCreateIn, MessageUpdateIn
 from api.src.types.schema.user import AuthorOut
-from api.src.usecase.auth import auth_check
 from api.src.usecase.broadcast import broadcast_create_message, broadcast_delete_message, broadcast_update_message
 from api.src.usecase.message import create_message, delete_message, get_replies, update_message
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError

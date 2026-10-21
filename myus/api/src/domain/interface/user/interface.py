@@ -16,6 +16,8 @@ class FilterOption:
     id: int = 0
     ulid: str = ""
     email: str = ""
+    username: str = ""
+    nickname: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -35,6 +37,10 @@ class UserInterface(ABC):
 
     @abstractmethod
     def bulk_save(self, objs: list[UserAllData]) -> Result[list[int], FatalError]:
+        ...
+
+    @abstractmethod
+    def authenticate(self, login_id: str, password: str) -> Result[int | None, FatalError]:
         ...
 
     @abstractmethod
