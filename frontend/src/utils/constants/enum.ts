@@ -78,14 +78,6 @@ export enum NotificationObjectType {
   Message = 'Message',
 }
 
-export enum CommentTypeNo {
-  Video = 1,
-  Music = 2,
-  Blog = 3,
-  Comic = 4,
-  Picture = 5,
-}
-
 export enum CommentType {
   Video = 'Video',
   Music = 'Music',

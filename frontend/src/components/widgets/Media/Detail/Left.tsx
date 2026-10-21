@@ -8,7 +8,7 @@ import { postSubscribeChannel } from 'api/internal/channel'
 import { postComment } from 'api/internal/comment'
 import { postLikeMedia } from 'api/internal/user'
 import { FetchError, MediaPath } from 'utils/constants/enum'
-import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
+import { mediaTypeMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
@@ -115,9 +115,8 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const handleMediaComment = async () => {
     handleLoading(true)
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
-    const typeNo = commentTypeNoMap[typeName]
     const objectUlid = String(router.query.ulid ?? '')
-    const request: CommnetIn = { text, typeName, typeNo, objectUlid }
+    const request: CommnetIn = { text, typeName, objectUlid }
     const ret = await postComment(request)
     if (ret.isErr()) {
       handleLoading(false)

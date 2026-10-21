@@ -20,6 +20,5 @@ export interface MessageCreateIn {
 }
 
 export interface MessageUpdateIn {
-  chatUlid: string
   text: string
 }

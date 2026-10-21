@@ -1,5 +1,5 @@
 import { Author } from 'types/internal/user'
-import { CommentType, CommentTypeNo } from 'utils/constants/enum'
+import { CommentType } from 'utils/constants/enum'
 
 export interface Comment {
   ulid: string
@@ -25,7 +25,6 @@ export interface Reply {
 export interface CommnetIn {
   text: string
   typeName: CommentType
-  typeNo: CommentTypeNo
   objectUlid: string
   parentUlid?: string
 }
