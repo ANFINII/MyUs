@@ -3,7 +3,6 @@ from datetime import date
 from django.db import transaction
 from ninja import UploadedFile
 from api.modules.logger import log
-from api.src.domain.interface.category.data import CategoryData
 from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.video.interface import VideoInterface
@@ -21,6 +20,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PA
 from api.src.domain.interface.message.interface import FilterOption as MessageFilterOption, MessageInterface, SortOption as MessageSortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
+from api.src.usecase.category import get_category_data
 from api.src.usecase.notification import create_publish_notification, delete_object_notifications
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, WriteError
 from api.utils.enum.media import MediaType
@@ -115,7 +115,11 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
         update_data = replace(update_data, image=save_upload(image, ImageUpload.VIDEO, obj.channel.ulid))
 
     category_repo = injector.get(CategoryInterface)
-    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
+    categories_ret = get_category_data(input.category_ulid)
+    if categories_ret.is_err:
+        return Result.err(categories_ret.err_value)
+
+    categories = categories_ret.ok_value
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -212,7 +216,7 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, AccessError]:
+def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, WriteError]:
     repo = injector.get(MusicInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -235,7 +239,11 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish)
     category_repo = injector.get(CategoryInterface)
-    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
+    categories_ret = get_category_data(input.category_ulid)
+    if categories_ret.is_err:
+        return Result.err(categories_ret.err_value)
+
+    categories = categories_ret.ok_value
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -362,7 +370,11 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
         update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
 
     category_repo = injector.get(CategoryInterface)
-    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
+    categories_ret = get_category_data(input.category_ulid)
+    if categories_ret.is_err:
+        return Result.err(categories_ret.err_value)
+
+    categories = categories_ret.ok_value
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -495,7 +507,11 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
         update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
 
     category_repo = injector.get(CategoryInterface)
-    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
+    categories_ret = get_category_data(input.category_ulid)
+    if categories_ret.is_err:
+        return Result.err(categories_ret.err_value)
+
+    categories = categories_ret.ok_value
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -622,7 +638,11 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
         update_data = replace(update_data, image=save_upload(image, ImageUpload.PICTURE, obj.channel.ulid))
 
     category_repo = injector.get(CategoryInterface)
-    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
+    categories_ret = get_category_data(input.category_ulid)
+    if categories_ret.is_err:
+        return Result.err(categories_ret.err_value)
+
+    categories = categories_ret.ok_value
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])
@@ -716,7 +736,7 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, AccessError]:
+def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, WriteError]:
     repo = injector.get(ChatInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -739,7 +759,11 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
 
     update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish)
     category_repo = injector.get(CategoryInterface)
-    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
+    categories_ret = get_category_data(input.category_ulid)
+    if categories_ret.is_err:
+        return Result.err(categories_ret.err_value)
+
+    categories = categories_ret.ok_value
 
     with transaction.atomic():
         save_ret = repo.bulk_save([update_data])

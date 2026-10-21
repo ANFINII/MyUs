@@ -55,7 +55,8 @@
     "fileTypeInvalid": "Unsupported file type",
     "fileTooLarge": "The file is too large",
     "checkoutFailed": "Failed to start the payment",
-    "cancelFailed": "Failed to cancel the subscription. Please try again later"
+    "cancelFailed": "Failed to cancel the subscription. Please try again later",
+    "categoryRequired": "Please select a category"
   },
   "gender": {
     "Male": "Male",

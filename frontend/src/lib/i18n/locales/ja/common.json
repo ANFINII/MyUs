@@ -55,7 +55,8 @@
     "fileTypeInvalid": "対応していないファイル形式です",
     "fileTooLarge": "ファイルサイズが大きすぎます",
     "checkoutFailed": "決済セッションの作成に失敗しました",
-    "cancelFailed": "解約処理に失敗しました。時間をおいて再度お試しください"
+    "cancelFailed": "解約処理に失敗しました。時間をおいて再度お試しください",
+    "categoryRequired": "カテゴリを選択してください"
   },
   "gender": {
     "Male": "男性",
