@@ -38,7 +38,3 @@ class SubscribeInterface(ABC):
     @abstractmethod
     def count(self, filter: FilterOption) -> Result[int, FatalError]:
         ...
-
-    @abstractmethod
-    def save_is_subscribe(self, id: int, is_subscribe: bool) -> Result[bool, FatalError]:
-        ...

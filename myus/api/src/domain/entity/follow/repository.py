@@ -68,8 +68,3 @@ class FollowRepository(FollowInterface):
             q_list.append(Q(following__nickname__icontains=filter.search))
 
         return Result.ok(Follow.objects.filter(*q_list).count())
-
-    @Result.shield_exception()
-    def save_is_follow(self, id: int, is_follow: bool) -> Result[bool, FatalError]:
-        updated_rows = Follow.objects.filter(id=id, is_follow=not is_follow).update(is_follow=is_follow)
-        return Result.ok(updated_rows > 0)

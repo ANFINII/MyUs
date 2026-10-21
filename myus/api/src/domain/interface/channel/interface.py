@@ -36,5 +36,5 @@ class ChannelInterface(ABC):
         ...
 
     @abstractmethod
-    def save_count(self, id: int, diff: int) -> Result[int, FatalError]:
+    def save_count(self, id: int, count: int) -> Result[None, FatalError]:
         ...

@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import F, Q
+from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
@@ -110,10 +110,9 @@ class UserRepository(UserInterface):
         return Result.ok((not is_like, obj.like.count()))
 
     @Result.shield_exception()
-    def save_follow_count(self, follower_id: int, following_id: int, diff: int) -> Result[int, FatalError]:
-        updates = sorted([(follower_id, "following_count"), (following_id, "follower_count")])
+    def save_follow_count(self, follower_id: int, following_id: int, follower_count: int, following_count: int) -> Result[None, FatalError]:
         with transaction.atomic():
-            for user_id, field_name in updates:
-                MyPage.objects.filter(user_id=user_id).update(**{field_name: F(field_name) + diff})
+            MyPage.objects.filter(user_id=follower_id).update(following_count=following_count)
+            MyPage.objects.filter(user_id=following_id).update(follower_count=follower_count)
 
-        return Result.ok(MyPage.objects.values_list("follower_count", flat=True).get(user_id=following_id))
+        return Result.ok(None)
