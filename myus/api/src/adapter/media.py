@@ -15,7 +15,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.utils.functions.index import create_url, get_client_ip
 from api.src.types.dto.message import MessageDTO
 from api.src.types.dto.user import AuthorDTO, MediaUserDTO
-from api.src.types.schema.common import ErrorOut, ErrorType
+from api.src.types.schema.common import ErrorOut, ErrorType, Limit, Offset
 from api.src.types.schema.comment import CommentOut, ReplyOut
 from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn
 from api.src.types.schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, HashtagOut
@@ -132,7 +132,7 @@ class VideoAPI:
 
     @staticmethod
     @router.get("", response={200: VideoListOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("VideoAPI list", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -239,7 +239,7 @@ class MusicAPI:
 
     @staticmethod
     @router.get("", response={200: MusicListOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("MusicAPI list", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -346,7 +346,7 @@ class BlogAPI:
 
     @staticmethod
     @router.get("", response={200: BlogListOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("BlogAPI list", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -452,7 +452,7 @@ class ComicAPI:
 
     @staticmethod
     @router.get("", response={200: ComicListOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ComicAPI list", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -558,7 +558,7 @@ class PictureAPI:
 
     @staticmethod
     @router.get("", response={200: PictureListOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("PictureAPI list", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -661,7 +661,7 @@ class ChatAPI:
 
     @staticmethod
     @router.get("", response={200: ChatListOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
         log.info("ChatAPI list", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
