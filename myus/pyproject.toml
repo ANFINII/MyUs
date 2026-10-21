@@ -34,7 +34,14 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["django-debug-toolbar>=8.0.0", "django-stubs>=6.1.2", "mypy>=2.4.0", "ruff>=0.17.1"]
+dev = [
+    "django-debug-toolbar>=8.0.0",
+    "django-stubs>=6.1.2",
+    "mypy>=2.4.0",
+    "pytest>=9.1.1",
+    "pytest-django>=4.14.0",
+    "ruff>=0.17.1",
+]
 
 [tool.mypy]
 mypy_path = "."                          # ソースルートパスを指定
@@ -81,6 +88,11 @@ disallow_any_unimported = false   # 同上
 [[tool.mypy.overrides]]
 module = ["wmi"]
 ignore_missing_imports = true     # Windows でだけ使う任意のライブラリ（GPU の検出）
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.local"
+addopts = "--nomigrations"                # マイグレーションは git 管理外のため、テスト用 DB はモデルから直接作る
+testpaths = ["api/tests"]
 
 [tool.django-stubs]
 django_settings_module = "config.settings.base"

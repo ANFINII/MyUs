@@ -287,6 +287,15 @@ wheels = [
 ]
 
 [[package]]
+name = "colorama"
+version = "0.4.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44", size = 27697, upload-time = "2022-10-25T02:36:22.414Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6", size = 25335, upload-time = "2022-10-25T02:36:20.889Z" },
+]
+
+[[package]]
 name = "coloredlogs"
 version = "15.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -619,6 +628,15 @@ wheels = [
 ]
 
 [[package]]
+name = "iniconfig"
+version = "2.3.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/e1/2069291243c926a2ff1cd706c7f3eeb9b62144bf60f77c9fb9ff2fb26bd3/iniconfig-2.3.1.tar.gz", hash = "sha256:67f4b9c50da0dedf52af349e7749a80a9057a5031199791b906c3bb3ae878960", size = 21209, upload-time = "2026-10-06T22:48:38.076Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/56/43/4ca9e49d27a1fcf6bece6f6aec0ea46bb9112489b93d4b688fb415457bdb/iniconfig-2.3.1-py3-none-any.whl", hash = "sha256:9121e2c1fdb355232495be3194c8dfe87ccc2d5dee45947b78e68f499790d7a7", size = 7552, upload-time = "2026-10-06T22:48:36.959Z" },
+]
+
+[[package]]
 name = "injector"
 version = "0.24.0"
 source = { registry = "https://pypi.org/simple" }
@@ -785,6 +803,8 @@ dev = [
     { name = "django-debug-toolbar" },
     { name = "django-stubs" },
     { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-django" },
     { name = "ruff" },
 ]
 
@@ -823,6 +843,8 @@ dev = [
     { name = "django-debug-toolbar", specifier = ">=8.0.0" },
     { name = "django-stubs", specifier = ">=6.1.2" },
     { name = "mypy", specifier = ">=2.4.0" },
+    { name = "pytest", specifier = ">=9.1.1" },
+    { name = "pytest-django", specifier = ">=4.14.0" },
     { name = "ruff", specifier = ">=0.17.1" },
 ]
 
@@ -871,6 +893,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/fc/96/d6b82e8b8c06ad143b66b12e0b31051e4bf489b4fabca1f390a14fe1ebde/pillow-13.0.0-cp315-cp315t-win32.whl", hash = "sha256:c50c80e3591e5cf9a8dfa6007d4f10732f02e32263850999286e56ccd650cfb2", size = 6517200, upload-time = "2026-10-16T22:17:42.886Z" },
     { url = "https://files.pythonhosted.org/packages/60/d4/0062e6005e9b270b165015aafd343364ac378ec5a685431ea42baad33357/pillow-13.0.0-cp315-cp315t-win_amd64.whl", hash = "sha256:adb3c2124c68e480f4632d06cb7caa3b48a51678475f483b4edb1c6dee29ea43", size = 7287488, upload-time = "2026-10-16T22:17:45.56Z" },
     { url = "https://files.pythonhosted.org/packages/e4/81/b8eb349746be7bce47dd95337c6634e84910af91b59aaa9159c034c614fa/pillow-13.0.0-cp315-cp315t-win_arm64.whl", hash = "sha256:4a25756244bdcce3b50580baadf320fa48297f0eeb8e114ba64139a40d4d0fc8", size = 2698073, upload-time = "2026-10-16T22:17:47.556Z" },
+]
+
+[[package]]
+name = "pluggy"
+version = "1.7.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/db/7fc19e6f2dc92a966727031389fc2e08b558f0f25eb7403c1119ad4713cd/pluggy-1.7.0.tar.gz", hash = "sha256:d1eaa46ebb595891b860ab086b4d09c8588af65ebd4361b8e8f4bb8920b90ba8", size = 123304, upload-time = "2026-10-15T09:50:58.343Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/40/9e/2b38731e0fc536806f16490e1a12d7f0dc2a1235aa8cc07bcc75416a7daa/pluggy-1.7.0-py3-none-any.whl", hash = "sha256:7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec", size = 27082, upload-time = "2026-10-15T09:50:56.808Z" },
 ]
 
 [[package]]
@@ -981,6 +1012,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pygments"
+version = "2.21.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/49/2e/ced460408999b33da6b31b0021b0f37d329e202d4169aeb164493778f25b/pygments-2.21.0.tar.gz", hash = "sha256:610ca751c9bc2492b38eb9a38a7fbc93edbbb2d7182edaf34e66ae493dee5c8c", size = 5005329, upload-time = "2026-08-17T08:02:48.824Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/71/46/17f022dd3e953bf20a04a028a21ec746d942f8d2af30fa0f124fa0e6a684/pygments-2.21.0-py3-none-any.whl", hash = "sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9", size = 1250147, upload-time = "2026-08-17T08:02:44.912Z" },
+]
+
+[[package]]
 name = "pyjwt"
 version = "2.15.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1008,6 +1048,34 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/b6/6d/f94028646d7bbe6d9d873c47ee7c246f2d29129d253f0d96cb6fcab70733/pyreadline3-3.5.6.tar.gz", hash = "sha256:61e53218b99656091ddb077df9e71f25850e72e030b6183b39c9b7e6e4f4a9bf", size = 100368, upload-time = "2026-05-14T17:55:04.471Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f7/5e/35c856e186b74678c24927847ad9895a51f1bc02a0c6126477a6c6040064/pyreadline3-3.5.6-py3-none-any.whl", hash = "sha256:8449b734232e42a5dcd74048e39b60db2839a4c38cf3ae2bf7707d58b5389c0d", size = 85243, upload-time = "2026-05-14T17:55:03.262Z" },
+]
+
+[[package]]
+name = "pytest"
+version = "9.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "iniconfig" },
+    { name = "packaging" },
+    { name = "pluggy" },
+    { name = "pygments" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e4/47/b9efed96c114afcfa3c9d3fe98a76a1d14c74a9e266d397cf6eb64be5e01/pytest-9.1.1.tar.gz", hash = "sha256:1088fbde8f2b49d95a549a195707afa7a76a3ce9bcadc26b6d71f0ffda5fe313", size = 1636369, upload-time = "2026-06-19T10:58:32.857Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/24/25/1de2678b631f5a49215c6c96fff41ba892b0a34df68d6d80292b1b48aa7f/pytest-9.1.1-py3-none-any.whl", hash = "sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c", size = 386536, upload-time = "2026-06-19T10:58:31.347Z" },
+]
+
+[[package]]
+name = "pytest-django"
+version = "4.14.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/44/f6/3851312120c2bf2f19cafff931e75059aad1ba670703cd751e2fde9bc942/pytest_django-4.14.0.tar.gz", hash = "sha256:26787dd3f422cfbab8f55b80a776e2edea7a11092cb74e960bef1312515708ef", size = 94700, upload-time = "2026-08-10T14:13:08.319Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9c/03/850bffad2b581c440ca51c039d74504d5a422c94bda0bdb8a8ba5068d48b/pytest_django-4.14.0-py3-none-any.whl", hash = "sha256:c533b08d89cc675efcd5398eea270b34547e35f9a3608e2c9748dd88428ea187", size = 27067, upload-time = "2026-08-10T14:13:06.998Z" },
 ]
 
 [[package]]
