@@ -99,18 +99,20 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 - 条件の意味で型を選ぶ（エンドポイントの種類では決めない）
 - エラー型に`@final`は付けない
 
-| エラー型 | 使う条件 | HTTPステータス | `type`（`ErrorType`） | message |
+| エラー型 | 使う条件 | `type`（`ErrorType`） | HTTPステータス | message |
 |---|---|---|---|---|
-| `ValidationError` | 入力や業務ルールに反する（上限超過・ファイル形式等） | 400 | `VALIDATION` | `message` |
-| `UnauthorizedError` | 認証されていない | 401 | `UNAUTHENTICATED` | `"Unauthorized"` |
-| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | 403 | `FORBIDDEN` | `message` |
-| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `NOT_FOUND` | `message` |
-| `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `INTERNAL` | `"Internal Server Error"`固定 |
+| `ValidationError` | 入力や業務ルールに反する（上限超過・ファイル形式等） | `VALIDATION` | 400 | `message` |
+| `UnauthorizedError` | 認証されていない | `UNAUTHENTICATED` | 400 | `"Unauthorized"` |
+| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | `FORBIDDEN` | 400 | `message` |
+| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | `NOT_FOUND` | 400 | `message` |
+| `FatalError` | 想定外のエラー（DB・外部APIの例外等） | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
 
 - エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`api/src/types/schema/common.py`）。`type`は必須
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
 - `auth_check`の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
-- 移行の計画は`roadmap_error_status.md`（ステータスは今は上の表のまま。後で400 / 500にまとめる）
+- HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
+- `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く（`response={...}`に無いステータスを返すとNinjaが実行時に例外にする）
+- 成功で返すものが無いときは`200: None`・`return 200, None`にする
 
 ### エラー型の組み合わせ
 - 複数のエラー型を返すときは、`NotFoundError | FatalError`のように直接書かず、`errors.py`の別名を使う
@@ -135,7 +137,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 - `FatalError`以外のエラー型も返すusecaseは、`match` + `assert_never`でエラー型ごとにステータスを決める（`isinstance`で分岐しない）
 - usecaseに新しいエラー型が追加されたとき、adapterの対応漏れを`assert_never`でmypyが検出する
 - `Result[T, FatalError]`だけを返すusecaseは`if ret.is_err: return 500, ...`のままでよい
-- `case`はHTTPステータスの番号が小さい順に並べ、最後を`case _: assert_never(...)`にする
+- `case`はエラー型の表の上から順に並べ、最後を`case _: assert_never(...)`にする
 - BEにしか表示されないメッセージ（500など）は英語にする
 - エラー型の`message`は`match`の前で`message = ret.err_value.message`と変数に取り出し、`ErrorOut(..., message=message)`で渡す（`message`が他の変数と被るときは`error_message`にする）
 
@@ -147,9 +149,9 @@ if ret.is_err:
         case ValidationError():
             return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
         case ForbiddenError():
-            return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+            return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
         case NotFoundError():
-            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
         case FatalError():
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
         case _:
@@ -256,3 +258,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-02-22: 全体整備、domain interface初期値禁止ルール追加
 - 2026-04-16: docs/に一元化、構成整理
 - 2026-10-20: エラーハンドリング（Result型・エラー型とHTTPステータスの対応・adapterのmatch + assert_never）を追加
+- 2026-10-21: HTTPステータスを成功は200、エラーは400 / 500にまとめた

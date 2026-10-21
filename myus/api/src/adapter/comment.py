@@ -71,7 +71,7 @@ class CommentAPI:
         return 200, data
 
     @staticmethod
-    @router.post("", response={201: CommentOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: CommentOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: CommentCreateIn):
         log.info("CommentAPI post", input=input)
 
@@ -112,7 +112,7 @@ class CommentAPI:
                 replys=[],
             )
 
-            return 201, data
+            return 200, data
         except Exception as e:
             log.error("CommentAPI post error", exc=e)
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの作成に失敗しました")

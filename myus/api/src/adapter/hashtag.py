@@ -36,7 +36,7 @@ class MediaHashtagAPI:
         return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in hashtags]
 
     @staticmethod
-    @router.put("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: MediaHashtagsUpdateIn):
         log.info("MediaHashtagAPI put", media_type=input.media_type.value, media_ulid=input.media_ulid)
 
@@ -62,4 +62,4 @@ class MediaHashtagAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")

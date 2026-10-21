@@ -94,7 +94,7 @@ class VideoAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(
         request: HttpRequest,
         input: VideoIn = Form(...),
@@ -128,7 +128,7 @@ class VideoAPI:
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
-        return 201, data
+        return 200, data
 
     @staticmethod
     @router.get("", response={200: VideoListOut, 500: ErrorOut})
@@ -206,7 +206,7 @@ class MusicAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...)):
         log.info("MusicAPI create", input=input, music=music)
 
@@ -235,7 +235,7 @@ class MusicAPI:
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
-        return 201, data
+        return 200, data
 
     @staticmethod
     @router.get("", response={200: MusicListOut, 500: ErrorOut})
@@ -313,7 +313,7 @@ class BlogAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
         log.info("BlogAPI create", input=input, image=image)
 
@@ -342,7 +342,7 @@ class BlogAPI:
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
-        return 201, data
+        return 200, data
 
     @staticmethod
     @router.get("", response={200: BlogListOut, 500: ErrorOut})
@@ -419,7 +419,7 @@ class ComicAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), pages: list[UploadedFile] = File(...)):
         log.info("ComicAPI create", input=input, image=image, pages=pages)
 
@@ -448,7 +448,7 @@ class ComicAPI:
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
-        return 201, data
+        return 200, data
 
     @staticmethod
     @router.get("", response={200: ComicListOut, 500: ErrorOut})
@@ -525,7 +525,7 @@ class PictureAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: PictureIn = Form(...), image: UploadedFile = File(...)):
         log.info("PictureAPI create", input=input, image=image)
 
@@ -554,7 +554,7 @@ class PictureAPI:
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
-        return 201, data
+        return 200, data
 
     @staticmethod
     @router.get("", response={200: PictureListOut, 500: ErrorOut})
@@ -630,7 +630,7 @@ class ChatAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: ChatIn = Form(...)):
         log.info("ChatAPI create", input=input)
 
@@ -657,7 +657,7 @@ class ChatAPI:
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
-        return 201, data
+        return 200, data
 
     @staticmethod
     @router.get("", response={200: ChatListOut, 500: ErrorOut})

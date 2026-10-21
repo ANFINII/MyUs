@@ -76,7 +76,7 @@ class ManageVideoAPI:
         return 200, convert_videos([video])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: VideoUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageVideoAPI put", ulid=ulid, input=input, image=image)
 
@@ -103,10 +103,10 @@ class ManageVideoAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageVideoAPI delete", ulids=input.ulids)
 
@@ -129,7 +129,7 @@ class ManageVideoAPI:
                 case _:
                     assert_never(delete_ret.err_value)
 
-        return 204, SuccessOut(message="削除しました!")
+        return 200, SuccessOut(message="削除しました!")
 
 
 class ManageMusicAPI:
@@ -185,7 +185,7 @@ class ManageMusicAPI:
         return 200, convert_musics([music])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: MusicUpdateIn):
         log.info("ManageMusicAPI put", ulid=ulid, input=input)
 
@@ -210,10 +210,10 @@ class ManageMusicAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageMusicAPI delete", ulids=input.ulids)
 
@@ -236,7 +236,7 @@ class ManageMusicAPI:
                 case _:
                     assert_never(delete_ret.err_value)
 
-        return 204, SuccessOut(message="削除しました!")
+        return 200, SuccessOut(message="削除しました!")
 
 
 class ManageBlogAPI:
@@ -292,7 +292,7 @@ class ManageBlogAPI:
         return 200, convert_blogs([blog])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: BlogUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageBlogAPI put", ulid=ulid, input=input, image=image)
 
@@ -319,10 +319,10 @@ class ManageBlogAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageBlogAPI delete", ulids=input.ulids)
 
@@ -345,7 +345,7 @@ class ManageBlogAPI:
                 case _:
                     assert_never(delete_ret.err_value)
 
-        return 204, SuccessOut(message="削除しました!")
+        return 200, SuccessOut(message="削除しました!")
 
 
 class ManageComicAPI:
@@ -401,7 +401,7 @@ class ManageComicAPI:
         return 200, convert_comics([comic])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ComicUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageComicAPI put", ulid=ulid, input=input, image=image)
 
@@ -428,10 +428,10 @@ class ManageComicAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageComicAPI delete", ulids=input.ulids)
 
@@ -454,7 +454,7 @@ class ManageComicAPI:
                 case _:
                     assert_never(delete_ret.err_value)
 
-        return 204, SuccessOut(message="削除しました!")
+        return 200, SuccessOut(message="削除しました!")
 
 
 class ManagePictureAPI:
@@ -510,7 +510,7 @@ class ManagePictureAPI:
         return 200, convert_pictures([picture])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: PictureUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManagePictureAPI put", ulid=ulid, input=input, image=image)
 
@@ -537,10 +537,10 @@ class ManagePictureAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManagePictureAPI delete", ulids=input.ulids)
 
@@ -563,7 +563,7 @@ class ManagePictureAPI:
                 case _:
                     assert_never(delete_ret.err_value)
 
-        return 204, SuccessOut(message="削除しました!")
+        return 200, SuccessOut(message="削除しました!")
 
 
 class ManageChatAPI:
@@ -619,7 +619,7 @@ class ManageChatAPI:
         return 200, convert_chats([chat])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChatUpdateIn):
         log.info("ManageChatAPI put", ulid=ulid, input=input)
 
@@ -644,10 +644,10 @@ class ManageChatAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageChatAPI delete", ulids=input.ulids)
 
@@ -670,7 +670,7 @@ class ManageChatAPI:
                 case _:
                     assert_never(delete_ret.err_value)
 
-        return 204, SuccessOut(message="削除しました!")
+        return 200, SuccessOut(message="削除しました!")
 
 
 class ManageAdvertiseAPI:
@@ -726,7 +726,7 @@ class ManageAdvertiseAPI:
         return 200, convert_advertises([advertise])[0]
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: AdvertiseIn = Form(...), image: UploadedFile = File(...), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI post", input=input, image=image, video=video)
 
@@ -752,10 +752,10 @@ class ManageAdvertiseAPI:
                     assert_never(create_ret.err_value)
 
         advertise = create_ret.ok_value
-        return 201, MediaCreateOut(ulid=advertise.ulid)
+        return 200, MediaCreateOut(ulid=advertise.ulid)
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: AdvertiseUpdateIn = Form(...), image: UploadedFile | None = File(None), video: UploadedFile | None = File(None)):
         log.info("ManageAdvertiseAPI put", ulid=ulid, input=input, image=image, video=video)
 
@@ -780,10 +780,10 @@ class ManageAdvertiseAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.delete("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageAdvertiseAPI delete", ulids=input.ulids)
 
@@ -806,4 +806,4 @@ class ManageAdvertiseAPI:
                 case _:
                     assert_never(delete_ret.err_value)
 
-        return 204, SuccessOut(message="削除しました!")
+        return 200, SuccessOut(message="削除しました!")

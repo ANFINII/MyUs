@@ -63,7 +63,7 @@ class SettingProfileAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("SettingProfileAPI put", input=input)
 
@@ -92,7 +92,7 @@ class SettingProfileAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
 
 class SettingMyPageAPI:
@@ -142,7 +142,7 @@ class SettingMyPageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner_file: UploadedFile = File(None)):
         log.info("SettingMyPageAPI put", input=input)
 
@@ -170,7 +170,7 @@ class SettingMyPageAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
 
 
 
@@ -219,7 +219,7 @@ class SettingNotificationAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingNotificationIn):
         log.info("SettingNotificationAPI put", input=input)
 
@@ -242,4 +242,4 @@ class SettingNotificationAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")

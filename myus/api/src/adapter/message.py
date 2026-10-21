@@ -17,7 +17,7 @@ class MessageAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MessageOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: MessageOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MessageCreateIn):
         log.info("MessageAPI post", input=input)
 
@@ -58,7 +58,7 @@ class MessageAPI:
 
             broadcast_create_message(input.chat_ulid, message, input.parent_ulid)
 
-            return 201, data
+            return 200, data
         except Exception as e:
             log.error("MessageAPI post error", exc=e)
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="メッセージの作成に失敗しました")

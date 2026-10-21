@@ -112,7 +112,7 @@ class ChannelAPI:
         return 200, data
 
     @staticmethod
-    @router.post("", response={201: ChannelCreateOut, 400: ErrorOut, 500: ErrorOut})
+    @router.post("", response={200: ChannelCreateOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("ChannelAPI post", input=input)
 
@@ -136,10 +136,10 @@ class ChannelAPI:
                     assert_never(create_ret.err_value)
 
         ulid = create_ret.ok_value
-        return 201, ChannelCreateOut(ulid=ulid)
+        return 200, ChannelCreateOut(ulid=ulid)
 
     @staticmethod
-    @router.put("/{ulid}", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("ChannelAPI put", ulid=ulid, input=input)
 
@@ -166,4 +166,4 @@ class ChannelAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 204, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="保存しました!")
