@@ -1,12 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
 from api.src.types.schema.user import AuthorOut
-from api.utils.enum.media import CommentType, CommentTypeNo
-
-
-class CommentListIn(BaseModel):
-    type_no: CommentTypeNo
-    object_id: int
+from api.utils.enum.media import CommentType
 
 
 class CommentCreateIn(BaseModel):
