@@ -28,7 +28,7 @@ from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_user_data
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidationError
 from api.utils.enum.media import CommentType, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload, MediaUpload
@@ -37,7 +37,7 @@ from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
 from api.utils.functions.convert.encode_worker import EncodeWorker
 from api.utils.functions.convert.video_encoding import convert_video
-from api.utils.functions.media import get_media_repository, save_upload
+from api.utils.functions.media import get_media_repository, save_upload, validate_uploads
 from api.utils.plan import get_plan
 
 
@@ -45,7 +45,11 @@ VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 
 
 @Result.shield_exception()
-def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
+def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(video, MediaUpload.VIDEO), (image, ImageUpload.VIDEO)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -130,7 +134,11 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 
 
 @Result.shield_exception()
-def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
+def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(music, MediaUpload.MUSIC)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -193,7 +201,11 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
 
 
 @Result.shield_exception()
-def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
+def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(image, ImageUpload.BLOG)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -255,7 +267,11 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
 
 
 @Result.shield_exception()
-def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
+def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(image, ImageUpload.COMIC), *[(p, ImageUpload.COMIC_PAGE) for p in pages]])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -317,7 +333,11 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
 
 
 @Result.shield_exception()
-def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | FatalError]:
+def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | ForbiddenError | ValidationError | FatalError]:
+    upload_ret = validate_uploads([(image, ImageUpload.PICTURE)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)

@@ -1,6 +1,9 @@
+import os
+from dataclasses import dataclass
 from typing import assert_never
 from django.core.files.storage import default_storage
 from ninja import UploadedFile
+from api.modules.logger import log
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.domain.interface.media.music.interface import MusicInterface
 from api.src.domain.interface.media.blog.interface import BlogInterface
@@ -8,14 +11,60 @@ from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.injectors.container import injector
+from api.utils.common.result import Result, ValidationError
 from api.utils.enum.media import MediaType
 from api.utils.enum.upload import ImageUpload, MediaUpload
-from api.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
+from api.utils.functions.convert.audio_converter import CONVERTIBLE_EXTENSIONS, is_conversion, save_converted_mp3
 from api.utils.functions.file import advertise_image_path, advertise_video_path, avatar_path, comic_path, image_path, musics_path, video_path
 
 
 type MediaInterfaceType = VideoInterface | MusicInterface | BlogInterface | ComicInterface | PictureInterface | ChatInterface
 type UploadType = ImageUpload | MediaUpload
+
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+VIDEO_EXTENSIONS = {".mp4", ".mov", ".m4v", ".webm", ".mkv", ".avi"}
+MUSIC_EXTENSIONS = {".mp3"} | CONVERTIBLE_EXTENSIONS
+IMAGE_MAX_SIZE = 20 * 1024 * 1024
+VIDEO_MAX_SIZE = 5 * 1024 * 1024 * 1024
+MUSIC_MAX_SIZE = 500 * 1024 * 1024
+
+
+@dataclass(frozen=True, slots=True)
+class UploadRule:
+    extensions: set[str]
+    content_type_prefix: str
+    max_size: int
+
+
+def upload_rule(upload_type: UploadType) -> UploadRule:
+    match upload_type:
+        case ImageUpload():
+            return UploadRule(extensions=IMAGE_EXTENSIONS, content_type_prefix="image/", max_size=IMAGE_MAX_SIZE)
+        case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
+            return UploadRule(extensions=VIDEO_EXTENSIONS, content_type_prefix="video/", max_size=VIDEO_MAX_SIZE)
+        case MediaUpload.MUSIC:
+            return UploadRule(extensions=MUSIC_EXTENSIONS, content_type_prefix="audio/", max_size=MUSIC_MAX_SIZE)
+        case _:
+            assert_never(upload_type)
+
+
+def validate_uploads(files: list[tuple[UploadedFile | None, UploadType]]) -> Result[None, ValidationError]:
+    for file, upload_type in files:
+        if file is None:
+            continue
+
+        rule = upload_rule(upload_type)
+        extension = os.path.splitext(file.name or "")[1].lower()
+        content_type = file.content_type or ""
+        if extension not in rule.extensions or not content_type.startswith(rule.content_type_prefix):
+            log.warning("Upload rejected: unsupported type", upload_type=upload_type.value, extension=extension, content_type=content_type)
+            return Result.err(ValidationError("対応していないファイル形式です"))
+
+        if file.size is None or file.size > rule.max_size:
+            log.warning("Upload rejected: too large", upload_type=upload_type.value, size=file.size)
+            return Result.err(ValidationError("ファイルサイズが大きすぎます"))
+
+    return Result.ok(None)
 
 
 def get_media_repository(media_type: MediaType) -> MediaInterfaceType:

@@ -6,7 +6,7 @@ from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.user import get_user_data, profile_check, update_mypage, update_notification, update_profile
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, NotFoundError, ValidationError
 from api.utils.functions.index import create_url
 from api.utils.functions.validation import has_email
 
@@ -84,6 +84,8 @@ class SettingProfileAPI:
             match update_ret.err_value:
                 case NotFoundError():
                     return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -159,6 +161,8 @@ class SettingMyPageAPI:
             match update_ret.err_value:
                 case NotFoundError():
                     return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

@@ -31,7 +31,7 @@ from api.src.usecase.media import create_video, create_music, create_blog, creat
 from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from api.src.usecase.media import increment_media_read
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 
 
 class HomeAPI:
@@ -118,6 +118,8 @@ class VideoAPI:
                     return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -221,6 +223,8 @@ class MusicAPI:
                     return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -324,6 +328,8 @@ class BlogAPI:
                     return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -426,6 +432,8 @@ class ComicAPI:
                     return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -528,6 +536,8 @@ class PictureAPI:
                     return 404, ErrorOut(message=obj_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=obj_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

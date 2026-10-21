@@ -8,7 +8,7 @@ from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import create_user_channel, get_user_channels, update_user_channel
 from api.src.usecase.subscribe import get_subscribe_channels, upsert_subscribe
-from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from api.utils.functions.index import create_url
 
 
@@ -125,7 +125,13 @@ class ChannelAPI:
 
         create_ret = create_user_channel(user_id, input, avatar_file)
         if create_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            match create_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(message=create_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(create_ret.err_value)
 
         ulid = create_ret.ok_value
         return 201, ChannelCreateOut(ulid=ulid)
@@ -150,6 +156,8 @@ class ChannelAPI:
                     return 404, ErrorOut(message=update_ret.err_value.error_message)
                 case ForbiddenError():
                     return 403, ErrorOut(message=update_ret.err_value.error_message)
+                case ValidationError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
