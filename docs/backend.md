@@ -107,7 +107,7 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `NOT_FOUND` | `error_message` |
 | `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `INTERNAL` | `"Internal Server Error"`固定 |
 
-- エラーレスポンスは`ProblemOut`（`type`・`message`）で返す（`api/src/types/schema/common.py`）。`ErrorOut`は移行中の古い形で、新しく使わない
+- エラーレスポンスは`ErrorOut`（`type`・`message`）で返し、`type`を必ず入れる（`api/src/types/schema/common.py`）。`type`の初期値`None`は移行中だけのもので、全adapterを置き換えたら必須にする
 - `auth_check`の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - 移行の計画は`roadmap_error_status.md`（ステータスは今は上の表のまま。後で400 / 500にまとめる）
 
@@ -142,18 +142,17 @@ ret = update_manage_video(user_id, ulid, input, image)
 if ret.is_err:
     match ret.err_value:
         case ValidationError():
-            return 400, ProblemOut(type=ErrorType.VALIDATION, message=ret.err_value.error_message)
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=ret.err_value.error_message)
         case ForbiddenError():
-            return 403, ProblemOut(type=ErrorType.FORBIDDEN, message=ret.err_value.error_message)
+            return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=ret.err_value.error_message)
         case NotFoundError():
-            return 404, ProblemOut(type=ErrorType.NOT_FOUND, message=ret.err_value.error_message)
+            return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=ret.err_value.error_message)
         case FatalError():
-            return 500, ProblemOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
         case _:
             assert_never(ret.err_value)
 ```
 
-- `response={...}`のエラーのステータスも`ProblemOut`にする（例: `response={200: VideoOut, 400: ProblemOut, 403: ProblemOut, 404: ProblemOut, 500: ProblemOut}`）
 - 400以上のレスポンスは、ミドルウェア（`config/middleware.py`の`ErrorResponseLogMiddleware`）が`path`・`status`・`type`をログに出す
 
 ## 文字列

@@ -2,10 +2,6 @@ from enum import StrEnum
 from pydantic import BaseModel
 
 
-class ErrorOut(BaseModel):
-    message: str
-
-
 class ErrorType(StrEnum):
     UNAUTHENTICATED = "UNAUTHENTICATED"
     FORBIDDEN = "FORBIDDEN"
@@ -14,6 +10,6 @@ class ErrorType(StrEnum):
     INTERNAL = "INTERNAL"
 
 
-class ProblemOut(BaseModel):
-    type: ErrorType
+class ErrorOut(BaseModel):
+    type: ErrorType | None = None
     message: str
