@@ -49,13 +49,13 @@ def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int =
 
 @Result.shield_exception()
 def get_userpage_advertises(search: str, owner_id: int) -> Result[list[AdvertiseData], FatalError]:
-    repository = injector.get(AdvertiseInterface)
-    ids_ret = repository.get_ids(MediaFilterOption(search=search, publish=True, owner_id=owner_id), ExcludeOption(), MediaSortOption(is_asc=True), PageOption())
+    repo = injector.get(AdvertiseInterface)
+    ids_ret = repo.get_ids(MediaFilterOption(search=search, publish=True, owner_id=owner_id), ExcludeOption(), MediaSortOption(is_asc=True), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 

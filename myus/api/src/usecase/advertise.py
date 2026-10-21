@@ -29,8 +29,8 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
     if max_count <= 0:
         return Result.ok([])
 
-    repository = injector.get(AdvertiseInterface)
-    ids_ret = repository.get_ids(FilterOption(owner_id=user.user.id, publish=True), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(AdvertiseInterface)
+    ids_ret = repo.get_ids(FilterOption(owner_id=user.user.id, publish=True), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -38,7 +38,7 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
     if len(ids) == 0:
         return Result.ok([])
 
-    objs_ret = repository.bulk_get(ids)
+    objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -55,8 +55,8 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
 
 @Result.shield_exception()
 def increment_advertise_read(ulid: str) -> Result[int, FindError]:
-    repository = injector.get(AdvertiseInterface)
-    ids_ret = repository.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption())
+    repo = injector.get(AdvertiseInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -65,7 +65,7 @@ def increment_advertise_read(ulid: str) -> Result[int, FindError]:
         log.info("data not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
-    read_ret = repository.save_read(ids[0])
+    read_ret = repo.save_read(ids[0])
     if read_ret.is_err:
         return Result.err(read_ret.err_value)
 

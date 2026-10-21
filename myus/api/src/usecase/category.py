@@ -6,13 +6,13 @@ from api.utils.common.result import FatalError, Result
 
 @Result.shield_exception()
 def get_categories() -> Result[list[CategoryDTO], FatalError]:
-    repository = injector.get(CategoryInterface)
-    ids_ret = repository.get_ids(FilterOption(), SortOption(is_asc=True, sort_type=SortType.ID))
+    repo = injector.get(CategoryInterface)
+    ids_ret = repo.get_ids(FilterOption(), SortOption(is_asc=True, sort_type=SortType.ID))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    categories_ret = repository.bulk_get(ids)
+    categories_ret = repo.bulk_get(ids)
     if categories_ret.is_err:
         return Result.err(categories_ret.err_value)
 

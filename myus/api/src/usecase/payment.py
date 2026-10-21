@@ -77,8 +77,8 @@ def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult
 
 @Result.shield_exception()
 def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
-    repository = injector.get(SubscriptionInterface)
-    ids_ret = repository.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False), limit=1)
+    repo = injector.get(SubscriptionInterface)
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -86,7 +86,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
     if len(ids) == 0:
         return Result.err(NotFoundError("アクティブなサブスクリプションが見つかりません"))
 
-    subscriptions_ret = repository.bulk_get(ids)
+    subscriptions_ret = repo.bulk_get(ids)
     if subscriptions_ret.is_err:
         return Result.err(subscriptions_ret.err_value)
 
@@ -103,7 +103,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
     cancellation = cancel_ret.ok_value
     if isinstance(cancellation, CancelSuccess):
         updated = replace(subscription, canceled_at=cancellation.canceled_at, current_period_end=cancellation.period_end)
-        save_ret = repository.bulk_save([updated])
+        save_ret = repo.bulk_save([updated])
         if save_ret.is_err:
             return Result.err(save_ret.err_value)
 
@@ -139,8 +139,8 @@ def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 
 @Result.shield_exception()
 def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
-    repository = injector.get(WebhookInboxInterface)
-    ids_ret = repository.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
+    repo = injector.get(WebhookInboxInterface)
+    ids_ret = repo.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -149,7 +149,7 @@ def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
         log.info("WebhookInbox already processed", event_id=event.event_id)
         return Result.ok(False)
 
-    save_ret = repository.bulk_save([event])
+    save_ret = repo.bulk_save([event])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -176,7 +176,7 @@ def dispatch_webhook_inbox(event: WebhookInboxData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
-    repository = injector.get(WebhookOutboxInterface)
+    repo = injector.get(WebhookOutboxInterface)
 
     payload = WebhookOutboxPayloadDTO(
         provider=event.provider.value,
@@ -197,7 +197,7 @@ def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
         delivered_at=datetime.min.replace(tzinfo=timezone.utc),
     )
 
-    ret = repository.bulk_save([data])
+    ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -230,8 +230,8 @@ def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
         log.error("Subscription user not found", external_id=event.external_id, user_ulid=provider_subscription.user_ulid)
         return Result.ok(None)
 
-    repository = injector.get(SubscriptionInterface)
-    ids_ret = repository.get_ids(
+    repo = injector.get(SubscriptionInterface)
+    ids_ret = repo.get_ids(
         SubscriptionFilterOption(provider=provider_subscription.provider.value, external_id=provider_subscription.external_id),
         SubscriptionSortOption(),
         limit=1,
@@ -267,8 +267,8 @@ def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def save_subscription_data(data: SubscriptionData) -> Result[None, FatalError]:
-    repository = injector.get(SubscriptionInterface)
-    ret = repository.bulk_save([data])
+    repo = injector.get(SubscriptionInterface)
+    ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -307,8 +307,8 @@ def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscript
 
 @Result.shield_exception()
 def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, update_paid_at: bool) -> Result[None, FatalError]:
-    repository = injector.get(TransactionInterface)
-    ids_ret = repository.get_ids(
+    repo = injector.get(TransactionInterface)
+    ids_ret = repo.get_ids(
         TransactionFilterOption(provider=event.provider.value, external_id=event.external_id),
         TransactionSortOption(),
         limit=1,
@@ -321,14 +321,14 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
         log.warning("Transaction not found for status update", external_id=event.external_id, status=status.value)
         return Result.ok(None)
 
-    transactions_ret = repository.bulk_get(ids)
+    transactions_ret = repo.bulk_get(ids)
     if transactions_ret.is_err:
         return Result.err(transactions_ret.err_value)
 
     transactions = transactions_ret.ok_value
     payment_transaction = transactions[0]
     updated = replace(payment_transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(payment_transaction, status=status)
-    save_ret = repository.bulk_save([updated])
+    save_ret = repo.bulk_save([updated])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 

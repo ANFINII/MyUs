@@ -13,21 +13,21 @@ ACCESS_INTERVAL = timedelta(hours=2)
 
 @Result.shield_exception()
 def record_access(ip_address: str, media_type: MediaType, media_id: int) -> Result[bool, FatalError]:
-    repository = injector.get(AccessLogInterface)
+    repo = injector.get(AccessLogInterface)
     now = timezone.now()
-    ids_ret = repository.get_ids(FilterOption(ip_address=ip_address, type=media_type, type_id=media_id), SortOption(), limit=1)
+    ids_ret = repo.get_ids(FilterOption(ip_address=ip_address, type=media_type, type_id=media_id), SortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        create_ret = repository.bulk_save([AccessLogData(id=0, ip_address=ip_address, type=media_type, type_id=media_id, updated=now)])
+        create_ret = repo.bulk_save([AccessLogData(id=0, ip_address=ip_address, type=media_type, type_id=media_id, updated=now)])
         if create_ret.is_err:
             return Result.err(create_ret.err_value)
 
         return Result.ok(True)
 
-    access_logs_ret = repository.bulk_get(ids)
+    access_logs_ret = repo.bulk_get(ids)
     if access_logs_ret.is_err:
         return Result.err(access_logs_ret.err_value)
 
@@ -36,7 +36,7 @@ def record_access(ip_address: str, media_type: MediaType, media_id: int) -> Resu
     if now - access_log.updated < ACCESS_INTERVAL:
         return Result.ok(False)
 
-    save_ret = repository.bulk_save([replace(access_log, updated=now)])
+    save_ret = repo.bulk_save([replace(access_log, updated=now)])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 

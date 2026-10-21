@@ -23,8 +23,8 @@ from api.utils.functions.validation import has_alphabet, has_birthday, has_email
 
 @Result.shield_exception()
 def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None, FatalError]:
-    repository = injector.get(UserInterface)
-    ids_ret = repository.get_ids(FilterOption(id=user_id, ulid=ulid))
+    repo = injector.get(UserInterface)
+    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -32,7 +32,7 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None
     if len(ids) == 0:
         return Result.ok(None)
 
-    users_ret = repository.bulk_get(ids)
+    users_ret = repo.bulk_get(ids)
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
 
@@ -42,8 +42,8 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None
 
 @Result.shield_exception()
 def save_user_data(data: UserAllData) -> Result[None, FatalError]:
-    repository = injector.get(UserInterface)
-    ret = repository.bulk_save([data])
+    repo = injector.get(UserInterface)
+    ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -75,8 +75,8 @@ def get_author_data_map(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalErr
     if len(ids) == 0:
         return Result.ok({})
 
-    repository = injector.get(UserInterface)
-    ret = repository.bulk_get(ids)
+    repo = injector.get(UserInterface)
+    ret = repo.bulk_get(ids)
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -206,7 +206,7 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> Result[No
 
 @Result.shield_exception()
 def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO, FindError]:
-    repository = injector.get(UserInterface)
+    repo = injector.get(UserInterface)
     media_repo = get_media_repository(media_type)
     ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if ids_ret.is_err:
@@ -216,7 +216,7 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO
     if len(ids) == 0:
         return Result.err(NotFoundError("メディアが見つかりません!"))
 
-    like_ret = repository.media_like(user_id, media_type, ids[0])
+    like_ret = repo.media_like(user_id, media_type, ids[0])
     if like_ret.is_err:
         return Result.err(like_ret.err_value)
 
@@ -226,7 +226,7 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO
 
 @Result.shield_exception()
 def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
-    repository = injector.get(UserInterface)
+    repo = injector.get(UserInterface)
     comment_repo = injector.get(CommentInterface)
     ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
     if ids_ret.is_err:
@@ -236,7 +236,7 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
     if len(ids) == 0:
         return Result.err(NotFoundError("コメントが見つかりません!"))
 
-    like_ret = repository.comment_like(user_id, ids[0])
+    like_ret = repo.comment_like(user_id, ids[0])
     if like_ret.is_err:
         return Result.err(like_ret.err_value)
 

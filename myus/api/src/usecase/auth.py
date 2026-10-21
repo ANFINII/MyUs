@@ -58,8 +58,8 @@ def auth_check(request: HttpRequest) -> Result[int | None, FatalError]:
 
 @Result.shield_exception()
 def verify_user(user_id: int) -> Result[bool, FatalError]:
-    repository = injector.get(UserInterface)
-    ret = repository.bulk_get([user_id])
+    repo = injector.get(UserInterface)
+    ret = repo.bulk_get([user_id])
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -99,8 +99,8 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
     if has_email(email):
         return Result.ok("メールアドレスの形式が違います!")
 
-    repository = injector.get(UserInterface)
-    ret = repository.get_ids(FilterOption(email=email))
+    repo = injector.get(UserInterface)
+    ret = repo.get_ids(FilterOption(email=email))
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -253,8 +253,8 @@ def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalE
     if len(password1) < PASSWORD_MIN_LENGTH or len(password1) > PASSWORD_MAX_LENGTH:
         return Result.ok("新規パスワードは英数字8~16文字で入力してください!")
 
-    repository = injector.get(UserInterface)
-    users_ret = repository.bulk_get([user_id])
+    repo = injector.get(UserInterface)
+    users_ret = repo.bulk_get([user_id])
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
 
@@ -270,7 +270,7 @@ def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalE
     new_user = replace(user_data.user, password=make_password(password1))
     new_data = replace(user_data, user=new_user)
 
-    save_ret = repository.bulk_save([new_data])
+    save_ret = repo.bulk_save([new_data])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -282,8 +282,8 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
     if has_email(email):
         return Result.ok("メールアドレスの形式が違います!")
 
-    repository = injector.get(UserInterface)
-    ids_ret = repository.get_ids(FilterOption(email=email))
+    repo = injector.get(UserInterface)
+    ids_ret = repo.get_ids(FilterOption(email=email))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -291,7 +291,7 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
     if len(user_ids) == 0:
         return Result.ok("")
 
-    users_ret = repository.bulk_get(user_ids)
+    users_ret = repo.bulk_get(user_ids)
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
 
@@ -367,8 +367,8 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
     if len(password1) < PASSWORD_MIN_LENGTH or len(password1) > PASSWORD_MAX_LENGTH:
         return Result.ok("新規パスワードは英数字8~16文字で入力してください!")
 
-    repository = injector.get(UserInterface)
-    users_ret = repository.bulk_get([user_id])
+    repo = injector.get(UserInterface)
+    users_ret = repo.bulk_get([user_id])
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
 
@@ -381,7 +381,7 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
     new_user = replace(user_data.user, password=make_password(password1))
     new_data = replace(user_data, user=new_user)
 
-    save_ret = repository.bulk_save([new_data])
+    save_ret = repo.bulk_save([new_data])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -396,8 +396,8 @@ def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
         log.error("Decrypt error")
         return Result.ok("復号に失敗しました!")
 
-    repository = injector.get(UserInterface)
-    users_ret = repository.bulk_get([user_id])
+    repo = injector.get(UserInterface)
+    users_ret = repo.bulk_get([user_id])
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
 
@@ -413,7 +413,7 @@ def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
     new_user = replace(user_data.user, is_active=False)
     new_data = replace(user_data, user=new_user)
 
-    save_ret = repository.bulk_save([new_data])
+    save_ret = repo.bulk_save([new_data])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
