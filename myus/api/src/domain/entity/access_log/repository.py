@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.common import AccessLog
 from api.src.domain.entity.access_log._convert import convert_data, marshal_data
-from api.src.domain.entity.index import insert_new_models, sort_ids
+from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.access_log.data import AccessLogData
 from api.src.domain.interface.access_log.interface import AccessLogInterface, FilterOption, SortOption
 from api.utils.common.result import FatalError, Result
@@ -49,7 +49,7 @@ class AccessLogRepository(AccessLogInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = insert_new_models(models)
+        new_ids = get_new_ids(models)
 
         AccessLog.objects.bulk_create(
             models,

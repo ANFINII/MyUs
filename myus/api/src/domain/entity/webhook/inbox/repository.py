@@ -1,6 +1,6 @@
 from django.db.models import Q
 from api.db.models.payment import WebhookInbox
-from api.src.domain.entity.index import insert_new_models, sort_ids
+from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.entity.webhook.inbox._convert import convert_data, marshal_data
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.src.domain.interface.webhook.inbox.interface import FilterOption, SortOption, WebhookInboxInterface
@@ -43,7 +43,7 @@ class WebhookInboxRepository(WebhookInboxInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = insert_new_models(models)
+        new_ids = get_new_ids(models)
 
         WebhookInbox.objects.bulk_create(
             models,

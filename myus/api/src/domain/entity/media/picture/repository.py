@@ -2,7 +2,7 @@ from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Picture
 from api.src.domain.entity.media.picture._convert import convert_data, marshal_data
-from api.src.domain.entity.index import insert_new_models, sort_ids
+from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.picture.interface import PictureInterface
@@ -41,7 +41,7 @@ class PictureRepository(PictureInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = insert_new_models(models)
+        new_ids = get_new_ids(models)
 
         Picture.objects.bulk_create(
             models,

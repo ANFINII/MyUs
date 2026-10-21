@@ -2,7 +2,7 @@ from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Video
 from api.src.domain.entity.media.video._convert import convert_data, marshal_data
-from api.src.domain.entity.index import insert_new_models, sort_ids
+from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.video.interface import VideoInterface
@@ -41,7 +41,7 @@ class VideoRepository(VideoInterface):
             return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
-        new_ids = insert_new_models(models)
+        new_ids = get_new_ids(models)
 
         Video.objects.bulk_create(
             models,

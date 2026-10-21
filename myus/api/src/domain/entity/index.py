@@ -10,7 +10,7 @@ def sort_ids(objs: list[T], ids: list[int]) -> list[T]:
     return [obj_map[id] for id in ids]
 
 
-def insert_new_models(models: list[T]) -> list[int]:
+def get_new_ids(models: list[T]) -> list[int]:
     new_models = [m for m in models if m.pk is None]
     for m in new_models:
         m.save(force_insert=True)
