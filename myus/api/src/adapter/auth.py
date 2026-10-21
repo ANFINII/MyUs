@@ -14,7 +14,7 @@ class AuthAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: SuccessOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def auth(request: HttpRequest):
         log.info("AuthAPI auth")
 
@@ -24,19 +24,19 @@ class AuthAPI:
 
         user_id = ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         return 200, SuccessOut(message="認証済みです!")
 
     @staticmethod
-    @router.post("refresh", response={204: None, 401: ErrorOut, 500: ErrorOut})
+    @router.post("refresh", response={204: None, 400: ErrorOut, 500: ErrorOut})
     def refresh(request: HttpRequest, response: HttpResponse):
         log.info("AuthAPI refresh")
 
         token = request.COOKIES.get("refresh_token")
         if token is None:
             log.warning("No refresh token in cookies")
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Refresh token not found")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Refresh token not found")
 
         user_id_ret = verify_token(token, "refresh")
         if user_id_ret.is_err:
@@ -44,7 +44,7 @@ class AuthAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         tokens_ret = create_auth_tokens(user_id)
         if tokens_ret.is_err:
@@ -52,7 +52,7 @@ class AuthAPI:
 
         tokens = tokens_ret.ok_value
         if tokens is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         access, _ = tokens
         response.delete_cookie("access_token")
@@ -151,7 +151,7 @@ class AuthAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="ログアウトに失敗しました!")
 
     @staticmethod
-    @router.post("/password/change", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/password/change", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def password_change(request: HttpRequest, response: HttpResponse, input: PasswordChangeIn):
         log.info("AuthAPI password_change")
 
@@ -161,7 +161,7 @@ class AuthAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         change_ret = change_password(user_id, input)
         if change_ret.is_err:
@@ -177,7 +177,7 @@ class AuthAPI:
 
         tokens = tokens_ret.ok_value
         if tokens is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         access, refresh = tokens
         response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
@@ -232,7 +232,7 @@ class AuthAPI:
         return 204, SuccessOut(message="パスワードをリセットしました!")
 
     @staticmethod
-    @router.post("/withdrawal", response={204: SuccessOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/withdrawal", response={204: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def withdrawal(request: HttpRequest, response: HttpResponse, input: WithdrawalIn):
         log.info("AuthAPI withdrawal")
 
@@ -242,7 +242,7 @@ class AuthAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         withdraw_ret = withdraw_user(user_id, input)
         if withdraw_ret.is_err:
