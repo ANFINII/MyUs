@@ -111,7 +111,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
         result = convert_video(video_path)
         videos_ret = repo.bulk_get([obj.id])
         if videos_ret.is_err:
-            log.error("動画の取得に失敗しました", error=videos_ret.err_value.error_message, video_id=obj.id)
+            log.error("動画の取得に失敗しました", error=videos_ret.err_value.message, video_id=obj.id)
             return
 
         videos = videos_ret.ok_value
@@ -121,13 +121,13 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
         updated = replace(videos[0], video=result.video, convert=result.convert, publish=input.publish)
         save_ret = repo.bulk_save([updated])
         if save_ret.is_err:
-            log.error("動画の保存に失敗しました", error=save_ret.err_value.error_message, video_id=obj.id)
+            log.error("動画の保存に失敗しました", error=save_ret.err_value.message, video_id=obj.id)
             return
 
         if input.publish:
             notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
             if notification_ret.is_err:
-                log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, video_id=obj.id)
+                log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, video_id=obj.id)
 
     EncodeWorker.submit(encode_task)
 
@@ -196,7 +196,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
         if notification_ret.is_err:
-            log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, music_id=obj.id)
+            log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, music_id=obj.id)
 
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
@@ -262,7 +262,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
         if notification_ret.is_err:
-            log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, blog_id=obj.id)
+            log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, blog_id=obj.id)
 
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
@@ -328,7 +328,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
         if notification_ret.is_err:
-            log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, comic_id=obj.id)
+            log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, comic_id=obj.id)
 
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
@@ -393,7 +393,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
         if notification_ret.is_err:
-            log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, picture_id=obj.id)
+            log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, picture_id=obj.id)
 
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
@@ -456,7 +456,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, AccessErr
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
         if notification_ret.is_err:
-            log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, chat_id=obj.id)
+            log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, chat_id=obj.id)
 
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 

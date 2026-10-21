@@ -83,9 +83,9 @@ class SettingProfileAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -160,9 +160,9 @@ class SettingMyPageAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=update_ret.err_value.message)
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -233,7 +233,7 @@ class SettingNotificationAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

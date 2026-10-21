@@ -174,7 +174,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
     if parent is not None:
         notification_ret = create_notification(user_id, parent.author_id, NotificationTypeNo.REPLY, comment.id, NotificationObjectType.COMMENT)
         if notification_ret.is_err:
-            log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, comment_id=comment.id)
+            log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, comment_id=comment.id)
 
     data = CommentDTO(
         ulid=comment.ulid,

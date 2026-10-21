@@ -189,9 +189,9 @@ class UserAPI:
         if follow_ret.is_err:
             match follow_ret.err_value:
                 case ValidationError():
-                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=follow_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=follow_ret.err_value.message)
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=follow_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=follow_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -218,7 +218,7 @@ class UserAPI:
         if like_ret.is_err:
             match like_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -245,7 +245,7 @@ class UserAPI:
         if like_ret.is_err:
             match like_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.error_message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=like_ret.err_value.message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

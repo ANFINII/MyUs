@@ -88,7 +88,7 @@ class CommentAPI:
             if comment_ret.is_err:
                 match comment_ret.err_value:
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=comment_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=comment_ret.err_value.message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -134,9 +134,9 @@ class CommentAPI:
             if update_ret.is_err:
                 match update_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
@@ -165,9 +165,9 @@ class CommentAPI:
             if delete_ret.is_err:
                 match delete_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=delete_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=delete_ret.err_value.message)
                     case NotFoundError():
-                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.message)
                     case FatalError():
                         return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
