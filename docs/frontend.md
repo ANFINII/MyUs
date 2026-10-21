@@ -190,7 +190,7 @@ const { t } = useTranslation()
 - API のエラーの `message` は i18n のキー（`error.*`）で返るので、翻訳せずにそのまま `handleToast` / `handleError` に渡す（`useToast` / `useApiError` が、i18n にあるキーなら翻訳し、無ければそのまま出す）
 - BE がエラーの文言を増やしたときは、同じキーを `error` の下に ja / en とも追加する
 - 日付の表示は `useDatetime` の `formatDatetime` / `formatDate` / `formatTimeAgo` を使う（表示中の言語で整形する）
-- 金額の表示は `usePrice` の `formatPrice(amount, currency)` を使う（`Currency` の通貨と表示中の言語で整形する。`¥` などの通貨記号を直書きしない）
+- 金額の表示は `utils/functions/price.ts` の `formatPrice(amount, currency, i18n.language)` を使う（`Currency` の通貨と表示中の言語で整形する。`¥` などの通貨記号を直書きしない）
 - 性別は ``t(`gender.${gender}`)``、都道府県の選択肢は `prefectures` の `key` から ``t(`prefecture.${key}`)`` で作る（保存する値は日本語のまま）
 - ユーザーが入力した内容や API から返る値（投稿タイトル、カテゴリ名など）は翻訳しない
 
@@ -303,4 +303,4 @@ return <div className={style.box}>...</div>
 - 2026-10-07: 言語の接頭辞（`/en`）を `{-$locale}` ルートからルーターの `rewrite` に移動
 - 2026-10-07: `useAppRouter` を `useRouter` に名前を変更し、`window.location` / `window.history` の直接利用をなくす
 - 2026-10-21: API のエラーの `message` を i18n のキー（`error.*`）として翻訳するようにした
-- 2026-10-22: 金額の表示を `usePrice` で通貨に合わせて整形するようにした
+- 2026-10-22: 金額の表示を `formatPrice` で通貨に合わせて整形するようにした
