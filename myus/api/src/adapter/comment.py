@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
 from api.src.types.schema.comment import CommentCreateIn, CommentListIn, CommentOut, CommentUpdateIn, ReplyOut
-from api.src.types.schema.common import ErrorOut
+from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import create_comment, delete_comment, get_comments, update_comment
@@ -22,15 +22,15 @@ class CommentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         comments_ret = get_comments(type_no=input.type_no, object_id=input.object_id, user_id=user_id)
         if comments_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         comments = comments_ret.ok_value
         data = [
@@ -77,20 +77,20 @@ class CommentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             comment_ret = create_comment(user_id, input)
             if comment_ret.is_err:
                 match comment_ret.err_value:
                     case NotFoundError():
-                        return 404, ErrorOut(message=comment_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=comment_ret.err_value.error_message)
                     case FatalError():
-                        return 500, ErrorOut(message="Internal Server Error")
+                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
                         assert_never(comment_ret.err_value)
 
@@ -114,7 +114,7 @@ class CommentAPI:
             return 201, data
         except Exception as e:
             log.error("CommentAPI post error", exc=e)
-            return 500, ErrorOut(message="コメントの作成に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの作成に失敗しました")
 
     @staticmethod
     @router.put("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
@@ -123,29 +123,29 @@ class CommentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             update_ret = update_comment(user_id, comment_ulid, input.text)
             if update_ret.is_err:
                 match update_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(message=update_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=update_ret.err_value.error_message)
                     case NotFoundError():
-                        return 404, ErrorOut(message=update_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=update_ret.err_value.error_message)
                     case FatalError():
-                        return 500, ErrorOut(message="Internal Server Error")
+                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
                         assert_never(update_ret.err_value)
 
             return 200, ErrorOut(message="コメントを更新しました")
         except Exception as e:
             log.error("CommentAPI put error", exc=e)
-            return 500, ErrorOut(message="コメントの更新に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの更新に失敗しました")
 
     @staticmethod
     @router.delete("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
@@ -154,26 +154,26 @@ class CommentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
+            return 401, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         try:
             delete_ret = delete_comment(user_id, comment_ulid)
             if delete_ret.is_err:
                 match delete_ret.err_value:
                     case ForbiddenError():
-                        return 403, ErrorOut(message=delete_ret.err_value.error_message)
+                        return 403, ErrorOut(type=ErrorType.FORBIDDEN, message=delete_ret.err_value.error_message)
                     case NotFoundError():
-                        return 404, ErrorOut(message=delete_ret.err_value.error_message)
+                        return 404, ErrorOut(type=ErrorType.NOT_FOUND, message=delete_ret.err_value.error_message)
                     case FatalError():
-                        return 500, ErrorOut(message="Internal Server Error")
+                        return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                     case _:
                         assert_never(delete_ret.err_value)
 
             return 200, ErrorOut(message="コメントを削除しました")
         except Exception as e:
             log.error("CommentAPI delete error", exc=e)
-            return 500, ErrorOut(message="コメントの削除に失敗しました")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="コメントの削除に失敗しました")
