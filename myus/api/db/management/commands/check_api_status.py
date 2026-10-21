@@ -2,11 +2,11 @@ from django.core.management.base import BaseCommand, CommandError
 from api.src.routers import api
 
 
-ALLOWED_STATUS = {200, 201, 204, 400, 500}
+ALLOWED_STATUS = {200, 400, 500}
 
 
 class Command(BaseCommand):
-    help = "API のレスポンスのステータスが 200 / 201 / 204 / 400 / 500 だけであることを確かめる"
+    help = "API のレスポンスのステータスが 200 / 400 / 500 だけであることを確かめる"
 
     def handle(self, *args, **options):
         schema = api.get_openapi_schema()

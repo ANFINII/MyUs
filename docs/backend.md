@@ -107,11 +107,12 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | `NOT_FOUND` | 400 | `message` |
 | `FatalError` | 想定外のエラー（DB・外部APIの例外等） | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
 
-- エラーレスポンスは`ErrorOut`（`status`・`type`・`message`）で返す（`api/src/types/schema/common.py`）。`status`はHTTPステータスと同じ値（`Literal[400, 500]`）を入れる
+- エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`api/src/types/schema/common.py`）。`type`は必須
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
 - `auth_check`の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
-- エラーのHTTPステータスは400 / 500だけを使う（401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
-- `response={...}`のエラーも`400: ErrorOut`・`500: ErrorOut`だけを書く。ほかのステータスが無いことは`manage.py check_api_status`（CIで実行）が確かめる
+- HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
+- `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く。ほかのステータスが無いことは`manage.py check_api_status`（CIで実行）が確かめる。`response={...}`に無いステータスを返すとNinjaが実行時に例外にする
+- 成功で返すものが無いときは`200: None`・`return 200, None`にする
 
 ### エラー型の組み合わせ
 - 複数のエラー型を返すときは、`NotFoundError | FatalError`のように直接書かず、`errors.py`の別名を使う
@@ -146,13 +147,13 @@ if ret.is_err:
     message = ret.err_value.message
     match ret.err_value:
         case ValidationError():
-            return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message=message)
+            return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
         case ForbiddenError():
-            return 400, ErrorOut(status=400, type=ErrorType.FORBIDDEN, message=message)
+            return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
         case NotFoundError():
-            return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
         case FatalError():
-            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
         case _:
             assert_never(ret.err_value)
 ```
@@ -257,4 +258,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-02-22: 全体整備、domain interface初期値禁止ルール追加
 - 2026-04-16: docs/に一元化、構成整理
 - 2026-10-20: エラーハンドリング（Result型・エラー型とHTTPステータスの対応・adapterのmatch + assert_never）を追加
-- 2026-10-21: エラーのHTTPステータスを400 / 500にまとめ、`ErrorOut`に`status`を追加。`check_api_status`を追加
+- 2026-10-21: HTTPステータスを成功は200、エラーは400 / 500にまとめ、`check_api_status`を追加

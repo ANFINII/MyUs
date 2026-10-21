@@ -23,20 +23,20 @@ class PaymentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         checkout_ret = create_checkout(user_id, input.plan)
         if checkout_ret.is_err:
             message = checkout_ret.err_value.message
             match checkout_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(checkout_ret.err_value)
 
@@ -46,7 +46,7 @@ class PaymentAPI:
                 return 200, PaymentCheckoutOut(url=session.redirect_url)
             case CheckoutFailed(error=error, message=message):
                 log.error("Payment checkout failed", error=error.value, message=message)
-                return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="決済セッションの作成に失敗しました!")
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="決済セッションの作成に失敗しました!")
 
     @staticmethod
     @router.post("/webhook", response={200: PaymentWebhookOut, 400: ErrorOut, 500: ErrorOut})
@@ -56,7 +56,7 @@ class PaymentAPI:
 
         verify_ret = verify_webhook(payload, signature)
         if verify_ret.is_err:
-            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         verification = verify_ret.ok_value
         match verification:
@@ -65,13 +65,13 @@ class PaymentAPI:
                 return 200, PaymentWebhookOut(message="Unsupported event type")
             case WebhookVerifyFailed(error=error, message=message):
                 log.warning("PaymentAPI webhook verify failed", error=error.value, message=message)
-                return 400, ErrorOut(status=400, type=ErrorType.VALIDATION, message="Invalid webhook")
+                return 400, ErrorOut(type=ErrorType.VALIDATION, message="Invalid webhook")
             case WebhookVerified(event=event):
                 log.info("PaymentAPI webhook verified", event_id=event.event_id, event_type=event.event_type.value)
 
                 receive_ret = receive_webhook_inbox(event)
                 if receive_ret.is_err:
-                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
                 is_received = receive_ret.ok_value
                 if not is_received:
@@ -84,20 +84,20 @@ class PaymentAPI:
     def cancel(request: HttpRequest):
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(status=400, type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         cancel_ret = cancel_subscription(user_id)
         if cancel_ret.is_err:
             message = cancel_ret.err_value.message
             match cancel_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(status=400, type=ErrorType.NOT_FOUND, message=message)
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
-                    return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="Internal Server Error")
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
                     assert_never(cancel_ret.err_value)
 
@@ -107,4 +107,4 @@ class PaymentAPI:
                 return 200, PaymentCancelOut(canceled_at=canceled_at, period_end=period_end)
             case CancelFailed(error=error, message=message):
                 log.error("Payment cancel failed", error=error.value, message=message)
-                return 500, ErrorOut(status=500, type=ErrorType.INTERNAL, message="解約処理に失敗しました")
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="解約処理に失敗しました")
