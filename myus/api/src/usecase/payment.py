@@ -78,22 +78,21 @@ def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult
 @Result.shield_exception()
 def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
     repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False), limit=1)
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    if len(ids) == 0:
-        return Result.err(NotFoundError("アクティブなサブスクリプションが見つかりません"))
-
     subscriptions_ret = repo.bulk_get(ids)
     if subscriptions_ret.is_err:
         return Result.err(subscriptions_ret.err_value)
 
     subscriptions = subscriptions_ret.ok_value
-    subscription = subscriptions[0]
-    if subscription.status != SubscriptionStatus.ACTIVE:
+    cancelable_subscriptions = [s for s in subscriptions if s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE)]
+    if len(cancelable_subscriptions) == 0:
         return Result.err(NotFoundError("アクティブなサブスクリプションが見つかりません"))
+
+    subscription = cancelable_subscriptions[0]
 
     payment = injector.get(PaymentInterface)
     cancel_ret = payment.cancel_subscription(subscription.external_id)
