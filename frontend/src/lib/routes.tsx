@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { AnyRoute, createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet, ResolveParams } from '@tanstack/react-router'
+import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet, ResolveParams } from '@tanstack/react-router'
 import { homeLoader, PageLoad, videoDetailLoader } from 'lib/query/loaders'
 import { useRouter } from 'components/hooks/useRouter'
 import Layout from 'components/layout'
@@ -28,18 +28,24 @@ function RootLayout(): React.JSX.Element {
 
 const rootRoute = createRootRouteWithContext<RouterContext>()({ component: RootLayout })
 
+const components = new Map<PageImport, AsyncRouteComponent<unknown>>()
+
+const lazyPage = (load: PageImport) => {
+  const component = components.get(load) ?? lazyRouteComponent(load)
+  components.set(load, component)
+  return component
+}
+
+const chatDetailPage: PageImport = () => import('pages/media/chat/detail')
+
 const page = <TPath extends string>(path: TPath, load: PageImport, loader?: PageLoader<TPath>) => {
   return createRoute({
     getParentRoute: () => rootRoute,
     path,
-    component: lazyRouteComponent(load),
+    component: lazyPage(load),
     loaderDeps: ({ search }) => search,
     loader: ({ context, params, deps }) => loader?.({ queryClient: context.queryClient, params: params as ResolveParams<TPath>, search: deps }),
   })
-}
-
-const nest = <TParent extends AnyRoute>(parent: TParent, paths: string[]) => {
-  return parent.addChildren(paths.map((path) => createRoute({ getParentRoute: () => parent, path, component: () => null })))
 }
 
 export const routeTree = rootRoute.addChildren([
@@ -56,7 +62,8 @@ export const routeTree = rootRoute.addChildren([
   page('/media/picture', () => import('pages/media/picture')),
   page('/media/picture/$ulid', () => import('pages/media/picture/detail')),
   page('/media/chat', () => import('pages/media/chat')),
-  nest(page('/media/chat/$ulid', () => import('pages/media/chat/detail')), ['/', '/thread/$messageUlid']),
+  page('/media/chat/$ulid', chatDetailPage),
+  page('/media/chat/$ulid/thread/$messageUlid', chatDetailPage),
   page('/userpage/$ulid', () => import('pages/userpage')),
 
   page('/menu/channel', () => import('pages/menu/channel')),
