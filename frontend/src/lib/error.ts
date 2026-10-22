@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { ok, err } from 'neverthrow'
 import { Result } from 'neverthrow'
-import { ErrorType } from 'utils/constants/enum'
+import { ErrorType, FetchError } from 'utils/constants/enum'
 
 export interface ApiError {
   status: number
@@ -24,6 +24,6 @@ export const apiOut = async <T>(apiCall: Promise<AxiosResponse<T>>): Promise<Api
       const data = e.response?.data
       return err({ status: e.response?.status ?? 500, type: toErrorType(data?.type), message: data?.message })
     }
-    return err({ status: 500, message: 'Unknown Error' })
+    return err({ status: 500, message: FetchError.Error })
   }
 }
