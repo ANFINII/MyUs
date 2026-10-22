@@ -13,15 +13,13 @@ export interface RouterContext {
 
 const rootRoute = createRootRouteWithContext<RouterContext>()({ component: PageLayout })
 
-const components = new Map<PageImport, AsyncRouteComponent<unknown>>()
+const components = new Map<string, AsyncRouteComponent<unknown>>()
 
 const lazyPage = (load: PageImport) => {
-  const component = components.get(load) ?? lazyRouteComponent(load)
-  components.set(load, component)
+  const component = components.get(load.toString()) ?? lazyRouteComponent(load)
+  components.set(load.toString(), component)
   return component
 }
-
-const chatDetailPage: PageImport = () => import('pages/media/chat/detail')
 
 const page = <TPath extends string>(path: TPath, load: PageImport, loader?: PageLoader<TPath>) => {
   return createRoute({
@@ -47,8 +45,8 @@ export const routeTree = rootRoute.addChildren([
   page('/media/picture', () => import('pages/media/picture')),
   page('/media/picture/$ulid', () => import('pages/media/picture/detail')),
   page('/media/chat', () => import('pages/media/chat')),
-  page('/media/chat/$ulid', chatDetailPage),
-  page('/media/chat/$ulid/thread/$messageUlid', chatDetailPage),
+  page('/media/chat/$ulid', () => import('pages/media/chat/detail')),
+  page('/media/chat/$ulid/thread/$messageUlid', () => import('pages/media/chat/detail')),
   page('/userpage/$ulid', () => import('pages/userpage')),
 
   page('/menu/channel', () => import('pages/menu/channel')),
