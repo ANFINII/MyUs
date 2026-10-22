@@ -191,7 +191,9 @@ const { t } = useTranslation()
 <Main title={t('setting.profile.title')}>
 ```
 
-- トースト文言は `Fetch` / `FetchError` をそのまま `handleToast` に渡す（`useToast` の中で翻訳する）
+- トースト文言は `Fetch` / `FetchError` をそのまま `handleToast` に渡す（`ToastProvider` の中で翻訳する）
+- トーストはアプリ全体で 1 つ（`ToastProvider`）で、`useToast` はそれを取り出す。`handleToast` のあとに画面を移動しても、移動先の `Main` に `toast` を渡していれば表示される
+- 管理画面の作成は、成功したら `handleToast` を呼んでから、作ったチャンネルの一覧（`/manage/video?channel=...`）へ移動する
 - API のエラーの `message` は i18n のキー（`error.*`）で返るので、翻訳せずにそのまま `handleToast` / `handleError` に渡す（`useToast` / `useApiError` が、i18n にあるキーなら翻訳し、無ければそのまま出す）
 - BE がエラーの文言を増やしたときは、同じキーを `error` の下に ja / en とも追加する
 - 日付の表示は `useDatetime` の `formatDatetime` / `formatDate` / `formatTimeAgo` を使う（表示中の言語で整形する）
@@ -311,3 +313,4 @@ return <div className={style.box}>...</div>
 - 2026-10-22: 金額の表示を `formatPrice` で通貨に合わせて整形するようにした
 - 2026-10-22: ルートの`loader`で遷移前にデータを取る形を追加（ホーム・動画の詳細から）
 - 2026-10-22: `queryKeys`・`queryOptions`の名前を一覧は複数形、詳細は単数形、まとめたキーは`All`付きにそろえた
+- 2026-10-22: トーストをアプリ全体で 1 つ（`ToastProvider`）にし、管理画面の作成後は一覧へ移動するようにした

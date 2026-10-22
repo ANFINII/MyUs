@@ -8,6 +8,7 @@ import { postPictureCreate } from 'api/internal/manage/create'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
+import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -26,6 +27,7 @@ interface Props {
 export default function PictureCreate(props: Props): React.JSX.Element {
   const { channels, categories } = props
 
+  const router = useRouter()
   const { t } = useTranslation()
 
   const channelUlid = channels.find((c) => c.isDefault)!.ulid
@@ -35,7 +37,6 @@ export default function PictureCreate(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [formKey, setFormKey] = useState(0)
   const [values, setValues] = useState<PictureIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '' })
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
@@ -54,9 +55,8 @@ export default function PictureCreate(props: Props): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    setValues({ channelUlid, categoryUlid: '', publish: true, title: '', content: '' })
-    setFormKey((prev) => prev + 1)
     handleToast(Fetch.Create, false)
+    router.push({ pathname: '/manage/picture', query: { channel: channelUlid } })
   }
 
   return (
@@ -67,7 +67,7 @@ export default function PictureCreate(props: Props): React.JSX.Element {
       isFooter={false}
       button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}
     >
-      <form key={formKey} method="POST" action="">
+      <form method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
