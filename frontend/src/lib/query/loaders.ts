@@ -4,6 +4,7 @@ import {
   blogsQuery,
   categoriesQuery,
   channelsQuery,
+  chatQuery,
   chatsQuery,
   comicQuery,
   comicsQuery,
@@ -94,6 +95,13 @@ export const pictureDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: st
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Picture })
   return queryClient.query(pictureQuery(params.ulid)).catch(noop)
 }
+
+export const chatDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
+  postMediaRead({ ulid: params.ulid, mediaType: MediaType.Chat })
+  return queryClient.query(chatQuery(params.ulid)).catch(noop)
+}
+
+export const chatThreadLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => queryClient.query(chatQuery(params.ulid)).catch(noop)
 
 export const userPageLoader = ({ queryClient, params, search }: PageLoad<{ ulid: string }>) => {
   const query = searchParams(search)

@@ -1,9 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { toQuery } from 'lib/query/client'
-import { queryKeys } from 'lib/query/keys'
-import { getChat } from 'api/internal/media/detail'
-import { postMediaRead } from 'api/internal/media/read'
-import { MediaType } from 'utils/constants/enum'
+import { chatQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ChatDetail from 'components/templates/media/chat/detail'
@@ -13,17 +9,11 @@ export default function ChatDetailPage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const threadUlid = String(router.query.messageUlid ?? '')
 
-  const data = useQuery({
-    queryKey: queryKeys.mediaChat(ulid),
-    queryFn: () => {
-      postMediaRead({ ulid, mediaType: MediaType.Chat })
-      return toQuery(getChat(ulid))
-    },
-  })
+  const data = useQuery(chatQuery(ulid))
   const queries = { data }
 
   return (
-    <QueryCheck title="Chat" queries={queries} fresh>
+    <QueryCheck title="Chat" queries={queries}>
       {(props) => <ChatDetail key={ulid} {...props} threadUlid={threadUlid} />}
     </QueryCheck>
   )

@@ -21,7 +21,7 @@ import {
   getManageVideo,
   getManageVideos,
 } from 'api/internal/manage/get'
-import { getBlog, getComic, getMusic, getPicture, getVideo } from 'api/internal/media/detail'
+import { getBlog, getChat, getComic, getMusic, getPicture, getVideo } from 'api/internal/media/detail'
 import { getBlogs, getChats, getComics, getHome, getMusics, getPictures, getRecommend, getVideos } from 'api/internal/media/list'
 import { getSettingMypage, getSettingNotification, getSettingProfile } from 'api/internal/setting'
 import { getFollow, getFollower, getUser, getUserPage, getUserPageAdvertises, getUserPageMedia } from 'api/internal/user'
@@ -47,6 +47,7 @@ export const musicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.m
 export const blogQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaBlog(ulid), queryFn: () => toQuery(getBlog(ulid)), refetchOnMount: false })
 export const comicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaComic(ulid), queryFn: () => toQuery(getComic(ulid)), refetchOnMount: false })
 export const pictureQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaPicture(ulid), queryFn: () => toQuery(getPicture(ulid)), refetchOnMount: false })
+export const chatQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaChat(ulid), queryFn: () => toQuery(getChat(ulid)), refetchOnMount: false })
 
 export const userPageQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.userPage(ulid), queryFn: () => toQuery(getUserPage(ulid)), refetchOnMount: false })
 export const userPageMediaQuery = (ulid: string, channelUlid: string, params: SearchParams) =>

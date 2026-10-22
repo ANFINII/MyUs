@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
-import { blogDetailLoader, blogListLoader, chatListLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, manageAdvertiseEditLoader, manageAdvertiseListLoader, manageBlogEditLoader, manageBlogListLoader, manageChatEditLoader, manageChatListLoader, manageComicEditLoader, manageComicListLoader, manageCreateLoader, manageLoader, manageMusicEditLoader, manageMusicListLoader, managePictureEditLoader, managePictureListLoader, manageVideoEditLoader, manageVideoListLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, subscribeChannelsLoader, userPageLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
+import { blogDetailLoader, blogListLoader, chatDetailLoader, chatListLoader, chatThreadLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, manageAdvertiseEditLoader, manageAdvertiseListLoader, manageBlogEditLoader, manageBlogListLoader, manageChatEditLoader, manageChatListLoader, manageComicEditLoader, manageComicListLoader, manageCreateLoader, manageLoader, manageMusicEditLoader, manageMusicListLoader, managePictureEditLoader, managePictureListLoader, manageVideoEditLoader, manageVideoListLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, subscribeChannelsLoader, userPageLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
@@ -44,8 +44,8 @@ export const routeTree = rootRoute.addChildren([
   page('/media/picture', () => import('pages/media/picture'), pictureListLoader),
   page('/media/picture/$ulid', () => import('pages/media/picture/detail'), pictureDetailLoader),
   page('/media/chat', () => import('pages/media/chat'), chatListLoader),
-  page('/media/chat/$ulid', () => import('pages/media/chat/detail')),
-  page('/media/chat/$ulid/thread/$messageUlid', () => import('pages/media/chat/detail')),
+  page('/media/chat/$ulid', () => import('pages/media/chat/detail'), chatDetailLoader),
+  page('/media/chat/$ulid/thread/$messageUlid', () => import('pages/media/chat/detail'), chatThreadLoader),
 
   page('/menu/channel', () => import('pages/menu/channel'), subscribeChannelsLoader),
   page('/menu/follow', () => import('pages/menu/follow'), followsLoader),
