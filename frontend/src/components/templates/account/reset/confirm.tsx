@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { PasswordResetIn } from 'types/internal/auth'
 import { getPasswordResetVerify, postPasswordReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -66,7 +67,7 @@ export default function ResetConfirm(): React.JSX.Element {
     const ret = await postPasswordReset(request)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(ret.error.message ?? FetchError.Post, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push('/account/reset/done')

@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
+import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Video, VideoList } from 'types/internal/media/output'
@@ -55,7 +56,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     const ret = await deleteManageVideos(ulids)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(ret.error.message ?? FetchError.Delete, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Delete), true)
       return
     }
     setSelectedKeys(new Set())

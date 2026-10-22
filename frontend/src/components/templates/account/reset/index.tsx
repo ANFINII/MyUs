@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { postPasswordResetEmail } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
@@ -33,7 +34,7 @@ export default function Reset(): React.JSX.Element {
     const ret = await postPasswordResetEmail(email)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(ret.error.message ?? FetchError.Error, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Error), true)
       return
     }
     handleToast(t('account.form.mailSent'), false)

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
 import { FetchError } from 'utils/constants/enum'
@@ -39,7 +40,7 @@ export default function Payment(props: Props): React.JSX.Element {
     const ret = await postPaymentCheckout({ plan })
     if (ret.isErr()) {
       setSelectedPlan('')
-      handleToast(ret.error.message ?? FetchError.Post, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push(ret.value.url)
@@ -52,7 +53,7 @@ export default function Payment(props: Props): React.JSX.Element {
     const ret = await postPaymentCancel()
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(ret.error.message ?? FetchError.Post, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
       return
     }
     setIsModal(false)
