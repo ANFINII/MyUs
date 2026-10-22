@@ -7,7 +7,6 @@ import { Chat, ChatList } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { deleteManageChats } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
-import { useApiError } from 'components/hooks/useApiError'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
@@ -35,7 +34,6 @@ export default function ManageChats(props: Props): React.JSX.Element {
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
-  const { handleError } = useApiError({ handleToast })
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
   const { formatDate, formatDatetime } = useDatetime()
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -56,7 +54,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
     const ret = await deleteManageChats(ulids)
     handleLoading(false)
     if (ret.isErr()) {
-      handleError(FetchError.Delete, ret.error.message)
+      handleToast(ret.error.message ?? FetchError.Delete, true)
       return
     }
     setSelectedKeys(new Set())
