@@ -1,7 +1,7 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
 import { homeLoader, PageLoad, videoDetailLoader } from 'lib/query/loaders'
-import RootLayout from 'components/layout/RootLayout'
+import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
 
@@ -11,7 +11,7 @@ export interface RouterContext {
   queryClient: QueryClient
 }
 
-const rootRoute = createRootRouteWithContext<RouterContext>()({ component: RootLayout })
+const rootRoute = createRootRouteWithContext<RouterContext>()({ component: PageLayout })
 
 const components = new Map<PageImport, AsyncRouteComponent<unknown>>()
 

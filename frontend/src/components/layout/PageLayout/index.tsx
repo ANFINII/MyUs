@@ -4,7 +4,7 @@ import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
 import Unexpected from 'components/widgets/Status/Unexpected'
 
-export default function RootLayout(): React.JSX.Element {
+export default function PageLayout(): React.JSX.Element {
   const router = useRouter()
 
   return (
