@@ -8,7 +8,7 @@ export default function VideoDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery({ ...videoDetailQuery(ulid), refetchOnMount: false })
+  const data = useQuery(videoDetailQuery(ulid))
   const queries = { data }
 
   return (

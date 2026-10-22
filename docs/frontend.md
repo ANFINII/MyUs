@@ -121,10 +121,10 @@ page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
 - `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
 - `QueryCheck`のpropsは`title` → `queries` → `fresh`の順に書く
-- ページ遷移の前にデータを取るルートは、`lib/query/options.ts`に`queryOptions`を置き、`lib/routes.tsx`の`loader`（`context.queryClient.prefetchQuery(...)`）とページの`useQuery({ ...xxxQuery(...), refetchOnMount: false })`で共有する
+- ページ遷移の前にデータを取るルートは、`lib/query/options.ts`の`queryOptions`（`refetchOnMount: false`を含める）を、`lib/routes.tsx`の`page('/path', () => import(...), { query: ({ params, search }) => xxxQuery(...) })`とページの`useQuery(xxxQuery(...))`で共有する
   - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ（1秒を超えると`PageLoading`）。取得に失敗しても`prefetchQuery`はエラーを投げず、ページの`QueryCheck`が404・500の画面を出す
   - `loader`は遷移のたびに最新を取るため、`fresh`は付けない（`useState`の初期値に使う画面でも古いキャッシュで初期化されない）
-  - 閲覧数の加算など、遷移のたびに1回だけ行う処理は`queryFn`ではなく`loader`で呼ぶ（`queryFn`は再試行で複数回呼ばれる）
+  - 閲覧数の加算など、遷移のたびに1回だけ行う処理は`queryFn`ではなく`page`の`onLoad`で呼ぶ（`queryFn`は再試行で複数回呼ばれる）
 - エラー時の画面は`Status/Check`が`ApiError.type`（BEの`ErrorOut.type`）で出し分ける。`status`を見るのは、500画面の判定（nginx等が返したエラー・ネットワークエラーは`type`を持たない）と再試行（`shouldRetry`）だけにする
 
 ```typescript

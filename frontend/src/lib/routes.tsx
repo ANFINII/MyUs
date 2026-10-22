@@ -1,5 +1,5 @@
-import { QueryClient } from '@tanstack/react-query'
-import { createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
+import { FetchQueryOptions, QueryClient, QueryKey } from '@tanstack/react-query'
+import { createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet, ResolveParams } from '@tanstack/react-router'
 import { homeQuery, videoDetailQuery } from 'lib/query/options'
 import { postMediaRead } from 'api/internal/media/read'
 import { MediaType } from 'utils/constants/enum'
@@ -10,6 +10,16 @@ import { ErrorBoundary } from 'components/parts/ErrorBoundary'
 import Unexpected from 'components/widgets/Status/Unexpected'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
+
+interface PageLoad<TPath extends string> {
+  params: ResolveParams<TPath>
+  search: Record<string, string>
+}
+
+interface PageOptions<TPath extends string, TQueryFnData, TError, TData, TQueryKey extends QueryKey> {
+  query?: (load: PageLoad<TPath>) => FetchQueryOptions<TQueryFnData, TError, TData, TQueryKey>
+  onLoad?: (load: PageLoad<TPath>) => void
+}
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -29,37 +39,37 @@ function RootLayout(): React.JSX.Element {
 
 const rootRoute = createRootRouteWithContext<RouterContext>()({ component: RootLayout })
 
-const page = <TPath extends string>(path: TPath, load: PageImport) => {
-  return createRoute({ getParentRoute: () => rootRoute, path, component: lazyRouteComponent(load) })
+const page = <TPath extends string, TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
+  path: TPath,
+  load: PageImport,
+  options: PageOptions<TPath, TQueryFnData, TError, TData, TQueryKey> = {},
+) => {
+  const { query, onLoad } = options
+  return createRoute({
+    getParentRoute: () => rootRoute,
+    path,
+    component: lazyRouteComponent(load),
+    loaderDeps: ({ search }) => search,
+    loader: async ({ context, params, deps }) => {
+      const pageLoad: PageLoad<TPath> = { params: params as ResolveParams<TPath>, search: deps }
+      onLoad?.(pageLoad)
+      if (query) await context.queryClient.prefetchQuery(query(pageLoad))
+    },
+  })
 }
-
-const homeRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/',
-  component: lazyRouteComponent(() => import('pages/index')),
-  loaderDeps: ({ search }) => searchParams(search),
-  loader: ({ context, deps }) => context.queryClient.prefetchQuery(homeQuery(deps)),
-})
-
-const videoDetailRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/media/video/$ulid',
-  component: lazyRouteComponent(() => import('pages/media/video/detail')),
-  loader: ({ context, params }) => {
-    postMediaRead({ ulid: params.ulid, mediaType: MediaType.Video })
-    return context.queryClient.prefetchQuery(videoDetailQuery(params.ulid))
-  },
-})
 
 const chatRoute = page('/media/chat/$ulid', () => import('pages/media/chat/detail'))
 const chatIndexRoute = createRoute({ getParentRoute: () => chatRoute, path: '/', component: () => null })
 const chatThreadRoute = createRoute({ getParentRoute: () => chatRoute, path: '/thread/$messageUlid', component: () => null })
 
 export const routeTree = rootRoute.addChildren([
-  homeRoute,
+  page('/', () => import('pages/index'), { query: ({ search }) => homeQuery(searchParams(search)) }),
   page('/recommend', () => import('pages/recommend')),
   page('/media/video', () => import('pages/media/video')),
-  videoDetailRoute,
+  page('/media/video/$ulid', () => import('pages/media/video/detail'), {
+    query: ({ params }) => videoDetailQuery(params.ulid),
+    onLoad: ({ params }) => postMediaRead({ ulid: params.ulid, mediaType: MediaType.Video }),
+  }),
   page('/media/music', () => import('pages/media/music')),
   page('/media/music/$ulid', () => import('pages/media/music/detail')),
   page('/media/blog', () => import('pages/media/blog')),
