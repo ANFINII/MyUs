@@ -65,7 +65,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     isLike: mediaUser.isLike,
     isSubscribe: mediaUser.isSubscribe,
     likeCount: media.like,
-    subscribeCount: 0,
+    subscribeCount: channel.count,
     text: '',
     comments: media.comments,
     hashtags: media.hashtags,
