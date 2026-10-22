@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
-import { blogDetailLoader, comicDetailLoader, homeLoader, musicDetailLoader, PageLoad, pictureDetailLoader, videoDetailLoader } from 'lib/query/loaders'
+import { blogDetailLoader, blogListLoader, chatListLoader, comicDetailLoader, comicListLoader, homeLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
@@ -31,19 +31,19 @@ const page = <TPath extends string>(path: TPath, load: PageImport, loader?: Page
 
 export const routeTree = rootRoute.addChildren([
   page('/', () => import('pages/index'), homeLoader),
-  page('/recommend', () => import('pages/recommend')),
+  page('/recommend', () => import('pages/recommend'), recommendLoader),
   page('/userpage/$ulid', () => import('pages/userpage')),
-  page('/media/video', () => import('pages/media/video')),
+  page('/media/video', () => import('pages/media/video'), videoListLoader),
   page('/media/video/$ulid', () => import('pages/media/video/detail'), videoDetailLoader),
-  page('/media/music', () => import('pages/media/music')),
+  page('/media/music', () => import('pages/media/music'), musicListLoader),
   page('/media/music/$ulid', () => import('pages/media/music/detail'), musicDetailLoader),
-  page('/media/blog', () => import('pages/media/blog')),
+  page('/media/blog', () => import('pages/media/blog'), blogListLoader),
   page('/media/blog/$ulid', () => import('pages/media/blog/detail'), blogDetailLoader),
-  page('/media/comic', () => import('pages/media/comic')),
+  page('/media/comic', () => import('pages/media/comic'), comicListLoader),
   page('/media/comic/$ulid', () => import('pages/media/comic/detail'), comicDetailLoader),
-  page('/media/picture', () => import('pages/media/picture')),
+  page('/media/picture', () => import('pages/media/picture'), pictureListLoader),
   page('/media/picture/$ulid', () => import('pages/media/picture/detail'), pictureDetailLoader),
-  page('/media/chat', () => import('pages/media/chat')),
+  page('/media/chat', () => import('pages/media/chat'), chatListLoader),
   page('/media/chat/$ulid', () => import('pages/media/chat/detail')),
   page('/media/chat/$ulid/thread/$messageUlid', () => import('pages/media/chat/detail')),
 

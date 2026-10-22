@@ -1,7 +1,5 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { toQuery } from 'lib/query/client'
-import { queryKeys } from 'lib/query/keys'
-import { getMusics } from 'api/internal/media/list'
+import { useQuery } from '@tanstack/react-query'
+import { musicListQuery } from 'lib/query/options'
 import { pageParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
@@ -12,7 +10,7 @@ export default function MusicsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const data = useQuery({ queryKey: queryKeys.mediaMusicList(params), queryFn: () => toQuery(getMusics(params)), placeholderData: keepPreviousData })
+  const data = useQuery(musicListQuery(params))
   const queries = { data }
 
   return (
