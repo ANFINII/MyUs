@@ -122,7 +122,7 @@ page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
 - `QueryCheck`のpropsは`title` → `queries`の順に書く
 - ページ遷移の前にデータを取るルートは、`lib/query/options.ts`の`queryOptions`（`refetchOnMount: false`を含める）を、`lib/query/loaders.ts`の`xxxLoader`（`queryClient.query(xxxQuery(...)).catch(noop)`）とページの`useQuery(xxxQuery(...))`で共有し、`lib/routes.tsx`では`page('/path', () => import(...), xxxLoader)`の1行で登録する
-  - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ（1秒を超えると`PageLoading`）。取得の失敗は`.catch(noop)`で握りつぶし、ページの`QueryCheck`が404・500の画面を出す（`prefetchQuery`・`fetchQuery`・`ensureQueryData`は非推奨のため使わない）
+  - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ（何秒かかっても画面全体のスピナーは出さない。最初にサイトを開いたときだけ、1秒を超えると`InitialLoading`が`PageLoading`を出す）。取得の失敗は`.catch(noop)`で握りつぶし、ページの`QueryCheck`が404・500の画面を出す（`prefetchQuery`・`fetchQuery`・`ensureQueryData`は非推奨のため使わない）
   - 閲覧数の加算など、遷移のたびに1回だけ行う処理は`queryFn`ではなく`xxxLoader`の中で呼ぶ（`queryFn`は再試行で複数回呼ばれる）
   - チャットのスレッド（`/media/chat/$ulid/thread/$messageUlid`）は`chatThreadLoader`で詳細だけを取り、閲覧数は加算しない（加算はチャットの`chatDetailLoader`だけ）
 - エラー時の画面は`Status/Check`が`ApiError.type`（BEの`ErrorOut.type`）で出し分ける。`status`を見るのは、500画面の判定（nginx等が返したエラー・ネットワークエラーは`type`を持たない）と再試行（`shouldRetry`）だけにする

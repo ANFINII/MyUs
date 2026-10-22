@@ -5,7 +5,7 @@ import { routeTree } from 'lib/routes'
 import { AppProvider } from 'components/provider/AppProvider'
 import Custom404 from 'components/widgets/Status/Custom404'
 import Custom500 from 'components/widgets/Status/Custom500'
-import PageLoading from 'components/widgets/Status/Loading'
+import InitialLoading from 'components/widgets/Status/InitialLoading'
 
 const parseSearch = (search: string): Record<string, string> => Object.fromEntries(new URLSearchParams(search))
 
@@ -42,7 +42,7 @@ export const router = createRouter({
   rewrite,
   context: { queryClient },
   InnerWrap: AppProvider,
-  defaultPendingComponent: PageLoading,
+  defaultPendingComponent: InitialLoading,
   defaultNotFoundComponent: Custom404,
   defaultErrorComponent: Custom500,
 })
