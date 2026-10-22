@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WithdrawalIn } from 'types/internal/auth'
 import { postWithdrawal } from 'api/internal/auth'
@@ -29,7 +29,9 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   const handleBack = () => router.push('/account/withdrawal')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
     const { password } = values
     if (!validate({ password })) return
 
@@ -48,7 +50,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   return (
     <Main metaTitle={t('account.withdrawal.title')} toast={toast}>
       <article className={style.account}>
-        <form method="POST" action="" className={style.form}>
+        <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.withdrawal.title')}</h1>
           <VStack gap="8">
             <Alert type="error">{t('account.withdrawal.confirm')}</Alert>
@@ -56,7 +58,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="red" size="l" name={t('account.withdrawal.submit')} loading={loading} onClick={handleSubmit} />
+            <Button color="red" size="l" name={t('account.withdrawal.submit')} type="submit" loading={loading} />
             <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>

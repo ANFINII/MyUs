@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { postPasswordResetEmail } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -25,7 +25,9 @@ export default function Reset(): React.JSX.Element {
   const handleBack = () => router.push('/account/login')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
     if (!validate({ email })) return
     handleLoading(true)
     const ret = await postPasswordResetEmail(email)
@@ -40,7 +42,7 @@ export default function Reset(): React.JSX.Element {
   return (
     <Main metaTitle={t('account.reset.title')} toast={toast}>
       <article className={style.account}>
-        <form method="POST" action="" className={style.form}>
+        <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.reset.title')}</h1>
           <VStack gap="8">
             <Input type="email" name="email" placeholder={t('account.form.email')} maxLength={255} required error={error} onChange={handleInput} />
@@ -48,7 +50,7 @@ export default function Reset(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name={t('account.form.send')} type="submit" loading={loading} onClick={handleSubmit} />
+            <Button color="green" size="l" name={t('account.form.send')} type="submit" loading={loading} />
             <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>

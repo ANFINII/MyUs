@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { LoginIn } from 'types/internal/auth'
@@ -35,7 +35,9 @@ export default function Login(): React.JSX.Element {
   const handleSignup = () => router.push('/account/signup/email')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
     const { username, password } = values
     if (!validate({ username, password })) return
     handleLoading(true)
@@ -55,7 +57,7 @@ export default function Login(): React.JSX.Element {
   return (
     <Main title={t('status.login')} toast={toast}>
       <article className={style.account}>
-        <form method="POST" action="" className={style.form}>
+        <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('welcome')}</h1>
           {message && (
             <ul className="messages_login">
@@ -72,7 +74,7 @@ export default function Login(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="blue" size="l" name={t('status.login')} type="submit" loading={loading} onClick={handleSubmit} />
+            <Button color="blue" size="l" name={t('status.login')} type="submit" loading={loading} />
             <Button color="green" size="l" name={t('account.login.signup')} onClick={handleSignup} />
           </VStack>
         </form>

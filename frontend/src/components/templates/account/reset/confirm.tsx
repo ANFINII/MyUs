@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PasswordResetIn } from 'types/internal/auth'
 import { getPasswordResetVerify, postPasswordReset } from 'api/internal/auth'
@@ -48,7 +48,9 @@ export default function ResetConfirm(): React.JSX.Element {
     verify()
   }, [router])
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
     const { password1, password2 } = values
     if (!validate({ password1, password2 })) return
     if (password1 !== password2) {
@@ -73,7 +75,7 @@ export default function ResetConfirm(): React.JSX.Element {
   return (
     <Main metaTitle={t('account.reset.confirmTitle')} toast={toast}>
       <article className={style.account}>
-        <form method="POST" action="" className={style.form}>
+        <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.reset.confirmTitle')}</h1>
           {isVerified && (
             <>
@@ -84,7 +86,7 @@ export default function ResetConfirm(): React.JSX.Element {
               </VStack>
 
               <VStack gap="12" className="mv_40">
-                <Button color="green" size="l" name={t('account.reset.submit')} type="submit" loading={loading} onClick={handleSubmit} />
+                <Button color="green" size="l" name={t('account.reset.submit')} type="submit" loading={loading} />
                 <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
               </VStack>
             </>

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SignupIn } from 'types/internal/auth'
 import { getSignupVerify, postSignup } from 'api/internal/auth'
@@ -66,7 +66,9 @@ export default function Signup(): React.JSX.Element {
     verify()
   }, [router])
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
     const { email, username, nickname, lastName, firstName, password1, password2 } = values
     if (!validate({ email, username, nickname, lastName, firstName, password1, password2 })) return
     handleLoading(true)
@@ -82,7 +84,7 @@ export default function Signup(): React.JSX.Element {
   return (
     <Main metaTitle={t('account.signup.title')} toast={toast}>
       <article className={style.account}>
-        <form method="POST" action="" className={style.form}>
+        <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('account.signup.title')}</h1>
           {isVerified && (
             <>
@@ -121,7 +123,7 @@ export default function Signup(): React.JSX.Element {
               </VStack>
 
               <VStack gap="12" className="mv_40">
-                <Button color="green" size="l" name={t('account.signup.submit')} type="submit" loading={loading} onClick={handleSubmit} />
+                <Button color="green" size="l" name={t('account.signup.submit')} type="submit" loading={loading} />
                 <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
               </VStack>
             </>
