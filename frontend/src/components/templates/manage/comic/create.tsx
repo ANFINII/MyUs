@@ -35,6 +35,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
+  const [formKey, setFormKey] = useState(0)
   const [values, setValues] = useState<ComicIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '' })
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
@@ -55,6 +56,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
       return
     }
     setValues({ channelUlid, categoryUlid: '', publish: true, title: '', content: '' })
+    setFormKey((prev) => prev + 1)
     handleToast(Fetch.Create, false)
   }
 
@@ -66,7 +68,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
       isFooter={false}
       button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}
     >
-      <form method="POST" action="" encType="multipart/form-data">
+      <form key={formKey} method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />

@@ -23,6 +23,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
+  const [formKey, setFormKey] = useState(0)
   const [values, setValues] = useState<AdvertiseIn>({ title: '', url: '', content: '', publish: true, period: '' })
 
   const handleBack = () => router.push('/manage/advertise')
@@ -44,6 +45,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
       return
     }
     setValues({ title: '', url: '', content: '', publish: true, period: '' })
+    setFormKey((prev) => prev + 1)
     handleToast(Fetch.Create, false)
   }
 
@@ -56,7 +58,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
 
   return (
     <Main title="Advertise" type="table" toast={toast} isFooter={false} button={button}>
-      <form method="POST" action="" encType="multipart/form-data">
+      <form key={formKey} method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <Input label={t('manage.form.title')} name="title" required error={error} onChange={handleInput} />
