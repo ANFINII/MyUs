@@ -1,7 +1,5 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { toQuery } from 'lib/query/client'
-import { queryKeys } from 'lib/query/keys'
-import { getHome } from 'api/internal/media/list'
+import { useQuery } from '@tanstack/react-query'
+import { homeQuery } from 'lib/query/options'
 import { searchParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
@@ -10,7 +8,7 @@ import Homes from 'components/templates/media/home/list'
 export default function HomesPage(): React.JSX.Element {
   const router = useRouter()
   const params = searchParams(router.query)
-  const data = useQuery({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), placeholderData: keepPreviousData })
+  const data = useQuery(homeQuery(params))
   const queries = { data }
 
   return (

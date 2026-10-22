@@ -1,10 +1,18 @@
-import { AsyncRouteComponent, createRootRoute, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
+import { QueryClient } from '@tanstack/react-query'
+import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet, ResolveParams } from '@tanstack/react-router'
+import { homeLoader, PageLoad, videoDetailLoader } from 'lib/query/loaders'
 import { useRouter } from 'components/hooks/useRouter'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
 import Unexpected from 'components/widgets/Status/Unexpected'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
+
+type PageLoader<TPath extends string> = (load: PageLoad<ResolveParams<TPath>>) => Promise<unknown>
+
+export interface RouterContext {
+  queryClient: QueryClient
+}
 
 function RootLayout(): React.JSX.Element {
   const router = useRouter()
@@ -18,7 +26,7 @@ function RootLayout(): React.JSX.Element {
   )
 }
 
-const rootRoute = createRootRoute({ component: RootLayout })
+const rootRoute = createRootRouteWithContext<RouterContext>()({ component: RootLayout })
 
 const components = new Map<PageImport, AsyncRouteComponent<unknown>>()
 
@@ -30,15 +38,21 @@ const lazyPage = (load: PageImport) => {
 
 const chatDetailPage: PageImport = () => import('pages/media/chat/detail')
 
-const page = <TPath extends string>(path: TPath, load: PageImport) => {
-  return createRoute({ getParentRoute: () => rootRoute, path, component: lazyPage(load) })
+const page = <TPath extends string>(path: TPath, load: PageImport, loader?: PageLoader<TPath>) => {
+  return createRoute({
+    getParentRoute: () => rootRoute,
+    path,
+    component: lazyPage(load),
+    loaderDeps: ({ search }) => search,
+    loader: ({ context, params, deps }) => loader?.({ queryClient: context.queryClient, params: params as ResolveParams<TPath>, search: deps }),
+  })
 }
 
 export const routeTree = rootRoute.addChildren([
-  page('/', () => import('pages/index')),
+  page('/', () => import('pages/index'), homeLoader),
   page('/recommend', () => import('pages/recommend')),
   page('/media/video', () => import('pages/media/video')),
-  page('/media/video/$ulid', () => import('pages/media/video/detail')),
+  page('/media/video/$ulid', () => import('pages/media/video/detail'), videoDetailLoader),
   page('/media/music', () => import('pages/media/music')),
   page('/media/music/$ulid', () => import('pages/media/music/detail')),
   page('/media/blog', () => import('pages/media/blog')),
