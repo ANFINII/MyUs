@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { categoriesQuery, channelsQuery, manageChatDetailQuery } from 'lib/query/options'
+import { categoriesQuery, channelsQuery, manageChatQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageChatEdit from 'components/templates/manage/chat/edit'
@@ -10,7 +10,7 @@ export default function ManageChatEditPage(): React.JSX.Element {
 
   const channels = useQuery(channelsQuery())
   const categories = useQuery(categoriesQuery())
-  const data = useQuery(manageChatDetailQuery(ulid))
+  const data = useQuery(manageChatQuery(ulid))
   const queries = { data, channels, categories }
 
   return (

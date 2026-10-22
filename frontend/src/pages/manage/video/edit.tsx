@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { categoriesQuery, channelsQuery, manageVideoDetailQuery } from 'lib/query/options'
+import { categoriesQuery, channelsQuery, manageVideoQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageVideoEdit from 'components/templates/manage/video/edit'
@@ -10,7 +10,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
   const channels = useQuery(channelsQuery())
   const categories = useQuery(categoriesQuery())
-  const data = useQuery(manageVideoDetailQuery(ulid))
+  const data = useQuery(manageVideoQuery(ulid))
   const queries = { data, channels, categories }
 
   return (
