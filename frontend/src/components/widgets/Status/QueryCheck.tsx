@@ -9,16 +9,15 @@ type QueryData<T extends Queries> = { [K in keyof T]: T[K] extends UseQueryResul
 interface Props<T extends Queries> {
   title?: string
   queries: T
-  fresh?: boolean
   children: React.ReactNode | ((data: QueryData<T>) => React.ReactNode)
 }
 
 export default function QueryCheck<T extends Queries>(props: Props<T>): React.JSX.Element {
-  const { title, queries, fresh = false, children } = props
+  const { title, queries, children } = props
 
   const results = Object.values(queries)
   const error = results.find((q) => q.error !== null)?.error ?? null
-  const isReady = results.every((q) => q.data !== undefined && (!fresh || q.isFetchedAfterMount))
+  const isReady = results.every((q) => q.data !== undefined)
 
   const render = (): React.ReactNode => {
     if (typeof children !== 'function') return children

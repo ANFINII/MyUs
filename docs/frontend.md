@@ -120,10 +120,9 @@ page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
 - クエリは名前付きのオブジェクトを`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
 - `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
-- `QueryCheck`のpropsは`title` → `queries` → `fresh`の順に書く
+- `QueryCheck`のpropsは`title` → `queries`の順に書く
 - ページ遷移の前にデータを取るルートは、`lib/query/options.ts`の`queryOptions`（`refetchOnMount: false`を含める）を、`lib/query/loaders.ts`の`xxxLoader`（`queryClient.query(xxxQuery(...)).catch(noop)`）とページの`useQuery(xxxQuery(...))`で共有し、`lib/routes.tsx`では`page('/path', () => import(...), xxxLoader)`の1行で登録する
   - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ（1秒を超えると`PageLoading`）。取得の失敗は`.catch(noop)`で握りつぶし、ページの`QueryCheck`が404・500の画面を出す（`prefetchQuery`・`fetchQuery`・`ensureQueryData`は非推奨のため使わない）
-  - `loader`は遷移のたびに最新を取るため、`fresh`は付けない（`useState`の初期値に使う画面でも古いキャッシュで初期化されない）
   - 閲覧数の加算など、遷移のたびに1回だけ行う処理は`queryFn`ではなく`xxxLoader`の中で呼ぶ（`queryFn`は再試行で複数回呼ばれる）
   - チャットのスレッド（`/media/chat/$ulid/thread/$messageUlid`）は`chatThreadLoader`で詳細だけを取り、閲覧数は加算しない（加算はチャットの`chatDetailLoader`だけ）
 - エラー時の画面は`Status/Check`が`ApiError.type`（BEの`ErrorOut.type`）で出し分ける。`status`を見るのは、500画面の判定（nginx等が返したエラー・ネットワークエラーは`type`を持たない）と再試行（`shouldRetry`）だけにする
@@ -162,9 +161,8 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 | 用途 | ルール |
 |------|------|
-| 取得データを`useState`の初期値に使う（作成・編集フォーム） | `QueryCheck`に`fresh`を付ける（画面を開いた後の取得完了を待ち、古いキャッシュでフォームが初期化され、古い値で上書き保存されるのを防ぐ） |
-| ページ送り・検索等で`queryKey`が変わる一覧 | `placeholderData: keepPreviousData`で前の表示を残す（画面全体がスピナーに切り替わるのを防ぐ） |
-| 一覧・表示のみ | `fresh`は付けない（キャッシュを即表示し、最新が届いたら置き換わる） |
+| 取得データを`useState`の初期値に使う（作成・編集フォーム） | そのまま使う（`loader`が遷移のたびに最新を取ってから表示するため、古いキャッシュでフォームが初期化されない） |
+| ページ送り・検索等で`queryKey`が変わる一覧 | `keepPreviousData`は使わない（URLのクエリが変わると`loader`が動き、前のページを表示したまま待つ） |
 
 ### キャッシュ
 
@@ -311,4 +309,5 @@ return <div className={style.box}>...</div>
 - 2026-10-21: API のエラーの `message` を i18n のキー（`error.*`）として翻訳するようにした
 - 2026-10-22: 金額の表示を `formatPrice` で通貨に合わせて整形するようにした
 - 2026-10-22: ルートの`loader`で遷移前にデータを取る形を追加（ホーム・動画の詳細から）
+- 2026-10-22: 全ページが`loader`に移ったため、`QueryCheck`の`fresh`を廃止
 - 2026-10-22: `queryKeys`・`queryOptions`の名前を一覧は複数形、詳細は単数形、まとめたキーは`All`付きにそろえた
