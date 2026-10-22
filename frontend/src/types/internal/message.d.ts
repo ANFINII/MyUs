@@ -9,6 +9,8 @@ export interface ChatMessage {
   author: Author
 }
 
+export type ChatReplyOut = Omit<ChatMessage, 'replyCount'>
+
 export interface ChatReply extends ChatMessage {
   parentUlid: string
 }

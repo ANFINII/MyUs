@@ -97,7 +97,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     threadInitRef.current = true
     getReplies(target.ulid).then((ret) => {
       if (ret.isOk()) {
-        const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, parentUlid: target.ulid }))
+        const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: target.ulid }))
         setFormState((prev) => ({
           ...prev,
           selectedMessage: target,
@@ -180,7 +180,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     if (message !== null && message.ulid !== selectedMessage?.ulid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
-        const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, parentUlid: message.ulid }))
+        const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: message.ulid }))
         setFormState((prev) => ({
           ...prev,
           selectedMessage: message,
