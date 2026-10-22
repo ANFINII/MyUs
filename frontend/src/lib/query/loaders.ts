@@ -1,5 +1,19 @@
 import { noop, QueryClient } from '@tanstack/react-query'
-import { blogDetailQuery, blogListQuery, chatListQuery, comicDetailQuery, comicListQuery, homeQuery, musicDetailQuery, musicListQuery, pictureDetailQuery, pictureListQuery, recommendQuery, videoDetailQuery, videoListQuery } from 'lib/query/options'
+import {
+  blogDetailQuery,
+  blogListQuery,
+  chatListQuery,
+  comicDetailQuery,
+  comicListQuery,
+  homeQuery,
+  musicDetailQuery,
+  musicListQuery,
+  pictureDetailQuery,
+  pictureListQuery,
+  recommendQuery,
+  videoDetailQuery,
+  videoListQuery,
+} from 'lib/query/options'
 import { postMediaRead } from 'api/internal/media/read'
 import { MediaType } from 'utils/constants/enum'
 import { pageParams, searchParams } from 'utils/functions/common'
@@ -10,25 +24,18 @@ export interface PageLoad<TParams> {
   search: Record<string, string>
 }
 
-export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(searchParams(search))).catch(noop)
-
-export const recommendLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(recommendQuery(searchParams(search))).catch(noop)
-
 const listParams = (query: Record<string, string>) => {
   const { search, limit, offset } = pageParams(query)
   return { search, limit, offset }
 }
 
+export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(searchParams(search))).catch(noop)
+export const recommendLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(recommendQuery(searchParams(search))).catch(noop)
 export const videoListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(videoListQuery(listParams(search))).catch(noop)
-
 export const musicListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(musicListQuery(listParams(search))).catch(noop)
-
 export const blogListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(blogListQuery(listParams(search))).catch(noop)
-
 export const comicListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(comicListQuery(listParams(search))).catch(noop)
-
 export const pictureListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(pictureListQuery(listParams(search))).catch(noop)
-
 export const chatListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(chatListQuery(listParams(search))).catch(noop)
 
 export const videoDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
