@@ -1,4 +1,4 @@
-import { createRootRoute, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
+import { AsyncRouteComponent, createRootRoute, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
 import { useRouter } from 'components/hooks/useRouter'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
@@ -20,13 +20,19 @@ function RootLayout(): React.JSX.Element {
 
 const rootRoute = createRootRoute({ component: RootLayout })
 
-const page = <TPath extends string>(path: TPath, load: PageImport) => {
-  return createRoute({ getParentRoute: () => rootRoute, path, component: lazyRouteComponent(load) })
+const components = new Map<PageImport, AsyncRouteComponent<unknown>>()
+
+const lazyPage = (load: PageImport) => {
+  const component = components.get(load) ?? lazyRouteComponent(load)
+  components.set(load, component)
+  return component
 }
 
-const chatRoute = page('/media/chat/$ulid', () => import('pages/media/chat/detail'))
-const chatIndexRoute = createRoute({ getParentRoute: () => chatRoute, path: '/', component: () => null })
-const chatThreadRoute = createRoute({ getParentRoute: () => chatRoute, path: '/thread/$messageUlid', component: () => null })
+const chatDetailPage: PageImport = () => import('pages/media/chat/detail')
+
+const page = <TPath extends string>(path: TPath, load: PageImport) => {
+  return createRoute({ getParentRoute: () => rootRoute, path, component: lazyPage(load) })
+}
 
 export const routeTree = rootRoute.addChildren([
   page('/', () => import('pages/index')),
@@ -42,7 +48,8 @@ export const routeTree = rootRoute.addChildren([
   page('/media/picture', () => import('pages/media/picture')),
   page('/media/picture/$ulid', () => import('pages/media/picture/detail')),
   page('/media/chat', () => import('pages/media/chat')),
-  chatRoute.addChildren([chatIndexRoute, chatThreadRoute]),
+  page('/media/chat/$ulid', chatDetailPage),
+  page('/media/chat/$ulid/thread/$messageUlid', chatDetailPage),
   page('/userpage/$ulid', () => import('pages/userpage')),
 
   page('/menu/channel', () => import('pages/menu/channel')),
