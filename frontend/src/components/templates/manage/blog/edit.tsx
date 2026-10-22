@@ -7,7 +7,6 @@ import { Blog } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageBlog } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
-import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -37,7 +36,6 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const { handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, richtext: data.richtext, publish: data.publish })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
@@ -62,7 +60,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
     const ret = await putManageBlog(data.ulid, values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleError(FetchError.Put, ret.error.message)
+      handleToast(ret.error.message ?? FetchError.Put, true)
       return
     }
     handleToast(Fetch.Save, false)
