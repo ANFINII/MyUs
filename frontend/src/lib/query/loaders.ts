@@ -33,12 +33,16 @@ import {
   settingNotificationQuery,
   settingProfileQuery,
   subscribeChannelsQuery,
+  userPageAdvertisesQuery,
+  userPageMediaQuery,
+  userPageQuery,
   userQuery,
   videoQuery,
   videosQuery,
 } from 'lib/query/options'
 import { postMediaRead } from 'api/internal/media/read'
 import { MediaType } from 'utils/constants/enum'
+import { selectChannelUlid } from 'utils/functions/channel'
 import { pageParams, searchParams } from 'utils/functions/common'
 
 export interface PageLoad<TParams> {
@@ -89,6 +93,15 @@ export const comicDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: stri
 export const pictureDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Picture })
   return queryClient.query(pictureQuery(params.ulid)).catch(noop)
+}
+
+export const userPageLoader = ({ queryClient, params, search }: PageLoad<{ ulid: string }>) => {
+  const query = searchParams(search)
+  const media = queryClient.query(userPageQuery(params.ulid)).then((userPage) => {
+    const channelUlid = selectChannelUlid(userPage.channels, search.channel)
+    return channelUlid ? queryClient.query(userPageMediaQuery(params.ulid, channelUlid, query)) : undefined
+  })
+  return Promise.all([media, queryClient.query(userPageAdvertisesQuery(params.ulid, query))]).catch(noop)
 }
 
 export const subscribeChannelsLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(subscribeChannelsQuery()).catch(noop)
