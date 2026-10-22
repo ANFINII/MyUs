@@ -1,12 +1,16 @@
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { postLogout } from 'api/internal/auth'
+import { FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
+import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
 import IconPerson from 'components/parts/Icon/Person'
 import NavItem from 'components/parts/NavItem'
+import Toast from 'components/parts/Toast'
 import style from './DropMenu.module.scss'
 
 interface Props {
@@ -20,6 +24,7 @@ export default function DropMenuProfile(props: Props): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
   const { resetUser } = useUser()
+  const { toast, handleToast } = useToast()
 
   const handleRouter = (url: string) => {
     router.push(url)
@@ -29,22 +34,28 @@ export default function DropMenuProfile(props: Props): React.JSX.Element {
   const handleLogin = () => handleRouter('/account/login')
 
   const handleLogout = async () => {
-    await handleLogin()
     const ret = await postLogout()
-    if (ret.isErr()) return
+    if (ret.isErr()) {
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      return
+    }
     resetUser()
+    handleLogin()
   }
 
   return (
-    <nav className={cx(style.drop_menu, open && style.active)}>
-      <ul>
-        <NavItem label={t('profileMenu.account')} icon={<IconPerson size="1.5em" type="circle" />} className={style.item} onClick={() => handleRouter('/setting/profile')} />
-        <NavItem label={t('profileMenu.mypage')} icon={<IconPerson size="1.5em" type="square" />} className={style.item} onClick={() => handleRouter('/setting/mypage')} />
-        <NavItem label={t('profileMenu.payment')} icon={<IconCredit size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/payment')} />
-        <NavItem label={t('profileMenu.withdrawal')} icon={<IconPerson size="1.5em" type="cross" />} className={style.item} onClick={() => handleRouter('/account/withdrawal')} />
-        <NavItem label={t('profileMenu.login')} icon={<IconArrow size="1.5em" type="in" />} className={style.item} onClick={handleLogin} />
-        <NavItem label={t('profileMenu.logout')} icon={<IconArrow size="1.5em" type="out" />} className={style.item} onClick={handleLogout} />
-      </ul>
-    </nav>
+    <>
+      <nav className={cx(style.drop_menu, open && style.active)}>
+        <ul>
+          <NavItem label={t('profileMenu.account')} icon={<IconPerson size="1.5em" type="circle" />} className={style.item} onClick={() => handleRouter('/setting/profile')} />
+          <NavItem label={t('profileMenu.mypage')} icon={<IconPerson size="1.5em" type="square" />} className={style.item} onClick={() => handleRouter('/setting/mypage')} />
+          <NavItem label={t('profileMenu.payment')} icon={<IconCredit size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/payment')} />
+          <NavItem label={t('profileMenu.withdrawal')} icon={<IconPerson size="1.5em" type="cross" />} className={style.item} onClick={() => handleRouter('/account/withdrawal')} />
+          <NavItem label={t('profileMenu.login')} icon={<IconArrow size="1.5em" type="in" />} className={style.item} onClick={handleLogin} />
+          <NavItem label={t('profileMenu.logout')} icon={<IconArrow size="1.5em" type="out" />} className={style.item} onClick={handleLogout} />
+        </ul>
+      </nav>
+      <Toast {...toast} />
+    </>
   )
 }
