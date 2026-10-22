@@ -2,8 +2,10 @@ import { queryOptions } from '@tanstack/react-query'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { SearchParams } from 'types/internal/media/output'
+import { getSubscribeChannels } from 'api/internal/channel'
 import { getBlog, getComic, getMusic, getPicture, getVideo } from 'api/internal/media/detail'
 import { getBlogs, getChats, getComics, getHome, getMusics, getPictures, getRecommend, getVideos } from 'api/internal/media/list'
+import { getFollow, getFollower } from 'api/internal/user'
 
 export const homeQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), refetchOnMount: false })
 
@@ -30,3 +32,9 @@ export const blogDetailQuery = (ulid: string) => queryOptions({ queryKey: queryK
 export const comicDetailQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaComicDetail(ulid), queryFn: () => toQuery(getComic(ulid)), refetchOnMount: false })
 
 export const pictureDetailQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaPictureDetail(ulid), queryFn: () => toQuery(getPicture(ulid)), refetchOnMount: false })
+
+export const subscribeChannelsQuery = () => queryOptions({ queryKey: queryKeys.subscribeChannels, queryFn: () => toQuery(getSubscribeChannels()), refetchOnMount: false })
+
+export const followsQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.follows(params), queryFn: () => toQuery(getFollow(params)), refetchOnMount: false })
+
+export const followersQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.followers(params), queryFn: () => toQuery(getFollower(params)), refetchOnMount: false })

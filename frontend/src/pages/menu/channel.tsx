@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { toQuery } from 'lib/query/client'
-import { queryKeys } from 'lib/query/keys'
-import { getSubscribeChannels } from 'api/internal/channel'
+import { subscribeChannelsQuery } from 'lib/query/options'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Channels from 'components/templates/menu/channel'
 
 export default function ChannelsPage(): React.JSX.Element {
-  const data = useQuery({ queryKey: queryKeys.subscribeChannels, queryFn: () => toQuery(getSubscribeChannels()) })
+  const data = useQuery(subscribeChannelsQuery())
   const queries = { data }
 
   return (
