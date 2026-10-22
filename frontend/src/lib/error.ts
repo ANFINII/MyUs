@@ -15,6 +15,10 @@ const toErrorType = (value: unknown): ErrorType | undefined => {
   return Object.values(ErrorType).find((type) => type === value)
 }
 
+export const toErrorMessage = (error: ApiError, fallback: FetchError): string => {
+  return error.message?.startsWith('error.') ? error.message : fallback
+}
+
 export const apiOut = async <T>(apiCall: Promise<AxiosResponse<T>>): Promise<ApiOut<T>> => {
   try {
     const res = await apiCall

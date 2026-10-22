@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
+import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Advertise, AdvertiseList } from 'types/internal/advertise'
 import { deleteManageAdvertises } from 'api/internal/manage/delete'
@@ -51,7 +52,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
     const ret = await deleteManageAdvertises(ulids)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(ret.error.message ?? FetchError.Delete, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Delete), true)
       return
     }
     setSelectedKeys(new Set())

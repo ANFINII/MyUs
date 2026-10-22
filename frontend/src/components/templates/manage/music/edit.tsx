@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { MusicUpdateIn } from 'types/internal/media/input'
@@ -54,7 +55,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
     const ret = await putManageMusic(data.ulid, values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(ret.error.message ?? FetchError.Put, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Put), true)
       return
     }
     handleToast(Fetch.Save, false)

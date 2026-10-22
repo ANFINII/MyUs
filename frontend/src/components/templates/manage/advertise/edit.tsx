@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { Advertise, AdvertiseUpdateIn } from 'types/internal/advertise'
 import { putManageAdvertise } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
@@ -46,7 +47,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
     const ret = await putManageAdvertise(data.ulid, values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(ret.error.message ?? FetchError.Put, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Put), true)
       return
     }
     handleToast(Fetch.Save, false)
