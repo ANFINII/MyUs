@@ -1,7 +1,6 @@
 const base = '/api'
 
 // Auth
-export const apiAuth = base + '/auth'
 export const apiRefresh = base + '/auth/refresh'
 export const apiSignup = base + '/auth/signup'
 export const apiSignupEmail = base + '/auth/signup/email'
