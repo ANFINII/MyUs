@@ -11,12 +11,7 @@ export const axiosInterceptor = (client: AxiosInstance) => {
     (e: AxiosError) => {
       return retryWithRefresh(client, e).then((retried) => {
         if (retried !== null) return retried
-
-        const status = e.response?.status
-        if (status && status >= 400) {
-          return Promise.reject(e)
-        }
-        return Promise.resolve(e.response)
+        return Promise.reject(e)
       })
     },
   )
