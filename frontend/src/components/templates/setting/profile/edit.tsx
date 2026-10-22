@@ -6,6 +6,7 @@ import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { selectDate } from 'utils/functions/datetime'
+import { createPreviewUrl } from 'utils/functions/file'
 import { getAge } from 'utils/functions/user'
 import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
@@ -42,13 +43,20 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const { message, setMessage, handleError } = useApiError({ handleToast })
   const [avatarFile, setAvatarFile] = useState<File>()
+  const [avatarPreview, setAvatarPreview] = useState<string>()
   const [values, setValues] = useState<ProfileOut>(profile)
 
   const { years, months, days } = selectDate()
   const prefectureOptions = prefectures.map((p) => ({ label: t(`prefecture.${p.key}`), value: p.value }))
-  const avatarUrl = avatarFile ? URL.createObjectURL(avatarFile) : profile.avatar
+  const avatarUrl = avatarPreview ?? profile.avatar
   const handleBack = () => router.push('/setting/profile')
-  const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFile(files)
+
+  const handleAvatar = (files: File | File[]) => {
+    if (Array.isArray(files)) return
+    setAvatarFile(files)
+    setAvatarPreview(createPreviewUrl(files, avatarPreview))
+  }
+
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
