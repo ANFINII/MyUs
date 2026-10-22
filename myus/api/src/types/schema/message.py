@@ -15,7 +15,6 @@ class MessageUpdateIn(BaseModel):
 
 class MessageReplyOut(BaseModel):
     ulid: str
-    parent_id: str
     text: str
     created: datetime
     updated: datetime

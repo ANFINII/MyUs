@@ -80,7 +80,6 @@ class MessageAPI:
         data = [
             MessageReplyOut(
                 ulid=r.ulid,
-                parent_id=r.parent_id,
                 text=r.text,
                 created=r.created,
                 updated=r.updated,
