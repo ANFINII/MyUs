@@ -13,6 +13,7 @@ from api.utils.common.result import FatalError, FindError, InputError, NotFoundE
 from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload, validate_uploads
+from api.utils.functions.validation import has_url
 
 
 ADVERTISE_TYPE_PERSONAL = "one"
@@ -72,6 +73,9 @@ def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, FindE
 
 @Result.shield_exception()
 def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFile, video: UploadedFile | None) -> Result[AdvertiseData, InputError]:
+    if has_url(input.url):
+        return Result.err(ValidationError("error.urlInvalid"))
+
     upload_ret = validate_uploads([(image, ImageUpload.ADVERTISE), (video, MediaUpload.ADVERTISE)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -132,6 +136,9 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
 
 @Result.shield_exception()
 def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, image: UploadedFile | None, video: UploadedFile | None) -> Result[None, InputError]:
+    if has_url(input.url):
+        return Result.err(ValidationError("error.urlInvalid"))
+
     upload_ret = validate_uploads([(image, ImageUpload.ADVERTISE), (video, MediaUpload.ADVERTISE)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)

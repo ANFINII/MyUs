@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+from urllib.parse import urlparse
 
 
 PASSWORD_MIN_LENGTH = 8
@@ -24,6 +25,12 @@ def has_phone(text: str) -> bool:
 
 def has_postal_code(text: str) -> bool:
     if re.fullmatch(r"\d{3,3}-?\d{4,4}", text):
+        return False
+    return True
+
+def has_url(text: str) -> bool:
+    url = urlparse(text)
+    if url.scheme in ("http", "https") and url.netloc:
         return False
     return True
 
