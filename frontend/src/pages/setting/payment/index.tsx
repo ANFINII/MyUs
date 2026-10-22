@@ -1,14 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
-import { toQuery } from 'lib/query/client'
-import { queryKeys } from 'lib/query/keys'
-import { getSettingMypage } from 'api/internal/setting'
+import { settingMypageQuery } from 'lib/query/options'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Payment from 'components/templates/setting/payment'
 
 export default function PaymentPage(): React.JSX.Element {
   const { t } = useTranslation()
-  const mypage = useQuery({ queryKey: queryKeys.settingMypage, queryFn: () => toQuery(getSettingMypage()) })
+  const mypage = useQuery(settingMypageQuery())
   const queries = { mypage }
 
   return (

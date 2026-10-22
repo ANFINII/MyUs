@@ -2,6 +2,7 @@ import { noop, QueryClient } from '@tanstack/react-query'
 import {
   blogDetailQuery,
   blogListQuery,
+  channelsQuery,
   chatListQuery,
   comicDetailQuery,
   comicListQuery,
@@ -13,7 +14,11 @@ import {
   pictureDetailQuery,
   pictureListQuery,
   recommendQuery,
+  settingMypageQuery,
+  settingNotificationQuery,
+  settingProfileQuery,
   subscribeChannelsQuery,
+  userQuery,
   videoDetailQuery,
   videoListQuery,
 } from 'lib/query/options'
@@ -69,3 +74,9 @@ export const pictureDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: st
 export const subscribeChannelsLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(subscribeChannelsQuery()).catch(noop)
 export const followsLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(followsQuery(searchParams(search))).catch(noop)
 export const followersLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(followersQuery(searchParams(search))).catch(noop)
+
+export const settingProfileLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(settingProfileQuery()).catch(noop)
+export const settingMypageLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(settingMypageQuery()), queryClient.query(channelsQuery())]).catch(noop)
+export const settingNotificationLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(settingNotificationQuery()).catch(noop)
+export const settingPasswordLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery()).catch(noop)
+export const settingPaymentLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(settingMypageQuery()).catch(noop)
