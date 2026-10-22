@@ -4,6 +4,7 @@ import { axiosInterceptor } from '.'
 
 type ContentType = 'json' | 'form'
 
+const JSON_TIMEOUT_MS = 10000 // 10秒
 const FILE_UPLOAD_TIMEOUT_MS = 60000 // 1分
 
 const axiosInstance = (baseURL: string, contentType: ContentType) => {
@@ -13,7 +14,7 @@ const axiosInstance = (baseURL: string, contentType: ContentType) => {
     headers: {
       'Content-Type': contentType === 'json' ? 'application/json' : 'multipart/form-data',
     },
-    timeout: contentType === 'json' ? 2000 : FILE_UPLOAD_TIMEOUT_MS,
+    timeout: contentType === 'json' ? JSON_TIMEOUT_MS : FILE_UPLOAD_TIMEOUT_MS,
     paramsSerializer: { indexes: null },
     formSerializer: { indexes: null },
   })
