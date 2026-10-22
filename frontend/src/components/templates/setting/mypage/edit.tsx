@@ -40,26 +40,24 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { message, handleError } = useApiError({ handleToast })
   const [bannerFile, setBannerFile] = useState<File>()
   const [mypageValues, setMypageValues] = useState<MypageOut>(mypage)
-  const [avatarFile, setAvatarFile] = useState<File>()
+  const [avatarFiles, setAvatarFiles] = useState<Record<string, File>>({})
   const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
   const [channelValues, setChannelValues] = useState<Record<string, Channel>>(Object.fromEntries(channels.map((c) => [c.ulid, c])))
 
   const channel = channelValues[channelUlid]!
+  const avatarFile = avatarFiles[channelUlid]
   const bannerUrl = bannerFile ? URL.createObjectURL(bannerFile) : mypage.banner
   const avatarUrl = avatarFile ? URL.createObjectURL(avatarFile) : channel.avatar
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
   const handleBack = () => router.push('/setting/mypage')
   const handleBanner = (files: File | File[]) => Array.isArray(files) || setBannerFile(files)
-  const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFile(files)
+  const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFiles({ ...avatarFiles, [channelUlid]: files })
   const handleToggle = () => setMypageValues({ ...mypageValues, isAdvertise: !mypageValues.isAdvertise })
   const handleMypageInput = (e: ChangeEvent<HTMLInputElement>) => setMypageValues({ ...mypageValues, [e.target.name]: e.target.value })
   const handleMypageText = (e: ChangeEvent<HTMLTextAreaElement>) => setMypageValues({ ...mypageValues, [e.target.name]: e.target.value })
 
-  const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => {
-    setChannelUlid(e.target.value)
-    setAvatarFile(undefined)
-  }
+  const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
 
   const handleChannelInput = (e: ChangeEvent<HTMLInputElement>) => {
     setChannelValues({ ...channelValues, [channelUlid]: { ...channel, [e.target.name]: e.target.value } })
@@ -81,9 +79,19 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
       return
     }
 
-    const channelRequest: ChannelIn = { name: channel.name, description: channel.description, avatarFile }
-    const channelRet = await putChannel(channelUlid, channelRequest)
-    if (channelRet.isErr()) {
+    const changedChannels = channels.filter((c) => {
+      const values = channelValues[c.ulid]!
+      return values.name !== c.name || values.description !== c.description || avatarFiles[c.ulid]
+    })
+    const channelRets = await Promise.all(
+      changedChannels.map((c) => {
+        const { name, description } = channelValues[c.ulid]!
+        const channelRequest: ChannelIn = { name, description, avatarFile: avatarFiles[c.ulid] }
+        return putChannel(c.ulid, channelRequest)
+      }),
+    )
+    const channelRet = channelRets.find((ret) => ret.isErr())
+    if (channelRet?.isErr()) {
       const message = channelRet.error.message
       handleError(FetchError.Put, message)
       handleLoading(false)
