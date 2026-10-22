@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
-import { blogDetailLoader, blogListLoader, chatListLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, subscribeChannelsLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
+import { blogDetailLoader, blogListLoader, chatListLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, manageAdvertiseEditLoader, manageAdvertiseListLoader, manageBlogEditLoader, manageBlogListLoader, manageChatEditLoader, manageChatListLoader, manageComicEditLoader, manageComicListLoader, manageCreateLoader, manageLoader, manageMusicEditLoader, manageMusicListLoader, managePictureEditLoader, managePictureListLoader, manageVideoEditLoader, manageVideoListLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, subscribeChannelsLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
@@ -62,28 +62,28 @@ export const routeTree = rootRoute.addChildren([
   page('/account/withdrawal', () => import('pages/account/withdrawal')),
   page('/account/withdrawal/confirm', () => import('pages/account/withdrawal/confirm')),
 
-  page('/manage', () => import('pages/manage')),
-  page('/manage/video', () => import('pages/manage/video')),
-  page('/manage/video/create', () => import('pages/manage/video/create')),
-  page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
-  page('/manage/music', () => import('pages/manage/music')),
-  page('/manage/music/create', () => import('pages/manage/music/create')),
-  page('/manage/music/$ulid', () => import('pages/manage/music/edit')),
-  page('/manage/blog', () => import('pages/manage/blog')),
-  page('/manage/blog/create', () => import('pages/manage/blog/create')),
-  page('/manage/blog/$ulid', () => import('pages/manage/blog/edit')),
-  page('/manage/comic', () => import('pages/manage/comic')),
-  page('/manage/comic/create', () => import('pages/manage/comic/create')),
-  page('/manage/comic/$ulid', () => import('pages/manage/comic/edit')),
-  page('/manage/picture', () => import('pages/manage/picture')),
-  page('/manage/picture/create', () => import('pages/manage/picture/create')),
-  page('/manage/picture/$ulid', () => import('pages/manage/picture/edit')),
-  page('/manage/chat', () => import('pages/manage/chat')),
-  page('/manage/chat/create', () => import('pages/manage/chat/create')),
-  page('/manage/chat/$ulid', () => import('pages/manage/chat/edit')),
-  page('/manage/advertise', () => import('pages/manage/advertise')),
+  page('/manage', () => import('pages/manage'), manageLoader),
+  page('/manage/video', () => import('pages/manage/video'), manageVideoListLoader),
+  page('/manage/video/create', () => import('pages/manage/video/create'), manageCreateLoader),
+  page('/manage/video/$ulid', () => import('pages/manage/video/edit'), manageVideoEditLoader),
+  page('/manage/music', () => import('pages/manage/music'), manageMusicListLoader),
+  page('/manage/music/create', () => import('pages/manage/music/create'), manageCreateLoader),
+  page('/manage/music/$ulid', () => import('pages/manage/music/edit'), manageMusicEditLoader),
+  page('/manage/blog', () => import('pages/manage/blog'), manageBlogListLoader),
+  page('/manage/blog/create', () => import('pages/manage/blog/create'), manageCreateLoader),
+  page('/manage/blog/$ulid', () => import('pages/manage/blog/edit'), manageBlogEditLoader),
+  page('/manage/comic', () => import('pages/manage/comic'), manageComicListLoader),
+  page('/manage/comic/create', () => import('pages/manage/comic/create'), manageCreateLoader),
+  page('/manage/comic/$ulid', () => import('pages/manage/comic/edit'), manageComicEditLoader),
+  page('/manage/picture', () => import('pages/manage/picture'), managePictureListLoader),
+  page('/manage/picture/create', () => import('pages/manage/picture/create'), manageCreateLoader),
+  page('/manage/picture/$ulid', () => import('pages/manage/picture/edit'), managePictureEditLoader),
+  page('/manage/chat', () => import('pages/manage/chat'), manageChatListLoader),
+  page('/manage/chat/create', () => import('pages/manage/chat/create'), manageCreateLoader),
+  page('/manage/chat/$ulid', () => import('pages/manage/chat/edit'), manageChatEditLoader),
+  page('/manage/advertise', () => import('pages/manage/advertise'), manageAdvertiseListLoader),
   page('/manage/advertise/create', () => import('pages/manage/advertise/create')),
-  page('/manage/advertise/$ulid', () => import('pages/manage/advertise/edit')),
+  page('/manage/advertise/$ulid', () => import('pages/manage/advertise/edit'), manageAdvertiseEditLoader),
 
   page('/setting/profile', () => import('pages/setting/profile'), settingProfileLoader),
   page('/setting/profile/edit', () => import('pages/setting/profile/edit'), settingProfileLoader),
