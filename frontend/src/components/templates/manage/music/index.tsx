@@ -59,7 +59,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
     }
     setSelectedKeys(new Set())
     handleModal()
-    await queryClient.invalidateQueries({ queryKey: queryKeys.manageMusics })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.manageMusicAll })
   }
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))

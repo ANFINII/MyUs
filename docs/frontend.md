@@ -132,13 +132,13 @@ export default function ManageVideoEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
-  const categories = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
-  const data = useQuery({ queryKey: queryKeys.manageVideoDetail(ulid), queryFn: () => toQuery(getManageVideo(ulid)) })
+  const channels = useQuery(channelsQuery())
+  const categories = useQuery(categoriesQuery())
+  const data = useQuery(manageVideoQuery(ulid))
   const queries = { data, channels, categories }
 
   return (
-    <QueryCheck title="Video" queries={queries} fresh>
+    <QueryCheck title="Video" queries={queries}>
       {(props) => <ManageVideoEdit {...props} />}
     </QueryCheck>
   )
@@ -149,6 +149,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 - `queryFn`は`toQuery`（`lib/query/client`）でAPI関数を包む（`Result`型をthrowに変換し、`error`を`ApiError`型として扱うため）
 - `queryKey`は`lib/query/keys.ts`の`queryKeys`に定義する（`invalidateQueries`で前方一致させるため、配列の先頭から粒度が細かくなるようにする）
+- `queryKeys`と`queryOptions`の名前は、取得関数（`getVideos`・`getVideo`）に合わせて一覧を複数形（`manageVideos`・`manageVideosQuery`）、詳細を単数形（`manageVideo`・`manageVideoQuery`）にする。一覧と詳細をまとめて`invalidateQueries`するキーは`All`を付ける（`manageVideoAll`）
 - 1行で書く。180文字（`printWidth`）を超えるものはPrettierの折り返しに任せる
 - `useQuery`の結果は`queries`のキー（テンプレートのprops名）と同じ名前の変数に入れ、`const queries = { data, channels }`のように省略記法で書く
 - 一覧・詳細・編集ページの主となるクエリは`data`と名付ける（`datas`・`mediaHome`のような個別の名前にしない）
@@ -309,3 +310,4 @@ return <div className={style.box}>...</div>
 - 2026-10-21: API のエラーの `message` を i18n のキー（`error.*`）として翻訳するようにした
 - 2026-10-22: 金額の表示を `formatPrice` で通貨に合わせて整形するようにした
 - 2026-10-22: ルートの`loader`で遷移前にデータを取る形を追加（ホーム・動画の詳細から）
+- 2026-10-22: `queryKeys`・`queryOptions`の名前を一覧は複数形、詳細は単数形、まとめたキーは`All`付きにそろえた

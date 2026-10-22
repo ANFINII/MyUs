@@ -56,7 +56,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
     }
     setSelectedKeys(new Set())
     handleModal()
-    await queryClient.invalidateQueries({ queryKey: queryKeys.manageAdvertises })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.manageAdvertiseAll })
   }
 
   const isLimitReached = total >= ADVERTISE_LIMIT
