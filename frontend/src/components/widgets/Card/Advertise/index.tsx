@@ -1,6 +1,6 @@
 import { Advertise } from 'types/internal/advertise'
 import { postAdvertiseRead } from 'api/internal/advertise'
-import { isHttpUrl } from 'utils/functions/validation'
+import { isHttpsUrl } from 'utils/functions/validation'
 import ExImage from 'components/parts/ExImage'
 import IconCaret from 'components/parts/Icon/Caret'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -19,7 +19,7 @@ export default function AdvertiseCard(props: Props): React.JSX.Element {
 
   return (
     <article className={style.card}>
-      <a href={isHttpUrl(url) ? url : undefined} target="_blank" rel="noopener noreferrer" className={style.link} onClick={handleRead}>
+      <a href={isHttpsUrl(url) ? url : undefined} target="_blank" rel="noopener noreferrer" className={style.link} onClick={handleRead}>
         <HStack gap="4">
           {video ? (
             <video src={video} poster={image} width="192" height="108" preload="metadata" muted className={style.thumbnail} />

@@ -3,10 +3,10 @@ export const isEmpty = (value: unknown): boolean => {
   return !value
 }
 
-export const isHttpUrl = (value: string): boolean => {
+export const isHttpsUrl = (value: string): boolean => {
   try {
     const url = new URL(value)
-    return url.protocol === 'http:' || url.protocol === 'https:'
+    return url.protocol === 'https:'
   } catch {
     return false
   }

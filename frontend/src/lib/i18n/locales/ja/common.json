@@ -20,7 +20,7 @@
     "mailSendFailed": "メールの送信に失敗しました",
     "decryptFailed": "復号に失敗しました",
     "emailInvalid": "メールアドレスの形式が違います",
-    "urlInvalid": "URL は http または https で始めてください",
+    "urlInvalid": "URL は https で始めてください",
     "emailMismatch": "メールアドレスが一致しません",
     "emailTaken": "メールアドレスは既に登録されています",
     "usernameInvalid": "ユーザー名は半角英数字のみ入力できます",
