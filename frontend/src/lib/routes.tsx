@@ -1,10 +1,7 @@
 import { QueryClient } from '@tanstack/react-query'
-import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet, ResolveParams } from '@tanstack/react-router'
+import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
 import { homeLoader, PageLoad, videoDetailLoader } from 'lib/query/loaders'
-import { useRouter } from 'components/hooks/useRouter'
-import Layout from 'components/layout'
-import { ErrorBoundary } from 'components/parts/ErrorBoundary'
-import Unexpected from 'components/widgets/Status/Unexpected'
+import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
 
@@ -14,19 +11,7 @@ export interface RouterContext {
   queryClient: QueryClient
 }
 
-function RootLayout(): React.JSX.Element {
-  const router = useRouter()
-
-  return (
-    <Layout>
-      <ErrorBoundary fallback={<Unexpected />} resetKeys={[router.pathname]}>
-        <Outlet />
-      </ErrorBoundary>
-    </Layout>
-  )
-}
-
-const rootRoute = createRootRouteWithContext<RouterContext>()({ component: RootLayout })
+const rootRoute = createRootRouteWithContext<RouterContext>()({ component: PageLayout })
 
 const components = new Map<PageImport, AsyncRouteComponent<unknown>>()
 
