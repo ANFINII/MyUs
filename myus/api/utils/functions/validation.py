@@ -30,7 +30,7 @@ def has_postal_code(text: str) -> bool:
 
 def has_url(text: str) -> bool:
     url = urlparse(text)
-    if url.scheme in ("http", "https") and url.netloc:
+    if url.scheme == "https" and url.netloc:
         return False
     return True
 
