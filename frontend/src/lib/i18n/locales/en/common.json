@@ -20,6 +20,7 @@
     "mailSendFailed": "Failed to send the email",
     "decryptFailed": "Failed to read the input",
     "emailInvalid": "Invalid email address",
+    "urlInvalid": "URL must start with https",
     "emailMismatch": "The email address does not match",
     "emailTaken": "This email address is already registered",
     "usernameInvalid": "Username can only contain letters and numbers",
