@@ -134,13 +134,13 @@ export default function CommentContent(props: Props): React.JSX.Element {
         <HStack gap="4" align="start" className="w_full">
           <AvatarLink src={author.avatar} ulid={author.ulid} title={author.nickname} />
           <VStack gap="4" className="w_full">
-            {!isEdit ? <CommentInfo comment={comment} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
+            {!isEdit ? <CommentInfo comment={comment} /> : <CommentUpdate value={commentText} loading={loading} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
             <HStack gap="4" className="fs_12">
               <CountLike isLike={isLike} disable={!isActive} count={likeCount} onClick={handleLike} />
               <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content={t('action.reply')} />
               <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={t('comment.thread', { count: replys.length })} />
             </HStack>
-            <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleMediaReply} onCancel={handleReplyCancel} />
+            <ReplyInput user={user} value={replyText} open={isReplyView} loading={loading} onChange={handleReply} onSubmit={handleMediaReply} onCancel={handleReplyCancel} />
           </VStack>
         </HStack>
         <ActionButton open={isMenu} onMenu={handleMenu} size="s" isRound disabled={disabled} actionItems={actionItems} />

@@ -9,6 +9,7 @@ import { postMessage, getReplies, putMessage, deleteMessage } from 'api/internal
 import { postLikeMedia } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
 import { useChatWebSocket } from 'components/hooks/useChatWebSocket'
+import { useLoading } from 'components/hooks/useLoading'
 import { useNavResize } from 'components/hooks/useNavResize'
 import { useRouter } from 'components/hooks/useRouter'
 import { useThreadResize } from 'components/hooks/useThreadResize'
@@ -64,6 +65,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const { t } = useTranslation()
   const { user } = useUser()
   const { toast, handleToast } = useToast()
+  const { loading, handleLoading } = useLoading()
   const { navRef, handleNav, handleResize } = useNavResize()
   const { threadRef, resetThreadWidth, handleThreadResize } = useThreadResize()
   const messageAreaRef = useRef<HTMLDivElement>(null)
@@ -197,18 +199,22 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   const handleMessageSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (message.replace(/<[^>]*>/g, '').trim().length === 0) return
+    if (loading || message.replace(/<[^>]*>/g, '').trim().length === 0) return
+    handleLoading(true)
     const request: MessageCreateIn = { chatUlid: detail.ulid, text: message }
     const ret = await postMessage(request)
+    handleLoading(false)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     setFormState((prev) => ({ ...prev, message: '' }))
   }
 
   const handleReplySubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!selectedMessage || reply.replace(/<[^>]*>/g, '').trim().length === 0) return
+    if (loading || !selectedMessage || reply.replace(/<[^>]*>/g, '').trim().length === 0) return
+    handleLoading(true)
     const request: MessageCreateIn = { chatUlid: detail.ulid, text: reply, parentUlid: selectedMessage.ulid }
     const ret = await postMessage(request)
+    handleLoading(false)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     setFormState((prev) => ({ ...prev, reply: '' }))
   }
