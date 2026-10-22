@@ -4,6 +4,7 @@ import {
   blogsQuery,
   categoriesQuery,
   channelsQuery,
+  chatQuery,
   chatsQuery,
   comicQuery,
   comicsQuery,
@@ -49,6 +50,7 @@ export interface PageLoad<TParams> {
   queryClient: QueryClient
   params: TParams
   search: Record<string, string>
+  from: string
 }
 
 const listParams = (query: Record<string, string>) => {
@@ -93,6 +95,13 @@ export const comicDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: stri
 export const pictureDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Picture })
   return queryClient.query(pictureQuery(params.ulid)).catch(noop)
+}
+
+export const chatDetailLoader = ({ queryClient, params, from }: PageLoad<{ ulid: string }>) => {
+  const chatPath = `/media/chat/${params.ulid}`
+  if (from === chatPath || from.startsWith(`${chatPath}/`)) return Promise.resolve()
+  postMediaRead({ ulid: params.ulid, mediaType: MediaType.Chat })
+  return queryClient.query(chatQuery(params.ulid)).catch(noop)
 }
 
 export const userPageLoader = ({ queryClient, params, search }: PageLoad<{ ulid: string }>) => {

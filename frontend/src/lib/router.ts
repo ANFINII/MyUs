@@ -40,7 +40,7 @@ export const router = createRouter({
   parseSearch,
   stringifySearch,
   rewrite,
-  context: { queryClient },
+  context: { queryClient, resolvedPath: () => router.state.resolvedLocation?.pathname ?? '' },
   InnerWrap: AppProvider,
   defaultPendingComponent: PageLoading,
   defaultNotFoundComponent: Custom404,
