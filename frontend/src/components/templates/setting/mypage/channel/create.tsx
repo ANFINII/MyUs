@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ChannelIn } from 'types/internal/channel'
 import { postChannel } from 'api/internal/channel'
 import { FetchError } from 'utils/constants/enum'
-import { createPreviewUrl } from 'utils/functions/file'
+import { previewUrl } from 'utils/functions/file'
 import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -43,7 +43,7 @@ export default function ChannelCreate(): React.JSX.Element {
   const handleAvatar = (files: File | File[]) => {
     if (Array.isArray(files)) return
     setAvatarFile(files)
-    setAvatarPreview(createPreviewUrl(files, avatarPreview))
+    setAvatarPreview(previewUrl(files, avatarPreview))
   }
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })

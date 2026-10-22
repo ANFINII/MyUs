@@ -6,7 +6,7 @@ import { MypageIn, MypageOut } from 'types/internal/user'
 import { putChannel } from 'api/internal/channel'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
-import { createPreviewUrl } from 'utils/functions/file'
+import { previewUrl } from 'utils/functions/file'
 import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
@@ -60,13 +60,13 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const handleBanner = (files: File | File[]) => {
     if (Array.isArray(files)) return
     setBannerFile(files)
-    setBannerPreview(createPreviewUrl(files, bannerPreview))
+    setBannerPreview(previewUrl(files, bannerPreview))
   }
 
   const handleAvatar = (files: File | File[]) => {
     if (Array.isArray(files)) return
     setAvatarFiles({ ...avatarFiles, [channelUlid]: files })
-    setAvatarPreviews({ ...avatarPreviews, [channelUlid]: createPreviewUrl(files, avatarPreviews[channelUlid]) })
+    setAvatarPreviews({ ...avatarPreviews, [channelUlid]: previewUrl(files, avatarPreviews[channelUlid]) })
   }
 
   const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)

@@ -6,7 +6,7 @@ import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { selectDate } from 'utils/functions/datetime'
-import { createPreviewUrl } from 'utils/functions/file'
+import { previewUrl } from 'utils/functions/file'
 import { getAge } from 'utils/functions/user'
 import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
@@ -54,7 +54,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const handleAvatar = (files: File | File[]) => {
     if (Array.isArray(files)) return
     setAvatarFile(files)
-    setAvatarPreview(createPreviewUrl(files, avatarPreview))
+    setAvatarPreview(previewUrl(files, avatarPreview))
   }
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
