@@ -11,7 +11,6 @@ export default function PageLoading(props: Props): React.JSX.Element {
   const { title } = props
 
   const isInitial = useRouterState({ select: (s) => s.resolvedLocation === undefined })
-
   if (!isInitial) return <></>
 
   return (
