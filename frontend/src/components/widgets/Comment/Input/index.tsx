@@ -21,6 +21,11 @@ export default function CommentInput(props: Props): React.JSX.Element {
 
   const { t } = useTranslation()
 
+  const handleSubmit = () => {
+    if (loading || !value?.trim()) return
+    onClick?.()
+  }
+
   return (
     <form method="POST" action="">
       <VStack gap="4">
@@ -31,7 +36,7 @@ export default function CommentInput(props: Props): React.JSX.Element {
         <HStack gap="4">
           <AvatarLink src={user.avatar} ulid={user.ulid} title={user.nickname} />
           {user.isActive ? (
-            <TextareaLine name="text" placeholder={t('comment.placeholder')} value={value} onChange={onChange} onSubmit={onClick} />
+            <TextareaLine name="text" placeholder={t('comment.placeholder')} value={value} onChange={onChange} onSubmit={handleSubmit} />
           ) : (
             <TextareaLine name="text" placeholder={t('comment.loginRequired')} disabled />
           )}

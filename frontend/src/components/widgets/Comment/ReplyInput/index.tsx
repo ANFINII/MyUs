@@ -11,15 +11,21 @@ interface Props {
   user: UserMe
   value: string
   open: boolean
+  loading?: boolean
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
   onSubmit: () => void
   onCancel: () => void
 }
 
 export default function ReplyInput(props: Props): React.JSX.Element {
-  const { user, value, open, onChange, onSubmit, onCancel } = props
+  const { user, value, open, loading, onChange, onSubmit, onCancel } = props
 
   const { t } = useTranslation()
+
+  const handleSubmit = () => {
+    if (loading || value.trim() === '') return
+    onSubmit()
+  }
 
   return (
     <>
@@ -27,10 +33,10 @@ export default function ReplyInput(props: Props): React.JSX.Element {
         <HStack gap="4" align="start">
           <AvatarLink size="s" src={user.avatar} ulid={user.ulid} title={user.nickname} className="m_2" />
           <VStack gap="4" className="w_full">
-            <TextareaLine name="text" placeholder={t('comment.placeholder')} value={value} onChange={onChange} onSubmit={onSubmit} />
+            <TextareaLine name="text" placeholder={t('comment.placeholder')} value={value} onChange={onChange} onSubmit={handleSubmit} />
             <HStack gap="4" justify="end">
               <Button size="s" name={t('action.cancel')} onClick={onCancel} />
-              <Button size="s" color="blue" name={t('action.reply')} disabled={value.trim() === ''} onClick={onSubmit} />
+              <Button size="s" color="blue" name={t('action.reply')} disabled={value.trim() === ''} loading={loading} onClick={onSubmit} />
             </HStack>
           </VStack>
         </HStack>

@@ -113,7 +113,6 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   }
 
   const handleMediaComment = async () => {
-    if (loading || text.trim() === '') return
     handleLoading(true)
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
     const objectUlid = String(router.query.ulid ?? '')
