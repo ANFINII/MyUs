@@ -1,8 +1,11 @@
 import { useRef, useState, useEffect, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { SearchTagOut } from 'types/internal/user'
 import { getSearchTag, putSearchTag } from 'api/internal/user'
+import { FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
+import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import ButtonSquare from 'components/parts/Button/Square'
 import IconChevront from 'components/parts/Icon/Chevront'
@@ -11,11 +14,13 @@ import IconGrip from 'components/parts/Icon/Grip'
 import Input from 'components/parts/Input'
 import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
+import Toast from 'components/parts/Toast'
 import styles from './SearchTagBar.module.scss'
 
 export default function SearchTagBar(): React.JSX.Element {
   const { t } = useTranslation()
   const { user } = useUser()
+  const { toast, handleToast } = useToast()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isILoading, setILoading] = useState<boolean>(false)
   const [isSearchtag, setIsSearchtag] = useState<boolean>(false)
@@ -51,10 +56,12 @@ export default function SearchTagBar(): React.JSX.Element {
         setILoading(true)
         const tags = editTags.map((tag, i) => ({ sequence: i + 1, name: tag.name }))
         const ret = await putSearchTag(tags)
-        if (ret.isOk()) {
-          setSearchTags(tags)
-        }
         setILoading(false)
+        if (ret.isErr()) {
+          handleToast(toErrorMessage(ret.error, FetchError.Put), true)
+          return
+        }
+        setSearchTags(tags)
       }
       setIsSearchtag(false)
     } else {
@@ -103,61 +110,64 @@ export default function SearchTagBar(): React.JSX.Element {
   }
 
   return (
-    <nav className={styles.searchtag}>
-      <HStack justify="between">
-        <HStack gap="3">
-          <HStack gap="0.5">
-            <ButtonSquare color="emerald" name={isSearchtag ? t('searchTag.done') : t('searchTag.tag')} loading={isILoading} onClick={handleSearchtag} />
-            <Input
-              placeholder={t('searchTag.name')}
-              maxLength={30}
-              value={inputTag}
-              disabled={!user.isActive}
-              className={cx(styles.input, isSearchtag && styles.active)}
-              onChange={handleInput}
-            />
-            <ButtonSquare color="sakura" name={t('searchTag.add')} className={cx(styles.button, isSearchtag && styles.active)} onClick={handleAdd} />
-          </HStack>
-          <div ref={scrollRef} className={cx(styles.tags, isSearchtag && styles.active)}>
-            <HStack gap="2.5">
-              {isSearchtag
-                ? editTags.map((tag, index) => (
-                    <div
-                      key={tag.name}
-                      className={cx(styles.tag_item, dragIndex === index && styles.dragging, dragOverIndex === index && styles.drag_over)}
-                      draggable
-                      onDragStart={() => handleDragStart(index)}
-                      onDragOver={(e) => handleDrag(e, index)}
-                      onDragLeave={(e) => handleDrag(e)}
-                      onDrop={() => handleDrop(index)}
-                      onDragEnd={handleDragEnd}
-                    >
-                      <span className={styles.drag_handle}>
-                        <IconGrip size="12" />
-                      </span>
-                      <span className={styles.tag_name}>{tag.name}</span>
-                      <span className={styles.delete_button} onClick={() => handleDelete(index)}>
-                        <IconCross size="18" />
-                      </span>
-                    </div>
-                  ))
-                : searchTags.map((tag) => (
-                    <Link key={tag.sequence} href={`?search=${encodeURIComponent(tag.name)}`}>
-                      {tag.name}
-                    </Link>
-                  ))}
+    <>
+      <nav className={styles.searchtag}>
+        <HStack justify="between">
+          <HStack gap="3">
+            <HStack gap="0.5">
+              <ButtonSquare color="emerald" name={isSearchtag ? t('searchTag.done') : t('searchTag.tag')} loading={isILoading} onClick={handleSearchtag} />
+              <Input
+                placeholder={t('searchTag.name')}
+                maxLength={30}
+                value={inputTag}
+                disabled={!user.isActive}
+                className={cx(styles.input, isSearchtag && styles.active)}
+                onChange={handleInput}
+              />
+              <ButtonSquare color="sakura" name={t('searchTag.add')} className={cx(styles.button, isSearchtag && styles.active)} onClick={handleAdd} />
             </HStack>
-          </div>
+            <div ref={scrollRef} className={cx(styles.tags, isSearchtag && styles.active)}>
+              <HStack gap="2.5">
+                {isSearchtag
+                  ? editTags.map((tag, index) => (
+                      <div
+                        key={tag.name}
+                        className={cx(styles.tag_item, dragIndex === index && styles.dragging, dragOverIndex === index && styles.drag_over)}
+                        draggable
+                        onDragStart={() => handleDragStart(index)}
+                        onDragOver={(e) => handleDrag(e, index)}
+                        onDragLeave={(e) => handleDrag(e)}
+                        onDrop={() => handleDrop(index)}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <span className={styles.drag_handle}>
+                          <IconGrip size="12" />
+                        </span>
+                        <span className={styles.tag_name}>{tag.name}</span>
+                        <span className={styles.delete_button} onClick={() => handleDelete(index)}>
+                          <IconCross size="18" />
+                        </span>
+                      </div>
+                    ))
+                  : searchTags.map((tag) => (
+                      <Link key={tag.sequence} href={`?search=${encodeURIComponent(tag.name)}`}>
+                        {tag.name}
+                      </Link>
+                    ))}
+              </HStack>
+            </div>
+          </HStack>
+          <HStack>
+            <div className={styles.arrow} onClick={() => handleScroll(-200)}>
+              <IconChevront width="18" height="17" type="left" />
+            </div>
+            <div className={styles.arrow} onClick={() => handleScroll(200)}>
+              <IconChevront width="18" height="17" type="right" />
+            </div>
+          </HStack>
         </HStack>
-        <HStack>
-          <div className={styles.arrow} onClick={() => handleScroll(-200)}>
-            <IconChevront width="18" height="17" type="left" />
-          </div>
-          <div className={styles.arrow} onClick={() => handleScroll(200)}>
-            <IconChevront width="18" height="17" type="right" />
-          </div>
-        </HStack>
-      </HStack>
-    </nav>
+      </nav>
+      <Toast {...toast} />
+    </>
   )
 }

@@ -1,12 +1,15 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { Advertise } from 'types/internal/advertise'
 import { Search } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
+import { FetchError } from 'utils/constants/enum'
 import { useRouter } from 'components/hooks/useRouter'
 import { useSearch } from 'components/hooks/useSearch'
+import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -48,6 +51,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   const router = useRouter()
   const { t, i18n } = useTranslation()
   const { user } = useUser()
+  const { toast, handleToast } = useToast()
   const mediaCount = media.videos.length + media.musics.length + media.blogs.length + media.comics.length + media.pictures.length + media.chats.length
   const search = useSearch(mediaCount)
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -80,7 +84,10 @@ export default function Userpage(props: Props): React.JSX.Element {
       return
     }
     const ret = await postFollow({ ulid, isFollow: !isFollow })
-    if (ret.isErr()) return
+    if (ret.isErr()) {
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      return
+    }
     setIsFollow(ret.value.isFollow)
     setFollowerCount(ret.value.followerCount)
     if (isModal) handleModal()
@@ -91,7 +98,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={`${nickname} - MyUs`} search={tabSearch[selectedTab]}>
+    <Main metaTitle={`${nickname} - MyUs`} search={tabSearch[selectedTab]} toast={toast}>
       <div className={style.userpage}>
         <figure className={style.banner}>
           <ExImage src={banner} title={nickname} />

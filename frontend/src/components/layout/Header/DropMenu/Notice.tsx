@@ -1,16 +1,19 @@
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
+import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
-import { MediaPath, MediaType, NotificationType } from 'utils/constants/enum'
+import { FetchError, MediaPath, MediaType, NotificationType } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
+import { useToast } from 'components/hooks/useToast'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconBell from 'components/parts/Icon/Bell'
 import IconCircle from 'components/parts/Icon/Circle'
 import IconCross from 'components/parts/Icon/Cross'
 import NavItem from 'components/parts/NavItem'
+import Toast from 'components/parts/Toast'
 import style from './DropMenu.module.scss'
 
 interface Props {
@@ -35,6 +38,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation()
+  const { toast, handleToast } = useToast()
 
   const updateNotifications = (update: (prev: NotificationOut) => NotificationOut): void => {
     queryClient.setQueryData<NotificationOut>(queryKeys.notification, (prev) => prev && update(prev))
@@ -61,7 +65,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   const handleClick = (notification: Notification) => () => {
     const { ulid, contentObject, userFrom, isConfirmed } = notification
     const { mediaType, mediaUlid, threadUlid } = contentObject
-    postNotificationConfirmed(ulid)
+    postNotificationConfirmed(ulid).then((ret) => ret.isErr() && handleToast(toErrorMessage(ret.error, FetchError.Post), true))
     updateNotifications((prev) => ({
       count: isConfirmed ? prev.count : prev.count - 1,
       items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)),
@@ -74,7 +78,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   const handleDelete = (notification: Notification) => (e: React.MouseEvent) => {
     const { ulid, isConfirmed } = notification
     e.stopPropagation()
-    postNotificationDeleted(ulid)
+    postNotificationDeleted(ulid).then((ret) => ret.isErr() && handleToast(toErrorMessage(ret.error, FetchError.Delete), true))
     updateNotifications((prev) => ({
       count: isConfirmed ? prev.count : prev.count - 1,
       items: prev.items.filter((n) => n.ulid !== ulid),
@@ -82,51 +86,54 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   }
 
   return (
-    <nav className={cx(style.drop_menu, style.drop_menu_notice, open && style.active)}>
-      <ul>
-        <NavItem label={t('noticeMenu.setting')} icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
-        {notifications?.items?.map((notification) => {
-          const { ulid, typeName, userFrom, contentObject, isConfirmed } = notification
-          const { avatar, nickname } = userFrom
-          const { title, text, read } = contentObject
-          return (
-            <NavItem key={ulid}>
-              <div className={style.notice_item}>
-                <div className={style.avatar}>
-                  <AvatarLink src={avatar} ulid={userFrom.ulid} title={nickname} size="s" />
-                  <IconCircle size="6" className={isConfirmed ? style.hidden : style.circle} />
+    <>
+      <nav className={cx(style.drop_menu, style.drop_menu_notice, open && style.active)}>
+        <ul>
+          <NavItem label={t('noticeMenu.setting')} icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
+          {notifications?.items?.map((notification) => {
+            const { ulid, typeName, userFrom, contentObject, isConfirmed } = notification
+            const { avatar, nickname } = userFrom
+            const { title, text, read } = contentObject
+            return (
+              <NavItem key={ulid}>
+                <div className={style.notice_item}>
+                  <div className={style.avatar}>
+                    <AvatarLink src={avatar} ulid={userFrom.ulid} title={nickname} size="s" />
+                    <IconCircle size="6" className={isConfirmed ? style.hidden : style.circle} />
+                  </div>
+                  <div className={style.anker} onClick={handleClick(notification)}>
+                    {mediaObjs.includes(typeName) && (
+                      <div className={style.content} title={t('noticeMenu.post', { nickname, title })}>
+                        {title}
+                      </div>
+                    )}
+                    {typeName === NotificationType.Follow && (
+                      <div className={style.content} title={t('noticeMenu.follow', { nickname })}>
+                        {t('noticeMenu.follow', { nickname })}
+                      </div>
+                    )}
+                    {typeName === NotificationType.Like && (
+                      <div className={style.content} title={t('noticeMenu.like', { text, nickname })}>
+                        {t('noticeMenu.like', { text, nickname })}
+                      </div>
+                    )}
+                    {typeName === NotificationType.Reply && (
+                      <div className={style.content} title={t('noticeMenu.reply', { nickname, text })}>
+                        {text}
+                      </div>
+                    )}
+                    {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
+                  </div>
+                  <span title={t('noticeMenu.close')} className={style.close} onClick={handleDelete(notification)}>
+                    <IconCross size="18" className={style.close_icon} />
+                  </span>
                 </div>
-                <div className={style.anker} onClick={handleClick(notification)}>
-                  {mediaObjs.includes(typeName) && (
-                    <div className={style.content} title={t('noticeMenu.post', { nickname, title })}>
-                      {title}
-                    </div>
-                  )}
-                  {typeName === NotificationType.Follow && (
-                    <div className={style.content} title={t('noticeMenu.follow', { nickname })}>
-                      {t('noticeMenu.follow', { nickname })}
-                    </div>
-                  )}
-                  {typeName === NotificationType.Like && (
-                    <div className={style.content} title={t('noticeMenu.like', { text, nickname })}>
-                      {t('noticeMenu.like', { text, nickname })}
-                    </div>
-                  )}
-                  {typeName === NotificationType.Reply && (
-                    <div className={style.content} title={t('noticeMenu.reply', { nickname, text })}>
-                      {text}
-                    </div>
-                  )}
-                  {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
-                </div>
-                <span title={t('noticeMenu.close')} className={style.close} onClick={handleDelete(notification)}>
-                  <IconCross size="18" className={style.close_icon} />
-                </span>
-              </div>
-            </NavItem>
-          )
-        })}
-      </ul>
-    </nav>
+              </NavItem>
+            )
+          })}
+        </ul>
+      </nav>
+      <Toast {...toast} />
+    </>
   )
 }
