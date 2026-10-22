@@ -21,7 +21,6 @@ from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupI
 from api.src.usecase.payment import cancel_subscription
 from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.payment import CancelError
-from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import access_token, password_fingerprint, password_reset_token, refresh_token, signup_token
 from api.utils.functions.validation import PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, has_email
 
@@ -95,15 +94,8 @@ def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalErro
 
 @Result.shield_exception()
 def login_user(username: str, password: str) -> Result[int | None, FatalError]:
-    try:
-        decrypted_username = decrypt(username)
-        decrypted_password = decrypt(password)
-    except Exception:
-        log.error("Decrypt error")
-        return Result.ok(None)
-
     repo = injector.get(UserInterface)
-    user_id_ret = repo.authenticate(decrypted_username, decrypted_password)
+    user_id_ret = repo.authenticate(username, password)
     if user_id_ret.is_err:
         return Result.err(user_id_ret.err_value)
 
@@ -266,14 +258,9 @@ def signup_user(input: SignupIn) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalError]:
-    try:
-        old_password = decrypt(input.old_password)
-        password1 = decrypt(input.password1)
-        password2 = decrypt(input.password2)
-    except Exception:
-        log.error("Decrypt error")
-        return Result.ok("error.decryptFailed")
-
+    old_password = input.old_password
+    password1 = input.password1
+    password2 = input.password2
     if password1 != password2:
         return Result.ok("error.newPasswordMismatch")
 
@@ -399,13 +386,8 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
         return Result.ok("error.linkExpired")
     user_id, _ = verified
 
-    try:
-        password1 = decrypt(input.password1)
-        password2 = decrypt(input.password2)
-    except Exception:
-        log.error("Decrypt error")
-        return Result.ok("error.decryptFailed")
-
+    password1 = input.password1
+    password2 = input.password2
     if password1 != password2:
         return Result.ok("error.newPasswordMismatch")
 
@@ -435,12 +417,7 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
 
 @Result.shield_exception()
 def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
-    try:
-        password = decrypt(input.password)
-    except Exception:
-        log.error("Decrypt error")
-        return Result.ok("error.decryptFailed")
-
+    password = input.password
     repo = injector.get(UserInterface)
     users_ret = repo.bulk_get([user_id])
     if users_ret.is_err:

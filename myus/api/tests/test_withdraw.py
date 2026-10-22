@@ -13,11 +13,6 @@ from api.utils.enum.payment import CancelError, PaymentProvider, SubscriptionSta
 from api.utils.enum.user import PlanName
 
 
-@pytest.fixture(autouse=True)
-def plain_password(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("api.src.usecase.auth.decrypt", lambda value: value)
-
-
 def add_subscription(user: User, external_id: str, status: SubscriptionStatus, month: int) -> None:
     Subscription.objects.create(
         customer=user,

@@ -4,7 +4,6 @@ import { toErrorMessage } from 'lib/error'
 import { PasswordResetIn } from 'types/internal/auth'
 import { getPasswordResetVerify, postPasswordReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
-import { encrypt } from 'utils/functions/encrypt'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -59,11 +58,7 @@ export default function ResetConfirm(): React.JSX.Element {
       return
     }
     handleLoading(true)
-    const request: PasswordResetIn = {
-      token: values.token,
-      password1: encrypt(password1),
-      password2: encrypt(password2),
-    }
+    const request: PasswordResetIn = { token: values.token, password1, password2 }
     const ret = await postPasswordReset(request)
     handleLoading(false)
     if (ret.isErr()) {

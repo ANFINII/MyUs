@@ -23,7 +23,6 @@ dependencies = [
     "mysqlclient>=2.3.0",
     "pillow>=13.0.0",
     "psutil>=7.2.2",
-    "pycryptodome>=4.0.1",
     "pyjwt>=2.15.1",
     "python-dateutil>=2.9.0.post0",
     "python-ffmpeg-video-streaming>=0.1.16",
