@@ -1,14 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
-import { toQuery } from 'lib/query/client'
-import { queryKeys } from 'lib/query/keys'
-import { getSettingProfile } from 'api/internal/setting'
+import { settingProfileQuery } from 'lib/query/options'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingProfile from 'components/templates/setting/profile'
 
 export default function SettingProfilePage(): React.JSX.Element {
   const { t } = useTranslation()
-  const profile = useQuery({ queryKey: queryKeys.settingProfile, queryFn: () => toQuery(getSettingProfile()) })
+  const profile = useQuery(settingProfileQuery())
   const queries = { profile }
 
   return (

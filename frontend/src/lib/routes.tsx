@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
-import { blogDetailLoader, blogListLoader, chatListLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, subscribeChannelsLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
+import { blogDetailLoader, blogListLoader, chatListLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, subscribeChannelsLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
@@ -85,16 +85,16 @@ export const routeTree = rootRoute.addChildren([
   page('/manage/advertise/create', () => import('pages/manage/advertise/create')),
   page('/manage/advertise/$ulid', () => import('pages/manage/advertise/edit')),
 
-  page('/setting/profile', () => import('pages/setting/profile')),
-  page('/setting/profile/edit', () => import('pages/setting/profile/edit')),
-  page('/setting/mypage', () => import('pages/setting/mypage')),
-  page('/setting/mypage/edit', () => import('pages/setting/mypage/edit')),
+  page('/setting/profile', () => import('pages/setting/profile'), settingProfileLoader),
+  page('/setting/profile/edit', () => import('pages/setting/profile/edit'), settingProfileLoader),
+  page('/setting/mypage', () => import('pages/setting/mypage'), settingMypageLoader),
+  page('/setting/mypage/edit', () => import('pages/setting/mypage/edit'), settingMypageLoader),
   page('/setting/mypage/channel/create', () => import('pages/setting/mypage/channel/create')),
-  page('/setting/notification', () => import('pages/setting/notification')),
-  page('/setting/password/change', () => import('pages/setting/password/change')),
-  page('/setting/password/change-done', () => import('pages/setting/password/change-done')),
-  page('/setting/payment', () => import('pages/setting/payment')),
-  page('/setting/payment/change', () => import('pages/setting/payment/change')),
+  page('/setting/notification', () => import('pages/setting/notification'), settingNotificationLoader),
+  page('/setting/password/change', () => import('pages/setting/password/change'), settingPasswordLoader),
+  page('/setting/password/change-done', () => import('pages/setting/password/change-done'), settingPasswordLoader),
+  page('/setting/payment', () => import('pages/setting/payment'), settingPaymentLoader),
+  page('/setting/payment/change', () => import('pages/setting/payment/change'), settingPaymentLoader),
   page('/setting/payment/success', () => import('pages/setting/payment/success')),
   page('/setting/payment/cancel', () => import('pages/setting/payment/cancel')),
 ])
