@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { toQuery } from 'lib/query/client'
-import { queryKeys } from 'lib/query/keys'
+import { useQuery } from '@tanstack/react-query'
+import { userPageAdvertisesQuery, userPageMediaQuery, userPageQuery } from 'lib/query/options'
 import { UserPageMedia } from 'types/internal/userpage'
-import { getUserPage, getUserPageAdvertises, getUserPageMedia } from 'api/internal/user'
+import { selectChannelUlid } from 'utils/functions/channel'
 import { searchParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
@@ -18,21 +17,14 @@ export default function UserpagePage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const queryChannel = String(router.query.channel ?? '')
 
-  const userPage = useQuery({ queryKey: queryKeys.userPage(ulid), queryFn: () => toQuery(getUserPage(ulid)) })
-  const channels = userPage.data?.channels ?? []
-  const channelUlid = (channels.find((c) => c.ulid === queryChannel) ?? channels.find((c) => c.isDefault))?.ulid ?? ''
-
-  const media = useQuery({
-    queryKey: queryKeys.userPageMedia(ulid, channelUlid, params),
-    queryFn: () => toQuery(getUserPageMedia(ulid, channelUlid, params)),
-    enabled: channelUlid !== '',
-    placeholderData: keepPreviousData,
-  })
-  const advertises = useQuery({ queryKey: queryKeys.userPageAdvertise(ulid, params), queryFn: () => toQuery(getUserPageAdvertises(ulid, params)), placeholderData: keepPreviousData })
+  const userPage = useQuery(userPageQuery(ulid))
+  const channelUlid = selectChannelUlid(userPage.data?.channels ?? [], queryChannel)
+  const media = useQuery({ ...userPageMediaQuery(ulid, channelUlid, params), enabled: channelUlid !== '' })
+  const advertises = useQuery(userPageAdvertisesQuery(ulid, params))
   const queries = { userPage }
 
   return (
-    <QueryCheck title={t('media.userpage.title')} queries={queries} fresh>
+    <QueryCheck title={t('media.userpage.title')} queries={queries}>
       {(props) => (
         <Userpage key={params.search ?? ''} {...props} ulid={ulid} channelUlid={channelUlid} media={media.data ?? initMedia} advertises={advertises.data?.items ?? []} />
       )}
