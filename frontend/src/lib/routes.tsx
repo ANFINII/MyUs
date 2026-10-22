@@ -4,16 +4,14 @@ import { homeLoader, PageLoad, videoDetailLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
-
 type PageLoader<TPath extends string> = (load: PageLoad<ResolveParams<TPath>>) => Promise<unknown>
 
 export interface RouterContext {
   queryClient: QueryClient
 }
 
-const rootRoute = createRootRouteWithContext<RouterContext>()({ component: PageLayout })
-
 const components = new Map<string, AsyncRouteComponent<unknown>>()
+const rootRoute = createRootRouteWithContext<RouterContext>()({ component: PageLayout })
 
 const lazyPage = (load: PageImport) => {
   const component = components.get(load.toString()) ?? lazyRouteComponent(load)
@@ -34,6 +32,7 @@ const page = <TPath extends string>(path: TPath, load: PageImport, loader?: Page
 export const routeTree = rootRoute.addChildren([
   page('/', () => import('pages/index'), homeLoader),
   page('/recommend', () => import('pages/recommend')),
+  page('/userpage/$ulid', () => import('pages/userpage')),
   page('/media/video', () => import('pages/media/video')),
   page('/media/video/$ulid', () => import('pages/media/video/detail'), videoDetailLoader),
   page('/media/music', () => import('pages/media/music')),
@@ -47,7 +46,6 @@ export const routeTree = rootRoute.addChildren([
   page('/media/chat', () => import('pages/media/chat')),
   page('/media/chat/$ulid', () => import('pages/media/chat/detail')),
   page('/media/chat/$ulid/thread/$messageUlid', () => import('pages/media/chat/detail')),
-  page('/userpage/$ulid', () => import('pages/userpage')),
 
   page('/menu/channel', () => import('pages/menu/channel')),
   page('/menu/follow', () => import('pages/menu/follow')),
