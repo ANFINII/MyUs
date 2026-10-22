@@ -1,9 +1,6 @@
-import { FetchQueryOptions, QueryClient, QueryKey } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet, ResolveParams } from '@tanstack/react-router'
-import { homeQuery, videoDetailQuery } from 'lib/query/options'
-import { postMediaRead } from 'api/internal/media/read'
-import { MediaType } from 'utils/constants/enum'
-import { searchParams } from 'utils/functions/common'
+import { homeLoader, PageLoad, videoDetailLoader } from 'lib/query/loaders'
 import { useRouter } from 'components/hooks/useRouter'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
@@ -11,15 +8,7 @@ import Unexpected from 'components/widgets/Status/Unexpected'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
 
-interface PageLoad<TPath extends string> {
-  params: ResolveParams<TPath>
-  search: Record<string, string>
-}
-
-interface PageOptions<TPath extends string, TQueryFnData, TError, TData, TQueryKey extends QueryKey> {
-  query?: (load: PageLoad<TPath>) => FetchQueryOptions<TQueryFnData, TError, TData, TQueryKey>
-  onLoad?: (load: PageLoad<TPath>) => void
-}
+type PageLoader<TPath extends string> = (load: PageLoad<ResolveParams<TPath>>) => Promise<void>
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -39,22 +28,13 @@ function RootLayout(): React.JSX.Element {
 
 const rootRoute = createRootRouteWithContext<RouterContext>()({ component: RootLayout })
 
-const page = <TPath extends string, TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
-  path: TPath,
-  load: PageImport,
-  options: PageOptions<TPath, TQueryFnData, TError, TData, TQueryKey> = {},
-) => {
-  const { query, onLoad } = options
+const page = <TPath extends string>(path: TPath, load: PageImport, loader?: PageLoader<TPath>) => {
   return createRoute({
     getParentRoute: () => rootRoute,
     path,
     component: lazyRouteComponent(load),
     loaderDeps: ({ search }) => search,
-    loader: async ({ context, params, deps }) => {
-      const pageLoad: PageLoad<TPath> = { params: params as ResolveParams<TPath>, search: deps }
-      onLoad?.(pageLoad)
-      if (query) await context.queryClient.prefetchQuery(query(pageLoad))
-    },
+    loader: ({ context, params, deps }) => loader?.({ queryClient: context.queryClient, params: params as ResolveParams<TPath>, search: deps }),
   })
 }
 
@@ -63,13 +43,10 @@ const chatIndexRoute = createRoute({ getParentRoute: () => chatRoute, path: '/',
 const chatThreadRoute = createRoute({ getParentRoute: () => chatRoute, path: '/thread/$messageUlid', component: () => null })
 
 export const routeTree = rootRoute.addChildren([
-  page('/', () => import('pages/index'), { query: ({ search }) => homeQuery(searchParams(search)) }),
+  page('/', () => import('pages/index'), homeLoader),
   page('/recommend', () => import('pages/recommend')),
   page('/media/video', () => import('pages/media/video')),
-  page('/media/video/$ulid', () => import('pages/media/video/detail'), {
-    query: ({ params }) => videoDetailQuery(params.ulid),
-    onLoad: ({ params }) => postMediaRead({ ulid: params.ulid, mediaType: MediaType.Video }),
-  }),
+  page('/media/video/$ulid', () => import('pages/media/video/detail'), videoDetailLoader),
   page('/media/music', () => import('pages/media/music')),
   page('/media/music/$ulid', () => import('pages/media/music/detail')),
   page('/media/blog', () => import('pages/media/blog')),
