@@ -2,6 +2,7 @@ import { noop, QueryClient } from '@tanstack/react-query'
 import {
   blogDetailQuery,
   blogListQuery,
+  categoriesQuery,
   channelsQuery,
   chatListQuery,
   comicDetailQuery,
@@ -9,6 +10,20 @@ import {
   followersQuery,
   followsQuery,
   homeQuery,
+  manageAdvertiseDetailQuery,
+  manageAdvertiseListQuery,
+  manageBlogDetailQuery,
+  manageBlogListQuery,
+  manageChatDetailQuery,
+  manageChatListQuery,
+  manageComicDetailQuery,
+  manageComicListQuery,
+  manageMusicDetailQuery,
+  manageMusicListQuery,
+  managePictureDetailQuery,
+  managePictureListQuery,
+  manageVideoDetailQuery,
+  manageVideoListQuery,
   musicDetailQuery,
   musicListQuery,
   pictureDetailQuery,
@@ -35,6 +50,11 @@ export interface PageLoad<TParams> {
 const listParams = (query: Record<string, string>) => {
   const { search, limit, offset } = pageParams(query)
   return { search, limit, offset }
+}
+
+const manageListParams = async (queryClient: QueryClient, search: Record<string, string>) => {
+  const channels = await queryClient.query(channelsQuery()).catch(noop)
+  return { ...listParams(search), channel: search.channel || channels?.[0]?.ulid }
 }
 
 export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(searchParams(search))).catch(noop)
@@ -80,3 +100,21 @@ export const settingMypageLoader = ({ queryClient }: PageLoad<object>) => Promis
 export const settingNotificationLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(settingNotificationQuery()).catch(noop)
 export const settingPasswordLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery()).catch(noop)
 export const settingPaymentLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(settingMypageQuery()).catch(noop)
+
+export const manageLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery()).catch(noop)
+export const manageVideoListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageVideoListQuery(await manageListParams(queryClient, search))).catch(noop)
+export const manageMusicListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageMusicListQuery(await manageListParams(queryClient, search))).catch(noop)
+export const manageBlogListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageBlogListQuery(await manageListParams(queryClient, search))).catch(noop)
+export const manageComicListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageComicListQuery(await manageListParams(queryClient, search))).catch(noop)
+export const managePictureListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(managePictureListQuery(await manageListParams(queryClient, search))).catch(noop)
+export const manageChatListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageChatListQuery(await manageListParams(queryClient, search))).catch(noop)
+export const manageAdvertiseListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageAdvertiseListQuery(listParams(search))).catch(noop)
+export const manageCreateLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())]).catch(noop)
+
+export const manageVideoEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => Promise.all([queryClient.query(manageVideoDetailQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())]).catch(noop)
+export const manageMusicEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => Promise.all([queryClient.query(manageMusicDetailQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())]).catch(noop)
+export const manageBlogEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => Promise.all([queryClient.query(manageBlogDetailQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())]).catch(noop)
+export const manageComicEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => Promise.all([queryClient.query(manageComicDetailQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())]).catch(noop)
+export const managePictureEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => Promise.all([queryClient.query(managePictureDetailQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())]).catch(noop)
+export const manageChatEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => Promise.all([queryClient.query(manageChatDetailQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())]).catch(noop)
+export const manageAdvertiseEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => queryClient.query(manageAdvertiseDetailQuery(params.ulid)).catch(noop)

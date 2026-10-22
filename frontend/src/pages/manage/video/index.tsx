@@ -1,8 +1,5 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { toQuery } from 'lib/query/client'
-import { queryKeys } from 'lib/query/keys'
-import { getChannels } from 'api/internal/channel'
-import { getManageVideos } from 'api/internal/manage/get'
+import { useQuery } from '@tanstack/react-query'
+import { channelsQuery, manageVideoListQuery } from 'lib/query/options'
 import { pageParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
@@ -12,16 +9,11 @@ export default function ManageVideosPage(): React.JSX.Element {
   const router = useRouter()
   const { search, page, limit, offset } = pageParams(router.query)
 
-  const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
+  const channels = useQuery(channelsQuery())
   const channel = router.query.channel?.toString() || channels.data?.[0]?.ulid
   const params = { search, channel, limit, offset }
 
-  const data = useQuery({
-    queryKey: queryKeys.manageVideoList(params),
-    queryFn: () => toQuery(getManageVideos(params)),
-    enabled: channels.isSuccess,
-    placeholderData: keepPreviousData,
-  })
+  const data = useQuery({ ...manageVideoListQuery(params), enabled: channels.isSuccess })
   const queries = { channels, data }
 
   return (
