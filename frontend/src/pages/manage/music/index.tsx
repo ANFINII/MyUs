@@ -18,7 +18,7 @@ export default function ManageMusicsPage(): React.JSX.Element {
 
   return (
     <QueryCheck title="Music" queries={queries}>
-      {(props) => <ManageMusics {...props} page={page} />}
+      {(props) => <ManageMusics key={`${channel}-${search}-${page}`} {...props} page={page} />}
     </QueryCheck>
   )
 }

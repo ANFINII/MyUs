@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
 import { toErrorMessage } from 'lib/error'
+import { queryKeys } from 'lib/query/keys'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
 import { FetchError } from 'utils/constants/enum'
@@ -23,6 +25,7 @@ export default function Payment(props: Props): React.JSX.Element {
   const { mypage } = props
 
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { t, i18n } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -59,7 +62,7 @@ export default function Payment(props: Props): React.JSX.Element {
     setIsModal(false)
     const periodEnd = new Date(ret.value.periodEnd).toLocaleDateString(i18n.language)
     handleToast(t('setting.payment.cancelReserved', { periodEnd }), false)
-    router.reload()
+    await queryClient.invalidateQueries({ queryKey: queryKeys.settingMypage })
   }
 
   return (

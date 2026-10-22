@@ -18,7 +18,7 @@ export default function ManageChatsPage(): React.JSX.Element {
 
   return (
     <QueryCheck title="Chat" queries={queries}>
-      {(props) => <ManageChats {...props} page={page} />}
+      {(props) => <ManageChats key={`${channel}-${search}-${page}`} {...props} page={page} />}
     </QueryCheck>
   )
 }

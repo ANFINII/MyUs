@@ -18,7 +18,7 @@ export default function ManageComicsPage(): React.JSX.Element {
 
   return (
     <QueryCheck title="Comic" queries={queries}>
-      {(props) => <ManageComics {...props} page={page} />}
+      {(props) => <ManageComics key={`${channel}-${search}-${page}`} {...props} page={page} />}
     </QueryCheck>
   )
 }

@@ -18,7 +18,7 @@ export default function ManageBlogsPage(): React.JSX.Element {
 
   return (
     <QueryCheck title="Blog" queries={queries}>
-      {(props) => <ManageBlogs {...props} page={page} />}
+      {(props) => <ManageBlogs key={`${channel}-${search}-${page}`} {...props} page={page} />}
     </QueryCheck>
   )
 }
