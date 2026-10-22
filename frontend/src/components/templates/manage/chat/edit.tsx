@@ -7,7 +7,6 @@ import { Chat } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageChat } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
-import { useApiError } from 'components/hooks/useApiError'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -37,7 +36,6 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const { handleError } = useApiError({ handleToast })
   const { formatDate } = useDatetime()
   const [values, setValues] = useState<ChatUpdateIn>({ ...data, period: formatDate(data.period) })
 
@@ -58,7 +56,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
     const ret = await putManageChat(data.ulid, values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleError(FetchError.Put, ret.error.message)
+      handleToast(ret.error.message ?? FetchError.Put, true)
       return
     }
     handleToast(Fetch.Save, false)

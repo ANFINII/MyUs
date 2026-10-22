@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Advertise, AdvertiseUpdateIn } from 'types/internal/advertise'
 import { putManageAdvertise } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
-import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -30,7 +29,6 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const { handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<AdvertiseUpdateIn>({ title: data.title, url: data.url, content: data.content, publish: data.publish, period: data.period })
 
   const handleBack = () => router.push('/manage/advertise')
@@ -48,7 +46,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
     const ret = await putManageAdvertise(data.ulid, values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleError(FetchError.Put, ret.error.message)
+      handleToast(ret.error.message ?? FetchError.Put, true)
       return
     }
     handleToast(Fetch.Save, false)
