@@ -7,12 +7,12 @@ interface Props {
   title?: string
 }
 
-export default function PageLoading(props: Props): React.JSX.Element | null {
+export default function PageLoading(props: Props): React.JSX.Element {
   const { title } = props
 
   const isInitial = useRouterState({ select: (s) => s.resolvedLocation === undefined })
 
-  if (!isInitial) return null
+  if (!isInitial) return <></>
 
   return (
     <Main metaTitle={title} isFooter={false}>
