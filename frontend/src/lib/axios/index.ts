@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
 import { snakeCamel } from 'utils/functions/convertCase'
+import { retryWithRefresh } from './refresh'
 
 export const axiosInterceptor = (client: AxiosInstance) => {
   client.interceptors.response.use(
@@ -8,11 +9,15 @@ export const axiosInterceptor = (client: AxiosInstance) => {
       return response
     },
     (e: AxiosError) => {
-      const status = e.response?.status
-      if (status && status >= 400) {
-        return Promise.reject(e)
-      }
-      return Promise.resolve(e.response)
+      return retryWithRefresh(client, e).then((retried) => {
+        if (retried !== null) return retried
+
+        const status = e.response?.status
+        if (status && status >= 400) {
+          return Promise.reject(e)
+        }
+        return Promise.resolve(e.response)
+      })
     },
   )
 }
