@@ -5,7 +5,7 @@ import { Channel } from 'types/internal/channel'
 import { MusicIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postMusicCreate } from 'api/internal/manage/create'
-import { Fetch, FetchError } from 'utils/constants/enum'
+import { FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -57,7 +57,6 @@ export default function MusicCreate(props: Props): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    handleToast(Fetch.Create, false)
     router.push({ pathname: '/manage/music', query: { channel: channelUlid } })
   }
 

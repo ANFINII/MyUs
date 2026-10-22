@@ -1,6 +1,5 @@
 import { I18nProvider } from 'components/provider/I18nProvider'
 import { QueryProvider } from 'components/provider/QueryProvider'
-import { ToastProvider } from 'components/provider/ToastProvider'
 import { UserProvider } from 'components/provider/UserProvider'
 
 interface Props {
@@ -13,9 +12,7 @@ export function AppProvider(props: Props): React.JSX.Element {
   return (
     <I18nProvider>
       <QueryProvider>
-        <UserProvider>
-          <ToastProvider>{children}</ToastProvider>
-        </UserProvider>
+        <UserProvider>{children}</UserProvider>
       </QueryProvider>
     </I18nProvider>
   )

@@ -56,7 +56,6 @@ export default function VideoCreate(props: Props): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    handleToast(t('manage.toast.creating'), false)
     router.push({ pathname: '/manage/video', query: { channel: channelUlid } })
   }
 

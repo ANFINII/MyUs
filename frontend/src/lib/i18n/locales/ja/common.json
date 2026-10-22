@@ -2,7 +2,6 @@
   "welcome": "MyUsへようこそ",
   "fetch": {
     "save": "保存しました",
-    "create": "作成しました",
     "delete": "削除しました"
   },
   "fetchError": {
@@ -187,9 +186,6 @@
     "deleteModal": {
       "title": "データの削除",
       "content": "{{count}}件のデータを削除しますか？"
-    },
-    "toast": {
-      "creating": "作成中です。完了まで時間がかかる場合があります"
     },
     "table": {
       "image": "画像",

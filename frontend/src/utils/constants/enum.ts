@@ -1,6 +1,5 @@
 export enum Fetch {
   Save = 'fetch.save',
-  Create = 'fetch.create',
   Delete = 'fetch.delete',
 }
 
