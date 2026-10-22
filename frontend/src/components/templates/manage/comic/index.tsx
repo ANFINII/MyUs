@@ -60,7 +60,7 @@ export default function ManageComics(props: Props): React.JSX.Element {
     }
     setSelectedKeys(new Set())
     handleModal()
-    await queryClient.invalidateQueries({ queryKey: queryKeys.manageComics })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.manageComicAll })
   }
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))

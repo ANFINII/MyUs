@@ -60,7 +60,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
     }
     setSelectedKeys(new Set())
     handleModal()
-    await queryClient.invalidateQueries({ queryKey: queryKeys.manageBlogs })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.manageBlogAll })
   }
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))

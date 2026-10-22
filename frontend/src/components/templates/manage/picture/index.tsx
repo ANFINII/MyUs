@@ -60,7 +60,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
     }
     setSelectedKeys(new Set())
     handleModal()
-    await queryClient.invalidateQueries({ queryKey: queryKeys.managePictures })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.managePictureAll })
   }
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
