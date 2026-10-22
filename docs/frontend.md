@@ -125,7 +125,7 @@ page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
   - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ（1秒を超えると`PageLoading`）。取得の失敗は`.catch(noop)`で握りつぶし、ページの`QueryCheck`が404・500の画面を出す（`prefetchQuery`・`fetchQuery`・`ensureQueryData`は非推奨のため使わない）
   - `loader`は遷移のたびに最新を取るため、`fresh`は付けない（`useState`の初期値に使う画面でも古いキャッシュで初期化されない）
   - 閲覧数の加算など、遷移のたびに1回だけ行う処理は`queryFn`ではなく`xxxLoader`の中で呼ぶ（`queryFn`は再試行で複数回呼ばれる）
-  - 遷移元によって処理を変えるときは、loader の引数`from`（遷移元のパス）を使う（チャットの詳細とスレッドの行き来では、閲覧数の加算も取り直しもしない）
+  - チャットのスレッド（`/media/chat/$ulid/thread/$messageUlid`）は`chatThreadLoader`で詳細だけを取り、閲覧数は加算しない（加算はチャットの`chatDetailLoader`だけ）
 - エラー時の画面は`Status/Check`が`ApiError.type`（BEの`ErrorOut.type`）で出し分ける。`status`を見るのは、500画面の判定（nginx等が返したエラー・ネットワークエラーは`type`を持たない）と再試行（`shouldRetry`）だけにする
 
 ```typescript
