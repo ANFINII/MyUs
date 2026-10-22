@@ -107,10 +107,16 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     })
   }, [threadUlid, messages])
 
+  const isNewAuthor = (prev: ChatDetailState, authorUlid: string): boolean => {
+    const replies = Object.values(prev.replies).flat()
+    return ![...prev.messages, ...replies].some((m) => m.author.ulid === authorUlid)
+  }
+
   const handleWsCreateMessage = (newMessage: ChatMessage) => {
     setFormState((prev) => {
       if (prev.messages.some((m) => m.ulid === newMessage.ulid)) return prev
-      return { ...prev, messages: [...prev.messages, newMessage], joined: prev.joined + 1, thread: prev.thread + 1 }
+      const joined = isNewAuthor(prev, newMessage.author.ulid) ? prev.joined + 1 : prev.joined
+      return { ...prev, messages: [...prev.messages, newMessage], joined, thread: prev.thread + 1 }
     })
   }
 
@@ -118,8 +124,10 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     setFormState((prev) => {
       const existing = prev.replies[newReply.parentUlid] ?? []
       if (existing.some((r) => r.ulid === newReply.ulid)) return prev
+      const joined = isNewAuthor(prev, newReply.author.ulid) ? prev.joined + 1 : prev.joined
       return {
         ...prev,
+        joined,
         messages: prev.messages.map((m) => (m.ulid === newReply.parentUlid ? { ...m, replyCount: m.replyCount + 1 } : m)),
         replies: {
           ...prev.replies,
@@ -140,8 +148,10 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const handleWsDeleteMessage = (ulid: string) => {
     setFormState((prev) => {
       const parentUlid = Object.entries(prev.replies).find(([, list]) => list.some((r) => r.ulid === ulid))?.[0]
+      const isMessage = prev.messages.some((m) => m.ulid === ulid)
       return {
         ...prev,
+        thread: isMessage ? Math.max(0, prev.thread - 1) : prev.thread,
         messages: parentUlid
           ? prev.messages.map((m) => (m.ulid === parentUlid ? { ...m, replyCount: Math.max(0, m.replyCount - 1) } : m)).filter((m) => m.ulid !== ulid)
           : prev.messages.filter((m) => m.ulid !== ulid),

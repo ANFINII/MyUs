@@ -72,7 +72,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
           extendedPlayer.hlsQualitySelector({ displayCurrentQuality: false })
           // 設定メニューの作成
           if (!settingsMenuCreatedRef.current) {
-            setTimeout(() => {
+            player.setTimeout(() => {
               createSettingsMenu(extendedPlayer, labels)
               settingsMenuCreatedRef.current = true
             }, MENU_DELAY_MS)
@@ -82,10 +82,10 @@ export default function VideoJS(props: Props): React.JSX.Element {
         const isHLS = playerOptions.sources?.[0]?.type === 'application/x-mpegURL'
         if (isHLS) {
           player.on('loadedmetadata', () => {
-            setTimeout(initializeQualitySelector, 100)
+            player.setTimeout(initializeQualitySelector, 100)
           })
         } else if (!settingsMenuCreatedRef.current) {
-          setTimeout(() => {
+          player.setTimeout(() => {
             createSettingsMenu(extendedPlayer, labels, false)
             settingsMenuCreatedRef.current = true
           }, MENU_DELAY_MS)
