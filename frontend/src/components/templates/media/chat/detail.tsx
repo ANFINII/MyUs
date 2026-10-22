@@ -56,7 +56,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     joined: detail.joined,
     thread: detail.thread,
     likeCount: detail.like,
-    subscribeCount: 0,
+    subscribeCount: detail.channel.count,
     isLike: detail.mediaUser.isLike,
     isSubscribe: detail.mediaUser.isSubscribe,
   }
