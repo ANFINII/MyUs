@@ -114,7 +114,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: flex-start;
     width: 24px;
+    padding-top: 6px;
     visibility: hidden;
     cursor: pointer;
 
