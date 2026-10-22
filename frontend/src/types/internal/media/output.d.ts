@@ -30,7 +30,6 @@ export interface Media {
   updated: Date
   categoryUlid: string
   channel: Channel
-  mediaUser: MediaUser
 }
 
 export interface Hashtag {
@@ -190,6 +189,10 @@ export interface PictureDetailOut {
 export interface ChatDetailOut {
   detail: ChatDetail
   list: Chat[]
+}
+
+export interface MediaCreateOut {
+  ulid: string
 }
 
 export interface MediaReadOut {

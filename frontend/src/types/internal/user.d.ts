@@ -8,18 +8,6 @@ export interface UserMe {
   isStaff: boolean
 }
 
-export interface User {
-  avatar: string
-  ulid: string
-  email: string
-  username: string
-  nickname: string
-  isActive: boolean
-  isStaff: boolean
-  lastLogin: string
-  dateJoined: string
-}
-
 export interface Author {
   avatar: string
   ulid: string
@@ -33,7 +21,11 @@ export interface NotificationUser {
   nickname: string
 }
 
-export interface ProfileOut extends User {
+export interface ProfileOut {
+  avatar: string
+  email: string
+  username: string
+  nickname: string
   lastName: string
   firstName: string
   year: number

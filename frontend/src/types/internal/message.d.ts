@@ -1,12 +1,15 @@
 import { Author } from 'types/internal/user'
 
-export interface ChatMessage {
+export interface ChatReplyOut {
   ulid: string
   text: string
-  replyCount: number
   created: Date
   updated: Date
   author: Author
+}
+
+export interface ChatMessage extends ChatReplyOut {
+  replyCount: number
 }
 
 export interface ChatReply extends ChatMessage {

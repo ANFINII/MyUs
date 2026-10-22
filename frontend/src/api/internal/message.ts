@@ -1,6 +1,6 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
-import { ChatMessage, MessageCreateIn, MessageUpdateIn } from 'types/internal/message'
+import { ChatMessage, ChatReplyOut, MessageCreateIn, MessageUpdateIn } from 'types/internal/message'
 import { apiMessages, apiMessage } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
@@ -8,7 +8,7 @@ export const postMessage = async (request: MessageCreateIn): Promise<ApiOut<Chat
   return await apiOut(apiClient('json').post(apiMessages, camelSnake(request)))
 }
 
-export const getReplies = async (ulid: string): Promise<ApiOut<ChatMessage[]>> => {
+export const getReplies = async (ulid: string): Promise<ApiOut<ChatReplyOut[]>> => {
   return await apiOut(apiClient('json').get(apiMessage(ulid)))
 }
 
