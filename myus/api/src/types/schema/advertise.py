@@ -7,7 +7,7 @@ class AdvertiseIn(BaseModel):
     url: str
     content: str
     publish: bool
-    period: date | None = None
+    period: date
 
 
 class AdvertiseUpdateIn(BaseModel):
@@ -15,7 +15,7 @@ class AdvertiseUpdateIn(BaseModel):
     url: str
     content: str
     publish: bool
-    period: date | None = None
+    period: date
 
 
 class AdvertiseOut(BaseModel):

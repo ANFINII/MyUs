@@ -3,7 +3,7 @@ export interface AdvertiseIn {
   url: string
   content: string
   publish: boolean
-  period: string | null
+  period: string
   image?: File
   video?: File
 }
@@ -13,7 +13,7 @@ export interface AdvertiseUpdateIn {
   url: string
   content: string
   publish: boolean
-  period: string | null
+  period: string
   image?: File
   video?: File
 }

@@ -23,19 +23,19 @@ export default function AdvertiseCreate(): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<AdvertiseIn>({ title: '', url: '', content: '', publish: true, period: null })
+  const [values, setValues] = useState<AdvertiseIn>({ title: '', url: '', content: '', publish: true, period: '' })
 
   const handleBack = () => router.push('/manage/advertise')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handlePeriod = (period: string) => setValues({ ...values, period: period || null })
+  const handlePeriod = (period: string) => setValues({ ...values, period })
   const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handleVideo = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
 
   const handleForm = async () => {
-    const { title, url, content, image } = values
-    if (!validate({ title, url, content, image })) return
+    const { title, url, content, image, period } = values
+    if (!validate({ title, url, content, image, period })) return
     handleLoading(true)
     const ret = await postAdvertiseCreate(values)
     handleLoading(false)
@@ -43,7 +43,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    setValues({ title: '', url: '', content: '', publish: true, period: null })
+    setValues({ title: '', url: '', content: '', publish: true, period: '' })
     handleToast(Fetch.Create, false)
   }
 
@@ -64,7 +64,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.image')} accept="image/*" required error={error} onChange={handleImage} />
           <InputFile label={t('manage.form.video')} accept="video/*" onChange={handleVideo} />
-          <DatePicker label={t('manage.form.period')} name="period" value={values.period ?? ''} onChange={handlePeriod} />
+          <DatePicker label={t('manage.form.period')} name="period" value={values.period} required error={error} onChange={handlePeriod} />
         </VStack>
       </form>
     </Main>
