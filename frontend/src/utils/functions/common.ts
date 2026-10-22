@@ -27,5 +27,3 @@ export const assertNever = (value: never): never => {
 export const assertUnexpected = (value: unknown): never => {
   throw new Error(`Unexpected value: ${value}`)
 }
-
-export const omitNull = (obj: object): object => Object.fromEntries(Object.entries(obj).filter(([, value]) => value !== null))

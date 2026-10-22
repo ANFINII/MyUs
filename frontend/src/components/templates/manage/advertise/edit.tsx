@@ -31,19 +31,19 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [values, setValues] = useState<AdvertiseUpdateIn>({ title: data.title, url: data.url, content: data.content, publish: data.publish, period: data.period })
+  const [values, setValues] = useState<AdvertiseUpdateIn>({ title: data.title, url: data.url, content: data.content, publish: data.publish, period: data.period ?? '' })
 
   const handleBack = () => router.push('/manage/advertise')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handlePeriod = (period: string) => setValues({ ...values, period: period || null })
+  const handlePeriod = (period: string) => setValues({ ...values, period })
   const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handleVideo = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
 
   const handleForm = async () => {
-    const { title, url, content } = values
-    if (!validate({ title, url, content })) return
+    const { title, url, content, period } = values
+    if (!validate({ title, url, content, period })) return
     handleLoading(true)
     const ret = await putManageAdvertise(data.ulid, values)
     handleLoading(false)
@@ -71,7 +71,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.image')} accept="image/*" required error={error} onChange={handleImage} />
           <InputFile label={t('manage.form.video')} accept="video/*" onChange={handleVideo} />
-          <DatePicker label={t('manage.form.displayPeriod')} name="period" value={values.period ?? ''} onChange={handlePeriod} />
+          <DatePicker label={t('manage.form.displayPeriod')} name="period" value={values.period} required error={error} onChange={handlePeriod} />
         </VStack>
       </form>
     </Main>
