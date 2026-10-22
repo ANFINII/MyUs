@@ -1,15 +1,16 @@
 import { Author } from 'types/internal/user'
 
-export interface ChatMessage {
+export interface ChatReplyOut {
   ulid: string
   text: string
-  replyCount: number
   created: Date
   updated: Date
   author: Author
 }
 
-export type ChatReplyOut = Omit<ChatMessage, 'replyCount'>
+export interface ChatMessage extends ChatReplyOut {
+  replyCount: number
+}
 
 export interface ChatReply extends ChatMessage {
   parentUlid: string
