@@ -1,3 +1,4 @@
+import { useRouterState } from '@tanstack/react-router'
 import Main from 'components/layout/Main'
 import Spinner from 'components/parts/Spinner'
 import style from './Status.module.scss'
@@ -8,6 +9,9 @@ interface Props {
 
 export default function PageLoading(props: Props): React.JSX.Element {
   const { title } = props
+
+  const isInitial = useRouterState({ select: (s) => s.resolvedLocation === undefined })
+  if (!isInitial) return <></>
 
   return (
     <Main metaTitle={title} isFooter={false}>
