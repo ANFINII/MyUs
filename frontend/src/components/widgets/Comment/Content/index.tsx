@@ -75,6 +75,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   }
 
   const handleMediaReply = async () => {
+    if (loading || replyText.trim() === '') return
     handleLoading(true)
     const text = replyText
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
@@ -93,6 +94,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   }
 
   const handleUpdate = async () => {
+    if (loading || commentText.trim() === '') return
     handleLoading(true)
     const text = commentText
     const ret = await putComment(ulid, { text })
