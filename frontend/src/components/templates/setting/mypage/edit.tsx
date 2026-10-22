@@ -6,6 +6,7 @@ import { MypageIn, MypageOut } from 'types/internal/user'
 import { putChannel } from 'api/internal/channel'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
+import { previewUrl } from 'utils/functions/file'
 import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
@@ -39,23 +40,34 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
   const [bannerFile, setBannerFile] = useState<File>()
+  const [bannerPreview, setBannerPreview] = useState<string>()
   const [mypageValues, setMypageValues] = useState<MypageOut>(mypage)
   const [avatarFiles, setAvatarFiles] = useState<Record<string, File>>({})
+  const [avatarPreviews, setAvatarPreviews] = useState<Record<string, string>>({})
   const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
   const [channelValues, setChannelValues] = useState<Record<string, Channel>>(Object.fromEntries(channels.map((c) => [c.ulid, c])))
 
   const channel = channelValues[channelUlid]!
-  const avatarFile = avatarFiles[channelUlid]
-  const bannerUrl = bannerFile ? URL.createObjectURL(bannerFile) : mypage.banner
-  const avatarUrl = avatarFile ? URL.createObjectURL(avatarFile) : channel.avatar
+  const bannerUrl = bannerPreview ?? mypage.banner
+  const avatarUrl = avatarPreviews[channelUlid] ?? channel.avatar
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
   const handleBack = () => router.push('/setting/mypage')
-  const handleBanner = (files: File | File[]) => Array.isArray(files) || setBannerFile(files)
-  const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFiles({ ...avatarFiles, [channelUlid]: files })
   const handleToggle = () => setMypageValues({ ...mypageValues, isAdvertise: !mypageValues.isAdvertise })
   const handleMypageInput = (e: ChangeEvent<HTMLInputElement>) => setMypageValues({ ...mypageValues, [e.target.name]: e.target.value })
   const handleMypageText = (e: ChangeEvent<HTMLTextAreaElement>) => setMypageValues({ ...mypageValues, [e.target.name]: e.target.value })
+
+  const handleBanner = (files: File | File[]) => {
+    if (Array.isArray(files)) return
+    setBannerFile(files)
+    setBannerPreview(previewUrl(files, bannerPreview))
+  }
+
+  const handleAvatar = (files: File | File[]) => {
+    if (Array.isArray(files)) return
+    setAvatarFiles({ ...avatarFiles, [channelUlid]: files })
+    setAvatarPreviews({ ...avatarPreviews, [channelUlid]: previewUrl(files, avatarPreviews[channelUlid]) })
+  }
 
   const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
 

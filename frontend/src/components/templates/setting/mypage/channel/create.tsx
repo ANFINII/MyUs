@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ChannelIn } from 'types/internal/channel'
 import { postChannel } from 'api/internal/channel'
 import { FetchError } from 'utils/constants/enum'
+import { previewUrl } from 'utils/functions/file'
 import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -32,12 +33,19 @@ export default function ChannelCreate(): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
   const [avatarFile, setAvatarFile] = useState<File>()
+  const [avatarPreview, setAvatarPreview] = useState<string>()
   const [values, setValues] = useState<ChannelIn>(initChannel)
 
-  const avatarUrl = avatarFile ? URL.createObjectURL(avatarFile) : ''
+  const avatarUrl = avatarPreview ?? ''
 
   const handleBack = () => router.push('/setting/mypage')
-  const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFile(files)
+
+  const handleAvatar = (files: File | File[]) => {
+    if (Array.isArray(files)) return
+    setAvatarFile(files)
+    setAvatarPreview(previewUrl(files, avatarPreview))
+  }
+
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
