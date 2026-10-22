@@ -1,9 +1,11 @@
 import { createRouter, LocationRewrite } from '@tanstack/react-router'
 import { getLocale } from 'lib/i18n'
+import { queryClient } from 'lib/query/client'
 import { routeTree } from 'lib/routes'
 import { AppProvider } from 'components/provider/AppProvider'
 import Custom404 from 'components/widgets/Status/Custom404'
 import Custom500 from 'components/widgets/Status/Custom500'
+import PageLoading from 'components/widgets/Status/Loading'
 
 const parseSearch = (search: string): Record<string, string> => Object.fromEntries(new URLSearchParams(search))
 
@@ -38,7 +40,9 @@ export const router = createRouter({
   parseSearch,
   stringifySearch,
   rewrite,
+  context: { queryClient },
   InnerWrap: AppProvider,
+  defaultPendingComponent: PageLoading,
   defaultNotFoundComponent: Custom404,
   defaultErrorComponent: Custom500,
 })

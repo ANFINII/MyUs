@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { createQueryClient } from 'lib/query/client'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from 'lib/query/client'
 
 interface Props {
   children: React.ReactNode
@@ -9,7 +8,5 @@ interface Props {
 export function QueryProvider(props: Props): React.JSX.Element {
   const { children } = props
 
-  const [client] = useState<QueryClient>(createQueryClient)
-
-  return <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 }

@@ -1,10 +1,19 @@
-import { createRootRoute, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
+import { QueryClient } from '@tanstack/react-query'
+import { createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
+import { homeQuery, videoDetailQuery } from 'lib/query/options'
+import { postMediaRead } from 'api/internal/media/read'
+import { MediaType } from 'utils/constants/enum'
+import { searchParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
 import Unexpected from 'components/widgets/Status/Unexpected'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
+
+export interface RouterContext {
+  queryClient: QueryClient
+}
 
 function RootLayout(): React.JSX.Element {
   const router = useRouter()
@@ -18,21 +27,39 @@ function RootLayout(): React.JSX.Element {
   )
 }
 
-const rootRoute = createRootRoute({ component: RootLayout })
+const rootRoute = createRootRouteWithContext<RouterContext>()({ component: RootLayout })
 
 const page = <TPath extends string>(path: TPath, load: PageImport) => {
   return createRoute({ getParentRoute: () => rootRoute, path, component: lazyRouteComponent(load) })
 }
+
+const homeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: lazyRouteComponent(() => import('pages/index')),
+  loaderDeps: ({ search }) => searchParams(search),
+  loader: ({ context, deps }) => context.queryClient.prefetchQuery(homeQuery(deps)),
+})
+
+const videoDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/media/video/$ulid',
+  component: lazyRouteComponent(() => import('pages/media/video/detail')),
+  loader: ({ context, params }) => {
+    postMediaRead({ ulid: params.ulid, mediaType: MediaType.Video })
+    return context.queryClient.prefetchQuery(videoDetailQuery(params.ulid))
+  },
+})
 
 const chatRoute = page('/media/chat/$ulid', () => import('pages/media/chat/detail'))
 const chatIndexRoute = createRoute({ getParentRoute: () => chatRoute, path: '/', component: () => null })
 const chatThreadRoute = createRoute({ getParentRoute: () => chatRoute, path: '/thread/$messageUlid', component: () => null })
 
 export const routeTree = rootRoute.addChildren([
-  page('/', () => import('pages/index')),
+  homeRoute,
   page('/recommend', () => import('pages/recommend')),
   page('/media/video', () => import('pages/media/video')),
-  page('/media/video/$ulid', () => import('pages/media/video/detail')),
+  videoDetailRoute,
   page('/media/music', () => import('pages/media/music')),
   page('/media/music/$ulid', () => import('pages/media/music/detail')),
   page('/media/blog', () => import('pages/media/blog')),
