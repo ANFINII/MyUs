@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
-import { homeLoader, PageLoad, videoDetailLoader } from 'lib/query/loaders'
+import { blogDetailLoader, comicDetailLoader, homeLoader, musicDetailLoader, PageLoad, pictureDetailLoader, videoDetailLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
@@ -36,13 +36,13 @@ export const routeTree = rootRoute.addChildren([
   page('/media/video', () => import('pages/media/video')),
   page('/media/video/$ulid', () => import('pages/media/video/detail'), videoDetailLoader),
   page('/media/music', () => import('pages/media/music')),
-  page('/media/music/$ulid', () => import('pages/media/music/detail')),
+  page('/media/music/$ulid', () => import('pages/media/music/detail'), musicDetailLoader),
   page('/media/blog', () => import('pages/media/blog')),
-  page('/media/blog/$ulid', () => import('pages/media/blog/detail')),
+  page('/media/blog/$ulid', () => import('pages/media/blog/detail'), blogDetailLoader),
   page('/media/comic', () => import('pages/media/comic')),
-  page('/media/comic/$ulid', () => import('pages/media/comic/detail')),
+  page('/media/comic/$ulid', () => import('pages/media/comic/detail'), comicDetailLoader),
   page('/media/picture', () => import('pages/media/picture')),
-  page('/media/picture/$ulid', () => import('pages/media/picture/detail')),
+  page('/media/picture/$ulid', () => import('pages/media/picture/detail'), pictureDetailLoader),
   page('/media/chat', () => import('pages/media/chat')),
   page('/media/chat/$ulid', () => import('pages/media/chat/detail')),
   page('/media/chat/$ulid/thread/$messageUlid', () => import('pages/media/chat/detail')),
