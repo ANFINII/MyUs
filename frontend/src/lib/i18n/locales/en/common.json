@@ -2,7 +2,6 @@
   "welcome": "Welcome to MyUs",
   "fetch": {
     "save": "Saved",
-    "create": "Created",
     "delete": "Deleted"
   },
   "fetchError": {
@@ -190,9 +189,6 @@
       "title": "Delete data",
       "content_one": "Delete {{count}} item?",
       "content_other": "Delete {{count}} items?"
-    },
-    "toast": {
-      "creating": "Creating. This may take a while to finish."
     },
     "table": {
       "image": "Image",

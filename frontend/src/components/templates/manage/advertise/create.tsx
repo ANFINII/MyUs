@@ -2,7 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AdvertiseIn } from 'types/internal/advertise'
 import { postAdvertiseCreate } from 'api/internal/manage/create'
-import { Fetch, FetchError } from 'utils/constants/enum'
+import { FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -43,8 +43,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    setValues({ title: '', url: '', content: '', publish: true, period: '' })
-    handleToast(Fetch.Create, false)
+    router.push('/manage/advertise')
   }
 
   const button = (
