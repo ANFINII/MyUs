@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet, ResolveParams } from '@tanstack/react-router'
+import { AnyRoute, createRootRouteWithContext, createRoute, lazyRouteComponent, Outlet, ResolveParams } from '@tanstack/react-router'
 import { homeLoader, PageLoad, videoDetailLoader } from 'lib/query/loaders'
 import { useRouter } from 'components/hooks/useRouter'
 import Layout from 'components/layout'
@@ -38,9 +38,9 @@ const page = <TPath extends string>(path: TPath, load: PageImport, loader?: Page
   })
 }
 
-const chatRoute = page('/media/chat/$ulid', () => import('pages/media/chat/detail'))
-const chatIndexRoute = createRoute({ getParentRoute: () => chatRoute, path: '/', component: () => null })
-const chatThreadRoute = createRoute({ getParentRoute: () => chatRoute, path: '/thread/$messageUlid', component: () => null })
+const nest = <TParent extends AnyRoute>(parent: TParent, paths: string[]) => {
+  return parent.addChildren(paths.map((path) => createRoute({ getParentRoute: () => parent, path, component: () => null })))
+}
 
 export const routeTree = rootRoute.addChildren([
   page('/', () => import('pages/index'), homeLoader),
@@ -56,7 +56,7 @@ export const routeTree = rootRoute.addChildren([
   page('/media/picture', () => import('pages/media/picture')),
   page('/media/picture/$ulid', () => import('pages/media/picture/detail')),
   page('/media/chat', () => import('pages/media/chat')),
-  chatRoute.addChildren([chatIndexRoute, chatThreadRoute]),
+  nest(page('/media/chat/$ulid', () => import('pages/media/chat/detail')), ['/', '/thread/$messageUlid']),
   page('/userpage/$ulid', () => import('pages/userpage')),
 
   page('/menu/channel', () => import('pages/menu/channel')),
