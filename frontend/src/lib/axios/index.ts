@@ -8,15 +8,16 @@ export const axiosInterceptor = (client: AxiosInstance) => {
       response.data = snakeCamel(response.data)
       return response
     },
-    async (e: AxiosError) => {
-      const retried = await retryWithRefresh(client, e)
-      if (retried !== null) return retried
+    (e: AxiosError) => {
+      return retryWithRefresh(client, e).then((retried) => {
+        if (retried !== null) return retried
 
-      const status = e.response?.status
-      if (status && status >= 400) {
-        return Promise.reject(e)
-      }
-      return Promise.resolve(e.response)
+        const status = e.response?.status
+        if (status && status >= 400) {
+          return Promise.reject(e)
+        }
+        return Promise.resolve(e.response)
+      })
     },
   )
 }
