@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query'
+import { noop, QueryClient } from '@tanstack/react-query'
 import { homeQuery, videoDetailQuery } from 'lib/query/options'
 import { postMediaRead } from 'api/internal/media/read'
 import { MediaType } from 'utils/constants/enum'
@@ -10,9 +10,9 @@ export interface PageLoad<TParams> {
   search: Record<string, string>
 }
 
-export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.prefetchQuery(homeQuery(searchParams(search)))
+export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(searchParams(search))).catch(noop)
 
 export const videoDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Video })
-  return queryClient.prefetchQuery(videoDetailQuery(params.ulid))
+  return queryClient.query(videoDetailQuery(params.ulid)).catch(noop)
 }

@@ -8,7 +8,7 @@ import Unexpected from 'components/widgets/Status/Unexpected'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
 
-type PageLoader<TPath extends string> = (load: PageLoad<ResolveParams<TPath>>) => Promise<void>
+type PageLoader<TPath extends string> = (load: PageLoad<ResolveParams<TPath>>) => Promise<unknown>
 
 export interface RouterContext {
   queryClient: QueryClient
