@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { musicDetailQuery } from 'lib/query/options'
+import { musicQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import MusicDetail from 'components/templates/media/music/detail'
@@ -8,7 +8,7 @@ export default function MusicDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery(musicDetailQuery(ulid))
+  const data = useQuery(musicQuery(ulid))
   const queries = { data }
 
   return (

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { channelsQuery, manageComicListQuery } from 'lib/query/options'
+import { channelsQuery, manageComicsQuery } from 'lib/query/options'
 import { pageParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
@@ -13,7 +13,7 @@ export default function ManageComicsPage(): React.JSX.Element {
   const channel = router.query.channel?.toString() || channels.data?.[0]?.ulid
   const params = { search, channel, limit, offset }
 
-  const data = useQuery({ ...manageComicListQuery(params), enabled: channels.isSuccess })
+  const data = useQuery({ ...manageComicsQuery(params), enabled: channels.isSuccess })
   const queries = { channels, data }
 
   return (

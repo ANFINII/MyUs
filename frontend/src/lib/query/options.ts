@@ -34,22 +34,19 @@ export const categoriesQuery = () => queryOptions({ queryKey: queryKeys.categori
 export const homeQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), refetchOnMount: false })
 export const recommendQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.recommend(params), queryFn: () => toQuery(getRecommend(params)), refetchOnMount: false })
 
-export const videoListQuery = (params: SearchParams) =>
-  queryOptions({ queryKey: queryKeys.mediaVideoList(params), queryFn: () => toQuery(getVideos(params)), refetchOnMount: false })
-export const musicListQuery = (params: SearchParams) =>
-  queryOptions({ queryKey: queryKeys.mediaMusicList(params), queryFn: () => toQuery(getMusics(params)), refetchOnMount: false })
-export const blogListQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaBlogList(params), queryFn: () => toQuery(getBlogs(params)), refetchOnMount: false })
-export const comicListQuery = (params: SearchParams) =>
-  queryOptions({ queryKey: queryKeys.mediaComicList(params), queryFn: () => toQuery(getComics(params)), refetchOnMount: false })
-export const pictureListQuery = (params: SearchParams) =>
+export const videosQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaVideoList(params), queryFn: () => toQuery(getVideos(params)), refetchOnMount: false })
+export const musicsQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaMusicList(params), queryFn: () => toQuery(getMusics(params)), refetchOnMount: false })
+export const blogsQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaBlogList(params), queryFn: () => toQuery(getBlogs(params)), refetchOnMount: false })
+export const comicsQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaComicList(params), queryFn: () => toQuery(getComics(params)), refetchOnMount: false })
+export const picturesQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.mediaPictureList(params), queryFn: () => toQuery(getPictures(params)), refetchOnMount: false })
-export const chatListQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaChatList(params), queryFn: () => toQuery(getChats(params)), refetchOnMount: false })
+export const chatsQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaChatList(params), queryFn: () => toQuery(getChats(params)), refetchOnMount: false })
 
-export const videoDetailQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaVideoDetail(ulid), queryFn: () => toQuery(getVideo(ulid)), refetchOnMount: false })
-export const musicDetailQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaMusicDetail(ulid), queryFn: () => toQuery(getMusic(ulid)), refetchOnMount: false })
-export const blogDetailQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaBlogDetail(ulid), queryFn: () => toQuery(getBlog(ulid)), refetchOnMount: false })
-export const comicDetailQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaComicDetail(ulid), queryFn: () => toQuery(getComic(ulid)), refetchOnMount: false })
-export const pictureDetailQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaPictureDetail(ulid), queryFn: () => toQuery(getPicture(ulid)), refetchOnMount: false })
+export const videoQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaVideoDetail(ulid), queryFn: () => toQuery(getVideo(ulid)), refetchOnMount: false })
+export const musicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaMusicDetail(ulid), queryFn: () => toQuery(getMusic(ulid)), refetchOnMount: false })
+export const blogQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaBlogDetail(ulid), queryFn: () => toQuery(getBlog(ulid)), refetchOnMount: false })
+export const comicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaComicDetail(ulid), queryFn: () => toQuery(getComic(ulid)), refetchOnMount: false })
+export const pictureQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaPictureDetail(ulid), queryFn: () => toQuery(getPicture(ulid)), refetchOnMount: false })
 
 export const followsQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.follows(params), queryFn: () => toQuery(getFollow(params)), refetchOnMount: false })
 export const followersQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.followers(params), queryFn: () => toQuery(getFollower(params)), refetchOnMount: false })
@@ -57,32 +54,27 @@ export const settingProfileQuery = () => queryOptions({ queryKey: queryKeys.sett
 export const settingMypageQuery = () => queryOptions({ queryKey: queryKeys.settingMypage, queryFn: () => toQuery(getSettingMypage()), refetchOnMount: false })
 export const settingNotificationQuery = () => queryOptions({ queryKey: queryKeys.settingNotification, queryFn: () => toQuery(getSettingNotification()), refetchOnMount: false })
 
-export const manageVideoListQuery = (params: SearchParams) =>
+export const manageVideosQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.manageVideoList(params), queryFn: () => toQuery(getManageVideos(params)), refetchOnMount: false })
-export const manageMusicListQuery = (params: SearchParams) =>
+export const manageMusicsQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.manageMusicList(params), queryFn: () => toQuery(getManageMusics(params)), refetchOnMount: false })
-export const manageBlogListQuery = (params: SearchParams) =>
+export const manageBlogsQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.manageBlogList(params), queryFn: () => toQuery(getManageBlogs(params)), refetchOnMount: false })
-export const manageComicListQuery = (params: SearchParams) =>
+export const manageComicsQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.manageComicList(params), queryFn: () => toQuery(getManageComics(params)), refetchOnMount: false })
-export const managePictureListQuery = (params: SearchParams) =>
+export const managePicturesQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.managePictureList(params), queryFn: () => toQuery(getManagePictures(params)), refetchOnMount: false })
-export const manageChatListQuery = (params: SearchParams) =>
+export const manageChatsQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.manageChatList(params), queryFn: () => toQuery(getManageChats(params)), refetchOnMount: false })
-export const manageAdvertiseListQuery = (params: AdvertiseSearchParams) =>
+export const manageAdvertisesQuery = (params: AdvertiseSearchParams) =>
   queryOptions({ queryKey: queryKeys.manageAdvertiseList(params), queryFn: () => toQuery(getManageAdvertises(params)), refetchOnMount: false })
 
-export const manageVideoDetailQuery = (ulid: string) =>
-  queryOptions({ queryKey: queryKeys.manageVideoDetail(ulid), queryFn: () => toQuery(getManageVideo(ulid)), refetchOnMount: false })
-export const manageMusicDetailQuery = (ulid: string) =>
-  queryOptions({ queryKey: queryKeys.manageMusicDetail(ulid), queryFn: () => toQuery(getManageMusic(ulid)), refetchOnMount: false })
-export const manageBlogDetailQuery = (ulid: string) =>
-  queryOptions({ queryKey: queryKeys.manageBlogDetail(ulid), queryFn: () => toQuery(getManageBlog(ulid)), refetchOnMount: false })
-export const manageComicDetailQuery = (ulid: string) =>
-  queryOptions({ queryKey: queryKeys.manageComicDetail(ulid), queryFn: () => toQuery(getManageComic(ulid)), refetchOnMount: false })
-export const managePictureDetailQuery = (ulid: string) =>
+export const manageVideoQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageVideoDetail(ulid), queryFn: () => toQuery(getManageVideo(ulid)), refetchOnMount: false })
+export const manageMusicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageMusicDetail(ulid), queryFn: () => toQuery(getManageMusic(ulid)), refetchOnMount: false })
+export const manageBlogQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageBlogDetail(ulid), queryFn: () => toQuery(getManageBlog(ulid)), refetchOnMount: false })
+export const manageComicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageComicDetail(ulid), queryFn: () => toQuery(getManageComic(ulid)), refetchOnMount: false })
+export const managePictureQuery = (ulid: string) =>
   queryOptions({ queryKey: queryKeys.managePictureDetail(ulid), queryFn: () => toQuery(getManagePicture(ulid)), refetchOnMount: false })
-export const manageChatDetailQuery = (ulid: string) =>
-  queryOptions({ queryKey: queryKeys.manageChatDetail(ulid), queryFn: () => toQuery(getManageChat(ulid)), refetchOnMount: false })
-export const manageAdvertiseDetailQuery = (ulid: string) =>
+export const manageChatQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageChatDetail(ulid), queryFn: () => toQuery(getManageChat(ulid)), refetchOnMount: false })
+export const manageAdvertiseQuery = (ulid: string) =>
   queryOptions({ queryKey: queryKeys.manageAdvertiseDetail(ulid), queryFn: () => toQuery(getManageAdvertise(ulid)), refetchOnMount: false })

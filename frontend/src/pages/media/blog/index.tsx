@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { blogListQuery } from 'lib/query/options'
+import { blogsQuery } from 'lib/query/options'
 import { pageParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
@@ -10,7 +10,7 @@ export default function BlogsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const data = useQuery(blogListQuery(params))
+  const data = useQuery(blogsQuery(params))
   const queries = { data }
 
   return (
