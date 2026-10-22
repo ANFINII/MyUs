@@ -14,6 +14,23 @@ export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryCl
 
 export const recommendLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(recommendQuery(searchParams(search))).catch(noop)
 
+const listParams = (query: Record<string, string>) => {
+  const { search, limit, offset } = pageParams(query)
+  return { search, limit, offset }
+}
+
+export const videoListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(videoListQuery(listParams(search))).catch(noop)
+
+export const musicListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(musicListQuery(listParams(search))).catch(noop)
+
+export const blogListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(blogListQuery(listParams(search))).catch(noop)
+
+export const comicListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(comicListQuery(listParams(search))).catch(noop)
+
+export const pictureListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(pictureListQuery(listParams(search))).catch(noop)
+
+export const chatListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(chatListQuery(listParams(search))).catch(noop)
+
 export const videoDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Video })
   return queryClient.query(videoDetailQuery(params.ulid)).catch(noop)
@@ -38,20 +55,3 @@ export const pictureDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: st
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Picture })
   return queryClient.query(pictureDetailQuery(params.ulid)).catch(noop)
 }
-
-const listParams = (query: Record<string, string>) => {
-  const { search, limit, offset } = pageParams(query)
-  return { search, limit, offset }
-}
-
-export const videoListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(videoListQuery(listParams(search))).catch(noop)
-
-export const musicListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(musicListQuery(listParams(search))).catch(noop)
-
-export const blogListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(blogListQuery(listParams(search))).catch(noop)
-
-export const comicListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(comicListQuery(listParams(search))).catch(noop)
-
-export const pictureListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(pictureListQuery(listParams(search))).catch(noop)
-
-export const chatListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(chatListQuery(listParams(search))).catch(noop)
