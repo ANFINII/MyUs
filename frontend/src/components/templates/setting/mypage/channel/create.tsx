@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChannelIn } from 'types/internal/channel'
 import { postChannel } from 'api/internal/channel'
@@ -41,7 +41,9 @@ export default function ChannelCreate(): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
     const { name } = values
     if (!validate({ name })) return
     handleLoading(true)
@@ -58,7 +60,7 @@ export default function ChannelCreate(): React.JSX.Element {
   return (
     <Main metaTitle={t('setting.channelCreate.title')} toast={toast}>
       <article className={style.account}>
-        <form method="POST" action="" className={style.form}>
+        <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('setting.channelCreate.title')}</h1>
           {message && (
             <ul className="messages_signup">
@@ -92,7 +94,7 @@ export default function ChannelCreate(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name={t('setting.channelCreate.submit')} type="submit" loading={loading} onClick={handleSubmit} />
+            <Button color="green" size="l" name={t('setting.channelCreate.submit')} type="submit" loading={loading} />
             <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>
