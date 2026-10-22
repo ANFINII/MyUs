@@ -5,12 +5,15 @@ import {
   chatListQuery,
   comicDetailQuery,
   comicListQuery,
+  followersQuery,
+  followsQuery,
   homeQuery,
   musicDetailQuery,
   musicListQuery,
   pictureDetailQuery,
   pictureListQuery,
   recommendQuery,
+  subscribeChannelsQuery,
   videoDetailQuery,
   videoListQuery,
 } from 'lib/query/options'
@@ -62,3 +65,7 @@ export const pictureDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: st
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Picture })
   return queryClient.query(pictureDetailQuery(params.ulid)).catch(noop)
 }
+
+export const subscribeChannelsLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(subscribeChannelsQuery()).catch(noop)
+export const followsLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(followsQuery(searchParams(search))).catch(noop)
+export const followersLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(followersQuery(searchParams(search))).catch(noop)

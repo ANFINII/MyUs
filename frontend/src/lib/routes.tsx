@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
-import { blogDetailLoader, blogListLoader, chatListLoader, comicDetailLoader, comicListLoader, homeLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
+import { blogDetailLoader, blogListLoader, chatListLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, recommendLoader, subscribeChannelsLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
@@ -47,9 +47,9 @@ export const routeTree = rootRoute.addChildren([
   page('/media/chat/$ulid', () => import('pages/media/chat/detail')),
   page('/media/chat/$ulid/thread/$messageUlid', () => import('pages/media/chat/detail')),
 
-  page('/menu/channel', () => import('pages/menu/channel')),
-  page('/menu/follow', () => import('pages/menu/follow')),
-  page('/menu/follower', () => import('pages/menu/follower')),
+  page('/menu/channel', () => import('pages/menu/channel'), subscribeChannelsLoader),
+  page('/menu/follow', () => import('pages/menu/follow'), followsLoader),
+  page('/menu/follower', () => import('pages/menu/follower'), followersLoader),
   page('/menu/knowledge', () => import('pages/menu/knowledge')),
   page('/menu/userpolicy', () => import('pages/menu/userpolicy')),
 
