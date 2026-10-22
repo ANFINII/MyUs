@@ -14,7 +14,7 @@ export default function ManageAdvertisesPage(): React.JSX.Element {
 
   return (
     <QueryCheck title="Advertise" queries={queries}>
-      {(props) => <ManageAdvertises {...props} page={page} />}
+      {(props) => <ManageAdvertises key={`${search}-${page}`} {...props} page={page} />}
     </QueryCheck>
   )
 }

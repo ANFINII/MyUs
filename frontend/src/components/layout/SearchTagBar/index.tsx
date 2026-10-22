@@ -142,7 +142,7 @@ export default function SearchTagBar(): React.JSX.Element {
                     </div>
                   ))
                 : searchTags.map((tag) => (
-                    <Link key={tag.sequence} href={`?search=${tag.name}`}>
+                    <Link key={tag.sequence} href={`?search=${encodeURIComponent(tag.name)}`}>
                       {tag.name}
                     </Link>
                   ))}

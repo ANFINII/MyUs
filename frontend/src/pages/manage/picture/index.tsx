@@ -18,7 +18,7 @@ export default function ManagePicturesPage(): React.JSX.Element {
 
   return (
     <QueryCheck title="Picture" queries={queries}>
-      {(props) => <ManagePictures {...props} page={page} />}
+      {(props) => <ManagePictures key={`${channel}-${search}-${page}`} {...props} page={page} />}
     </QueryCheck>
   )
 }
