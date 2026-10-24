@@ -570,7 +570,8 @@
   },
   "media": {
     "blog": {
-      "promotion": "This post contains promotions"
+      "promotion": "This post contains promotions",
+      "promotionBadge": "PR"
     },
     "userpage": {
       "title": "User page",

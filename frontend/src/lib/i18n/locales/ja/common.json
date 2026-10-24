@@ -563,7 +563,8 @@
   },
   "media": {
     "blog": {
-      "promotion": "この記事はプロモーションを含みます"
+      "promotion": "この記事はプロモーションを含みます",
+      "promotionBadge": "PR"
     },
     "userpage": {
       "title": "ユーザーページ",

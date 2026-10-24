@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Blog } from 'types/internal/media/output'
 import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
@@ -11,13 +12,18 @@ interface Props {
 
 export default function BlogCard(props: Props): React.JSX.Element {
   const { item } = props
-  const { ulid, image } = item
+  const { ulid, image, isPromotion } = item
+
+  const { t } = useTranslation()
 
   return (
     <Card className={style.card}>
-      <Link href={`/media/blog/${ulid}`}>
-        <ExImage src={image} width="312" height="195" className={style.thumbnail} />
-      </Link>
+      <div className={style.thumbnail_wrap}>
+        <Link href={`/media/blog/${ulid}`}>
+          <ExImage src={image} width="312" height="195" className={style.thumbnail} />
+        </Link>
+        {isPromotion && <span className={style.promotion}>{t('media.blog.promotionBadge')}</span>}
+      </div>
       <CardMediaContent href={`/media/blog/${ulid}`} media={item} />
     </Card>
   )
