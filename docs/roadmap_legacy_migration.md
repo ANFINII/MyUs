@@ -20,10 +20,10 @@
 
 | # | 旧実装の機能 | 状況 | 旧実装 | 新実装 |
 |---|---|---|---|---|
-| 1 | メディア詳細の広告表示（全体広告 1 件 ＋ 投稿者の個別広告をプランに応じて 1〜4 件） | 未移行 | `app/modules/context_data.py:94-104`、`templates/parts/common/common.html:84-95` | `frontend/src/components/widgets/Advertise/index.tsx` は空の枠だけ。`isAd` を渡している所がなく表示されない |
+| 1 | メディア詳細の広告表示（全体広告 1 件 ＋ 投稿者の個別広告をプランに応じて 1〜4 件） | 完了（#989・#1140） | `app/modules/context_data.py:94-104`、`templates/parts/common/common.html:84-95` | `frontend/src/components/widgets/Advertise/index.tsx` は空の枠だけ。`isAd` を渡している所がなく表示されない |
 | 2 | 広告のクリック数カウント | API のみ | `url/read` → `advertise_read` | `POST /advertise/{ulid}/read` はあるが、FE の `postAdvertiseRead` は未使用 |
-| 3 | 全体広告（`type="all"`） | 未移行 | `Advertise.objects.filter(publish=True, type=0).order_by("?")[:1]` | 取得する API も FE も無い |
-| 4 | 広告の自動再生設定（`is_advertise`） | 一部 | `advertise_article_auto.html` | 設定画面で保存はできるが、広告を出していないので効いていない |
+| 3 | 全体広告（`type="all"`） | 完了（#1140） | `Advertise.objects.filter(publish=True, type=0).order_by("?")[:1]` | 取得する API も FE も無い |
+| 4 | 広告の自動再生設定（`is_advertise`） | 対象外（`is_advertise` は全体広告の表示設定にした。D2） | `advertise_article_auto.html` | 設定画面で保存はできるが、広告を出していないので効いていない |
 | 5 | ユーザーページの「広告」タブ（検索付き） | 未移行 | `userpage/advertise/<nickname>` | `components/templates/userpage/index.tsx` は「情報」「投稿」の 2 タブのみ |
 | 6 | ユーザーページの投稿内検索 | 未移行 | `userpage/post?search=`（`Search.search_userpage`） | `GET /user/userpage/{ulid}/media` は `channel_ulid` のみ受け取る |
 | 7 | Google Tag Manager（サイト全体 `GTM-5F3M5PR` ＋ 投稿者ごとの `tag_manager_id`） | 未移行 | `templates/base.html`、`templates/parts/google_tag_user.html` | FE に読み込みが無い。マイページで ID は登録できるが未使用 |
@@ -46,7 +46,9 @@
 | # | 内容 | 関連フェーズ |
 |---|---|---|
 | D1 | 全体広告を誰に出すか。料金プランの説明（`api/utils/plan.py`）では有料プランは「全体広告OFF」。閲覧者のプランで出し分けるか、旧実装どおり常に出すか | Phase 1 |
+|  | → 決定：閲覧者で出し分ける。全体広告はすべての詳細に出し、無料プラン・未ログインの閲覧者には常に出す。有料プランの閲覧者は、マイページの設定（`is_advertise`）でオフにできる。個別広告はオフにしても表示する | |
 | D2 | 全体広告の自動再生（`is_advertise`）は閲覧者の設定か、投稿者の設定か（旧実装は閲覧者のマイページ設定） | Phase 1 |
+|  | → 決定：`is_advertise` は自動再生ではなく、閲覧者の全体広告の表示設定（マイページの「全体広告」。有料プランだけ変更できる）とする | |
 | D3 | ユーザーページの投稿内検索は、チャンネル絞り込みと併用するか置き換えるか | Phase 2 |
 | D4 | GTM は今も使うか（サイト全体の `GTM-5F3M5PR` が有効か）。投稿者の `tag_manager_id` を他人のページに埋め込む機能を続けるか | Phase 3 |
 | D5 | 音楽ダウンロードの制限は「閲覧者のプラン」で良いか（旧実装は閲覧者のプランで判定） | Phase 4 |
@@ -199,8 +201,8 @@ B1〜B3 は PR 6-1 で対応済み（ブランチ `back_fix_legacy_removal_block
 
 | フェーズ | 状況 |
 |---|---|
-| 決めること（D1〜D5） | D3（併用）・D5（閲覧者のプラン）は決定。D1・D2・D4 は未決定 |
-| Phase 1: 広告の表示 | PR 1-2（詳細画面の個別広告）・1-3（クリック数）完了（#989）。PR 1-1・1-4（全体広告・自動再生）は D1・D2 待ち |
+| 決めること（D1〜D5） | D1（閲覧者で出し分け）・D2（`is_advertise` は全体広告の表示設定）・D3（併用）・D5（閲覧者のプラン）は決定。D4 は未決定 |
+| Phase 1: 広告の表示 | 完了。PR 1-2（詳細画面の個別広告）・1-3（クリック数）は #989、PR 1-1（全体広告）は #1140 と閲覧者での出し分けの PR。PR 1-4（自動再生）は D2 で不要になった |
 | Phase 2: ユーザーページ | 完了（#990・#991：投稿内検索、#993・#995：広告タブ） |
 | Phase 3: Google Tag Manager | D4 待ち |
 | Phase 4: 音楽ダウンロードのプラン制限 | 完了（#994。FE は既存の `download` を使うため変更なし） |
