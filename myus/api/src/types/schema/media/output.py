@@ -59,8 +59,9 @@ class MusicOut(MediaOut):
 
 
 class BlogOut(MediaOut):
-    image: str
     richtext: str
+    is_promotion: bool
+    image: str
 
 
 class ComicOut(MediaOut):
@@ -132,6 +133,7 @@ class MusicDetailOut(MediaDetailOut):
 
 class BlogDetailOut(MediaDetailOut):
     richtext: str
+    is_promotion: bool
     image: str
     comments: list[CommentOut]
 

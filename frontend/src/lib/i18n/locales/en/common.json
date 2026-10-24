@@ -221,6 +221,7 @@
       "video": "Video",
       "music": "Audio",
       "richtext": "Body",
+      "promotion": "Contains promotion",
       "url": "Link URL",
       "period": "Period",
       "displayPeriod": "Display until"
@@ -568,6 +569,9 @@
     }
   },
   "media": {
+    "blog": {
+      "promotion": "This post contains promotions"
+    },
     "userpage": {
       "title": "User page",
       "info": "Info",

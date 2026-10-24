@@ -218,6 +218,7 @@
       "video": "動画",
       "music": "音楽",
       "richtext": "本文",
+      "promotion": "PR を含む",
       "url": "リンク URL",
       "period": "期間",
       "displayPeriod": "表示期限"
@@ -561,6 +562,9 @@
     }
   },
   "media": {
+    "blog": {
+      "promotion": "この記事はプロモーションを含みます"
+    },
     "userpage": {
       "title": "ユーザーページ",
       "info": "情報",

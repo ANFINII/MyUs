@@ -27,6 +27,7 @@ class BlogIn(BaseModel):
     title: str
     content: str
     richtext: str
+    is_promotion: bool
 
 
 class ComicIn(BaseModel):
@@ -75,6 +76,7 @@ class BlogUpdateIn(BaseModel):
     title: str
     content: str
     richtext: str
+    is_promotion: bool
     publish: bool
 
 
