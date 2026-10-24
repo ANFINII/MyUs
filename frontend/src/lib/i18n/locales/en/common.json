@@ -481,7 +481,8 @@
   },
   "advertise": {
     "title": "Ads",
-    "channel": "Channel ads"
+    "channel": "Channel ads",
+    "global": "MyUs ads"
   },
   "menu": {
     "userpolicy": {

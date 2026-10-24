@@ -25,6 +25,7 @@ export const queryKeys = {
   userPage: (ulid: string) => ['userpage', ulid] as const,
   userPageMedia: (ulid: string, channelUlid: string, params: SearchParams) => ['userpage', ulid, 'media', channelUlid, params] as const,
   userPageAdvertise: (ulid: string, params: SearchParams) => ['userpage', ulid, 'advertise', params] as const,
+  globalAdvertises: ['advertise', 'global'] as const,
   userAdvertises: (userUlid: string) => ['advertise', 'user', userUlid] as const,
 
   settingProfile: ['setting', 'profile'] as const,

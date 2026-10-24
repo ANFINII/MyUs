@@ -474,7 +474,8 @@
   },
   "advertise": {
     "title": "広告表示",
-    "channel": "チャンネル広告"
+    "channel": "チャンネル広告",
+    "global": "MyUs 広告"
   },
   "menu": {
     "userpolicy": {

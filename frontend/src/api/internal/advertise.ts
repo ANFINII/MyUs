@@ -1,7 +1,11 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { AdvertiseList } from 'types/internal/advertise'
-import { apiAdvertiseRead, apiAdvertiseUser } from 'api/uri'
+import { apiAdvertiseGlobal, apiAdvertiseRead, apiAdvertiseUser } from 'api/uri'
+
+export const getGlobalAdvertises = async (): Promise<ApiOut<AdvertiseList>> => {
+  return await apiOut(apiClient('json').get(apiAdvertiseGlobal))
+}
 
 export const getUserAdvertises = async (userUlid: string): Promise<ApiOut<AdvertiseList>> => {
   return await apiOut(apiClient('json').get(apiAdvertiseUser(userUlid)))
