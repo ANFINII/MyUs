@@ -21,8 +21,6 @@ class Environment:
     csrf_trusted_origins: list[str]
     domain_url: str
     frontend_url: str
-    encrypt_key: str
-    encrypt_iv: str
 
     # MySQL
     mysql_engine: str

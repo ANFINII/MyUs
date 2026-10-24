@@ -18,7 +18,6 @@
     "signupFailed": "Failed to create the account",
     "linkExpired": "This link has expired",
     "mailSendFailed": "Failed to send the email",
-    "decryptFailed": "Failed to read the input",
     "emailInvalid": "Invalid email address",
     "urlInvalid": "URL must start with https",
     "emailMismatch": "The email address does not match",

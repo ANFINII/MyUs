@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { WithdrawalIn } from 'types/internal/auth'
 import { postWithdrawal } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
-import { encrypt } from 'utils/functions/encrypt'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -36,7 +35,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
     if (!validate({ password })) return
 
     handleLoading(true)
-    const request: WithdrawalIn = { password: encrypt(password) }
+    const request: WithdrawalIn = { password }
     const ret = await postWithdrawal(request)
     handleLoading(false)
     if (ret.isErr()) {

@@ -18,7 +18,6 @@
     "signupFailed": "アカウント登録に失敗しました",
     "linkExpired": "リンクの有効期限が切れています",
     "mailSendFailed": "メールの送信に失敗しました",
-    "decryptFailed": "復号に失敗しました",
     "emailInvalid": "メールアドレスの形式が違います",
     "urlInvalid": "URL は https で始めてください",
     "emailMismatch": "メールアドレスが一致しません",

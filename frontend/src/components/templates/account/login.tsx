@@ -4,7 +4,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
-import { encrypt } from 'utils/functions/encrypt'
 import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -41,7 +40,7 @@ export default function Login(): React.JSX.Element {
     const { username, password } = values
     if (!validate({ username, password })) return
     handleLoading(true)
-    const request = { username: encrypt(username), password: encrypt(password) }
+    const request = { username, password }
     const ret = await postLogin(request)
     handleLoading(false)
     if (ret.isErr()) {

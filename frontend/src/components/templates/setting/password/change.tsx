@@ -4,7 +4,6 @@ import { toErrorMessage } from 'lib/error'
 import { PasswordChangeIn } from 'types/internal/auth'
 import { postPasswordChange } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
-import { encrypt } from 'utils/functions/encrypt'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -35,11 +34,7 @@ export default function PasswordChange(): React.JSX.Element {
       return
     }
     handleLoading(true)
-    const request: PasswordChangeIn = {
-      oldPassword: encrypt(oldPassword),
-      password1: encrypt(password1),
-      password2: encrypt(password2),
-    }
+    const request: PasswordChangeIn = { oldPassword, password1, password2 }
     const ret = await postPasswordChange(request)
     handleLoading(false)
     if (ret.isErr()) {
