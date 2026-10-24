@@ -20,6 +20,7 @@
     "mailSendFailed": "メールの送信に失敗しました",
     "emailInvalid": "メールアドレスの形式が違います",
     "urlInvalid": "URL は https で始めてください",
+    "promotionPlanRequired": "PR を含む記事は有料プランで投稿できます",
     "emailMismatch": "メールアドレスが一致しません",
     "emailTaken": "メールアドレスは既に登録されています",
     "usernameInvalid": "ユーザー名は半角英数字のみ入力できます",
@@ -366,6 +367,7 @@
         "individualAds": "個別広告表示 {{count}}つ",
         "hideGlobalAds": "全体広告 非表示",
         "musicDownload": "楽曲ダウンロード",
+        "promotion": "PR 記事（アフィリエイト）",
         "basic": "基本機能",
         "withAds": "広告あり"
       }

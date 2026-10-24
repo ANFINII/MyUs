@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { BlogIn } from 'types/internal/media/input'
@@ -59,7 +60,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
     const ret = await postBlogCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(FetchError.Post, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push({ pathname: '/manage/blog', query: { channel: channelUlid } })

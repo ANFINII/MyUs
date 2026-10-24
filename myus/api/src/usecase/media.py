@@ -27,7 +27,7 @@ from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.src.usecase.notification import create_notification
-from api.src.usecase.user import get_user_data
+from api.src.usecase.user import get_user_data, get_user_plan
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from api.utils.enum.access_log import AccessType
 from api.utils.enum.media import CommentType, MediaType
@@ -236,6 +236,15 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
     if channel.owner_id != user_id:
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
+
+    if input.is_promotion:
+        plan_ret = get_user_plan(user_id)
+        if plan_ret.is_err:
+            return Result.err(plan_ret.err_value)
+
+        plan = plan_ret.ok_value
+        if plan is None or not plan.is_promotion:
+            return Result.err(ValidationError("error.promotionPlanRequired"))
 
     new_blog = BlogData(
         id=0,

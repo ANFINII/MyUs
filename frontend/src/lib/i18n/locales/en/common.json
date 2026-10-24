@@ -20,6 +20,7 @@
     "mailSendFailed": "Failed to send the email",
     "emailInvalid": "Invalid email address",
     "urlInvalid": "URL must start with https",
+    "promotionPlanRequired": "Posts that contain promotions require a paid plan",
     "emailMismatch": "The email address does not match",
     "emailTaken": "This email address is already registered",
     "usernameInvalid": "Username can only contain letters and numbers",
@@ -371,6 +372,7 @@
         "individualAds_other": "{{count}} custom ad slots",
         "hideGlobalAds": "No site-wide ads",
         "musicDownload": "Music downloads",
+        "promotion": "Promotional posts (affiliate)",
         "basic": "Basic features",
         "withAds": "Includes ads"
       }
