@@ -59,9 +59,9 @@ class MusicOut(MediaOut):
 
 
 class BlogOut(MediaOut):
-    image: str
     richtext: str
     is_promotion: bool
+    image: str
 
 
 class ComicOut(MediaOut):
