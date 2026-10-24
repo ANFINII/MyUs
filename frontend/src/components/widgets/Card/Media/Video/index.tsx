@@ -1,13 +1,13 @@
-import { useRef } from 'react'
-import videojs from 'video.js'
+import { lazy, Suspense, useRef } from 'react'
+import Player from 'video.js/dist/types/player'
 import { Video } from 'types/internal/media/output'
 import { useRouter } from 'components/hooks/useRouter'
 import Card from 'components/parts/Card'
-import VideoJS from 'components/widgets/Video/videojs'
+import ExImage from 'components/parts/ExImage'
 import style from './Video.module.scss'
 import CardMediaContent from '../Content'
 
-type Player = ReturnType<typeof videojs>
+const VideoJS = lazy(() => import('components/widgets/Video/videojs'))
 
 interface Props {
   item: Video
@@ -50,20 +50,22 @@ export default function VideoCard(props: Props): React.JSX.Element {
   return (
     <Card className={style.card}>
       <div className="video video_auto" onClick={handleClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-        <VideoJS
-          onReady={handlePlayerReady}
-          options={{
-            src: convert,
-            poster: image,
-            width: 312,
-            height: 195,
-            muted: true,
-            controls: false,
-            autoplay: false,
-            loop: true,
-            preload: 'metadata',
-          }}
-        />
+        <Suspense fallback={<ExImage src={image} width="312" height="195" />}>
+          <VideoJS
+            onReady={handlePlayerReady}
+            options={{
+              src: convert,
+              poster: image,
+              width: 312,
+              height: 195,
+              muted: true,
+              controls: false,
+              autoplay: false,
+              loop: true,
+              preload: 'metadata',
+            }}
+          />
+        </Suspense>
       </div>
       <CardMediaContent href={`/media/video/${ulid}`} media={item} />
     </Card>
