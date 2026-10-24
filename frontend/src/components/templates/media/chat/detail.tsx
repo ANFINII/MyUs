@@ -95,16 +95,17 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     if (!target) return
 
     threadInitRef.current = true
-    getReplies(target.ulid).then((ret) => {
-      if (ret.isOk()) {
-        const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: target.ulid }))
-        setFormState((prev) => ({
-          ...prev,
-          selectedMessage: target,
-          replies: { ...prev.replies, [target.ulid]: replyData },
-        }))
-      }
-    })
+    const fetchReplies = async () => {
+      const ret = await getReplies(target.ulid)
+      if (ret.isErr()) return
+      const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: target.ulid }))
+      setFormState((prev) => ({
+        ...prev,
+        selectedMessage: target,
+        replies: { ...prev.replies, [target.ulid]: replyData },
+      }))
+    }
+    fetchReplies()
   }, [threadUlid, messages])
 
   const isNewAuthor = (prev: ChatDetailState, authorUlid: string): boolean => {
