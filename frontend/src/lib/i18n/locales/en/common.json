@@ -510,6 +510,11 @@
         "p3": "Uploading content containing violent or cruel depictions is prohibited.",
         "p4": "Defaming or slandering specific individuals or the general public is prohibited.",
         "p5": "Scraping content on MyUs is prohibited."
+      },
+      "article4": {
+        "title": "Article 4. Advertising and Affiliate Links",
+        "p1": "You are free to include advertising, such as affiliate links, in your blogs.",
+        "p2": "If your blog contains advertising, turn on \"Contains promotion\" on the create or edit screen. The post will show \"This post contains promotions\" so readers can read it with confidence."
       }
     },
     "knowledge": {
