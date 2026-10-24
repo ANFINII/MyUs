@@ -183,7 +183,8 @@
     "button": {
       "new": "New",
       "create": "Create",
-      "save": "Save"
+      "save": "Save",
+      "preview": "Preview"
     },
     "deleteModal": {
       "title": "Delete data",

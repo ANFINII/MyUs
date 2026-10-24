@@ -18,7 +18,10 @@ import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
+import Modal from 'components/parts/Modal'
+import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import BlogArticle from 'components/widgets/BlogArticle'
 import TextEditor from 'components/widgets/TextEditor'
 
 interface Props {
@@ -40,7 +43,9 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '', isPromotion: false })
+  const [isModal, setIsModal] = useState<boolean>(false)
 
+  const handleModal = () => setIsModal(!isModal)
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -66,14 +71,15 @@ export default function BlogCreate(props: Props): React.JSX.Element {
     router.push({ pathname: '/manage/blog', query: { channel: channelUlid } })
   }
 
+  const button = (
+    <HStack gap="4">
+      <Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />
+      <Button color="purple" size="s" name={t('manage.button.preview')} onClick={handleModal} />
+    </HStack>
+  )
+
   return (
-    <Main
-      title="Blog"
-      type="table"
-      toast={toast}
-      isFooter={false}
-      button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}
-    >
+    <Main title="Blog" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
@@ -86,6 +92,9 @@ export default function BlogCreate(props: Props): React.JSX.Element {
           <TextEditor label={t('manage.form.richtext')} value={values.richtext} required error={error} onChange={handleRichtext} />
         </VStack>
       </form>
+      <Modal open={isModal} onClose={handleModal} title={t('manage.button.preview')} size="l">
+        <BlogArticle richtext={values.richtext} isPromotion={values.isPromotion} />
+      </Modal>
     </Main>
   )
 }

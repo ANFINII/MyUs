@@ -19,8 +19,10 @@ import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
+import Modal from 'components/parts/Modal'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import BlogArticle from 'components/widgets/BlogArticle'
 import TextEditor from 'components/widgets/TextEditor'
 
 interface Props {
@@ -38,11 +40,13 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, richtext: data.richtext, publish: data.publish, isPromotion: data.isPromotion })
+  const [isModal, setIsModal] = useState<boolean>(false)
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/blog')
+  const handleModal = () => setIsModal(!isModal)
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -71,6 +75,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const button = (
     <HStack gap="4">
       <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleForm} />
+      <Button color="purple" size="s" name={t('manage.button.preview')} onClick={handleModal} />
       <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )
@@ -89,6 +94,9 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
           <TextEditor label={t('manage.form.richtext')} value={values.richtext} required error={error} onChange={handleRichtext} />
         </VStack>
       </form>
+      <Modal open={isModal} onClose={handleModal} title={t('manage.button.preview')} size="l">
+        <BlogArticle richtext={values.richtext} isPromotion={values.isPromotion} />
+      </Modal>
     </Main>
   )
 }
