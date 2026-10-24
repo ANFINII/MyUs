@@ -68,20 +68,21 @@ class Music(models.Model, MediaModel):
 # Blog
 class Blog(models.Model, MediaModel):
     """Blog"""
-    id       = models.BigAutoField(primary_key=True)
-    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="blogs")
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    richtext = models.TextField()
-    image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, through=BlogHashtag, blank=True)
-    like     = models.ManyToManyField(User, related_name="blog_like", blank=True)
-    read     = models.IntegerField(default=0)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    id           = models.BigAutoField(primary_key=True)
+    ulid         = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel      = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="blogs")
+    title        = models.CharField(max_length=100)
+    content      = models.TextField()
+    richtext     = models.TextField()
+    image        = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    category     = models.ManyToManyField(Category, blank=True)
+    hashtag      = models.ManyToManyField(HashTag, through=BlogHashtag, blank=True)
+    like         = models.ManyToManyField(User, related_name="blog_like", blank=True)
+    read         = models.IntegerField(default=0)
+    publish      = models.BooleanField(default=True)
+    is_promotion = models.BooleanField(default=False)
+    created      = models.DateTimeField(auto_now_add=True)
+    updated      = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "blog"

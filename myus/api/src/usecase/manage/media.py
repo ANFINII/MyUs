@@ -361,7 +361,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
         log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish)
+    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish, is_promotion=input.is_promotion)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
 

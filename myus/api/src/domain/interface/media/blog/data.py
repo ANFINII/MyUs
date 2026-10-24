@@ -15,6 +15,7 @@ class BlogData:
     read: int
     like: int
     publish: bool
+    is_promotion: bool
     created: datetime
     updated: datetime
     category_ulid: str

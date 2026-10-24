@@ -261,7 +261,7 @@ class BlogAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "richtext", "image", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "richtext", "image", "like", "read", "publish", "is_promotion")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -608,7 +608,7 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "richtext", "image", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "richtext", "image", "publish", "is_promotion")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 

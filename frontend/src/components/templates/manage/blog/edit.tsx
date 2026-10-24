@@ -37,13 +37,14 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, richtext: data.richtext, publish: data.publish })
+  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, richtext: data.richtext, publish: data.publish, isPromotion: data.isPromotion })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/blog')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -79,6 +80,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
       <form method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
+          <ToggleCard label={t('manage.form.promotion')} isActive={values.isPromotion} onClick={handlePromotion} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" value={values.title} required error={error} onChange={handleInput} />

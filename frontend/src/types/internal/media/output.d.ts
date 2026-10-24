@@ -66,6 +66,7 @@ export interface Music extends Media {
 export interface Blog extends Media {
   image: string
   richtext: string
+  isPromotion: boolean
 }
 
 export interface Comic extends Media {
@@ -139,6 +140,7 @@ export interface MusicDetail extends MediaDetail {
 export interface BlogDetail extends MediaDetail {
   image: string
   richtext: string
+  isPromotion: boolean
   comments: Comment[]
 }
 

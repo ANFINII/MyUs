@@ -63,6 +63,7 @@ class MusicDetailDTO(MediaDetailDTO):
 @dataclass(frozen=True, slots=True)
 class BlogDetailDTO(MediaDetailDTO):
     richtext: str
+    is_promotion: bool
     image: str
     comments: list[CommentDTO]
 
