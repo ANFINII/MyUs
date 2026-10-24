@@ -181,7 +181,8 @@
     "button": {
       "new": "新規作成",
       "create": "作成する",
-      "save": "保存する"
+      "save": "保存する",
+      "preview": "プレビュー"
     },
     "deleteModal": {
       "title": "データの削除",
