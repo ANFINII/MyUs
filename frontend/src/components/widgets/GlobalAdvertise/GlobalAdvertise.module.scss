@@ -1,0 +1,14 @@
+.advertise {
+  margin-top: 24px;
+
+  .heading {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

@@ -64,6 +64,7 @@ class MusicDetailDTO(MediaDetailDTO):
 class BlogDetailDTO(MediaDetailDTO):
     richtext: str
     is_promotion: bool
+    is_global_advertise: bool
     image: str
     comments: list[CommentDTO]
 

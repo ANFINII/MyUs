@@ -97,6 +97,7 @@ export const apiManageChat = (ulid: string) => base + `/manage/media/chat/${ulid
 export const apiManageAdvertises = base + '/manage/advertise'
 export const apiManageAdvertise = (ulid: string) => base + `/manage/advertise/${ulid}`
 
+export const apiAdvertiseGlobal = base + '/advertise/global'
 export const apiAdvertiseUser = (userUlid: string) => base + `/advertise/user/${userUlid}`
 export const apiAdvertiseRead = (ulid: string) => base + `/advertise/${ulid}/read`
 

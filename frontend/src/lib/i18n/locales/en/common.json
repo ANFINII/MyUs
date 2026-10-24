@@ -20,7 +20,6 @@
     "mailSendFailed": "Failed to send the email",
     "emailInvalid": "Invalid email address",
     "urlInvalid": "URL must start with https",
-    "promotionPlanRequired": "Posts that contain promotions require a paid plan",
     "emailMismatch": "The email address does not match",
     "emailTaken": "This email address is already registered",
     "usernameInvalid": "Username can only contain letters and numbers",
@@ -372,7 +371,6 @@
         "individualAds_other": "{{count}} custom ad slots",
         "hideGlobalAds": "No site-wide ads",
         "musicDownload": "Music downloads",
-        "promotion": "Promotional posts (affiliate)",
         "basic": "Basic features",
         "withAds": "Includes ads"
       }
@@ -483,7 +481,8 @@
   },
   "advertise": {
     "title": "Ads",
-    "channel": "Channel ads"
+    "channel": "Channel ads",
+    "global": "MyUs ads"
   },
   "menu": {
     "userpolicy": {
@@ -513,8 +512,9 @@
       },
       "article4": {
         "title": "Article 4. Advertising and Affiliate Links",
-        "p1": "With a paid plan, you are free to include advertising, such as affiliate links, in your blogs.",
-        "p2": "If your blog contains advertising, turn on \"Contains promotion\" on the create or edit screen. The post will show \"This post contains promotions\" so readers can read it with confidence."
+        "p1": "You are free to include advertising, such as affiliate links, in your blogs.",
+        "p2": "If your blog contains advertising, turn on \"Contains promotion\" on the create or edit screen. The post will show \"This post contains promotions\" so readers can read it with confidence.",
+        "p3": "On the free plan, MyUs ads are shown on posts that contain promotions. On a paid plan, you can turn them off in your My Page settings."
       }
     },
     "knowledge": {

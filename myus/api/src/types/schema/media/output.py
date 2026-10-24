@@ -134,6 +134,7 @@ class MusicDetailOut(MediaDetailOut):
 class BlogDetailOut(MediaDetailOut):
     richtext: str
     is_promotion: bool
+    is_global_advertise: bool
     image: str
     comments: list[CommentOut]
 

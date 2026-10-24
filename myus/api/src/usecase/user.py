@@ -18,7 +18,6 @@ from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository, save_upload, validate_uploads
 from api.utils.functions.validation import PASSWORD_MIN_LENGTH, has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
-from api.utils.plan import PlanDef, get_plan
 
 
 @Result.shield_exception()
@@ -38,19 +37,6 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None
 
     users = users_ret.ok_value
     return Result.ok(users[0])
-
-
-@Result.shield_exception()
-def get_user_plan(user_id: int) -> Result[PlanDef | None, FatalError]:
-    user_ret = get_user_data(user_id=user_id)
-    if user_ret.is_err:
-        return Result.err(user_ret.err_value)
-
-    user = user_ret.ok_value
-    if user is None:
-        return Result.ok(None)
-
-    return Result.ok(get_plan(user.user_plan.plan))
 
 
 @Result.shield_exception()

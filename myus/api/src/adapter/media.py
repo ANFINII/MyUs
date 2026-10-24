@@ -397,6 +397,7 @@ class BlogAPI:
                 content=obj.content,
                 richtext=obj.richtext,
                 is_promotion=obj.is_promotion,
+                is_global_advertise=obj.is_global_advertise,
                 image=obj.image,
                 comments=convert_comments(obj.comments),
                 hashtags=convert_hashtags(obj.hashtags),

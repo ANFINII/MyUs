@@ -24,6 +24,8 @@ def _filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) -
         q_list.append(Q(author_id=filter.owner_id))
     if filter.search:
         q_list.append(Q(title__icontains=filter.search))
+    if filter.advertise_type:
+        q_list.append(Q(type=filter.advertise_type))
     if exclude and exclude.id:
         q_list.append(~Q(id=exclude.id))
     return q_list

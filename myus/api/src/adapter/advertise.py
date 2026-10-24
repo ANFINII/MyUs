@@ -5,7 +5,7 @@ from api.modules.logger import log
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.types.schema.advertise import AdvertiseListOut, AdvertiseOut, AdvertiseReadOut
 from api.src.types.schema.common import ErrorOut, ErrorType
-from api.src.usecase.advertise import get_user_advertises, increment_advertise_read
+from api.src.usecase.advertise import get_global_advertises, get_user_advertises, increment_advertise_read
 from api.utils.common.result import FatalError, NotFoundError
 from api.utils.functions.index import get_client_ip
 
@@ -14,6 +14,18 @@ class AdvertiseAPI:
     """AdvertiseAPI"""
 
     router = Router()
+
+    @staticmethod
+    @router.get("/global", response={200: AdvertiseListOut, 500: ErrorOut})
+    def list_global(request: HttpRequest):
+        log.info("AdvertiseAPI list_global")
+
+        ret = get_global_advertises()
+        if ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        objs = ret.ok_value
+        return 200, AdvertiseListOut(items=convert_advertises(objs), total=len(objs))
 
     @staticmethod
     @router.get("/user/{user_ulid}", response={200: AdvertiseListOut, 500: ErrorOut})

@@ -16,6 +16,10 @@ from api.utils.functions.index import create_url
 from api.utils.plan import get_plan
 
 
+ADVERTISE_TYPE_ALL = "all"
+GLOBAL_ADVERTISE_LIMIT = 3
+
+
 @Result.shield_exception()
 def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalError]:
     user_ret = get_user_data(ulid=user_ulid)
@@ -53,6 +57,31 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
 
     sample_size = min(max_count, len(active))
     picked = random.sample(active, sample_size)
+    return Result.ok([replace(a, image=create_url(a.image), video=create_url(a.video)) for a in picked])
+
+
+@Result.shield_exception()
+def get_global_advertises() -> Result[list[AdvertiseData], FatalError]:
+    repo = injector.get(AdvertiseInterface)
+    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        return Result.ok([])
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    today = timezone.localdate()
+    active = [o for o in objs if o.period is None or o.period >= today]
+    if len(active) == 0:
+        return Result.ok([])
+
+    picked = random.sample(active, min(GLOBAL_ADVERTISE_LIMIT, len(active)))
     return Result.ok([replace(a, image=create_url(a.image), video=create_url(a.video)) for a in picked])
 
 

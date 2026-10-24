@@ -25,6 +25,7 @@ class FilterOption:
     category_id: int = 0
     is_recommend: bool = False
     search: str = ""
+    advertise_type: str = ""
 
 
 @dataclass(frozen=True, slots=True)

@@ -140,6 +140,7 @@ export interface MusicDetail extends MediaDetail {
 export interface BlogDetail extends MediaDetail {
   richtext: string
   isPromotion: boolean
+  isGlobalAdvertise: boolean
   image: string
   comments: Comment[]
 }

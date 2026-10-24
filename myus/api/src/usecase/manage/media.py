@@ -22,7 +22,6 @@ from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.category import get_category_data
 from api.src.usecase.notification import create_publish_notification, delete_object_notifications
-from api.src.usecase.user import get_user_plan
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -361,15 +360,6 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     if obj.channel.owner_id != user_id:
         log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
-
-    if input.is_promotion and not obj.is_promotion:
-        plan_ret = get_user_plan(user_id)
-        if plan_ret.is_err:
-            return Result.err(plan_ret.err_value)
-
-        plan = plan_ret.ok_value
-        if plan is None or not plan.is_promotion:
-            return Result.err(ValidationError("error.promotionPlanRequired"))
 
     update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish, is_promotion=input.is_promotion)
     if image is not None:
