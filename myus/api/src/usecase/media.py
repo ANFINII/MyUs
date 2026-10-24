@@ -33,7 +33,6 @@ from api.utils.enum.access_log import AccessType
 from api.utils.enum.media import CommentType, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload, MediaUpload
-from api.utils.enum.user import PlanName
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
@@ -897,15 +896,6 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
-    is_global_advertise = False
-    if obj.is_promotion:
-        owner_ret = get_user_data(user_id=obj.channel.owner_id)
-        if owner_ret.is_err:
-            return Result.err(owner_ret.err_value)
-
-        owner = owner_ret.ok_value
-        is_global_advertise = owner is not None and (owner.user_plan.plan == PlanName.FREE or owner.mypage.is_advertise)
-
     data =BlogDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -913,7 +903,6 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         content=obj.content,
         richtext=obj.richtext,
         is_promotion=obj.is_promotion,
-        is_global_advertise=is_global_advertise,
         image=create_url(obj.image),
         comments=comments,
         hashtags=obj.hashtags,

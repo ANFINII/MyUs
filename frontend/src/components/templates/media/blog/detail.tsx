@@ -6,7 +6,6 @@ import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
 import Divide from 'components/parts/Divide'
 import FormatHtml from 'components/parts/FormatHtml'
-import GlobalAdvertise from 'components/widgets/GlobalAdvertise'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
 import style from './Detail.module.scss'
@@ -18,7 +17,7 @@ interface Props {
 export default function BlogDetail(props: Props): React.JSX.Element {
   const { data } = props
   const { detail, list } = data
-  const { publish, richtext, isPromotion, isGlobalAdvertise, ...other } = detail
+  const { publish, richtext, isPromotion, ...other } = detail
 
   const { t } = useTranslation()
   const { toast, handleToast } = useToast()
@@ -29,7 +28,6 @@ export default function BlogDetail(props: Props): React.JSX.Element {
         <div className={style.media_detail}>
           {isPromotion && <Alert type="info">{t('media.blog.promotion')}</Alert>}
           <FormatHtml content={richtext} isSponsored={isPromotion} />
-          {isGlobalAdvertise && <GlobalAdvertise />}
         </div>
         <Divide />
         <MediaDetailCommon media={{ mediaPath: MediaPath.Blog, ...other }} list={list} handleToast={handleToast} />
