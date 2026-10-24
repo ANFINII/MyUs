@@ -2,6 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.adapter.auth import auth_check
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.types.schema.advertise import AdvertiseListOut, AdvertiseOut, AdvertiseReadOut
 from api.src.types.schema.common import ErrorOut, ErrorType
@@ -20,7 +21,12 @@ class AdvertiseAPI:
     def list_global(request: HttpRequest):
         log.info("AdvertiseAPI list_global")
 
-        ret = get_global_advertises()
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        ret = get_global_advertises(user_id)
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 

@@ -12,12 +12,13 @@ from api.src.usecase.access_log import record_access
 from api.src.usecase.user import get_user_data
 from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.access_log import AccessType
+from api.utils.enum.user import PlanName
 from api.utils.functions.index import create_url
 from api.utils.plan import get_plan
 
 
 ADVERTISE_TYPE_ALL = "all"
-GLOBAL_ADVERTISE_LIMIT = 3
+GLOBAL_ADVERTISE_LIMIT = 1
 
 
 @Result.shield_exception()
@@ -61,7 +62,16 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
 
 
 @Result.shield_exception()
-def get_global_advertises() -> Result[list[AdvertiseData], FatalError]:
+def get_global_advertises(user_id: int | None) -> Result[list[AdvertiseData], FatalError]:
+    if user_id is not None:
+        user_ret = get_user_data(user_id=user_id)
+        if user_ret.is_err:
+            return Result.err(user_ret.err_value)
+
+        user = user_ret.ok_value
+        if user is not None and user.user_plan.plan != PlanName.FREE and not user.mypage.is_advertise:
+            return Result.ok([])
+
     repo = injector.get(AdvertiseInterface)
     ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
