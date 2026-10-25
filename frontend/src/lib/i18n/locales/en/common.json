@@ -471,7 +471,7 @@
     "image": "Image",
     "rounded": "Round image corners",
     "urlPlaceholder": "Enter a URL",
-    "widthPlaceholder": "Width (leave blank for original size)",
+    "widthPlaceholder": "Width 50–1200 (leave blank for original size)",
     "insert": "Insert"
   },
   "video": {
