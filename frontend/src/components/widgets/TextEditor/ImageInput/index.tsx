@@ -2,6 +2,9 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import style from './ImageInput.module.scss'
 
+const MIN_WIDTH = 50
+const MAX_WIDTH = 1200
+
 interface Props {
   onSubmit: (width?: number) => void
   onCancel: () => void
@@ -15,8 +18,9 @@ export default function ImageInput(props: Props): React.JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = () => {
-    const width = Number(inputRef.current?.value)
-    onSubmit(width > 0 ? width : undefined)
+    const value = inputRef.current?.value
+    const width = value ? Math.min(Math.max(Math.round(Number(value)), MIN_WIDTH), MAX_WIDTH) : undefined
+    onSubmit(width)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -31,7 +35,7 @@ export default function ImageInput(props: Props): React.JSX.Element {
 
   return (
     <div className={style.image}>
-      <input ref={inputRef} type="number" min="1" className={style.field} placeholder={t('textEditor.widthPlaceholder')} autoFocus onKeyDown={handleKeyDown} />
+      <input ref={inputRef} type="number" min={MIN_WIDTH} max={MAX_WIDTH} className={style.field} placeholder={t('textEditor.widthPlaceholder')} autoFocus onKeyDown={handleKeyDown} />
       <span className={style.unit}>px</span>
       <button type="button" className={style.submit} onClick={handleSubmit}>
         {t('textEditor.insert')}
