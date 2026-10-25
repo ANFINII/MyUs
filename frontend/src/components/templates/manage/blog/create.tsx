@@ -18,10 +18,9 @@ import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
-import Modal from 'components/parts/Modal'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import BlogArticle from 'components/widgets/BlogArticle'
+import BlogModal from 'components/widgets/Modal/Blog'
 import TextEditor from 'components/widgets/TextEditor'
 
 interface Props {
@@ -42,8 +41,8 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '', isPromotion: false })
   const [isModal, setIsModal] = useState<boolean>(false)
+  const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '', isPromotion: false })
 
   const handleModal = () => setIsModal(!isModal)
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
@@ -92,9 +91,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
           <TextEditor label={t('manage.form.richtext')} value={values.richtext} required error={error} onChange={handleRichtext} />
         </VStack>
       </form>
-      <Modal open={isModal} onClose={handleModal} title={t('manage.button.preview')} size="l">
-        <BlogArticle richtext={values.richtext} isPromotion={values.isPromotion} />
-      </Modal>
+      <BlogModal open={isModal} onClose={handleModal} richtext={values.richtext} isPromotion={values.isPromotion} />
     </Main>
   )
 }
