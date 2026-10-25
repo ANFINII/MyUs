@@ -13,6 +13,7 @@ import IconImage from './Icon/Image'
 import IconItalic from './Icon/Italic'
 import IconLink from './Icon/Link'
 import IconOrderedList from './Icon/OrderedList'
+import IconRounded from './Icon/Rounded'
 import IconStrike from './Icon/Strike'
 import IconSubscript from './Icon/Subscript'
 import IconSuperscript from './Icon/Superscript'
@@ -135,6 +136,11 @@ export default function Toolbar(props: Props): React.JSX.Element {
   }
 
   const handleImageClick = () => fileRef.current?.click()
+
+  const handleRounded = () => {
+    if (!editor.isActive('image')) return
+    editor.chain().focus().updateAttributes('image', { rounded: !editor.getAttributes('image').rounded }).run()
+  }
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -293,6 +299,9 @@ export default function Toolbar(props: Props): React.JSX.Element {
                   <IconImage className={style.icon_wide} />
                 </button>
                 <input ref={fileRef} type="file" accept="image/*" className={style.file_hidden} onChange={handleFile} />
+                <button type="button" className={btnClass(editor.isActive('image', { rounded: true }))} title={t('textEditor.rounded')} onClick={handleRounded}>
+                  <IconRounded className={style.icon} />
+                </button>
               </>
             )}
           </div>

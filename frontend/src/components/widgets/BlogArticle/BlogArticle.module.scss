@@ -8,5 +8,9 @@
 
   img {
     height: auto;
+
+    &[data-rounded] {
+      border-radius: 8px;
+    }
   }
 }

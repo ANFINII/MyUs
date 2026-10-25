@@ -469,6 +469,7 @@
     "blockquote": "Quote",
     "link": "Link",
     "image": "Image",
+    "rounded": "Round image corners",
     "urlPlaceholder": "Enter a URL",
     "widthPlaceholder": "Width (leave blank for original size)",
     "insert": "Insert"

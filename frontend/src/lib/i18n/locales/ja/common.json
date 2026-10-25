@@ -462,6 +462,7 @@
     "blockquote": "引用",
     "link": "リンク",
     "image": "画像",
+    "rounded": "画像の角を丸くする",
     "urlPlaceholder": "URLを入力",
     "widthPlaceholder": "幅（空欄で元のサイズ）",
     "insert": "挿入"

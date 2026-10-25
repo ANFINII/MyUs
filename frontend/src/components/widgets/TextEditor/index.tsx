@@ -13,13 +13,26 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from './TextEditor.module.scss'
 import Toolbar from './Toolbar'
 
+const RoundedImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      rounded: {
+        default: false,
+        parseHTML: (element: HTMLElement) => element.hasAttribute('data-rounded'),
+        renderHTML: (attributes: { rounded: boolean }) => (attributes.rounded ? { 'data-rounded': '' } : {}),
+      },
+    }
+  },
+})
+
 const extensions = [
   StarterKit.configure({ heading: { levels: [1, 2, 3, 4, 5] }, link: { openOnClick: false } }),
   TextStyle,
   Color,
   Highlight.configure({ multicolor: true }),
   TextAlign.configure({ types: ['heading', 'paragraph'] }),
-  Image.configure({ resize: { enabled: true, minWidth: 50, alwaysPreserveAspectRatio: true } }),
+  RoundedImage.configure({ resize: { enabled: true, minWidth: 50, alwaysPreserveAspectRatio: true } }),
   Subscript,
   Superscript,
 ]
