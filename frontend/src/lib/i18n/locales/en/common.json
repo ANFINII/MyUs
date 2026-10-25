@@ -475,7 +475,7 @@
     "roundedMedium": "Medium",
     "roundedLarge": "Large",
     "urlPlaceholder": "Enter a URL",
-    "widthPlaceholder": "Width 50–1200 (leave blank for original size)",
+    "widthPlaceholder": "Width 50–1200",
     "insert": "Insert"
   },
   "video": {

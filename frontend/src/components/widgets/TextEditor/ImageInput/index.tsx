@@ -5,7 +5,7 @@ import Select from 'components/parts/Select'
 import style from './ImageInput.module.scss'
 
 const MIN_WIDTH = 50
-const MAX_WIDTH = 1200
+export const MAX_WIDTH = 1200
 
 export interface ImageValues {
   width?: number
@@ -38,7 +38,7 @@ export default function ImageInput(props: Props): React.JSX.Element {
   const handleRounded = (e: ChangeEvent<HTMLSelectElement>) => setRounded(e.target.value)
 
   const handleSubmit = () => {
-    const value = width ? Math.min(Math.max(Math.round(Number(width)), MIN_WIDTH), MAX_WIDTH) : undefined
+    const value = width ? Math.min(Math.max(Math.round(Number(width)), MIN_WIDTH), MAX_WIDTH) : values?.width
     onSubmit({ width: value, rounded })
   }
 

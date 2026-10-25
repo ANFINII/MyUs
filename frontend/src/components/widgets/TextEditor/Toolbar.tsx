@@ -17,7 +17,7 @@ import IconStrike from './Icon/Strike'
 import IconSubscript from './Icon/Subscript'
 import IconSuperscript from './Icon/Superscript'
 import IconUnderline from './Icon/Underline'
-import ImageInput, { ImageValues } from './ImageInput'
+import ImageInput, { ImageValues, MAX_WIDTH } from './ImageInput'
 import LinkInput from './LinkInput'
 import style from './TextEditor.module.scss'
 
@@ -73,6 +73,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
   const [color, setColor] = useState<string>('rgb(0, 0, 0)')
   const [isLinkInput, setIsLinkInput] = useState<boolean>(false)
   const [imageSrc, setImageSrc] = useState<string>('')
+  const [imageWidth, setImageWidth] = useState<number>(MAX_WIDTH)
   const selectedImage = useEditorState({
     editor,
     selector: ({ editor: e }): ImageValues | null => {
@@ -150,9 +151,13 @@ export default function Toolbar(props: Props): React.JSX.Element {
     const reader = new FileReader()
     reader.onload = () => {
       const src = reader.result
-      if (typeof src === 'string') {
+      if (typeof src !== 'string') return
+      const image = new Image()
+      image.onload = () => {
+        setImageWidth(Math.min(image.naturalWidth, MAX_WIDTH))
         setImageSrc(src)
       }
+      image.src = src
     }
     reader.readAsDataURL(file)
     e.target.value = ''
@@ -319,7 +324,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
       </div>
 
       {config.link && isLinkInput && <LinkInput onSubmit={handleLinkSubmit} onCancel={handleLinkCancel} />}
-      {config.image && imageSrc && <ImageInput onSubmit={handleImageSubmit} onCancel={handleImageCancel} />}
+      {config.image && imageSrc && <ImageInput values={{ width: imageWidth, rounded: '' }} onSubmit={handleImageSubmit} onCancel={handleImageCancel} />}
       {config.image && !imageSrc && selectedImage && (
         <ImageInput key={`${selectedImage.width}-${selectedImage.rounded}`} values={selectedImage} isEdit onSubmit={handleImageSubmit} onCancel={handleImageCancel} />
       )}
