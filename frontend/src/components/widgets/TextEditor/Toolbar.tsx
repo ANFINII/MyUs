@@ -74,6 +74,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
   const [isLinkInput, setIsLinkInput] = useState<boolean>(false)
   const [imageSrc, setImageSrc] = useState<string>('')
   const [imageWidth, setImageWidth] = useState<number>(MAX_WIDTH)
+
   const selectedImage = useEditorState({
     editor,
     selector: ({ editor: e }): ImageValues | null => {
@@ -82,6 +83,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
       return { width: Number(width) || undefined, rounded: String(rounded ?? '') }
     },
   })
+
   const fileRef = useRef<HTMLInputElement>(null)
 
   const headingOptions: Option[] = [
