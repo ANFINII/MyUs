@@ -73,8 +73,8 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleForm} />
       <Button color="purple" size="s" name={t('manage.button.preview')} onClick={handleModal} />
+      <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleForm} />
       <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )

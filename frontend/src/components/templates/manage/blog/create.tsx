@@ -72,8 +72,8 @@ export default function BlogCreate(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />
       <Button color="purple" size="s" name={t('manage.button.preview')} onClick={handleModal} />
+      <Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />
     </HStack>
   )
 
