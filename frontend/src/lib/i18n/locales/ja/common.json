@@ -463,6 +463,7 @@
     "link": "リンク",
     "image": "画像",
     "urlPlaceholder": "URLを入力",
+    "widthPlaceholder": "幅（空欄で元のサイズ）",
     "insert": "挿入"
   },
   "video": {
