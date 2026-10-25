@@ -19,7 +19,7 @@ const extensions = [
   Color,
   Highlight.configure({ multicolor: true }),
   TextAlign.configure({ types: ['heading', 'paragraph'] }),
-  Image,
+  Image.configure({ resize: { enabled: true, minWidth: 50, alwaysPreserveAspectRatio: true } }),
   Subscript,
   Superscript,
 ]
