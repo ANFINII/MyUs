@@ -17,6 +17,7 @@ import IconStrike from './Icon/Strike'
 import IconSubscript from './Icon/Subscript'
 import IconSuperscript from './Icon/Superscript'
 import IconUnderline from './Icon/Underline'
+import ImageInput from './ImageInput'
 import LinkInput from './LinkInput'
 import style from './TextEditor.module.scss'
 
@@ -71,6 +72,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
   const [align, setAlign] = useState<string>('left')
   const [color, setColor] = useState<string>('rgb(0, 0, 0)')
   const [isLinkInput, setIsLinkInput] = useState<boolean>(false)
+  const [imageSrc, setImageSrc] = useState<string>('')
   const fileRef = useRef<HTMLInputElement>(null)
 
   const headingOptions: Option[] = [
@@ -141,11 +143,21 @@ export default function Toolbar(props: Props): React.JSX.Element {
     reader.onload = () => {
       const src = reader.result
       if (typeof src === 'string') {
-        editor.chain().focus().setImage({ src }).run()
+        setImageSrc(src)
       }
     }
     reader.readAsDataURL(file)
     e.target.value = ''
+  }
+
+  const handleImageSubmit = (width?: number) => {
+    editor.chain().focus().setImage({ src: imageSrc, width }).run()
+    setImageSrc('')
+  }
+
+  const handleImageCancel = () => {
+    setImageSrc('')
+    editor.commands.focus()
   }
 
   const showFormatting = config.bold || config.italic || config.underline || config.strike || config.color || config.superscript || config.subscript
@@ -288,6 +300,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
       </div>
 
       {config.link && isLinkInput && <LinkInput onSubmit={handleLinkSubmit} onCancel={handleLinkCancel} />}
+      {config.image && imageSrc && <ImageInput onSubmit={handleImageSubmit} onCancel={handleImageCancel} />}
     </div>
   )
 }
