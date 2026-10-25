@@ -18,9 +18,9 @@ const RoundedImage = Image.extend({
     return {
       ...this.parent?.(),
       rounded: {
-        default: false,
-        parseHTML: (element: HTMLElement) => element.hasAttribute('data-rounded'),
-        renderHTML: (attributes: { rounded: boolean }) => (attributes.rounded ? { 'data-rounded': '' } : {}),
+        default: '',
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-rounded') ?? '',
+        renderHTML: (attributes: { rounded: string }) => (attributes.rounded ? { 'data-rounded': attributes.rounded } : {}),
       },
     }
   },

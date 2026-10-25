@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Editor } from '@tiptap/react'
+import { Editor, useEditorState } from '@tiptap/react'
 import { Option } from 'types/internal/other'
 import cx from 'utils/functions/cx'
 import Select from 'components/parts/Select'
@@ -13,12 +13,11 @@ import IconImage from './Icon/Image'
 import IconItalic from './Icon/Italic'
 import IconLink from './Icon/Link'
 import IconOrderedList from './Icon/OrderedList'
-import IconRounded from './Icon/Rounded'
 import IconStrike from './Icon/Strike'
 import IconSubscript from './Icon/Subscript'
 import IconSuperscript from './Icon/Superscript'
 import IconUnderline from './Icon/Underline'
-import ImageInput from './ImageInput'
+import ImageInput, { ImageValues } from './ImageInput'
 import LinkInput from './LinkInput'
 import style from './TextEditor.module.scss'
 
@@ -74,6 +73,14 @@ export default function Toolbar(props: Props): React.JSX.Element {
   const [color, setColor] = useState<string>('rgb(0, 0, 0)')
   const [isLinkInput, setIsLinkInput] = useState<boolean>(false)
   const [imageSrc, setImageSrc] = useState<string>('')
+  const selectedImage = useEditorState({
+    editor,
+    selector: ({ editor: e }): ImageValues | null => {
+      if (!e.isActive('image')) return null
+      const { width, rounded } = e.getAttributes('image')
+      return { width: Number(width) || undefined, rounded: String(rounded ?? '') }
+    },
+  })
   const fileRef = useRef<HTMLInputElement>(null)
 
   const headingOptions: Option[] = [
@@ -137,11 +144,6 @@ export default function Toolbar(props: Props): React.JSX.Element {
 
   const handleImageClick = () => fileRef.current?.click()
 
-  const handleRounded = () => {
-    if (!editor.isActive('image')) return
-    editor.chain().focus().updateAttributes('image', { rounded: !editor.getAttributes('image').rounded }).run()
-  }
-
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -156,14 +158,25 @@ export default function Toolbar(props: Props): React.JSX.Element {
     e.target.value = ''
   }
 
-  const handleImageSubmit = (width?: number) => {
-    editor.chain().focus().setImage({ src: imageSrc, width }).run()
+  const handleImageSubmit = (values: ImageValues) => {
+    const attrs = imageSrc ? { src: imageSrc } : editor.getAttributes('image')
+    const content = { type: 'image', attrs: { ...attrs, width: values.width ?? null, height: null, rounded: values.rounded } }
+    const chain = editor.chain().focus()
+    if (imageSrc) {
+      chain.insertContentAt(editor.state.selection.to, content).run()
+    } else {
+      chain.insertContent(content).run()
+    }
     setImageSrc('')
   }
 
   const handleImageCancel = () => {
-    setImageSrc('')
-    editor.commands.focus()
+    if (imageSrc) {
+      setImageSrc('')
+      editor.commands.focus()
+      return
+    }
+    editor.chain().focus().setTextSelection(editor.state.selection.to).run()
   }
 
   const showFormatting = config.bold || config.italic || config.underline || config.strike || config.color || config.superscript || config.subscript
@@ -299,9 +312,6 @@ export default function Toolbar(props: Props): React.JSX.Element {
                   <IconImage className={style.icon_wide} />
                 </button>
                 <input ref={fileRef} type="file" accept="image/*" className={style.file_hidden} onChange={handleFile} />
-                <button type="button" className={btnClass(editor.isActive('image', { rounded: true }))} title={t('textEditor.rounded')} onClick={handleRounded}>
-                  <IconRounded className={style.icon} />
-                </button>
               </>
             )}
           </div>
@@ -310,6 +320,9 @@ export default function Toolbar(props: Props): React.JSX.Element {
 
       {config.link && isLinkInput && <LinkInput onSubmit={handleLinkSubmit} onCancel={handleLinkCancel} />}
       {config.image && imageSrc && <ImageInput onSubmit={handleImageSubmit} onCancel={handleImageCancel} />}
+      {config.image && !imageSrc && selectedImage && (
+        <ImageInput key={`${selectedImage.width}-${selectedImage.rounded}`} values={selectedImage} isEdit onSubmit={handleImageSubmit} onCancel={handleImageCancel} />
+      )}
     </div>
   )
 }

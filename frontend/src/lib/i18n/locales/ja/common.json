@@ -462,7 +462,11 @@
     "blockquote": "引用",
     "link": "リンク",
     "image": "画像",
-    "rounded": "画像の角を丸くする",
+    "rounded": "角丸",
+    "roundedNone": "なし",
+    "roundedSmall": "小",
+    "roundedMedium": "中",
+    "roundedLarge": "大",
     "urlPlaceholder": "URLを入力",
     "widthPlaceholder": "幅 50〜1200（空欄で元のサイズ）",
     "insert": "挿入"
