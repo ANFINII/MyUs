@@ -8,5 +8,17 @@
 
   img {
     height: auto;
+
+    &[data-rounded='s'] {
+      border-radius: 4px;
+    }
+
+    &[data-rounded='m'] {
+      border-radius: 8px;
+    }
+
+    &[data-rounded='l'] {
+      border-radius: 16px;
+    }
   }
 }

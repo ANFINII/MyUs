@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Editor } from '@tiptap/react'
+import { Editor, useEditorState } from '@tiptap/react'
 import { Option } from 'types/internal/other'
 import cx from 'utils/functions/cx'
 import Select from 'components/parts/Select'
@@ -17,7 +17,7 @@ import IconStrike from './Icon/Strike'
 import IconSubscript from './Icon/Subscript'
 import IconSuperscript from './Icon/Superscript'
 import IconUnderline from './Icon/Underline'
-import ImageInput from './ImageInput'
+import ImageInput, { ImageValues, MAX_WIDTH } from './ImageInput'
 import LinkInput from './LinkInput'
 import style from './TextEditor.module.scss'
 
@@ -73,6 +73,17 @@ export default function Toolbar(props: Props): React.JSX.Element {
   const [color, setColor] = useState<string>('rgb(0, 0, 0)')
   const [isLinkInput, setIsLinkInput] = useState<boolean>(false)
   const [imageSrc, setImageSrc] = useState<string>('')
+  const [imageWidth, setImageWidth] = useState<number>(MAX_WIDTH)
+
+  const selectedImage = useEditorState({
+    editor,
+    selector: ({ editor: e }): ImageValues | null => {
+      if (!e.isActive('image')) return null
+      const { width, rounded } = e.getAttributes('image')
+      return { width: Number(width) || undefined, rounded: String(rounded ?? '') }
+    },
+  })
+
   const fileRef = useRef<HTMLInputElement>(null)
 
   const headingOptions: Option[] = [
@@ -142,22 +153,37 @@ export default function Toolbar(props: Props): React.JSX.Element {
     const reader = new FileReader()
     reader.onload = () => {
       const src = reader.result
-      if (typeof src === 'string') {
+      if (typeof src !== 'string') return
+      const image = new Image()
+      image.onload = () => {
+        setImageWidth(Math.min(image.naturalWidth, MAX_WIDTH))
         setImageSrc(src)
       }
+      image.src = src
     }
     reader.readAsDataURL(file)
     e.target.value = ''
   }
 
-  const handleImageSubmit = (width?: number) => {
-    editor.chain().focus().setImage({ src: imageSrc, width }).run()
+  const handleImageSubmit = (values: ImageValues) => {
+    const attrs = imageSrc ? { src: imageSrc } : editor.getAttributes('image')
+    const content = { type: 'image', attrs: { ...attrs, width: values.width ?? null, height: null, rounded: values.rounded } }
+    const chain = editor.chain().focus()
+    if (imageSrc) {
+      chain.insertContentAt(editor.state.selection.to, content).run()
+    } else {
+      chain.insertContent(content).run()
+    }
     setImageSrc('')
   }
 
   const handleImageCancel = () => {
-    setImageSrc('')
-    editor.commands.focus()
+    if (imageSrc) {
+      setImageSrc('')
+      editor.commands.focus()
+      return
+    }
+    editor.chain().focus().setTextSelection(editor.state.selection.to).run()
   }
 
   const showFormatting = config.bold || config.italic || config.underline || config.strike || config.color || config.superscript || config.subscript
@@ -300,7 +326,10 @@ export default function Toolbar(props: Props): React.JSX.Element {
       </div>
 
       {config.link && isLinkInput && <LinkInput onSubmit={handleLinkSubmit} onCancel={handleLinkCancel} />}
-      {config.image && imageSrc && <ImageInput onSubmit={handleImageSubmit} onCancel={handleImageCancel} />}
+      {config.image && imageSrc && <ImageInput values={{ width: imageWidth, rounded: '' }} onSubmit={handleImageSubmit} onCancel={handleImageCancel} />}
+      {config.image && !imageSrc && selectedImage && (
+        <ImageInput key={`${selectedImage.width}-${selectedImage.rounded}`} values={selectedImage} isEdit onSubmit={handleImageSubmit} onCancel={handleImageCancel} />
+      )}
     </div>
   )
 }
