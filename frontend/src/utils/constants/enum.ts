@@ -34,6 +34,13 @@ export enum Currency {
   Krw = 'KRW',
 }
 
+export enum Locale {
+  Ja = 'Ja',
+  En = 'En',
+  Zh = 'Zh',
+  Ko = 'Ko',
+}
+
 export enum MediaType {
   Video = 'Video',
   Music = 'Music',
