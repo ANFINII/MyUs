@@ -209,7 +209,7 @@ match result:
 
 ## PR 計画
 
-### ⬜ PR #1: 決済ドメイン層を新設（interfaces + data + enums のみ）
+### ✅ PR #1: 決済ドメイン層を新設（interfaces + data + enums のみ）
 
 **Goal**: 実装無しでドメイン層を全部入れる。既存機能は無変更（adapter / frontend / injector は触らない）。
 
@@ -237,7 +237,7 @@ match result:
 
 ---
 
-### ⬜ PR #2: Stripe Provider 実装 + injector 登録 + env 追加
+### ✅ PR #2: Stripe Provider 実装 + injector 登録 + env 追加
 
 **Goal**: PR #1 で定義した interface に対する Stripe 実装を作る。adapter / frontend はまだ触らない。
 
@@ -268,7 +268,7 @@ match result:
 
 ---
 
-### ⬜ PR #3: adapter リファクタ + frontend を新インターフェース経由に切替
+### ✅ PR #3: adapter リファクタ + frontend を新インターフェース経由に切替
 
 **Goal**: 既存の Stripe 直接呼び出し adapter を、新 provider 経由に置き換える。フロントは `stripeId` → `plan` 送信に変更。ここで動作切替が完了する。
 
@@ -291,7 +291,7 @@ match result:
 
 ---
 
-### ⬜ PR #4: Subscription / PaymentTransaction テーブル設計
+### ✅ PR #4: Subscription / PaymentTransaction テーブル設計
 
 **Goal**: 既存 `UserPlan` を `Subscription` に置き換え、`PaymentTransaction` を新設。`provider` カラムを必須化。
 
@@ -309,7 +309,7 @@ match result:
 
 ---
 
-### ⬜ PR #5: Webhook 受信エンドポイント（署名検証 + 冪等性）
+### ✅ PR #5: Webhook 受信エンドポイント（署名検証 + 冪等性）
 
 **Goal**: Stripe からの webhook を受けて Subscription / PaymentTransaction の status を更新できるようにする。
 
@@ -327,7 +327,7 @@ match result:
 
 ---
 
-### ⬜ PR #6: cancel_subscription / get_subscription API
+### ✅ PR #6: cancel_subscription / get_subscription API
 
 **Goal**: ユーザーがプラン解約できる。
 
@@ -342,7 +342,7 @@ match result:
 
 ---
 
-### ⬜ PR #7: User の Merchant 化フィールド追加（Stripe Connect 準備）
+### ⏸ PR #7: User の Merchant 化フィールド追加（Stripe Connect 準備）
 
 **Goal**: User がマーチャントになれる準備。
 
@@ -356,7 +356,7 @@ match result:
 
 ---
 
-### ⬜ PR #8: Stripe Connect onboarding API
+### ⏸ PR #8: Stripe Connect onboarding API
 
 **Goal**: User が Stripe Connect で merchant 登録できる。
 
@@ -372,7 +372,7 @@ match result:
 
 ---
 
-### ⬜ PR #9: Store / Product / Price テーブル
+### ⏸ PR #9: Store / Product / Price テーブル
 
 **Goal**: User がマーチャントとして商品を登録できる準備（テーブルのみ）。
 
@@ -387,7 +387,7 @@ match result:
 
 ---
 
-### ⬜ PR #10: User Merchant の Product 同期 + Marketplace checkout
+### ⏸ PR #10: User Merchant の Product 同期 + Marketplace checkout
 
 **Goal**: User が登録した商品で買い物される checkout フローを実装。
 
@@ -416,7 +416,7 @@ match result:
 
 ---
 
-### ⬜ PR #12: 国際化対応（多言語表示・多通貨）
+### 🔶 PR #12: 国際化対応（多言語表示・多通貨）
 
 **Goal**: `Locale` を実 API として使い、ユーザーの言語で checkout ページを表示する。
 
@@ -439,8 +439,15 @@ match result:
 
 ---
 
+## 進捗
+
+| PR | 状況 |
+|---|---|
+| #1〜#6 | 完了（決済ドメイン層、Stripe Provider、adapter の切り替え、Subscription / PaymentTransaction、Webhook、解約） |
+| #7〜#10 | 後回し（ユーザーが売る機能は当面作らない。2026-10-26 決定） |
+| #11 | 未着手 |
+| #12 | 言語は #1148（決済画面を表示中の言語で出し、支払い後もその言語のページに戻す）。多通貨は未着手 |
+
 ## 次にやること
 
-→ **PR #1**（決済ドメイン層を新設・実装無し）を開始する。
-
-ブランチ案: `back_feat_payment_domain`
+→ #11（複数 Provider の受け皿）と、#12 の多通貨は、着手するか未定。
