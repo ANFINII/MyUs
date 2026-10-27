@@ -827,6 +827,7 @@ def convert_comics(objs: list[ComicData]) -> list[ComicOut]:
             title=x.title,
             content=x.content,
             image=x.image,
+            pages=x.pages,
             read=x.read,
             like=x.like,
             publish=x.publish,
