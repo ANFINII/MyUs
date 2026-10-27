@@ -1,5 +1,8 @@
+import { Locale } from 'utils/constants/enum'
+
 export interface PaymentCheckoutIn {
   plan: string
+  locale: Locale
 }
 
 export interface PaymentCheckoutOut {

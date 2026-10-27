@@ -5,7 +5,7 @@ import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
-import { FetchError } from 'utils/constants/enum'
+import { FetchError, Locale } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
@@ -40,7 +40,8 @@ export default function Payment(props: Props): React.JSX.Element {
 
   const handlePurchase = async (plan: string) => {
     setSelectedPlan(plan)
-    const ret = await postPaymentCheckout({ plan })
+    const locale = router.locale === 'en' ? Locale.En : Locale.Ja
+    const ret = await postPaymentCheckout({ plan, locale })
     if (ret.isErr()) {
       setSelectedPlan('')
       handleToast(toErrorMessage(ret.error, FetchError.Post), true)

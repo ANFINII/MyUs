@@ -19,7 +19,7 @@ class PaymentAPI:
     @staticmethod
     @router.post("/checkout", response={200: PaymentCheckoutOut, 400: ErrorOut, 500: ErrorOut})
     def checkout(request: HttpRequest, input: PaymentCheckoutIn):
-        log.info("PaymentAPI checkout", plan=input.plan)
+        log.info("PaymentAPI checkout", plan=input.plan, locale=input.locale.value)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -29,7 +29,7 @@ class PaymentAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        checkout_ret = create_checkout(user_id, input.plan)
+        checkout_ret = create_checkout(user_id, input.plan, input.locale)
         if checkout_ret.is_err:
             message = checkout_ret.err_value.message
             match checkout_ret.err_value:

@@ -1,9 +1,11 @@
 from datetime import datetime
 from pydantic import BaseModel
+from api.utils.enum.i18n import Locale
 
 
 class PaymentCheckoutIn(BaseModel):
     plan: str
+    locale: Locale
 
 
 class PaymentCheckoutOut(BaseModel):

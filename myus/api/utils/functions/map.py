@@ -1,4 +1,5 @@
 from typing import assert_never
+from api.utils.enum.i18n import Locale
 from api.utils.enum.media import CommentType, CommentTypeNo, MediaType
 from api.utils.enum.payment import PaymentStatus
 
@@ -21,3 +22,13 @@ def payment_status_rank(status: PaymentStatus) -> int:
             return 2
         case _:
             assert_never(status)
+
+
+def locale_path(locale: Locale) -> str:
+    match locale:
+        case Locale.JA | Locale.ZH | Locale.KO:
+            return ""
+        case Locale.EN:
+            return "/en"
+        case _:
+            assert_never(locale)
