@@ -32,7 +32,7 @@ const extensions = [
   Color,
   Highlight.configure({ multicolor: true }),
   TextAlign.configure({ types: ['heading', 'paragraph'] }),
-  RoundedImage.configure({ resize: { enabled: true, minWidth: 50, alwaysPreserveAspectRatio: true } }),
+  RoundedImage.configure({ allowBase64: true, resize: { enabled: true, minWidth: 50, alwaysPreserveAspectRatio: true } }),
   Subscript,
   Superscript,
 ]
