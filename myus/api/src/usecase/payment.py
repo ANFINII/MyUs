@@ -23,7 +23,7 @@ from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
 from api.utils.enum.user import PlanName
-from api.utils.functions.map import locale_path_prefix, payment_status_rank
+from api.utils.functions.map import locale_path, payment_status_rank
 from api.utils.plan import get_plan
 
 
@@ -42,7 +42,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         log.warning("Payment unknown plan", plan=plan_name)
         return Result.err(NotFoundError("Not Found"))
 
-    frontend_url = f"{settings.FRONTEND_URL}{locale_path_prefix(locale)}"
+    frontend_url = f"{settings.FRONTEND_URL}{locale_path(locale)}"
     data = CheckoutData(
         product_code=plan.name,
         description=plan.description,

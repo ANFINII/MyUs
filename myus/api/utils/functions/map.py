@@ -24,7 +24,7 @@ def payment_status_rank(status: PaymentStatus) -> int:
             assert_never(status)
 
 
-def locale_path_prefix(locale: Locale) -> str:
+def locale_path(locale: Locale) -> str:
     match locale:
         case Locale.JA | Locale.ZH | Locale.KO:
             return ""
