@@ -71,6 +71,7 @@ export interface Blog extends Media {
 
 export interface Comic extends Media {
   image: string
+  pages: string[]
 }
 
 export interface Picture extends Media {

@@ -66,6 +66,7 @@ class BlogOut(MediaOut):
 
 class ComicOut(MediaOut):
     image: str
+    pages: list[str]
 
 
 class PictureOut(MediaOut):

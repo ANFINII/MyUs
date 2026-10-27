@@ -8,6 +8,7 @@ import { Comic } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageComic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
+import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -21,6 +22,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import ComicModal from 'components/widgets/Modal/Comic'
 
 interface Props {
   data: Comic
@@ -37,6 +39,8 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish })
+  const [isModal, setIsModal] = useState<boolean>(false)
+  const [previewPages, setPreviewPages] = useState<string[]>([])
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
@@ -47,6 +51,16 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+
+  const handleModal = () => {
+    if (isModal) {
+      previewPages.forEach((url) => URL.revokeObjectURL(url))
+      setPreviewPages([])
+    } else {
+      setPreviewPages([values.image ? previewUrl(values.image) : data.image, ...data.pages])
+    }
+    setIsModal(!isModal)
+  }
 
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
@@ -63,6 +77,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
+      <Button color="purple" size="s" name={t('manage.button.preview')} onClick={handleModal} />
       <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleForm} />
       <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
@@ -80,6 +95,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
         </VStack>
       </form>
+      <ComicModal open={isModal} onClose={handleModal} pages={previewPages} />
     </Main>
   )
 }

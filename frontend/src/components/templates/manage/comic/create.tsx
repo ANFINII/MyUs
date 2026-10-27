@@ -6,6 +6,7 @@ import { ComicIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postComicCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
+import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -17,7 +18,9 @@ import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
+import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import ComicModal from 'components/widgets/Modal/Comic'
 
 interface Props {
   channels: Channel[]
@@ -38,6 +41,8 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<ComicIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '' })
+  const [isModal, setIsModal] = useState<boolean>(false)
+  const [previewPages, setPreviewPages] = useState<string[]>([])
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -45,6 +50,18 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, pages: files })
+
+  const handleModal = () => {
+    if (isModal) {
+      previewPages.forEach((url) => URL.revokeObjectURL(url))
+      setPreviewPages([])
+    } else {
+      const { image, pages = [] } = values
+      const files = image ? [image, ...pages] : pages
+      setPreviewPages(files.map((file) => previewUrl(file)))
+    }
+    setIsModal(!isModal)
+  }
 
   const handleForm = async () => {
     const { channelUlid, categoryUlid, title, content, image, pages } = values
@@ -59,14 +76,15 @@ export default function ComicCreate(props: Props): React.JSX.Element {
     router.push({ pathname: '/manage/comic', query: { channel: channelUlid } })
   }
 
+  const button = (
+    <HStack gap="4">
+      <Button color="purple" size="s" name={t('manage.button.preview')} onClick={handleModal} />
+      <Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />
+    </HStack>
+  )
+
   return (
-    <Main
-      title="Comic"
-      type="table"
-      toast={toast}
-      isFooter={false}
-      button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}
-    >
+    <Main title="Comic" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
@@ -78,6 +96,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
           <InputFile label={t('manage.form.pages')} accept="image/*" required error={error} multiple onChange={handleMultiFile} />
         </VStack>
       </form>
+      <ComicModal open={isModal} onClose={handleModal} pages={previewPages} />
     </Main>
   )
 }
