@@ -1,6 +1,7 @@
 from dataclasses import replace
 from datetime import date, datetime
 from django.db import transaction
+from django.utils import timezone
 from ninja import UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.category.interface import CategoryInterface
@@ -76,6 +77,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
         read=0,
         like=0,
         publish=False,
+        publish_at=input.publish_at,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -175,6 +177,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
         like=0,
         download=input.download,
         publish=input.publish,
+        publish_at=input.publish_at,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -248,6 +251,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
         read=0,
         like=0,
         publish=input.publish,
+        publish_at=input.publish_at,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -320,6 +324,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
         read=0,
         like=0,
         publish=input.publish,
+        publish_at=input.publish_at,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -391,6 +396,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
         read=0,
         like=0,
         publish=input.publish,
+        publish_at=input.publish_at,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -449,6 +455,9 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
+    if timezone.localdate(input.publish_at) > date.fromisoformat(input.period):
+        return Result.err(ValidationError("error.publishAtAfterPeriod"))
+
     new_chat = ChatData(
         id=0,
         ulid="",
@@ -458,6 +467,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
         like=0,
         period=date.fromisoformat(input.period),
         publish=input.publish,
+        publish_at=input.publish_at,
         created=datetime.min,
         updated=datetime.min,
         thread_count=0,

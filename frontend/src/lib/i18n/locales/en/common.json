@@ -55,7 +55,8 @@
     "fileTooLarge": "The file is too large",
     "checkoutFailed": "Failed to start the payment",
     "cancelFailed": "Failed to cancel the subscription. Please try again later",
-    "categoryRequired": "Please select a category"
+    "categoryRequired": "Please select a category",
+    "publishAtAfterPeriod": "Set the publish date on or before the end of the period"
   },
   "gender": {
     "Male": "Male",
@@ -209,6 +210,7 @@
     },
     "form": {
       "publish": "Publish",
+      "publishAt": "Publish at",
       "channel": "Channel",
       "category": "Category",
       "unselected": "Not selected",

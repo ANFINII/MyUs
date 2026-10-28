@@ -19,6 +19,7 @@ def convert_data(obj: Chat) -> ChatData:
         like=obj.like_count,
         period=obj.period,
         publish=obj.publish,
+        publish_at=obj.publish_at,
         created=obj.created,
         updated=obj.updated,
         thread_count=obj.thread_total,
@@ -49,4 +50,5 @@ def marshal_data(data: ChatData) -> Chat:
         read=data.read,
         period=data.period,
         publish=data.publish,
+        publish_at=data.publish_at,
     )

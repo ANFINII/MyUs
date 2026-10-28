@@ -8,6 +8,7 @@ import { Comic } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageComic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
+import { toDatetimeLocal } from 'utils/functions/datetime'
 import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -38,7 +39,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish })
+  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish, publishAt: new Date(data.publishAt).toISOString() })
   const [isModal, setIsModal] = useState<boolean>(false)
   const [previewPages, setPreviewPages] = useState<string[]>([])
 
@@ -47,6 +48,10 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
 
   const handleBack = () => router.push('/manage/comic')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) return
+    setValues({ ...values, publishAt: new Date(e.target.value).toISOString() })
+  }
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -88,6 +93,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
+          <Input type="datetime-local" label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" value={values.title} required error={error} onChange={handleInput} />

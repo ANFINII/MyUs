@@ -8,6 +8,7 @@ import { Blog } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageBlog } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
+import { toDatetimeLocal } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -38,7 +39,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, richtext: data.richtext, publish: data.publish, isPromotion: data.isPromotion })
+  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, richtext: data.richtext, publish: data.publish, publishAt: new Date(data.publishAt).toISOString(), isPromotion: data.isPromotion })
   const [isModal, setIsModal] = useState<boolean>(false)
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
@@ -47,6 +48,10 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const handleBack = () => router.push('/manage/blog')
   const handleModal = () => setIsModal(!isModal)
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) return
+    setValues({ ...values, publishAt: new Date(e.target.value).toISOString() })
+  }
   const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -84,6 +89,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
       <form method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
+          <Input type="datetime-local" label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} />
           <ToggleCard label={t('manage.form.promotion')} isActive={values.isPromotion} onClick={handlePromotion} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />

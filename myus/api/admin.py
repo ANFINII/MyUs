@@ -193,7 +193,7 @@ class VideoAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "image", "video", "convert", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "video", "convert", "like", "read", "publish", "publish_at")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -210,7 +210,7 @@ class MusicAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "music", "like", "read", "publish", "download")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "music", "like", "read", "publish", "publish_at", "download")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -227,7 +227,7 @@ class ComicAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "image", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "like", "read", "publish", "publish_at")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -244,7 +244,7 @@ class PictureAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "image", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "like", "read", "publish", "publish_at")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -261,7 +261,7 @@ class BlogAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "richtext", "image", "like", "read", "publish", "is_promotion")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "richtext", "image", "like", "read", "publish", "publish_at", "is_promotion")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -278,7 +278,7 @@ class ChatAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "like", "read", "period", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "like", "read", "period", "publish", "publish_at")}),
         ("確認項目", {"fields": ("total_like", "thread_count", "joined_count", "created", "updated")})
     ]
 
@@ -496,7 +496,7 @@ class VideoAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "image", "video", "convert", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "image", "video", "convert", "publish", "publish_at")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -524,7 +524,7 @@ class MusicAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "lyric", "music", "download", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "lyric", "music", "download", "publish", "publish_at")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -552,7 +552,7 @@ class ComicAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "image", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "image", "publish", "publish_at")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -580,7 +580,7 @@ class PictureAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "image", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "image", "publish", "publish_at")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -608,7 +608,7 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "richtext", "image", "publish", "is_promotion")}),
+        ("編集項目", {"fields": ("title", "content", "richtext", "image", "publish", "publish_at", "is_promotion")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -636,7 +636,7 @@ class ChatAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "period", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "period", "publish", "publish_at")}),
         ("確認項目", {"fields": ("read", "total_like", "thread_count", "joined_count", "created", "updated")})
     ]
 

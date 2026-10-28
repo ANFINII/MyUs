@@ -8,6 +8,7 @@ import { Video } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageVideo } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
+import { toDatetimeLocal } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -36,13 +37,17 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<VideoUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish })
+  const [values, setValues] = useState<VideoUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish, publishAt: new Date(data.publishAt).toISOString() })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/video')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) return
+    setValues({ ...values, publishAt: new Date(e.target.value).toISOString() })
+  }
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -73,6 +78,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
+          <Input type="datetime-local" label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" value={values.title} required error={error} onChange={handleInput} />

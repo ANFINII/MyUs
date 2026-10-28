@@ -55,7 +55,8 @@
     "fileTooLarge": "ファイルサイズが大きすぎます",
     "checkoutFailed": "決済セッションの作成に失敗しました",
     "cancelFailed": "解約処理に失敗しました。時間をおいて再度お試しください",
-    "categoryRequired": "カテゴリを選択してください"
+    "categoryRequired": "カテゴリを選択してください",
+    "publishAtAfterPeriod": "公開日時は期間の終わりより前にしてください"
   },
   "gender": {
     "Male": "男性",
@@ -206,6 +207,7 @@
     },
     "form": {
       "publish": "公開する",
+      "publishAt": "公開日時",
       "channel": "チャンネル",
       "category": "カテゴリー",
       "unselected": "未選択",

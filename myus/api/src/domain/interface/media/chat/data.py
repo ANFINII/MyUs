@@ -14,6 +14,7 @@ class ChatData:
     like: int
     period: date
     publish: bool
+    publish_at: datetime
     created: datetime
     updated: datetime
     thread_count: int

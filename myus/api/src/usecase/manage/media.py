@@ -1,6 +1,7 @@
 from dataclasses import replace
 from datetime import date
 from django.db import transaction
+from django.utils import timezone
 from ninja import UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.category.interface import CategoryInterface
@@ -110,7 +111,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
         log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
+    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.VIDEO, obj.channel.ulid))
 
@@ -235,7 +236,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
         log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish)
+    update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish, publish_at=input.publish_at)
     category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
@@ -361,7 +362,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
         log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish, is_promotion=input.is_promotion)
+    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
 
@@ -496,7 +497,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
         log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
+    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
 
@@ -625,7 +626,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
         log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
+    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.PICTURE, obj.channel.ulid))
 
@@ -747,7 +748,10 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
         log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish)
+    if timezone.localdate(input.publish_at) > date.fromisoformat(input.period):
+        return Result.err(ValidationError("error.publishAtAfterPeriod"))
+
+    update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish, publish_at=input.publish_at)
     category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:

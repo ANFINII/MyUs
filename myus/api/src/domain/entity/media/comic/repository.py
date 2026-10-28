@@ -11,7 +11,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.utils.common.result import FatalError, Result
 
 
-COMIC_FIELDS = ["channel_id", "title", "content", "image", "publish", "updated"]
+COMIC_FIELDS = ["channel_id", "title", "content", "image", "publish", "publish_at", "updated"]
 
 
 class ComicRepository(ComicInterface):

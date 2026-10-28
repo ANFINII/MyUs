@@ -18,6 +18,7 @@ def convert_data(obj: Blog) -> BlogData:
         read=obj.read,
         like=obj.like_count,
         publish=obj.publish,
+        publish_at=obj.publish_at,
         is_promotion=obj.is_promotion,
         created=obj.created,
         updated=obj.updated,
@@ -48,5 +49,6 @@ def marshal_data(data: BlogData) -> Blog:
         image=data.image,
         read=data.read,
         publish=data.publish,
+        publish_at=data.publish_at,
         is_promotion=data.is_promotion,
     )
