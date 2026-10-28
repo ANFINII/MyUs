@@ -17,6 +17,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
+import DatePicker from 'components/parts/Input/DatePicker'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
@@ -44,10 +45,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
 
   const handleBack = () => router.push('/manage/music')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value) return
-    setValues({ ...values, publishAt: toDatetimeISO(e.target.value) })
-  }
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: toDatetimeISO(publishAt) })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -78,7 +76,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
-          <Input type="datetime-local" label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} />
+          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} isTime onChange={handlePublishAt} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" value={values.title} required error={error} onChange={handleInput} />

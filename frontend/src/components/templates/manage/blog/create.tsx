@@ -15,6 +15,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import DatePicker from 'components/parts/Input/DatePicker'
 import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
@@ -47,10 +48,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
 
   const handleModal = () => setIsModal(!isModal)
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value) return
-    setValues({ ...values, publishAt: toDatetimeISO(e.target.value) })
-  }
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: toDatetimeISO(publishAt) })
   const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -87,7 +85,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
       <form method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
-          <Input type="datetime-local" label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} />
+          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} isTime onChange={handlePublishAt} />
           <ToggleCard label={t('manage.form.promotion')} isActive={values.isPromotion} onClick={handlePromotion} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />

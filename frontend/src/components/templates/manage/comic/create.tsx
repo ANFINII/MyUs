@@ -15,6 +15,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import DatePicker from 'components/parts/Input/DatePicker'
 import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
@@ -45,16 +46,13 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const [isModal, setIsModal] = useState<boolean>(false)
   const [previewPages, setPreviewPages] = useState<string[]>([])
 
-  const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value) return
-    setValues({ ...values, publishAt: toDatetimeISO(e.target.value) })
-  }
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, pages: files })
+  const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: toDatetimeISO(publishAt) })
 
   const handleModal = () => {
     if (isModal) {
@@ -93,7 +91,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
-          <Input type="datetime-local" label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} />
+          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} isTime onChange={handlePublishAt} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" required error={error} onChange={handleInput} />
