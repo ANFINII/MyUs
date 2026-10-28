@@ -8,7 +8,7 @@ import { Music } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageMusic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
-import { toDatetimeLocal, toDatetimeISO } from 'utils/functions/datetime'
+import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -38,14 +38,14 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<MusicUpdateIn>({ ...data, publishAt: toDatetimeISO(data.publishAt) })
+  const [values, setValues] = useState<MusicUpdateIn>({ ...data, publishAt: datetimeISO(data.publishAt) })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/music')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: toDatetimeISO(publishAt) })
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -76,7 +76,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
-          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
+          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" value={values.title} required error={error} onChange={handleInput} />

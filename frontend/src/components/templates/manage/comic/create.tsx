@@ -6,7 +6,7 @@ import { ComicIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postComicCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
-import { toDatetimeLocal, toDatetimeISO } from 'utils/functions/datetime'
+import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -42,7 +42,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<ComicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: toDatetimeISO(), title: '', content: '' })
+  const [values, setValues] = useState<ComicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '' })
   const [isModal, setIsModal] = useState<boolean>(false)
   const [previewPages, setPreviewPages] = useState<string[]>([])
 
@@ -52,7 +52,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, pages: files })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: toDatetimeISO(publishAt) })
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
   const handleModal = () => {
     if (isModal) {
@@ -91,7 +91,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
-          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
+          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" required error={error} onChange={handleInput} />

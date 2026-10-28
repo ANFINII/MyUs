@@ -8,7 +8,7 @@ import { Chat } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageChat } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
-import { toDatetimeLocal, toDatetimeISO } from 'utils/functions/datetime'
+import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -39,14 +39,14 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { formatDate } = useDatetime()
-  const [values, setValues] = useState<ChatUpdateIn>({ ...data, publishAt: toDatetimeISO(data.publishAt), period: formatDate(data.period) })
+  const [values, setValues] = useState<ChatUpdateIn>({ ...data, publishAt: datetimeISO(data.publishAt), period: formatDate(data.period) })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/chat')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: toDatetimeISO(publishAt) })
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -77,7 +77,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
       <form method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
-          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={toDatetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
+          <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" value={values.title} required error={error} onChange={handleInput} />
