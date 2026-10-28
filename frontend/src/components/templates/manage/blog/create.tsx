@@ -7,7 +7,7 @@ import { BlogIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postBlogCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
-import { toDatetimeLocal } from 'utils/functions/datetime'
+import { toDatetimeLocal, toDatetimeISO } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -43,13 +43,13 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: new Date().toISOString(), title: '', content: '', richtext: '', isPromotion: false })
+  const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: toDatetimeISO(), title: '', content: '', richtext: '', isPromotion: false })
 
   const handleModal = () => setIsModal(!isModal)
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value) return
-    setValues({ ...values, publishAt: new Date(e.target.value).toISOString() })
+    setValues({ ...values, publishAt: toDatetimeISO(e.target.value) })
   }
   const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })

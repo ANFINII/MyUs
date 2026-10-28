@@ -6,7 +6,7 @@ import { PictureIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postPictureCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
-import { toDatetimeLocal } from 'utils/functions/datetime'
+import { toDatetimeLocal, toDatetimeISO } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -38,12 +38,12 @@ export default function PictureCreate(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<PictureIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: new Date().toISOString(), title: '', content: '' })
+  const [values, setValues] = useState<PictureIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: toDatetimeISO(), title: '', content: '' })
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value) return
-    setValues({ ...values, publishAt: new Date(e.target.value).toISOString() })
+    setValues({ ...values, publishAt: toDatetimeISO(e.target.value) })
   }
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })

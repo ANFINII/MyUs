@@ -34,3 +34,7 @@ export const toDatetimeLocal = (datetime: Date | string): string => {
   const offset = date.getTimezoneOffset() * 60 * 1000
   return new Date(date.getTime() - offset).toISOString().slice(0, 16)
 }
+
+export const toDatetimeISO = (datetime: Date | string = new Date()): string => {
+  return new Date(datetime).toISOString()
+}

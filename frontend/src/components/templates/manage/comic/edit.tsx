@@ -8,7 +8,7 @@ import { Comic } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageComic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
-import { toDatetimeLocal } from 'utils/functions/datetime'
+import { toDatetimeLocal, toDatetimeISO } from 'utils/functions/datetime'
 import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -39,7 +39,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish, publishAt: new Date(data.publishAt).toISOString() })
+  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish, publishAt: toDatetimeISO(data.publishAt) })
   const [isModal, setIsModal] = useState<boolean>(false)
   const [previewPages, setPreviewPages] = useState<string[]>([])
 
@@ -50,7 +50,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value) return
-    setValues({ ...values, publishAt: new Date(e.target.value).toISOString() })
+    setValues({ ...values, publishAt: toDatetimeISO(e.target.value) })
   }
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
