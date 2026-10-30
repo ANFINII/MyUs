@@ -9,7 +9,7 @@ interface DayCell {
   isDisabled: boolean
 }
 
-const toIsoDate = (date: Date): string => {
+const isoDate = (date: Date): string => {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')
   const d = String(date.getDate()).padStart(2, '0')
@@ -137,21 +137,21 @@ export default function DatePicker(props: Props): React.JSX.Element {
   const handleSelect = (cell: DayCell) => {
     if (cell.isDisabled) return
     if (isTime) {
-      onChange?.(`${toIsoDate(cell.date)}T${selected ? isoTime(selected) : '00:00'}`)
+      onChange?.(`${isoDate(cell.date)}T${selected ? isoTime(selected) : '00:00'}`)
       return
     }
-    onChange?.(toIsoDate(cell.date))
+    onChange?.(isoDate(cell.date))
     setIsOpen(false)
   }
 
   const handleTime = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value) return
-    onChange?.(`${toIsoDate(selected ?? today)}T${e.target.value}`)
+    onChange?.(`${isoDate(selected ?? today)}T${e.target.value}`)
   }
 
   const displayText = (date: Date): string => {
     if (locale !== 'ja') return displayFormat.format(date)
-    return isTime ? `${toIsoDate(date)} ${isoTime(date)}` : toIsoDate(date)
+    return isTime ? `${isoDate(date)} ${isoTime(date)}` : isoDate(date)
   }
 
   return (
