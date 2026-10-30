@@ -48,13 +48,13 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
 
   const handleBack = () => router.push('/manage/blog')
   const handleModal = () => setIsModal(!isModal)
-  const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
-  const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+  const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
+  const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
   const handleRichtext = (html: string) => {
     const richtext = html.trim() === '<p></p>' ? '' : html.trim()

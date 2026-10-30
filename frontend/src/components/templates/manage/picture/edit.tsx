@@ -44,12 +44,12 @@ export default function ManagePictureEdit(props: Props): React.JSX.Element {
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/picture')
-  const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+  const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
