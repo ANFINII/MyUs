@@ -10,7 +10,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.utils.common.result import FatalError, Result
 
 
-BLOG_FIELDS = ["channel_id", "title", "content", "richtext", "image", "publish", "is_promotion", "updated"]
+BLOG_FIELDS = ["channel_id", "title", "content", "richtext", "image", "publish", "publish_at", "is_promotion", "updated"]
 
 
 class BlogRepository(BlogInterface):

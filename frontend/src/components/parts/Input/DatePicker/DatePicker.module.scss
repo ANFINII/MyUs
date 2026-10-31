@@ -68,6 +68,11 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       padding: 12px;
 
+      &.below {
+        top: calc(100% + 4px);
+        bottom: auto;
+      }
+
       .nav {
         display: flex;
         align-items: center;
@@ -175,6 +180,23 @@
             cursor: not-allowed;
             background: transparent;
           }
+        }
+      }
+
+      .time {
+        width: 100%;
+        height: 32px;
+        padding: 4px 8px;
+        margin-top: 8px;
+        font-size: 14px;
+        color: rgb(30, 30, 30);
+        border: 1px solid rgb(200, 200, 200);
+        border-radius: 6px;
+        background: rgb(255, 255, 255);
+
+        &:focus-visible {
+          outline: none;
+          border-color: rgb(40, 130, 250);
         }
       }
     }

@@ -1,3 +1,4 @@
+from datetime import date, datetime
 from pydantic import BaseModel
 from api.utils.enum.media import MediaType
 
@@ -6,6 +7,7 @@ class VideoIn(BaseModel):
     channel_ulid: str
     category_ulid: str
     publish: bool
+    publish_at: datetime
     title: str
     content: str
 
@@ -14,6 +16,7 @@ class MusicIn(BaseModel):
     channel_ulid: str
     category_ulid: str
     publish: bool
+    publish_at: datetime
     title: str
     content: str
     lyric: str
@@ -24,6 +27,7 @@ class BlogIn(BaseModel):
     channel_ulid: str
     category_ulid: str
     publish: bool
+    publish_at: datetime
     title: str
     content: str
     richtext: str
@@ -34,6 +38,7 @@ class ComicIn(BaseModel):
     channel_ulid: str
     category_ulid: str
     publish: bool
+    publish_at: datetime
     title: str
     content: str
 
@@ -42,6 +47,7 @@ class PictureIn(BaseModel):
     channel_ulid: str
     category_ulid: str
     publish: bool
+    publish_at: datetime
     title: str
     content: str
 
@@ -50,9 +56,10 @@ class ChatIn(BaseModel):
     channel_ulid: str
     category_ulid: str
     publish: bool
+    publish_at: datetime
     title: str
     content: str
-    period: str
+    period: date
 
 
 class VideoUpdateIn(BaseModel):
@@ -60,6 +67,7 @@ class VideoUpdateIn(BaseModel):
     title: str
     content: str
     publish: bool
+    publish_at: datetime
 
 
 class MusicUpdateIn(BaseModel):
@@ -69,6 +77,7 @@ class MusicUpdateIn(BaseModel):
     lyric: str
     download: bool
     publish: bool
+    publish_at: datetime
 
 
 class BlogUpdateIn(BaseModel):
@@ -78,6 +87,7 @@ class BlogUpdateIn(BaseModel):
     richtext: str
     is_promotion: bool
     publish: bool
+    publish_at: datetime
 
 
 class ComicUpdateIn(BaseModel):
@@ -85,6 +95,7 @@ class ComicUpdateIn(BaseModel):
     title: str
     content: str
     publish: bool
+    publish_at: datetime
 
 
 class PictureUpdateIn(BaseModel):
@@ -92,14 +103,16 @@ class PictureUpdateIn(BaseModel):
     title: str
     content: str
     publish: bool
+    publish_at: datetime
 
 
 class ChatUpdateIn(BaseModel):
     category_ulid: str
     title: str
     content: str
-    period: str
+    period: date
     publish: bool
+    publish_at: datetime
 
 
 class BulkDeleteIn(BaseModel):

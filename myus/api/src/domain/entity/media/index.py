@@ -32,6 +32,8 @@ def filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) ->
         q_list.append(Q(ulid__in=filter.ulids))
     if filter.publish is not None:
         q_list.append(Q(publish=filter.publish))
+    if filter.publish:
+        q_list.append(Q(publish_at__lte=Now()))
     if filter.owner_id:
         q_list.append(Q(channel__owner_id=filter.owner_id))
     if filter.channel_id:

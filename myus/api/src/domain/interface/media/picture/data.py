@@ -14,6 +14,7 @@ class PictureData:
     read: int
     like: int
     publish: bool
+    publish_at: datetime
     created: datetime
     updated: datetime
     category_ulid: str

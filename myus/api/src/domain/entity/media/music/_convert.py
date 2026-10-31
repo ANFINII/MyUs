@@ -19,6 +19,7 @@ def convert_data(obj: Music) -> MusicData:
         like=obj.like_count,
         download=obj.download,
         publish=obj.publish,
+        publish_at=obj.publish_at,
         created=obj.created,
         updated=obj.updated,
         category_ulid=category.ulid if category is not None else "",
@@ -49,4 +50,5 @@ def marshal_data(data: MusicData) -> Music:
         read=data.read,
         download=data.download,
         publish=data.publish,
+        publish_at=data.publish_at,
     )

@@ -17,6 +17,7 @@ def convert_data(obj: Picture) -> PictureData:
         read=obj.read,
         like=obj.like_count,
         publish=obj.publish,
+        publish_at=obj.publish_at,
         created=obj.created,
         updated=obj.updated,
         category_ulid=category.ulid if category is not None else "",
@@ -45,4 +46,5 @@ def marshal_data(data: PictureData) -> Picture:
         image=data.image,
         read=data.read,
         publish=data.publish,
+        publish_at=data.publish_at,
     )

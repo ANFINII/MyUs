@@ -4,6 +4,7 @@ export interface MediaIn {
   channelUlid: string
   categoryUlid: string
   publish: boolean
+  publishAt: string
   title: string
   content: string
 }
@@ -43,6 +44,7 @@ export interface MediaUpdateIn {
   title: string
   content: string
   publish: boolean
+  publishAt: string
 }
 
 export interface VideoUpdateIn extends MediaUpdateIn {

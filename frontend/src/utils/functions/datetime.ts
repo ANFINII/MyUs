@@ -28,3 +28,13 @@ export const selectDate = () => {
 
   return { years, months, days }
 }
+
+export const datetimeLocal = (datetime: Date | string): string => {
+  const date = new Date(datetime)
+  const offset = date.getTimezoneOffset() * 60 * 1000
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16)
+}
+
+export const datetimeISO = (datetime: Date | string = new Date()): string => {
+  return new Date(datetime).toISOString()
+}

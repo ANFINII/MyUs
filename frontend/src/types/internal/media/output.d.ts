@@ -26,6 +26,7 @@ export interface Media {
   read: number
   like: number
   publish: boolean
+  publishAt: Date
   created: Date
   updated: Date
   categoryUlid: string

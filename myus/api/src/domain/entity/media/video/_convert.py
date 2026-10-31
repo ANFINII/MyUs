@@ -19,6 +19,7 @@ def convert_data(obj: Video) -> VideoData:
         read=obj.read,
         like=obj.like_count,
         publish=obj.publish,
+        publish_at=obj.publish_at,
         created=obj.created,
         updated=obj.updated,
         category_ulid=category.ulid if category is not None else "",
@@ -49,4 +50,5 @@ def marshal_data(data: VideoData) -> Video:
         convert=data.convert,
         read=data.read,
         publish=data.publish,
+        publish_at=data.publish_at,
     )

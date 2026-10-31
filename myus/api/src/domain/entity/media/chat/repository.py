@@ -10,7 +10,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.utils.common.result import FatalError, Result
 
 
-CHAT_FIELDS = ["channel_id", "title", "content", "period", "publish", "updated"]
+CHAT_FIELDS = ["channel_id", "title", "content", "period", "publish", "publish_at", "updated"]
 
 
 class ChatRepository(ChatInterface):

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db import models
+from django.utils import timezone
 from django_ulid.models import ulid
 from api.db.models.base import MediaModel
 from api.db.models.channel import Channel
@@ -12,21 +13,22 @@ from api.utils.functions.file import comic_upload, image_upload, music_upload, v
 # Video
 class Video(models.Model, MediaModel):
     """Video"""
-    id       = models.BigAutoField(primary_key=True)
-    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    video    = models.FileField(upload_to=video_upload, max_length=255, blank=True)
-    convert  = models.FileField(upload_to=video_upload, max_length=255, blank=True)
-    category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
-    like     = models.ManyToManyField(User, related_name="video_like", blank=True)
-    read     = models.IntegerField(default=0)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    video      = models.FileField(upload_to=video_upload, max_length=255, blank=True)
+    convert    = models.FileField(upload_to=video_upload, max_length=255, blank=True)
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="video_like", blank=True)
+    read       = models.IntegerField(default=0)
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "video"
@@ -40,21 +42,22 @@ class Video(models.Model, MediaModel):
 # Music
 class Music(models.Model, MediaModel):
     """Music"""
-    id       = models.BigAutoField(primary_key=True)
-    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    lyric    = models.TextField()
-    music    = models.FileField(upload_to=music_upload, max_length=255, blank=True)
-    category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, through=MusicHashtag, blank=True)
-    like     = models.ManyToManyField(User, related_name="music_like", blank=True)
-    read     = models.IntegerField(default=0)
-    download = models.BooleanField(default=True)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    lyric      = models.TextField()
+    music      = models.FileField(upload_to=music_upload, max_length=255, blank=True)
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=MusicHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="music_like", blank=True)
+    read       = models.IntegerField(default=0)
+    download   = models.BooleanField(default=True)
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "music"
@@ -80,6 +83,7 @@ class Blog(models.Model, MediaModel):
     like         = models.ManyToManyField(User, related_name="blog_like", blank=True)
     read         = models.IntegerField(default=0)
     publish      = models.BooleanField(default=True)
+    publish_at   = models.DateTimeField(default=timezone.now)
     is_promotion = models.BooleanField(default=False)
     created      = models.DateTimeField(auto_now_add=True)
     updated      = models.DateTimeField(auto_now=True)
@@ -96,19 +100,20 @@ class Blog(models.Model, MediaModel):
 # Comic
 class Comic(models.Model, MediaModel):
     """Comic"""
-    id       = models.BigAutoField(primary_key=True)
-    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, through=ComicHashtag, blank=True)
-    like     = models.ManyToManyField(User, related_name="comic_like", blank=True)
-    read     = models.IntegerField(default=0)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=ComicHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="comic_like", blank=True)
+    read       = models.IntegerField(default=0)
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "comic"
@@ -137,19 +142,20 @@ class ComicPage(models.Model):
 # Picture
 class Picture(models.Model, MediaModel):
     """Picture"""
-    id       = models.BigAutoField(primary_key=True)
-    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, through=PictureHashtag, blank=True)
-    like     = models.ManyToManyField(User, related_name="picture_like", blank=True)
-    read     = models.IntegerField(default=0)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=PictureHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="picture_like", blank=True)
+    read       = models.IntegerField(default=0)
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "picture"
@@ -163,19 +169,20 @@ class Picture(models.Model, MediaModel):
 # Chat
 class Chat(models.Model):
     """Chat"""
-    id       = models.BigAutoField(primary_key=True)
-    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="chats")
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, through=ChatHashtag, blank=True)
-    like     = models.ManyToManyField(User, related_name="chat_like", blank=True)
-    read     = models.IntegerField(default=0)
-    period   = models.DateField()
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="chats")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=ChatHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="chat_like", blank=True)
+    read       = models.IntegerField(default=0)
+    period     = models.DateField()
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title

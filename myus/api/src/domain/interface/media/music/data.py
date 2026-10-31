@@ -16,6 +16,7 @@ class MusicData:
     like: int
     download: bool
     publish: bool
+    publish_at: datetime
     created: datetime
     updated: datetime
     category_ulid: str

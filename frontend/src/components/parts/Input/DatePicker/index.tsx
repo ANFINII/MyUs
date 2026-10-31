@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import IconCalendar from 'components/parts/Icon/Calendar'
@@ -9,21 +9,35 @@ interface DayCell {
   isDisabled: boolean
 }
 
-const toIsoDate = (date: Date): string => {
+const isoDate = (date: Date): string => {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')
   const d = String(date.getDate()).padStart(2, '0')
   return `${y}-${m}-${d}`
 }
 
-const fromIsoDate = (iso?: string): Date | undefined => {
+const isoTime = (date: Date): string => {
+  const h = String(date.getHours()).padStart(2, '0')
+  const min = String(date.getMinutes()).padStart(2, '0')
+  return `${h}:${min}`
+}
+
+const parseDate = (iso?: string): Date | undefined => {
   if (!iso) return undefined
-  const [y, m, d] = iso.split('-').map(Number)
+  const [date = '', time = '00:00'] = iso.split('T')
+  const [y, m, d] = date.split('-').map(Number)
+  const [h, min] = time.split(':').map(Number)
   if (!y || !m || !d) return undefined
-  return new Date(y, m - 1, d)
+  return new Date(y, m - 1, d, h, min)
 }
 
 const isSameDate = (a: Date, b: Date): boolean => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+
+const isClipped = (el: HTMLElement, parent = el.parentElement): boolean => {
+  if (!parent) return el.getBoundingClientRect().top < 0
+  if (getComputedStyle(parent).overflowY !== 'visible') return el.getBoundingClientRect().top < parent.getBoundingClientRect().top
+  return isClipped(el, parent.parentElement)
+}
 
 const buildMonthGrid = (year: number, month: number, min?: Date, max?: Date): (DayCell | null)[] => {
   const startDay = new Date(year, month, 1).getDay()
@@ -51,24 +65,25 @@ interface Props {
   error?: string
   className?: string
   required?: boolean
+  isTime?: boolean
   minDate?: string
   maxDate?: string
   onChange?: (date: string) => void
 }
 
 export default function DatePicker(props: Props): React.JSX.Element {
-  const { label, value, placeholder, error, className, required = false, minDate, maxDate, onChange } = props
+  const { label, value, placeholder, error, className, required = false, isTime = false, minDate, maxDate, onChange } = props
 
   const { t, i18n } = useTranslation()
   const locale = i18n.language
 
   const boxRef = useRef<HTMLDivElement>(null)
   const today = useMemo(() => new Date(), [])
-  const min = useMemo(() => fromIsoDate(minDate), [minDate])
-  const max = useMemo(() => fromIsoDate(maxDate), [maxDate])
-  const selected = useMemo(() => fromIsoDate(value), [value])
+  const min = useMemo(() => parseDate(minDate), [minDate])
+  const max = useMemo(() => parseDate(maxDate), [maxDate])
+  const selected = useMemo(() => parseDate(value), [value])
 
-  const displayFormat = useMemo(() => new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }), [locale])
+  const displayFormat = useMemo(() => new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric', ...(isTime && { hour: '2-digit', minute: '2-digit' }) }), [locale, isTime])
   const titleFormat = useMemo(() => new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' }), [locale])
   const weekdays = useMemo(() => {
     const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short' })
@@ -77,6 +92,7 @@ export default function DatePicker(props: Props): React.JSX.Element {
   const placeholderText = placeholder ?? t('input.date')
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isBelow, setIsBelow] = useState<boolean>(false)
   const [viewYear, setViewYear] = useState<number>((selected ?? today).getFullYear())
   const [viewMonth, setViewMonth] = useState<number>((selected ?? today).getMonth())
 
@@ -97,8 +113,13 @@ export default function DatePicker(props: Props): React.JSX.Element {
       const base = selected ?? today
       setViewYear(base.getFullYear())
       setViewMonth(base.getMonth())
+      setIsBelow(false)
     }
     setIsOpen(!isOpen)
+  }
+
+  const calendarRef = (el: HTMLDivElement | null) => {
+    if (el && !isBelow && isClipped(el)) setIsBelow(true)
   }
 
   const handlePrev = () => {
@@ -115,8 +136,22 @@ export default function DatePicker(props: Props): React.JSX.Element {
 
   const handleSelect = (cell: DayCell) => {
     if (cell.isDisabled) return
-    onChange?.(toIsoDate(cell.date))
+    if (isTime) {
+      onChange?.(`${isoDate(cell.date)}T${selected ? isoTime(selected) : '00:00'}`)
+      return
+    }
+    onChange?.(isoDate(cell.date))
     setIsOpen(false)
+  }
+
+  const handleTime = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) return
+    onChange?.(`${isoDate(selected ?? today)}T${e.target.value}`)
+  }
+
+  const displayText = (date: Date): string => {
+    if (locale !== 'ja') return displayFormat.format(date)
+    return isTime ? `${isoDate(date)} ${isoTime(date)}` : isoDate(date)
   }
 
   return (
@@ -129,11 +164,11 @@ export default function DatePicker(props: Props): React.JSX.Element {
       )}
       <div className={style.field}>
         <button id={label} type="button" onClick={handleToggle} className={cx(style.input, !selected && style.placeholder, isOpen && style.active, isError && style.error)}>
-          {selected ? (locale === 'ja' ? toIsoDate(selected) : displayFormat.format(selected)) : placeholderText}
+          {selected ? displayText(selected) : placeholderText}
         </button>
         <IconCalendar size="16" className={style.icon} />
         {isOpen && (
-          <div className={style.calendar}>
+          <div ref={calendarRef} className={cx(style.calendar, isBelow && style.below)}>
             <div className={style.nav}>
               <button type="button" onClick={handlePrev} className={style.nav_button}>
                 ‹
@@ -176,6 +211,7 @@ export default function DatePicker(props: Props): React.JSX.Element {
                 )
               })}
             </div>
+            {isTime && <input type="time" value={selected ? isoTime(selected) : ''} onChange={handleTime} className={style.time} />}
           </div>
         )}
       </div>
