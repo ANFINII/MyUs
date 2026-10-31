@@ -2,7 +2,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from api.admin import manage_site
 from api.src.routers import api
 from config.views import serve_media
 
@@ -10,7 +9,6 @@ from config.views import serve_media
 urlpatterns = [
     path("api/", api.urls),
     path("myus-admin/", admin.site.urls),
-    path("myus-manage/", manage_site.urls),
 ]
 
 if settings.DEBUG:
