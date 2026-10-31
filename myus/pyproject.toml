@@ -72,7 +72,7 @@ disallow_subclassing_any = false  # channels の WebsocketConsumer は型情報�
 disallow_any_unimported = false   # 同上
 
 [[tool.mypy.overrides]]
-module = ["api.admin"]
+module = ["api.db.admin"]
 disallow_subclassing_any = false  # import_export の ImportExportModelAdmin は型情報が無いため継承を許可
 disallow_any_unimported = false   # 同上
 
