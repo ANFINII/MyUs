@@ -21,6 +21,7 @@ class Environment:
     csrf_trusted_origins: list[str]
     domain_url: str
     frontend_url: str
+    admin_path: str
 
     # MySQL
     mysql_engine: str
