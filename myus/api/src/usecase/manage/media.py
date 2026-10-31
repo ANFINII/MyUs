@@ -1,5 +1,4 @@
 from dataclasses import replace
-from datetime import date
 from django.db import transaction
 from django.utils import timezone
 from ninja import UploadedFile
@@ -748,10 +747,10 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
         log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    if timezone.localdate(input.publish_at) > date.fromisoformat(input.period):
+    if timezone.localdate(input.publish_at) > input.period:
         return Result.err(ValidationError("error.publishAtAfterPeriod"))
 
-    update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish, publish_at=input.publish_at)
+    update_data = replace(obj, title=input.title, content=input.content, period=input.period, publish=input.publish, publish_at=input.publish_at)
     category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:

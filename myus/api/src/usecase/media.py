@@ -1,5 +1,5 @@
 from dataclasses import replace
-from datetime import date, datetime
+from datetime import datetime
 from django.db import transaction
 from django.utils import timezone
 from ninja import UploadedFile
@@ -455,7 +455,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
-    if timezone.localdate(input.publish_at) > date.fromisoformat(input.period):
+    if timezone.localdate(input.publish_at) > input.period:
         return Result.err(ValidationError("error.publishAtAfterPeriod"))
 
     new_chat = ChatData(
@@ -465,7 +465,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
         content=input.content,
         read=0,
         like=0,
-        period=date.fromisoformat(input.period),
+        period=input.period,
         publish=input.publish,
         publish_at=input.publish_at,
         created=datetime.min,

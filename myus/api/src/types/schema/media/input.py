@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from pydantic import BaseModel
 from api.utils.enum.media import MediaType
 
@@ -59,7 +59,7 @@ class ChatIn(BaseModel):
     publish_at: datetime
     title: str
     content: str
-    period: str
+    period: date
 
 
 class VideoUpdateIn(BaseModel):
@@ -110,7 +110,7 @@ class ChatUpdateIn(BaseModel):
     category_ulid: str
     title: str
     content: str
-    period: str
+    period: date
     publish: bool
     publish_at: datetime
 
