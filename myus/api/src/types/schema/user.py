@@ -8,6 +8,7 @@ class UserOut(BaseModel):
     nickname: str
     is_active: bool
     is_staff: bool
+    admin_path: str
 
 
 class AuthorOut(BaseModel):

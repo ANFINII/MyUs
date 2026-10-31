@@ -119,7 +119,7 @@ ASGI_APPLICATION = "config.asgi.application"
 WSGI_APPLICATION = "config.wsgi.application"
 ROOT_URLCONF = "config.urls"
 
-AUTH_USER_MODEL = "db.User"
+AUTH_USER_MODEL = "myus.User"
 AUTHENTICATION_BACKENDS = ["api.backends.MyBackend"]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -173,6 +173,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"),]
 DOMAIN_URL = env.domain_url
 FRONTEND_URL = env.frontend_url
+ADMIN_PATH = env.admin_path
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

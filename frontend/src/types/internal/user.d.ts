@@ -6,6 +6,7 @@ export interface UserMe {
   nickname: string
   isActive: boolean
   isStaff: boolean
+  adminPath: string
 }
 
 export interface Author {

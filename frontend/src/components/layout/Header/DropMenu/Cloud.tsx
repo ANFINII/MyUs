@@ -26,7 +26,7 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
   const { user } = useUser()
 
   const handleManage = () => {
-    if (user.isStaff) router.push(`${API_URL}/myus-admin/`)
+    if (user.isStaff) router.push(`${API_URL}/${user.adminPath}/`)
     else router.push('/manage')
     onClose()
   }
