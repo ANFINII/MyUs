@@ -22,7 +22,7 @@ const isoTime = (date: Date): string => {
   return `${h}:${min}`
 }
 
-const fromIsoDate = (iso?: string): Date | undefined => {
+const parseDate = (iso?: string): Date | undefined => {
   if (!iso) return undefined
   const [date = '', time = '00:00'] = iso.split('T')
   const [y, m, d] = date.split('-').map(Number)
@@ -79,9 +79,9 @@ export default function DatePicker(props: Props): React.JSX.Element {
 
   const boxRef = useRef<HTMLDivElement>(null)
   const today = useMemo(() => new Date(), [])
-  const min = useMemo(() => fromIsoDate(minDate), [minDate])
-  const max = useMemo(() => fromIsoDate(maxDate), [maxDate])
-  const selected = useMemo(() => fromIsoDate(value), [value])
+  const min = useMemo(() => parseDate(minDate), [minDate])
+  const max = useMemo(() => parseDate(maxDate), [maxDate])
+  const selected = useMemo(() => parseDate(value), [value])
 
   const displayFormat = useMemo(() => new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric', ...(isTime && { hour: '2-digit', minute: '2-digit' }) }), [locale, isTime])
   const titleFormat = useMemo(() => new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' }), [locale])
