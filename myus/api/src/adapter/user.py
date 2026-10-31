@@ -1,5 +1,4 @@
 from typing import assert_never
-from django.conf import settings
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
@@ -57,7 +56,6 @@ class UserAPI:
             nickname=user.nickname,
             is_active=user.is_active,
             is_staff=user.is_staff,
-            admin_path=settings.ADMIN_PATH if user.is_staff else "",
         )
 
         return 200, data
