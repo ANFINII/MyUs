@@ -19,7 +19,7 @@ class HashTag(models.Model):
 class VideoHashtag(models.Model):
     """VideoHashtag"""
     id       = models.BigAutoField(primary_key=True)
-    video    = models.ForeignKey("db.Video", on_delete=models.CASCADE, related_name="video_hashtags")
+    video    = models.ForeignKey("Video", on_delete=models.CASCADE, related_name="video_hashtags")
     hashtag  = models.ForeignKey(HashTag, on_delete=models.CASCADE, related_name="video_hashtags")
     sequence = models.PositiveIntegerField()
 
@@ -34,7 +34,7 @@ class VideoHashtag(models.Model):
 class MusicHashtag(models.Model):
     """MusicHashtag"""
     id       = models.BigAutoField(primary_key=True)
-    music    = models.ForeignKey("db.Music", on_delete=models.CASCADE, related_name="music_hashtags")
+    music    = models.ForeignKey("Music", on_delete=models.CASCADE, related_name="music_hashtags")
     hashtag  = models.ForeignKey(HashTag, on_delete=models.CASCADE, related_name="music_hashtags")
     sequence = models.PositiveIntegerField()
 
@@ -49,7 +49,7 @@ class MusicHashtag(models.Model):
 class BlogHashtag(models.Model):
     """BlogHashtag"""
     id       = models.BigAutoField(primary_key=True)
-    blog     = models.ForeignKey("db.Blog", on_delete=models.CASCADE, related_name="blog_hashtags")
+    blog     = models.ForeignKey("Blog", on_delete=models.CASCADE, related_name="blog_hashtags")
     hashtag  = models.ForeignKey(HashTag, on_delete=models.CASCADE, related_name="blog_hashtags")
     sequence = models.PositiveIntegerField()
 
@@ -64,7 +64,7 @@ class BlogHashtag(models.Model):
 class ComicHashtag(models.Model):
     """ComicHashtag"""
     id       = models.BigAutoField(primary_key=True)
-    comic    = models.ForeignKey("db.Comic", on_delete=models.CASCADE, related_name="comic_hashtags")
+    comic    = models.ForeignKey("Comic", on_delete=models.CASCADE, related_name="comic_hashtags")
     hashtag  = models.ForeignKey(HashTag, on_delete=models.CASCADE, related_name="comic_hashtags")
     sequence = models.PositiveIntegerField()
 
@@ -79,7 +79,7 @@ class ComicHashtag(models.Model):
 class PictureHashtag(models.Model):
     """PictureHashtag"""
     id       = models.BigAutoField(primary_key=True)
-    picture  = models.ForeignKey("db.Picture", on_delete=models.CASCADE, related_name="picture_hashtags")
+    picture  = models.ForeignKey("Picture", on_delete=models.CASCADE, related_name="picture_hashtags")
     hashtag  = models.ForeignKey(HashTag, on_delete=models.CASCADE, related_name="picture_hashtags")
     sequence = models.PositiveIntegerField()
 
@@ -94,7 +94,7 @@ class PictureHashtag(models.Model):
 class ChatHashtag(models.Model):
     """ChatHashtag"""
     id       = models.BigAutoField(primary_key=True)
-    chat     = models.ForeignKey("db.Chat", on_delete=models.CASCADE, related_name="chat_hashtags")
+    chat     = models.ForeignKey("Chat", on_delete=models.CASCADE, related_name="chat_hashtags")
     hashtag  = models.ForeignKey(HashTag, on_delete=models.CASCADE, related_name="chat_hashtags")
     sequence = models.PositiveIntegerField()
 

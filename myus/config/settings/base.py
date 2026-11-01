@@ -119,7 +119,7 @@ ASGI_APPLICATION = "config.asgi.application"
 WSGI_APPLICATION = "config.wsgi.application"
 ROOT_URLCONF = "config.urls"
 
-AUTH_USER_MODEL = "db.User"
+AUTH_USER_MODEL = "myus.User"
 AUTHENTICATION_BACKENDS = ["api.backends.MyBackend"]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
