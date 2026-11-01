@@ -26,6 +26,7 @@ def convert_mp3(input_path: str, output_path: str, bitrate: str = "192k") -> Non
     ffmpeg_path = shutil.which("ffmpeg") or "ffmpeg"
     cmd = [
         ffmpeg_path,
+        "-protocol_whitelist", "file",
         "-i", input_path,
         "-codec:a", "libmp3lame",
         "-b:a", bitrate,
