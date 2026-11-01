@@ -33,6 +33,7 @@ class Environment:
     # Redis
     redis_host: str
     redis_port: int
+    redis_password: str
 
     # Email
     email_host: str
