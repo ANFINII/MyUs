@@ -10,5 +10,5 @@ interface Props {
 }
 
 export default function Password(props: Props): React.JSX.Element {
-  return <Input type="password" minLength={8} maxLength={16} required {...props} />
+  return <Input type="password" minLength={8} maxLength={128} required {...props} />
 }

@@ -22,7 +22,7 @@ from api.src.usecase.payment import cancel_subscription
 from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.payment import CancelError
 from api.utils.functions.token import access_token, password_fingerprint, password_reset_token, refresh_token, signup_token
-from api.utils.functions.validation import PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, has_email
+from api.utils.functions.validation import has_email, has_password, has_weak_password
 
 
 @Result.shield_exception()
@@ -264,7 +264,7 @@ def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalE
     if password1 != password2:
         return Result.ok("error.newPasswordMismatch")
 
-    if len(password1) < PASSWORD_MIN_LENGTH or len(password1) > PASSWORD_MAX_LENGTH:
+    if has_password(password1):
         return Result.ok("error.newPasswordInvalid")
 
     repo = injector.get(UserInterface)
@@ -278,10 +278,14 @@ def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalE
         return Result.ok("error.userNotFound")
 
     user_data = users[0]
-    if not check_password(old_password, user_data.user.password):
+    user = user_data.user
+    if not check_password(old_password, user.password):
         return Result.ok("error.currentPasswordWrong")
 
-    new_user = replace(user_data.user, password=make_password(password1))
+    if has_weak_password(password1, user.username, user.email, user.nickname):
+        return Result.ok("error.passwordWeak")
+
+    new_user = replace(user, password=make_password(password1))
     new_data = replace(user_data, user=new_user)
 
     save_ret = repo.bulk_save([new_data])
@@ -391,7 +395,7 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
     if password1 != password2:
         return Result.ok("error.newPasswordMismatch")
 
-    if len(password1) < PASSWORD_MIN_LENGTH or len(password1) > PASSWORD_MAX_LENGTH:
+    if has_password(password1):
         return Result.ok("error.newPasswordInvalid")
 
     repo = injector.get(UserInterface)
@@ -405,7 +409,11 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
         return Result.ok("error.userNotFound")
 
     user_data = users[0]
-    new_user = replace(user_data.user, password=make_password(password1))
+    user = user_data.user
+    if has_weak_password(password1, user.username, user.email, user.nickname):
+        return Result.ok("error.passwordWeak")
+
+    new_user = replace(user, password=make_password(password1))
     new_data = replace(user_data, user=new_user)
 
     save_ret = repo.bulk_save([new_data])
