@@ -17,7 +17,7 @@ from api.utils.enum.notification import NotificationObjectType, NotificationType
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository, save_upload, validate_uploads
-from api.utils.functions.validation import PASSWORD_MIN_LENGTH, has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
+from api.utils.functions.validation import has_birthday, has_email, has_number, has_password, has_phone, has_postal_code, has_username, has_weak_password
 
 
 @Result.shield_exception()
@@ -307,8 +307,11 @@ def signup_check(data: SignupIn) -> Result[str, FatalError]:
     if password1 != password2:
         return Result.ok("error.passwordMismatch")
 
-    if len(password1) < PASSWORD_MIN_LENGTH or not has_number(password1) or not has_alphabet(password1):
+    if has_password(password1):
         return Result.ok("error.passwordInvalid")
+
+    if has_weak_password(password1, data.username, data.email, data.nickname):
+        return Result.ok("error.passwordWeak")
 
     repo = injector.get(UserInterface)
     registered_checks = [
