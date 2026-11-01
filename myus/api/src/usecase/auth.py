@@ -16,14 +16,14 @@ from api.src.domain.interface.payment.provider.data import CancelFailed, CancelS
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.utils.enum.user import PlanName
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
-from api.src.domain.interface.login_attempt.interface import LoginAttemptInterface
-from api.src.domain.interface.revoked_token.interface import RevokedTokenInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
 from api.src.usecase.payment import cancel_subscription
 from api.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
 from api.utils.constants.auth import LOGIN_FAILURE_LIMIT
 from api.utils.enum.payment import CancelError
+from api.utils.functions.login_attempt import add_failure, clear_failures, get_failure_count
+from api.utils.functions.revoked_token import is_revoked, revoke
 from api.utils.functions.token import access_token, password_fingerprint, password_reset_token, refresh_token, signup_token
 from api.utils.functions.validation import has_email, has_password, has_weak_password
 
@@ -49,13 +49,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
     if not isinstance(jti, str):
         return Result.ok(None)
 
-    revoked_token_repo = injector.get(RevokedTokenInterface)
-    revoked_ret = revoked_token_repo.is_revoked(jti)
-    if revoked_ret.is_err:
-        return Result.err(revoked_ret.err_value)
-
-    is_revoked = revoked_ret.ok_value
-    if is_revoked:
+    if is_revoked(jti):
         log.warning("ログアウト済みのトークンです", user_id=user_id)
         return Result.ok(None)
 
@@ -111,7 +105,6 @@ def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalErro
 
 @Result.shield_exception()
 def revoke_auth_tokens(tokens: list[str]) -> Result[None, FatalError]:
-    repo = injector.get(RevokedTokenInterface)
     for token in tokens:
         try:
             payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
@@ -125,21 +118,13 @@ def revoke_auth_tokens(tokens: list[str]) -> Result[None, FatalError]:
         if not isinstance(jti, str) or not isinstance(exp, int):
             continue
 
-        ret = repo.revoke(jti, datetime.fromtimestamp(exp, tz=UTC))
-        if ret.is_err:
-            return Result.err(ret.err_value)
+        revoke(jti, datetime.fromtimestamp(exp, tz=UTC))
 
     return Result.ok(None)
 
 @Result.shield_exception()
 def login_user(username: str, password: str) -> Result[int | None, ValidateError]:
-    login_attempt_repo = injector.get(LoginAttemptInterface)
-    count_ret = login_attempt_repo.get_failure_count(username)
-    if count_ret.is_err:
-        return Result.err(count_ret.err_value)
-
-    count = count_ret.ok_value
-    if count >= LOGIN_FAILURE_LIMIT:
+    if get_failure_count(username) >= LOGIN_FAILURE_LIMIT:
         log.warning("Login blocked: too many attempts", username=username)
         return Result.err(ValidationError("error.tooManyAttempts"))
 
@@ -150,10 +135,7 @@ def login_user(username: str, password: str) -> Result[int | None, ValidateError
 
     user_id = user_id_ret.ok_value
     if user_id is None:
-        add_ret = login_attempt_repo.add_failure(username)
-        if add_ret.is_err:
-            return Result.err(add_ret.err_value)
-
+        add_failure(username)
         return Result.ok(None)
 
     user_ret = get_active_user(user_id)
@@ -162,16 +144,10 @@ def login_user(username: str, password: str) -> Result[int | None, ValidateError
 
     user = user_ret.ok_value
     if user is None:
-        add_ret = login_attempt_repo.add_failure(username)
-        if add_ret.is_err:
-            return Result.err(add_ret.err_value)
-
+        add_failure(username)
         return Result.ok(None)
 
-    clear_ret = login_attempt_repo.clear_failures(username)
-    if clear_ret.is_err:
-        return Result.err(clear_ret.err_value)
-
+    clear_failures(username)
     return Result.ok(user_id)
 
 
