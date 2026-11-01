@@ -8,7 +8,7 @@ from config.views import serve_media
 
 urlpatterns = [
     path("api/", api.urls),
-    path(f"{settings.ADMIN_PATH}/", admin.site.urls),
+    path("admin/", admin.site.urls),
 ]
 
 if settings.DEBUG:

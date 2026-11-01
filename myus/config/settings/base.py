@@ -173,7 +173,6 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"),]
 DOMAIN_URL = env.domain_url
 FRONTEND_URL = env.frontend_url
-ADMIN_PATH = env.admin_path
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
