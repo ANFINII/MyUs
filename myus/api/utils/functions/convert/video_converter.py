@@ -260,6 +260,7 @@ class VideoConverter:
         cmd = [
             self.ffprobe_path,
             '-v', 'quiet',
+            '-protocol_whitelist', 'file',
             '-print_format', 'json',
             '-show_format',
             '-show_streams',
@@ -292,6 +293,7 @@ class VideoConverter:
         # 入力バッファサイズとスレッド設定
         cmd.extend([
             '-thread_queue_size', '4096',  # 入力キューサイズ増加
+            '-protocol_whitelist', 'file',
             '-i', input_path,
             '-y',
             '-map', '0:v:0',  # 最初のビデオストリームのみ
@@ -596,6 +598,7 @@ class VideoConverter:
         # 超高速MP4変換コマンド
         cmd = [
             self.ffmpeg_path,
+            '-protocol_whitelist', 'file',
             '-i', input_path,
             '-y',
             '-vf', f"scale={profile.width}:{profile.height}:force_original_aspect_ratio=decrease",
