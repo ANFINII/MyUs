@@ -2,6 +2,7 @@ import datetime
 import hashlib
 import hmac
 import jwt
+import uuid
 from django.conf import settings
 
 
@@ -13,6 +14,7 @@ def access_token(user_id: int, password_hash: str) -> str:
     payload = {
         "user_id": user_id,
         "type": "access",
+        "jti": uuid.uuid4().hex,
         "pwd": password_fingerprint(password_hash),
         "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=1),
         "iat": datetime.datetime.now(datetime.timezone.utc),
@@ -24,6 +26,7 @@ def refresh_token(user_id: int, password_hash: str) -> str:
     payload = {
         "user_id": user_id,
         "type": "refresh",
+        "jti": uuid.uuid4().hex,
         "pwd": password_fingerprint(password_hash),
         "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30),
         "iat": datetime.datetime.now(datetime.timezone.utc),

@@ -1,7 +1,7 @@
 import hmac
 import jwt
 from dataclasses import replace
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from typing import assert_never
 from django_ulid.models import ulid
 from django.conf import settings
@@ -17,6 +17,7 @@ from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllD
 from api.utils.enum.user import PlanName
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.domain.interface.login_attempt.interface import LoginAttemptInterface
+from api.src.domain.interface.revoked_token.interface import RevokedTokenInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
 from api.src.usecase.payment import cancel_subscription
@@ -42,6 +43,20 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
 
     user_id = payload.get("user_id")
     if not isinstance(user_id, int):
+        return Result.ok(None)
+
+    jti = payload.get("jti")
+    if not isinstance(jti, str):
+        return Result.ok(None)
+
+    revoked_token_repo = injector.get(RevokedTokenInterface)
+    revoked_ret = revoked_token_repo.is_revoked(jti)
+    if revoked_ret.is_err:
+        return Result.err(revoked_ret.err_value)
+
+    is_revoked = revoked_ret.ok_value
+    if is_revoked:
+        log.warning("ログアウト済みのトークンです", user_id=user_id)
         return Result.ok(None)
 
     ret = get_active_user(user_id)
@@ -93,6 +108,28 @@ def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalErro
     password_hash = user.user.password
     return Result.ok((access_token(user_id, password_hash), refresh_token(user_id, password_hash)))
 
+
+@Result.shield_exception()
+def revoke_auth_tokens(tokens: list[str]) -> Result[None, FatalError]:
+    repo = injector.get(RevokedTokenInterface)
+    for token in tokens:
+        try:
+            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            continue
+        except jwt.exceptions.DecodeError:
+            continue
+
+        jti = payload.get("jti")
+        exp = payload.get("exp")
+        if not isinstance(jti, str) or not isinstance(exp, int):
+            continue
+
+        ret = repo.revoke(jti, datetime.fromtimestamp(exp, tz=UTC))
+        if ret.is_err:
+            return Result.err(ret.err_value)
+
+    return Result.ok(None)
 
 @Result.shield_exception()
 def login_user(username: str, password: str) -> Result[int | None, ValidateError]:

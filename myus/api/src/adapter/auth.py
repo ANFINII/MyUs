@@ -6,7 +6,7 @@ from ninja.throttling import AnonRateThrottle
 from api.modules.logger import log
 from api.src.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from api.src.usecase.auth import change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
+from api.src.usecase.auth import change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, revoke_auth_tokens, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
 from api.src.usecase.user import signup_check
 from api.utils.common.result import FatalError, Result, ValidationError
 
@@ -177,12 +177,19 @@ class AuthAPI:
         return 200, None
 
     @staticmethod
-    @router.post("/logout", response={200: None})
+    @router.post("/logout", response={200: None, 500: ErrorOut})
     def logout(request: HttpRequest, response: HttpResponse):
         log.info("AuthAPI logout")
 
+        access = request.COOKIES.get("access_token", "")
+        refresh = request.COOKIES.get("refresh_token", "")
+        ret = revoke_auth_tokens([access, refresh])
+
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
+        if ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
         return 200, None
 
     @staticmethod
