@@ -7,7 +7,7 @@ from api.db.models.user import User
 
 
 PASSWORD_MIN_LENGTH = 8
-PASSWORD_MAX_LENGTH = 128
+PASSWORD_MAX_LENGTH = 64
 
 
 # バリデーション関数定義
