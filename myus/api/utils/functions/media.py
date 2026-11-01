@@ -1,5 +1,6 @@
 import os
 from typing import assert_never
+from PIL import Image, UnidentifiedImageError
 from django.core.files.storage import default_storage
 from ninja import UploadedFile
 from api.modules.logger import log
@@ -11,7 +12,7 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.injectors.container import injector
 from api.utils.common.result import Result, ValidationError
-from api.utils.constants.upload import IMAGE_EXTENSIONS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_MAX_SIZE, UploadRuleData
+from api.utils.constants.upload import IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_MAX_SIZE, UploadRuleData
 from api.utils.enum.media import MediaType
 from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
@@ -50,7 +51,23 @@ def validate_uploads(files: list[tuple[UploadedFile | None, UploadType]]) -> Res
             log.warning("Upload rejected: too large", upload_type=upload_type.value, size=file.size)
             return Result.err(ValidationError("error.fileTooLarge"))
 
+        if isinstance(upload_type, ImageUpload) and not is_image(file):
+            log.warning("Upload rejected: not an image", upload_type=upload_type.value, extension=extension, content_type=content_type)
+            return Result.err(ValidationError("error.fileTypeInvalid"))
+
     return Result.ok(None)
+
+
+def is_image(file: UploadedFile) -> bool:
+    try:
+        with Image.open(file) as image:
+            image_format = image.format
+            image.verify()
+    except (UnidentifiedImageError, Image.DecompressionBombError, OSError, SyntaxError, ValueError):
+        return False
+    finally:
+        file.seek(0)
+    return image_format in IMAGE_FORMATS
 
 
 def get_media_repository(media_type: MediaType) -> MediaInterfaceType:

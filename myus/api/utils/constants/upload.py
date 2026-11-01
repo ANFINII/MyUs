@@ -10,6 +10,7 @@ class UploadRuleData:
 
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+IMAGE_FORMATS = {"JPEG", "PNG", "GIF", "WEBP"}
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".m4v", ".webm", ".mkv", ".avi"}
 MUSIC_EXTENSIONS = {".mp3"} | CONVERTIBLE_EXTENSIONS
 IMAGE_MAX_SIZE = 20 * 1024 * 1024
