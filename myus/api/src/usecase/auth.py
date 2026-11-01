@@ -22,9 +22,8 @@ from api.src.usecase.payment import cancel_subscription
 from api.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
 from api.utils.constants.auth import LOGIN_FAILURE_LIMIT
 from api.utils.enum.payment import CancelError
-from api.utils.functions.login_attempt import add_failure, clear_failures, get_failure_count
-from api.utils.functions.revoked_token import is_revoked, revoke
-from api.utils.functions.token import access_token, password_fingerprint, password_reset_token, refresh_token, signup_token
+from api.utils.functions.auth import add_failure, clear_failures, get_failure_count
+from api.utils.functions.token import access_token, is_revoked, password_fingerprint, password_reset_token, refresh_token, revoke, signup_token
 from api.utils.functions.validation import has_email, has_password, has_weak_password
 
 

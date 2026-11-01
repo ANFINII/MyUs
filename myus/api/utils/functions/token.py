@@ -4,6 +4,7 @@ import hmac
 import jwt
 import uuid
 from django.conf import settings
+from django.core.cache import cache
 
 
 def password_fingerprint(password_hash: str) -> str:
@@ -54,3 +55,19 @@ def password_reset_token(user_id: int, email: str, password_hash: str) -> str:
         "iat": datetime.datetime.now(datetime.timezone.utc),
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+
+
+def revoked_token_key(jti: str) -> str:
+    return f"revoked_token:{jti}"
+
+
+def is_revoked(jti: str) -> bool:
+    return cache.get(revoked_token_key(jti)) is not None
+
+
+def revoke(jti: str, expires_at: datetime.datetime) -> None:
+    timeout = int((expires_at - datetime.datetime.now(datetime.timezone.utc)).total_seconds())
+    if timeout <= 0:
+        return
+
+    cache.set(revoked_token_key(jti), True, timeout)
