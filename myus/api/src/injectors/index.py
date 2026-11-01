@@ -5,6 +5,7 @@ from api.src.domain.entity.payment.transaction.repository import TransactionRepo
 from api.src.domain.entity.webhook.inbox.repository import WebhookInboxRepository
 from api.src.domain.entity.webhook.outbox.repository import WebhookOutboxRepository
 from api.src.domain.entity.user.repository import UserRepository
+from api.src.domain.entity.login_attempt.repository import LoginAttemptRepository
 from api.src.domain.entity.category.repository import CategoryRepository
 from api.src.domain.entity.channel.repository import ChannelRepository
 from api.src.domain.entity.media.video.repository import VideoRepository
@@ -24,6 +25,7 @@ from api.src.domain.entity.search_tag.repository import SearchTagRepository
 from api.src.domain.entity.notification.repository import NotificationRepository
 from api.src.domain.entity.access_log.repository import AccessLogRepository
 from api.src.domain.interface.user.interface import UserInterface
+from api.src.domain.interface.login_attempt.interface import LoginAttemptInterface
 from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.channel.interface import ChannelInterface
 from api.src.domain.interface.media.video.interface import VideoInterface
@@ -53,6 +55,12 @@ class UserModule(Module):
     @provider
     def provide_user_repository(self) -> UserInterface:
         return UserRepository()
+
+
+class AuthModule(Module):
+    @provider
+    def provide_login_attempt_repository(self) -> LoginAttemptInterface:
+        return LoginAttemptRepository()
 
 
 class ChannelModule(Module):

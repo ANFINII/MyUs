@@ -1,6 +1,7 @@
 from injector import Injector, Module
 from api.src.injectors.index import (
     UserModule,
+    AuthModule,
     ChannelModule,
     MediaModule,
     AdvertiseModule,
@@ -20,6 +21,7 @@ from api.src.injectors.index import (
 
 modules: list[Module] = [
     UserModule(),
+    AuthModule(),
     ChannelModule(),
     MediaModule(),
     AdvertiseModule(),

@@ -13,6 +13,7 @@
   },
   "error": {
     "loginFailed": "ID又はパスワードが違います",
+    "tooManyAttempts": "ログインの失敗が続いたため、しばらくログインできません。15分後にお試しください",
     "tokenCreateFailed": "認証トークンの生成に失敗しました",
     "logoutFailed": "ログアウトに失敗しました",
     "signupFailed": "アカウント登録に失敗しました",
