@@ -62,7 +62,8 @@ disallow_untyped_defs = true             # 型アノテーションのない関�
 disallow_untyped_decorators = true       # 型アノテーションのないデコレータを禁止
 disallow_untyped_calls = true            # 型アノテーションのない関数呼び出しを禁止
 disallow_incomplete_defs = true          # 一部のパラメータにのみ型アノテーションがある関数を禁止
-disable_error_code = ["import-untyped", "var-annotated", "type-abstract", "no-untyped-def", "type-arg"]  # 特定のエラーを無視
+disable_error_code = ["import-untyped", "type-abstract", "no-untyped-def", "type-arg"]  # 特定のエラーを無視
+enable_error_code = ["truthy-bool", "truthy-iterable", "exhaustive-match", "possibly-undefined", "ignore-without-code", "unused-awaitable", "redundant-cast", "redundant-self"]  # strict に含まれないエラーを追加で有効化
 plugins = ["mypy_django_plugin.main"]    # Django stubsプラグイン
 
 # 特定のモジュールの設定
@@ -102,7 +103,7 @@ django_settings_module = "config.settings.base"
 line-length = 200
 
 [tool.ruff.lint]
-select = ["I"]  # isortのみ有効
+select = ["I", "T201", "TID251"]  # isort・print の禁止・使わない API の禁止
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
@@ -110,3 +111,7 @@ lines-after-imports = 2                                        # import後の空
 no-lines-before = ["third-party", "first-party", "local-folder"]  # セクション間の改行なし
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 known-first-party = ["api", "app", "config"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"django.test.TestCase".msg = "pytest を使う（docs/backend.md の「テスト」）"
+"unittest.TestCase".msg = "pytest を使う（docs/backend.md の「テスト」）"

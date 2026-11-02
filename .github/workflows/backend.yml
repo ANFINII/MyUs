@@ -74,6 +74,9 @@ jobs:
       - name: mypy
         run: uv run mypy api
 
+      - name: ruff
+        run: uv run ruff check api config --extend-ignore I
+
       - name: Django check
         run: uv run python manage.py check
 

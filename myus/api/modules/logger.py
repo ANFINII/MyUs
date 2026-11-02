@@ -6,11 +6,12 @@ from enum import Enum
 from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING, FileHandler, Formatter, Logger, LogRecord, StreamHandler, getLogger
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
-from typing import Any, ClassVar, Self
+from typing import Any, ClassVar, Literal, Self, assert_never
 
 
 type CallerInfo = tuple[str, str, str, int]
 type LogLevel = int
+type LevelName = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
 class Color(str, Enum):
@@ -173,8 +174,8 @@ class Log:
     @classmethod
     def _get_caller_info(cls, depth: int = 3) -> CallerInfo:
         """呼び出し元の情報を自動取得"""
+        frame = inspect.currentframe()
         try:
-            frame = inspect.currentframe()
             if not frame:
                 return "", "", "", 0
 
@@ -238,7 +239,7 @@ class Log:
         return " - ".join(parts)
 
     @classmethod
-    def _log(cls, level: str, msg: str, exc: Exception | None = None, is_traceback: bool = False, **kwargs: Any) -> None:
+    def _log(cls, level: LevelName, msg: str, exc: Exception | None = None, is_traceback: bool = False, **kwargs: Any) -> None:
         """共通ログ処理（重複コード削減）"""
         if not cls._instance:
             cls()
@@ -272,7 +273,7 @@ class Log:
             color_code = ColorFormat.LEVEL_COLORS[level_upper]
             format_msg = f"{color_code}{format_msg}{Color.RESET}"
 
-        match level.upper():
+        match level:
             case "DEBUG":
                 logger.debug(format_msg)
             case "INFO":
@@ -283,6 +284,8 @@ class Log:
                 logger.error(format_msg)
             case "CRITICAL":
                 logger.critical(format_msg)
+            case _:
+                assert_never(level)
 
     @classmethod
     def debug(cls, msg: str = "", **kwargs: Any) -> None:
