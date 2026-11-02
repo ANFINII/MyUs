@@ -6,7 +6,6 @@ import ComicDetail from './view'
 export default function ComicDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
-
   const { data } = useSuspenseQuery(comicQuery(ulid))
 
   return <ComicDetail data={data} />

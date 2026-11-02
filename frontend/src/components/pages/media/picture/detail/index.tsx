@@ -6,7 +6,6 @@ import PictureDetail from './view'
 export default function PictureDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
-
   const { data } = useSuspenseQuery(pictureQuery(ulid))
 
   return <PictureDetail data={data} />

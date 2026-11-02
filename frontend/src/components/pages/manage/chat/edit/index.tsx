@@ -6,7 +6,6 @@ import ManageChatEdit from './view'
 export default function ManageChatEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
-
   const { data: channels } = useSuspenseQuery(channelsQuery())
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageChatQuery(ulid))

@@ -13,7 +13,6 @@ export default function UserpagePage(): React.JSX.Element {
   const params = searchParams(router.query)
   const ulid = String(router.query.ulid ?? '')
   const queryChannel = String(router.query.channel ?? '')
-
   const { data: userPage } = useSuspenseQuery(userPageQuery(ulid))
   const channelUlid = selectChannelUlid(userPage.channels, queryChannel)
   const media = useQuery({ ...userPageMediaQuery(ulid, channelUlid, params), enabled: channelUlid !== '' })

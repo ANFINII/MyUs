@@ -6,7 +6,6 @@ import ManageBlogEdit from './view'
 export default function ManageBlogEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
-
   const { data: channels } = useSuspenseQuery(channelsQuery())
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageBlogQuery(ulid))
