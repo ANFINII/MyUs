@@ -4,7 +4,7 @@
 
 - ファイル形式は必ずSCSSを使用
 - `parts/`、`widgets/`はCSS Modules（`.module.scss`）を使用
-- `templates/`ではグローバルCSS（`styles/`配下）を利用してよい
+- `pages/`ではグローバルCSS（`styles/`配下）を利用してよい
 - ネスト構文で記述する（子要素は親クラスの中にネスト、3階層まで）
 - インラインスタイルは使用しない
 - 動的スタイルはクラスの切り替え（`cx()`）で対応
@@ -19,7 +19,7 @@
 - 必要な値（色・サイズ等）は `rgb(...)` / `px` 直書き
 - 例外: SCSS ビルトイン（`@use 'sass:math'` 等）は OK
 
-`widgets/` / `templates/` ではグローバル CSS / 共有 mixin の利用を許容（ページ単位の構成のため）。
+`widgets/` / `pages/` ではグローバル CSS / 共有 mixin の利用を許容（ページ単位の構成のため）。
 
 詳細とコード例は [docs/frontend.md の「依存方向」](frontend.md#依存方向) を参照。
 

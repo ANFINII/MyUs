@@ -91,7 +91,7 @@ const [user, setUser] = useState<User | null>(null)
 ### ページの構成
 
 - URLとページの対応は`src/lib/routes.tsx`の1ファイルにまとめる（TanStack Routerのコードベースのルーティング）。ページを追加するときは、該当する領域に`page()`を1行追加する
-- ルートは`pages/`のコンポーネントを`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
+- ルートは`components/pages/`のページのフォルダ（`index.tsx`）を`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
 - ルーターの機能は `useRouter`（`components/hooks/useRouter`）を通して使う。使い方は Next.js の `useRouter` と同じにしている。コンポーネントから `@tanstack/react-router` や `window.location` / `window.history` を直接使わない（ルーターのライブラリを置き換えるときに、`useRouter` とルーターの設定だけを直せばよいようにするため）
 
 | やりたいこと | 書き方 |
@@ -112,9 +112,9 @@ const [user, setUser] = useState<User | null>(null)
 
 ```typescript
 // src/lib/routes.tsx
-page('/manage/video', () => import('pages/manage/video')),
-page('/manage/video/create', () => import('pages/manage/video/create')),
-page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
+page('/manage/video', () => import('components/pages/manage/video')),
+page('/manage/video/create', () => import('components/pages/manage/video/create')),
+page('/manage/video/$ulid', () => import('components/pages/manage/video/edit')),
 ```
 
 - クエリは名前付きのオブジェクトを`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
@@ -202,15 +202,25 @@ const { t } = useTranslation()
 
 - 1ファイル1コンポーネント（default export）
 - ロジックが複雑になったらカスタムフックに切り出す
-- `pages/`はデータ取得（`useQuery`）とテンプレート呼び出しのみ
-- `templates/`にページの実装を置く
+- 1ページ = 1フォルダ（`components/pages/` の下）にし、URL と同じ階層に置く（`/media/video/$ulid` → `components/pages/media/video/detail/`）
+- `index.tsx` はデータ取得（`useQuery`）と `view.tsx` の呼び出しのみ。ルートが読み込む入口になる
+- `view.tsx` にページの実装（表示・状態管理）を置く。データは props で受け取る
+- そのページだけで使う scss・部品は、同じフォルダに置く。近いページで共有するもの（`Account.module.scss` など）は、共通の親フォルダに置く
+
+```
+components/pages/media/video/
+  index.tsx        ← 一覧のデータ取得（/media/video）
+  view.tsx         ← 一覧の表示
+  detail/
+    index.tsx      ← 詳細のデータ取得（/media/video/$ulid）
+    view.tsx       ← 詳細の表示
+```
 
 ## ディレクトリ構成の責務
 
 | ディレクトリ | 責務 |
 |------|------|
-| `pages/` | データ取得（`useQuery`）とテンプレート呼び出し |
-| `templates/` | ページの実装、状態管理 |
+| `pages/` | 1ページ = 1フォルダ。`index.tsx` でデータ取得（`useQuery`）、`view.tsx` でページの実装・状態管理 |
 | `widgets/` | 複合コンポーネント（Modal, Card等） |
 | `parts/` | 汎用UIコンポーネント（Button, Input等） |
 | `hooks/` | カスタムフック |
@@ -222,9 +232,9 @@ const { t } = useTranslation()
 
 ## 依存方向
 
-`parts/` ← `widgets/` ← `templates/` ← `pages/` の片方向のみ依存する。逆方向や同階層への依存は禁止。
+`parts/` ← `widgets/` ← `pages/` の片方向のみ依存する。逆方向や同階層への依存は禁止（ページ間で表示を共有するときだけ、`pages/` 同士の import を許容する。例: `recommend/index.tsx` が `home/view.tsx` を使う）。
 
-`parts/` → `widgets/`・`templates/`、`widgets/` → `templates/`、`components/` → `pages/` の import は、`eslint.config.mjs` の `import/no-restricted-paths` で検出する。
+`parts/` → `widgets/`・`pages/`、`widgets/` → `pages/` の import は、`eslint.config.mjs` の `import/no-restricted-paths` で検出する。
 
 ただし、`widgets/` 内の同じフォルダ（同ファミリ）内の依存は許容する（例: `Status/QueryCheck` が `Status/Check`・`Status/Loading` を使う）。
 
@@ -232,7 +242,7 @@ const { t } = useTranslation()
 
 - `parts/` 配下のコンポーネントは他の `parts/` を import しない（最下層UIとしてそれ単体で動作する）
 - レイアウト（縦並び・間隔等）は `VStack` / `HStack` などの parts に頼らず、自前の `<div>` + CSS（`display: flex` / `gap` 等）で実現する
-- `widgets/` / `templates/` から parts を呼ぶ・複数 parts を組み合わせるのは正常な使い方
+- `widgets/` / `pages/` から parts を呼ぶ・複数 parts を組み合わせるのは正常な使い方
 
 ```typescript
 // ❌ NG: parts/Input が他 parts に依存
@@ -261,7 +271,7 @@ return <div className={style.box}>...</div>
 - `styles/` 配下の `@use` / `@import` を行わない、`:global(...)` も使わない、`className="text_sub"` 等のグローバルユーティリティクラスを使用しない
 - 必要な値（色・サイズ等）はその場で `rgb(...)` や `px` を直接記述する
 - 例外: SCSS の標準モジュール（`@use 'sass:math'` 等）はビルトインなので使用可
-- `widgets/` / `templates/` ではグローバル CSS / 共有 mixin の利用を許容（ページ単位の構成のため）
+- `widgets/` / `pages/` ではグローバル CSS / 共有 mixin の利用を許容（ページ単位の構成のため）
 
 ```scss
 /* ❌ NG: parts の scss がグローバルに依存 */
