@@ -1,6 +1,5 @@
 from dataclasses import replace
 from datetime import datetime
-from django.db import transaction
 from api.modules.logger import log
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
@@ -13,6 +12,7 @@ from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_author_data, get_author_data_map
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from api.utils.functions.transaction import atomic_result
 
 
 @Result.shield_exception()
@@ -41,6 +41,23 @@ def save_message_data(data: MessageDomainData) -> Result[None, FatalError]:
     ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_message_data(data: MessageDomainData, user_id: int) -> Result[None, FatalError]:
+    # 返信の場合はNotificationも削除
+    if data.parent_id is not None:
+        notification_repo = injector.get(NotificationInterface)
+        notification_ret = notification_repo.delete(NotificationTypeNo.REPLY, NotificationObjectType.MESSAGE, data.id, user_id)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
+    repo = injector.get(MessageInterface)
+    delete_ret = repo.bulk_delete([data.id])
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
@@ -243,19 +260,8 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
         log.warning("チャットが見つかりませんでした", chat_id=message.chat_id)
         return Result.err(NotFoundError("Not Found"))
 
-    with transaction.atomic():
-        # 返信の場合はNotificationも削除
-        if message.parent_id is not None:
-            notification_repo = injector.get(NotificationInterface)
-            notification_ret = notification_repo.delete(NotificationTypeNo.REPLY, NotificationObjectType.MESSAGE, message.id, user_id)
-            if notification_ret.is_err:
-                transaction.set_rollback(True)
-                return Result.err(notification_ret.err_value)
-
-        repo = injector.get(MessageInterface)
-        delete_ret = repo.bulk_delete([message.id])
-        if delete_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(delete_ret.err_value)
+    delete_ret = atomic_result(lambda: delete_message_data(message, user_id))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
     return Result.ok(chats[0].ulid)
