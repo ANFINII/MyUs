@@ -3,7 +3,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.urls import path
 from api.modules.logger import log
-from api.src.usecase.media import is_public_chat
+from api.src.usecase.media.core import is_public_chat
 
 
 class ChatConsumer(WebsocketConsumer):
