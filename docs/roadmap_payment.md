@@ -29,33 +29,13 @@ User (買い手 / 売り手の両方になりうる)
        └─ Product (将来: Store 配下の販売単位)
             └─ Price (将来: Product 配下の価格)
 
-Subscription (継続課金の状態)
-  ├─ customer_user_id        # 買い手
-  ├─ seller_id               # 売り手（"" なら PLATFORM）
-  ├─ provider                # PaymentProvider enum
-  ├─ external_id             # プロバイダ固有 ID
-  ├─ product_ref             # 内部商品参照
-  ├─ price                   # Money value object
-  ├─ status                  # SubscriptionStatus enum
-  ├─ started_at
-  ├─ current_period_end
-  └─ canceled_at             # datetime.min なら未キャンセル
-
-PaymentTransaction (個別取引)
-  ├─ subscription_id         # 0 なら one-time
-  ├─ customer_user_id
-  ├─ provider
-  ├─ external_id
-  ├─ price                   # Money
-  ├─ status                  # PaymentStatus enum
-  └─ paid_at
-
-WebhookEvent (プロバイダからの非同期通知)
-  ├─ provider
-  ├─ event_id                # 冪等性キー
-  ├─ event_type              # WebhookEventType enum
-  ├─ related_external_id
-  └─ occurred_at
+決済のテーブル（PaymentEvent を正とするイベントソーシング。詳細は docs/myus.md の「決済システム」）
+PaymentEvent        # 決済会社から届いたイベント（本文と、整えた内容）。追記のみ
+PaymentCustomer     # ユーザーと決済会社の顧客 ID。provider はここだけが持つ
+  ├─ Subscription        # 継続課金の状態（イベントから作る）
+  └─ PaymentTransaction  # 1回の請求・支払い（金額は持たない）
+       └─ PaymentLedgerEntry  # 帳簿の明細（売上・返金・決済手数料）。追記のみ
+PaymentPayout       # 銀行口座への入金。明細が紐づく
 ```
 
 ### Enum 群（最終形）
@@ -318,7 +298,7 @@ match result:
 - `PaymentProviderInterface.verify_webhook(payload, signature) -> WebhookVerifyResult` 追加
 - `StripeProvider.verify_webhook` 実装
 - adapter で webhook 受信エンドポイント新設
-- 冪等性: `WebhookEvent` テーブル（`provider`, `event_id` で unique）で重複弾く
+- 冪等性: `provider`・`event_id` で一意のテーブルで重複を弾く（今は `PaymentEvent`）
 - usecase で Subscription/Payment status を更新
 
 **Acceptance**:
@@ -347,12 +327,13 @@ match result:
 **Goal**: User がマーチャントになれる準備。
 
 **Scope**:
-- `User.stripe_account_id` カラム追加（空文字なら未マーチャント）
+- `PaymentSeller`（クリエイターと、決済会社の受け取り口座 `acct_...` の対応）を追加し、`Subscription.seller_id` をこれへの参照にする（docs/myus.md の「クリエイターへの支払い」）
+- 明細の種類に `Transfer`・`TransferReversal` を追加
 - `Country` enum を実利用開始
 - 関連 migration
 
 **Acceptance**:
-- 既存ユーザーは `stripe_account_id=""` で問題無く動作
+- 既存のサブスクリプションは売り手なし（MyUs のプラン）のまま動作
 
 ---
 
@@ -365,7 +346,7 @@ match result:
 - `StripeProvider.onboard_seller` 実装（Account 作成 → AccountLink 生成）
 - adapter API（`POST /payment/onboard`）
 - フロント onboarding 開始ボタン
-- `User.stripe_account_id` 更新
+- `PaymentSeller` を作成
 
 **Acceptance**:
 - Stripe Connect Dashboard でテストアカウントが作成できる
@@ -393,7 +374,7 @@ match result:
 
 **Scope**:
 - `PaymentProviderInterface.sync_product(product, price, owner_account_id) -> SyncResult` で Stripe 側に Product/Price 作成、`external_id` を DB に保存
-- `CheckoutData.marketplace.seller_id` に `user.stripe_account_id` を埋めて checkout
+- `CheckoutData.marketplace.seller_id` に `PaymentSeller` の口座 ID を埋めて checkout
 - usecase / adapter の整備
 
 **Acceptance**:
@@ -410,7 +391,7 @@ match result:
 - `api/utils/functions/payment.py` の `get_payment_repository(provider)` で、辞書から取り出す
 - どの決済会社を使うか
   - 決済の画面の作成：`usecase/payment.py` の `CHECKOUT_PROVIDER`（今は Stripe）
-  - 解約：サブスクリプションに記録された `provider`
+  - 解約：サブスクリプションの顧客（`PaymentCustomer`）の `provider`
   - webhook からの更新：受けたイベントの `provider`
   - webhook の検証：入口（`adapter/payment.py`）が渡す `provider`。今の `/payment/webhook` は Stripe（Stripe の管理画面に登録済みの URL のため変えない）
 
@@ -439,11 +420,12 @@ match result:
 
 - **`None` 排除方針**: `| None` の代わりに sum type / sentinel 値（`""`, `0`, `datetime.min`）/ `Failed` バリアントで表現する
 - **Value Object 強制**: `amount: int` 単独を関数引数に取らない。常に `Money` で包む
-- **`provider` カラム**: Subscription / PaymentTransaction / WebhookEvent には必ず `PaymentProvider` enum を持たせる（後で振り返り可能に）
+- **`provider` カラム**: 正規化のため、`PaymentEvent`・`PaymentCustomer`・`PaymentPayout` だけが持つ。サブスクリプション・取引は顧客から辿る
 - **`external_id` opaque**: プロバイダ固有 ID は文字列として持つだけ。ドメイン側でパース・解釈しない
-- **マーチャント = User**: 別 `Merchant` テーブルは作らない。User が `Store` を持ち、`Store` が `Product` を持つ
+- **マーチャント = User**: 別 `Merchant` テーブルは作らない。決済会社の受け取り口座は `PaymentSeller`（User と口座 ID の対応）に持つ。User が `Store` を持ち、`Store` が `Product` を持つ
 - **PLATFORM プラン**: 当面は `seller_id=""` のセンチネルで PLATFORM 課金を表現。Store/Product 移行は段階的に
 - **マイグレーション**: `UserPlan` → `Subscription` への移行は PR #4 で集中して行う
+- **イベントソーシング**: 決済会社のイベントを `PaymentEvent` に追記して正とし、ほかのテーブルはその内容だけから作る。流し直しで決済会社の API は呼ばない（`replay_payment_events`）
 
 ---
 
@@ -454,6 +436,7 @@ match result:
 | #1〜#6 | 完了（決済ドメイン層、Stripe Provider、adapter の切り替え、Subscription / PaymentTransaction、Webhook、解約） |
 | #7〜#10 | 後回し（ユーザーが売る機能は当面作らない。2026-10-26 決定） |
 | #11 | 完了（決済会社を `PaymentProvider` で選ぶ仕組み。足す手順は PR #11 の節） |
+| 帳簿 | 完了（#1199〜#1203。イベントソーシング・正規化・取引と明細と入金・帳簿の CSV・作り直しのコマンド）。本物の Stripe（テスト環境）で `invoice.paid`・`charge.refunded`・`payout.paid` を通す確認が残っている |
 | #12 | 言語は #1148（決済画面を表示中の言語で出し、支払い後もその言語のページに戻す）。多通貨は未着手 |
 
 ## 次にやること
