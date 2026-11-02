@@ -31,5 +31,9 @@ class WebhookInboxInterface(ABC):
         ...
 
     @abstractmethod
+    def bulk_save(self, objs: list[WebhookInboxData]) -> Result[list[int], FatalError]:
+        ...
+
+    @abstractmethod
     def save_if_absent(self, obj: WebhookInboxData) -> Result[bool, FatalError]:
         ...

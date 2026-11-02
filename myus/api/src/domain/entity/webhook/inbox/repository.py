@@ -1,11 +1,14 @@
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from api.db.models.payment import WebhookInbox
-from api.src.domain.entity.index import sort_ids
+from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.webhook.inbox._convert import convert_data, marshal_data
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.src.domain.interface.webhook.inbox.interface import FilterOption, SortOption, WebhookInboxInterface
 from api.utils.common.result import FatalError, Result
+
+
+WEBHOOK_INBOX_FIELDS = ["provider", "event_id", "event_type", "external_id", "occurred_at"]
 
 
 class WebhookInboxRepository(WebhookInboxInterface):
@@ -34,6 +37,16 @@ class WebhookInboxRepository(WebhookInboxInterface):
         objs = list(WebhookInbox.objects.filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
         return Result.ok([convert_data(obj) for obj in sorted_objs])
+
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[WebhookInboxData]) -> Result[list[int], FatalError]:
+        if len(objs) == 0:
+            return Result.ok([])
+
+        models = [marshal_data(o) for o in objs]
+        new_ids = get_save_new_ids(models, WEBHOOK_INBOX_FIELDS)
+
+        return Result.ok(new_ids)
 
     @Result.shield_exception()
     def save_if_absent(self, obj: WebhookInboxData) -> Result[bool, FatalError]:
