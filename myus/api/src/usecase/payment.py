@@ -7,11 +7,16 @@ from api.modules.logger import log
 from api.src.domain.interface.payment.customer.data import PaymentCustomerData
 from api.src.domain.interface.payment.customer.interface import FilterOption as PaymentCustomerFilterOption, SortOption as PaymentCustomerSortOption, PaymentCustomerInterface
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.event.data import PaymentEventData
+from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, RefundContent
 from api.src.domain.interface.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, ProviderSubscriptionData, RedirectUrls, WebhookVerifyResult
+from api.src.domain.interface.payment.ledger.data import LedgerEntryData
+from api.src.domain.interface.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
+from api.src.domain.interface.payment.payout.data import PayoutData
+from api.src.domain.interface.payment.payout.interface import FilterOption as PayoutFilterOption, SortOption as PayoutSortOption, PayoutInterface
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, RedirectUrls, WebhookVerifyResult
 from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
+from api.src.domain.interface.payment.transaction.data import TransactionData
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
@@ -21,15 +26,16 @@ from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
 from api.src.usecase.user import get_user_data, save_user_data
 from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
-from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
+from api.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookDeliveryStatus
 from api.utils.enum.user import PlanName
 from api.utils.functions.map import locale_path, payment_status_rank
-from api.utils.functions.payment import get_payment_repository
+from api.utils.functions.payment import get_payment_repository, included_tax
 from api.utils.functions.transaction import atomic_result
 from api.utils.plan import get_plan
 
 
 CHECKOUT_PROVIDER = PaymentProvider.STRIPE
+TAX_RATE = 10
 
 
 @Result.shield_exception()
@@ -131,7 +137,7 @@ def receive_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
 
 
 @Result.shield_exception()
-def record_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
+def record_payment_event(event: PaymentEventData) -> Result[int | None, FatalError]:
     repo = injector.get(PaymentEventInterface)
     filter = PaymentEventFilterOption(provider=event.provider.value, event_id=event.event_id)
     ids_ret = repo.get_ids(filter, PaymentEventSortOption(), limit=1)
@@ -141,7 +147,7 @@ def record_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
     ids = ids_ret.ok_value
     if len(ids) > 0:
         log.info("PaymentEvent already recorded", event_id=event.event_id)
-        return Result.ok(False)
+        return Result.ok(None)
 
     save_ret = repo.bulk_save([event])
     if save_ret.is_err:
@@ -152,26 +158,29 @@ def record_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
         saved_ids = saved_ids_ret.ok_value
         if len(saved_ids) > 0:
             log.info("PaymentEvent recorded by another request", event_id=event.event_id)
-            return Result.ok(False)
+            return Result.ok(None)
 
         return Result.err(save_ret.err_value)
 
-    return Result.ok(True)
+    new_ids = save_ret.ok_value
+    return Result.ok(new_ids[0])
 
 
 @Result.shield_exception()
 def apply_payment_event(event: PaymentEventData) -> Result[None, FatalError]:
-    match event.event_type:
-        case WebhookEventType.SUBSCRIPTION_CREATED | WebhookEventType.SUBSCRIPTION_UPDATED | WebhookEventType.SUBSCRIPTION_CANCELED:
-            ret = update_subscription(event)
-        case WebhookEventType.PAYMENT_SUCCEEDED:
-            ret = update_transaction_status(event, PaymentStatus.CAPTURED, update_paid_at=True)
-        case WebhookEventType.PAYMENT_FAILED:
-            ret = update_transaction_status(event, PaymentStatus.FAILED, update_paid_at=False)
-        case WebhookEventType.REFUND_ISSUED:
-            ret = update_transaction_status(event, PaymentStatus.REFUNDED, update_paid_at=False)
+    match event.content:
+        case ProviderSubscriptionData() as provider_subscription:
+            ret = update_subscription(event, provider_subscription)
+        case PaymentPaidContent() as paid:
+            ret = record_payment(event, paid)
+        case PaymentFailedContent():
+            ret = update_transaction_status(event, PaymentStatus.FAILED)
+        case RefundContent() as refund:
+            ret = record_refund(event, refund)
+        case PayoutContent() as payout:
+            ret = record_payout(event, payout)
         case _:
-            assert_never(event.event_type)
+            assert_never(event.content)
 
     if ret.is_err:
         return Result.err(ret.err_value)
@@ -211,13 +220,7 @@ def enqueue_webhook_outbox(event: PaymentEventData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def update_subscription(event: PaymentEventData) -> Result[None, FatalError]:
-    payment_repo = get_payment_repository(event.provider)
-    provider_ret = payment_repo.get_subscription(event.external_id)
-    if provider_ret.is_err:
-        return Result.err(provider_ret.err_value)
-
-    provider_subscription = provider_ret.ok_value
+def update_subscription(event: PaymentEventData, provider_subscription: ProviderSubscriptionData) -> Result[None, FatalError]:
     if get_plan(provider_subscription.product_code) is None:
         log.error("Subscription unknown plan", external_id=event.external_id, product_code=provider_subscription.product_code)
         return Result.ok(None)
@@ -325,27 +328,177 @@ def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscript
 
 
 @Result.shield_exception()
-def update_transaction_status(event: PaymentEventData, status: PaymentStatus, update_paid_at: bool) -> Result[None, FatalError]:
-    repo = injector.get(TransactionInterface)
-    ids_ret = repo.get_ids(
-        TransactionFilterOption(provider=event.provider.value, external_id=event.external_id),
-        TransactionSortOption(),
-        limit=1,
-    )
+def record_payment(event: PaymentEventData, paid: PaymentPaidContent) -> Result[None, FatalError]:
+    user_ret = get_user_data(ulid=paid.user_ulid)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    if user is None:
+        log.error("Payment user not found", external_id=event.external_id, user_ulid=paid.user_ulid)
+        return Result.err(FatalError("Payment user not found"))
+
+    customer_ret = save_payment_customer_data(user.user.id, event.provider, paid.customer_id)
+    if customer_ret.is_err:
+        return Result.err(customer_ret.err_value)
+
+    customer_id = customer_ret.ok_value
+    subscription_id = 0
+    if len(paid.subscription_external_id) > 0:
+        subscription_repo = injector.get(SubscriptionInterface)
+        subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(provider=event.provider.value, external_id=paid.subscription_external_id), SubscriptionSortOption(), limit=1)
+        if subscription_ids_ret.is_err:
+            return Result.err(subscription_ids_ret.err_value)
+
+        subscription_ids = subscription_ids_ret.ok_value
+        if len(subscription_ids) == 0:
+            log.warning("Payment subscription not yet recorded", external_id=event.external_id, subscription=paid.subscription_external_id)
+            return Result.err(FatalError("Payment subscription not yet recorded"))
+
+        subscription_id = subscription_ids[0]
+
+    transaction_ret = get_transaction_data(event)
+    if transaction_ret.is_err:
+        return Result.err(transaction_ret.err_value)
+
+    payment_transaction = transaction_ret.ok_value
+    if payment_transaction is None or payment_transaction.last_event_at <= event.occurred_at:
+        status = PaymentStatus.CAPTURED
+        if payment_transaction is not None and payment_status_rank(payment_transaction.status) > payment_status_rank(status):
+            status = payment_transaction.status
+
+        transaction = TransactionData(
+            id=payment_transaction.id if payment_transaction is not None else 0,
+            payment_customer_id=customer_id,
+            subscription_id=subscription_id,
+            external_id=event.external_id,
+            currency=paid.balance.currency,
+            tax_rate=TAX_RATE,
+            receipt_number=paid.receipt_number,
+            status=status,
+            paid_at=paid.balance.occurred_at,
+            last_event_at=event.occurred_at,
+        )
+        save_ret = save_transaction_data(transaction)
+        if save_ret.is_err:
+            return Result.err(save_ret.err_value)
+
+        payment_transaction = replace(transaction, id=save_ret.ok_value)
+
+    ledger_ret = save_ledger_entry_data(payment_transaction.id, event.id, LedgerEntryType.SALE, [paid.balance])
+    if ledger_ret.is_err:
+        return Result.err(ledger_ret.err_value)
+
+    log.info("Payment recorded", external_id=event.external_id, amount=paid.balance.amount)
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def record_refund(event: PaymentEventData, refund: RefundContent) -> Result[None, FatalError]:
+    transaction_ret = get_transaction_data(event)
+    if transaction_ret.is_err:
+        return Result.err(transaction_ret.err_value)
+
+    payment_transaction = transaction_ret.ok_value
+    if payment_transaction is None:
+        log.warning("Refund transaction not yet recorded", external_id=event.external_id)
+        return Result.err(FatalError("Refund transaction not yet recorded"))
+
+    ledger_ret = save_ledger_entry_data(payment_transaction.id, event.id, LedgerEntryType.REFUND, refund.balances)
+    if ledger_ret.is_err:
+        return Result.err(ledger_ret.err_value)
+
+    status_ret = update_transaction_status(event, PaymentStatus.REFUNDED)
+    if status_ret.is_err:
+        return Result.err(status_ret.err_value)
+
+    log.info("Refund recorded", external_id=event.external_id)
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def record_payout(event: PaymentEventData, payout: PayoutContent) -> Result[None, FatalError]:
+    repo = injector.get(PayoutInterface)
+    ids_ret = repo.get_ids(PayoutFilterOption(provider=event.provider.value, external_id=event.external_id), PayoutSortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    if len(ids) == 0:
-        log.warning("Transaction not found for status update", external_id=event.external_id, status=status.value)
+    payouts_ret = repo.bulk_get(ids)
+    if payouts_ret.is_err:
+        return Result.err(payouts_ret.err_value)
+
+    payouts = payouts_ret.ok_value
+    if len(payouts) > 0 and payouts[0].last_event_at > event.occurred_at:
+        log.info("Payout event is older than applied", external_id=event.external_id, event_id=event.event_id)
         return Result.ok(None)
 
+    data = PayoutData(
+        id=ids[0] if len(ids) > 0 else 0,
+        provider=event.provider,
+        external_id=event.external_id,
+        amount=payout.amount,
+        currency=payout.currency,
+        status=payout.status,
+        arrival_at=payout.arrival_at,
+        last_event_at=event.occurred_at,
+    )
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    new_ids = save_ret.ok_value
+    payout_id = ids[0] if len(ids) > 0 else new_ids[0]
+
+    ledger_repo = injector.get(LedgerEntryInterface)
+    entry_ids_ret = ledger_repo.get_ids(LedgerEntryFilterOption(external_ids=payout.balance_external_ids), LedgerEntrySortOption(), limit=None)
+    if entry_ids_ret.is_err:
+        return Result.err(entry_ids_ret.err_value)
+
+    entry_ids = entry_ids_ret.ok_value
+    entries_ret = ledger_repo.bulk_get(entry_ids)
+    if entries_ret.is_err:
+        return Result.err(entries_ret.err_value)
+
+    entries = entries_ret.ok_value
+    entries_save_ret = ledger_repo.bulk_save([replace(e, payout_id=payout_id) for e in entries])
+    if entries_save_ret.is_err:
+        return Result.err(entries_save_ret.err_value)
+
+    log.info("Payout recorded", external_id=event.external_id, amount=payout.amount, entries=len(entries))
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def get_transaction_data(event: PaymentEventData) -> Result[TransactionData | None, FatalError]:
+    repo = injector.get(TransactionInterface)
+    ids_ret = repo.get_ids(TransactionFilterOption(provider=event.provider.value, external_id=event.external_id), TransactionSortOption(), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     transactions_ret = repo.bulk_get(ids)
     if transactions_ret.is_err:
         return Result.err(transactions_ret.err_value)
 
     transactions = transactions_ret.ok_value
-    payment_transaction = transactions[0]
+    if len(transactions) == 0:
+        return Result.ok(None)
+
+    return Result.ok(transactions[0])
+
+
+@Result.shield_exception()
+def update_transaction_status(event: PaymentEventData, status: PaymentStatus) -> Result[None, FatalError]:
+    transaction_ret = get_transaction_data(event)
+    if transaction_ret.is_err:
+        return Result.err(transaction_ret.err_value)
+
+    payment_transaction = transaction_ret.ok_value
+    if payment_transaction is None:
+        log.warning("Transaction not found for status update", external_id=event.external_id, status=status.value)
+        return Result.ok(None)
+
     if payment_status_rank(status) < payment_status_rank(payment_transaction.status):
         log.info("Transaction status not downgraded", external_id=event.external_id, current=payment_transaction.status.value, status=status.value)
         return Result.ok(None)
@@ -354,11 +507,7 @@ def update_transaction_status(event: PaymentEventData, status: PaymentStatus, up
         log.info("Transaction event is older than applied", external_id=event.external_id, event_id=event.event_id)
         return Result.ok(None)
 
-    updated = replace(payment_transaction, status=status, last_event_at=event.occurred_at)
-    if update_paid_at:
-        updated = replace(updated, paid_at=event.occurred_at)
-
-    save_ret = repo.bulk_save([updated])
+    save_ret = save_transaction_data(replace(payment_transaction, status=status, last_event_at=event.occurred_at))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -372,11 +521,11 @@ def save_payment_event_data(event: PaymentEventData) -> Result[bool, FatalError]
     if record_ret.is_err:
         return Result.err(record_ret.err_value)
 
-    is_recorded = record_ret.ok_value
-    if not is_recorded:
+    event_id = record_ret.ok_value
+    if event_id is None:
         return Result.ok(False)
 
-    apply_ret = apply_payment_event(event)
+    apply_ret = apply_payment_event(replace(event, id=event_id))
     if apply_ret.is_err:
         return Result.err(apply_ret.err_value)
 
@@ -412,5 +561,65 @@ def save_subscription_data(data: SubscriptionData) -> Result[None, FatalError]:
     ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_transaction_data(data: TransactionData) -> Result[int, FatalError]:
+    repo = injector.get(TransactionInterface)
+    ret = repo.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    new_ids = ret.ok_value
+    return Result.ok(data.id if data.id != 0 else new_ids[0])
+
+
+@Result.shield_exception()
+def save_ledger_entry_data(transaction_id: int, event_id: int, entry_type: LedgerEntryType, balances: list[BalanceData]) -> Result[None, FatalError]:
+    repo = injector.get(LedgerEntryInterface)
+    external_ids = [b.external_id for b in balances]
+    ids_ret = repo.get_ids(LedgerEntryFilterOption(transaction_id=transaction_id, external_ids=external_ids), LedgerEntrySortOption(), limit=None)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    entries_ret = repo.bulk_get(ids)
+    if entries_ret.is_err:
+        return Result.err(entries_ret.err_value)
+
+    entries = entries_ret.ok_value
+    recorded = {(e.external_id, e.entry_type) for e in entries}
+    new_entries: list[LedgerEntryData] = []
+    for balance in balances:
+        if (balance.external_id, entry_type) not in recorded:
+            new_entries.append(LedgerEntryData(
+                id=0,
+                transaction_id=transaction_id,
+                payout_id=0,
+                event_id=event_id,
+                external_id=balance.external_id,
+                entry_type=entry_type,
+                amount=balance.amount,
+                tax_amount=included_tax(balance.amount, TAX_RATE),
+                occurred_at=balance.occurred_at,
+            ))
+        if balance.fee != 0 and (balance.external_id, LedgerEntryType.FEE) not in recorded:
+            new_entries.append(LedgerEntryData(
+                id=0,
+                transaction_id=transaction_id,
+                payout_id=0,
+                event_id=event_id,
+                external_id=balance.external_id,
+                entry_type=LedgerEntryType.FEE,
+                amount=-balance.fee,
+                tax_amount=0,
+                occurred_at=balance.occurred_at,
+            ))
+
+    save_ret = repo.bulk_save(new_entries)
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     return Result.ok(None)

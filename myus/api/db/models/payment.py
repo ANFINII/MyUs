@@ -16,6 +16,7 @@ class PaymentEvent(models.Model):
     event_type  = models.CharField(max_length=30, choices=WEBHOOK_EVENT_TYPE_CHOICES)
     external_id = models.CharField(max_length=255)
     payload     = models.TextField(blank=True)
+    content     = models.TextField(blank=True)
     occurred_at = models.DateTimeField(default=DATETIME_MIN)
     created     = models.DateTimeField(auto_now_add=True)
 

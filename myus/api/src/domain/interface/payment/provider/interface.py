@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from api.src.domain.interface.payment.provider.data import CancelResult, CheckoutData, CheckoutResult, ProviderSubscriptionData, WebhookVerifyResult
+from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
+from api.src.domain.interface.payment.provider.data import CancelResult, CheckoutData, CheckoutResult, WebhookVerifyResult
 from api.utils.common.result import FatalError, Result
 
 
