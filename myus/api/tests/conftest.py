@@ -20,7 +20,7 @@ def make_user(db: None) -> Callable[[str], User]:
         Profile.objects.create(user=user, last_name="last", first_name="first", birthday=date(2000, 1, 1))
         MyPage.objects.create(user=user, content="")
         UserNotification.objects.create(user=user)
-        UserPlan.objects.create(user=user, customer_id="", subscription="")
+        UserPlan.objects.create(user=user)
         saved_user: User = User.objects.get(id=user.id)
         return saved_user
 

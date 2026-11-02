@@ -128,8 +128,7 @@ Advertise
 - アクション別通知設定
 
 #### UserPlan
-- 料金プラン情報
-- Stripe顧客ID、サブスクリプションID
+- 料金プラン情報（決済会社の顧客 ID・サブスクリプションは `PaymentCustomer`・`Subscription` に持つ）
 - 支払い状態
 - プラン開始/終了日
 

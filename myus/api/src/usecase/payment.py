@@ -291,14 +291,24 @@ def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscript
             user_plan = replace(
                 user.user_plan,
                 plan=provider_subscription.product_code,
-                customer_id=provider_subscription.customer_id,
-                subscription=provider_subscription.external_id,
                 is_paid=True,
                 start_date=provider_subscription.started_at,
                 end_date=provider_subscription.current_period_end,
             )
         case SubscriptionStatus.CANCELED | SubscriptionStatus.EXPIRED:
-            if user.user_plan.subscription != provider_subscription.external_id:
+            repo = injector.get(SubscriptionInterface)
+            ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user.user.id), SubscriptionSortOption(), limit=None)
+            if ids_ret.is_err:
+                return Result.err(ids_ret.err_value)
+
+            ids = ids_ret.ok_value
+            subscriptions_ret = repo.bulk_get(ids)
+            if subscriptions_ret.is_err:
+                return Result.err(subscriptions_ret.err_value)
+
+            subscriptions = subscriptions_ret.ok_value
+            active_subscriptions = [s for s in subscriptions if s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE)]
+            if len(active_subscriptions) > 0:
                 return Result.ok(None)
 
             user_plan = replace(user.user_plan, plan=PlanName.FREE, is_paid=False, end_date=provider_subscription.current_period_end)

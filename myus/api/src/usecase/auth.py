@@ -259,8 +259,6 @@ def signup_user(input: SignupIn) -> Result[None, FatalError]:
         ),
         user_plan=UserPlanData(
             plan=PlanName.FREE,
-            customer_id="",
-            subscription="",
             is_paid=False,
             start_date=None,
             end_date=None,
