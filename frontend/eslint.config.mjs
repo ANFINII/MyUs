@@ -29,6 +29,12 @@ export default [
       react: {
         version: 'detect',
       },
+      'import/resolver': {
+        node: {
+          extensions: ['.ts', '.tsx', '.js'],
+          moduleDirectory: ['node_modules', 'src'],
+        },
+      },
     },
     plugins: {
       react: fixupPluginRules(pluginReact),
@@ -67,6 +73,14 @@ export default [
       'react-hooks/exhaustive-deps': 'warn', // Hooksの依存配列で警告
       '@typescript-eslint/no-explicit-any': 'warn', // anyの使用を警告
       'unused-imports/no-unused-imports': 'error', // 未使用のimportを禁止
+      'import/no-restricted-paths': ['error', {
+        zones: [
+          { target: './src/components/parts', from: './src/components/widgets', message: 'parts/ から widgets/ を import しない' },
+          { target: './src/components/parts', from: './src/components/templates', message: 'parts/ から templates/ を import しない' },
+          { target: './src/components/widgets', from: './src/components/templates', message: 'widgets/ から templates/ を import しない' },
+          { target: './src/components', from: './src/pages', message: 'components/ から pages/ を import しない' },
+        ],
+      }], // ディレクトリ間の依存方向を強制
       'import/order': ['error',
         {
           groups: ['builtin', 'external', 'internal', ['sibling', 'index'], 'parent'],

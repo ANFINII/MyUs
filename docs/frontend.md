@@ -224,6 +224,8 @@ const { t } = useTranslation()
 
 `parts/` ← `widgets/` ← `templates/` ← `pages/` の片方向のみ依存する。逆方向や同階層への依存は禁止。
 
+`parts/` → `widgets/`・`templates/`、`widgets/` → `templates/`、`components/` → `pages/` の import は、`eslint.config.mjs` の `import/no-restricted-paths` で検出する。
+
 ただし、`widgets/` 内の同じフォルダ（同ファミリ）内の依存は許容する（例: `Status/QueryCheck` が `Status/Check`・`Status/Loading` を使う）。
 
 ### parts は独立性を持つ
