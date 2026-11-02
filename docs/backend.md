@@ -78,7 +78,14 @@
   - 例: `create_video`は`repo`（動画）と`category_repo`、`upsert_follow`は`repo`（フォロー）と`user_repo`
   - 外部サービス（`PaymentInterface`）も同じ扱い（メインなら`repo`、ほかにメインがあれば`payment_repo`）
 - `ok_value`は直接使わず、`ids = ids_ret.ok_value`のように1行で変数に取り出してから使う
-- `transaction.atomic()`の中でErrを返すときは、直前に`transaction.set_rollback(True)`を呼ぶ（Errは例外ではないためロールバックされない）
+- 複数の書き込みを1つのトランザクションにまとめるときは、書き込みを`Result`を返す関数に切り出し、`atomic_result`（`api/utils/functions/transaction.py`）に渡す。関数がErrを返すとロールバックしてそのErrを返し、例外が出てもロールバックする（Errは例外ではないため、`transaction.atomic()`の中でErrを返すだけではロールバックされない）
+  - 移行中。まだ`with transaction.atomic():`と`transaction.set_rollback(True)`で書いている箇所は、触るときに`atomic_result`に置き換える
+
+```python
+save_ret = atomic_result(lambda: save_follow(follower, following, follow, is_follow))
+if save_ret.is_err:
+    return Result.err(save_ret.err_value)
+```
 
 ```python
 @Result.shield_exception()
