@@ -12,14 +12,12 @@ from api.src.types.schema.media.output import MediaCreateOut, VideoOut, MusicOut
 from api.src.types.schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 from api.src.domain.interface.media.index import PAGE_SIZE
 from api.src.usecase.manage.advertise import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise
-from api.src.usecase.manage.media import (
-    get_manage_videos, get_manage_video, update_manage_video, delete_manage_video,
-    get_manage_musics, get_manage_music, update_manage_music, delete_manage_music,
-    get_manage_blogs, get_manage_blog, update_manage_blog, delete_manage_blog,
-    get_manage_comics, get_manage_comic, update_manage_comic, delete_manage_comic,
-    get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture,
-    get_manage_chats, get_manage_chat, update_manage_chat, delete_manage_chat,
-)
+from api.src.usecase.manage.media.video import get_manage_videos, get_manage_video, update_manage_video, delete_manage_video
+from api.src.usecase.manage.media.music import get_manage_musics, get_manage_music, update_manage_music, delete_manage_music
+from api.src.usecase.manage.media.blog import get_manage_blogs, get_manage_blog, update_manage_blog, delete_manage_blog
+from api.src.usecase.manage.media.comic import get_manage_comics, get_manage_comic, update_manage_comic, delete_manage_comic
+from api.src.usecase.manage.media.picture import get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture
+from api.src.usecase.manage.media.chat import get_manage_chats, get_manage_chat, update_manage_chat, delete_manage_chat
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 
 
