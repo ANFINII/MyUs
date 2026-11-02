@@ -82,7 +82,7 @@
   - 移行中。まだ`with transaction.atomic():`と`transaction.set_rollback(True)`で書いている箇所は、触るときに`atomic_result`に置き換える
 
 ```python
-save_ret = atomic_result(lambda: save_follow(follower, following, follow, is_follow))
+save_ret = atomic_result(lambda: save_follow_data(follower, following, follow, is_follow))
 if save_ret.is_err:
     return Result.err(save_ret.err_value)
 ```

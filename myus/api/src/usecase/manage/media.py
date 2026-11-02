@@ -123,7 +123,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    save_ret = atomic_result(lambda: save_video_with_category(update_data, category_data))
+    save_ret = atomic_result(lambda: save_video_data(update_data, category_data))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -135,7 +135,8 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     return Result.ok(None)
 
 
-def save_video_with_category(data: VideoData, category_data: CategoryData) -> Result[None, FatalError]:
+@Result.shield_exception()
+def save_video_data(data: VideoData, category_data: CategoryData) -> Result[None, FatalError]:
     repo = injector.get(VideoInterface)
     category_repo = injector.get(CategoryInterface)
     save_ret = repo.bulk_save([data])
@@ -161,14 +162,15 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
         log.error("Video not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    delete_ret = atomic_result(lambda: delete_videos_with_notifications(delete_ids))
+    delete_ret = atomic_result(lambda: delete_video_data(delete_ids))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
 
-def delete_videos_with_notifications(ids: list[int]) -> Result[None, FatalError]:
+@Result.shield_exception()
+def delete_video_data(ids: list[int]) -> Result[None, FatalError]:
     repo = injector.get(VideoInterface)
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
@@ -257,7 +259,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    save_ret = atomic_result(lambda: save_music_with_category(update_data, category_data))
+    save_ret = atomic_result(lambda: save_music_data(update_data, category_data))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -269,7 +271,8 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     return Result.ok(None)
 
 
-def save_music_with_category(data: MusicData, category_data: CategoryData) -> Result[None, FatalError]:
+@Result.shield_exception()
+def save_music_data(data: MusicData, category_data: CategoryData) -> Result[None, FatalError]:
     repo = injector.get(MusicInterface)
     category_repo = injector.get(CategoryInterface)
     save_ret = repo.bulk_save([data])
@@ -295,14 +298,15 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
         log.error("Music not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    delete_ret = atomic_result(lambda: delete_musics_with_notifications(delete_ids))
+    delete_ret = atomic_result(lambda: delete_music_data(delete_ids))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
 
-def delete_musics_with_notifications(ids: list[int]) -> Result[None, FatalError]:
+@Result.shield_exception()
+def delete_music_data(ids: list[int]) -> Result[None, FatalError]:
     repo = injector.get(MusicInterface)
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
@@ -398,7 +402,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    save_ret = atomic_result(lambda: save_blog_with_category(update_data, category_data))
+    save_ret = atomic_result(lambda: save_blog_data(update_data, category_data))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -410,7 +414,8 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     return Result.ok(None)
 
 
-def save_blog_with_category(data: BlogData, category_data: CategoryData) -> Result[None, FatalError]:
+@Result.shield_exception()
+def save_blog_data(data: BlogData, category_data: CategoryData) -> Result[None, FatalError]:
     repo = injector.get(BlogInterface)
     category_repo = injector.get(CategoryInterface)
     save_ret = repo.bulk_save([data])
@@ -436,14 +441,15 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
         log.error("Blog not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    delete_ret = atomic_result(lambda: delete_blogs_with_notifications(delete_ids))
+    delete_ret = atomic_result(lambda: delete_blog_data(delete_ids))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
 
-def delete_blogs_with_notifications(ids: list[int]) -> Result[None, FatalError]:
+@Result.shield_exception()
+def delete_blog_data(ids: list[int]) -> Result[None, FatalError]:
     repo = injector.get(BlogInterface)
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
@@ -545,7 +551,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    save_ret = atomic_result(lambda: save_comic_with_category(update_data, category_data))
+    save_ret = atomic_result(lambda: save_comic_data(update_data, category_data))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -557,7 +563,8 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     return Result.ok(None)
 
 
-def save_comic_with_category(data: ComicData, category_data: CategoryData) -> Result[None, FatalError]:
+@Result.shield_exception()
+def save_comic_data(data: ComicData, category_data: CategoryData) -> Result[None, FatalError]:
     repo = injector.get(ComicInterface)
     category_repo = injector.get(CategoryInterface)
     save_ret = repo.bulk_save([data])
@@ -583,14 +590,15 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
         log.error("Comic not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    delete_ret = atomic_result(lambda: delete_comics_with_notifications(delete_ids))
+    delete_ret = atomic_result(lambda: delete_comic_data(delete_ids))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
 
-def delete_comics_with_notifications(ids: list[int]) -> Result[None, FatalError]:
+@Result.shield_exception()
+def delete_comic_data(ids: list[int]) -> Result[None, FatalError]:
     repo = injector.get(ComicInterface)
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
@@ -686,7 +694,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    save_ret = atomic_result(lambda: save_picture_with_category(update_data, category_data))
+    save_ret = atomic_result(lambda: save_picture_data(update_data, category_data))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -698,7 +706,8 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     return Result.ok(None)
 
 
-def save_picture_with_category(data: PictureData, category_data: CategoryData) -> Result[None, FatalError]:
+@Result.shield_exception()
+def save_picture_data(data: PictureData, category_data: CategoryData) -> Result[None, FatalError]:
     repo = injector.get(PictureInterface)
     category_repo = injector.get(CategoryInterface)
     save_ret = repo.bulk_save([data])
@@ -724,14 +733,15 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindEr
         log.error("Picture not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    delete_ret = atomic_result(lambda: delete_pictures_with_notifications(delete_ids))
+    delete_ret = atomic_result(lambda: delete_picture_data(delete_ids))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
 
-def delete_pictures_with_notifications(ids: list[int]) -> Result[None, FatalError]:
+@Result.shield_exception()
+def delete_picture_data(ids: list[int]) -> Result[None, FatalError]:
     repo = injector.get(PictureInterface)
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
@@ -820,7 +830,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    save_ret = atomic_result(lambda: save_chat_with_category(update_data, category_data))
+    save_ret = atomic_result(lambda: save_chat_data(update_data, category_data))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -832,7 +842,8 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     return Result.ok(None)
 
 
-def save_chat_with_category(data: ChatData, category_data: CategoryData) -> Result[None, FatalError]:
+@Result.shield_exception()
+def save_chat_data(data: ChatData, category_data: CategoryData) -> Result[None, FatalError]:
     repo = injector.get(ChatInterface)
     category_repo = injector.get(CategoryInterface)
     save_ret = repo.bulk_save([data])
@@ -868,14 +879,15 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError
         chat_reply_ids = reply_ids_ret.ok_value
         reply_ids += chat_reply_ids
 
-    delete_ret = atomic_result(lambda: delete_chats_with_notifications(delete_ids, reply_ids))
+    delete_ret = atomic_result(lambda: delete_chat_data(delete_ids, reply_ids))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
 
-def delete_chats_with_notifications(ids: list[int], reply_ids: list[int]) -> Result[None, FatalError]:
+@Result.shield_exception()
+def delete_chat_data(ids: list[int], reply_ids: list[int]) -> Result[None, FatalError]:
     repo = injector.get(ChatInterface)
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
