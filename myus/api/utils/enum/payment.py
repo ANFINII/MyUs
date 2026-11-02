@@ -59,3 +59,17 @@ class WebhookDeliveryStatus(str, Enum):
     PENDING = "Pending"
     DELIVERED = "Delivered"
     FAILED = "Failed"
+
+
+class LedgerEntryType(str, Enum):
+    SALE = "Sale"
+    REFUND = "Refund"
+    FEE = "Fee"
+
+
+class PayoutStatus(str, Enum):
+    PENDING = "Pending"
+    IN_TRANSIT = "InTransit"
+    PAID = "Paid"
+    FAILED = "Failed"
+    CANCELED = "Canceled"

@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 from django_ulid.models import ulid
-from api.utils.constants.choice import GENDER_CHOICES, PLAN_CHOICES, PLAN_ACTION_CHOICES
+from api.utils.constants.choice import GENDER_CHOICES, PLAN_CHOICES
 from api.utils.enum.user import PlanName
 from api.utils.functions.file import avatar_upload
 
@@ -142,22 +142,3 @@ class UserPlan(models.Model):
     class Meta:
         db_table = "user_plan"
         verbose_name_plural = "001 UserPlan"
-
-
-class UserPlanHistory(models.Model):
-    """UserPlanHistory"""
-    id           = models.BigAutoField(primary_key=True)
-    user         = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_plan_histories")
-    plan         = models.CharField(max_length=30, choices=PLAN_CHOICES)
-    price        = models.IntegerField()
-    action       = models.CharField(max_length=20, choices=PLAN_ACTION_CHOICES)
-    subscription = models.CharField(max_length=255, blank=True)
-    created      = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user_id}:{self.plan}:{self.action}"
-
-    class Meta:
-        db_table = "user_plan_history"
-        verbose_name_plural = "001 UserPlanHistory"
-        indexes = [models.Index(fields=["user", "-created"], name="user_plan_history_idx")]
