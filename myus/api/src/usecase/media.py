@@ -1,9 +1,9 @@
 from dataclasses import replace
 from datetime import datetime
-from django.db import transaction
 from django.utils import timezone
 from ninja import UploadedFile
 from api.modules.logger import log
+from api.src.domain.interface.category.data import CategoryData
 from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
@@ -40,6 +40,7 @@ from api.utils.functions.user import get_media_user
 from api.utils.functions.convert.encode_worker import EncodeWorker
 from api.utils.functions.convert.video_encoding import convert_video
 from api.utils.functions.media import get_media_repository, save_upload, validate_uploads
+from api.utils.functions.transaction import atomic_result
 from api.utils.plan import get_plan
 
 
@@ -86,7 +87,6 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
     )
 
     repo = injector.get(VideoInterface)
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -95,20 +95,12 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        ids_ret = repo.bulk_save([new_video])
-        if ids_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(ids_ret.err_value)
+    create_ret = atomic_result(lambda: create_video_data(new_video, category_data))
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
 
-        new_ids = ids_ret.ok_value
-        assert len(new_ids) == 1, "作成に失敗しました"
-        category_ret = category_repo.bulk_save(MediaType.VIDEO, new_ids[0], [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
-
-    objs_ret = repo.bulk_get(new_ids)
+    new_id = create_ret.ok_value
+    objs_ret = repo.bulk_get([new_id])
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -186,7 +178,6 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
     )
 
     repo = injector.get(MusicInterface)
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -195,20 +186,12 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        ids_ret = repo.bulk_save([new_music])
-        if ids_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(ids_ret.err_value)
+    create_ret = atomic_result(lambda: create_music_data(new_music, category_data))
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
 
-        new_ids = ids_ret.ok_value
-        assert len(new_ids) == 1, "作成に失敗しました"
-        category_ret = category_repo.bulk_save(MediaType.MUSIC, new_ids[0], [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
-
-    objs_ret = repo.bulk_get(new_ids)
+    new_id = create_ret.ok_value
+    objs_ret = repo.bulk_get([new_id])
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -260,7 +243,6 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
     )
 
     repo = injector.get(BlogInterface)
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -269,20 +251,12 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        ids_ret = repo.bulk_save([new_blog])
-        if ids_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(ids_ret.err_value)
+    create_ret = atomic_result(lambda: create_blog_data(new_blog, category_data))
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
 
-        new_ids = ids_ret.ok_value
-        assert len(new_ids) == 1, "作成に失敗しました"
-        category_ret = category_repo.bulk_save(MediaType.BLOG, new_ids[0], [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
-
-    objs_ret = repo.bulk_get(new_ids)
+    new_id = create_ret.ok_value
+    objs_ret = repo.bulk_get([new_id])
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -333,7 +307,6 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
     )
 
     repo = injector.get(ComicInterface)
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -342,20 +315,12 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        ids_ret = repo.bulk_save([new_comic])
-        if ids_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(ids_ret.err_value)
+    create_ret = atomic_result(lambda: create_comic_data(new_comic, category_data))
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
 
-        new_ids = ids_ret.ok_value
-        assert len(new_ids) == 1, "作成に失敗しました"
-        category_ret = category_repo.bulk_save(MediaType.COMIC, new_ids[0], [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
-
-    objs_ret = repo.bulk_get(new_ids)
+    new_id = create_ret.ok_value
+    objs_ret = repo.bulk_get([new_id])
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -405,7 +370,6 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
     )
 
     repo = injector.get(PictureInterface)
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -414,20 +378,12 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        ids_ret = repo.bulk_save([new_picture])
-        if ids_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(ids_ret.err_value)
+    create_ret = atomic_result(lambda: create_picture_data(new_picture, category_data))
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
 
-        new_ids = ids_ret.ok_value
-        assert len(new_ids) == 1, "作成に失敗しました"
-        category_ret = category_repo.bulk_save(MediaType.PICTURE, new_ids[0], [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
-
-    objs_ret = repo.bulk_get(new_ids)
+    new_id = create_ret.ok_value
+    objs_ret = repo.bulk_get([new_id])
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -478,7 +434,6 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
     )
 
     repo = injector.get(ChatInterface)
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -487,20 +442,12 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        ids_ret = repo.bulk_save([new_chat])
-        if ids_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(ids_ret.err_value)
+    create_ret = atomic_result(lambda: create_chat_data(new_chat, category_data))
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
 
-        new_ids = ids_ret.ok_value
-        assert len(new_ids) == 1, "作成に失敗しました"
-        category_ret = category_repo.bulk_save(MediaType.CHAT, new_ids[0], [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
-
-    objs_ret = repo.bulk_get(new_ids)
+    new_id = create_ret.ok_value
+    objs_ret = repo.bulk_get([new_id])
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -1133,28 +1080,11 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    with transaction.atomic():
-        access_ret = record_access(ip_address, AccessType(media_type.value), obj.id)
-        if access_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(access_ret.err_value)
+    read_ret = atomic_result(lambda: save_read_data(media_type, obj.id, obj.read, obj.channel.owner_id, ip_address))
+    if read_ret.is_err:
+        return Result.err(read_ret.err_value)
 
-        is_accessed = access_ret.ok_value
-        if not is_accessed:
-            return Result.ok(obj.read)
-
-        read_ret = repo.save_read(obj.id)
-        if read_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(read_ret.err_value)
-
-        read = read_ret.ok_value
-        if read in VIEWS_THRESHOLDS:
-            notification_ret = create_views_notification(obj.channel.owner_id, NotificationObjectType(media_type.value), obj.id)
-            if notification_ret.is_err:
-                transaction.set_rollback(True)
-                return Result.err(notification_ret.err_value)
-
+    read = read_ret.ok_value
     return Result.ok(read)
 
 
@@ -1170,3 +1100,129 @@ def create_views_notification(owner_id: int, object_type: NotificationObjectType
         return Result.err(create_ret.err_value)
 
     return Result.ok(None)
+
+
+@Result.shield_exception()
+def create_video_data(data: VideoData, category_data: CategoryData) -> Result[int, FatalError]:
+    repo = injector.get(VideoInterface)
+    category_repo = injector.get(CategoryInterface)
+    ids_ret = repo.bulk_save([data])
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    new_ids = ids_ret.ok_value
+    assert len(new_ids) == 1, "作成に失敗しました"
+    category_ret = category_repo.bulk_save(MediaType.VIDEO, new_ids[0], [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(new_ids[0])
+
+
+@Result.shield_exception()
+def create_music_data(data: MusicData, category_data: CategoryData) -> Result[int, FatalError]:
+    repo = injector.get(MusicInterface)
+    category_repo = injector.get(CategoryInterface)
+    ids_ret = repo.bulk_save([data])
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    new_ids = ids_ret.ok_value
+    assert len(new_ids) == 1, "作成に失敗しました"
+    category_ret = category_repo.bulk_save(MediaType.MUSIC, new_ids[0], [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(new_ids[0])
+
+
+@Result.shield_exception()
+def create_blog_data(data: BlogData, category_data: CategoryData) -> Result[int, FatalError]:
+    repo = injector.get(BlogInterface)
+    category_repo = injector.get(CategoryInterface)
+    ids_ret = repo.bulk_save([data])
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    new_ids = ids_ret.ok_value
+    assert len(new_ids) == 1, "作成に失敗しました"
+    category_ret = category_repo.bulk_save(MediaType.BLOG, new_ids[0], [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(new_ids[0])
+
+
+@Result.shield_exception()
+def create_comic_data(data: ComicData, category_data: CategoryData) -> Result[int, FatalError]:
+    repo = injector.get(ComicInterface)
+    category_repo = injector.get(CategoryInterface)
+    ids_ret = repo.bulk_save([data])
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    new_ids = ids_ret.ok_value
+    assert len(new_ids) == 1, "作成に失敗しました"
+    category_ret = category_repo.bulk_save(MediaType.COMIC, new_ids[0], [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(new_ids[0])
+
+
+@Result.shield_exception()
+def create_picture_data(data: PictureData, category_data: CategoryData) -> Result[int, FatalError]:
+    repo = injector.get(PictureInterface)
+    category_repo = injector.get(CategoryInterface)
+    ids_ret = repo.bulk_save([data])
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    new_ids = ids_ret.ok_value
+    assert len(new_ids) == 1, "作成に失敗しました"
+    category_ret = category_repo.bulk_save(MediaType.PICTURE, new_ids[0], [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(new_ids[0])
+
+
+@Result.shield_exception()
+def create_chat_data(data: ChatData, category_data: CategoryData) -> Result[int, FatalError]:
+    repo = injector.get(ChatInterface)
+    category_repo = injector.get(CategoryInterface)
+    ids_ret = repo.bulk_save([data])
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    new_ids = ids_ret.ok_value
+    assert len(new_ids) == 1, "作成に失敗しました"
+    category_ret = category_repo.bulk_save(MediaType.CHAT, new_ids[0], [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(new_ids[0])
+
+
+@Result.shield_exception()
+def save_read_data(media_type: MediaType, media_id: int, read: int, owner_id: int, ip_address: str) -> Result[int, FatalError]:
+    repo = get_media_repository(media_type)
+    access_ret = record_access(ip_address, AccessType(media_type.value), media_id)
+    if access_ret.is_err:
+        return Result.err(access_ret.err_value)
+
+    is_accessed = access_ret.ok_value
+    if not is_accessed:
+        return Result.ok(read)
+
+    read_ret = repo.save_read(media_id)
+    if read_ret.is_err:
+        return Result.err(read_ret.err_value)
+
+    new_read = read_ret.ok_value
+    if new_read in VIEWS_THRESHOLDS:
+        notification_ret = create_views_notification(owner_id, NotificationObjectType(media_type.value), media_id)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(new_read)
