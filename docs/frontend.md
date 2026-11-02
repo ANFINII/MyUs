@@ -86,7 +86,7 @@ const [user, setUser] = useState<User | null>(null)
 
 ## データ取得（TanStack Query）
 
-ページ表示時のデータ取得は`getServerSideProps`ではなく、TanStack Queryの`useQuery`でクライアント側から行う。
+ページ表示時のデータ取得は`getServerSideProps`ではなく、TanStack Queryの`useSuspenseQuery`でクライアント側から行う。
 
 ### ページの構成
 
@@ -117,61 +117,41 @@ page('/manage/video/create', () => import('components/pages/manage/video/create'
 page('/manage/video/$ulid', () => import('components/pages/manage/video/edit')),
 ```
 
-- `useSuspenseQuery` に移行中（今は `/media/video`・`/media/video/$ulid` だけ）。移行したページは次のように書く
-  - `index.tsx` は `useSuspenseQuery(xxxQuery(...))` で取った `data` を `view.tsx` に渡すだけにする。`QueryCheck` は使わない
-  - 取得中の表示は router の `defaultPendingComponent`（`PageLoading`）、エラーの表示は `defaultErrorComponent`（`Status/RouteError`。`ApiError.type` で 401・404・500 の画面を出し分ける）に任せる
-  - ローダーは `.catch(noop)` を付けずに `queryClient.query(xxxQuery(...))` を返す（失敗するとルートのエラー表示になる。握りつぶすとページの `useSuspenseQuery` が同じリクエストをもう一度送るため）
-
-```typescript
-export default function VideoDetailPage(): React.JSX.Element {
-  const router = useRouter()
-  const ulid = String(router.query.ulid ?? '')
-
-  const { data } = useSuspenseQuery(videoQuery(ulid))
-
-  return <VideoDetail data={data} />
-}
-```
-
-- まだ移行していないページは、クエリを名前付きのオブジェクトの`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
-- `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
-- `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
-- `QueryCheck`のpropsは`title` → `queries`の順に書く
-- ページ遷移の前にデータを取るルートは、`lib/query/options.ts`の`queryOptions`（`refetchOnMount: false`を含める）を、`lib/query/loaders.ts`の`xxxLoader`（`queryClient.query(xxxQuery(...)).catch(noop)`）とページの`useQuery(xxxQuery(...))`で共有し、`lib/routes.tsx`では`page('/path', () => import(...), xxxLoader)`の1行で登録する
-  - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ（何秒かかっても画面全体のスピナーは出さない。最初にサイトを開いたときだけ、1秒を超えると`PageLoading`を出す。`PageLoading`は、まだ1ページも表示していないときだけスピナーを出す）。取得の失敗は`.catch(noop)`で握りつぶし、ページの`QueryCheck`が404・500の画面を出す（`prefetchQuery`・`fetchQuery`・`ensureQueryData`は非推奨のため使わない）
+- ページの`index.tsx`は、`useSuspenseQuery(xxxQuery(...))`で取ったデータを`view.tsx`にpropsで渡すだけにする。データが取れるまで描画を待つので、`data`が`undefined`になる場合を書かなくてよい
+- 取得中の表示はrouterの`defaultPendingComponent`（`Status/Loading`の`PageLoading`）、エラーの表示は`defaultErrorComponent`（`Status/RouteError`）に任せる。ページごとに取得中・エラーを判定しない
+- ページ遷移の前にデータを取るルートは、`lib/query/options.ts`の`queryOptions`（`refetchOnMount: false`を含める）を、`lib/query/loaders.ts`の`xxxLoader`（`queryClient.query(xxxQuery(...))`）とページの`useSuspenseQuery(xxxQuery(...))`で共有し、`lib/routes.tsx`では`page('/path', () => import(...), xxxLoader)`の1行で登録する
+  - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ（何秒かかっても画面全体のスピナーは出さない。最初にサイトを開いたときだけ、1秒を超えると`PageLoading`を出す。`PageLoading`は、まだ1ページも表示していないときだけスピナーを出す）
+  - ローダーは取得の失敗を握りつぶさない（`.catch(noop)`を付けない）。失敗するとルートのエラー表示になる。握りつぶすと、ページの`useSuspenseQuery`が同じリクエストをもう一度送るため（`prefetchQuery`・`fetchQuery`・`ensureQueryData`は非推奨のため使わない）
+  - 表示を待たないデータ（ユーザーページの投稿・広告など、後から出すもの）だけは、ページで`useQuery`を使い、ローダーでは`.catch(noop)`で握りつぶす
   - 閲覧数の加算など、遷移のたびに1回だけ行う処理は`queryFn`ではなく`xxxLoader`の中で呼ぶ（`queryFn`は再試行で複数回呼ばれる）
   - チャットのスレッド（`/media/chat/$ulid/thread/$messageUlid`）は`chatThreadLoader`で詳細だけを取り、閲覧数は加算しない（加算はチャットの`chatDetailLoader`だけ）
-- エラー時の画面は`Status/Check`が`ApiError.type`（BEの`ErrorOut.type`）で出し分ける。`status`を見るのは、500画面の判定（nginx等が返したエラー・ネットワークエラーは`type`を持たない）と再試行（`shouldRetry`）だけにする
+- エラー時の画面は`Status/RouteError`（中で`Status/Check`）が`ApiError.type`（BEの`ErrorOut.type`）で出し分ける。`status`を見るのは、500画面の判定（nginx等が返したエラー・ネットワークエラーは`type`を持たない）と再試行（`shouldRetry`）だけにする
+- ログインしているかを確かめるだけのページは、`useSuspenseQuery(userQuery())`を呼ぶだけにする（ログインしていなければ401の画面になる）
 
 ```typescript
 export default function ManageVideoEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const channels = useQuery(channelsQuery())
-  const categories = useQuery(categoriesQuery())
-  const data = useQuery(manageVideoQuery(ulid))
-  const queries = { data, channels, categories }
+  const { data: channels } = useSuspenseQuery(channelsQuery())
+  const { data: categories } = useSuspenseQuery(categoriesQuery())
+  const { data } = useSuspenseQuery(manageVideoQuery(ulid))
 
-  return (
-    <QueryCheck title="Video" queries={queries}>
-      {(props) => <ManageVideoEdit {...props} />}
-    </QueryCheck>
-  )
+  return <ManageVideoEdit data={data} channels={channels} categories={categories} />
 }
 ```
 
-### useQuery の書き方
+### useSuspenseQuery の書き方
 
 - `queryFn`は`toQuery`（`lib/query/client`）でAPI関数を包む（`Result`型をthrowに変換し、`error`を`ApiError`型として扱うため）
 - `queryKey`は`lib/query/keys.ts`の`queryKeys`に定義する（`invalidateQueries`で前方一致させるため、配列の先頭から粒度が細かくなるようにする）
 - `queryKeys`と`queryOptions`の名前は、取得関数（`getVideos`・`getVideo`）に合わせて一覧を複数形（`manageVideos`・`manageVideosQuery`）、詳細を単数形（`manageVideo`・`manageVideoQuery`）にする。一覧と詳細をまとめて`invalidateQueries`するキーは`All`を付ける（`manageVideoAll`）
 - 1行で書く。180文字（`printWidth`）を超えるものはPrettierの折り返しに任せる
-- `useQuery`の結果は`queries`のキー（テンプレートのprops名）と同じ名前の変数に入れ、`const queries = { data, channels }`のように省略記法で書く
+- `useSuspenseQuery`の結果は`const { data: channels } = ...`のように、`view.tsx`のprops名と同じ名前の変数に入れる
 - 一覧・詳細・編集ページの主となるクエリは`data`と名付ける（`datas`・`mediaHome`のような個別の名前にしない）
 - 主となるクエリが無いページ（作成画面）や、複数の種類のデータを並べて扱うページ（設定画面・ユーザーページ等）は、扱うものの名前を付ける（`channels`・`categories`・`mypage`・`profile`・`user`・`userPage`等）
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
-- 連続する`useQuery`の間、および直後の`const queries`との間に空行を入れない
+- 連続する`useSuspenseQuery`の間に空行を入れない
 
 ### 用途別のルール
 
@@ -219,7 +199,7 @@ const { t } = useTranslation()
 - 1ファイル1コンポーネント（default export）
 - ロジックが複雑になったらカスタムフックに切り出す
 - 1ページ = 1フォルダ（`components/pages/` の下）にし、URL と同じ階層に置く（`/media/video/$ulid` → `components/pages/media/video/detail/`）
-- `index.tsx` はデータ取得（`useQuery`）と `view.tsx` の呼び出しのみ。ルートが読み込む入口になる
+- `index.tsx` はデータ取得（`useSuspenseQuery`）と `view.tsx` の呼び出しのみ。ルートが読み込む入口になる
 - `view.tsx` にページの実装（表示・状態管理）を置く。データは props で受け取る
 - そのページだけで使う scss・部品は、同じフォルダに置く。近いページで共有するもの（`Account.module.scss` など）は、共通の親フォルダに置く
 
@@ -236,7 +216,7 @@ components/pages/media/video/
 
 | ディレクトリ | 責務 |
 |------|------|
-| `pages/` | 1ページ = 1フォルダ。`index.tsx` でデータ取得（`useQuery`）、`view.tsx` でページの実装・状態管理 |
+| `pages/` | 1ページ = 1フォルダ。`index.tsx` でデータ取得（`useSuspenseQuery`）、`view.tsx` でページの実装・状態管理 |
 | `widgets/` | 複合コンポーネント（Modal, Card等） |
 | `parts/` | 汎用UIコンポーネント（Button, Input等） |
 | `hooks/` | カスタムフック |
@@ -252,7 +232,7 @@ components/pages/media/video/
 
 `parts/` → `widgets/`・`pages/`、`widgets/` → `pages/` の import は、`eslint.config.mjs` の `import/no-restricted-paths` で検出する。
 
-ただし、`widgets/` 内の同じフォルダ（同ファミリ）内の依存は許容する（例: `Status/QueryCheck` が `Status/Check`・`Status/Loading` を使う）。
+ただし、`widgets/` 内の同じフォルダ（同ファミリ）内の依存は許容する（例: `Status/RouteError` が `Status/Check`・`Status/Custom500` を使う）。
 
 ### parts は独立性を持つ
 
@@ -339,3 +319,4 @@ return <div className={style.box}>...</div>
 - 2026-10-22: ルートの`loader`で遷移前にデータを取る形を追加（ホーム・動画の詳細から）
 - 2026-10-22: 全ページが`loader`に移ったため、`QueryCheck`の`fresh`を廃止
 - 2026-10-22: `queryKeys`・`queryOptions`の名前を一覧は複数形、詳細は単数形、まとめたキーは`All`付きにそろえた
+- 2026-11-02: 全ページを`useSuspenseQuery`に移し、取得中・エラーの表示をルートに任せた（`QueryCheck`を廃止）

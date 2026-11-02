@@ -1,20 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { manageAdvertisesQuery } from 'lib/query/options'
 import { pageParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageAdvertises from './view'
 
 export default function ManageAdvertisesPage(): React.JSX.Element {
   const router = useRouter()
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
-  const data = useQuery(manageAdvertisesQuery(params))
-  const queries = { data }
+  const { data } = useSuspenseQuery(manageAdvertisesQuery(params))
 
-  return (
-    <QueryCheck title="Advertise" queries={queries}>
-      {(props) => <ManageAdvertises key={`${search}-${page}`} {...props} page={page} />}
-    </QueryCheck>
-  )
+  return <ManageAdvertises key={`${search}-${page}`} data={data} page={page} />
 }

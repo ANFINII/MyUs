@@ -1,8 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { blogsQuery } from 'lib/query/options'
 import { pageParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Blogs from './view'
 
 export default function BlogsPage(): React.JSX.Element {
@@ -10,12 +9,7 @@ export default function BlogsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const data = useQuery(blogsQuery(params))
-  const queries = { data }
+  const { data } = useSuspenseQuery(blogsQuery(params))
 
-  return (
-    <QueryCheck title="Blog" queries={queries}>
-      {(props) => <Blogs {...props} page={page} />}
-    </QueryCheck>
-  )
+  return <Blogs data={data} page={page} />
 }

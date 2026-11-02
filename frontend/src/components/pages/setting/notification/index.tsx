@@ -1,17 +1,9 @@
-import { useTranslation } from 'react-i18next'
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { settingNotificationQuery } from 'lib/query/options'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingNotification from './view'
 
 export default function SettingNotificationPage(): React.JSX.Element {
-  const { t } = useTranslation()
-  const userNotification = useQuery(settingNotificationQuery())
-  const queries = { userNotification }
+  const { data: userNotification } = useSuspenseQuery(settingNotificationQuery())
 
-  return (
-    <QueryCheck title={t('setting.notification.title')} queries={queries}>
-      {(props) => <SettingNotification {...props} />}
-    </QueryCheck>
-  )
+  return <SettingNotification userNotification={userNotification} />
 }

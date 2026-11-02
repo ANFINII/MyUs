@@ -1,16 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { categoriesQuery, channelsQuery } from 'lib/query/options'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import PictureCreate from './view'
 
 export default function PictureCreatePage(): React.JSX.Element {
-  const channels = useQuery(channelsQuery())
-  const categories = useQuery(categoriesQuery())
-  const queries = { channels, categories }
+  const { data: channels } = useSuspenseQuery(channelsQuery())
+  const { data: categories } = useSuspenseQuery(categoriesQuery())
 
-  return (
-    <QueryCheck title="Picture" queries={queries}>
-      {(props) => <PictureCreate {...props} />}
-    </QueryCheck>
-  )
+  return <PictureCreate channels={channels} categories={categories} />
 }

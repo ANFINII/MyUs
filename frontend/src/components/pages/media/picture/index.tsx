@@ -1,8 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { picturesQuery } from 'lib/query/options'
 import { pageParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Pictures from './view'
 
 export default function PicturesPage(): React.JSX.Element {
@@ -10,12 +9,7 @@ export default function PicturesPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const data = useQuery(picturesQuery(params))
-  const queries = { data }
+  const { data } = useSuspenseQuery(picturesQuery(params))
 
-  return (
-    <QueryCheck title="Picture" queries={queries}>
-      {(props) => <Pictures {...props} page={page} />}
-    </QueryCheck>
-  )
+  return <Pictures data={data} page={page} />
 }

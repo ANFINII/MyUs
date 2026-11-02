@@ -1,19 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { homeQuery } from 'lib/query/options'
 import { searchParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Homes from './view'
 
 export default function HomesPage(): React.JSX.Element {
   const router = useRouter()
   const params = searchParams(router.query)
-  const data = useQuery(homeQuery(params))
-  const queries = { data }
+  const { data } = useSuspenseQuery(homeQuery(params))
 
-  return (
-    <QueryCheck title="Home" queries={queries}>
-      {(props) => <Homes title="Home" {...props} />}
-    </QueryCheck>
-  )
+  return <Homes title="Home" data={data} />
 }

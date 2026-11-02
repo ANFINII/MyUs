@@ -1,16 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { categoriesQuery, channelsQuery } from 'lib/query/options'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import VideoCreate from './view'
 
 export default function VideoCreatePage(): React.JSX.Element {
-  const channels = useQuery(channelsQuery())
-  const categories = useQuery(categoriesQuery())
-  const queries = { channels, categories }
+  const { data: channels } = useSuspenseQuery(channelsQuery())
+  const { data: categories } = useSuspenseQuery(categoriesQuery())
 
-  return (
-    <QueryCheck title="Video" queries={queries}>
-      {(props) => <VideoCreate {...props} />}
-    </QueryCheck>
-  )
+  return <VideoCreate channels={channels} categories={categories} />
 }

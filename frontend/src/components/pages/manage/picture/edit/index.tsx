@@ -1,21 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { categoriesQuery, channelsQuery, managePictureQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManagePictureEdit from './view'
 
 export default function ManagePictureEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const channels = useQuery(channelsQuery())
-  const categories = useQuery(categoriesQuery())
-  const data = useQuery(managePictureQuery(ulid))
-  const queries = { data, channels, categories }
+  const { data: channels } = useSuspenseQuery(channelsQuery())
+  const { data: categories } = useSuspenseQuery(categoriesQuery())
+  const { data } = useSuspenseQuery(managePictureQuery(ulid))
 
-  return (
-    <QueryCheck title="Picture" queries={queries}>
-      {(props) => <ManagePictureEdit {...props} />}
-    </QueryCheck>
-  )
+  return <ManagePictureEdit data={data} channels={channels} categories={categories} />
 }

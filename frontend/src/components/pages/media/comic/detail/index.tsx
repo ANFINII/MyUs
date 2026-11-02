@@ -1,19 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { comicQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ComicDetail from './view'
 
 export default function ComicDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery(comicQuery(ulid))
-  const queries = { data }
+  const { data } = useSuspenseQuery(comicQuery(ulid))
 
-  return (
-    <QueryCheck title="Comic" queries={queries}>
-      {(props) => <ComicDetail {...props} />}
-    </QueryCheck>
-  )
+  return <ComicDetail data={data} />
 }
