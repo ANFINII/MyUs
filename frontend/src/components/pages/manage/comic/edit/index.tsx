@@ -11,5 +11,5 @@ export default function ManageComicEditPage(): React.JSX.Element {
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageComicQuery(ulid))
 
-  return <ManageComicEdit data={data} channels={channels} categories={categories} />
+  return <ManageComicEdit channels={channels} categories={categories} data={data} />
 }

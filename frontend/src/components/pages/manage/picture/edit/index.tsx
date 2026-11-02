@@ -11,5 +11,5 @@ export default function ManagePictureEditPage(): React.JSX.Element {
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(managePictureQuery(ulid))
 
-  return <ManagePictureEdit data={data} channels={channels} categories={categories} />
+  return <ManagePictureEdit channels={channels} categories={categories} data={data} />
 }

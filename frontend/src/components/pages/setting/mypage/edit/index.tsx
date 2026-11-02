@@ -6,5 +6,5 @@ export default function SettingMypageEditPage(): React.JSX.Element {
   const { data: channels } = useSuspenseQuery(channelsQuery())
   const { data: mypage } = useSuspenseQuery(settingMypageQuery())
 
-  return <SettingMyPageEdit mypage={mypage} channels={channels} />
+  return <SettingMyPageEdit channels={channels} mypage={mypage} />
 }

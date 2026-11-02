@@ -11,5 +11,5 @@ export default function ManageBlogEditPage(): React.JSX.Element {
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageBlogQuery(ulid))
 
-  return <ManageBlogEdit data={data} channels={channels} categories={categories} />
+  return <ManageBlogEdit channels={channels} categories={categories} data={data} />
 }

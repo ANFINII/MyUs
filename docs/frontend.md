@@ -137,7 +137,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageVideoQuery(ulid))
 
-  return <ManageVideoEdit data={data} channels={channels} categories={categories} />
+  return <ManageVideoEdit channels={channels} categories={categories} data={data} />
 }
 ```
 
@@ -152,6 +152,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - 主となるクエリが無いページ（作成画面）や、複数の種類のデータを並べて扱うページ（設定画面・ユーザーページ等）は、扱うものの名前を付ける（`channels`・`categories`・`mypage`・`profile`・`user`・`userPage`等）
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
 - 連続する`useSuspenseQuery`の間に空行を入れない
+- `view.tsx`に渡すpropsは、`useSuspenseQuery`を書いた順（補助的なもの → 主となる`data`）に並べる
 
 ### 用途別のルール
 

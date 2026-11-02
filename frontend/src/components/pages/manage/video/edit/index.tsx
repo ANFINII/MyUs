@@ -11,5 +11,5 @@ export default function ManageVideoEditPage(): React.JSX.Element {
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageVideoQuery(ulid))
 
-  return <ManageVideoEdit data={data} channels={channels} categories={categories} />
+  return <ManageVideoEdit channels={channels} categories={categories} data={data} />
 }

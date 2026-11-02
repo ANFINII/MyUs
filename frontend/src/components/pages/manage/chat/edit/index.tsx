@@ -11,5 +11,5 @@ export default function ManageChatEditPage(): React.JSX.Element {
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageChatQuery(ulid))
 
-  return <ManageChatEdit data={data} channels={channels} categories={categories} />
+  return <ManageChatEdit channels={channels} categories={categories} data={data} />
 }

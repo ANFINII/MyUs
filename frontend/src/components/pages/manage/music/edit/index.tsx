@@ -11,5 +11,5 @@ export default function ManageMusicEditPage(): React.JSX.Element {
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageMusicQuery(ulid))
 
-  return <ManageMusicEdit data={data} channels={channels} categories={categories} />
+  return <ManageMusicEdit channels={channels} categories={categories} data={data} />
 }
