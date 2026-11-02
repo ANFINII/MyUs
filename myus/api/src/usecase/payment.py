@@ -122,7 +122,8 @@ def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 @Result.shield_exception()
 def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
     repo = injector.get(WebhookInboxInterface)
-    ids_ret = repo.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
+    filter = WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id)
+    ids_ret = repo.get_ids(filter, WebhookInboxSortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -133,6 +134,15 @@ def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 
     save_ret = repo.bulk_save([event])
     if save_ret.is_err:
+        saved_ids_ret = repo.get_ids(filter, WebhookInboxSortOption(), limit=1)
+        if saved_ids_ret.is_err:
+            return Result.err(saved_ids_ret.err_value)
+
+        saved_ids = saved_ids_ret.ok_value
+        if len(saved_ids) > 0:
+            log.info("WebhookInbox saved by another request", event_id=event.event_id)
+            return Result.ok(False)
+
         return Result.err(save_ret.err_value)
 
     return Result.ok(True)
