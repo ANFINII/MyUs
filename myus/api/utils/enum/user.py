@@ -13,10 +13,3 @@ class PlanName(str, Enum):
     STANDARD = "Standard"
     PREMIUM = "Premium"
     ULTIMATE = "Ultimate"
-
-
-class PlanAction(str, Enum):
-    SUBSCRIBE = "Subscribe"
-    CHANGE = "Change"
-    CANCEL = "Cancel"
-    EXPIRE = "Expire"
