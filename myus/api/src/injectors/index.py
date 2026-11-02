@@ -2,6 +2,8 @@ from injector import Module, multiprovider, provider, singleton
 from api.src.adapter.external.payment.stripe.provider import StripeProvider
 from api.src.domain.entity.payment.customer.repository import PaymentCustomerRepository
 from api.src.domain.entity.payment.event.repository import PaymentEventRepository
+from api.src.domain.entity.payment.ledger.repository import LedgerEntryRepository
+from api.src.domain.entity.payment.payout.repository import PayoutRepository
 from api.src.domain.entity.payment.subscription.repository import SubscriptionRepository
 from api.src.domain.entity.payment.transaction.repository import TransactionRepository
 from api.src.domain.entity.webhook.outbox.repository import WebhookOutboxRepository
@@ -45,6 +47,8 @@ from api.src.domain.interface.notification.interface import NotificationInterfac
 from api.src.domain.interface.access_log.interface import AccessLogInterface
 from api.src.domain.interface.payment.customer.interface import PaymentCustomerInterface
 from api.src.domain.interface.payment.event.interface import PaymentEventInterface
+from api.src.domain.interface.payment.ledger.interface import LedgerEntryInterface
+from api.src.domain.interface.payment.payout.interface import PayoutInterface
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
@@ -177,6 +181,14 @@ class PaymentModule(Module):
     @provider
     def provide_transaction_repository(self) -> TransactionInterface:
         return TransactionRepository()
+
+    @provider
+    def provide_ledger_entry_repository(self) -> LedgerEntryInterface:
+        return LedgerEntryRepository()
+
+    @provider
+    def provide_payout_repository(self) -> PayoutInterface:
+        return PayoutRepository()
 
     @provider
     def provide_webhook_outbox_repository(self) -> WebhookOutboxInterface:

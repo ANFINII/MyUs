@@ -1,12 +1,15 @@
 import stripe
 from datetime import datetime, timezone
+from typing import Any, assert_never
 from django.conf import settings
 from api.modules.logger import log
-from api.src.adapter.external.payment.stripe._convert import convert_stripe_event, convert_stripe_params, convert_stripe_subscription, stripe_period_end
-from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, ProviderSubscriptionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from api.src.adapter.external.payment.stripe._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_period_end
+from api.src.adapter.external.payment.stripe._type import stripe_event_type
+from api.src.domain.interface.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.common.result import FatalError, Result
-from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, WebhookEventType, WebhookVerifyError
 
 
 class StripeProvider(PaymentInterface):
@@ -47,10 +50,13 @@ class StripeProvider(PaymentInterface):
             log.warning("Stripe webhook payload malformed", exc=e)
             return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.MALFORMED_PAYLOAD, message=str(e)))
 
-        event_data = convert_stripe_event(event, payload)
-        if isinstance(event_data, WebhookVerifyFailed):
-            return Result.ok(event_data)
-        return Result.ok(WebhookVerified(event=event_data))
+        event_type = stripe_event_type(event.type)
+        if event_type is None:
+            return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"unsupported event_type={event.type}"))
+
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        external_id, content = stripe_event_content(event_type, event.data.object.to_dict())
+        return Result.ok(WebhookVerified(event=convert_stripe_event(event, event_type, payload, external_id, content)))
 
     @Result.shield_exception()
     def cancel_subscription(self, external_id: str) -> Result[CancelResult, FatalError]:
@@ -77,3 +83,40 @@ class StripeProvider(PaymentInterface):
         stripe.api_key = settings.STRIPE_SECRET_KEY
         subscription = stripe.Subscription.retrieve(external_id)
         return Result.ok(convert_stripe_subscription(subscription))
+
+
+def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> tuple[str, PaymentEventContent]:
+    match event_type:
+        case WebhookEventType.SUBSCRIPTION_CREATED | WebhookEventType.SUBSCRIPTION_UPDATED | WebhookEventType.SUBSCRIPTION_CANCELED:
+            subscription = stripe.Subscription.construct_from(obj, stripe.api_key)
+            return subscription.id, convert_stripe_subscription(subscription)
+        case WebhookEventType.PAYMENT_SUCCEEDED:
+            invoice = stripe.Invoice.construct_from(obj, stripe.api_key)
+            payment_intent = stripe.PaymentIntent.retrieve(stripe_invoice_payment_intent_id(invoice), expand=["latest_charge.balance_transaction"])
+            charge = payment_intent.latest_charge
+            if not isinstance(charge, stripe.Charge) or not isinstance(charge.balance_transaction, stripe.BalanceTransaction):
+                raise ValueError(f"balance_transaction missing payment_intent={payment_intent.id}")
+            return payment_intent.id, convert_stripe_paid(invoice, charge.balance_transaction)
+        case WebhookEventType.PAYMENT_FAILED:
+            invoice = stripe.Invoice.construct_from(obj, stripe.api_key)
+            return stripe_invoice_payment_intent_id(invoice), PaymentFailedContent()
+        case WebhookEventType.REFUND_ISSUED:
+            charge = stripe.Charge.construct_from(obj, stripe.api_key)
+            refunds = stripe.Refund.list(charge=charge.id, expand=["data.balance_transaction"]).auto_paging_iter()
+            balances = [convert_stripe_balance(r.balance_transaction) for r in refunds if isinstance(r.balance_transaction, stripe.BalanceTransaction)]
+            return stripe_id(charge.payment_intent), RefundContent(balances=balances)
+        case WebhookEventType.PAYOUT_PAID:
+            payout = stripe.Payout.construct_from(obj, stripe.api_key)
+            balance_transactions = stripe.BalanceTransaction.list(payout=payout.id).auto_paging_iter()
+            balance_external_ids = [b.id for b in balance_transactions if b.type != "payout"]
+            return payout.id, convert_stripe_payout(payout, balance_external_ids)
+        case _:
+            assert_never(event_type)
+
+
+def stripe_invoice_payment_intent_id(invoice: stripe.Invoice) -> str:
+    payments = stripe.InvoicePayment.list(invoice=invoice.id)
+    payment_intent_ids = [stripe_id(p.payment.payment_intent) for p in payments.data if p.payment.payment_intent is not None]
+    if len(payment_intent_ids) == 0:
+        raise ValueError(f"payment_intent missing invoice={invoice.id}")
+    return payment_intent_ids[0]

@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, ProviderSubscriptionData, WebhookVerifyResult
+from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.i18n import Currency

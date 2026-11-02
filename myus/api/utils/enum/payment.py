@@ -47,6 +47,7 @@ class WebhookEventType(str, Enum):
     SUBSCRIPTION_UPDATED = "SubscriptionUpdated"
     SUBSCRIPTION_CANCELED = "SubscriptionCanceled"
     REFUND_ISSUED = "RefundIssued"
+    PAYOUT_PAID = "PayoutPaid"
 
 
 class WebhookVerifyError(str, Enum):

@@ -7,7 +7,7 @@ from api.src.domain.interface.payment.event.interface import FilterOption, SortO
 from api.utils.common.result import FatalError, Result
 
 
-PAYMENT_EVENT_FIELDS = ["provider", "event_id", "event_type", "external_id", "payload", "occurred_at"]
+PAYMENT_EVENT_FIELDS = ["provider", "event_id", "event_type", "external_id", "payload", "content", "occurred_at"]
 
 
 class PaymentEventRepository(PaymentEventInterface):

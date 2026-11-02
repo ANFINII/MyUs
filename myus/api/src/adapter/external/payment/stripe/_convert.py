@@ -12,21 +12,15 @@ from stripe.params.checkout import (
     SessionCreateParamsSubscriptionData,
     SessionCreateParamsSubscriptionDataTransferData,
 )
-from api.src.adapter.external.payment.stripe._type import stripe_event_type
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.event.data import PaymentEventData
-from api.src.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed, ProviderSubscriptionData, WebhookVerifyFailed
+from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentPaidContent, PayoutContent, ProviderSubscriptionData
+from api.src.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed
 from api.utils.enum.i18n import Currency, Locale
-from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
+from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, PayoutStatus, SubscriptionStatus, WebhookEventType
 from api.utils.enum.user import PlanName
 
 
-def convert_stripe_event(event: stripe.Event, payload: bytes) -> PaymentEventData | WebhookVerifyFailed:
-    event_type = stripe_event_type(event.type)
-    if event_type is None:
-        return WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"unsupported event_type={event.type}")
-
-    external_id: str = getattr(event.data.object, "id", "")
+def convert_stripe_event(event: stripe.Event, event_type: WebhookEventType, payload: bytes, external_id: str, content: PaymentEventContent) -> PaymentEventData:
     return PaymentEventData(
         id=0,
         provider=PaymentProvider.STRIPE,
@@ -34,7 +28,8 @@ def convert_stripe_event(event: stripe.Event, payload: bytes) -> PaymentEventDat
         event_type=event_type,
         external_id=external_id,
         payload=payload.decode(),
-        occurred_at=datetime.fromtimestamp(event.created, tz=timezone.utc),
+        content=content,
+        occurred_at=stripe_datetime(event.created),
     )
 
 
@@ -192,4 +187,62 @@ def convert_stripe_subscription(subscription: stripe.Subscription) -> ProviderSu
         started_at=stripe_datetime(subscription.start_date),
         current_period_end=stripe_period_end(subscription),
         canceled_at=stripe_datetime(subscription.canceled_at),
+    )
+
+
+def stripe_id(field: str | stripe.StripeObject | None) -> str:
+    if field is None:
+        return ""
+    if isinstance(field, str):
+        return field
+    return str(field["id"])
+
+
+def stripe_currency(currency: str) -> Currency:
+    return Currency(currency.capitalize())
+
+
+def stripe_payout_status(status: str) -> PayoutStatus:
+    match status:
+        case "paid":
+            return PayoutStatus.PAID
+        case "in_transit":
+            return PayoutStatus.IN_TRANSIT
+        case "failed":
+            return PayoutStatus.FAILED
+        case "canceled":
+            return PayoutStatus.CANCELED
+        case _:
+            return PayoutStatus.PENDING
+
+
+def convert_stripe_balance(balance: stripe.BalanceTransaction) -> BalanceData:
+    return BalanceData(
+        external_id=balance.id,
+        amount=balance.amount,
+        fee=balance.fee,
+        currency=stripe_currency(balance.currency),
+        occurred_at=stripe_datetime(balance.created),
+    )
+
+
+def convert_stripe_paid(invoice: stripe.Invoice, balance: stripe.BalanceTransaction) -> PaymentPaidContent:
+    details = invoice.parent.subscription_details if invoice.parent is not None else None
+    metadata = details.metadata if details is not None else None
+    return PaymentPaidContent(
+        customer_id=stripe_id(invoice.customer),
+        user_ulid=str(metadata["user_ulid"]) if metadata is not None and "user_ulid" in metadata else "",
+        subscription_external_id=stripe_id(details.subscription) if details is not None else "",
+        receipt_number=invoice.number or "",
+        balance=convert_stripe_balance(balance),
+    )
+
+
+def convert_stripe_payout(payout: stripe.Payout, balance_external_ids: list[str]) -> PayoutContent:
+    return PayoutContent(
+        amount=payout.amount,
+        currency=stripe_currency(payout.currency),
+        status=stripe_payout_status(payout.status),
+        arrival_at=stripe_datetime(payout.arrival_date),
+        balance_external_ids=balance_external_ids,
     )
