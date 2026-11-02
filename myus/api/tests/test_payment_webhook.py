@@ -1,6 +1,8 @@
+import threading
 from collections.abc import Callable
 from datetime import datetime, timezone
 import pytest
+from django.db import connection
 from api.db.models.payment import PaymentTransaction, Subscription, WebhookInbox, WebhookOutbox
 from api.db.models.user import User, UserPlan
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
@@ -111,6 +113,29 @@ def test_same_event_is_processed_once(make_user: Callable[[str], User], fake_pay
     assert not send(WebhookEventType.SUBSCRIPTION_CREATED, "sub_1", "evt_dup")
 
     assert WebhookInbox.objects.filter(event_id="evt_dup").count() == 1
+    assert WebhookOutbox.objects.count() == 1
+
+
+@pytest.mark.django_db(transaction=True)
+def test_same_event_arriving_at_once_is_processed_once(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
+    user = make_user("alice")
+    fake_payment.subscriptions["sub_1"] = provider_subscription("sub_1", user.ulid, PlanName.PREMIUM, SubscriptionStatus.ACTIVE)
+    results: list[bool] = []
+
+    def receive() -> None:
+        try:
+            results.append(send(WebhookEventType.SUBSCRIPTION_CREATED, "sub_1", "evt_at_once"))
+        finally:
+            connection.close()
+
+    threads = [threading.Thread(target=receive) for _ in range(4)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert sorted(results) == [False, False, False, True]
+    assert WebhookInbox.objects.filter(event_id="evt_at_once").count() == 1
     assert WebhookOutbox.objects.count() == 1
 
 

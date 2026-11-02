@@ -12,7 +12,7 @@ from api.src.domain.interface.payment.subscription.interface import FilterOption
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
-from api.src.domain.interface.webhook.inbox.interface import FilterOption as WebhookInboxFilterOption, SortOption as WebhookInboxSortOption, WebhookInboxInterface
+from api.src.domain.interface.webhook.inbox.interface import WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
@@ -122,20 +122,15 @@ def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 @Result.shield_exception()
 def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
     repo = injector.get(WebhookInboxInterface)
-    ids_ret = repo.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
-
-    ids = ids_ret.ok_value
-    if len(ids) > 0:
-        log.info("WebhookInbox already processed", event_id=event.event_id)
-        return Result.ok(False)
-
-    save_ret = repo.bulk_save([event])
+    save_ret = repo.save_if_absent(event)
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    return Result.ok(True)
+    is_saved = save_ret.ok_value
+    if not is_saved:
+        log.info("WebhookInbox already processed", event_id=event.event_id)
+
+    return Result.ok(is_saved)
 
 
 @Result.shield_exception()
