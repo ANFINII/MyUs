@@ -46,3 +46,10 @@ class PayoutRepository(PayoutInterface):
         new_ids = get_save_new_ids(models, PAYOUT_FIELDS)
 
         return Result.ok(new_ids)
+
+    @Result.shield_exception()
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
+        if len(ids) == 0:
+            return Result.ok(None)
+        PaymentPayout.objects.filter(id__in=ids).delete()
+        return Result.ok(None)

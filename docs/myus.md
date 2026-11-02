@@ -293,6 +293,10 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 顧客・取引・明細・イベントは消せない（`on_delete=PROTECT`。帳簿は法律で一定期間残す必要があるため）。
 
+#### 管理コマンド
+- `uv run python manage.py export_ledger --from 2026-01-01 --to 2026-12-31`：期間の明細を CSV で出す（日本時間。`--to` の日も含む）。列は日時・決済会社・種類・金額・消費税額・通貨・取引ID・請求書番号・入金ID・入金日
+- `uv run python manage.py replay_payment_events --confirm`：取引・明細・入金・サブスクリプションを消し、`PaymentEvent` を古い順に流し直して作り直す。`--confirm` が無いと何もしない。途中で失敗したら全部元に戻る
+
 #### クリエイターへの支払い（Connect を作るときに足す）
 決済の時点でクリエイターに送金する形（Stripe の destination charge）では、MyUs が決済の主体になり、全額がいったん MyUs に入る。Connect を作るときに次を足す。
 - `PaymentSeller`：クリエイターと、決済会社の受け取り口座（Stripe の `acct_...`）の対応。`Subscription.seller_id` はこれへの参照にする

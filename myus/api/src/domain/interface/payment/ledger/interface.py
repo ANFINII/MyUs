@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum, auto
 from api.src.domain.interface.payment.ledger.data import LedgerEntryData
 from api.utils.common.result import FatalError, Result
@@ -13,6 +14,8 @@ class SortType(Enum):
 class FilterOption:
     transaction_id: int = 0
     external_ids: list[str] = field(default_factory=list)
+    occurred_from: datetime | None = None
+    occurred_to: datetime | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,4 +35,8 @@ class LedgerEntryInterface(ABC):
 
     @abstractmethod
     def bulk_save(self, objs: list[LedgerEntryData]) -> Result[list[int], FatalError]:
+        ...
+
+    @abstractmethod
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
         ...

@@ -18,6 +18,10 @@ class LedgerEntryRepository(LedgerEntryInterface):
             q_list.append(Q(transaction_id=filter.transaction_id))
         if len(filter.external_ids) > 0:
             q_list.append(Q(external_id__in=filter.external_ids))
+        if filter.occurred_from is not None:
+            q_list.append(Q(occurred_at__gte=filter.occurred_from))
+        if filter.occurred_to is not None:
+            q_list.append(Q(occurred_at__lt=filter.occurred_to))
 
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
@@ -46,3 +50,10 @@ class LedgerEntryRepository(LedgerEntryInterface):
         new_ids = get_save_new_ids(models, LEDGER_ENTRY_FIELDS)
 
         return Result.ok(new_ids)
+
+    @Result.shield_exception()
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
+        if len(ids) == 0:
+            return Result.ok(None)
+        PaymentLedgerEntry.objects.filter(id__in=ids).delete()
+        return Result.ok(None)

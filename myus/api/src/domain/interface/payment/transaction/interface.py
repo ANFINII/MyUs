@@ -35,3 +35,7 @@ class TransactionInterface(ABC):
     @abstractmethod
     def bulk_save(self, objs: list[TransactionData]) -> Result[list[int], FatalError]:
         ...
+
+    @abstractmethod
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
+        ...

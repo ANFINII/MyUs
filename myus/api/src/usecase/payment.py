@@ -22,6 +22,7 @@ from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
+from api.src.types.dto.ledger import LedgerRowDTO
 from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
 from api.src.usecase.user import get_user_data, save_user_data
 from api.utils.common.result import FatalError, FindError, NotFoundError, Result
@@ -36,6 +37,7 @@ from api.utils.plan import get_plan
 
 CHECKOUT_PROVIDER = PaymentProvider.STRIPE
 TAX_RATE = 10
+REPLAY_BATCH_SIZE = 100
 
 
 @Result.shield_exception()
@@ -186,6 +188,65 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, FatalError]:
         return Result.err(ret.err_value)
 
     return Result.ok(None)
+
+
+@Result.shield_exception()
+def replay_payment_events() -> Result[int, FatalError]:
+    return atomic_result(lambda: save_payment_projection_data())
+
+
+@Result.shield_exception()
+def export_ledger(start: datetime, end: datetime) -> Result[list[LedgerRowDTO], FatalError]:
+    repo = injector.get(LedgerEntryInterface)
+    ids_ret = repo.get_ids(LedgerEntryFilterOption(occurred_from=start, occurred_to=end), LedgerEntrySortOption(), limit=None)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    entries_ret = repo.bulk_get(ids)
+    if entries_ret.is_err:
+        return Result.err(entries_ret.err_value)
+
+    entries = entries_ret.ok_value
+    transaction_repo = injector.get(TransactionInterface)
+    transactions_ret = transaction_repo.bulk_get(list({e.transaction_id for e in entries}))
+    if transactions_ret.is_err:
+        return Result.err(transactions_ret.err_value)
+
+    transactions = transactions_ret.ok_value
+    customer_repo = injector.get(PaymentCustomerInterface)
+    customers_ret = customer_repo.bulk_get(list({t.payment_customer_id for t in transactions}))
+    if customers_ret.is_err:
+        return Result.err(customers_ret.err_value)
+
+    customers = customers_ret.ok_value
+    payout_repo = injector.get(PayoutInterface)
+    payouts_ret = payout_repo.bulk_get(list({e.payout_id for e in entries if e.payout_id != 0}))
+    if payouts_ret.is_err:
+        return Result.err(payouts_ret.err_value)
+
+    payouts = payouts_ret.ok_value
+    transaction_map = {t.id: t for t in transactions}
+    customer_map = {c.id: c for c in customers}
+    payout_map = {p.id: p for p in payouts}
+    rows: list[LedgerRowDTO] = []
+    for entry in entries:
+        transaction = transaction_map[entry.transaction_id]
+        payout = payout_map.get(entry.payout_id)
+        rows.append(LedgerRowDTO(
+            occurred_at=entry.occurred_at,
+            provider=customer_map[transaction.payment_customer_id].provider,
+            entry_type=entry.entry_type,
+            amount=entry.amount,
+            tax_amount=entry.tax_amount,
+            currency=transaction.currency,
+            transaction_external_id=transaction.external_id,
+            receipt_number=transaction.receipt_number,
+            payout_external_id=payout.external_id if payout is not None else "",
+            payout_arrival_at=payout.arrival_at if payout is not None else None,
+        ))
+
+    return Result.ok(rows)
 
 
 @Result.shield_exception()
@@ -621,5 +682,78 @@ def save_ledger_entry_data(transaction_id: int, event_id: int, entry_type: Ledge
     save_ret = repo.bulk_save(new_entries)
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_payment_projection_data() -> Result[int, FatalError]:
+    delete_ret = delete_payment_projection_data()
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    repo = injector.get(PaymentEventInterface)
+    ids_ret = repo.get_ids(PaymentEventFilterOption(), PaymentEventSortOption(), limit=None)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    for start in range(0, len(ids), REPLAY_BATCH_SIZE):
+        events_ret = repo.bulk_get(ids[start:start + REPLAY_BATCH_SIZE])
+        if events_ret.is_err:
+            return Result.err(events_ret.err_value)
+
+        events = events_ret.ok_value
+        for event in events:
+            apply_ret = apply_payment_event(event)
+            if apply_ret.is_err:
+                log.error("PaymentEvent replay failed", event_id=event.event_id, error=apply_ret.err_value.message)
+                return Result.err(apply_ret.err_value)
+
+    log.info("PaymentEvent replayed", count=len(ids))
+    return Result.ok(len(ids))
+
+
+@Result.shield_exception()
+def delete_payment_projection_data() -> Result[None, FatalError]:
+    ledger_repo = injector.get(LedgerEntryInterface)
+    ledger_ids_ret = ledger_repo.get_ids(LedgerEntryFilterOption(), LedgerEntrySortOption(), limit=None)
+    if ledger_ids_ret.is_err:
+        return Result.err(ledger_ids_ret.err_value)
+
+    ledger_ids = ledger_ids_ret.ok_value
+    ledger_ret = ledger_repo.bulk_delete(ledger_ids)
+    if ledger_ret.is_err:
+        return Result.err(ledger_ret.err_value)
+
+    payout_repo = injector.get(PayoutInterface)
+    payout_ids_ret = payout_repo.get_ids(PayoutFilterOption(), PayoutSortOption(), limit=None)
+    if payout_ids_ret.is_err:
+        return Result.err(payout_ids_ret.err_value)
+
+    payout_ids = payout_ids_ret.ok_value
+    payout_ret = payout_repo.bulk_delete(payout_ids)
+    if payout_ret.is_err:
+        return Result.err(payout_ret.err_value)
+
+    transaction_repo = injector.get(TransactionInterface)
+    transaction_ids_ret = transaction_repo.get_ids(TransactionFilterOption(), TransactionSortOption(), limit=None)
+    if transaction_ids_ret.is_err:
+        return Result.err(transaction_ids_ret.err_value)
+
+    transaction_ids = transaction_ids_ret.ok_value
+    transaction_ret = transaction_repo.bulk_delete(transaction_ids)
+    if transaction_ret.is_err:
+        return Result.err(transaction_ret.err_value)
+
+    subscription_repo = injector.get(SubscriptionInterface)
+    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(), SubscriptionSortOption(), limit=None)
+    if subscription_ids_ret.is_err:
+        return Result.err(subscription_ids_ret.err_value)
+
+    subscription_ids = subscription_ids_ret.ok_value
+    subscription_ret = subscription_repo.bulk_delete(subscription_ids)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
 
     return Result.ok(None)

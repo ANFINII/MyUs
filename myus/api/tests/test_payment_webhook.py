@@ -1,12 +1,14 @@
 import threading
 from collections.abc import Callable
+from io import StringIO
 from datetime import datetime, timezone
 import pytest
+from django.core.management import call_command
 from django.db import connection
 from api.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Subscription, WebhookOutbox
 from api.db.models.user import User, UserPlan
 from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
-from api.src.usecase.payment import receive_payment_event
+from api.src.usecase.payment import export_ledger, receive_payment_event, replay_payment_events
 from api.tests.fakes import provider_subscription
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.i18n import Currency
@@ -38,8 +40,8 @@ def send_subscription(event_type: WebhookEventType, user: User, external_id: str
     return send(event_type, external_id, event_id, provider_subscription(external_id, user.ulid, plan, status), occurred_at)
 
 
-def balance(external_id: str, amount: int, fee: int) -> BalanceData:
-    return BalanceData(external_id=external_id, amount=amount, fee=fee, currency=Currency.JPY, occurred_at=datetime(2026, 10, 1, tzinfo=timezone.utc))
+def balance(external_id: str, amount: int, fee: int, occurred_at: datetime = datetime(2026, 10, 1, tzinfo=timezone.utc)) -> BalanceData:
+    return BalanceData(external_id=external_id, amount=amount, fee=fee, currency=Currency.JPY, occurred_at=occurred_at)
 
 
 def paid(user: User, subscription_external_id: str = "sub_1") -> PaymentPaidContent:
@@ -248,3 +250,62 @@ def test_late_failed_does_not_overwrite_captured(make_user: Callable[[str], User
     assert send(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_5", paid(user))
     assert transaction_status("pi_1") == PaymentStatus.REFUNDED
     assert ledger(LedgerEntryType.SALE) == [("txn_1", 1100, 100)]
+
+
+def record_all(user: User) -> None:
+    send_subscription(WebhookEventType.SUBSCRIPTION_CREATED, user, "sub_1", SubscriptionStatus.ACTIVE, "evt_1", occurred_at=datetime(2026, 10, 1, tzinfo=timezone.utc))
+    send(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_2", paid(user), datetime(2026, 10, 1, 1, tzinfo=timezone.utc))
+    send(WebhookEventType.REFUND_ISSUED, "pi_1", "evt_3", RefundContent(balances=[balance("txn_r1", -550, 0, datetime(2026, 10, 2, tzinfo=timezone.utc))]), datetime(2026, 10, 2, tzinfo=timezone.utc))
+    content = PayoutContent(amount=1060, currency=Currency.JPY, status=PayoutStatus.PAID, arrival_at=datetime(2026, 10, 8, tzinfo=timezone.utc), balance_external_ids=["txn_1"])
+    send(WebhookEventType.PAYOUT_PAID, "po_1", "evt_4", content, datetime(2026, 10, 8, tzinfo=timezone.utc))
+
+
+def ledger_snapshot() -> list[tuple[str, str, int, int, str | None]]:
+    return list(PaymentLedgerEntry.objects.order_by("external_id", "entry_type").values_list("external_id", "entry_type", "amount", "tax_amount", "payout__external_id"))
+
+
+@pytest.mark.django_db
+def test_replay_rebuilds_same_ledger(make_user: Callable[[str], User]) -> None:
+    user = make_user("alice")
+    record_all(user)
+    before = ledger_snapshot()
+
+    ret = replay_payment_events()
+
+    assert ret.is_ok, ret
+    assert ret.ok_value == 4
+    assert ledger_snapshot() == before
+    assert transaction_status("pi_1") == PaymentStatus.REFUNDED
+    assert Subscription.objects.get(external_id="sub_1").status == SubscriptionStatus.ACTIVE
+    assert user_plan(user).plan == PlanName.PREMIUM
+    assert WebhookOutbox.objects.count() == 4
+
+
+@pytest.mark.django_db
+def test_export_ledger_returns_entries_in_period(make_user: Callable[[str], User]) -> None:
+    user = make_user("alice")
+    record_all(user)
+
+    ret = export_ledger(datetime(2026, 10, 1, tzinfo=timezone.utc), datetime(2026, 10, 2, tzinfo=timezone.utc))
+
+    assert ret.is_ok, ret
+    rows = ret.ok_value
+    assert [(r.entry_type, r.amount, r.tax_amount, r.payout_external_id) for r in rows] == [
+        (LedgerEntryType.SALE, 1100, 100, "po_1"),
+        (LedgerEntryType.FEE, -40, 0, "po_1"),
+    ]
+    assert rows[0].receipt_number == "INV-0001"
+    assert rows[0].transaction_external_id == "pi_1"
+
+
+@pytest.mark.django_db
+def test_export_ledger_command_writes_csv_in_japan_time(make_user: Callable[[str], User]) -> None:
+    user = make_user("alice")
+    record_all(user)
+    out = StringIO()
+
+    call_command("export_ledger", "--from", "2026-10-02", "--to", "2026-10-02", stdout=out)
+
+    lines = out.getvalue().splitlines()
+    assert lines[0] == "日時,決済会社,種類,金額,消費税額,通貨,取引ID,請求書番号,入金ID,入金日"
+    assert lines[1:] == ["2026-10-02 09:00:00,Stripe,Refund,-550,-50,JPY,pi_1,INV-0001,,"]
