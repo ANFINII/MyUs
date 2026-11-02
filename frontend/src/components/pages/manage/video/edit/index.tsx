@@ -1,21 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { categoriesQuery, channelsQuery, manageVideoQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageVideoEdit from './view'
 
 export default function ManageVideoEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const channels = useQuery(channelsQuery())
-  const categories = useQuery(categoriesQuery())
-  const data = useQuery(manageVideoQuery(ulid))
-  const queries = { data, channels, categories }
+  const { data: channels } = useSuspenseQuery(channelsQuery())
+  const { data: categories } = useSuspenseQuery(categoriesQuery())
+  const { data } = useSuspenseQuery(manageVideoQuery(ulid))
 
-  return (
-    <QueryCheck title="Video" queries={queries}>
-      {(props) => <ManageVideoEdit {...props} />}
-    </QueryCheck>
-  )
+  return <ManageVideoEdit channels={channels} categories={categories} data={data} />
 }

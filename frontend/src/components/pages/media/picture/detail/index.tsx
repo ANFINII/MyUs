@@ -1,19 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { pictureQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import PictureDetail from './view'
 
 export default function PictureDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery(pictureQuery(ulid))
-  const queries = { data }
+  const { data } = useSuspenseQuery(pictureQuery(ulid))
 
-  return (
-    <QueryCheck title="Picture" queries={queries}>
-      {(props) => <PictureDetail {...props} />}
-    </QueryCheck>
-  )
+  return <PictureDetail data={data} />
 }

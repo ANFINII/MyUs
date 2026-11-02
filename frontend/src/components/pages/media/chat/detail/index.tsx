@@ -1,7 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { chatQuery } from 'lib/query/options'
 import { useRouter } from 'components/hooks/useRouter'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ChatDetail from './view'
 
 export default function ChatDetailPage(): React.JSX.Element {
@@ -9,12 +8,7 @@ export default function ChatDetailPage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const threadUlid = String(router.query.messageUlid ?? '')
 
-  const data = useQuery(chatQuery(ulid))
-  const queries = { data }
+  const { data } = useSuspenseQuery(chatQuery(ulid))
 
-  return (
-    <QueryCheck title="Chat" queries={queries}>
-      {(props) => <ChatDetail key={ulid} {...props} threadUlid={threadUlid} />}
-    </QueryCheck>
-  )
+  return <ChatDetail key={ulid} data={data} threadUlid={threadUlid} />
 }

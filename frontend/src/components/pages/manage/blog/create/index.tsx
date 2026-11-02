@@ -1,16 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { categoriesQuery, channelsQuery } from 'lib/query/options'
-import QueryCheck from 'components/widgets/Status/QueryCheck'
 import BlogCreate from './view'
 
 export default function BlogCreatePage(): React.JSX.Element {
-  const channels = useQuery(channelsQuery())
-  const categories = useQuery(categoriesQuery())
-  const queries = { channels, categories }
+  const { data: channels } = useSuspenseQuery(channelsQuery())
+  const { data: categories } = useSuspenseQuery(categoriesQuery())
 
-  return (
-    <QueryCheck title="Blog" queries={queries}>
-      {(props) => <BlogCreate {...props} />}
-    </QueryCheck>
-  )
+  return <BlogCreate channels={channels} categories={categories} />
 }
