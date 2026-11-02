@@ -103,7 +103,7 @@ django_settings_module = "config.settings.base"
 line-length = 200
 
 [tool.ruff.lint]
-select = ["I", "T201", "TID251", "BLE001"]  # isort・print の禁止・使わない API の禁止・except Exception の禁止
+select = ["I", "F401", "T201", "TID251", "BLE001"]  # isort・使っていない import・print の禁止・使わない API の禁止・except Exception の禁止
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

@@ -1,6 +1,6 @@
 from typing import assert_never
 from api.utils.enum.i18n import Locale
-from api.utils.enum.media import CommentType, CommentTypeNo, MediaType
+from api.utils.enum.media import CommentType, CommentTypeNo
 from api.utils.enum.payment import PaymentStatus
 
 
