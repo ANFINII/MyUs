@@ -105,7 +105,7 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
     follows = follows_ret.ok_value
     follow = follows[0] if len(follows) > 0 else None
 
-    save_ret = atomic_result(lambda: _save_follow(follower, following, follow, is_follow))
+    save_ret = atomic_result(lambda: save_follow(follower, following, follow, is_follow))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -113,7 +113,7 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
     return Result.ok(FollowDTO(is_follow=is_follow, follower_count=follower_count))
 
 
-def _save_follow(follower: UserAllData, following: UserAllData, follow: FollowData | None, is_follow: bool) -> Result[int, FatalError]:
+def save_follow(follower: UserAllData, following: UserAllData, follow: FollowData | None, is_follow: bool) -> Result[int, FatalError]:
     user_repo = injector.get(UserInterface)
     repo = injector.get(FollowInterface)
     follower_id = follower.user.id
