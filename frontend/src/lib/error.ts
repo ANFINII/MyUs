@@ -11,6 +11,10 @@ export interface ApiError {
 
 export type ApiOut<T> = Result<T, ApiError>
 
+export const isApiError = (value: unknown): value is ApiError => {
+  return typeof value === 'object' && value !== null && 'status' in value && typeof value.status === 'number'
+}
+
 const toErrorType = (value: unknown): ErrorType | undefined => {
   return Object.values(ErrorType).find((type) => type === value)
 }

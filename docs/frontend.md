@@ -117,7 +117,23 @@ page('/manage/video/create', () => import('components/pages/manage/video/create'
 page('/manage/video/$ulid', () => import('components/pages/manage/video/edit')),
 ```
 
-- クエリは名前付きのオブジェクトを`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
+- `useSuspenseQuery` に移行中（今は `/media/video`・`/media/video/$ulid` だけ）。移行したページは次のように書く
+  - `index.tsx` は `useSuspenseQuery(xxxQuery(...))` で取った `data` を `view.tsx` に渡すだけにする。`QueryCheck` は使わない
+  - 取得中の表示は router の `defaultPendingComponent`（`PageLoading`）、エラーの表示は `defaultErrorComponent`（`Status/RouteError`。`ApiError.type` で 401・404・500 の画面を出し分ける）に任せる
+  - ローダーは `.catch(noop)` を付けずに `queryClient.query(xxxQuery(...))` を返す（失敗するとルートのエラー表示になる。握りつぶすとページの `useSuspenseQuery` が同じリクエストをもう一度送るため）
+
+```typescript
+export default function VideoDetailPage(): React.JSX.Element {
+  const router = useRouter()
+  const ulid = String(router.query.ulid ?? '')
+
+  const { data } = useSuspenseQuery(videoQuery(ulid))
+
+  return <VideoDetail data={data} />
+}
+```
+
+- まだ移行していないページは、クエリを名前付きのオブジェクトの`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
 - `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
 - `QueryCheck`のpropsは`title` → `queries`の順に書く

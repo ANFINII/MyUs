@@ -64,7 +64,7 @@ const manageListParams = async (queryClient: QueryClient, search: Record<string,
 
 export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(searchParams(search))).catch(noop)
 export const recommendLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(recommendQuery(searchParams(search))).catch(noop)
-export const videoListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(videosQuery(listParams(search))).catch(noop)
+export const videoListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(videosQuery(listParams(search)))
 export const musicListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(musicsQuery(listParams(search))).catch(noop)
 export const blogListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(blogsQuery(listParams(search))).catch(noop)
 export const comicListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(comicsQuery(listParams(search))).catch(noop)
@@ -73,7 +73,7 @@ export const chatListLoader = ({ queryClient, search }: PageLoad<object>) => que
 
 export const videoDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Video })
-  return queryClient.query(videoQuery(params.ulid)).catch(noop)
+  return queryClient.query(videoQuery(params.ulid))
 }
 
 export const musicDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
