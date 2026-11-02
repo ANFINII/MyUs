@@ -1,6 +1,5 @@
 from dataclasses import replace
 from datetime import datetime
-from django.db import transaction
 from ninja import UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.advertise.data import AdvertiseData
@@ -117,14 +116,12 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
         updated=datetime.min,
     )
 
-    with transaction.atomic():
-        new_ids_ret = repo.bulk_save([new_advertise])
-        if new_ids_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(new_ids_ret.err_value)
+    new_ids_ret = repo.bulk_save([new_advertise])
+    if new_ids_ret.is_err:
+        return Result.err(new_ids_ret.err_value)
 
-        new_ids = new_ids_ret.ok_value
-        assert len(new_ids) == 1, "作成に失敗しました"
+    new_ids = new_ids_ret.ok_value
+    assert len(new_ids) == 1, "作成に失敗しました"
 
     objs_ret = repo.bulk_get(new_ids)
     if objs_ret.is_err:
@@ -181,11 +178,9 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
     if video is not None:
         update_data = replace(update_data, video=save_upload(video, MediaUpload.ADVERTISE, user.user.ulid))
 
-    with transaction.atomic():
-        save_ret = repo.bulk_save([update_data])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
+    save_ret = repo.bulk_save([update_data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     return Result.ok(None)
 

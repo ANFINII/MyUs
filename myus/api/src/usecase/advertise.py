@@ -1,7 +1,6 @@
 import random
 from dataclasses import replace
 from datetime import date
-from django.db import transaction
 from django.utils import timezone
 from api.modules.logger import log
 from api.src.domain.interface.advertise.data import AdvertiseData
@@ -14,6 +13,7 @@ from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.access_log import AccessType
 from api.utils.enum.user import PlanName
 from api.utils.functions.index import create_url
+from api.utils.functions.transaction import atomic_result
 from api.utils.plan import get_plan
 
 
@@ -113,23 +113,11 @@ def increment_advertise_read(ulid: str, ip_address: str) -> Result[int, FindErro
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    with transaction.atomic():
-        access_ret = record_access(ip_address, AccessType.ADVERTISE, obj.id)
-        if access_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(access_ret.err_value)
+    read_ret = atomic_result(lambda: save_read_data(obj.id, obj.read, ip_address))
+    if read_ret.is_err:
+        return Result.err(read_ret.err_value)
 
-        is_accessed = access_ret.ok_value
-        if not is_accessed:
-            return Result.ok(obj.read)
-
-        read_ret = repo.save_read(obj.id)
-        if read_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(read_ret.err_value)
-
-        read = read_ret.ok_value
-
+    read = read_ret.ok_value
     return Result.ok(read)
 
 
@@ -139,3 +127,22 @@ def is_active(ad: AdvertiseData, today: date) -> bool:
     if ad.period is None:
         return True
     return ad.period >= today
+
+
+@Result.shield_exception()
+def save_read_data(advertise_id: int, read: int, ip_address: str) -> Result[int, FatalError]:
+    repo = injector.get(AdvertiseInterface)
+    access_ret = record_access(ip_address, AccessType.ADVERTISE, advertise_id)
+    if access_ret.is_err:
+        return Result.err(access_ret.err_value)
+
+    is_accessed = access_ret.ok_value
+    if not is_accessed:
+        return Result.ok(read)
+
+    read_ret = repo.save_read(advertise_id)
+    if read_ret.is_err:
+        return Result.err(read_ret.err_value)
+
+    new_read = read_ret.ok_value
+    return Result.ok(new_read)
