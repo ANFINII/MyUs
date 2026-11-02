@@ -30,7 +30,7 @@ export default function ResetConfirm(): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   useEffect(() => {
-    const token = router.query.token?.toString()
+    const token = String(router.query.token ?? '')
     if (!token) {
       router.push('/account/login')
       return

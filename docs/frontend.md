@@ -101,7 +101,7 @@ const [user, setUser] = useState<User | null>(null)
 | 今のページのクエリ文字列だけ変える | `router.push({ pathname: router.pathname, query: { ...router.query, page: 2 } })` |
 | 履歴に残さない画面遷移 | `router.replace('/')` |
 | 外部 URL への遷移 | `router.push('https://...')` |
-| URL のパラメータ・クエリ文字列（`$ulid`、`?search=`） | `router.query.ulid`、`router.query.search` |
+| URL のパラメータ・クエリ文字列（`$ulid`、`?search=`） | `router.query.ulid`、`router.query.search`。文字列にするときは `String(router.query.ulid ?? '')` と書く（`?.toString()` は使わない。`String(router.query.ulid)` だけだと、無いときに `'undefined'` になる） |
 | 今のパス（言語の接頭辞は含まない） / 表示中の言語 | `router.pathname` / `router.locale` |
 | 戻る・再読み込み | `router.back()`・`router.reload()` |
 | 戻れる履歴があるか（Next.js にはない） | `router.canBack()` |

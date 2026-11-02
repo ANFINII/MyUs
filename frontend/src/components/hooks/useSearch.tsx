@@ -3,6 +3,6 @@ import { useRouter } from 'components/hooks/useRouter'
 
 export function useSearch(count: number): Search {
   const router = useRouter()
-  const name = router.query.search?.toString() ?? ''
+  const name = String(router.query.search ?? '')
   return { name, count }
 }

@@ -64,7 +64,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
   }
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const channelUlid = router.query.channel?.toString() || channels[0]!.ulid
+  const channelUlid = String(router.query.channel ?? '') || channels[0]!.ulid
 
   const columns: Column<Chat>[] = [
     {
