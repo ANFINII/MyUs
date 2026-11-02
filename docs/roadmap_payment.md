@@ -401,18 +401,26 @@ match result:
 
 ---
 
-### ⬜ PR #11: 複数 Provider 対応（GMO 等の受け皿）
+### ✅ PR #11: 複数 Provider 対応（GMO 等の受け皿）
 
 **Goal**: Stripe 以外のプロバイダを追加した際に動くインジェクション・dispatch 機構を整備。
 
-**Scope**:
-- `injectors/index.py` を `dict[PaymentProvider, PaymentProviderInterface]` ベースに変更
-- usecase で provider を選択（User 設定 or 契約毎）
-- GMO の実装は入れない（インフラのみ）
+**実装**:
+- `injectors/index.py` の `PaymentModule` で、`dict[PaymentProvider, PaymentInterface]` に実装を登録する（今は Stripe だけ）
+- `api/utils/functions/payment.py` の `get_payment_repository(provider)` で、辞書から取り出す
+- どの決済会社を使うか
+  - 決済の画面の作成：`usecase/payment.py` の `CHECKOUT_PROVIDER`（今は Stripe）
+  - 解約：サブスクリプションに記録された `provider`
+  - webhook からの更新：受けたイベントの `provider`
+  - webhook の検証：入口（`adapter/payment.py`）が渡す `provider`。今の `/payment/webhook` は Stripe（Stripe の管理画面に登録済みの URL のため変えない）
 
-**Acceptance**:
-- Stripe binding が今と同様に動く
-- 別 Provider 追加時の手順がドキュメント化されている
+**別の Provider を足すときの手順**:
+1. `api/utils/enum/payment.py` の `PaymentProvider` に値を足す（DB の `provider` の選択肢も変わるので、マイグレーションを作る）
+2. `api/src/adapter/external/payment/<provider>/` に `PaymentInterface` の実装（`provider.py`・`_convert.py`）を置く
+3. `injectors/index.py` の `provide_payment_providers` の辞書に1行足す
+4. `adapter/payment.py` に、その決済会社の webhook の入口（例：`/payment/webhook/gmo`）を足し、署名を取り出して `verify_webhook(PaymentProvider.XXX, payload, signature)` を呼ぶ
+5. キーなどを `config/env.py` と `envs/sample.env` に足す
+6. 新しく始める決済をその会社にするなら `CHECKOUT_PROVIDER` を変える（ユーザーや契約ごとに選ぶなら、そこを選ぶ処理に置き換える）
 
 ---
 
@@ -445,9 +453,9 @@ match result:
 |---|---|
 | #1〜#6 | 完了（決済ドメイン層、Stripe Provider、adapter の切り替え、Subscription / PaymentTransaction、Webhook、解約） |
 | #7〜#10 | 後回し（ユーザーが売る機能は当面作らない。2026-10-26 決定） |
-| #11 | 未着手 |
+| #11 | 完了（決済会社を `PaymentProvider` で選ぶ仕組み。足す手順は PR #11 の節） |
 | #12 | 言語は #1148（決済画面を表示中の言語で出し、支払い後もその言語のページに戻す）。多通貨は未着手 |
 
 ## 次にやること
 
-→ #11（複数 Provider の受け皿）と、#12 の多通貨は、着手するか未定。
+→ #12 の多通貨は、着手するか未定。

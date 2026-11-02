@@ -1,4 +1,4 @@
-from injector import Module, provider, singleton
+from injector import Module, multiprovider, provider, singleton
 from api.src.adapter.external.payment.stripe.provider import StripeProvider
 from api.src.domain.entity.payment.subscription.repository import SubscriptionRepository
 from api.src.domain.entity.payment.transaction.repository import TransactionRepository
@@ -47,6 +47,7 @@ from api.src.domain.interface.payment.subscription.interface import Subscription
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
 from api.src.domain.interface.webhook.inbox.interface import WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
+from api.utils.enum.payment import PaymentProvider
 
 
 class UserModule(Module):
@@ -155,9 +156,9 @@ class AdvertiseModule(Module):
 
 class PaymentModule(Module):
     @singleton
-    @provider
-    def provide_payment_provider(self) -> PaymentInterface:
-        return StripeProvider()
+    @multiprovider
+    def provide_payment_providers(self) -> dict[PaymentProvider, PaymentInterface]:
+        return {PaymentProvider.STRIPE: StripeProvider()}
 
     @provider
     def provide_subscription_repository(self) -> SubscriptionInterface:
