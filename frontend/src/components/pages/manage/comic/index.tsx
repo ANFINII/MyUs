@@ -11,7 +11,6 @@ export default function ManageComicsPage(): React.JSX.Element {
   const { data: channels } = useSuspenseQuery(channelsQuery())
   const channel = String(router.query.channel ?? '') || channels[0]?.ulid
   const params = { search, channel, limit, offset }
-
   const { data } = useSuspenseQuery(manageComicsQuery(params))
 
   return <ManageComics key={`${channel}-${search}-${page}`} channels={channels} data={data} page={page} />

@@ -6,7 +6,6 @@ import MusicDetail from './view'
 export default function MusicDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
-
   const { data } = useSuspenseQuery(musicQuery(ulid))
 
   return <MusicDetail data={data} />

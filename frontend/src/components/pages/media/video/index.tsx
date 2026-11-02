@@ -8,7 +8,6 @@ export default function VideosPage(): React.JSX.Element {
   const router = useRouter()
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
-
   const { data } = useSuspenseQuery(videosQuery(params))
 
   return <Videos data={data} page={page} />
