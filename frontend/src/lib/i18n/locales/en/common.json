@@ -13,6 +13,7 @@
   },
   "error": {
     "loginFailed": "Incorrect ID or password",
+    "tooManyAttempts": "Too many failed login attempts. Please try again in 15 minutes",
     "tokenCreateFailed": "Failed to create the login token",
     "logoutFailed": "Failed to log out",
     "signupFailed": "Failed to create the account",

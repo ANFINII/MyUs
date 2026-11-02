@@ -1,7 +1,7 @@
 import hmac
 import jwt
 from dataclasses import replace
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from typing import assert_never
 from django_ulid.models import ulid
 from django.conf import settings
@@ -19,9 +19,11 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
 from api.src.usecase.payment import cancel_subscription
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
+from api.utils.constants.auth import LOGIN_FAILURE_LIMIT
 from api.utils.enum.payment import CancelError
-from api.utils.functions.token import access_token, password_fingerprint, password_reset_token, refresh_token, signup_token
+from api.utils.functions.auth import add_failure, clear_failures, get_failure_count
+from api.utils.functions.token import access_token, is_revoked, password_fingerprint, password_reset_token, refresh_token, revoke, signup_token
 from api.utils.functions.validation import has_email, has_password, has_weak_password
 
 
@@ -40,6 +42,14 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
 
     user_id = payload.get("user_id")
     if not isinstance(user_id, int):
+        return Result.ok(None)
+
+    jti = payload.get("jti")
+    if not isinstance(jti, str):
+        return Result.ok(None)
+
+    if is_revoked(jti):
+        log.warning("ログアウト済みのトークンです", user_id=user_id)
         return Result.ok(None)
 
     ret = get_active_user(user_id)
@@ -93,7 +103,11 @@ def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalErro
 
 
 @Result.shield_exception()
-def login_user(username: str, password: str) -> Result[int | None, FatalError]:
+def login_user(username: str, password: str) -> Result[int | None, ValidateError]:
+    if get_failure_count(username) >= LOGIN_FAILURE_LIMIT:
+        log.warning("Login blocked: too many attempts", username=username)
+        return Result.err(ValidationError("error.tooManyAttempts"))
+
     repo = injector.get(UserInterface)
     user_id_ret = repo.authenticate(username, password)
     if user_id_ret.is_err:
@@ -101,6 +115,7 @@ def login_user(username: str, password: str) -> Result[int | None, FatalError]:
 
     user_id = user_id_ret.ok_value
     if user_id is None:
+        add_failure(username)
         return Result.ok(None)
 
     user_ret = get_active_user(user_id)
@@ -109,9 +124,31 @@ def login_user(username: str, password: str) -> Result[int | None, FatalError]:
 
     user = user_ret.ok_value
     if user is None:
+        add_failure(username)
         return Result.ok(None)
 
+    clear_failures(username)
     return Result.ok(user_id)
+
+
+@Result.shield_exception()
+def logout_user(access: str, refresh: str) -> Result[None, FatalError]:
+    for token in [access, refresh]:
+        try:
+            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            continue
+        except jwt.exceptions.DecodeError:
+            continue
+
+        jti = payload.get("jti")
+        exp = payload.get("exp")
+        if not isinstance(jti, str) or not isinstance(exp, int):
+            continue
+
+        revoke(jti, datetime.fromtimestamp(exp, tz=UTC))
+
+    return Result.ok(None)
 
 
 @Result.shield_exception()
