@@ -123,3 +123,4 @@ known-first-party = ["api", "app", "config"]
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "django.test.TestCase".msg = "pytest を使う（docs/backend.md の「テスト」）"
 "unittest.TestCase".msg = "pytest を使う（docs/backend.md の「テスト」）"
+"django.db.transaction.set_rollback".msg = "Result を返す関数を atomic_result に渡す（docs/backend.md の「エラーハンドリング（Result型）」）"
