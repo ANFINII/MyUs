@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from 'react'
+import { RefObject, useEffect, useEffectEvent } from 'react'
 
 interface Props {
   actionRef: RefObject<HTMLElement | null>
@@ -10,8 +10,7 @@ interface Props {
 export function useClickOutside(props: Props): void {
   const { actionRef, triggerRef, isActive, onClick } = props
 
-  const onClickRef = useRef<() => void>(onClick)
-  onClickRef.current = onClick
+  const handleClickOutsideEvent = useEffectEvent(() => onClick())
 
   useEffect(() => {
     if (!isActive) return
@@ -20,7 +19,7 @@ export function useClickOutside(props: Props): void {
       const target = event.target as Node
       const isOutsideRef = actionRef.current && !actionRef.current.contains(target)
       const isOutsideTrigger = !triggerRef.current?.contains(target)
-      if (isOutsideRef && isOutsideTrigger) onClickRef.current()
+      if (isOutsideRef && isOutsideTrigger) handleClickOutsideEvent()
     }
 
     document.addEventListener('mousedown', handleClickOutside)
