@@ -1,6 +1,5 @@
 from dataclasses import replace
 from datetime import datetime
-from django.db import transaction
 from api.modules.logger import log
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
@@ -15,6 +14,7 @@ from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.media import get_media_repository
+from api.utils.functions.transaction import atomic_result
 
 
 @Result.shield_exception()
@@ -43,6 +43,20 @@ def save_comment_data(data: CommentData) -> Result[None, FatalError]:
     ret = repo.bulk_save([data])
     if ret.is_err:
         return Result.err(ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
+    repo = injector.get(CommentInterface)
+    save_ret = repo.bulk_save([replace(data, deleted=True)])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    notification_ret = delete_object_notifications(NotificationObjectType.COMMENT, [data.id])
+    if notification_ret.is_err:
+        return Result.err(notification_ret.err_value)
 
     return Result.ok(None)
 
@@ -227,16 +241,8 @@ def delete_comment(user_id: int, comment_ulid: str) -> Result[None, AccessError]
         log.warning("コメントの削除権限がありません", comment_ulid=comment_ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
-    repo = injector.get(CommentInterface)
-    with transaction.atomic():
-        save_ret = repo.bulk_save([replace(comment, deleted=True)])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
-
-        notification_ret = delete_object_notifications(NotificationObjectType.COMMENT, [comment.id])
-        if notification_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(notification_ret.err_value)
+    delete_ret = atomic_result(lambda: delete_comment_data(comment))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
