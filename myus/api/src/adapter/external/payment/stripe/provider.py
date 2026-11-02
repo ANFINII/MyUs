@@ -99,7 +99,7 @@ def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> t
             if invoice.amount_paid == 0:
                 return None
 
-            payment_intent_id = stripe_invoice_payment_intent_id(invoice)
+            payment_intent_id = stripe_invoice_payment_intent_id(invoice, "paid")
             if len(payment_intent_id) == 0:
                 return None
 
@@ -110,7 +110,7 @@ def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> t
             return payment_intent.id, convert_stripe_paid(invoice, charge.balance_transaction)
         case WebhookEventType.PAYMENT_FAILED:
             invoice = stripe.Invoice.construct_from(obj, stripe.api_key)
-            payment_intent_id = stripe_invoice_payment_intent_id(invoice)
+            payment_intent_id = stripe_invoice_payment_intent_id(invoice, "open")
             if len(payment_intent_id) == 0:
                 return None
 
@@ -133,8 +133,8 @@ def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> t
             assert_never(event_type)
 
 
-def stripe_invoice_payment_intent_id(invoice: stripe.Invoice) -> str:
-    payments = stripe.InvoicePayment.list(invoice=invoice.id)
+def stripe_invoice_payment_intent_id(invoice: stripe.Invoice, status: str) -> str:
+    payments = stripe.InvoicePayment.list(invoice=invoice.id, status=status)
     payment_intent_ids = [stripe_id(p.payment.payment_intent) for p in payments.data if p.payment.payment_intent is not None]
     if len(payment_intent_ids) == 0:
         return ""
