@@ -2,3 +2,10 @@ allowBuilds:
   '@parcel/watcher': true
   sharp: true
   unrs-resolver: true
+
+strictDepBuilds: true
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - semver@6.3.1
+blockExoticSubdeps: true
+minimumReleaseAge: 10080
