@@ -75,11 +75,12 @@
 - Resultを受けたらその場で`is_err`を確認し、Errならそのまま返す
 - 受け取る変数名: 関数内で受けるResultが1つなら`ret`、複数なら`ids_ret`・`follows_ret`のように`<名前>_ret`
 - `injector.get`で取るRepositoryの変数名: その関数のメインのリソースのRepositoryは`repo`、ほかにもRepositoryを使うときは`category_repo`・`user_repo`のように`<名前>_repo`
-  - 例: `create_video`は`repo`（動画）と`category_repo`、`upsert_follow`は`repo`（フォロー）と`user_repo`
+  - 例: `create_video_data`は`repo`（動画）と`category_repo`、`save_follow_data`は`repo`（フォロー）と`user_repo`
   - 外部サービス（`PaymentInterface`）も同じ扱い（メインなら`repo`、ほかにメインがあれば`payment_repo`）
 - `ok_value`は直接使わず、`ids = ids_ret.ok_value`のように1行で変数に取り出してから使う
 - 複数の書き込みを1つのトランザクションにまとめるときは、書き込みを`Result`を返す関数に切り出し、`atomic_result`（`api/utils/functions/transaction.py`）に渡す。関数がErrを返すとロールバックしてそのErrを返し、例外が出てもロールバックする（Errは例外ではないため、`transaction.atomic()`の中でErrを返すだけではロールバックされない）
-  - 移行中。まだ`with transaction.atomic():`と`transaction.set_rollback(True)`で書いている箇所は、触るときに`atomic_result`に置き換える
+  - 切り出す関数は、作成なら`create_xxx_data`、保存なら`save_xxx_data`、削除なら`delete_xxx_data`と名付け、`@Result.shield_exception()`を付ける。頭に`_`は付けない。置き場所は、似た関数があればその隣、無ければファイルの末尾にまとめる
+  - usecaseで`with transaction.atomic():`と`transaction.set_rollback(True)`は使わない（`set_rollback`はruffの`TID251`で禁止している）
 
 ```python
 save_ret = atomic_result(lambda: save_follow_data(follower, following, follow, is_follow))
