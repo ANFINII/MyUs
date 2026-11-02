@@ -8,7 +8,6 @@ from django_ulid.models import ulid
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
-from django.db import transaction
 from django.template.loader import render_to_string
 from api.modules.logger import log
 from api.src.domain.interface.channel.data import ChannelData
@@ -25,6 +24,7 @@ from api.utils.constants.auth import LOGIN_FAILURE_LIMIT
 from api.utils.enum.payment import CancelError
 from api.utils.functions.auth import add_failure, clear_failures, get_failure_count
 from api.utils.functions.token import access_token, is_revoked, password_fingerprint, password_reset_token, refresh_token, revoke, signup_token
+from api.utils.functions.transaction import atomic_result
 from api.utils.functions.validation import has_email, has_password, has_weak_password
 
 
@@ -267,29 +267,9 @@ def signup_user(input: SignupIn) -> Result[None, FatalError]:
         ),
     )
 
-    repo = injector.get(UserInterface)
-    channel_repo = injector.get(ChannelInterface)
-    with transaction.atomic():
-        user_ret = repo.bulk_save(objs=[user_data])
-        if user_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(user_ret.err_value)
-
-        user_ids = user_ret.ok_value
-        channel_ret = channel_repo.bulk_save([ChannelData(
-            id=0,
-            ulid=str(ulid.new()),
-            owner_id=user_ids[0],
-            owner_ulid="",
-            avatar="",
-            name=input.nickname,
-            description="",
-            is_default=True,
-            count=0,
-        )])
-        if channel_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(channel_ret.err_value)
+    create_ret = atomic_result(lambda: create_user_data(user_data, input.nickname))
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
 
     return Result.ok(None)
 
@@ -506,3 +486,29 @@ def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
         return Result.err(save_ret.err_value)
 
     return Result.ok("")
+
+
+@Result.shield_exception()
+def create_user_data(data: UserAllData, channel_name: str) -> Result[None, FatalError]:
+    repo = injector.get(UserInterface)
+    channel_repo = injector.get(ChannelInterface)
+    user_ret = repo.bulk_save(objs=[data])
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user_ids = user_ret.ok_value
+    channel_ret = channel_repo.bulk_save([ChannelData(
+        id=0,
+        ulid=str(ulid.new()),
+        owner_id=user_ids[0],
+        owner_ulid="",
+        avatar="",
+        name=channel_name,
+        description="",
+        is_default=True,
+        count=0,
+    )])
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    return Result.ok(None)
