@@ -6,7 +6,6 @@ from django.conf import settings
 from api.modules.logger import log
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, ProviderSubscriptionData, RedirectUrls, WebhookVerifyResult
-from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
@@ -23,8 +22,12 @@ from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
 from api.utils.enum.user import PlanName
 from api.utils.functions.map import locale_path, payment_status_rank
+from api.utils.functions.payment import get_payment_repository
 from api.utils.functions.transaction import atomic_result
 from api.utils.plan import get_plan
+
+
+CHECKOUT_PROVIDER = PaymentProvider.STRIPE
 
 
 @Result.shield_exception()
@@ -57,7 +60,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         locale=locale,
     )
 
-    repo = injector.get(PaymentInterface)
+    repo = get_payment_repository(CHECKOUT_PROVIDER)
     checkout_ret = repo.create_checkout(data)
     if checkout_ret.is_err:
         return Result.err(checkout_ret.err_value)
@@ -67,8 +70,8 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
 
 
 @Result.shield_exception()
-def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult, FatalError]:
-    repo = injector.get(PaymentInterface)
+def verify_webhook(provider: PaymentProvider, payload: bytes, signature: str) -> Result[WebhookVerifyResult, FatalError]:
+    repo = get_payment_repository(provider)
     ret = repo.verify_webhook(payload, signature)
     if ret.is_err:
         return Result.err(ret.err_value)
@@ -80,7 +83,7 @@ def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult
 @Result.shield_exception()
 def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
     repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False))
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -97,7 +100,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
 
     subscription = cancelable_subscriptions[0]
 
-    payment_repo = injector.get(PaymentInterface)
+    payment_repo = get_payment_repository(subscription.provider)
     cancel_ret = payment_repo.cancel_subscription(subscription.external_id)
     if cancel_ret.is_err:
         return Result.err(cancel_ret.err_value)
@@ -201,7 +204,7 @@ def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
-    payment_repo = injector.get(PaymentInterface)
+    payment_repo = get_payment_repository(event.provider)
     provider_ret = payment_repo.get_subscription(event.external_id)
     if provider_ret.is_err:
         return Result.err(provider_ret.err_value)

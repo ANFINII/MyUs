@@ -8,7 +8,7 @@ from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
 from api.src.usecase.payment import cancel_subscription, create_checkout, receive_webhook_inbox, verify_webhook
 from api.utils.common.result import FatalError, NotFoundError
-from api.utils.enum.payment import WebhookVerifyError
+from api.utils.enum.payment import PaymentProvider, WebhookVerifyError
 
 
 class PaymentAPI:
@@ -54,7 +54,7 @@ class PaymentAPI:
         payload = request.body
         signature = request.META.get("HTTP_STRIPE_SIGNATURE", "")
 
-        verify_ret = verify_webhook(payload, signature)
+        verify_ret = verify_webhook(PaymentProvider.STRIPE, payload, signature)
         if verify_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 

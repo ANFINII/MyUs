@@ -5,6 +5,7 @@ from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.injectors.container import injector
 from api.tests.fakes import FakePayment
+from api.utils.enum.payment import PaymentProvider
 
 
 PASSWORD = "password1234"
@@ -29,6 +30,7 @@ def make_user(db: None) -> Callable[[str], User]:
 @pytest.fixture
 def fake_payment(monkeypatch: pytest.MonkeyPatch) -> FakePayment:
     fake = FakePayment()
-    binding = injector.binder.create_binding(PaymentInterface, to=fake)
-    monkeypatch.setitem(injector.binder._bindings, PaymentInterface, binding)
+    providers: dict[PaymentProvider, PaymentInterface] = {PaymentProvider.STRIPE: fake}
+    binding = injector.binder.create_binding(dict[PaymentProvider, PaymentInterface], to=providers)
+    monkeypatch.setitem(injector.binder._bindings, dict[PaymentProvider, PaymentInterface], binding)
     return fake
