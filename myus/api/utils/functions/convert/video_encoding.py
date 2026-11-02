@@ -29,7 +29,7 @@ def convert_video(video_path: str) -> VideoConvert:
             video=os.path.join(video_dir, f"{video_name}_master.m3u8"),
             convert=os.path.join(video_dir, f"{video_name}_convert.mp4"),
         )
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.error("動画エンコードエラー", exc=e, video_path=video_path)
         return VideoConvert(video="", convert="")
 

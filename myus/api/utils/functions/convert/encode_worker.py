@@ -26,5 +26,5 @@ class EncodeWorker:
     def _run(cls, task: Callable[[], None]) -> None:
         try:
             task()
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.error("バックグラウンドタスク失敗", exc=e)

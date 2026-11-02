@@ -221,18 +221,21 @@ class VideoConverter:
 
     def _check_amd_gpu(self) -> bool:
         """AMD GPU検出"""
+        if platform.system() != 'Windows':
+            return False
+
         try:
-            # Windows WMI経由でGPU情報取得
-            if platform.system() == 'Windows':
-                try:
-                    import wmi
-                    c = wmi.WMI()
-                    for gpu in c.Win32_VideoController():
-                        if 'AMD' in gpu.Name or 'Radeon' in gpu.Name:
-                            return True
-                except ImportError:
-                    log.debug("wmi module not available")
-        except Exception as e:  # noqa: BLE001
+            import wmi
+        except ImportError:
+            log.debug("wmi module not available")
+            return False
+
+        try:
+            c = wmi.WMI()
+            for gpu in c.Win32_VideoController():
+                if 'AMD' in gpu.Name or 'Radeon' in gpu.Name:
+                    return True
+        except wmi.x_wmi as e:
             log.error("AMD GPU detection error", exc=e)
         return False
 
@@ -562,7 +565,7 @@ class VideoConverter:
                 successful_resolutions
             )
             conversion_stats['mp4_path'] = mp4_path
-        except Exception as e:  # noqa: BLE001
+        except (OSError, KeyError, ValueError) as e:
             log.error("MP4生成エラー", exc=e)
             conversion_stats['mp4_path'] = None
 

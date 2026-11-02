@@ -202,7 +202,7 @@ class Log:
             line_no = frame.f_lineno
             return class_name, func_name, file_name, line_no
 
-        except Exception:  # noqa: BLE001
+        except Exception:
             return "", "", "", 0
         finally:
             del frame

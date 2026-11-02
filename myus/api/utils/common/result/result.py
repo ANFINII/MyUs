@@ -56,7 +56,7 @@ class Result[T, E: AnyError](ResultErrBase[T, E]):
             def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[R, F | FatalError]:
                 try:
                     return cast(Result[R, F | FatalError], func(*args, **kwargs))
-                except Exception as err:  # noqa: BLE001
+                except Exception as err:
                     emit_log(loglevel, "Unhandled Exception Occurred!", exc=err)
                     return cast(
                         Result[R, F | FatalError],

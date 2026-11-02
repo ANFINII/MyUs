@@ -57,7 +57,7 @@ class ResultFatal[T](ResultErrBase[T, FatalError]):
             def wrapper(*args: P.args, **kwargs: P.kwargs) -> ResultFatal[R]:
                 try:
                     return func(*args, **kwargs)
-                except Exception as err:  # noqa: BLE001
+                except Exception as err:
                     emit_log(loglevel, "Unhandled Exception Occurred!", exc=err)
                     return ResultFatal._err(err, loglevel=None)
 
