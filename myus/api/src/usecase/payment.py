@@ -169,6 +169,8 @@ def dispatch_webhook_inbox(event: WebhookInboxData) -> Result[None, FatalError]:
             ret = update_transaction_status(event, PaymentStatus.FAILED, update_paid_at=False)
         case WebhookEventType.REFUND_ISSUED:
             ret = update_transaction_status(event, PaymentStatus.REFUNDED, update_paid_at=False)
+        case _:
+            assert_never(event.event_type)
 
     if ret.is_err:
         return Result.err(ret.err_value)
