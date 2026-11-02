@@ -4,7 +4,6 @@ from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
-from django.contrib.contenttypes.admin import GenericTabularInline
 from django.db.models import Count
 from import_export.admin import ImportExportModelAdmin
 from api.db.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage

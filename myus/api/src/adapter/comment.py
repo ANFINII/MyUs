@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
 from api.src.adapter.auth import auth_check
-from api.src.types.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn, ReplyOut
+from api.src.types.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.comment import create_comment, delete_comment, update_comment
