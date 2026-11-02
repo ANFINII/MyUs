@@ -12,7 +12,7 @@ from api.src.domain.interface.payment.subscription.interface import FilterOption
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
-from api.src.domain.interface.webhook.inbox.interface import WebhookInboxInterface
+from api.src.domain.interface.webhook.inbox.interface import FilterOption as WebhookInboxFilterOption, SortOption as WebhookInboxSortOption, WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
@@ -122,15 +122,30 @@ def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 @Result.shield_exception()
 def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
     repo = injector.get(WebhookInboxInterface)
-    save_ret = repo.save_if_absent(event)
+    filter = WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id)
+    ids_ret = repo.get_ids(filter, WebhookInboxSortOption(), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) > 0:
+        log.info("WebhookInbox already processed", event_id=event.event_id)
+        return Result.ok(False)
+
+    save_ret = repo.bulk_save([event])
     if save_ret.is_err:
+        saved_ids_ret = repo.get_ids(filter, WebhookInboxSortOption(), limit=1)
+        if saved_ids_ret.is_err:
+            return Result.err(saved_ids_ret.err_value)
+
+        saved_ids = saved_ids_ret.ok_value
+        if len(saved_ids) > 0:
+            log.info("WebhookInbox saved by another request", event_id=event.event_id)
+            return Result.ok(False)
+
         return Result.err(save_ret.err_value)
 
-    is_saved = save_ret.ok_value
-    if not is_saved:
-        log.info("WebhookInbox already processed", event_id=event.event_id)
-
-    return Result.ok(is_saved)
+    return Result.ok(True)
 
 
 @Result.shield_exception()

@@ -1,4 +1,3 @@
-from django.db import IntegrityError, transaction
 from django.db.models import Q
 from api.db.models.payment import WebhookInbox
 from api.src.domain.entity.index import get_save_new_ids, sort_ids
@@ -47,13 +46,3 @@ class WebhookInboxRepository(WebhookInboxInterface):
         new_ids = get_save_new_ids(models, WEBHOOK_INBOX_FIELDS)
 
         return Result.ok(new_ids)
-
-    @Result.shield_exception()
-    def save_if_absent(self, obj: WebhookInboxData) -> Result[bool, FatalError]:
-        try:
-            with transaction.atomic():
-                marshal_data(obj).save(force_insert=True)
-        except IntegrityError:
-            return Result.ok(False)
-
-        return Result.ok(True)
