@@ -2,6 +2,7 @@ import { createRouter, LocationRewrite } from '@tanstack/react-router'
 import { getLocale } from 'lib/i18n'
 import { queryClient } from 'lib/query/client'
 import { routeTree } from 'lib/routes'
+import { isOutdated } from 'lib/version'
 import { AppProvider } from 'components/provider/AppProvider'
 import Custom404 from 'components/widgets/Status/Custom404'
 import PageLoading from 'components/widgets/Status/Loading'
@@ -45,6 +46,11 @@ export const router = createRouter({
   defaultPendingComponent: PageLoading,
   defaultNotFoundComponent: Custom404,
   defaultErrorComponent: RouteError,
+})
+
+router.subscribe('onBeforeNavigate', ({ fromLocation, toLocation, pathChanged }) => {
+  if (fromLocation === undefined || !pathChanged || !isOutdated()) return
+  window.location.assign(toLocation.publicHref)
 })
 
 declare module '@tanstack/react-router' {
