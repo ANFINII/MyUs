@@ -199,10 +199,8 @@ class VideoConverter:
                 if 'h264_nvenc' in nvenc_check.stdout:
                     return True
 
-        except FileNotFoundError:
+        except (OSError, subprocess.SubprocessError):
             pass  # NVIDIA GPUなし
-        except Exception:
-            pass  # エラー時はスキップ
 
         return False
 
@@ -217,25 +215,28 @@ class VideoConverter:
                 timeout=self.ENCODER_CHECK_TIMEOUT
             )
             return 'h264_qsv' in result.stdout
-        except Exception:
-            log.critical("Intel GPU検出エラー")
+        except (OSError, subprocess.SubprocessError) as e:
+            log.error("Intel GPU検出エラー", exc=e)
             return False
 
     def _check_amd_gpu(self) -> bool:
         """AMD GPU検出"""
+        if platform.system() != 'Windows':
+            return False
+
         try:
-            # Windows WMI経由でGPU情報取得
-            if platform.system() == 'Windows':
-                try:
-                    import wmi
-                    c = wmi.WMI()
-                    for gpu in c.Win32_VideoController():
-                        if 'AMD' in gpu.Name or 'Radeon' in gpu.Name:
-                            return True
-                except ImportError:
-                    log.debug("wmi module not available")
-        except Exception:
-            log.critical("AMD GPU detection error")
+            import wmi
+        except ImportError:
+            log.debug("wmi module not available")
+            return False
+
+        try:
+            c = wmi.WMI()
+            for gpu in c.Win32_VideoController():
+                if 'AMD' in gpu.Name or 'Radeon' in gpu.Name:
+                    return True
+        except wmi.x_wmi as e:
+            log.error("AMD GPU detection error", exc=e)
         return False
 
     def _calculate_optimal_workers(self) -> int:
@@ -564,8 +565,8 @@ class VideoConverter:
                 successful_resolutions
             )
             conversion_stats['mp4_path'] = mp4_path
-        except Exception:
-            log.critical("MP4生成エラー")
+        except (OSError, KeyError, ValueError) as e:
+            log.error("MP4生成エラー", exc=e)
             conversion_stats['mp4_path'] = None
 
         return conversion_stats

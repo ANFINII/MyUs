@@ -103,7 +103,7 @@ django_settings_module = "config.settings.base"
 line-length = 200
 
 [tool.ruff.lint]
-select = ["I", "T201", "TID251"]  # isort・print の禁止・使わない API の禁止
+select = ["I", "T201", "TID251", "BLE001"]  # isort・print の禁止・使わない API の禁止・except Exception の禁止
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
@@ -111,6 +111,14 @@ lines-after-imports = 2                                        # import後の空
 no-lines-before = ["third-party", "first-party", "local-folder"]  # セクション間の改行なし
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 known-first-party = ["api", "app", "config"]
+
+[tool.ruff.lint.per-file-ignores]
+"api/utils/common/result/result.py" = ["BLE001"]               # shield_exception：想定外の例外を FatalError に変える
+"api/utils/common/result/fatal.py" = ["BLE001"]                # 同上
+"api/utils/functions/convert/encode_worker.py" = ["BLE001"]    # バックグラウンドのスレッドの一番外側
+"api/utils/functions/convert/video_encoding.py" = ["BLE001"]   # 動画の変換の一番外側（失敗したら空の結果を返す）
+"api/src/usecase/broadcast.py" = ["BLE001"]                    # WebSocket の配信は失敗しても本処理を止めない
+"api/modules/logger.py" = ["BLE001"]                           # ログを取る処理の失敗でアプリを落とさない
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "django.test.TestCase".msg = "pytest を使う（docs/backend.md の「テスト」）"

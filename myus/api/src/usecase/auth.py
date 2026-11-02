@@ -2,6 +2,7 @@ import hmac
 import jwt
 from dataclasses import replace
 from datetime import UTC, date, datetime
+from smtplib import SMTPException
 from typing import assert_never
 from django_ulid.models import ulid
 from django.conf import settings
@@ -174,7 +175,7 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
 
     try:
         send_mail(subject, message, None, [email])
-    except Exception as e:
+    except (SMTPException, OSError) as e:
         log.error("Signup email send error", exc=e)
         return Result.ok("error.mailSendFailed")
 
@@ -364,7 +365,7 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
 
     try:
         send_mail(subject, message, None, [email])
-    except Exception as e:
+    except (SMTPException, OSError) as e:
         log.error("Password reset email send error", exc=e)
         return Result.ok("error.mailSendFailed")
 

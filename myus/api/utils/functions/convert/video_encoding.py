@@ -132,5 +132,5 @@ def save_encoding_log(convert_path: str, encode_duration: float, conversion_stat
         with open(encoding_log_file, "a", encoding="utf-8") as f:
             f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
         log.info(f"エンコード履歴を保存: {encoding_log_file}")
-    except Exception as e:
+    except (OSError, TypeError, ValueError) as e:
         log.error("エンコード履歴の保存エラー", exc=e)
