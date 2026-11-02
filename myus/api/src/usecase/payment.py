@@ -4,14 +4,16 @@ from datetime import datetime, timezone
 from typing import assert_never
 from django.conf import settings
 from api.modules.logger import log
+from api.src.domain.interface.payment.customer.data import PaymentCustomerData
+from api.src.domain.interface.payment.customer.interface import FilterOption as PaymentCustomerFilterOption, SortOption as PaymentCustomerSortOption, PaymentCustomerInterface
 from api.src.domain.interface.payment.data import Money
+from api.src.domain.interface.payment.event.data import PaymentEventData
+from api.src.domain.interface.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, ProviderSubscriptionData, RedirectUrls, WebhookVerifyResult
 from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.user.data import UserAllData
-from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
-from api.src.domain.interface.webhook.inbox.interface import FilterOption as WebhookInboxFilterOption, SortOption as WebhookInboxSortOption, WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
@@ -100,7 +102,13 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
 
     subscription = cancelable_subscriptions[0]
 
-    payment_repo = get_payment_repository(subscription.provider)
+    customer_repo = injector.get(PaymentCustomerInterface)
+    customers_ret = customer_repo.bulk_get([subscription.payment_customer_id])
+    if customers_ret.is_err:
+        return Result.err(customers_ret.err_value)
+
+    customers = customers_ret.ok_value
+    payment_repo = get_payment_repository(customers[0].provider)
     cancel_ret = payment_repo.cancel_subscription(subscription.external_id)
     if cancel_ret.is_err:
         return Result.err(cancel_ret.err_value)
@@ -118,32 +126,32 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
 
 
 @Result.shield_exception()
-def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
-    return atomic_result(lambda: save_webhook_inbox_data(event))
+def receive_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
+    return atomic_result(lambda: save_payment_event_data(event))
 
 
 @Result.shield_exception()
-def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
-    repo = injector.get(WebhookInboxInterface)
-    filter = WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id)
-    ids_ret = repo.get_ids(filter, WebhookInboxSortOption(), limit=1)
+def record_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
+    repo = injector.get(PaymentEventInterface)
+    filter = PaymentEventFilterOption(provider=event.provider.value, event_id=event.event_id)
+    ids_ret = repo.get_ids(filter, PaymentEventSortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
     if len(ids) > 0:
-        log.info("WebhookInbox already processed", event_id=event.event_id)
+        log.info("PaymentEvent already recorded", event_id=event.event_id)
         return Result.ok(False)
 
     save_ret = repo.bulk_save([event])
     if save_ret.is_err:
-        saved_ids_ret = repo.get_ids(filter, WebhookInboxSortOption(), limit=1)
+        saved_ids_ret = repo.get_ids(filter, PaymentEventSortOption(), limit=1)
         if saved_ids_ret.is_err:
             return Result.err(saved_ids_ret.err_value)
 
         saved_ids = saved_ids_ret.ok_value
         if len(saved_ids) > 0:
-            log.info("WebhookInbox saved by another request", event_id=event.event_id)
+            log.info("PaymentEvent recorded by another request", event_id=event.event_id)
             return Result.ok(False)
 
         return Result.err(save_ret.err_value)
@@ -152,7 +160,7 @@ def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
 
 
 @Result.shield_exception()
-def dispatch_webhook_inbox(event: WebhookInboxData) -> Result[None, FatalError]:
+def apply_payment_event(event: PaymentEventData) -> Result[None, FatalError]:
     match event.event_type:
         case WebhookEventType.SUBSCRIPTION_CREATED | WebhookEventType.SUBSCRIPTION_UPDATED | WebhookEventType.SUBSCRIPTION_CANCELED:
             ret = update_subscription(event)
@@ -172,7 +180,7 @@ def dispatch_webhook_inbox(event: WebhookInboxData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
+def enqueue_webhook_outbox(event: PaymentEventData) -> Result[None, FatalError]:
     repo = injector.get(WebhookOutboxInterface)
 
     payload = WebhookOutboxPayloadDTO(
@@ -203,7 +211,7 @@ def enqueue_webhook_outbox(event: WebhookInboxData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
+def update_subscription(event: PaymentEventData) -> Result[None, FatalError]:
     payment_repo = get_payment_repository(event.provider)
     provider_ret = payment_repo.get_subscription(event.external_id)
     if provider_ret.is_err:
@@ -237,11 +245,24 @@ def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
+    subscriptions_ret = repo.bulk_get(ids)
+    if subscriptions_ret.is_err:
+        return Result.err(subscriptions_ret.err_value)
+
+    subscriptions = subscriptions_ret.ok_value
+    if len(subscriptions) > 0 and subscriptions[0].last_event_at > event.occurred_at:
+        log.info("Subscription event is older than applied", external_id=event.external_id, event_id=event.event_id)
+        return Result.ok(None)
+
+    customer_ret = save_payment_customer_data(user.user.id, provider_subscription.provider, provider_subscription.customer_id)
+    if customer_ret.is_err:
+        return Result.err(customer_ret.err_value)
+
+    customer_id = customer_ret.ok_value
     subscription = SubscriptionData(
         id=ids[0] if len(ids) > 0 else 0,
-        customer_user_id=user.user.id,
+        payment_customer_id=customer_id,
         seller_id="",
-        provider=provider_subscription.provider,
         external_id=provider_subscription.external_id,
         product_code=provider_subscription.product_code,
         price=provider_subscription.price,
@@ -249,6 +270,7 @@ def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
         started_at=provider_subscription.started_at,
         current_period_end=provider_subscription.current_period_end,
         canceled_at=provider_subscription.canceled_at,
+        last_event_at=event.occurred_at,
     )
     subscription_ret = save_subscription_data(subscription)
     if subscription_ret.is_err:
@@ -259,16 +281,6 @@ def update_subscription(event: WebhookInboxData) -> Result[None, FatalError]:
         return Result.err(user_plan_ret.err_value)
 
     log.info("Subscription updated", external_id=event.external_id, status=provider_subscription.status.value)
-    return Result.ok(None)
-
-
-@Result.shield_exception()
-def save_subscription_data(data: SubscriptionData) -> Result[None, FatalError]:
-    repo = injector.get(SubscriptionInterface)
-    ret = repo.bulk_save([data])
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
     return Result.ok(None)
 
 
@@ -303,7 +315,7 @@ def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscript
 
 
 @Result.shield_exception()
-def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, update_paid_at: bool) -> Result[None, FatalError]:
+def update_transaction_status(event: PaymentEventData, status: PaymentStatus, update_paid_at: bool) -> Result[None, FatalError]:
     repo = injector.get(TransactionInterface)
     ids_ret = repo.get_ids(
         TransactionFilterOption(provider=event.provider.value, external_id=event.external_id),
@@ -328,7 +340,14 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
         log.info("Transaction status not downgraded", external_id=event.external_id, current=payment_transaction.status.value, status=status.value)
         return Result.ok(None)
 
-    updated = replace(payment_transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(payment_transaction, status=status)
+    if payment_transaction.last_event_at > event.occurred_at:
+        log.info("Transaction event is older than applied", external_id=event.external_id, event_id=event.event_id)
+        return Result.ok(None)
+
+    updated = replace(payment_transaction, status=status, last_event_at=event.occurred_at)
+    if update_paid_at:
+        updated = replace(updated, paid_at=event.occurred_at)
+
     save_ret = repo.bulk_save([updated])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
@@ -338,21 +357,50 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
 
 
 @Result.shield_exception()
-def save_webhook_inbox_data(event: WebhookInboxData) -> Result[bool, FatalError]:
-    enqueue_inbox_ret = enqueue_webhook_inbox(event)
-    if enqueue_inbox_ret.is_err:
-        return Result.err(enqueue_inbox_ret.err_value)
+def save_payment_event_data(event: PaymentEventData) -> Result[bool, FatalError]:
+    record_ret = record_payment_event(event)
+    if record_ret.is_err:
+        return Result.err(record_ret.err_value)
 
-    is_enqueued = enqueue_inbox_ret.ok_value
-    if not is_enqueued:
+    is_recorded = record_ret.ok_value
+    if not is_recorded:
         return Result.ok(False)
 
-    dispatch_ret = dispatch_webhook_inbox(event)
-    if dispatch_ret.is_err:
-        return Result.err(dispatch_ret.err_value)
+    apply_ret = apply_payment_event(event)
+    if apply_ret.is_err:
+        return Result.err(apply_ret.err_value)
 
     enqueue_outbox_ret = enqueue_webhook_outbox(event)
     if enqueue_outbox_ret.is_err:
         return Result.err(enqueue_outbox_ret.err_value)
 
     return Result.ok(True)
+
+
+@Result.shield_exception()
+def save_payment_customer_data(user_id: int, provider: PaymentProvider, external_id: str) -> Result[int, FatalError]:
+    repo = injector.get(PaymentCustomerInterface)
+    ids_ret = repo.get_ids(PaymentCustomerFilterOption(user_id=user_id, provider=provider.value), PaymentCustomerSortOption(), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) > 0:
+        return Result.ok(ids[0])
+
+    save_ret = repo.bulk_save([PaymentCustomerData(id=0, user_id=user_id, provider=provider, external_id=external_id)])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    new_ids = save_ret.ok_value
+    return Result.ok(new_ids[0])
+
+
+@Result.shield_exception()
+def save_subscription_data(data: SubscriptionData) -> Result[None, FatalError]:
+    repo = injector.get(SubscriptionInterface)
+    ret = repo.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)

@@ -1,8 +1,9 @@
 from injector import Module, multiprovider, provider, singleton
 from api.src.adapter.external.payment.stripe.provider import StripeProvider
+from api.src.domain.entity.payment.customer.repository import PaymentCustomerRepository
+from api.src.domain.entity.payment.event.repository import PaymentEventRepository
 from api.src.domain.entity.payment.subscription.repository import SubscriptionRepository
 from api.src.domain.entity.payment.transaction.repository import TransactionRepository
-from api.src.domain.entity.webhook.inbox.repository import WebhookInboxRepository
 from api.src.domain.entity.webhook.outbox.repository import WebhookOutboxRepository
 from api.src.domain.entity.user.repository import UserRepository
 from api.src.domain.entity.category.repository import CategoryRepository
@@ -42,10 +43,11 @@ from api.src.domain.interface.ng_word.interface import NgWordInterface
 from api.src.domain.interface.search_tag.interface import SearchTagInterface
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.domain.interface.access_log.interface import AccessLogInterface
+from api.src.domain.interface.payment.customer.interface import PaymentCustomerInterface
+from api.src.domain.interface.payment.event.interface import PaymentEventInterface
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
-from api.src.domain.interface.webhook.inbox.interface import WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.utils.enum.payment import PaymentProvider
 
@@ -161,16 +163,20 @@ class PaymentModule(Module):
         return {PaymentProvider.STRIPE: StripeProvider()}
 
     @provider
+    def provide_payment_event_repository(self) -> PaymentEventInterface:
+        return PaymentEventRepository()
+
+    @provider
+    def provide_payment_customer_repository(self) -> PaymentCustomerInterface:
+        return PaymentCustomerRepository()
+
+    @provider
     def provide_subscription_repository(self) -> SubscriptionInterface:
         return SubscriptionRepository()
 
     @provider
     def provide_transaction_repository(self) -> TransactionInterface:
         return TransactionRepository()
-
-    @provider
-    def provide_webhook_inbox_repository(self) -> WebhookInboxInterface:
-        return WebhookInboxRepository()
 
     @provider
     def provide_webhook_outbox_repository(self) -> WebhookOutboxInterface:

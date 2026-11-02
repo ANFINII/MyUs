@@ -14,25 +14,26 @@ from stripe.params.checkout import (
 )
 from api.src.adapter.external.payment.stripe._type import stripe_event_type
 from api.src.domain.interface.payment.data import Money
+from api.src.domain.interface.payment.event.data import PaymentEventData
 from api.src.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed, ProviderSubscriptionData, WebhookVerifyFailed
-from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
 from api.utils.enum.user import PlanName
 
 
-def convert_stripe_event(event: stripe.Event) -> WebhookInboxData | WebhookVerifyFailed:
+def convert_stripe_event(event: stripe.Event, payload: bytes) -> PaymentEventData | WebhookVerifyFailed:
     event_type = stripe_event_type(event.type)
     if event_type is None:
         return WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"unsupported event_type={event.type}")
 
     external_id: str = getattr(event.data.object, "id", "")
-    return WebhookInboxData(
+    return PaymentEventData(
         id=0,
         provider=PaymentProvider.STRIPE,
         event_id=event.id,
         event_type=event_type,
         external_id=external_id,
+        payload=payload.decode(),
         occurred_at=datetime.fromtimestamp(event.created, tz=timezone.utc),
     )
 

@@ -3,23 +3,24 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 import pytest
 from django.db import connection
-from api.db.models.payment import PaymentTransaction, Subscription, WebhookInbox, WebhookOutbox
+from api.db.models.payment import PaymentCustomer, PaymentEvent, PaymentTransaction, Subscription, WebhookOutbox
 from api.db.models.user import User, UserPlan
-from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
-from api.src.usecase.payment import receive_webhook_inbox
+from api.src.domain.interface.payment.event.data import PaymentEventData
+from api.src.usecase.payment import receive_payment_event
 from api.tests.fakes import FakePayment, provider_subscription
 from api.utils.enum.payment import PaymentProvider, PaymentStatus, SubscriptionStatus, WebhookEventType
 from api.utils.enum.user import PlanName
 
 
-def send(event_type: WebhookEventType, external_id: str, event_id: str) -> bool:
-    ret = receive_webhook_inbox(WebhookInboxData(
+def send(event_type: WebhookEventType, external_id: str, event_id: str, occurred_at: datetime | None = None) -> bool:
+    ret = receive_payment_event(PaymentEventData(
         id=0,
         provider=PaymentProvider.STRIPE,
         event_id=event_id,
         event_type=event_type,
         external_id=external_id,
-        occurred_at=datetime.now(timezone.utc),
+        payload="{}",
+        occurred_at=occurred_at or datetime.now(timezone.utc),
     ))
     assert ret.is_ok, ret
     is_received = ret.ok_value
@@ -43,7 +44,8 @@ def test_subscription_created_sets_paid_plan(make_user: Callable[[str], User], f
     assert plan.subscription == "sub_1"
     assert plan.customer_id == "cus_test"
     subscription = Subscription.objects.get(external_id="sub_1")
-    assert subscription.customer_id == user.id
+    assert subscription.payment_customer.user_id == user.id
+    assert subscription.payment_customer.external_id == "cus_test"
     assert subscription.status == SubscriptionStatus.ACTIVE
 
 
@@ -83,6 +85,21 @@ def test_old_subscription_end_does_not_downgrade_new_plan(make_user: Callable[[s
 
 
 @pytest.mark.django_db
+def test_older_subscription_event_is_not_applied(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
+    user = make_user("alice")
+    fake_payment.subscriptions["sub_1"] = provider_subscription("sub_1", user.ulid, PlanName.PREMIUM, SubscriptionStatus.ACTIVE)
+    send(WebhookEventType.SUBSCRIPTION_UPDATED, "sub_1", "evt_2", datetime(2026, 11, 2, tzinfo=timezone.utc))
+
+    fake_payment.subscriptions["sub_1"] = provider_subscription("sub_1", user.ulid, PlanName.PREMIUM, SubscriptionStatus.INCOMPLETE)
+    assert send(WebhookEventType.SUBSCRIPTION_CREATED, "sub_1", "evt_1", datetime(2026, 11, 1, tzinfo=timezone.utc))
+
+    subscription = Subscription.objects.get(external_id="sub_1")
+    assert subscription.status == SubscriptionStatus.ACTIVE
+    assert subscription.last_event_at == datetime(2026, 11, 2, tzinfo=timezone.utc)
+    assert PaymentEvent.objects.count() == 2
+
+
+@pytest.mark.django_db
 def test_incomplete_subscription_does_not_change_plan(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
     fake_payment.subscriptions["sub_1"] = provider_subscription("sub_1", user.ulid, PlanName.ULTIMATE, SubscriptionStatus.INCOMPLETE)
@@ -112,7 +129,7 @@ def test_same_event_is_processed_once(make_user: Callable[[str], User], fake_pay
     assert send(WebhookEventType.SUBSCRIPTION_CREATED, "sub_1", "evt_dup")
     assert not send(WebhookEventType.SUBSCRIPTION_CREATED, "sub_1", "evt_dup")
 
-    assert WebhookInbox.objects.filter(event_id="evt_dup").count() == 1
+    assert PaymentEvent.objects.filter(event_id="evt_dup").count() == 1
     assert WebhookOutbox.objects.count() == 1
 
 
@@ -135,8 +152,13 @@ def test_same_event_arriving_at_once_is_processed_once(make_user: Callable[[str]
         thread.join()
 
     assert sorted(results) == [False, False, False, True]
-    assert WebhookInbox.objects.filter(event_id="evt_at_once").count() == 1
+    assert PaymentEvent.objects.filter(event_id="evt_at_once").count() == 1
     assert WebhookOutbox.objects.count() == 1
+
+
+def add_transaction(user: User, external_id: str) -> None:
+    customer = PaymentCustomer.objects.create(user=user, provider=PaymentProvider.STRIPE, external_id="cus_test")
+    PaymentTransaction.objects.create(payment_customer=customer, external_id=external_id)
 
 
 def transaction_status(external_id: str) -> str:
@@ -147,7 +169,7 @@ def transaction_status(external_id: str) -> str:
 @pytest.mark.django_db
 def test_late_failed_does_not_overwrite_captured(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
-    PaymentTransaction.objects.create(customer=user, provider=PaymentProvider.STRIPE, external_id="pi_1")
+    add_transaction(user, "pi_1")
 
     assert send(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_1")
     assert send(WebhookEventType.PAYMENT_FAILED, "pi_1", "evt_2")
@@ -161,7 +183,7 @@ def test_late_failed_does_not_overwrite_captured(make_user: Callable[[str], User
 @pytest.mark.django_db
 def test_retry_succeeded_after_failed_is_captured(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
-    PaymentTransaction.objects.create(customer=user, provider=PaymentProvider.STRIPE, external_id="pi_1")
+    add_transaction(user, "pi_1")
 
     assert send(WebhookEventType.PAYMENT_FAILED, "pi_1", "evt_1")
     assert transaction_status("pi_1") == PaymentStatus.FAILED

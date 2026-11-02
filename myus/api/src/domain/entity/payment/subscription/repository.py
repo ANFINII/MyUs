@@ -7,7 +7,7 @@ from api.src.domain.interface.payment.subscription.interface import FilterOption
 from api.utils.common.result import FatalError, Result
 
 
-SUBSCRIPTION_FIELDS = ["customer_id", "seller_id", "provider", "external_id", "product_code", "price_amount", "price_currency", "status", "started_at", "current_period_end", "canceled_at"]
+SUBSCRIPTION_FIELDS = ["payment_customer_id", "seller_id", "external_id", "product_code", "price_amount", "price_currency", "status", "started_at", "current_period_end", "canceled_at", "last_event_at"]
 
 
 class SubscriptionRepository(SubscriptionInterface):
@@ -15,9 +15,9 @@ class SubscriptionRepository(SubscriptionInterface):
     def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = 20) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.customer_user_id != 0:
-            q_list.append(Q(customer_id=filter.customer_user_id))
+            q_list.append(Q(payment_customer__user_id=filter.customer_user_id))
         if len(filter.provider) > 0:
-            q_list.append(Q(provider=filter.provider))
+            q_list.append(Q(payment_customer__provider=filter.provider))
         if len(filter.external_id) > 0:
             q_list.append(Q(external_id=filter.external_id))
 
