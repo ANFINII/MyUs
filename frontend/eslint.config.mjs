@@ -64,7 +64,8 @@ export default [
       'eol-last': ['error', 'always'], // ファイル末尾に空行を強制
       'react/jsx-uses-react': 'off', // Reactのimportが不要
       'react/react-in-jsx-scope': 'off', // Reactのimportが不要
-      'react-hooks/exhaustive-deps': 'warn', // Hooksの依存配列で警告
+      ...reactHooks.configs.flat.recommended.rules,
+      'react-hooks/exhaustive-deps': 'error', // Hooksの依存配列の漏れを禁止
       '@typescript-eslint/no-explicit-any': 'warn', // anyの使用を警告
       'unused-imports/no-unused-imports': 'error', // 未使用のimportを禁止
       'import/order': ['error',

@@ -38,12 +38,10 @@ export default function SearchTagBar(): React.JSX.Element {
       const sortedData = data.sort((a: SearchTagOut, b: SearchTagOut) => a.sequence - b.sequence)
       setSearchTags(sortedData)
     }
-    if (user.isActive) {
-      fetchSearchTag()
-    } else {
-      setSearchTags([])
-    }
+    if (user.isActive) fetchSearchTag()
   }, [user])
+
+  const visibleTags = user.isActive ? searchTags : []
 
   const hasChanges = () => {
     if (editTags.length !== searchTags.length) return true
@@ -149,7 +147,7 @@ export default function SearchTagBar(): React.JSX.Element {
                         </span>
                       </div>
                     ))
-                  : searchTags.map((tag) => (
+                  : visibleTags.map((tag) => (
                       <Link key={tag.sequence} href={`?search=${encodeURIComponent(tag.name)}`}>
                         {tag.name}
                       </Link>

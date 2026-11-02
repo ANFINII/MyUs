@@ -46,14 +46,11 @@ interface Props {
 export function useRecording(props: Props): OutProps {
   const { onResult, lang = 'ja-JP' } = props
 
-  const onResultRef = useRef<(transcript: string) => void>(onResult)
   const recognitionRef = useRef<Recognition | null>(null)
   const speakingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [isRecording, setIsRecording] = useState<boolean>(false)
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false)
   const isSupported = getRecognitionClass() !== undefined
-
-  onResultRef.current = onResult
 
   const clearSpeakingTimer = (): void => {
     if (speakingTimerRef.current) clearTimeout(speakingTimerRef.current)
@@ -88,7 +85,7 @@ export function useRecording(props: Props): OutProps {
         const result = results.item(i)
         clearSpeakingTimer()
         if (result.isFinal) {
-          onResultRef.current(result.item(0).transcript)
+          onResult(result.item(0).transcript)
           setIsSpeaking(false)
         } else {
           setIsSpeaking(true)
@@ -108,7 +105,7 @@ export function useRecording(props: Props): OutProps {
     recognitionRef.current = recognition
     recognition.start()
     setIsRecording(true)
-  }, [isRecording, lang])
+  }, [isRecording, lang, onResult])
 
   return { isRecording, isSpeaking, isSupported, handleToggle }
 }

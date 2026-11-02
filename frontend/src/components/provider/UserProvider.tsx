@@ -35,7 +35,10 @@ export function UserProvider(props: Props): React.JSX.Element {
   }, [])
 
   useEffect(() => {
-    updateUser()
+    const fetchUser = async () => {
+      await updateUser()
+    }
+    fetchUser()
   }, [updateUser])
 
   const value = { user, resetUser, updateUser }
