@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from datetime import datetime, timezone
 import pytest
-from api.db.models.payment import Subscription
+from api.db.models.payment import PaymentCustomer, Subscription
 from api.db.models.user import User
 from api.src.domain.interface.payment.provider.data import CancelFailed
 from api.src.types.schema.auth import WithdrawalIn
@@ -14,9 +14,9 @@ from api.utils.enum.user import PlanName
 
 
 def add_subscription(user: User, external_id: str, status: SubscriptionStatus, month: int) -> None:
+    customer, _ = PaymentCustomer.objects.get_or_create(user=user, provider=PaymentProvider.STRIPE, defaults={"external_id": "cus_test"})
     Subscription.objects.create(
-        customer=user,
-        provider=PaymentProvider.STRIPE,
+        payment_customer=customer,
         external_id=external_id,
         product_code=PlanName.PREMIUM,
         status=status,

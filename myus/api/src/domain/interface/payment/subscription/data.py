@@ -1,15 +1,14 @@
 from dataclasses import dataclass
 from datetime import datetime
 from api.src.domain.interface.payment.data import Money
-from api.utils.enum.payment import PaymentProvider, SubscriptionStatus
+from api.utils.enum.payment import SubscriptionStatus
 
 
 @dataclass(frozen=True, slots=True)
 class SubscriptionData:
     id: int
-    customer_user_id: int
+    payment_customer_id: int
     seller_id: str
-    provider: PaymentProvider
     external_id: str
     product_code: str
     price: Money
@@ -17,3 +16,4 @@ class SubscriptionData:
     started_at: datetime
     current_period_end: datetime
     canceled_at: datetime
+    last_event_at: datetime

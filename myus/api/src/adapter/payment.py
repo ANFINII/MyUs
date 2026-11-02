@@ -6,7 +6,7 @@ from api.src.adapter.auth import auth_check
 from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, WebhookVerified, WebhookVerifyFailed
 from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
-from api.src.usecase.payment import cancel_subscription, create_checkout, receive_webhook_inbox, verify_webhook
+from api.src.usecase.payment import cancel_subscription, create_checkout, receive_payment_event, verify_webhook
 from api.utils.common.result import FatalError, NotFoundError
 from api.utils.enum.payment import PaymentProvider, WebhookVerifyError
 
@@ -69,7 +69,7 @@ class PaymentAPI:
             case WebhookVerified(event=event):
                 log.info("PaymentAPI webhook verified", event_id=event.event_id, event_type=event.event_type.value)
 
-                receive_ret = receive_webhook_inbox(event)
+                receive_ret = receive_payment_event(event)
                 if receive_ret.is_err:
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 

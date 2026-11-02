@@ -7,7 +7,7 @@ from api.src.domain.interface.payment.transaction.interface import FilterOption,
 from api.utils.common.result import FatalError, Result
 
 
-TRANSACTION_FIELDS = ["subscription_id", "customer_id", "provider", "external_id", "price_amount", "price_currency", "status", "paid_at"]
+TRANSACTION_FIELDS = ["payment_customer_id", "subscription_id", "external_id", "currency", "tax_rate", "receipt_number", "status", "paid_at", "last_event_at"]
 
 
 class TransactionRepository(TransactionInterface):
@@ -15,11 +15,11 @@ class TransactionRepository(TransactionInterface):
     def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = 20) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.customer_user_id != 0:
-            q_list.append(Q(customer_id=filter.customer_user_id))
+            q_list.append(Q(payment_customer__user_id=filter.customer_user_id))
         if filter.subscription_id != 0:
             q_list.append(Q(subscription_id=filter.subscription_id))
         if len(filter.provider) > 0:
-            q_list.append(Q(provider=filter.provider))
+            q_list.append(Q(payment_customer__provider=filter.provider))
         if len(filter.external_id) > 0:
             q_list.append(Q(external_id=filter.external_id))
 

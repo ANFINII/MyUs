@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
+from api.src.domain.interface.payment.event.data import PaymentEventData
 from api.utils.enum.i18n import Locale
 from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
 
@@ -59,7 +59,7 @@ type CheckoutResult = CheckoutCreated | CheckoutFailed
 
 @dataclass(frozen=True, slots=True)
 class WebhookVerified:
-    event: WebhookInboxData
+    event: PaymentEventData
 
 
 @dataclass(frozen=True, slots=True)

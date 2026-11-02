@@ -47,7 +47,7 @@ class StripeProvider(PaymentInterface):
             log.warning("Stripe webhook payload malformed", exc=e)
             return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.MALFORMED_PAYLOAD, message=str(e)))
 
-        event_data = convert_stripe_event(event)
+        event_data = convert_stripe_event(event, payload)
         if isinstance(event_data, WebhookVerifyFailed):
             return Result.ok(event_data)
         return Result.ok(WebhookVerified(event=event_data))
