@@ -85,8 +85,6 @@ def user_notification_data(user_notification: UserNotification) -> UserNotificat
 def user_plan_data(user_plan: UserPlan) -> UserPlanData:
     return UserPlanData(
         plan=user_plan.plan,
-        customer_id=user_plan.customer_id,
-        subscription=user_plan.subscription,
         is_paid=user_plan.is_paid,
         start_date=user_plan.start_date,
         end_date=user_plan.end_date,
@@ -179,8 +177,6 @@ def marshal_user_plan(user: User, data: UserAllData) -> UserPlan:
     return UserPlan(
         user=user,
         plan=user_plan.plan,
-        customer_id=user_plan.customer_id,
-        subscription=user_plan.subscription,
         is_paid=user_plan.is_paid,
         start_date=user_plan.start_date,
         end_date=user_plan.end_date,

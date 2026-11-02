@@ -68,8 +68,6 @@ class UserNotificationData:
 @dataclass(frozen=True, slots=True)
 class UserPlanData:
     plan: str
-    customer_id: str
-    subscription: str
     is_paid: bool
     start_date: date | None
     end_date: date | None

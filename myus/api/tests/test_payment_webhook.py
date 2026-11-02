@@ -41,8 +41,6 @@ def test_subscription_created_sets_paid_plan(make_user: Callable[[str], User], f
     plan = user_plan(user)
     assert plan.plan == PlanName.PREMIUM
     assert plan.is_paid
-    assert plan.subscription == "sub_1"
-    assert plan.customer_id == "cus_test"
     subscription = Subscription.objects.get(external_id="sub_1")
     assert subscription.payment_customer.user_id == user.id
     assert subscription.payment_customer.external_id == "cus_test"
@@ -81,7 +79,21 @@ def test_old_subscription_end_does_not_downgrade_new_plan(make_user: Callable[[s
 
     plan = user_plan(user)
     assert plan.plan == PlanName.BASIC
-    assert plan.subscription == "sub_new"
+
+
+@pytest.mark.django_db
+def test_older_subscription_event_is_not_applied(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
+    user = make_user("alice")
+    fake_payment.subscriptions["sub_1"] = provider_subscription("sub_1", user.ulid, PlanName.PREMIUM, SubscriptionStatus.ACTIVE)
+    send(WebhookEventType.SUBSCRIPTION_UPDATED, "sub_1", "evt_2", datetime(2026, 11, 2, tzinfo=timezone.utc))
+
+    fake_payment.subscriptions["sub_1"] = provider_subscription("sub_1", user.ulid, PlanName.PREMIUM, SubscriptionStatus.INCOMPLETE)
+    assert send(WebhookEventType.SUBSCRIPTION_CREATED, "sub_1", "evt_1", datetime(2026, 11, 1, tzinfo=timezone.utc))
+
+    subscription = Subscription.objects.get(external_id="sub_1")
+    assert subscription.status == SubscriptionStatus.ACTIVE
+    assert subscription.last_event_at == datetime(2026, 11, 2, tzinfo=timezone.utc)
+    assert PaymentEvent.objects.count() == 2
 
 
 @pytest.mark.django_db
