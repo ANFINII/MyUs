@@ -3,7 +3,6 @@ from dataclasses import asdict, replace
 from datetime import datetime, timezone
 from typing import assert_never
 from django.conf import settings
-from django.db import transaction
 from api.modules.logger import log
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, ProviderSubscriptionData, RedirectUrls, WebhookVerifyResult
@@ -24,6 +23,7 @@ from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
 from api.utils.enum.user import PlanName
 from api.utils.functions.map import locale_path, payment_status_rank
+from api.utils.functions.transaction import atomic_result
 from api.utils.plan import get_plan
 
 
@@ -116,27 +116,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
 
 @Result.shield_exception()
 def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
-    with transaction.atomic():
-        enqueue_inbox_ret = enqueue_webhook_inbox(event)
-        if enqueue_inbox_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(enqueue_inbox_ret.err_value)
-
-        is_enqueued = enqueue_inbox_ret.ok_value
-        if not is_enqueued:
-            return Result.ok(False)
-
-        dispatch_ret = dispatch_webhook_inbox(event)
-        if dispatch_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(dispatch_ret.err_value)
-
-        enqueue_outbox_ret = enqueue_webhook_outbox(event)
-        if enqueue_outbox_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(enqueue_outbox_ret.err_value)
-
-    return Result.ok(True)
+    return atomic_result(lambda: save_webhook_inbox_data(event))
 
 
 @Result.shield_exception()
@@ -342,3 +322,24 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
 
     log.info("Transaction status updated", external_id=event.external_id, status=status.value)
     return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_webhook_inbox_data(event: WebhookInboxData) -> Result[bool, FatalError]:
+    enqueue_inbox_ret = enqueue_webhook_inbox(event)
+    if enqueue_inbox_ret.is_err:
+        return Result.err(enqueue_inbox_ret.err_value)
+
+    is_enqueued = enqueue_inbox_ret.ok_value
+    if not is_enqueued:
+        return Result.ok(False)
+
+    dispatch_ret = dispatch_webhook_inbox(event)
+    if dispatch_ret.is_err:
+        return Result.err(dispatch_ret.err_value)
+
+    enqueue_outbox_ret = enqueue_webhook_outbox(event)
+    if enqueue_outbox_ret.is_err:
+        return Result.err(enqueue_outbox_ret.err_value)
+
+    return Result.ok(True)
