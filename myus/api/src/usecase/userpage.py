@@ -7,7 +7,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption as 
 from api.src.injectors.container import injector
 from api.src.types.dto.media import HomeDTO
 from api.src.usecase.advertise import is_active
-from api.src.usecase.media import get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
+from api.src.usecase.media.core import get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from api.utils.common.result import FatalError, Result
 from api.utils.functions.index import create_url
 
