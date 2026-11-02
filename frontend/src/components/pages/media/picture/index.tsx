@@ -8,7 +8,6 @@ export default function PicturesPage(): React.JSX.Element {
   const router = useRouter()
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
-
   const { data } = useSuspenseQuery(picturesQuery(params))
 
   return <Pictures data={data} page={page} />

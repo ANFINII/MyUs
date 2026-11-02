@@ -8,7 +8,6 @@ export default function MusicsPage(): React.JSX.Element {
   const router = useRouter()
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
-
   const { data } = useSuspenseQuery(musicsQuery(params))
 
   return <Musics data={data} page={page} />
