@@ -7,6 +7,7 @@ import ManageChats from './view'
 export default function ManageChatsPage(): React.JSX.Element {
   const router = useRouter()
   const { search, page, limit, offset } = pageParams(router.query)
+
   const { data: channels } = useSuspenseQuery(channelsQuery())
   const channel = String(router.query.channel ?? '') || channels[0]?.ulid
   const params = { search, channel, limit, offset }
