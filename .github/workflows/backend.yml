@@ -72,7 +72,7 @@ jobs:
           cp ../envs/sample.env envs/django.env
 
       - name: mypy
-        run: uv run mypy api
+        run: uv run mypy api config
 
       - name: ruff
         run: uv run ruff check api config --extend-ignore I
