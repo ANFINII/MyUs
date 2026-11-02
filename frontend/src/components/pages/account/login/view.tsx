@@ -1,0 +1,84 @@
+import { ChangeEvent, FormEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
+import { LoginIn } from 'types/internal/auth'
+import { postLogin } from 'api/internal/auth'
+import { FetchError } from 'utils/constants/enum'
+import { useApiError } from 'components/hooks/useApiError'
+import { useLoading } from 'components/hooks/useLoading'
+import { useRequired } from 'components/hooks/useRequired'
+import { useRouter } from 'components/hooks/useRouter'
+import { useToast } from 'components/hooks/useToast'
+import { useUser } from 'components/hooks/useUser'
+import Footer from 'components/layout/Footer'
+import Main from 'components/layout/Main'
+import Button from 'components/parts/Button'
+import Input from 'components/parts/Input'
+import Password from 'components/parts/Input/Password'
+import VStack from 'components/parts/Stack/Vertical'
+import style from '../Account.module.scss'
+
+export default function Login(): React.JSX.Element {
+  const router = useRouter()
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const { updateUser } = useUser()
+  const { loading, handleLoading } = useLoading()
+  const { error, validate } = useRequired()
+  const { toast, handleToast } = useToast()
+  const { message, handleError } = useApiError({ handleToast })
+  const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
+
+  const handleProfile = () => router.push('/setting/profile')
+  const handleReset = () => router.push('/account/reset')
+  const handleSignup = () => router.push('/account/signup/email')
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
+    const { username, password } = values
+    if (!validate({ username, password })) return
+    handleLoading(true)
+    const request = { username, password }
+    const ret = await postLogin(request)
+    handleLoading(false)
+    if (ret.isErr()) {
+      const message = ret.error.message
+      handleError(FetchError.Error, message)
+      return
+    }
+    queryClient.clear()
+    await updateUser()
+    handleProfile()
+  }
+
+  return (
+    <Main title={t('status.login')} toast={toast}>
+      <article className={style.account}>
+        <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
+          <h1 className={style.title}>{t('welcome')}</h1>
+          {message && (
+            <ul className="messages_login">
+              <li>{message}</li>
+            </ul>
+          )}
+
+          <VStack gap="8">
+            <Input type="text" name="username" placeholder={t('account.login.username')} required error={error} onChange={handleInput} />
+            <Password name="password" placeholder={t('account.form.password')} error={error} onChange={handleInput} />
+            <p className="password_reset" onClick={handleReset}>
+              {t('account.login.reset')}
+            </p>
+          </VStack>
+
+          <VStack gap="12" className="mv_40">
+            <Button color="blue" size="l" name={t('status.login')} type="submit" loading={loading} />
+            <Button color="green" size="l" name={t('account.login.signup')} onClick={handleSignup} />
+          </VStack>
+        </form>
+      </article>
+      <Footer />
+    </Main>
+  )
+}

@@ -12,7 +12,6 @@ export default defineConfig({
       api: src('api'),
       components: src('components'),
       lib: src('lib'),
-      pages: src('pages'),
       styles: src('styles'),
       types: src('types'),
       utils: src('utils'),

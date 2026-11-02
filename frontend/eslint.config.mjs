@@ -77,9 +77,8 @@ export default [
       'import/no-restricted-paths': ['error', {
         zones: [
           { target: './src/components/parts', from: './src/components/widgets', message: 'parts/ から widgets/ を import しない' },
-          { target: './src/components/parts', from: './src/components/templates', message: 'parts/ から templates/ を import しない' },
-          { target: './src/components/widgets', from: './src/components/templates', message: 'widgets/ から templates/ を import しない' },
-          { target: './src/components', from: './src/pages', message: 'components/ から pages/ を import しない' },
+          { target: './src/components/parts', from: './src/components/pages', message: 'parts/ から pages/ を import しない' },
+          { target: './src/components/widgets', from: './src/components/pages', message: 'widgets/ から pages/ を import しない' },
         ],
       }], // ディレクトリ間の依存方向を強制
       'import/order': ['error',
@@ -94,13 +93,12 @@ export default [
             { pattern: 'types/**', group: 'internal', position: 'before' },
             { pattern: '{api/**,api/external/**,api/internal/**}', group: 'internal', position: 'before' },
             { pattern: 'utils/**', group: 'internal', position: 'before' },
-            { pattern: 'pages/**', group: 'internal', position: 'before' },
             { pattern: 'components/hooks/**', group: 'internal', position: 'before' },
             { pattern: 'components/provider/**', group: 'internal', position: 'before' },
             { pattern: '{components/layout,components/layout/**}', group: 'internal', position: 'before' },
             { pattern: 'components/parts/**', group: 'sibling', position: 'before' },
             { pattern: 'components/widgets/**', group: 'sibling', position: 'before' },
-            { pattern: 'components/templates/**', group: 'sibling', position: 'before' },
+            { pattern: 'components/pages/**', group: 'sibling', position: 'before' },
           ],
         },
       ],
