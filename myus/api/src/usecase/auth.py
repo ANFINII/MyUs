@@ -103,25 +103,6 @@ def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalErro
 
 
 @Result.shield_exception()
-def revoke_auth_tokens(tokens: list[str]) -> Result[None, FatalError]:
-    for token in tokens:
-        try:
-            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
-        except jwt.ExpiredSignatureError:
-            continue
-        except jwt.exceptions.DecodeError:
-            continue
-
-        jti = payload.get("jti")
-        exp = payload.get("exp")
-        if not isinstance(jti, str) or not isinstance(exp, int):
-            continue
-
-        revoke(jti, datetime.fromtimestamp(exp, tz=UTC))
-
-    return Result.ok(None)
-
-@Result.shield_exception()
 def login_user(username: str, password: str) -> Result[int | None, ValidateError]:
     if get_failure_count(username) >= LOGIN_FAILURE_LIMIT:
         log.warning("Login blocked: too many attempts", username=username)
@@ -148,6 +129,26 @@ def login_user(username: str, password: str) -> Result[int | None, ValidateError
 
     clear_failures(username)
     return Result.ok(user_id)
+
+
+@Result.shield_exception()
+def logout_user(access: str, refresh: str) -> Result[None, FatalError]:
+    for token in [access, refresh]:
+        try:
+            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            continue
+        except jwt.exceptions.DecodeError:
+            continue
+
+        jti = payload.get("jti")
+        exp = payload.get("exp")
+        if not isinstance(jti, str) or not isinstance(exp, int):
+            continue
+
+        revoke(jti, datetime.fromtimestamp(exp, tz=UTC))
+
+    return Result.ok(None)
 
 
 @Result.shield_exception()

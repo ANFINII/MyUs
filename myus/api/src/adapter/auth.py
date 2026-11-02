@@ -6,7 +6,7 @@ from ninja.throttling import AnonRateThrottle
 from api.modules.logger import log
 from api.src.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from api.src.usecase.auth import change_password, create_auth_tokens, login_user, password_reset_send_email, password_reset_verify_token, reset_password, revoke_auth_tokens, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
+from api.src.usecase.auth import change_password, create_auth_tokens, login_user, logout_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
 from api.src.usecase.user import signup_check
 from api.utils.common.result import FatalError, Result, ValidationError
 
@@ -183,7 +183,7 @@ class AuthAPI:
 
         access = request.COOKIES.get("access_token", "")
         refresh = request.COOKIES.get("refresh_token", "")
-        ret = revoke_auth_tokens([access, refresh])
+        ret = logout_user(access, refresh)
 
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
