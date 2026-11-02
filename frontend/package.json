@@ -13,9 +13,12 @@
     "build": "vite build",
     "start": "vite preview",
     "test": "vitest run",
-    "prebuild": "pnpm run lint",
+    "prebuild": "pnpm run check",
     "lint": "eslint src",
-    "format": "eslint --fix src"
+    "format": "eslint --fix src",
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm run lint && pnpm run typecheck",
+    "check:fix": "pnpm run format && pnpm run typecheck"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.4",

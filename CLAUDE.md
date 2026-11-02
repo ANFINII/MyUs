@@ -13,11 +13,11 @@
 - ルールファイル: [docs/frontend.md](docs/frontend.md)
 - CSS/SCSS: [docs/css.md](docs/css.md)
 - 対象: TypeScript/React/Next.jsコード
-- 確認後: `npm run lint` でリンターチェックを実行
+- 確認後: `pnpm check` でリンター・型チェックを実行
 
 ## 確認フロー
 
 1. コードを書く
 2. 対象のルールファイルをReadツールで読み込む
 3. ルールに適合しているか確認し、違反があれば修正
-4. リンターチェックを実行してエラーがあれば修正
+4. リンターチェック（BE: `uv run mypy`、FE: `pnpm check`）を実行してエラーがあれば修正

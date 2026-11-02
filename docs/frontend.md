@@ -284,7 +284,7 @@ return <div className={style.box}>...</div>
 
 ## リンターチェック（必須）
 
-コードを書いた後、必ず `npm run lint` を実行する。
+コードを書いた後、必ず `pnpm check`（ESLint と `tsc --noEmit`）を実行する。
 
 ### 確認事項
 1. TypeScriptエラーが0件
