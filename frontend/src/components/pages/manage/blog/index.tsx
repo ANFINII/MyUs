@@ -9,7 +9,7 @@ export default function ManageBlogsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
 
   const { data: channels } = useSuspenseQuery(channelsQuery())
-  const channel = router.query.channel?.toString() || channels[0]?.ulid
+  const channel = String(router.query.channel ?? '') || channels[0]?.ulid
   const params = { search, channel, limit, offset }
 
   const { data } = useSuspenseQuery(manageBlogsQuery(params))
