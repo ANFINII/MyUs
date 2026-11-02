@@ -4,6 +4,7 @@ import json
 import time
 from typing import Any
 import pytest
+import stripe
 from api.src.adapter.external.payment.stripe.provider import StripeProvider
 from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
 from api.src.domain.interface.payment.provider.data import WebhookVerified, WebhookVerifyFailed
@@ -20,24 +21,36 @@ def signature(payload: bytes, secret: str) -> str:
     return f"t={timestamp},v1={digest}"
 
 
-def event_payload(event_type: str) -> bytes:
+SUBSCRIPTION_OBJECT: dict[str, Any] = {
+    "id": "sub_1",
+    "object": "subscription",
+    "customer": "cus_1",
+    "metadata": {"user_ulid": "01USER", "product_code": "Premium"},
+    "items": {"object": "list", "data": [{"object": "subscription_item", "current_period_end": 1702592000, "price": {"object": "price", "unit_amount": 1200, "currency": "jpy"}}]},
+    "status": "active",
+    "start_date": 1700000000,
+    "canceled_at": None,
+}
+
+
+def event_payload(event_type: str, obj: dict[str, Any] = SUBSCRIPTION_OBJECT) -> bytes:
     event = {
         "id": "evt_1",
         "object": "event",
         "type": event_type,
         "created": 1700000000,
-        "data": {"object": {
-            "id": "sub_1",
-            "object": "subscription",
-            "customer": "cus_1",
-            "metadata": {"user_ulid": "01USER", "product_code": "Premium"},
-            "items": {"object": "list", "data": [{"object": "subscription_item", "current_period_end": 1702592000, "price": {"object": "price", "unit_amount": 1200, "currency": "jpy"}}]},
-            "status": "active",
-            "start_date": 1700000000,
-            "canceled_at": None,
-        }},
+        "data": {"object": obj},
     }
     return json.dumps(event).encode()
+
+
+def assert_no_payment(payload: bytes) -> None:
+    ret = StripeProvider().verify_webhook(payload, signature(payload, SECRET))
+
+    assert ret.is_ok, ret
+    verification = ret.ok_value
+    assert isinstance(verification, WebhookVerifyFailed)
+    assert verification.error == WebhookVerifyError.UNSUPPORTED_EVENT
 
 
 @pytest.fixture(autouse=True)
@@ -95,3 +108,17 @@ def test_malformed_payload_is_reported() -> None:
     verification = ret.ok_value
     assert isinstance(verification, WebhookVerifyFailed)
     assert verification.error == WebhookVerifyError.MALFORMED_PAYLOAD
+
+
+def test_zero_yen_invoice_paid_is_not_recorded() -> None:
+    assert_no_payment(event_payload("invoice.paid", {"id": "in_1", "object": "invoice", "amount_paid": 0}))
+
+
+def test_invoice_failed_without_payment_intent_is_not_recorded(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(stripe.InvoicePayment, "list", lambda **params: stripe.ListObject.construct_from({"object": "list", "data": []}, None))
+
+    assert_no_payment(event_payload("invoice.payment_failed", {"id": "in_1", "object": "invoice", "amount_paid": 0}))
+
+
+def test_refund_without_payment_intent_is_not_recorded() -> None:
+    assert_no_payment(event_payload("charge.refunded", {"id": "ch_1", "object": "charge", "payment_intent": None}))

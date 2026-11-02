@@ -55,7 +55,11 @@ class StripeProvider(PaymentInterface):
             return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"unsupported event_type={event.type}"))
 
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        external_id, content = stripe_event_content(event_type, event.data.object.to_dict())
+        event_content = stripe_event_content(event_type, event.data.object.to_dict())
+        if event_content is None:
+            return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"no payment event_type={event.type} event_id={event.id}"))
+
+        external_id, content = event_content
         return Result.ok(WebhookVerified(event=convert_stripe_event(event, event_type, payload, external_id, content)))
 
     @Result.shield_exception()
@@ -85,26 +89,41 @@ class StripeProvider(PaymentInterface):
         return Result.ok(convert_stripe_subscription(subscription))
 
 
-def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> tuple[str, PaymentEventContent]:
+def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> tuple[str, PaymentEventContent] | None:
     match event_type:
         case WebhookEventType.SUBSCRIPTION_CREATED | WebhookEventType.SUBSCRIPTION_UPDATED | WebhookEventType.SUBSCRIPTION_CANCELED:
             subscription = stripe.Subscription.construct_from(obj, stripe.api_key)
             return subscription.id, convert_stripe_subscription(subscription)
         case WebhookEventType.PAYMENT_SUCCEEDED:
             invoice = stripe.Invoice.construct_from(obj, stripe.api_key)
-            payment_intent = stripe.PaymentIntent.retrieve(stripe_invoice_payment_intent_id(invoice), expand=["latest_charge.balance_transaction"])
+            if invoice.amount_paid == 0:
+                return None
+
+            payment_intent_id = stripe_invoice_payment_intent_id(invoice)
+            if len(payment_intent_id) == 0:
+                return None
+
+            payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id, expand=["latest_charge.balance_transaction"])
             charge = payment_intent.latest_charge
             if not isinstance(charge, stripe.Charge) or not isinstance(charge.balance_transaction, stripe.BalanceTransaction):
                 raise ValueError(f"balance_transaction missing payment_intent={payment_intent.id}")
             return payment_intent.id, convert_stripe_paid(invoice, charge.balance_transaction)
         case WebhookEventType.PAYMENT_FAILED:
             invoice = stripe.Invoice.construct_from(obj, stripe.api_key)
-            return stripe_invoice_payment_intent_id(invoice), PaymentFailedContent()
+            payment_intent_id = stripe_invoice_payment_intent_id(invoice)
+            if len(payment_intent_id) == 0:
+                return None
+
+            return payment_intent_id, PaymentFailedContent()
         case WebhookEventType.REFUND_ISSUED:
             charge = stripe.Charge.construct_from(obj, stripe.api_key)
+            payment_intent_id = stripe_id(charge.payment_intent)
+            if len(payment_intent_id) == 0:
+                return None
+
             refunds = stripe.Refund.list(charge=charge.id, expand=["data.balance_transaction"]).auto_paging_iter()
             balances = [convert_stripe_balance(r.balance_transaction) for r in refunds if isinstance(r.balance_transaction, stripe.BalanceTransaction)]
-            return stripe_id(charge.payment_intent), RefundContent(balances=balances)
+            return payment_intent_id, RefundContent(balances=balances)
         case WebhookEventType.PAYOUT_PAID:
             payout = stripe.Payout.construct_from(obj, stripe.api_key)
             balance_transactions = stripe.BalanceTransaction.list(payout=payout.id).auto_paging_iter()
@@ -118,5 +137,5 @@ def stripe_invoice_payment_intent_id(invoice: stripe.Invoice) -> str:
     payments = stripe.InvoicePayment.list(invoice=invoice.id)
     payment_intent_ids = [stripe_id(p.payment.payment_intent) for p in payments.data if p.payment.payment_intent is not None]
     if len(payment_intent_ids) == 0:
-        raise ValueError(f"payment_intent missing invoice={invoice.id}")
+        return ""
     return payment_intent_ids[0]
