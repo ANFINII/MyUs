@@ -1,8 +1,8 @@
 from dataclasses import replace
-from django.db import transaction
 from django.utils import timezone
 from ninja import UploadedFile
 from api.modules.logger import log
+from api.src.domain.interface.category.data import CategoryData
 from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.video.interface import VideoInterface
@@ -28,6 +28,7 @@ from api.utils.enum.notification import NotificationObjectType, NotificationType
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload, validate_uploads
+from api.utils.functions.transaction import atomic_result
 
 
 @Result.shield_exception()
@@ -114,7 +115,6 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.VIDEO, obj.channel.ulid))
 
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -123,16 +123,9 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        save_ret = repo.bulk_save([update_data])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
-
-        category_ret = category_repo.bulk_save(MediaType.VIDEO, obj.id, [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
+    save_ret = atomic_result(lambda: save_video_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish and obj.convert != "":
         notification_ret = create_publish_notification(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
@@ -154,16 +147,9 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
         log.error("Video not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    with transaction.atomic():
-        delete_ret = repo.bulk_delete(delete_ids)
-        if delete_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(delete_ret.err_value)
-
-        notification_ret = delete_object_notifications(NotificationObjectType.VIDEO, delete_ids)
-        if notification_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(notification_ret.err_value)
+    delete_ret = atomic_result(lambda: delete_video_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
@@ -236,7 +222,6 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish, publish_at=input.publish_at)
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -245,16 +230,9 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        save_ret = repo.bulk_save([update_data])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
-
-        category_ret = category_repo.bulk_save(MediaType.MUSIC, obj.id, [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
+    save_ret = atomic_result(lambda: save_music_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
         notification_ret = create_publish_notification(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
@@ -276,16 +254,9 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
         log.error("Music not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    with transaction.atomic():
-        delete_ret = repo.bulk_delete(delete_ids)
-        if delete_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(delete_ret.err_value)
-
-        notification_ret = delete_object_notifications(NotificationObjectType.MUSIC, delete_ids)
-        if notification_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(notification_ret.err_value)
+    delete_ret = atomic_result(lambda: delete_music_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
@@ -365,7 +336,6 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
 
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -374,16 +344,9 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        save_ret = repo.bulk_save([update_data])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
-
-        category_ret = category_repo.bulk_save(MediaType.BLOG, obj.id, [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
+    save_ret = atomic_result(lambda: save_blog_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
         notification_ret = create_publish_notification(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
@@ -405,16 +368,9 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
         log.error("Blog not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    with transaction.atomic():
-        delete_ret = repo.bulk_delete(delete_ids)
-        if delete_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(delete_ret.err_value)
-
-        notification_ret = delete_object_notifications(NotificationObjectType.BLOG, delete_ids)
-        if notification_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(notification_ret.err_value)
+    delete_ret = atomic_result(lambda: delete_blog_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
@@ -500,7 +456,6 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
 
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -509,16 +464,9 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        save_ret = repo.bulk_save([update_data])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
-
-        category_ret = category_repo.bulk_save(MediaType.COMIC, obj.id, [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
+    save_ret = atomic_result(lambda: save_comic_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
         notification_ret = create_publish_notification(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
@@ -540,16 +488,9 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
         log.error("Comic not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    with transaction.atomic():
-        delete_ret = repo.bulk_delete(delete_ids)
-        if delete_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(delete_ret.err_value)
-
-        notification_ret = delete_object_notifications(NotificationObjectType.COMIC, delete_ids)
-        if notification_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(notification_ret.err_value)
+    delete_ret = atomic_result(lambda: delete_comic_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
@@ -629,7 +570,6 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.PICTURE, obj.channel.ulid))
 
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -638,16 +578,9 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        save_ret = repo.bulk_save([update_data])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
-
-        category_ret = category_repo.bulk_save(MediaType.PICTURE, obj.id, [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
+    save_ret = atomic_result(lambda: save_picture_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
         notification_ret = create_publish_notification(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
@@ -669,16 +602,9 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindEr
         log.error("Picture not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    with transaction.atomic():
-        delete_ret = repo.bulk_delete(delete_ids)
-        if delete_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(delete_ret.err_value)
-
-        notification_ret = delete_object_notifications(NotificationObjectType.PICTURE, delete_ids)
-        if notification_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(notification_ret.err_value)
+    delete_ret = atomic_result(lambda: delete_picture_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
 
@@ -751,7 +677,6 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
         return Result.err(ValidationError("error.publishAtAfterPeriod"))
 
     update_data = replace(obj, title=input.title, content=input.content, period=input.period, publish=input.publish, publish_at=input.publish_at)
-    category_repo = injector.get(CategoryInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -760,16 +685,9 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    with transaction.atomic():
-        save_ret = repo.bulk_save([update_data])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
-
-        category_ret = category_repo.bulk_save(MediaType.CHAT, obj.id, [category_data])
-        if category_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(category_ret.err_value)
+    save_ret = atomic_result(lambda: save_chat_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
         notification_ret = create_publish_notification(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
@@ -801,20 +719,186 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError
         chat_reply_ids = reply_ids_ret.ok_value
         reply_ids += chat_reply_ids
 
-    with transaction.atomic():
-        delete_ret = repo.bulk_delete(delete_ids)
-        if delete_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(delete_ret.err_value)
+    delete_ret = atomic_result(lambda: delete_chat_data(delete_ids, reply_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
 
-        chat_notification_ret = delete_object_notifications(NotificationObjectType.CHAT, delete_ids)
-        if chat_notification_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(chat_notification_ret.err_value)
+    return Result.ok(None)
 
-        message_notification_ret = delete_object_notifications(NotificationObjectType.MESSAGE, reply_ids)
-        if message_notification_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(message_notification_ret.err_value)
+
+@Result.shield_exception()
+def save_video_data(data: VideoData, category_data: CategoryData) -> Result[None, FatalError]:
+    repo = injector.get(VideoInterface)
+    category_repo = injector.get(CategoryInterface)
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    category_ret = category_repo.bulk_save(MediaType.VIDEO, data.id, [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_music_data(data: MusicData, category_data: CategoryData) -> Result[None, FatalError]:
+    repo = injector.get(MusicInterface)
+    category_repo = injector.get(CategoryInterface)
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    category_ret = category_repo.bulk_save(MediaType.MUSIC, data.id, [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_blog_data(data: BlogData, category_data: CategoryData) -> Result[None, FatalError]:
+    repo = injector.get(BlogInterface)
+    category_repo = injector.get(CategoryInterface)
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    category_ret = category_repo.bulk_save(MediaType.BLOG, data.id, [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_comic_data(data: ComicData, category_data: CategoryData) -> Result[None, FatalError]:
+    repo = injector.get(ComicInterface)
+    category_repo = injector.get(CategoryInterface)
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    category_ret = category_repo.bulk_save(MediaType.COMIC, data.id, [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_picture_data(data: PictureData, category_data: CategoryData) -> Result[None, FatalError]:
+    repo = injector.get(PictureInterface)
+    category_repo = injector.get(CategoryInterface)
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    category_ret = category_repo.bulk_save(MediaType.PICTURE, data.id, [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_chat_data(data: ChatData, category_data: CategoryData) -> Result[None, FatalError]:
+    repo = injector.get(ChatInterface)
+    category_repo = injector.get(CategoryInterface)
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    category_ret = category_repo.bulk_save(MediaType.CHAT, data.id, [category_data])
+    if category_ret.is_err:
+        return Result.err(category_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_video_data(ids: list[int]) -> Result[None, FatalError]:
+    repo = injector.get(VideoInterface)
+    delete_ret = repo.bulk_delete(ids)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    notification_ret = delete_object_notifications(NotificationObjectType.VIDEO, ids)
+    if notification_ret.is_err:
+        return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_music_data(ids: list[int]) -> Result[None, FatalError]:
+    repo = injector.get(MusicInterface)
+    delete_ret = repo.bulk_delete(ids)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    notification_ret = delete_object_notifications(NotificationObjectType.MUSIC, ids)
+    if notification_ret.is_err:
+        return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_blog_data(ids: list[int]) -> Result[None, FatalError]:
+    repo = injector.get(BlogInterface)
+    delete_ret = repo.bulk_delete(ids)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    notification_ret = delete_object_notifications(NotificationObjectType.BLOG, ids)
+    if notification_ret.is_err:
+        return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_comic_data(ids: list[int]) -> Result[None, FatalError]:
+    repo = injector.get(ComicInterface)
+    delete_ret = repo.bulk_delete(ids)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    notification_ret = delete_object_notifications(NotificationObjectType.COMIC, ids)
+    if notification_ret.is_err:
+        return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_picture_data(ids: list[int]) -> Result[None, FatalError]:
+    repo = injector.get(PictureInterface)
+    delete_ret = repo.bulk_delete(ids)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    notification_ret = delete_object_notifications(NotificationObjectType.PICTURE, ids)
+    if notification_ret.is_err:
+        return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_chat_data(ids: list[int], reply_ids: list[int]) -> Result[None, FatalError]:
+    repo = injector.get(ChatInterface)
+    delete_ret = repo.bulk_delete(ids)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    chat_notification_ret = delete_object_notifications(NotificationObjectType.CHAT, ids)
+    if chat_notification_ret.is_err:
+        return Result.err(chat_notification_ret.err_value)
+
+    message_notification_ret = delete_object_notifications(NotificationObjectType.MESSAGE, reply_ids)
+    if message_notification_ret.is_err:
+        return Result.err(message_notification_ret.err_value)
 
     return Result.ok(None)
