@@ -27,13 +27,13 @@ import VStack from 'components/parts/Stack/Vertical'
 import ComicModal from 'components/widgets/Modal/Comic'
 
 interface Props {
-  data: Comic
   channels: Channel[]
   categories: Category[]
+  data: Comic
 }
 
 export default function ManageComicEdit(props: Props): React.JSX.Element {
-  const { data, channels, categories } = props
+  const { channels, categories, data } = props
 
   const router = useRouter()
   const { t } = useTranslation()

@@ -153,6 +153,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
 - 連続する`useSuspenseQuery`の間に空行を入れない
 - `view.tsx`に渡すpropsは、`useSuspenseQuery`を書いた順（補助的なもの → 主となる`data`）に並べる
+- `view.tsx`の`interface Props`と`const { ... } = props`も、`index.tsx`で渡す順に並べる
 
 ### 用途別のルール
 

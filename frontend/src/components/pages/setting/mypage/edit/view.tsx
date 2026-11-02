@@ -27,12 +27,12 @@ import TableRow from 'components/parts/Table/Row'
 import style from '../../Setting.module.scss'
 
 interface Props {
-  mypage: MypageOut
   channels: Channel[]
+  mypage: MypageOut
 }
 
 export default function SettingMyPageEdit(props: Props): React.JSX.Element {
-  const { mypage, channels } = props
+  const { channels, mypage } = props
 
   const router = useRouter()
   const { t } = useTranslation()
