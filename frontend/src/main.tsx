@@ -12,8 +12,8 @@ import 'styles/internal/userpolicy.scss'
 import 'styles/internal/registration.scss'
 import 'styles/internal/videojs-myus.scss'
 
-reloadOnPreloadError()
 watchVersion()
+reloadOnPreloadError()
 
 const root = document.getElementById('root')
 
