@@ -199,10 +199,8 @@ class VideoConverter:
                 if 'h264_nvenc' in nvenc_check.stdout:
                     return True
 
-        except FileNotFoundError:
+        except (OSError, subprocess.SubprocessError):
             pass  # NVIDIA GPUなし
-        except Exception:
-            pass  # エラー時はスキップ
 
         return False
 
@@ -217,8 +215,8 @@ class VideoConverter:
                 timeout=self.ENCODER_CHECK_TIMEOUT
             )
             return 'h264_qsv' in result.stdout
-        except Exception:
-            log.critical("Intel GPU検出エラー")
+        except (OSError, subprocess.SubprocessError) as e:
+            log.error("Intel GPU検出エラー", exc=e)
             return False
 
     def _check_amd_gpu(self) -> bool:
@@ -234,8 +232,8 @@ class VideoConverter:
                             return True
                 except ImportError:
                     log.debug("wmi module not available")
-        except Exception:
-            log.critical("AMD GPU detection error")
+        except Exception as e:  # noqa: BLE001
+            log.error("AMD GPU detection error", exc=e)
         return False
 
     def _calculate_optimal_workers(self) -> int:
@@ -564,8 +562,8 @@ class VideoConverter:
                 successful_resolutions
             )
             conversion_stats['mp4_path'] = mp4_path
-        except Exception:
-            log.critical("MP4生成エラー")
+        except Exception as e:  # noqa: BLE001
+            log.error("MP4生成エラー", exc=e)
             conversion_stats['mp4_path'] = None
 
         return conversion_stats
