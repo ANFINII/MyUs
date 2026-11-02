@@ -25,13 +25,13 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 
 interface Props {
-  data: Picture
   channels: Channel[]
   categories: Category[]
+  data: Picture
 }
 
 export default function ManagePictureEdit(props: Props): React.JSX.Element {
-  const { data, channels, categories } = props
+  const { channels, categories, data } = props
 
   const router = useRouter()
   const { t } = useTranslation()

@@ -22,13 +22,13 @@ import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
 
 interface Props {
+  channels: Channel[]
   data: BlogList
   page: number
-  channels: Channel[]
 }
 
 export default function ManageBlogs(props: Props): React.JSX.Element {
-  const { data, page, channels } = props
+  const { channels, data, page } = props
   const { items, total } = data
 
   const router = useRouter()

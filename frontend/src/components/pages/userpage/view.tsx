@@ -37,15 +37,15 @@ const enum TabKey {
 }
 
 interface Props {
+  userPage: UserPage
   ulid: string
   channelUlid: string
-  userPage: UserPage
   media: UserPageMedia
   advertises: Advertise[]
 }
 
 export default function Userpage(props: Props): React.JSX.Element {
-  const { ulid, channelUlid, userPage, media, advertises } = props
+  const { userPage, ulid, channelUlid, media, advertises } = props
   const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
   const router = useRouter()

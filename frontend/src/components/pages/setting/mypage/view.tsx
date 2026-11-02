@@ -17,12 +17,12 @@ import LightBox from 'components/widgets/LightBox'
 import style from '../Setting.module.scss'
 
 interface Props {
-  mypage: MypageOut
   channels: Channel[]
+  mypage: MypageOut
 }
 
 export default function SettingMyPage(props: Props): React.JSX.Element {
-  const { mypage, channels } = props
+  const { channels, mypage } = props
 
   const router = useRouter()
   const { t } = useTranslation()

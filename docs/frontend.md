@@ -152,7 +152,8 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - 主となるクエリが無いページ（作成画面）や、複数の種類のデータを並べて扱うページ（設定画面・ユーザーページ等）は、扱うものの名前を付ける（`channels`・`categories`・`mypage`・`profile`・`user`・`userPage`等）
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
 - `index.tsx`の関数の中は、`return`の前に空行を入れる。`router`・`params`などの準備と`useSuspenseQuery`の間には空行を入れない。ただし`useSuspenseQuery`が2行以上続くとき、または`useSuspenseQuery`の結果を使って次の`useSuspenseQuery`の引数を作るとき（管理画面の一覧の`channels` → `channel`・`params` → `data`）は、そのまとまりの上に空行を入れてよい（まとまりの中には入れない）
-- `view.tsx`に渡すpropsは、`useSuspenseQuery`を書いた順（補助的なもの → 主となる`data`）に並べる
+- `view.tsx`に渡すpropsは、`useSuspenseQuery`で取ったものを書いた順（補助的なもの → 主となる`data`）に先に並べ、そのあとに`page`・`ulid`などURLから作った値を並べる（例: `channels` → `data` → `page`）
+- `view.tsx`の`interface Props`と`const { ... } = props`も、`index.tsx`で渡す順に並べる
 
 ### 用途別のルール
 

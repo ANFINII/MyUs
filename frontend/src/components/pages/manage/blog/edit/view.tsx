@@ -27,13 +27,13 @@ import BlogModal from 'components/widgets/Modal/Blog'
 import TextEditor from 'components/widgets/TextEditor'
 
 interface Props {
-  data: Blog
   channels: Channel[]
   categories: Category[]
+  data: Blog
 }
 
 export default function ManageBlogEdit(props: Props): React.JSX.Element {
-  const { data, channels, categories } = props
+  const { channels, categories, data } = props
 
   const router = useRouter()
   const { t } = useTranslation()
