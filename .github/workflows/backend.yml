@@ -53,6 +53,7 @@ jobs:
 
       - uses: astral-sh/setup-uv@v6
         with:
+          version: "0.13.1"
           python-version: "3.15"
           enable-cache: true
           cache-dependency-glob: myus/uv.lock
