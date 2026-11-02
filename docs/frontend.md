@@ -132,6 +132,7 @@ page('/manage/video/$ulid', () => import('components/pages/manage/video/edit')),
 export default function ManageVideoEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
+
   const { data: channels } = useSuspenseQuery(channelsQuery())
   const { data: categories } = useSuspenseQuery(categoriesQuery())
   const { data } = useSuspenseQuery(manageVideoQuery(ulid))
@@ -150,7 +151,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - 一覧・詳細・編集ページの主となるクエリは`data`と名付ける（`datas`・`mediaHome`のような個別の名前にしない）
 - 主となるクエリが無いページ（作成画面）や、複数の種類のデータを並べて扱うページ（設定画面・ユーザーページ等）は、扱うものの名前を付ける（`channels`・`categories`・`mypage`・`profile`・`user`・`userPage`等）
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
-- `index.tsx`の関数の中は、`return`の前だけ空行を入れる（`router`・`params`などの準備と`useSuspenseQuery`の間、連続する`useSuspenseQuery`の間には空行を入れない）
+- `index.tsx`の関数の中は、`return`の前に空行を入れる。`router`・`params`などの準備と`useSuspenseQuery`の間には空行を入れない。ただし`useSuspenseQuery`が2行以上続くときは、そのまとまりの上に空行を入れてよい（まとまりの中には入れない）
 - `view.tsx`に渡すpropsは、`useSuspenseQuery`を書いた順（補助的なもの → 主となる`data`）に並べる
 
 ### 用途別のルール
