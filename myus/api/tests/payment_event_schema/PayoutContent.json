@@ -1,0 +1,60 @@
+{
+  "$defs": {
+    "Currency": {
+      "enum": [
+        "Jpy",
+        "Usd",
+        "Eur",
+        "Gbp",
+        "Cny",
+        "Krw"
+      ],
+      "title": "Currency",
+      "type": "string"
+    },
+    "PayoutStatus": {
+      "enum": [
+        "Pending",
+        "InTransit",
+        "Paid",
+        "Failed",
+        "Canceled"
+      ],
+      "title": "PayoutStatus",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "amount": {
+      "title": "Amount",
+      "type": "integer"
+    },
+    "arrival_at": {
+      "format": "date-time",
+      "title": "Arrival At",
+      "type": "string"
+    },
+    "balance_external_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Balance External Ids",
+      "type": "array"
+    },
+    "currency": {
+      "$ref": "#/$defs/Currency"
+    },
+    "status": {
+      "$ref": "#/$defs/PayoutStatus"
+    }
+  },
+  "required": [
+    "amount",
+    "currency",
+    "status",
+    "arrival_at",
+    "balance_external_ids"
+  ],
+  "title": "PayoutContent",
+  "type": "object"
+}

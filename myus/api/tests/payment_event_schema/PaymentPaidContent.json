@@ -1,0 +1,79 @@
+{
+  "$defs": {
+    "BalanceData": {
+      "properties": {
+        "amount": {
+          "title": "Amount",
+          "type": "integer"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "external_id": {
+          "title": "External Id",
+          "type": "string"
+        },
+        "fee": {
+          "title": "Fee",
+          "type": "integer"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "external_id",
+        "amount",
+        "fee",
+        "currency",
+        "occurred_at"
+      ],
+      "title": "BalanceData",
+      "type": "object"
+    },
+    "Currency": {
+      "enum": [
+        "Jpy",
+        "Usd",
+        "Eur",
+        "Gbp",
+        "Cny",
+        "Krw"
+      ],
+      "title": "Currency",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "balance": {
+      "$ref": "#/$defs/BalanceData"
+    },
+    "customer_id": {
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "receipt_number": {
+      "title": "Receipt Number",
+      "type": "string"
+    },
+    "subscription_external_id": {
+      "title": "Subscription External Id",
+      "type": "string"
+    },
+    "user_ulid": {
+      "title": "User Ulid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "customer_id",
+    "user_ulid",
+    "subscription_external_id",
+    "receipt_number",
+    "balance"
+  ],
+  "title": "PaymentPaidContent",
+  "type": "object"
+}

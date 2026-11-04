@@ -1,0 +1,107 @@
+{
+  "$defs": {
+    "Currency": {
+      "enum": [
+        "Jpy",
+        "Usd",
+        "Eur",
+        "Gbp",
+        "Cny",
+        "Krw"
+      ],
+      "title": "Currency",
+      "type": "string"
+    },
+    "Money": {
+      "properties": {
+        "amount": {
+          "title": "Amount",
+          "type": "integer"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "title": "Money",
+      "type": "object"
+    },
+    "PaymentProvider": {
+      "enum": [
+        "Stripe"
+      ],
+      "title": "PaymentProvider",
+      "type": "string"
+    },
+    "SubscriptionStatus": {
+      "enum": [
+        "Active",
+        "PastDue",
+        "Canceled",
+        "Expired",
+        "Incomplete"
+      ],
+      "title": "SubscriptionStatus",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "canceled_at": {
+      "format": "date-time",
+      "title": "Canceled At",
+      "type": "string"
+    },
+    "current_period_end": {
+      "format": "date-time",
+      "title": "Current Period End",
+      "type": "string"
+    },
+    "customer_id": {
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "external_id": {
+      "title": "External Id",
+      "type": "string"
+    },
+    "price": {
+      "$ref": "#/$defs/Money"
+    },
+    "product_code": {
+      "title": "Product Code",
+      "type": "string"
+    },
+    "provider": {
+      "$ref": "#/$defs/PaymentProvider"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/SubscriptionStatus"
+    },
+    "user_ulid": {
+      "title": "User Ulid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "provider",
+    "external_id",
+    "customer_id",
+    "user_ulid",
+    "product_code",
+    "price",
+    "status",
+    "started_at",
+    "current_period_end",
+    "canceled_at"
+  ],
+  "title": "ProviderSubscriptionData",
+  "type": "object"
+}
