@@ -120,5 +120,21 @@ def test_invoice_failed_without_payment_intent_is_not_recorded(monkeypatch: pyte
     assert_no_payment(event_payload("invoice.payment_failed", {"id": "in_1", "object": "invoice", "amount_paid": 0}))
 
 
+def test_invoice_failed_uses_open_payment(monkeypatch: pytest.MonkeyPatch) -> None:
+    payments = [
+        {"object": "invoice_payment", "status": "canceled", "payment": {"type": "payment_intent", "payment_intent": "pi_canceled"}},
+        {"object": "invoice_payment", "status": "open", "payment": {"type": "payment_intent", "payment_intent": "pi_open"}},
+    ]
+    monkeypatch.setattr(stripe.InvoicePayment, "list", lambda **params: stripe.ListObject.construct_from({"object": "list", "data": [p for p in payments if p["status"] == params["status"]]}, None))
+    payload = event_payload("invoice.payment_failed", {"id": "in_1", "object": "invoice", "amount_paid": 0})
+
+    ret = StripeProvider().verify_webhook(payload, signature(payload, SECRET))
+
+    assert ret.is_ok, ret
+    verification = ret.ok_value
+    assert isinstance(verification, WebhookVerified)
+    assert verification.event.external_id == "pi_open"
+
+
 def test_refund_without_payment_intent_is_not_recorded() -> None:
     assert_no_payment(event_payload("charge.refunded", {"id": "ch_1", "object": "charge", "payment_intent": None}))
