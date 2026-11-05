@@ -70,10 +70,12 @@ flowchart LR
 | 置き場 | 内容 |
 |---|---|
 | `api/db/models/es.py` | 上の `es_*` テーブル |
-| `api/src/domain/es/` | 基盤の型（`Event`・`EventEnvelope`・`AggregateId`・`Seq`・`EventId`）と、`EventStoreInterface`・`SnapshotStoreInterface`・`OutboxInterface` |
+| `api/src/domain/interface/es/` | 基盤の型（`EventEnvelope`）と `EventStoreInterface`（ほかのドメインの Interface と同じ置き場） |
 | `api/src/domain/aggregate/<集約>/` | 集約ごとの状態（判別共用体）・イベント・コマンド・`apply`・`replay`。I/O を持たない |
-| `api/src/domain/entity/es/` | `EventStoreInterface` などの Django ORM 実装と、イベントの codec（保存形式との変換） |
-| `api/src/usecase/command/<集約>.py` | コマンドハンドラ（取得 → 判断 → 保存） |
+| `api/src/domain/entity/es/` | `EventStoreRepository`（Django ORM の実装）。イベントの種類の名前 ↔ dataclass の対応を受け取り、`_convert.py` で保存形式と変換する |
+| `api/src/usecase/command/handler.py` | 共通のコマンドハンドラ `handle_command`（取得 → 判断 → 保存 → 競合なら取り直す） |
+| `api/src/usecase/command/<集約>.py` | 集約ごとのコマンド |
+| `api/utils/functions/es.py` | `new_event_id`（集約・`seq` から決まる UUID v5） |
 | `api/src/usecase/receiver/` | Receiver（外の事実やほかの集約のイベントを受けてコマンドを打つ） |
 | `api/src/usecase/projector/` | Projector と専用の Writer |
 | `api/src/usecase/query/` | query usecase と専用の Reader |
@@ -114,19 +116,28 @@ def replay(base: SubscriptionState | None, envelopes: list[EventEnvelope[Subscri
 
 | # | 決めること | 候補・推奨 |
 |---|---|---|
-| D1 | 競合を表すエラー型 | `ConflictError`（再試行できる）を共通のエラー型に足す。HTTP は 409 にするか、今の規約に合わせて 400 にするか |
-| D2 | 履歴の破損を表すエラー型 | `HistoryCorruptedError`（再試行できない）を足し、`FatalError` と分けてログ・通知する |
-| D3 | 集約 ID の採番 | ULID を既定にする（今の他ドメインと揃える）。自然キーから決めるのは、失効して作り直しても同じ履歴が続くときだけ |
-| D4 | worker の動かし方 | まずは DB を定期的に読む worker（docker-compose に `myus_worker` を足す）。件数が増えたら Redis Streams か SQS を検討する |
-| D5 | 帳簿の集約の単位 | 決済会社 × 会計年度（`Ledger(provider, fiscal_year)`）。年度で閉じられるので、イベントが際限なく増えない |
-| D6 | 既存データの移し方 | 今の `PaymentEvent` を Inbox として流し直し、集約のイベントを作る（移行用のイベントは作らない）。流し直した結果と今のテーブルを突き合わせる |
-| D7 | 決済以外への展開 | 最初は決済だけにする。メディア・フォローなどの CRUD は ES にしない（後述の「やらないこと」） |
+| D1 | 競合を表すエラー型 | → 決定：`ConflictError`（再試行できる）を共通のエラー型に足す。HTTP は今の規約に合わせて 400 |
+| D2 | 履歴の破損を表すエラー型 | → 決定：`HistoryCorruptedError`（再試行できない）を足し、`FatalError` と分けてログ・通知する |
+| D3 | 集約 ID の採番 | → 決定：ULID を既定にする（今の他ドメインと揃える）。自然キーから決めるのは、失効して作り直しても同じ履歴が続くときだけ |
+| D4 | worker の動かし方 | → 決定：まずは DB を定期的に読む worker（docker-compose に `myus_worker` を足す）。件数が増えたら Redis Streams か SQS を検討する |
+| D5 | 帳簿の集約の単位 | → 決定：決済会社 × 会計年度（`Ledger(provider, fiscal_year)`）。年度で閉じられるので、イベントが際限なく増えない |
+| D6 | 既存データの移し方 | → 決定：今の `PaymentEvent` を Inbox として流し直し、集約のイベントを作る（移行用のイベントは作らない）。流し直した結果と今のテーブルを突き合わせる |
+| D7 | 決済以外への展開 | → 決定：最初は決済だけにする。メディア・フォローなどの CRUD は ES にしない（後述の「やらないこと」） |
 
 ---
 
 ## PR 計画
 
-### ⏸ Phase 1: ES の基盤
+### ✅ Phase 1: ES の基盤
+
+PR #1〜#3 を1つの PR にまとめた。計画から変えたこと：
+
+- 作ったテーブルは `es_event`・`es_outbox` だけ。`es_snapshot`・`es_projection_progress`・`es_dead_letter` は、使う Phase（snapshot は必要になってから、進捗は Phase 6、dead letter は Phase 3）で足す。`SnapshotStoreInterface`・`OutboxInterface` も同じ
+- `EventStoreInterface` の `load`・`append` は、ほかの Interface の決まり（`get_ids`・`bulk_get` など）の例外にする。イベントの読み書きはその組み合わせでは書けないため
+- `EventEnvelope` は `event_type` を持たない。種類の名前は、`EventStoreRepository` に渡す対応表から dataclass で引く
+- `payload` は `PaymentEvent.content` と同じく TextField（pydantic の `TypeAdapter` で JSON にする）
+- `ConflictError` の HTTP は、`docs/backend.md` の決まり（200・400・500 だけ）に合わせて 400 にする（D1）
+- Repository は injector にまだ登録しない。最初の集約（Phase 4）で、その集約のイベントの対応表と一緒に登録する
 
 #### PR #1: 基盤の型とテーブル
 
