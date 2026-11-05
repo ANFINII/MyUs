@@ -1,0 +1,63 @@
+{
+  "$defs": {
+    "BalanceData": {
+      "properties": {
+        "amount": {
+          "title": "Amount",
+          "type": "integer"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "external_id": {
+          "title": "External Id",
+          "type": "string"
+        },
+        "fee": {
+          "title": "Fee",
+          "type": "integer"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "external_id",
+        "amount",
+        "fee",
+        "currency",
+        "occurred_at"
+      ],
+      "title": "BalanceData",
+      "type": "object"
+    },
+    "Currency": {
+      "enum": [
+        "Jpy",
+        "Usd",
+        "Eur",
+        "Gbp",
+        "Cny",
+        "Krw"
+      ],
+      "title": "Currency",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "balances": {
+      "items": {
+        "$ref": "#/$defs/BalanceData"
+      },
+      "title": "Balances",
+      "type": "array"
+    }
+  },
+  "required": [
+    "balances"
+  ],
+  "title": "RefundContent",
+  "type": "object"
+}
