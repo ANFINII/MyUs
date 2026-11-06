@@ -110,7 +110,6 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | エラー型 | 使う条件 | `type`（`ErrorType`） | HTTPステータス | message |
 |---|---|---|---|---|
 | `ValidationError` | 入力や業務ルールに反する（上限超過・ファイル形式等） | `VALIDATION` | 400 | `message` |
-| `UnauthorizedError` | 認証されていない | `UNAUTHENTICATED` | 400 | `"Unauthorized"` |
 | `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | `FORBIDDEN` | 400 | `message` |
 | `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | `NOT_FOUND` | 400 | `message` |
 | `FatalError` | 想定外のエラー（DB・外部APIの例外等） | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
