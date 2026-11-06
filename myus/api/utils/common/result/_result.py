@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
-
 
 class _Nil:
     """_Resultのnil状態を表す内部クラス。
@@ -58,16 +56,6 @@ class _Result[T, E]:
     def err(cls, value: E) -> _Result[T, E]:
         return _Result[T, E](_Result.__dummy, is_ok=False, ok_value=_Nil(), err_value=value)
 
-    def maybe_ok(self) -> T | None:
-        if self.is_ok:
-            return self.ok_value
-        return None
-
-    def maybe_err(self) -> E | None:
-        if self.is_err:
-            return self.err_value
-        return None
-
     @property
     def is_ok(self) -> bool:
         return self._is_ok
@@ -89,33 +77,3 @@ class _Result[T, E]:
             raise RuntimeError("結果がokの場合はerr_valueにアクセスしないでください")
         assert not isinstance(self._err_value, _Nil)
         return self._err_value
-
-    def map[U](self, f: Callable[[T], U]) -> _Result[U, E]:
-        if self.is_ok:
-            return _Result.ok(f(self.ok_value))
-        return _Result.err(self.err_value)
-
-    def map_err[F](self, f: Callable[[E], F]) -> _Result[T, F]:
-        if self.is_err:
-            return _Result.err(f(self.err_value))
-        return _Result.ok(self.ok_value)
-
-    def and_then[U](self, f: Callable[[T], _Result[U, E]]) -> _Result[U, E]:
-        if self.is_ok:
-            return f(self.ok_value)
-        return _Result.err(self.err_value)
-
-    def ok_value_or(self, default: T) -> T:
-        if self.is_ok:
-            return self.ok_value
-        return default
-
-    def ok_value_or_else(self, f: Callable[[E], T]) -> T:
-        if self.is_ok:
-            return self.ok_value
-        return f(self.err_value)
-
-    def expect(self, msg: str) -> T:
-        """Okならok_valueを返し、Errならmsgを含むAssertionErrorを発生させる"""
-        assert self.is_ok, f"[Unexpected _Result Status] {msg}: {self.err_value}"
-        return self.ok_value

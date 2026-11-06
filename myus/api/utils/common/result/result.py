@@ -116,12 +116,6 @@ class Result[T, E: AnyError]:
     ) -> Result[T, E]:
         return cls._err(message, loglevel="debug", log_message_body=log_message_body, **kwargs)
 
-    def maybe_ok(self) -> T | None:
-        return self._result.maybe_ok()
-
-    def maybe_err(self) -> E | None:
-        return self._result.maybe_err()
-
     @property
     def is_ok(self) -> bool:
         return self._result.is_ok
@@ -137,23 +131,3 @@ class Result[T, E: AnyError]:
     @property
     def err_value(self) -> E:
         return self._result.err_value
-
-    def map[U](self, f: Callable[[T], U]) -> Result[U, E]:
-        return Result(self._result.map(f))
-
-    def map_err(self, f: Callable[[E], E]) -> Result[T, E]:
-        return Result(self._result.map_err(f))
-
-    def and_then[U](self, f: Callable[[T], Result[U, E]]) -> Result[U, E]:
-        if self.is_ok:
-            return f(self.ok_value)
-        return Result(_Result.err(self.err_value))
-
-    def ok_value_or(self, default: T) -> T:
-        return self._result.ok_value_or(default)
-
-    def ok_value_or_else(self, f: Callable[[E], T]) -> T:
-        return self._result.ok_value_or_else(f)
-
-    def expect(self, msg: str) -> T:
-        return self._result.expect(msg)
