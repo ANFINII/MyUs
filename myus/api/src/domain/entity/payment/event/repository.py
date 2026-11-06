@@ -1,5 +1,5 @@
 from django.db.models import Q
-from api.db.models.payment import PaymentEvent
+from api.db.models.payment import DATETIME_MIN, PaymentEvent
 from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.payment.event._convert import convert_data, marshal_data
 from api.src.domain.interface.payment.event.data import PaymentEventData
@@ -7,7 +7,7 @@ from api.src.domain.interface.payment.event.interface import FilterOption, SortO
 from api.utils.common.result import FatalError, Result
 
 
-PAYMENT_EVENT_FIELDS = ["provider", "event_id", "event_type", "external_id", "payload", "content", "occurred_at"]
+PAYMENT_EVENT_FIELDS = ["provider", "event_id", "event_type", "external_id", "payload", "content", "occurred_at", "processed_at", "attempts", "last_error"]
 
 
 class PaymentEventRepository(PaymentEventInterface):
@@ -18,10 +18,14 @@ class PaymentEventRepository(PaymentEventInterface):
             q_list.append(Q(provider=filter.provider))
         if len(filter.event_id) > 0:
             q_list.append(Q(event_id=filter.event_id))
+        if filter.is_processed is not None:
+            q_list.append(~Q(processed_at=DATETIME_MIN) if filter.is_processed else Q(processed_at=DATETIME_MIN))
+        if filter.max_attempts > 0:
+            q_list.append(Q(attempts__lt=filter.max_attempts))
 
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
-        qs = PaymentEvent.objects.filter(*q_list).order_by(order_by_key)
+        qs = PaymentEvent.objects.filter(*q_list).order_by(order_by_key, "id" if sort.is_asc else "-id")
 
         if limit is not None:
             qs = qs[:limit]

@@ -12,7 +12,7 @@
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
 | メディア | `MEDIA_ROOT`（ローカルディスク）に保存。動画・音楽は ffmpeg で HLS に変換（`api/utils/functions/convert/`） |
 | 決済 | Stripe（webhook あり） |
-| 非同期処理 | outbox テーブルはあるが、送信先は未実装 |
+| 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する |
 | メール | `console.EmailBackend`（送信されない） |
 | CI | GitHub Actions（`backend.yml`：lint・テストのみ。デプロイなし） |
 

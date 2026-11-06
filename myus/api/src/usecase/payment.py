@@ -1,5 +1,4 @@
-import json
-from dataclasses import asdict, replace
+from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from django.conf import settings
@@ -19,15 +18,12 @@ from api.src.domain.interface.payment.subscription.interface import FilterOption
 from api.src.domain.interface.payment.transaction.data import TransactionData
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.user.data import UserAllData
-from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
-from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.ledger import LedgerRowDTO
-from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
 from api.src.usecase.user import get_user_data, save_user_data
 from api.utils.common.result import FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
-from api.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookDeliveryStatus
+from api.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus
 from api.utils.enum.user import PlanName
 from api.utils.functions.map import locale_path, payment_status_rank
 from api.utils.functions.payment import get_payment_repository, included_tax
@@ -38,6 +34,7 @@ from api.utils.plan import get_plan
 CHECKOUT_PROVIDER = PaymentProvider.STRIPE
 TAX_RATE = 10
 REPLAY_BATCH_SIZE = 100
+PAYMENT_EVENT_MAX_ATTEMPTS = 30
 
 
 @Result.shield_exception()
@@ -135,7 +132,61 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
 
 @Result.shield_exception()
 def receive_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
-    return atomic_result(lambda: save_payment_event_data(event))
+    record_ret = record_payment_event(event)
+    if record_ret.is_err:
+        return Result.err(record_ret.err_value)
+
+    event_id = record_ret.ok_value
+    return Result.ok(event_id is not None)
+
+
+@Result.shield_exception()
+def process_payment_events(limit: int) -> Result[int, FatalError]:
+    repo = injector.get(PaymentEventInterface)
+    filter = PaymentEventFilterOption(is_processed=False, max_attempts=PAYMENT_EVENT_MAX_ATTEMPTS)
+    ids_ret = repo.get_ids(filter, PaymentEventSortOption(), limit=limit)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    events_ret = repo.bulk_get(ids)
+    if events_ret.is_err:
+        return Result.err(events_ret.err_value)
+
+    events = events_ret.ok_value
+    processed_count = 0
+    for event in events:
+        process_ret = atomic_result(lambda: save_processed_payment_event_data(event))
+        if process_ret.is_ok:
+            processed_count += 1
+            continue
+
+        failed_ret = save_failed_payment_event_data(event, process_ret.err_value.message)
+        if failed_ret.is_err:
+            return Result.err(failed_ret.err_value)
+
+    return Result.ok(processed_count)
+
+
+@Result.shield_exception()
+def requeue_payment_events() -> Result[int, FatalError]:
+    repo = injector.get(PaymentEventInterface)
+    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=False), PaymentEventSortOption(), limit=None)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    events_ret = repo.bulk_get(ids)
+    if events_ret.is_err:
+        return Result.err(events_ret.err_value)
+
+    events = events_ret.ok_value
+    save_ret = repo.bulk_save([replace(event, attempts=0) for event in events])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    log.info("PaymentEvent requeued", count=len(events))
+    return Result.ok(len(events))
 
 
 @Result.shield_exception()
@@ -247,37 +298,6 @@ def export_ledger(start: datetime, end: datetime) -> Result[list[LedgerRowDTO], 
         ))
 
     return Result.ok(rows)
-
-
-@Result.shield_exception()
-def enqueue_webhook_outbox(event: PaymentEventData) -> Result[None, FatalError]:
-    repo = injector.get(WebhookOutboxInterface)
-
-    payload = WebhookOutboxPayloadDTO(
-        provider=event.provider.value,
-        event_id=event.event_id,
-        event_type=event.event_type.value,
-        external_id=event.external_id,
-        occurred_at=event.occurred_at.isoformat(),
-    )
-
-    data = WebhookOutboxData(
-        id=0,
-        provider=event.provider,
-        event_type=event.event_type,
-        external_id=event.external_id,
-        payload=json.dumps(asdict(payload)),
-        status=WebhookDeliveryStatus.PENDING,
-        occurred_at=event.occurred_at,
-        delivered_at=datetime.min.replace(tzinfo=timezone.utc),
-    )
-
-    ret = repo.bulk_save([data])
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    log.info("WebhookOutbox enqueued", event_id=event.event_id, event_type=event.event_type.value)
-    return Result.ok(None)
 
 
 @Result.shield_exception()
@@ -577,24 +597,32 @@ def update_transaction_status(event: PaymentEventData, status: PaymentStatus) ->
 
 
 @Result.shield_exception()
-def save_payment_event_data(event: PaymentEventData) -> Result[bool, FatalError]:
-    record_ret = record_payment_event(event)
-    if record_ret.is_err:
-        return Result.err(record_ret.err_value)
-
-    event_id = record_ret.ok_value
-    if event_id is None:
-        return Result.ok(False)
-
-    apply_ret = apply_payment_event(replace(event, id=event_id))
+def save_processed_payment_event_data(event: PaymentEventData) -> Result[None, FatalError]:
+    apply_ret = apply_payment_event(event)
     if apply_ret.is_err:
         return Result.err(apply_ret.err_value)
 
-    enqueue_outbox_ret = enqueue_webhook_outbox(event)
-    if enqueue_outbox_ret.is_err:
-        return Result.err(enqueue_outbox_ret.err_value)
+    repo = injector.get(PaymentEventInterface)
+    save_ret = repo.bulk_save([replace(event, processed_at=datetime.now(timezone.utc), last_error="")])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
-    return Result.ok(True)
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_failed_payment_event_data(event: PaymentEventData, error: str) -> Result[None, FatalError]:
+    attempts = event.attempts + 1
+    repo = injector.get(PaymentEventInterface)
+    save_ret = repo.bulk_save([replace(event, attempts=attempts, last_error=error)])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    if attempts >= PAYMENT_EVENT_MAX_ATTEMPTS:
+        log.error("PaymentEvent gave up", event_id=event.event_id, event_type=event.event_type.value, attempts=attempts, error=error)
+    else:
+        log.warning("PaymentEvent process failed", event_id=event.event_id, event_type=event.event_type.value, attempts=attempts, error=error)
+    return Result.ok(None)
 
 
 @Result.shield_exception()
@@ -693,7 +721,7 @@ def save_payment_projection_data() -> Result[int, FatalError]:
         return Result.err(delete_ret.err_value)
 
     repo = injector.get(PaymentEventInterface)
-    ids_ret = repo.get_ids(PaymentEventFilterOption(), PaymentEventSortOption(), limit=None)
+    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=True), PaymentEventSortOption(), limit=None)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

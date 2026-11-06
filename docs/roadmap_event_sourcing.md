@@ -196,7 +196,15 @@ PR #1〜#3 を1つの PR にまとめた。計画から変えたこと：
 **Acceptance**:
 - わざと項目を消すと CI が落ちる
 
-### ⏸ Phase 3: 外部イベントの受け口を分ける
+### ✅ Phase 3: 外部イベントの受け口を分ける
+
+PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
+
+- `PaymentEvent` は `inbox_event` に名前を変えず、そのまま Inbox として使う（名前を変えても動きは変わらず、変更が大きいため）。処理の状況（`processed_at`・`attempts`・`last_error`）を足した
+- Receiver は分けず、worker（`process_payment_events`）が今の `apply_payment_event` を呼ぶ。Receiver は Phase 4 で集約へのコマンドに変えるときに作る
+- 行のロック（`SKIP LOCKED`）は入れず、worker は1つだけ動かす。今の件数では1つで足りる。2つ以上にするときに入れる
+- `es_dead_letter` は作らず、失敗の回数が上限（30回）に達したイベントを処理の対象から外して `log.error` を出す。`requeue_payment_events` で回数を 0 に戻す。`es_outbox` の配信を作るときに、そちらの扱いを決める
+- `WebhookOutbox`・`dispatch_webhook_outbox` は消した（送信先が無いスタブだったため）。`es_outbox` の配信は Phase 6 で作る
 
 #### PR #5: Inbox と Receiver
 

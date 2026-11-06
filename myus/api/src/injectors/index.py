@@ -6,7 +6,6 @@ from api.src.domain.entity.payment.ledger.repository import LedgerEntryRepositor
 from api.src.domain.entity.payment.payout.repository import PayoutRepository
 from api.src.domain.entity.payment.subscription.repository import SubscriptionRepository
 from api.src.domain.entity.payment.transaction.repository import TransactionRepository
-from api.src.domain.entity.webhook.outbox.repository import WebhookOutboxRepository
 from api.src.domain.entity.user.repository import UserRepository
 from api.src.domain.entity.category.repository import CategoryRepository
 from api.src.domain.entity.channel.repository import ChannelRepository
@@ -52,7 +51,6 @@ from api.src.domain.interface.payment.payout.interface import PayoutInterface
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
-from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.utils.enum.payment import PaymentProvider
 
 
@@ -189,7 +187,3 @@ class PaymentModule(Module):
     @provider
     def provide_payout_repository(self) -> PayoutInterface:
         return PayoutRepository()
-
-    @provider
-    def provide_webhook_outbox_repository(self) -> WebhookOutboxInterface:
-        return WebhookOutboxRepository()

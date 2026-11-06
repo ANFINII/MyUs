@@ -56,12 +56,6 @@ class WebhookVerifyError(str, Enum):
     UNSUPPORTED_EVENT = "UnsupportedEvent"
 
 
-class WebhookDeliveryStatus(str, Enum):
-    PENDING = "Pending"
-    DELIVERED = "Delivered"
-    FAILED = "Failed"
-
-
 class LedgerEntryType(str, Enum):
     SALE = "Sale"
     REFUND = "Refund"

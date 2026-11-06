@@ -13,6 +13,8 @@ class SortType(Enum):
 class FilterOption:
     provider: str = ""
     event_id: str = ""
+    is_processed: bool | None = None
+    max_attempts: int = 0
 
 
 @dataclass(frozen=True, slots=True)

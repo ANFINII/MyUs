@@ -30,6 +30,9 @@ def convert_stripe_event(event: stripe.Event, event_type: WebhookEventType, payl
         payload=payload.decode(),
         content=content,
         occurred_at=stripe_datetime(event.created),
+        processed_at=datetime.min.replace(tzinfo=timezone.utc),
+        attempts=0,
+        last_error="",
     )
 
 

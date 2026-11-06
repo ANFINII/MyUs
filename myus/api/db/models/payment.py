@@ -1,24 +1,27 @@
 import datetime
 from django.db import models
 from api.db.models.user import User
-from api.utils.constants.choice import CURRENCY_CHOICES, PROVIDER_CHOICES, PAYMENT_STATUS_CHOICES, LEDGER_ENTRY_TYPE_CHOICES, PAYOUT_STATUS_CHOICES, SUBSCRIPTION_STATUS_CHOICES, WEBHOOK_EVENT_TYPE_CHOICES, WEBHOOK_DELIVERY_STATUS_CHOICES
+from api.utils.constants.choice import CURRENCY_CHOICES, PROVIDER_CHOICES, PAYMENT_STATUS_CHOICES, LEDGER_ENTRY_TYPE_CHOICES, PAYOUT_STATUS_CHOICES, SUBSCRIPTION_STATUS_CHOICES, WEBHOOK_EVENT_TYPE_CHOICES
 from api.utils.enum.i18n import Currency
-from api.utils.enum.payment import SubscriptionStatus, PaymentStatus, PayoutStatus, WebhookDeliveryStatus
+from api.utils.enum.payment import SubscriptionStatus, PaymentStatus, PayoutStatus
 
 DATETIME_MIN = datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
 
 
 class PaymentEvent(models.Model):
     """PaymentEvent"""
-    id          = models.BigAutoField(primary_key=True)
-    provider    = models.CharField(max_length=20, choices=PROVIDER_CHOICES)
-    event_id    = models.CharField(max_length=255)
-    event_type  = models.CharField(max_length=30, choices=WEBHOOK_EVENT_TYPE_CHOICES)
-    external_id = models.CharField(max_length=255)
-    payload     = models.TextField(blank=True)
-    content     = models.TextField(blank=True)
-    occurred_at = models.DateTimeField(default=DATETIME_MIN)
-    created     = models.DateTimeField(auto_now_add=True)
+    id           = models.BigAutoField(primary_key=True)
+    provider     = models.CharField(max_length=20, choices=PROVIDER_CHOICES)
+    event_id     = models.CharField(max_length=255)
+    event_type   = models.CharField(max_length=30, choices=WEBHOOK_EVENT_TYPE_CHOICES)
+    external_id  = models.CharField(max_length=255)
+    payload      = models.TextField(blank=True)
+    content      = models.TextField(blank=True)
+    occurred_at  = models.DateTimeField(default=DATETIME_MIN)
+    processed_at = models.DateTimeField(default=DATETIME_MIN)
+    attempts     = models.PositiveIntegerField(default=0)
+    last_error   = models.TextField(blank=True)
+    created      = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.provider}:{self.event_id}:{self.event_type}"
@@ -31,6 +34,7 @@ class PaymentEvent(models.Model):
         ]
         indexes = [
             models.Index(fields=["external_id", "occurred_at"], name="payment_event_external_idx"),
+            models.Index(fields=["processed_at", "occurred_at"], name="payment_event_processed_idx"),
         ]
 
 
@@ -160,27 +164,4 @@ class PaymentLedgerEntry(models.Model):
         ]
         indexes = [
             models.Index(fields=["occurred_at"], name="payment_ledger_occurred_idx"),
-        ]
-
-
-class WebhookOutbox(models.Model):
-    """WebhookOutbox"""
-    id           = models.BigAutoField(primary_key=True)
-    provider     = models.CharField(max_length=20, choices=PROVIDER_CHOICES)
-    event_type   = models.CharField(max_length=30, choices=WEBHOOK_EVENT_TYPE_CHOICES)
-    external_id  = models.CharField(max_length=255)
-    payload      = models.TextField(blank=True)
-    status       = models.CharField(max_length=20, choices=WEBHOOK_DELIVERY_STATUS_CHOICES, default=WebhookDeliveryStatus.PENDING)
-    occurred_at  = models.DateTimeField(default=DATETIME_MIN)
-    delivered_at = models.DateTimeField(default=DATETIME_MIN)
-
-    def __str__(self):
-        return f"{self.provider}:{self.event_type}:{self.status}"
-
-    class Meta:
-        db_table = "webhook_outbox"
-        verbose_name_plural = "001 WebhookOutbox"
-        indexes = [
-            models.Index(fields=["status", "occurred_at"], name="webhook_outbox_status_idx"),
-            models.Index(fields=["external_id"], name="webhook_outbox_external_idx"),
         ]
