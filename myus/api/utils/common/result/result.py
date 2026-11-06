@@ -5,8 +5,14 @@ from functools import wraps
 from typing import Any, cast
 
 from ._log import LogLevel, emit_log
-from ._result import _Result
 from .errors import AnyError, FatalError
+
+
+class _Nil:
+    """Result の nil 状態を表す内部クラス。
+    is_ok の場合は err_value が _Nil、is_err の場合は ok_value が _Nil。
+    None と区別するために専用クラスを用意している。
+    """
 
 
 class Result[T, E: AnyError]:
@@ -14,8 +20,10 @@ class Result[T, E: AnyError]:
     E は AnyError 派生に限定する。エラー時にログ出力するヘルパも提供する。
     """
 
-    def __init__(self, result: _Result[T, E]) -> None:
-        self._result = result
+    def __init__(self, *, is_ok: bool, ok_value: T | _Nil, err_value: E | _Nil) -> None:
+        self._is_ok = is_ok
+        self._ok_value = ok_value
+        self._err_value = err_value
 
     def __repr__(self) -> str:
         if self.is_ok:
@@ -26,7 +34,7 @@ class Result[T, E: AnyError]:
 
     @classmethod
     def ok(cls, value: T) -> Result[T, E]:
-        return Result(_Result.ok(value))
+        return Result(is_ok=True, ok_value=value, err_value=_Nil())
 
     @classmethod
     def _err(
@@ -42,8 +50,8 @@ class Result[T, E: AnyError]:
             emit_log(loglevel, body, err_from=repr(message), **kwargs)
 
         if isinstance(message, Result):
-            return Result(_Result.err(message.err_value))
-        return Result(_Result.err(message))
+            return Result(is_ok=False, ok_value=_Nil(), err_value=message.err_value)
+        return Result(is_ok=False, ok_value=_Nil(), err_value=message)
 
     @classmethod
     def err(cls, message: E | Result[T, E]) -> Result[T, E]:
@@ -118,16 +126,22 @@ class Result[T, E: AnyError]:
 
     @property
     def is_ok(self) -> bool:
-        return self._result.is_ok
+        return self._is_ok
 
     @property
     def is_err(self) -> bool:
-        return self._result.is_err
+        return not self._is_ok
 
     @property
     def ok_value(self) -> T:
-        return self._result.ok_value
+        if not self._is_ok:
+            raise RuntimeError("結果がerrの場合はok_valueにアクセスしないでください")
+        assert not isinstance(self._ok_value, _Nil)
+        return self._ok_value
 
     @property
     def err_value(self) -> E:
-        return self._result.err_value
+        if self._is_ok:
+            raise RuntimeError("結果がokの場合はerr_valueにアクセスしないでください")
+        assert not isinstance(self._err_value, _Nil)
+        return self._err_value
