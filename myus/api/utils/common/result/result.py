@@ -6,14 +6,23 @@ from typing import Any, cast
 
 from ._log import LogLevel, emit_log
 from ._result import _Result
-from ._result_err_base import ResultErrBase
 from .errors import AnyError, FatalError
 
 
-class Result[T, E: AnyError](ResultErrBase[T, E]):
+class Result[T, E: AnyError]:
     """Rust の Result<T, E> 相当の公開クラス。
     E は AnyError 派生に限定する。エラー時にログ出力するヘルパも提供する。
     """
+
+    def __init__(self, result: _Result[T, E]) -> None:
+        self._result = result
+
+    def __repr__(self) -> str:
+        if self.is_ok:
+            return f"Result[ok={self.ok_value}]"
+        return f"Result[err={self.err_value}]"
+
+    __str__ = __repr__
 
     @classmethod
     def ok(cls, value: T) -> Result[T, E]:
@@ -107,5 +116,44 @@ class Result[T, E: AnyError](ResultErrBase[T, E]):
     ) -> Result[T, E]:
         return cls._err(message, loglevel="debug", log_message_body=log_message_body, **kwargs)
 
-    def _type_name(self) -> str:
-        return "Result"
+    def maybe_ok(self) -> T | None:
+        return self._result.maybe_ok()
+
+    def maybe_err(self) -> E | None:
+        return self._result.maybe_err()
+
+    @property
+    def is_ok(self) -> bool:
+        return self._result.is_ok
+
+    @property
+    def is_err(self) -> bool:
+        return self._result.is_err
+
+    @property
+    def ok_value(self) -> T:
+        return self._result.ok_value
+
+    @property
+    def err_value(self) -> E:
+        return self._result.err_value
+
+    def map[U](self, f: Callable[[T], U]) -> Result[U, E]:
+        return Result(self._result.map(f))
+
+    def map_err(self, f: Callable[[E], E]) -> Result[T, E]:
+        return Result(self._result.map_err(f))
+
+    def and_then[U](self, f: Callable[[T], Result[U, E]]) -> Result[U, E]:
+        if self.is_ok:
+            return f(self.ok_value)
+        return Result(_Result.err(self.err_value))
+
+    def ok_value_or(self, default: T) -> T:
+        return self._result.ok_value_or(default)
+
+    def ok_value_or_else(self, f: Callable[[E], T]) -> T:
+        return self._result.ok_value_or_else(f)
+
+    def expect(self, msg: str) -> T:
+        return self._result.expect(msg)
