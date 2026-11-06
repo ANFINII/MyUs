@@ -16,6 +16,9 @@ def convert_data(obj: PaymentEvent) -> PaymentEventData:
         payload=obj.payload,
         content=convert_content(event_type, obj.content),
         occurred_at=obj.occurred_at,
+        processed_at=obj.processed_at,
+        attempts=obj.attempts,
+        last_error=obj.last_error,
     )
 
 
@@ -29,6 +32,9 @@ def marshal_data(data: PaymentEventData) -> PaymentEvent:
         payload=data.payload,
         content=marshal_content(data.content),
         occurred_at=data.occurred_at,
+        processed_at=data.processed_at,
+        attempts=data.attempts,
+        last_error=data.last_error,
     )
 
 

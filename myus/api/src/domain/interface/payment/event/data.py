@@ -69,3 +69,6 @@ class PaymentEventData:
     payload: str
     content: PaymentEventContent
     occurred_at: datetime
+    processed_at: datetime
+    attempts: int
+    last_error: str

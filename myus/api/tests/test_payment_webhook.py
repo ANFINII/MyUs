@@ -5,10 +5,10 @@ from datetime import datetime, timezone
 import pytest
 from django.core.management import call_command
 from django.db import connection
-from api.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Subscription, WebhookOutbox
+from api.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Subscription
 from api.db.models.user import User, UserPlan
 from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
-from api.src.usecase.payment import export_ledger, receive_payment_event, replay_payment_events
+from api.src.usecase.payment import PAYMENT_EVENT_MAX_ATTEMPTS, export_ledger, process_payment_events, receive_payment_event, replay_payment_events, requeue_payment_events
 from api.tests.fakes import provider_subscription
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.i18n import Currency
@@ -26,14 +26,30 @@ def receive(event_type: WebhookEventType, external_id: str, event_id: str, conte
         payload="{}",
         content=content,
         occurred_at=occurred_at or datetime.now(timezone.utc),
+        processed_at=datetime.min.replace(tzinfo=timezone.utc),
+        attempts=0,
+        last_error="",
     ))
+
+
+def process() -> int:
+    ret = process_payment_events(100)
+    assert ret.is_ok, ret
+    processed_count = ret.ok_value
+    return processed_count
 
 
 def send(event_type: WebhookEventType, external_id: str, event_id: str, content: PaymentEventContent, occurred_at: datetime | None = None) -> bool:
     ret = receive(event_type, external_id, event_id, content, occurred_at)
     assert ret.is_ok, ret
     is_received = ret.ok_value
+    process()
     return is_received
+
+
+def payment_event(event_id: str) -> PaymentEvent:
+    event: PaymentEvent = PaymentEvent.objects.get(event_id=event_id)
+    return event
 
 
 def send_subscription(event_type: WebhookEventType, user: User, external_id: str, status: SubscriptionStatus, event_id: str, plan: str = PlanName.PREMIUM, occurred_at: datetime | None = None) -> bool:
@@ -151,7 +167,7 @@ def test_same_event_is_processed_once(make_user: Callable[[str], User]) -> None:
     assert not send_subscription(WebhookEventType.SUBSCRIPTION_CREATED, user, "sub_1", SubscriptionStatus.ACTIVE, "evt_dup")
 
     assert PaymentEvent.objects.filter(event_id="evt_dup").count() == 1
-    assert WebhookOutbox.objects.count() == 1
+    assert Subscription.objects.count() == 1
 
 
 @pytest.mark.django_db(transaction=True)
@@ -173,7 +189,6 @@ def test_same_event_arriving_at_once_is_processed_once(make_user: Callable[[str]
 
     assert sorted(results) == [False, False, False, True]
     assert PaymentEvent.objects.filter(event_id="evt_at_once").count() == 1
-    assert WebhookOutbox.objects.count() == 1
 
 
 @pytest.mark.django_db
@@ -197,14 +212,50 @@ def test_payment_records_sale_and_fee(make_user: Callable[[str], User]) -> None:
 def test_payment_before_subscription_is_retried(make_user: Callable[[str], User]) -> None:
     user = make_user("alice")
 
-    ret = receive(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_2", paid(user))
+    assert send(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_2", paid(user))
 
-    assert ret.is_err
-    assert not PaymentEvent.objects.exists()
     assert not PaymentTransaction.objects.exists()
+    assert payment_event("evt_2").attempts == 1
+    assert payment_event("evt_2").last_error != ""
 
     send_subscription(WebhookEventType.SUBSCRIPTION_CREATED, user, "sub_1", SubscriptionStatus.ACTIVE, "evt_1")
-    assert send(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_2", paid(user))
+    assert process() == 1
+
+    assert ledger(LedgerEntryType.SALE) == [("txn_1", 1100, 100)]
+    assert payment_event("evt_2").last_error == ""
+    assert PaymentEvent.objects.filter(processed_at=datetime.min.replace(tzinfo=timezone.utc)).count() == 0
+
+
+@pytest.mark.django_db
+def test_webhook_only_records_event(make_user: Callable[[str], User]) -> None:
+    user = make_user("alice")
+
+    ret = receive(WebhookEventType.SUBSCRIPTION_CREATED, "sub_1", "evt_1", provider_subscription("sub_1", user.ulid, PlanName.PREMIUM, SubscriptionStatus.ACTIVE))
+
+    assert ret.is_ok, ret
+    assert PaymentEvent.objects.filter(event_id="evt_1").exists()
+    assert not Subscription.objects.exists()
+    assert process() == 1
+    assert Subscription.objects.filter(external_id="sub_1").exists()
+    assert process() == 0
+
+
+@pytest.mark.django_db
+def test_event_is_given_up_and_requeued(make_user: Callable[[str], User]) -> None:
+    user = make_user("alice")
+    receive(WebhookEventType.PAYMENT_SUCCEEDED, "pi_1", "evt_2", paid(user))
+    PaymentEvent.objects.filter(event_id="evt_2").update(attempts=PAYMENT_EVENT_MAX_ATTEMPTS - 1)
+
+    process()
+    assert payment_event("evt_2").attempts == PAYMENT_EVENT_MAX_ATTEMPTS
+    send_subscription(WebhookEventType.SUBSCRIPTION_CREATED, user, "sub_1", SubscriptionStatus.ACTIVE, "evt_1")
+    assert not PaymentTransaction.objects.exists()
+
+    ret = requeue_payment_events()
+
+    assert ret.is_ok, ret
+    assert ret.ok_value == 1
+    assert process() == 1
     assert ledger(LedgerEntryType.SALE) == [("txn_1", 1100, 100)]
 
 
@@ -278,7 +329,6 @@ def test_replay_rebuilds_same_ledger(make_user: Callable[[str], User]) -> None:
     assert transaction_status("pi_1") == PaymentStatus.REFUNDED
     assert Subscription.objects.get(external_id="sub_1").status == SubscriptionStatus.ACTIVE
     assert user_plan(user).plan == PlanName.PREMIUM
-    assert WebhookOutbox.objects.count() == 4
 
 
 @pytest.mark.django_db

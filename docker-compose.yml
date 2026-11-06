@@ -20,6 +20,24 @@ services:
     networks:
       - myus_network
 
+  myus_worker:
+    container_name: myus_worker
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UV_SYNC_ARGS: ""
+    volumes:
+      - ./myus:/code
+    env_file:
+      - ./myus/envs/django.env
+    depends_on:
+      - mysql
+    command: sh -c 'python manage.py process_payment_events --settings config.settings.local'
+    networks:
+      - myus_network
+
   mysql:
     container_name: myus_mysql
     image: mysql:8.4
