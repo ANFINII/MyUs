@@ -21,11 +21,6 @@ class FatalError(AnyError):
 
 
 @dataclass(frozen=True)
-class UnauthorizedError(AnyError):
-    pass
-
-
-@dataclass(frozen=True)
 class NotFoundError(AnyError):
     pass
 
