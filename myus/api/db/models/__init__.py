@@ -1,5 +1,6 @@
 from api.db.models.comment import *
 from api.db.models.common import *
+from api.db.models.es import *
 from api.db.models.master import *
 from api.db.models.media import *
 from api.db.models.hashtag import *

@@ -114,6 +114,8 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | `FORBIDDEN` | 400 | `message` |
 | `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | `NOT_FOUND` | 400 | `message` |
 | `FatalError` | 想定外のエラー（DB・外部APIの例外等） | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
+| `ConflictError` | 同じ集約に同時に書き込み、取り直しても保存できなかった（イベントストア） | adapter で返すときに `CONFLICT` を足す | 400 | `message` |
+| `HistoryCorruptedError` | 集約の履歴が壊れている（`seq` の抜け・未登録の種類・読めない中身）。再試行しても直らない | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
 
 - エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`api/src/types/schema/common.py`）。`type`は必須
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
@@ -134,6 +136,9 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `InputError` | `NotFoundError \| ValidationError \| FatalError` | 対象を探し、入力を確かめる |
 | `WriteError` | `NotFoundError \| ForbiddenError \| ValidationError \| FatalError` | 対象・権限・入力をすべて確かめて書き込む |
 | `ValidateError` | `ValidationError \| FatalError` | 入力だけを確かめる |
+| `HistoryError` | `HistoryCorruptedError \| FatalError` | 集約の履歴を読む |
+| `AppendError` | `ConflictError \| FatalError` | 集約にイベントを追記する |
+| `CommandError` | `ValidationError \| ConflictError \| HistoryCorruptedError \| FatalError` | コマンドを処理する（取得 → 判断 → 保存） |
 
 ```python
 @Result.shield_exception()
