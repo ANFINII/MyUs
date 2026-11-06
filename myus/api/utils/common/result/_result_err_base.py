@@ -9,7 +9,7 @@ from ._result import _Result
 
 class ResultErrBase[T, E](ABC):
     """Result系クラスの共通基底。
-    Result / ResultFatal はこのクラスを継承して E 型を絞り込む。
+    Result はこのクラスを継承して E 型を絞り込む。
     """
 
     def __init__(self, result: _Result[T, E]) -> None:
