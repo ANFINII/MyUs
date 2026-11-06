@@ -1,11 +1,12 @@
+from pathlib import Path
 import pytest
-from api.utils.functions.schema import payment_event_schema_path, payment_event_schemas, read_payment_event_schema, schema_breaking_changes
+from api.utils.functions.schema import event_schemas, read_schema, schema_breaking_changes
 
 
-@pytest.mark.parametrize("name", payment_event_schemas().keys())
-def test_payment_event_schema_is_compatible(name: str) -> None:
-    assert payment_event_schema_path(name).exists(), f"{name} のスキーマがありません。manage.py export_payment_event_schema を実行してください"
-    assert schema_breaking_changes(read_payment_event_schema(name), payment_event_schemas()[name]) == []
+@pytest.mark.parametrize("path", event_schemas().keys(), ids=lambda path: path.stem)
+def test_event_schema_is_compatible(path: Path) -> None:
+    assert path.exists(), f"{path.stem} のスキーマがありません。manage.py export_event_schema を実行してください"
+    assert schema_breaking_changes(read_schema(path), event_schemas()[path]) == []
 
 
 def test_removed_property_is_breaking() -> None:
