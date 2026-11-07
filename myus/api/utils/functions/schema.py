@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, get_args
 from pydantic import TypeAdapter
 from config.env import BASE_DIR
-from api.src.domain.aggregate.subscription.data import SUBSCRIPTION_EVENT_CLASSES
+from api.src.domain.aggregate.subscription.event import SUBSCRIPTION_EVENT_CLASSES
 from api.src.domain.interface.payment.event.data import PaymentEventContent
 
 
