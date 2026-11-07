@@ -8,10 +8,10 @@ from api.utils.common.result import HistoryCorruptedError, Result
 from api.utils.enum.payment import SubscriptionStatus
 
 
-def replay_subscription(history: list[EventEnvelope[SubscriptionEvent]]) -> Result[SubscriptionState | None, HistoryCorruptedError]:
+def replay(history: list[EventEnvelope[SubscriptionEvent]]) -> Result[SubscriptionState | None, HistoryCorruptedError]:
     state: SubscriptionState | None = None
     for envelope in history:
-        apply_ret = apply_subscription(state, envelope)
+        apply_ret = apply(state, envelope)
         if apply_ret.is_err:
             return Result.err(apply_ret.err_value)
         state = apply_ret.ok_value
@@ -19,7 +19,7 @@ def replay_subscription(history: list[EventEnvelope[SubscriptionEvent]]) -> Resu
     return Result.ok(state)
 
 
-def apply_subscription(state: SubscriptionState | None, envelope: EventEnvelope[SubscriptionEvent]) -> Result[SubscriptionState, HistoryCorruptedError]:
+def apply(state: SubscriptionState | None, envelope: EventEnvelope[SubscriptionEvent]) -> Result[SubscriptionState, HistoryCorruptedError]:
     expected_seq = 1 if state is None else state.seq + 1
     if envelope.seq != expected_seq:
         return Result.err(HistoryCorruptedError(f"seq expected={expected_seq} actual={envelope.seq} aggregate_id={envelope.aggregate_id}"))

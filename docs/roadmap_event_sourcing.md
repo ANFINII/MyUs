@@ -241,7 +241,7 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 
 計画から変えたこと：
 
-- 置き場は `api/src/domain/aggregate/subscription/`（`state.py`：状態、`event.py`：イベントと種類の名前の対応表 `SUBSCRIPTION_EVENT_CLASSES`、`decide.py`：事実やコマンドからイベントを決める `accept_provider_state`、`apply.py`：イベントを状態に当てる `apply_subscription`・`replay_subscription`）
+- 置き場は `api/src/domain/aggregate/subscription/`（`state.py`：状態、`event.py`：イベントと種類の名前の対応表 `SUBSCRIPTION_EVENT_CLASSES`、`decide.py`：事実やコマンドからイベントを決める `accept_provider_state`、`apply.py`：イベントを状態に当てる `apply`・`replay`）
 - 状態は `IncompleteSubscription`・`ActiveSubscription`・`PastDueSubscription`・`EndedSubscription`（解約・失効。`status` で分ける）。どれも今の内容（`SubscriptionDetail`）・`seq`・最後に受理した事実の日時を持つ
 - イベントは決済会社の事実を受理するものだけにした：`Opened`・`Activated`・`Renewed`（期間の更新）・`PlanChanged`・`PaymentPastDue`・`CancellationScheduled`（期間の終わりでの解約の予約）・`Ended`。`Requested`・`CancellationRequested` とコマンドの `request`・`request_cancellation` は、自サービスの操作を扱う Phase 5 で足す
 - 順番は、日時の比較を集約の中で行う（決済会社の状態は行ったり来たりするため、状態の比較だけでは古い事実を見分けられない）。ただし同じ日時の事実は受理し、終わった（`EndedSubscription`）後と、始まった後の `Incomplete` は受理しない。これで、同じ秒に届いた「有効」と「解約」は、届く順に関係なく解約になる

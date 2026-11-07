@@ -1,7 +1,7 @@
 from dataclasses import replace
 from datetime import datetime, timezone
 from itertools import permutations
-from api.src.domain.aggregate.subscription.apply import apply_subscription, replay_subscription
+from api.src.domain.aggregate.subscription.apply import apply, replay
 from api.src.domain.aggregate.subscription.decide import accept_provider_state
 from api.src.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionEvent
 from api.src.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, PastDueSubscription, SubscriptionState
@@ -40,7 +40,7 @@ def accept_all(facts: list[tuple[ProviderSubscriptionData, datetime]]) -> tuple[
         assert events_ret.is_ok, events_ret
         for event in events_ret.ok_value:
             history.append(envelope(len(history) + 1, event, occurred_at))
-            apply_ret = apply_subscription(state, history[-1])
+            apply_ret = apply(state, history[-1])
             assert apply_ret.is_ok, apply_ret
             state = apply_ret.ok_value
 
@@ -73,7 +73,7 @@ def test_lifecycle_produces_only_needed_events() -> None:
     assert state.detail.product_code == PlanName.BASIC
     assert state.detail.current_period_end == PERIOD_2
     assert state.detail.canceled_at == CANCELED_AT
-    replay_ret = replay_subscription(history)
+    replay_ret = replay(history)
     assert replay_ret.is_ok, replay_ret
     assert replay_ret.ok_value == state
 
@@ -123,7 +123,7 @@ def test_past_due_after_incomplete_activates_first() -> None:
 def test_event_not_acceptable_in_state_is_history_corrupted() -> None:
     state, _ = accept_all([(provider(SubscriptionStatus.CANCELED), at(1))])
 
-    ret = apply_subscription(state, envelope(2, SubscriptionActivated(current_period_end=PERIOD_1), at(2)))
+    ret = apply(state, envelope(2, SubscriptionActivated(current_period_end=PERIOD_1), at(2)))
 
     assert ret.is_err
     assert isinstance(ret.err_value, HistoryCorruptedError)
@@ -132,7 +132,7 @@ def test_event_not_acceptable_in_state_is_history_corrupted() -> None:
 def test_seq_gap_is_history_corrupted() -> None:
     state, _ = accept_all([(provider(SubscriptionStatus.ACTIVE), at(1))])
 
-    ret = apply_subscription(state, envelope(3, SubscriptionActivated(current_period_end=PERIOD_1), at(2)))
+    ret = apply(state, envelope(3, SubscriptionActivated(current_period_end=PERIOD_1), at(2)))
 
     assert ret.is_err
     assert isinstance(ret.err_value, HistoryCorruptedError)
