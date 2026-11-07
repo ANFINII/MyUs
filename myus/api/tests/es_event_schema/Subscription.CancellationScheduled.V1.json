@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "canceled_at": {
+      "format": "date-time",
+      "title": "Canceled At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "canceled_at"
+  ],
+  "title": "SubscriptionCancellationScheduled",
+  "type": "object"
+}

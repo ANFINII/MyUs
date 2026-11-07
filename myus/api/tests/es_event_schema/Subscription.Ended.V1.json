@@ -1,0 +1,31 @@
+{
+  "$defs": {
+    "SubscriptionStatus": {
+      "enum": [
+        "Active",
+        "PastDue",
+        "Canceled",
+        "Expired",
+        "Incomplete"
+      ],
+      "title": "SubscriptionStatus",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "canceled_at": {
+      "format": "date-time",
+      "title": "Canceled At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/SubscriptionStatus"
+    }
+  },
+  "required": [
+    "status",
+    "canceled_at"
+  ],
+  "title": "SubscriptionEnded",
+  "type": "object"
+}

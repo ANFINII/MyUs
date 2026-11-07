@@ -71,7 +71,7 @@ flowchart LR
 |---|---|
 | `api/db/models/es.py` | 上の `es_*` テーブル |
 | `api/src/domain/interface/es/` | 基盤の型（`EventEnvelope`）と `EventStoreInterface`（ほかのドメインの Interface と同じ置き場） |
-| `api/src/domain/aggregate/<集約>/` | 集約ごとの状態（判別共用体）・イベント・コマンド・`apply`・`replay`。I/O を持たない |
+| `api/src/domain/aggregate/<集約>/` | 集約ごとの `state.py`（状態の判別共用体）・`event.py`（イベント）・`decide.py`（事実やコマンドからイベントを決める）・`apply.py`（`apply`・`replay`）。I/O を持たない |
 | `api/src/domain/entity/es/` | `EventStoreRepository`（Django ORM の実装）。イベントの種類の名前 ↔ dataclass の対応を受け取り、`_convert.py` で保存形式と変換する |
 | `api/src/usecase/command/handler.py` | 共通のコマンドハンドラ `handle_command`（取得 → 判断 → 保存 → 競合なら取り直す） |
 | `api/src/usecase/command/<集約>.py` | 集約ごとのコマンド |
@@ -179,11 +179,11 @@ PR #1〜#3 を1つの PR にまとめた。計画から変えたこと：
 **Acceptance**:
 - テスト用の小さな集約（カウンタなど）で、並行して保存したときに片方が取り直して正しい結果になる
 
-### 🔶 Phase 2: 保存契約の検査
+### ✅ Phase 2: 保存契約の検査
 
 #### PR #4: イベントの保存スキーマを固定して検査する
 
-今の `PaymentEvent` の `content` に先に入れた（`api/tests/payment_event_schema/`・`export_payment_event_schema`・`test_payment_event_schema.py`）。codec を入れたら、集約のイベントも同じ検査に載せる。
+今の `PaymentEvent` の `content` に先に入れ、Phase 4 で集約のイベントも載せた（`api/tests/payment_event_schema/`・`api/tests/es_event_schema/`・`export_event_schema`・`test_event_schema.py`）。
 
 **Goal**: 実際のイベントを保存し始める前に、壊す変更を CI で止められるようにする。
 
@@ -235,9 +235,17 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 - worker を2つ動かしても、同じ行を二重に処理しない
 - わざと失敗させた行が dead letter に移り、再投入で処理される
 
-### ⏸ Phase 4: 最初の集約（Subscription）
+### 🔶 Phase 4: 最初の集約（Subscription）
 
-#### PR #7: Subscription 集約
+#### ✅ PR #7: Subscription 集約
+
+計画から変えたこと：
+
+- 置き場は `api/src/domain/aggregate/subscription/`（`state.py`：状態、`event.py`：イベントと種類の名前の対応表 `SUBSCRIPTION_EVENT_CLASSES`、`decide.py`：事実やコマンドからイベントを決める `accept_provider_state`、`apply.py`：イベントを状態に当てる `apply`・`replay`）
+- 状態は `IncompleteSubscription`・`ActiveSubscription`・`PastDueSubscription`・`EndedSubscription`（解約・失効。`status` で分ける）。どれも今の内容（`SubscriptionDetail`）・`seq`・最後に受理した事実の日時を持つ
+- イベントは決済会社の事実を受理するものだけにした：`Opened`・`Activated`・`Renewed`（期間の更新）・`PlanChanged`・`PaymentPastDue`・`CancellationScheduled`（期間の終わりでの解約の予約）・`Ended`。`Requested`・`CancellationRequested` とコマンドの `request`・`request_cancellation` は、自サービスの操作を扱う Phase 5 で足す
+- 順番は、日時の比較を集約の中で行う（決済会社の状態は行ったり来たりするため、状態の比較だけでは古い事実を見分けられない）。ただし同じ日時の事実は受理し、終わった（`EndedSubscription`）後と、始まった後の `Incomplete` は受理しない。これで、同じ秒に届いた「有効」と「解約」は、届く順に関係なく解約になる
+- 集約のイベントも Phase 2 のスキーマの検査に載せた
 
 **Goal**: サブスクリプションを集約にする（I/O なしの部分だけ）。
 

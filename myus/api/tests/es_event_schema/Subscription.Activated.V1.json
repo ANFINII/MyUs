@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "current_period_end": {
+      "format": "date-time",
+      "title": "Current Period End",
+      "type": "string"
+    }
+  },
+  "required": [
+    "current_period_end"
+  ],
+  "title": "SubscriptionActivated",
+  "type": "object"
+}

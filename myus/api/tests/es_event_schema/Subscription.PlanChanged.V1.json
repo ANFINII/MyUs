@@ -1,0 +1,48 @@
+{
+  "$defs": {
+    "Currency": {
+      "enum": [
+        "Jpy",
+        "Usd",
+        "Eur",
+        "Gbp",
+        "Cny",
+        "Krw"
+      ],
+      "title": "Currency",
+      "type": "string"
+    },
+    "Money": {
+      "properties": {
+        "amount": {
+          "title": "Amount",
+          "type": "integer"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "title": "Money",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "price": {
+      "$ref": "#/$defs/Money"
+    },
+    "product_code": {
+      "title": "Product Code",
+      "type": "string"
+    }
+  },
+  "required": [
+    "product_code",
+    "price"
+  ],
+  "title": "SubscriptionPlanChanged",
+  "type": "object"
+}
