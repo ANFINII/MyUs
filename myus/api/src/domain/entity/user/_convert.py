@@ -16,15 +16,15 @@ def convert_data(user: User) -> UserAllData:
     assert hasattr(user, "user_plan"), "User plan is required"
 
     return UserAllData(
-        user=convert_user_data(user),
-        profile=convert_profile_data(user.profile),
-        mypage=convert_mypage_data(user.mypage),
-        notification=convert_user_notification_data(user.notification),
-        user_plan=convert_user_plan_data(user.user_plan),
+        user=user_data(user),
+        profile=profile_data(user.profile),
+        mypage=mypage_data(user.mypage),
+        notification=user_notification_data(user.notification),
+        user_plan=user_plan_data(user.user_plan),
     )
 
 
-def convert_user_data(user: User) -> UserData:
+def user_data(user: User) -> UserData:
     return UserData(
         id=user.id,
         ulid=user.ulid,
@@ -39,7 +39,7 @@ def convert_user_data(user: User) -> UserData:
     )
 
 
-def convert_profile_data(profile: Profile) -> ProfileData:
+def profile_data(profile: Profile) -> ProfileData:
     return ProfileData(
         last_name=profile.last_name,
         first_name=profile.first_name,
@@ -55,7 +55,7 @@ def convert_profile_data(profile: Profile) -> ProfileData:
     )
 
 
-def convert_mypage_data(mypage: MyPage) -> MyPageData:
+def mypage_data(mypage: MyPage) -> MyPageData:
     return MyPageData(
         banner=mypage.banner.name or "",
         email=mypage.email,
@@ -67,7 +67,7 @@ def convert_mypage_data(mypage: MyPage) -> MyPageData:
     )
 
 
-def convert_user_notification_data(user_notification: UserNotification) -> UserNotificationData:
+def user_notification_data(user_notification: UserNotification) -> UserNotificationData:
     return UserNotificationData(
         is_video=user_notification.is_video,
         is_music=user_notification.is_music,
@@ -82,7 +82,7 @@ def convert_user_notification_data(user_notification: UserNotification) -> UserN
     )
 
 
-def convert_user_plan_data(user_plan: UserPlan) -> UserPlanData:
+def user_plan_data(user_plan: UserPlan) -> UserPlanData:
     return UserPlanData(
         plan=user_plan.plan,
         is_paid=user_plan.is_paid,
