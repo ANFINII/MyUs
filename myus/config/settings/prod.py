@@ -16,6 +16,21 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 NINJA_NUM_PROXIES = 1
 SECURE_SSL_REDIRECT = True
 
+# Email
+MAILERS = {
+    "default": {
+        "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+        "OPTIONS": {
+            "host": env.email_host,
+            "port": env.email_port,
+            "username": env.email_host_user,
+            "password": env.email_host_password,
+            "use_tls": True,
+            "timeout": 10,
+        },
+    },
+}
+
 # Cache
 CACHES = {
     "default": {

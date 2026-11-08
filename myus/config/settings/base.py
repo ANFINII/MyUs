@@ -191,7 +191,8 @@ STRIPE_PRICE_ID_PREMIUM = env.stripe_price_id_premium
 STRIPE_PRICE_ID_ULTIMATE = env.stripe_price_id_ultimate
 
 # Email
-MAILERS = {
+DEFAULT_FROM_EMAIL = env.email_from
+MAILERS: dict[str, dict[str, object]] = {
     "default": {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
