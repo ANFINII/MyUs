@@ -154,17 +154,17 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>
-      <div className={cx(style.time, style.timeCurrent)}>{formatTime(currentTime)}</div>
+      <div className={cx(style.time, style.time_current)}>{formatTime(currentTime)}</div>
       <div className={style.bar} ref={barRef} onMouseDown={handleBarMouseDown}>
-        <div className={style.barLoaded} style={{ width: `${loaded}%` }} />
-        <div className={style.barPlayed} style={{ width: `${playedPercent}%` }} />
+        <div className={style.bar_loaded} style={{ width: `${loaded}%` }} />
+        <div className={style.bar_played} style={{ width: `${playedPercent}%` }} />
       </div>
-      <div className={cx(style.time, style.timeDuration)}>{formatTime(duration)}</div>
+      <div className={cx(style.time, style.time_duration)}>{formatTime(duration)}</div>
       <div className={style.volume}>
-        <div className={style.volumeButton} onClick={handleMuteToggle}>
+        <div className={style.volume_button} onClick={handleMuteToggle}>
           <span className={style.icon} />
         </div>
-        <div className={style.volumeAdjust}>
+        <div className={style.volume_adjust}>
           <div ref={volumeTrackRef} onMouseDown={handleVolumeMouseDown}>
             <div style={{ height: `${volume * 100}%` }} />
           </div>

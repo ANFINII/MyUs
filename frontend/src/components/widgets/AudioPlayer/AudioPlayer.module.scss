@@ -91,13 +91,13 @@
     z-index: 2;
   }
 
-  .timeCurrent {
+  .time_current {
     left: 2.5em;
     border-left: 0px solid rgb(0, 135, 180);
     border-left-color: rgba(0, 0, 0, 0.25);
   }
 
-  .timeDuration {
+  .time_duration {
     right: 2.5em;
     border-right: 0px solid rgb(0, 135, 180);
     border-right-color: rgba(255, 255, 255, 0.1);
@@ -123,13 +123,13 @@
       pointer-events: none;
     }
 
-    .barLoaded {
+    .bar_loaded {
       background: rgb(255, 255, 255);
       border-radius: 10px;
       z-index: 1;
     }
 
-    .barPlayed {
+    .bar_played {
       background: linear-gradient(to right, rgb(50, 150, 255) 50%, rgb(255, 0, 130));
       border-radius: 10px;
       z-index: 2;
@@ -155,7 +155,7 @@
       background: rgb(0, 135, 180);
     }
 
-    .volumeButton {
+    .volume_button {
       width: 100%;
       height: 100%;
 
@@ -186,16 +186,16 @@
       }
     }
 
-    &:not(:hover) .volumeAdjust {
+    &:not(:hover) .volume_adjust {
       opacity: 0;
     }
 
-    &:hover .volumeAdjust {
+    &:hover .volume_adjust {
       top: auto;
       bottom: -267%;
     }
 
-    .volumeAdjust {
+    .volume_adjust {
       position: absolute;
       top: -9999px;
       left: 0;
@@ -231,7 +231,7 @@
   }
 
   // 音量波アイコン（ミュートでない時のみ）
-  &:not(.muted) .volumeButton .icon::after {
+  &:not(.muted) .volume_button .icon::after {
     position: absolute;
     content: "";
     top: 0.063em;
