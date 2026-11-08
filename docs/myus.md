@@ -295,6 +295,8 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 `Subscription`・`PaymentTransaction`・`PaymentPayout` は、最後に反映したイベントの日時（`last_event_at`）を持ち、それより古いイベントが後から届いても反映しない。明細は届いた順に関係なく、まだ無いものだけ追記する。
 
+サブスクリプションのイベントは、`Subscription` に反映する前に、Subscription 集約（`api/src/domain/aggregate/subscription/`）にも通す（`api/src/usecase/command/subscription.py` の `accept_provider_subscription`）。集約は決済会社の状態と今の状態を比べて、必要なイベントだけを `es_event` に追記する。集約の ID は決済会社のサブスクリプションの ID から `stripe:sub_xxx` の形で決めるので、ID を引くための表は持たない。同じサブスクリプションの最初のイベントが同時に届いても、`es_event` の `(aggregate_type, aggregate_id, seq)` の一意制約でぶつかり、コマンドの再試行で片方にまとまる。今は `Subscription` テーブルと並行して書いているだけで、画面はまだ `Subscription` テーブルを読む。`replay_payment_events` で流し直しても、集約は同じ状態なのでイベントは増えない。
+
 支払いのイベントが、対象のサブスクリプションより先に届いたときは、反映を失敗にして、worker が次の回にもう一度反映する（返金が取引より先に届いたときも同じ）。失敗が30回（10秒ごとで約5分）に達したら反映を諦めて `log.error` を出す。原因を直したら `requeue_payment_events` で戻す。
 
 顧客・取引・明細・イベントは消せない（`on_delete=PROTECT`。帳簿は法律で一定期間残す必要があるため）。

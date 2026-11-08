@@ -15,6 +15,7 @@ from api.src.injectors.index import (
     SubscribeModule,
     NgWordModule,
     PaymentModule,
+    EsModule,
 )
 
 
@@ -34,6 +35,7 @@ modules: list[Module] = [
     SubscribeModule(),
     NgWordModule(),
     PaymentModule(),
+    EsModule(),
 ]
 
 injector = Injector(modules)

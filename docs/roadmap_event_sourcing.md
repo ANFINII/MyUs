@@ -13,7 +13,7 @@
 - 各 PR は **独立してマージ可能** な単位に切る。旧テーブルの削除は、読み手を全部移した後にまとめて行う
 - 業務判断と状態遷移は純粋な関数にする。時刻・採番・外部 API の応答は呼び出し側が渡し、保存・配信・外部操作も呼び出し側が担う
 - BE は Result 型の規約（[backend.md](backend.md)）に従う
-- mypy・ruff・pytest を pass させる。集約ごとに `apply`・`replay`・競合のテストを必ず書く
+- mypy・ruff・pytest を pass させる。集約やイベントストアのテストは、ドメインと実装が固まるまで書かない（各 PR の Acceptance のテストもそれまでは書かない）
 
 ---
 
@@ -260,7 +260,16 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 **Acceptance**:
 - 届く順番を入れ替えても、最終的な状態が同じになるテスト
 
-#### PR #8: Subscription の Repository・同期索引・コマンドハンドラ
+#### ✅ PR #8: Subscription のコマンドハンドラ
+
+計画から変えたこと：
+
+- 同期索引 `es_subscription_lookup` は作らなかった。サブスクリプションは決済会社の ID で一意に決まるので、集約の ID を `<provider>:<external_id>`（例：`stripe:sub_xxx`）にすれば引く必要がない。同時に届いたときの重複も `es_event` の一意制約とコマンドの再試行で防げる。ユーザーから引く分は、画面を集約から読む PR #9 で、今の `Subscription` の表（投影）から引けるかを先に確かめる
+- Finder も作らない（引く表がないため）
+- イベントストアは `EsModule` で injector に登録した。集約が増えたら、渡す対応表（`SUBSCRIPTION_EVENT_CLASSES`）をつなげる
+- コマンドは `accept_provider_subscription`。Receiver はまだ作らず、今の `apply_payment_event` のサブスクリプションの分岐から呼ぶ。集約への追記は、worker の反映（`Subscription` への書き込み）と同じトランザクションに入る
+- ドメインと実装が固まるまでテストは書かないことにし、`test_event_store.py`・`test_subscription_aggregate.py` も消した。Stripe CLI での確認はまだ
+
 
 **Goal**: Subscription を実際に保存する。
 
