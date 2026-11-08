@@ -183,7 +183,7 @@ PR #1〜#3 を1つの PR にまとめた。計画から変えたこと：
 
 #### PR #4: イベントの保存スキーマを固定して検査する
 
-今の `PaymentEvent` の `content` に先に入れ、Phase 4 で集約のイベントも載せた（`api/tests/payment_event_schema/`・`api/tests/es_event_schema/`・`export_event_schema`・`test_event_schema.py`）。
+今の `PaymentEvent` の `content` に先に入れ、Phase 4 で集約のイベントも載せた（`api/tests/schema_compatibility/`・`export_event_schema`・`test_schema_compatibility.py`）。
 
 **Goal**: 実際のイベントを保存し始める前に、壊す変更を CI で止められるようにする。
 

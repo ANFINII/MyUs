@@ -1,20 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, get_args
-from pydantic import TypeAdapter
-from config.env import BASE_DIR
-from api.src.domain.aggregate.subscription.event import SUBSCRIPTION_EVENT_CLASSES
-from api.src.domain.interface.payment.event.data import PaymentEventContent
-
-
-PAYMENT_EVENT_SCHEMA_DIR = Path(BASE_DIR) / "api" / "tests" / "payment_event_schema"
-ES_EVENT_SCHEMA_DIR = Path(BASE_DIR) / "api" / "tests" / "es_event_schema"
-
-
-def event_schemas() -> dict[Path, dict[str, Any]]:
-    payment_schemas = {PAYMENT_EVENT_SCHEMA_DIR / f"{content.__name__}.json": TypeAdapter(content).json_schema() for content in get_args(PaymentEventContent.__value__)}
-    es_schemas = {ES_EVENT_SCHEMA_DIR / f"{event_type}.json": TypeAdapter(event_class).json_schema() for event_type, event_class in SUBSCRIPTION_EVENT_CLASSES.items()}
-    return payment_schemas | es_schemas
+from typing import Any
 
 
 def read_schema(path: Path) -> dict[str, Any]:
@@ -30,7 +16,7 @@ def write_schema(path: Path, schema: dict[str, Any]) -> None:
     path.write_text(json.dumps(schema, indent=2, ensure_ascii=False, sort_keys=True) + "\n")
 
 
-def schema_breaking_changes(saved: dict[str, Any], current: dict[str, Any]) -> list[str]:
+def breaking_changes(saved: dict[str, Any], current: dict[str, Any]) -> list[str]:
     return compare_schema(saved, current, saved.get("$defs", {}), current.get("$defs", {}), "")
 
 

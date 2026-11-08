@@ -268,7 +268,7 @@ return Result.ok(new_ids)
 - 共通のfixtureは`api/tests/conftest.py`
   - `make_user`: User・Profile・MyPage・UserNotification・UserPlanをまとめて作る
   - `fake_payment`: `PaymentInterface`を`api/tests/fakes.py`の`FakePayment`に差し替える（Stripeを呼ばない。テストごとに元に戻る）
-- `PaymentEvent`の`content`（`PaymentEventContent`）と集約のイベント（`SUBSCRIPTION_EVENT_CLASSES`など）の形は、`api/tests/payment_event_schema/*.json`・`api/tests/es_event_schema/*.json`に保存したJSONスキーマと比べて検査する（`test_event_schema.py`）
+- `PaymentEvent`の`content`（`PaymentEventContent`）と集約のイベント（`SUBSCRIPTION_EVENT_CLASSES`など）の形は、`api/tests/schema_compatibility/payment_event/*.json`・`es_event/*.json`に保存したJSONスキーマと比べて検査する（`test_schema_compatibility.py`）。比べる処理は`api/utils/functions/schema_compatibility.py`、確かめるイベントの一覧は`export_event_schema`の`event_schemas`
   - 過去のイベントを読めなくなる変更（項目の削除・型の変更・必須の項目の追加・enumの値の削除）はテストが落ちる
   - 項目を足すときは初期値を付ける。形を変えたら`uv run python manage.py export_event_schema`でスキーマを書き出す（読めなくなる変更は書き出さない）
   - 保存したスキーマを手で直して検査を通さない
