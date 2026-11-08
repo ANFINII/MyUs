@@ -63,10 +63,10 @@ class StripeProvider(PaymentInterface):
         return Result.ok(WebhookVerified(event=convert_stripe_event(event, event_type, payload, external_id, content)))
 
     @Result.shield_exception()
-    def cancel_subscription(self, external_id: str) -> Result[CancelResult, FatalError]:
+    def cancel_subscription(self, external_id: str, idempotency_key: str) -> Result[CancelResult, FatalError]:
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
-            subscription = stripe.Subscription.modify(external_id, cancel_at_period_end=True)
+            subscription = stripe.Subscription.modify(external_id, cancel_at_period_end=True, idempotency_key=idempotency_key)
         except stripe.InvalidRequestError as e:
             log.warning("Stripe subscription not found for cancel", external_id=external_id, exc=e)
             return Result.ok(CancelFailed(error=CancelError.NOT_FOUND, message=str(e)))

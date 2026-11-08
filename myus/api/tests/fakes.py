@@ -13,6 +13,7 @@ class FakePayment(PaymentInterface):
     def __init__(self) -> None:
         self.subscriptions: dict[str, ProviderSubscriptionData] = {}
         self.canceled_ids: list[str] = []
+        self.idempotency_keys: list[str] = []
         self.cancel_result: CancelResult = CancelSuccess(
             canceled_at=datetime(2026, 10, 15, tzinfo=timezone.utc),
             period_end=datetime(2026, 11, 1, tzinfo=timezone.utc),
@@ -24,8 +25,9 @@ class FakePayment(PaymentInterface):
     def verify_webhook(self, payload: bytes, signature: str) -> Result[WebhookVerifyResult, FatalError]:
         raise NotImplementedError
 
-    def cancel_subscription(self, external_id: str) -> Result[CancelResult, FatalError]:
+    def cancel_subscription(self, external_id: str, idempotency_key: str) -> Result[CancelResult, FatalError]:
         self.canceled_ids.append(external_id)
+        self.idempotency_keys.append(idempotency_key)
         if isinstance(self.cancel_result, CancelSuccess) and external_id in self.subscriptions:
             self.subscriptions[external_id] = replace(self.subscriptions[external_id], canceled_at=self.cancel_result.canceled_at, current_period_end=self.cancel_result.period_end)
         return Result.ok(self.cancel_result)

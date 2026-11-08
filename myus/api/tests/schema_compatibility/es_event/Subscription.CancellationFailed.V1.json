@@ -1,0 +1,23 @@
+{
+  "$defs": {
+    "CancelError": {
+      "enum": [
+        "NotFound",
+        "ProviderRejected",
+        "NetworkError"
+      ],
+      "title": "CancelError",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "error": {
+      "$ref": "#/$defs/CancelError"
+    }
+  },
+  "required": [
+    "error"
+  ],
+  "title": "SubscriptionCancellationFailed",
+  "type": "object"
+}

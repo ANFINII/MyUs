@@ -1,10 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import assert_never
-from api.src.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
+from api.src.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
 from api.src.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionDetail, SubscriptionState
 from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
-from api.utils.common.result import Result, ValidateError
-from api.utils.enum.payment import SubscriptionStatus
+from api.utils.common.result import Result, ValidateError, ValidationError
+from api.utils.enum.payment import CancelError, SubscriptionStatus
 
 
 def accept_provider_state(state: SubscriptionState | None, provider: ProviderSubscriptionData, occurred_at: datetime) -> Result[list[SubscriptionEvent], ValidateError]:
@@ -50,6 +50,35 @@ def accept_provider_state(state: SubscriptionState | None, provider: ProviderSub
     if detail.canceled_at != state.detail.canceled_at:
         events.append(SubscriptionCancellationScheduled(canceled_at=detail.canceled_at))
     return Result.ok(events)
+
+
+def request_cancellation(state: SubscriptionState | None) -> Result[list[SubscriptionEvent], ValidateError]:
+    match state:
+        case ActiveSubscription() | PastDueSubscription():
+            if state.detail.canceled_at != datetime.min.replace(tzinfo=timezone.utc):
+                return Result.err(ValidationError("error.subscriptionNotFound"))
+
+            if len(state.cancellation_request_id) > 0:
+                return Result.ok([])
+
+            return Result.ok([SubscriptionCancellationRequested()])
+        case None | IncompleteSubscription() | EndedSubscription():
+            return Result.err(ValidationError("error.subscriptionNotFound"))
+        case _:
+            assert_never(state)
+
+
+def fail_cancellation(state: SubscriptionState | None, error: CancelError) -> Result[list[SubscriptionEvent], ValidateError]:
+    match state:
+        case ActiveSubscription() | PastDueSubscription():
+            if len(state.cancellation_request_id) == 0:
+                return Result.ok([])
+
+            return Result.ok([SubscriptionCancellationFailed(error=error)])
+        case None | IncompleteSubscription() | EndedSubscription():
+            return Result.ok([])
+        case _:
+            assert_never(state)
 
 
 def convert_detail(provider: ProviderSubscriptionData) -> SubscriptionDetail:

@@ -30,6 +30,7 @@ class ActiveSubscription:
     detail: SubscriptionDetail
     seq: int
     last_occurred_at: datetime
+    cancellation_request_id: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,6 +38,7 @@ class PastDueSubscription:
     detail: SubscriptionDetail
     seq: int
     last_occurred_at: datetime
+    cancellation_request_id: str
 
 
 @dataclass(frozen=True, slots=True)

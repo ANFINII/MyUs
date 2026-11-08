@@ -14,7 +14,7 @@ class PaymentInterface(ABC):
         ...
 
     @abstractmethod
-    def cancel_subscription(self, external_id: str) -> Result[CancelResult, FatalError]:
+    def cancel_subscription(self, external_id: str, idempotency_key: str) -> Result[CancelResult, FatalError]:
         ...
 
     @abstractmethod
