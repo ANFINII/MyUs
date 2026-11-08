@@ -7,7 +7,7 @@ from api.src.domain.interface.payment.provider.data import CancelFailed, CancelS
 from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
 from api.src.usecase.payment.core import cancel_subscription, create_checkout, receive_payment_event, verify_webhook
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, NotFoundError, ValidationError
 from api.utils.enum.payment import PaymentProvider, WebhookVerifyError
 
 
@@ -33,6 +33,8 @@ class PaymentAPI:
         if checkout_ret.is_err:
             message = checkout_ret.err_value.message
             match checkout_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
                     return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
