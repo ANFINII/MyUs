@@ -2,6 +2,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from api.modules.logger import log
+from api.src.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionState, convert_status
 from api.src.domain.interface.payment.customer.data import PaymentCustomerData
 from api.src.domain.interface.payment.customer.interface import FilterOption as PaymentCustomerFilterOption, SortOption as PaymentCustomerSortOption, PaymentCustomerInterface
 from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, RefundContent
@@ -76,7 +77,8 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
             if command_ret.is_err:
                 return Result.err(command_ret.err_value)
 
-            ret = update_subscription(event, provider_subscription)
+            state = command_ret.ok_value
+            ret = update_subscription(event, state)
         case PaymentPaidContent() as paid:
             ret = record_payment(event, paid)
         case PaymentFailedContent():
@@ -95,85 +97,75 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
 
 
 @Result.shield_exception()
-def update_subscription(event: PaymentEventData, provider_subscription: ProviderSubscriptionData) -> Result[None, FatalError]:
-    if get_plan(provider_subscription.product_code) is None:
-        log.error("Subscription unknown plan", external_id=event.external_id, product_code=provider_subscription.product_code)
+def update_subscription(event: PaymentEventData, state: SubscriptionState) -> Result[None, FatalError]:
+    detail = state.detail
+    if get_plan(detail.product_code) is None:
+        log.error("Subscription unknown plan", external_id=event.external_id, product_code=detail.product_code)
         return Result.ok(None)
 
-    if len(provider_subscription.user_ulid) == 0:
+    if len(detail.user_ulid) == 0:
         log.error("Subscription user_ulid missing", external_id=event.external_id)
         return Result.ok(None)
 
-    user_ret = get_user_data(ulid=provider_subscription.user_ulid)
+    user_ret = get_user_data(ulid=detail.user_ulid)
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
 
     user = user_ret.ok_value
     if user is None:
-        log.error("Subscription user not found", external_id=event.external_id, user_ulid=provider_subscription.user_ulid)
+        log.error("Subscription user not found", external_id=event.external_id, user_ulid=detail.user_ulid)
         return Result.ok(None)
 
     repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(
-        SubscriptionFilterOption(provider=provider_subscription.provider.value, external_id=provider_subscription.external_id),
-        SubscriptionSortOption(),
-        limit=1,
-    )
+    ids_ret = repo.get_ids(SubscriptionFilterOption(provider=detail.provider.value, external_id=detail.external_id), SubscriptionSortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    subscriptions_ret = repo.bulk_get(ids)
-    if subscriptions_ret.is_err:
-        return Result.err(subscriptions_ret.err_value)
-
-    subscriptions = subscriptions_ret.ok_value
-    if len(subscriptions) > 0 and subscriptions[0].last_event_at > event.occurred_at:
-        log.info("Subscription event is older than applied", external_id=event.external_id, event_id=event.event_id)
-        return Result.ok(None)
-
-    customer_ret = save_payment_customer_data(user.user.id, provider_subscription.provider, provider_subscription.customer_id)
+    customer_ret = save_payment_customer_data(user.user.id, detail.provider, detail.customer_id)
     if customer_ret.is_err:
         return Result.err(customer_ret.err_value)
 
     customer_id = customer_ret.ok_value
+    status = convert_status(state)
     subscription = SubscriptionData(
         id=ids[0] if len(ids) > 0 else 0,
         payment_customer_id=customer_id,
         seller_id="",
-        external_id=provider_subscription.external_id,
-        product_code=provider_subscription.product_code,
-        price=provider_subscription.price,
-        status=provider_subscription.status,
-        started_at=provider_subscription.started_at,
-        current_period_end=provider_subscription.current_period_end,
-        canceled_at=provider_subscription.canceled_at,
-        last_event_at=event.occurred_at,
+        external_id=detail.external_id,
+        product_code=detail.product_code,
+        price=detail.price,
+        status=status,
+        started_at=detail.started_at,
+        current_period_end=detail.current_period_end,
+        canceled_at=detail.canceled_at,
+        last_event_at=state.last_occurred_at,
     )
     subscription_ret = save_subscription_data(subscription)
     if subscription_ret.is_err:
         return Result.err(subscription_ret.err_value)
 
-    user_plan_ret = update_user_plan(user, provider_subscription)
+    user_plan_ret = update_user_plan(user, state)
     if user_plan_ret.is_err:
         return Result.err(user_plan_ret.err_value)
 
-    log.info("Subscription updated", external_id=event.external_id, status=provider_subscription.status.value)
+    log.info("Subscription updated", external_id=event.external_id, status=status.value)
     return Result.ok(None)
 
 
 @Result.shield_exception()
-def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscriptionData) -> Result[None, FatalError]:
-    match provider_subscription.status:
-        case SubscriptionStatus.ACTIVE | SubscriptionStatus.PAST_DUE:
+def update_user_plan(user: UserAllData, state: SubscriptionState) -> Result[None, FatalError]:
+    detail = state.detail
+    match state:
+        case ActiveSubscription() | PastDueSubscription():
             user_plan = replace(
                 user.user_plan,
-                plan=provider_subscription.product_code,
+                plan=detail.product_code,
                 is_paid=True,
-                start_date=provider_subscription.started_at,
-                end_date=provider_subscription.current_period_end,
+                start_date=detail.started_at,
+                end_date=detail.current_period_end,
             )
-        case SubscriptionStatus.CANCELED | SubscriptionStatus.EXPIRED:
+        case EndedSubscription():
             repo = injector.get(SubscriptionInterface)
             ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user.user.id), SubscriptionSortOption(), limit=None)
             if ids_ret.is_err:
@@ -189,11 +181,11 @@ def update_user_plan(user: UserAllData, provider_subscription: ProviderSubscript
             if len(active_subscriptions) > 0:
                 return Result.ok(None)
 
-            user_plan = replace(user.user_plan, plan=PlanName.FREE, is_paid=False, end_date=provider_subscription.current_period_end)
-        case SubscriptionStatus.INCOMPLETE:
+            user_plan = replace(user.user_plan, plan=PlanName.FREE, is_paid=False, end_date=detail.current_period_end)
+        case IncompleteSubscription():
             return Result.ok(None)
         case _:
-            assert_never(provider_subscription.status)
+            assert_never(state)
 
     ret = save_user_data(replace(user, user_plan=user_plan))
     if ret.is_err:
