@@ -244,11 +244,13 @@ return Result.ok(new_ids)
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
 | domain/interface | 抽象定義（ABC, dataclass） | なし |
 | domain/entity | Repository実装、DBアクセス | Django ORM, interface |
+| utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase・types を import しない） |
 
 - adapter → usecase → interface の方向にのみ依存する
 - usecase層からadapter層の型（`HttpRequest`等）をインポートしない
 - usecase層からDjangoのモデル（`User.objects`等）や`authenticate`を直接使わない。リポジトリ（Interface）のメソッドを通す
 - domain/interface層は他の層に依存しない（純粋なPython）
+- Repositoryを取り出す・複数のusecaseで使うといった、domainに触れる補助の関数は`utils`に置かず、usecaseのディレクトリの`_convert.py`に置く（例：`usecase/media/_convert.py`の`get_media_repository`・`get_media_user`、`usecase/payment/_convert.py`の`get_payment_repository`）
 
 ## パフォーマンス
 
@@ -290,3 +292,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-10-21: 画面に出るエラーの文言をFEのi18nのキーで返すようにした
 - 2026-10-21: CSRF対策として`OriginCheckMiddleware`を追加
 - 2026-10-22: Interfaceで雛形と違う形を認める場合を追記
+- 2026-11-08: `utils`はdomainに依存しないこと、domainに触れる補助の関数はusecaseの`_convert.py`に置くことを追記

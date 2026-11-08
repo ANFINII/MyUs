@@ -6,7 +6,7 @@ from api.db.models.user import User
 from api.src.domain.interface.payment.provider.data import CancelFailed
 from api.src.types.schema.auth import WithdrawalIn
 from api.src.usecase.auth import withdraw_user
-from api.src.usecase.payment import cancel_subscription
+from api.src.usecase.payment.core import cancel_subscription
 from api.tests.conftest import PASSWORD
 from api.tests.fakes import FakePayment
 from api.utils.enum.payment import CancelError, PaymentProvider, SubscriptionStatus

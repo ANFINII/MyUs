@@ -10,13 +10,14 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.dto.user import AuthorDTO, LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
+from api.src.usecase.media._convert import get_media_repository
 from api.src.usecase.notification import create_notification
 from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
-from api.utils.functions.media import get_media_repository, save_upload, validate_uploads
+from api.utils.functions.media import save_upload, validate_uploads
 from api.utils.functions.validation import has_birthday, has_email, has_number, has_password, has_phone, has_postal_code, has_username, has_weak_password
 
 

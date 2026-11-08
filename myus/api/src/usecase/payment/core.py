@@ -26,7 +26,8 @@ from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus
 from api.utils.enum.user import PlanName
 from api.utils.functions.map import locale_path, payment_status_rank
-from api.utils.functions.payment import get_payment_repository, included_tax
+from api.src.usecase.payment._convert import get_payment_repository
+from api.utils.functions.payment import included_tax
 from api.utils.functions.transaction import atomic_result
 from api.utils.plan import get_plan
 
