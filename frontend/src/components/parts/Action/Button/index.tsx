@@ -19,7 +19,7 @@ export default function ActionButton(props: Props): React.JSX.Element {
   const actionRef = useRef<HTMLButtonElement>(null)
 
   return (
-    <div className={cx(style.action, isRound && style.isRound)}>
+    <div className={cx(style.action, isRound && style.round)}>
       <button ref={actionRef} className={style.action_button} disabled={disabled} onClick={onMenu}>
         <IconDots size="18" />
       </button>
