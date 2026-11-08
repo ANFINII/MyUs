@@ -43,6 +43,7 @@
     "mediaNotFound": "メディアが見つかりません",
     "commentNotFound": "コメントが見つかりません",
     "subscriptionNotFound": "有効なサブスクリプションが見つかりません",
+    "alreadySubscribed": "すでに有料プランを契約しています",
     "followSelf": "自分自身はフォローできません",
     "commentCreateFailed": "コメントの作成に失敗しました",
     "commentUpdateFailed": "コメントの更新に失敗しました",

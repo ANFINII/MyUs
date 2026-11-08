@@ -16,7 +16,7 @@ from api.src.injectors.container import injector
 from api.src.types.dto.ledger import LedgerRowDTO
 from api.src.usecase.user.core import get_user_data
 from api.src.usecase.payment._convert import get_payment_repository, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
-from api.utils.common.result import CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, NotFoundError, Result, ValidationError
+from api.utils.common.result import CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
 from api.utils.functions.map import locale_path
@@ -28,7 +28,7 @@ CHECKOUT_PROVIDER = PaymentProvider.STRIPE
 
 
 @Result.shield_exception()
-def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[CheckoutResult, FindError]:
+def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[CheckoutResult, InputError]:
     user_ret = get_user_data(user_id=user_id)
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
@@ -41,6 +41,21 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
     if plan is None:
         log.warning("Payment unknown plan", plan=plan_name)
         return Result.err(NotFoundError("Not Found"))
+
+    subscription_repo = injector.get(SubscriptionInterface)
+    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), limit=None)
+    if subscription_ids_ret.is_err:
+        return Result.err(subscription_ids_ret.err_value)
+
+    subscription_ids = subscription_ids_ret.ok_value
+    subscriptions_ret = subscription_repo.bulk_get(subscription_ids)
+    if subscriptions_ret.is_err:
+        return Result.err(subscriptions_ret.err_value)
+
+    subscriptions = subscriptions_ret.ok_value
+    if any(s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE) for s in subscriptions):
+        log.warning("Payment checkout already subscribed", user_id=user_id, plan=plan_name)
+        return Result.err(ValidationError("error.alreadySubscribed"))
 
     frontend_url = f"{settings.FRONTEND_URL}{locale_path(locale)}"
     data = CheckoutData(

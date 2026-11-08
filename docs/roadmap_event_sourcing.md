@@ -62,7 +62,7 @@ flowchart LR
 ## 🔶 Phase 5: 外部操作を要求と結果に分ける
 
 - ✅ **解約：** 要求（`Subscription.CancellationRequested.V1`）を記録し、その EventId を冪等キーにして Stripe を呼ぶ。成功したら Stripe から今の状態を取り直して受理し（`CancellationScheduled`）、断られたら `CancellationFailed` を記録する。結果が分からないとき（通信の失敗）は要求を残し、次の解約で同じキーを使って呼び直す。外部操作の worker は作らず、リクエストの中で行う（未決着の要求を自動で呼び直すのは、必要になったら worker で足す）
-- **checkout：** すぐに URL を返す必要があるので、リクエストの中で「要求を保存 → Stripe を呼ぶ → 結果を保存」を順に行う。`Subscription.Requested.V1` から webhook の `Activated` までを1つの集約の履歴でたどれるようにする
+- ⏸ **checkout：** 保留。Stripe のサブスクリプションは支払いが終わってから作られるので、checkout の時点ではサブスクリプションの ID（集約の ID）が無く、今の Subscription 集約には載せられない。載せるには checkout 用の別の集約が要るが、checkout の画面は二重に作っても支払われるのは1つだけで、得るものが小さい。有料プランの契約中に新しく checkout できないことは、`create_checkout` で今の `Subscription` を見て止めている
 - **冪等キー：** 解約は要求の EventId をキーにした。checkout も同じ形にする
 
 ## ⏸ Phase 6: Projector と query model
