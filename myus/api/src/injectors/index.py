@@ -27,7 +27,6 @@ from api.src.domain.entity.search_tag.repository import SearchTagRepository
 from api.src.domain.entity.notification.repository import NotificationRepository
 from api.src.domain.entity.access_log.repository import AccessLogRepository
 from api.src.domain.entity.es.repository import EventStoreRepository
-from api.src.domain.entity.es.subscription_lookup.repository import SubscriptionLookupRepository
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.channel.interface import ChannelInterface
@@ -55,7 +54,6 @@ from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
 from api.src.domain.interface.es.interface import EventStoreInterface
-from api.src.domain.interface.es.subscription_lookup.interface import SubscriptionLookupInterface
 from api.utils.enum.payment import PaymentProvider
 
 
@@ -198,7 +196,3 @@ class EsModule(Module):
     @provider
     def provide_event_store_repository(self) -> EventStoreInterface:
         return EventStoreRepository(SUBSCRIPTION_EVENT_CLASSES)
-
-    @provider
-    def provide_subscription_lookup_repository(self) -> SubscriptionLookupInterface:
-        return SubscriptionLookupRepository()

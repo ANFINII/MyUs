@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import pytest
 from django.core.management import call_command
 from django.db import connection
-from api.db.models.es import EsEvent, EsSubscriptionLookup
+from api.db.models.es import EsEvent
 from api.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Subscription
 from api.db.models.user import User, UserPlan
 from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
@@ -82,8 +82,7 @@ def transaction_status(external_id: str) -> str:
 
 
 def aggregate_event_types(external_id: str) -> list[str]:
-    lookup = EsSubscriptionLookup.objects.get(provider=PaymentProvider.STRIPE, external_id=external_id)
-    return list(EsEvent.objects.filter(aggregate_id=lookup.aggregate_id).order_by("seq").values_list("event_type", flat=True))
+    return list(EsEvent.objects.filter(aggregate_id=f"{PaymentProvider.STRIPE.value}:{external_id}").order_by("seq").values_list("event_type", flat=True))
 
 
 def ledger(entry_type: LedgerEntryType) -> list[tuple[str, int, int]]:
@@ -131,7 +130,6 @@ def test_subscription_events_are_stored_in_aggregate(make_user: Callable[[str], 
     send_subscription(WebhookEventType.SUBSCRIPTION_CANCELED, user, "sub_1", SubscriptionStatus.CANCELED, "evt_4", occurred_at=datetime(2026, 10, 2, tzinfo=timezone.utc))
 
     assert aggregate_event_types("sub_1") == ["Subscription.Opened.V1", "Subscription.Activated.V1", "Subscription.Ended.V1"]
-    assert EsSubscriptionLookup.objects.count() == 1
     assert Subscription.objects.get(external_id="sub_1").status == SubscriptionStatus.CANCELED
 
 

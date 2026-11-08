@@ -260,14 +260,14 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 **Acceptance**:
 - 届く順番を入れ替えても、最終的な状態が同じになるテスト
 
-#### ✅ PR #8: Subscription の Repository・同期索引・コマンドハンドラ
+#### ✅ PR #8: Subscription のコマンドハンドラ
 
 計画から変えたこと：
 
-- 索引 `es_subscription_lookup` は `(provider, external_id)` → 集約 ID だけにした。`(user_id)` から引くのは画面を集約から読む PR #9 で足す（今は使う所がないため）
-- Finder（`find_by_external_id`・`find_by_user`）は作らず、ほかのドメインと同じ `SubscriptionLookupInterface` の `get_ids`（`FilterOption(provider, external_id)`）・`bulk_get`・`bulk_save` にした
+- 同期索引 `es_subscription_lookup` は作らなかった。サブスクリプションは決済会社の ID で一意に決まるので、集約の ID を `<provider>:<external_id>`（例：`stripe:sub_xxx`）にすれば引く必要がない。同時に届いたときの重複も `es_event` の一意制約とコマンドの再試行で防げる。ユーザーから引く分は、画面を集約から読む PR #9 で、今の `Subscription` の表（投影）から引けるかを先に確かめる
+- Finder も作らない（引く表がないため）
 - イベントストアは `EsModule` で injector に登録した。集約が増えたら、渡す対応表（`SUBSCRIPTION_EVENT_CLASSES`）をつなげる
-- コマンドは `accept_provider_subscription`。Receiver はまだ作らず、今の `apply_payment_event` のサブスクリプションの分岐から呼ぶ。集約への追記と索引の作成を `atomic_result` で1つのトランザクションにし、worker の反映（`Subscription` への書き込み）とも同じトランザクションに入る
+- コマンドは `accept_provider_subscription`。Receiver はまだ作らず、今の `apply_payment_event` のサブスクリプションの分岐から呼ぶ。集約への追記は、worker の反映（`Subscription` への書き込み）と同じトランザクションに入る
 - Stripe CLI での確認はまだ（テストでは、届いた順に関係なく必要なイベントだけが追記され、流し直してもイベントが増えないことを確かめた）
 
 
