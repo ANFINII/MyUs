@@ -69,12 +69,15 @@ const [user, setUser] = useState<User | null>(null)
 
 ## インポート順序
 
+`eslint.config.mjs` の `import/order` で決まっていて、`pnpm check` で検出する。
+
 ```
 1. React関連
 2. 外部ライブラリ
-3. 内部型定義
-4. 内部コンポーネント
-5. スタイル
+3. lib → types → api → utils
+4. components/hooks → components/provider → components/layout
+5. components/parts → components/widgets → components/pages
+6. 同じフォルダのファイル（スタイルなど）
 ```
 
 ## 非同期処理
@@ -86,13 +89,13 @@ const [user, setUser] = useState<User | null>(null)
 
 ## データ取得（TanStack Query）
 
-ページ表示時のデータ取得は`getServerSideProps`ではなく、TanStack Queryの`useSuspenseQuery`でクライアント側から行う。
+ページ表示時のデータ取得は、TanStack Queryの`useSuspenseQuery`でクライアント側から行う。
 
 ### ページの構成
 
 - URLとページの対応は`src/lib/routes.tsx`の1ファイルにまとめる（TanStack Routerのコードベースのルーティング）。ページを追加するときは、該当する領域に`page()`を1行追加する
 - ルートは`components/pages/`のページのフォルダ（`index.tsx`）を`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
-- ルーターの機能は `useRouter`（`components/hooks/useRouter`）を通して使う。使い方は Next.js の `useRouter` と同じにしている。コンポーネントから `@tanstack/react-router` や `window.location` / `window.history` を直接使わない（ルーターのライブラリを置き換えるときに、`useRouter` とルーターの設定だけを直せばよいようにするため）
+- ルーターの機能は `useRouter`（`components/hooks/useRouter`）を通して使う。使い方は Next.js の `useRouter` と同じにしている。コンポーネントから `@tanstack/react-router` や `window.location` / `window.history` を直接使わない（ルーターのライブラリを置き換えるときに、`useRouter` とルーターの設定だけを直せばよいようにするため）。例外はルーターの設定（`lib/`）・レイアウト（`layout/PageLayout` の `Outlet`）・hooks（`usePageLoading` の `useRouterState`）
 
 | やりたいこと | 書き方 |
 | --- | --- |
@@ -112,9 +115,9 @@ const [user, setUser] = useState<User | null>(null)
 
 ```typescript
 // src/lib/routes.tsx
-page('/manage/video', () => import('components/pages/manage/video')),
-page('/manage/video/create', () => import('components/pages/manage/video/create')),
-page('/manage/video/$ulid', () => import('components/pages/manage/video/edit')),
+page('/manage/video', () => import('components/pages/manage/video'), manageVideoListLoader),
+page('/manage/video/create', () => import('components/pages/manage/video/create'), manageCreateLoader),
+page('/manage/video/$ulid', () => import('components/pages/manage/video/edit'), manageVideoEditLoader),
 ```
 
 - ページの`index.tsx`は、`useSuspenseQuery(xxxQuery(...))`で取ったデータを`view.tsx`にpropsで渡すだけにする。データが取れるまで描画を待つので、`data`が`undefined`になる場合を書かなくてよい
@@ -166,7 +169,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 - `staleTime: 0`のため、ページを開くたびに最新を取得する。更新処理のたびに`invalidateQueries`を呼ぶ必要はない
 - ログイン・ログアウト・退会時のキャッシュ削除は`UserProvider`とログイン画面で行っているため、個別のページでは不要
-- 全ページがクライアント側取得（CSR）。投稿ごとのOGPは、ホスティング先が決まってからエッジ関数で差し込む予定
+- 全ページがクライアント側取得（CSR）。投稿ごとのOGPは、Vercel のエッジ関数で差し込む予定
 
 ## 多言語対応（i18n）
 
@@ -222,9 +225,15 @@ components/pages/media/video/
 | `widgets/` | 複合コンポーネント（Modal, Card等） |
 | `parts/` | 汎用UIコンポーネント（Button, Input等） |
 | `hooks/` | カスタムフック |
+| `layout/` | ページの枠（ヘッダー・サイドバー・フッター・`Outlet` など） |
+| `provider/` | Context の Provider（`UserProvider` など） |
 | `api/` | APIクライアント関数 |
 | `lib/routes.tsx` | URL とページの対応（TanStack Router のルート定義） |
-| `lib/query/` | TanStack Queryの設定（`client.ts`）とクエリキー（`keys.ts`） |
+| `lib/router.ts` | ルーターの設定（言語の接頭辞の `rewrite` など） |
+| `lib/query/` | TanStack Queryの設定（`client.ts`）・クエリキー（`keys.ts`）・`queryOptions`（`options.ts`）・ルートのローダー（`loaders.ts`） |
+| `lib/i18n/` | 翻訳ファイルと i18next の設定 |
+| `lib/axios/` | API の通信の設定 |
+| `styles/` | グローバルな CSS と mixin（[css.md](css.md)） |
 | `types/` | 型定義 |
 | `utils/` | ユーティリティ関数 |
 
@@ -258,7 +267,7 @@ return <div className={style.box}>...</div>
 
 1. **純粋表示用 parts への依存**: `Icon` / `Spinner` / `ExImage` 等、state を持たず描画だけする parts は他 parts から import してよい
 2. **同ファミリ内の派生**: `Avatar/Link` が `Avatar` を呼ぶ、`Button/Square` が `Button` の補助 parts を共有する等、同コンポーネントファミリのサブバリアント
-3. **同サブツリーのプリミティブ取り込み**: `Input/SelectBox` が `Input/Select` を内部で使う等、同フォルダ階層の下位 parts への限定依存
+3. **プリミティブの取り込み**: `Input/SelectBox` が `Select` を内部で使う等、入力の部品が下位の部品を包むだけの限定依存
 4. **合成 UI として例外的に parts に置く部品**: `Modal` のような汎用合成 UI で、内部にクローズ用 `Button` 等の小さな部品を含むケース（移動候補ではあるが許容）
 
 判定は「循環依存を作らないか」「最下層 UI の独立性を本質的に壊さないか」を基準にする。
@@ -299,26 +308,3 @@ return <div className={style.box}>...</div>
 2. ESLintエラーが0件
 3. コメントは日本語で記述
 
-## 更新履歴
-- 2024-08-21: 初版作成
-- 2025-08-21: Props名統一、引数展開ルール、Linterチェック必須化
-- 2026-04-16: useState型引数必須、docs/に一元化、構成整理
-- 2026-04-22: `interface Props`はコンポーネント関数の直前配置ルール追加
-- 2026-04-27: 依存方向ルール追加（`parts/` は他 parts / グローバル CSS に依存せず単体で動作する）
-- 2026-04-27: parts 独立性の例外ケース 4 種を明文化（純粋表示用・同ファミリ派生・同サブツリー・汎用合成 UI）
-- 2026-10-06: データ取得（TanStack Query）のルール追加、`pages/` の責務を `useQuery` に更新、widgets 同フォルダ内の依存を許容、`useIsLoading` → `useLoading` に修正
-- 2026-10-06: `QueryCheck` がクエリを名前付きオブジェクトで受け取る形に変更（`useFreshData` を廃止し `fresh` に統合）
-- 2026-10-06: `useQuery` の結果を `queries` のキーと同じ名前の変数に入れるルールを追加
-- 2026-10-06: 公開ページの CSR 化完了に伴い、`getServerSideProps` が残っている旨の記述を削除
-- 2026-10-07: Next.js から TanStack Router + Vite に移行。`getStaticProps` / `getStaticPaths` の記述を削除し、`routes/` の説明を追加
-- 2026-10-07: ルート定義をファイルベース（`src/routes/`）からコードベース（`src/lib/routes.tsx` の 1 ファイル）に変更
-- 2026-10-07: 常に `true` だった `router.isReady` を削除
-- 2026-10-07: 多言語対応（i18n）のルールを追加
-- 2026-10-07: 言語の接頭辞（`/en`）を `{-$locale}` ルートからルーターの `rewrite` に移動
-- 2026-10-07: `useAppRouter` を `useRouter` に名前を変更し、`window.location` / `window.history` の直接利用をなくす
-- 2026-10-21: API のエラーの `message` を i18n のキー（`error.*`）として翻訳するようにした
-- 2026-10-22: 金額の表示を `formatPrice` で通貨に合わせて整形するようにした
-- 2026-10-22: ルートの`loader`で遷移前にデータを取る形を追加（ホーム・動画の詳細から）
-- 2026-10-22: 全ページが`loader`に移ったため、`QueryCheck`の`fresh`を廃止
-- 2026-10-22: `queryKeys`・`queryOptions`の名前を一覧は複数形、詳細は単数形、まとめたキーは`All`付きにそろえた
-- 2026-11-02: 全ページを`useSuspenseQuery`に移し、取得中・エラーの表示をルートに任せた（`QueryCheck`を廃止）

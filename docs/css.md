@@ -5,9 +5,11 @@
 - ファイル形式は必ずSCSSを使用
 - `parts/`、`widgets/`はCSS Modules（`.module.scss`）を使用
 - `pages/`ではグローバルCSS（`styles/`配下）を利用してよい
+  - `styles/global/`：全体のスタイル（`reset.scss`・`style.scss` など）と mixin（`mixin/scrollbar.scss`・`mixin/tiptap.scss`）
+  - `styles/internal/`：特定の画面・ライブラリ向け（`registration.scss`・`videojs-myus.scss` など）
 - ネスト構文で記述する（子要素は親クラスの中にネスト、3階層まで）
-- インラインスタイルは使用しない
-- 動的スタイルはクラスの切り替え（`cx()`）で対応
+- インラインスタイルは使用しない。ただし、再生位置のバーの幅のように値が連続して変わるものだけは `style` で渡してよい
+- 動的スタイルはクラスの切り替え（`cx()`。`utils/functions/cx.ts`）で対応
 
 ## parts の SCSS 独立性（必須）
 
@@ -109,9 +111,5 @@
 ## レスポンシブ
 
 - メディアクエリはコンポーネント単位でSCSSファイル内に記述
-- モバイルファーストで`min-width`で拡張
+- デスクトップを基本にし、`max-width`で狭い画面向けに上書きする（例：`@media screen and (max-width: 668px)`）
 
-## 更新履歴
-- 2026-04-16: 初版作成
-- 2026-04-22: 空行ルール追加（同一セレクタ内は詰める、セレクタ間は改行）、分類コメントは実ファイルに書かない旨を明記
-- 2026-04-27: parts の SCSS 独立性ルール追加（グローバル CSS / 共有 mixin に依存しない）
