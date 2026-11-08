@@ -464,7 +464,7 @@ flowchart TB
 ### 残っているもの
 - 決済：クリエイターが売る機能（Stripe Connect・Store・Product）、多通貨、Stripe のテスト環境での確認（[roadmap_payment.md](roadmap_payment.md)）
 - Event Sourcing：外部操作の要求と結果・Projector・帳簿の集約（保留。[roadmap_event_sourcing.md](roadmap_event_sourcing.md)）
-- Google Tag Manager（サイト全体と、投稿者ごとの `tag_manager_id`）：今も使うか未定。マイページで ID は登録できるが、読み込みはしていない
+- 投稿者ごとの Google Tag Manager（マイページの `tag_manager_id`）：ID は登録できるが、読み込みはしていない。GTM は任意のスクリプトを動かせるので、投稿者の GTM を MyUs のページで読み込むと、投稿者が閲覧者のページで好きなスクリプトを動かせてしまう（Cookie 以外の情報の抜き取り・画面の書き換えなど）。入れるなら、MyUs のドメインとは別の場所で動かす仕組みが要る
 
 ### 改善ポイント
 - モバイルアプリ対応
