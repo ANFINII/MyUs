@@ -501,7 +501,7 @@ def save_ledger_entry_data(transaction_id: int, event_id: int, entry_type: Ledge
 
 
 @Result.shield_exception()
-def save_payment_projection_data() -> Result[int, CommandError]:
+def rebuild_payment_projection_data() -> Result[int, CommandError]:
     delete_ret = delete_payment_projection_data()
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)

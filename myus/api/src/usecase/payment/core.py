@@ -14,7 +14,7 @@ from api.src.domain.interface.payment.transaction.interface import TransactionIn
 from api.src.injectors.container import injector
 from api.src.types.dto.ledger import LedgerRowDTO
 from api.src.usecase.user.core import get_user_data
-from api.src.usecase.payment._convert import get_payment_repository, record_payment_event, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
+from api.src.usecase.payment._convert import get_payment_repository, record_payment_event, save_processed_payment_event_data, save_failed_payment_event_data, rebuild_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from api.utils.common.result import CommandError, FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentType, SubscriptionStatus
@@ -180,7 +180,7 @@ def requeue_payment_events() -> Result[int, FatalError]:
 
 @Result.shield_exception()
 def replay_payment_events() -> Result[int, CommandError]:
-    return atomic_result(lambda: save_payment_projection_data())
+    return atomic_result(lambda: rebuild_payment_projection_data())
 
 
 @Result.shield_exception()

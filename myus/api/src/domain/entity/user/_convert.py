@@ -16,15 +16,15 @@ def convert_data(user: User) -> UserAllData:
     assert hasattr(user, "user_plan"), "User plan is required"
 
     return UserAllData(
-        user=user_data(user),
-        profile=profile_data(user.profile),
-        mypage=mypage_data(user.mypage),
-        notification=user_notification_data(user.notification),
-        user_plan=user_plan_data(user.user_plan),
+        user=convert_user_data(user),
+        profile=convert_profile_data(user.profile),
+        mypage=convert_mypage_data(user.mypage),
+        notification=convert_user_notification_data(user.notification),
+        user_plan=convert_user_plan_data(user.user_plan),
     )
 
 
-def user_data(user: User) -> UserData:
+def convert_user_data(user: User) -> UserData:
     return UserData(
         id=user.id,
         ulid=user.ulid,
@@ -39,7 +39,7 @@ def user_data(user: User) -> UserData:
     )
 
 
-def profile_data(profile: Profile) -> ProfileData:
+def convert_profile_data(profile: Profile) -> ProfileData:
     return ProfileData(
         last_name=profile.last_name,
         first_name=profile.first_name,
@@ -55,7 +55,7 @@ def profile_data(profile: Profile) -> ProfileData:
     )
 
 
-def mypage_data(mypage: MyPage) -> MyPageData:
+def convert_mypage_data(mypage: MyPage) -> MyPageData:
     return MyPageData(
         banner=mypage.banner.name or "",
         email=mypage.email,
@@ -67,7 +67,7 @@ def mypage_data(mypage: MyPage) -> MyPageData:
     )
 
 
-def user_notification_data(user_notification: UserNotification) -> UserNotificationData:
+def convert_user_notification_data(user_notification: UserNotification) -> UserNotificationData:
     return UserNotificationData(
         is_video=user_notification.is_video,
         is_music=user_notification.is_music,
@@ -82,7 +82,7 @@ def user_notification_data(user_notification: UserNotification) -> UserNotificat
     )
 
 
-def user_plan_data(user_plan: UserPlan) -> UserPlanData:
+def convert_user_plan_data(user_plan: UserPlan) -> UserPlanData:
     return UserPlanData(
         plan=user_plan.plan,
         is_paid=user_plan.is_paid,
@@ -110,7 +110,7 @@ def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[B
 
 
 # dataclass -> Django model
-def marshal_user(data: UserData) -> User:
+def marshal_user_data(data: UserData) -> User:
     return User(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid if data.ulid else ulid.new(),
@@ -123,7 +123,7 @@ def marshal_user(data: UserData) -> User:
     )
 
 
-def marshal_profile(user: User, data: UserAllData) -> Profile:
+def marshal_profile_data(user: User, data: UserAllData) -> Profile:
     profile = data.profile
     return Profile(
         user=user,
@@ -141,7 +141,7 @@ def marshal_profile(user: User, data: UserAllData) -> Profile:
     )
 
 
-def marshal_mypage(user: User, data: UserAllData) -> MyPage:
+def marshal_mypage_data(user: User, data: UserAllData) -> MyPage:
     mypage = data.mypage
     return MyPage(
         user=user,
@@ -155,7 +155,7 @@ def marshal_mypage(user: User, data: UserAllData) -> MyPage:
     )
 
 
-def marshal_notification(user: User, data: UserAllData) -> UserNotification:
+def marshal_user_notification_data(user: User, data: UserAllData) -> UserNotification:
     notification = data.notification
     return UserNotification(
         user=user,
@@ -172,7 +172,7 @@ def marshal_notification(user: User, data: UserAllData) -> UserNotification:
     )
 
 
-def marshal_user_plan(user: User, data: UserAllData) -> UserPlan:
+def marshal_user_plan_data(user: User, data: UserAllData) -> UserPlan:
     user_plan = data.user_plan
     return UserPlan(
         user=user,
