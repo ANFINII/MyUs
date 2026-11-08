@@ -418,7 +418,7 @@ flowchart TB
 
 ### 外部連携
 - **決済**: Stripe（Checkout・Billing・webhook）
-- **メール**: 今はコンソールに出すだけ（`MAILERS` の `default` が console。送信するときは SES などに切り替える）
+- **メール**: 開発はコンソールに出すだけ。本番は SMTP で送る（`config/settings/prod.py` の `MAILERS`。Gmail・SES の SMTP など、接続先は環境変数）
 - **動画変換**: ffmpeg
 
 ### パフォーマンス最適化

@@ -13,14 +13,14 @@
 | メディア | `MEDIA_ROOT`（ローカルディスク）に保存。動画・音楽は ffmpeg で HLS に変換（`myus/api/utils/functions/convert/`） |
 | 決済 | Stripe（webhook あり） |
 | 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する |
-| メール | `console.EmailBackend`（送信されない） |
+| メール | 開発は `console.EmailBackend`（送信されない）。本番（`config/settings/prod.py`）は SMTP で送る。接続先は `EMAIL_HOST`・`EMAIL_PORT`・`EMAIL_HOST_USER`・`EMAIL_HOST_PASSWORD`、送信元は `EMAIL_FROM` |
 | CI | GitHub Actions（デプロイなし）。`backend.yml`：mypy・ruff・`manage.py check`・pytest、`frontend.yml`：`pnpm check`・`pnpm test`・ビルド、`github-actions.yml`：ワークフロー自体の検査（actionlint・zizmor） |
 
 ### 本番化する前に解決すべき課題
 
 1. **メディアがローカルディスクにある**: サーバーの入れ替えやスケールアウトでファイルが消える・共有できない
 2. **HLS 変換が API サーバー上で動く**: CPU を占有し、API や WebSocket の応答が遅くなる
-3. **メールが送信されない**: パスワードリセットや通知が機能しない
+3. **メールの送信元が決まっていない**: 本番は SMTP で送る設定になったが、送る SMTP サーバー（Gmail・SES の SMTP など）と送信元のアドレス・ドメインの認証（SPF・DKIM）を用意する必要がある
 4. **シークレットが `myus/envs/*.env` にある**: 本番では安全な保管場所が必要。`envs/sample.env` の `AWS_*` の項目は、まだどこからも使われていない（`django-storages`・`django-ses` は未導入）
 
 ---
@@ -73,7 +73,7 @@ flowchart LR
 | キャッシュ・Channel Layer | EC2 上の **Redis コンテナ** | フェーズ 1 では ElastiCache を使わずにコストを抑える |
 | メディア保存 | **S3** | `django-storages[s3]` を導入して `STORAGES` を切り替える。バケットは非公開にする |
 | メディア配信 | **CloudFront**（OAC） | HLS（`.m3u8` / `.ts`）・画像を配信する。有料コンテンツは **署名付き Cookie** で保護する |
-| メール | **SES** | `django-ses` を使う。本番利用申請（サンドボックス解除）が必要。SPF・DKIM・DMARC は Route 53 で設定する |
+| メール | **SES** | 今の SMTP の設定のまま、接続先を SES の SMTP（`email-smtp.ap-northeast-1.amazonaws.com`）にする（`django-ses` は入れなくてよい）。本番利用申請（サンドボックス解除）が必要。SPF・DKIM・DMARC は Route 53 で設定する |
 | シークレット | **SSM Parameter Store**（SecureString） | Stripe キー・JWT シークレットなど。EC2 の IAM ロールで読み取り、起動時に環境変数へ展開する |
 | DNS | **Route 53** | `myus.xxx`（Vercel）・`api.myus.xxx`・`media.myus.xxx` |
 | 監視 | **CloudWatch**（Agent・Logs・Alarms）+ **AWS Budgets** | CPU・ディスク・RDS の空き容量・5xx のアラーム。予算超過はメールで通知する |
@@ -211,7 +211,7 @@ infra/
 1. **Terraform の土台**: `infra/bootstrap` と `network`・`media` モジュールを作る
 2. **メディアを S3 へ**: `django-storages` を導入して `STORAGES` を切り替え、既存の `media/` を `aws s3 sync` で移す
 3. **HLS 変換をワーカーへ分離**: アップロード時はジョブを積むだけにし、`worker` コンテナで変換する
-4. **SES 対応**: `MAILERS` の `default` の `BACKEND` を SES に切り替え、本番利用申請を出す
+4. **SES 対応**: 本番の `EMAIL_HOST` などを SES の SMTP に向け、本番利用申請を出す
 5. **フェーズ 1 の本番環境構築**: EC2・RDS・CloudFront を作り、GitHub Actions にデプロイを追加する
 6. **監視**: CloudWatch Alarms と Budgets を設定する
 7. （利用者が増えたら）**フェーズ 2 へ移行**
