@@ -12,7 +12,7 @@
 ### フロントエンド（frontend/）
 - ルールファイル: [docs/frontend.md](docs/frontend.md)
 - CSS/SCSS: [docs/css.md](docs/css.md)
-- 対象: TypeScript/React/Next.jsコード
+- 対象: TypeScript/React（Vite + TanStack Router）コード
 - 確認後: `pnpm check` でリンター・型チェックを実行
 
 ## 確認フロー
