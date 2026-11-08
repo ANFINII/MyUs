@@ -9,22 +9,13 @@ from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import TemporaryUploadedFile
 from ninja import UploadedFile
 from api.modules.logger import log
-from api.src.domain.interface.media.video.interface import VideoInterface
-from api.src.domain.interface.media.music.interface import MusicInterface
-from api.src.domain.interface.media.blog.interface import BlogInterface
-from api.src.domain.interface.media.comic.interface import ComicInterface
-from api.src.domain.interface.media.picture.interface import PictureInterface
-from api.src.domain.interface.media.chat.interface import ChatInterface
-from api.src.injectors.container import injector
 from api.utils.common.result import Result, ValidationError
 from api.utils.constants.upload import IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_FORMATS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
-from api.utils.enum.media import MediaType
 from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
 from api.utils.functions.file import advertise_image_path, advertise_video_path, avatar_path, comic_path, image_path, musics_path, video_path
 
 
-type MediaInterfaceType = VideoInterface | MusicInterface | BlogInterface | ComicInterface | PictureInterface | ChatInterface
 type UploadType = ImageUpload | MediaUpload
 
 PROBE_TIMEOUT = 60
@@ -123,24 +114,6 @@ def probe_formats(path: str) -> set[str]:
         log.warning("ffprobe output invalid", exc=e, path=path)
         return set()
     return set(format_name.split(","))
-
-
-def get_media_repository(media_type: MediaType) -> MediaInterfaceType:
-    match media_type:
-        case MediaType.VIDEO:
-            return injector.get(VideoInterface)
-        case MediaType.MUSIC:
-            return injector.get(MusicInterface)
-        case MediaType.BLOG:
-            return injector.get(BlogInterface)
-        case MediaType.COMIC:
-            return injector.get(ComicInterface)
-        case MediaType.PICTURE:
-            return injector.get(PictureInterface)
-        case MediaType.CHAT:
-            return injector.get(ChatInterface)
-        case _:
-            assert_never(media_type)
 
 
 def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:

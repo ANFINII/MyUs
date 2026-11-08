@@ -1,3 +1,4 @@
+from typing import assert_never
 from api.src.domain.interface.category.data import CategoryData
 from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.media.video.data import VideoData
@@ -13,17 +14,63 @@ from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.notification.interface import NotificationInterface
+from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
+from api.src.types.dto.user import MediaUserDTO
 from api.src.usecase.access_log import record_access
 from api.src.usecase.notification import create_notification
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.access_log import AccessType
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
-from api.utils.functions.media import get_media_repository
 
+
+type MediaInterfaceType = VideoInterface | MusicInterface | BlogInterface | ComicInterface | PictureInterface | ChatInterface
 
 VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
+
+
+def get_media_repository(media_type: MediaType) -> MediaInterfaceType:
+    match media_type:
+        case MediaType.VIDEO:
+            return injector.get(VideoInterface)
+        case MediaType.MUSIC:
+            return injector.get(MusicInterface)
+        case MediaType.BLOG:
+            return injector.get(BlogInterface)
+        case MediaType.COMIC:
+            return injector.get(ComicInterface)
+        case MediaType.PICTURE:
+            return injector.get(PictureInterface)
+        case MediaType.CHAT:
+            return injector.get(ChatInterface)
+        case _:
+            assert_never(media_type)
+
+
+@Result.shield_exception()
+def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Result[MediaUserDTO, FatalError]:
+    subscribe_repo = injector.get(SubscribeInterface)
+    subscribe = None
+    if user_id is not None:
+        ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        ids = ids_ret.ok_value
+        subscribes_ret = subscribe_repo.bulk_get(ids)
+        if subscribes_ret.is_err:
+            return Result.err(subscribes_ret.err_value)
+
+        subscribes = subscribes_ret.ok_value
+        subscribe = subscribes[0] if len(subscribes) > 0 else None
+
+    data = MediaUserDTO(
+        is_like=is_like,
+        is_subscribe=subscribe.is_subscribe if subscribe else False,
+    )
+
+    return Result.ok(data)
 
 
 @Result.shield_exception()

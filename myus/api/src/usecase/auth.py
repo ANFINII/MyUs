@@ -18,7 +18,7 @@ from api.utils.enum.user import PlanName
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
-from api.src.usecase.payment import cancel_subscription
+from api.src.usecase.payment.core import cancel_subscription
 from api.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
 from api.utils.constants.auth import LOGIN_FAILURE_LIMIT
 from api.utils.enum.payment import CancelError

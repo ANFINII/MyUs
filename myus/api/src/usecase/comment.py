@@ -7,13 +7,13 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption as 
 from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.types.schema.comment import CommentCreateIn
+from api.src.usecase.media._convert import get_media_repository
 from api.src.usecase.notification import create_notification, delete_object_notifications
 from api.src.usecase.user import get_author_data, get_author_data_map
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.map import comment_type_no_map
-from api.utils.functions.media import get_media_repository
 from api.utils.functions.transaction import atomic_result
 
 
