@@ -6,7 +6,7 @@ from api.src.adapter.auth import auth_check
 from api.src.types.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.user import AuthorOut
-from api.src.usecase.comment import create_comment, delete_comment, update_comment
+from api.src.usecase.comment.core import create_comment, delete_comment, update_comment
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
 
 

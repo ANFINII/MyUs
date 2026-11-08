@@ -12,12 +12,12 @@ from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationIn, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
 from api.src.types.schema.userpage import UserPageMediaOut, UserPageOut
-from api.src.usecase.channel import get_channel_data, get_user_channels
-from api.src.usecase.follow import get_followers, get_follows, upsert_follow
-from api.src.usecase.notification import get_notification, notification_confirm, notification_delete
-from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
-from api.src.usecase.user import get_user_data, like_comment, like_media
-from api.src.usecase.userpage import get_userpage_advertises, get_userpage_media, is_following
+from api.src.usecase.channel.core import get_channel_data, get_user_channels
+from api.src.usecase.follow.core import get_followers, get_follows, upsert_follow
+from api.src.usecase.notification.core import get_notification, notification_confirm, notification_delete
+from api.src.usecase.search_tag.core import get_search_tag_data, update_search_tags
+from api.src.usecase.user.core import get_user_data, like_comment, like_media
+from api.src.usecase.userpage.core import get_userpage_advertises, get_userpage_media, is_following
 from api.utils.common.result import FatalError, NotFoundError, ValidationError
 from api.utils.functions.index import create_url
 

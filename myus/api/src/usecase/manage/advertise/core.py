@@ -7,7 +7,7 @@ from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.advertise import AdvertiseIn, AdvertiseUpdateIn
-from api.src.usecase.user import get_user_data
+from api.src.usecase.user.core import get_user_data
 from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
 from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.index import create_url

@@ -6,7 +6,7 @@ from api.src.adapter.auth import auth_check
 from api.src.types.dto.hashtag import HashtagDTO
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.hashtag import HashtagOut, MediaHashtagsUpdateIn
-from api.src.usecase.hashtag import get_master_hashtags, update_media_hashtags
+from api.src.usecase.hashtag.core import get_master_hashtags, update_media_hashtags
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
 
 

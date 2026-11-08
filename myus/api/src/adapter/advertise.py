@@ -6,7 +6,7 @@ from api.src.adapter.auth import auth_check
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.types.schema.advertise import AdvertiseListOut, AdvertiseOut, AdvertiseReadOut
 from api.src.types.schema.common import ErrorOut, ErrorType
-from api.src.usecase.advertise import get_global_advertises, get_user_advertises, increment_advertise_read
+from api.src.usecase.advertise.core import get_global_advertises, get_user_advertises, increment_advertise_read
 from api.utils.common.result import FatalError, NotFoundError
 from api.utils.functions.index import get_client_ip
 

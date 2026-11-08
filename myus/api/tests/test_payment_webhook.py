@@ -8,7 +8,8 @@ from django.db import connection
 from api.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Subscription
 from api.db.models.user import User, UserPlan
 from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
-from api.src.usecase.payment.core import PAYMENT_EVENT_MAX_ATTEMPTS, export_ledger, process_payment_events, receive_payment_event, replay_payment_events, requeue_payment_events
+from api.src.usecase.payment.core import export_ledger, process_payment_events, receive_payment_event, replay_payment_events, requeue_payment_events
+from api.src.usecase.payment._convert import PAYMENT_EVENT_MAX_ATTEMPTS
 from api.tests.fakes import provider_subscription
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.i18n import Currency

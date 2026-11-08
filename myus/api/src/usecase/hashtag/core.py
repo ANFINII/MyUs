@@ -1,34 +1,13 @@
-import re
 from api.modules.logger import log
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType as HashtagSortType
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
-from api.src.domain.interface.ng_word.interface import FilterOption as NgWordFilterOption, NgWordInterface, SortOption as NgWordSortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
 from api.src.usecase.media._convert import get_media_repository
+from api.src.usecase.hashtag._convert import normalize_name, validate_name, get_ng_words
 from api.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import MediaType
-
-
-HASHTAG_MAX_LENGTH = 30
-ALLOWED_PATTERN = re.compile(r"^[ぁ-んァ-ヶー一-龯a-zA-Z]+$")
-
-
-def normalize_name(name: str) -> str:
-    return name.strip().lstrip("#").lower()
-
-
-def validate_name(name: str, ng_words: list[str]) -> bool:
-    if len(name) == 0:
-        return False
-    if len(name) > HASHTAG_MAX_LENGTH:
-        return False
-    if ALLOWED_PATTERN.match(name) is None:
-        return False
-    if any(ng in name for ng in ng_words):
-        return False
-    return True
 
 
 @Result.shield_exception()
@@ -45,22 +24,6 @@ def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
 
     hashtags = hashtags_ret.ok_value
     return Result.ok([HashtagDTO(ulid=h.ulid, name=h.name) for h in hashtags])
-
-
-@Result.shield_exception()
-def get_ng_words() -> Result[list[str], FatalError]:
-    repo = injector.get(NgWordInterface)
-    ids_ret = repo.get_ids(NgWordFilterOption(), NgWordSortOption())
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
-
-    ids = ids_ret.ok_value
-    ng_words_ret = repo.bulk_get(ids)
-    if ng_words_ret.is_err:
-        return Result.err(ng_words_ret.err_value)
-
-    ng_words = ng_words_ret.ok_value
-    return Result.ok([n.word for n in ng_words])
 
 
 @Result.shield_exception()

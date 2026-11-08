@@ -17,8 +17,8 @@ from api.src.domain.interface.notification.interface import NotificationInterfac
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.user import MediaUserDTO
-from api.src.usecase.access_log import record_access
-from api.src.usecase.notification import create_notification
+from api.src.usecase.access_log._convert import record_access
+from api.src.usecase.notification._convert import create_notification
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.access_log import AccessType
 from api.utils.enum.media import MediaType

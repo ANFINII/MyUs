@@ -11,7 +11,8 @@ from api.src.types.dto.user import AuthorDTO, LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.src.usecase.media._convert import get_media_repository
-from api.src.usecase.notification import create_notification
+from api.src.usecase.notification._convert import create_notification
+from api.src.usecase.user._convert import save_user_data
 from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -38,16 +39,6 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None
 
     users = users_ret.ok_value
     return Result.ok(users[0])
-
-
-@Result.shield_exception()
-def save_user_data(data: UserAllData) -> Result[None, FatalError]:
-    repo = injector.get(UserInterface)
-    ret = repo.bulk_save([data])
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    return Result.ok(None)
 
 
 @Result.shield_exception()
