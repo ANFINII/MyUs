@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.event.data import PaymentEventData
+from api.src.domain.interface.payment.event.data import PaymentEventData, ProviderSubscriptionData
 from api.utils.enum.i18n import Locale
-from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, PlanChangeError, WebhookVerifyError
 
 
 @dataclass(frozen=True, slots=True)
@@ -84,3 +84,17 @@ class CancelFailed:
 
 
 type CancelResult = CancelSuccess | CancelFailed
+
+
+@dataclass(frozen=True, slots=True)
+class PlanChangeSuccess:
+    subscription: ProviderSubscriptionData
+
+
+@dataclass(frozen=True, slots=True)
+class PlanChangeFailed:
+    error: PlanChangeError
+    message: str
+
+
+type PlanChangeResult = PlanChangeSuccess | PlanChangeFailed

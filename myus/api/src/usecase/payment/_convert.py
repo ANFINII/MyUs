@@ -100,6 +100,27 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
 
 
 @Result.shield_exception()
+def get_active_subscription_data(user_id: int) -> Result[SubscriptionData | None, FatalError]:
+    repo = injector.get(SubscriptionInterface)
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    subscriptions_ret = repo.bulk_get(ids)
+    if subscriptions_ret.is_err:
+        return Result.err(subscriptions_ret.err_value)
+
+    subscriptions = subscriptions_ret.ok_value
+    not_canceled_at = datetime.min.replace(tzinfo=timezone.utc)
+    active_subscriptions = [s for s in subscriptions if s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE) and s.canceled_at == not_canceled_at]
+    if len(active_subscriptions) == 0:
+        return Result.ok(None)
+
+    return Result.ok(active_subscriptions[0])
+
+
+@Result.shield_exception()
 def get_subscription_state_data(aggregate_id: str) -> Result[SubscriptionState, HistoryError]:
     repo = injector.get(EventStoreInterface)
     load_ret = repo.load(SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id, 0)

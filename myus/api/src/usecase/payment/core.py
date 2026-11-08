@@ -9,16 +9,17 @@ from api.src.domain.interface.payment.event.data import PaymentEventData
 from api.src.domain.interface.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from api.src.domain.interface.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from api.src.domain.interface.payment.payout.interface import PayoutInterface
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, RedirectUrls, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PlanChangeResult, PlanChangeSuccess, RedirectUrls, WebhookVerifyResult
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.ledger import LedgerRowDTO
 from api.src.usecase.user.core import get_user_data
-from api.src.usecase.payment._convert import get_payment_repository, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
+from api.src.usecase.payment._convert import get_payment_repository, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from api.utils.common.result import CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
+from api.utils.enum.user import PlanName
 from api.utils.functions.map import locale_path
 from api.utils.functions.transaction import atomic_result
 from api.utils.plan import get_plan
@@ -94,23 +95,13 @@ def verify_webhook(provider: PaymentProvider, payload: bytes, signature: str) ->
 
 @Result.shield_exception()
 def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
-    repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False))
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
+    subscription_ret = get_active_subscription_data(user_id)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
 
-    ids = ids_ret.ok_value
-    subscriptions_ret = repo.bulk_get(ids)
-    if subscriptions_ret.is_err:
-        return Result.err(subscriptions_ret.err_value)
-
-    subscriptions = subscriptions_ret.ok_value
-    not_canceled_at = datetime.min.replace(tzinfo=timezone.utc)
-    cancelable_subscriptions = [s for s in subscriptions if s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE) and s.canceled_at == not_canceled_at]
-    if len(cancelable_subscriptions) == 0:
+    subscription = subscription_ret.ok_value
+    if subscription is None:
         return Result.err(NotFoundError("error.subscriptionNotFound"))
-
-    subscription = cancelable_subscriptions[0]
 
     customer_repo = injector.get(PaymentCustomerInterface)
     customers_ret = customer_repo.bulk_get([subscription.payment_customer_id])
@@ -163,6 +154,50 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
         log.info("Payment cancel succeeded", user_id=user_id, external_id=subscription.external_id)
 
     return Result.ok(cancellation)
+
+
+@Result.shield_exception()
+def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputError]:
+    plan = get_plan(plan_name)
+    if plan is None:
+        log.warning("Payment unknown plan", plan=plan_name)
+        return Result.err(NotFoundError("Not Found"))
+
+    if plan.name == PlanName.FREE:
+        return Result.err(ValidationError("error.planChangeToFree"))
+
+    subscription_ret = get_active_subscription_data(user_id)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
+
+    subscription = subscription_ret.ok_value
+    if subscription is None:
+        return Result.err(NotFoundError("error.subscriptionNotFound"))
+
+    if subscription.product_code == plan.name:
+        return Result.err(ValidationError("error.planChangeSame"))
+
+    customer_repo = injector.get(PaymentCustomerInterface)
+    customers_ret = customer_repo.bulk_get([subscription.payment_customer_id])
+    if customers_ret.is_err:
+        return Result.err(customers_ret.err_value)
+
+    customers = customers_ret.ok_value
+    repo = get_payment_repository(customers[0].provider)
+    change_ret = repo.change_plan(subscription.external_id, plan.name)
+    if change_ret.is_err:
+        return Result.err(change_ret.err_value)
+
+    change = change_ret.ok_value
+    if isinstance(change, PlanChangeSuccess):
+        save_ret = atomic_result(lambda: save_provider_subscription_data(change.subscription, datetime.now(timezone.utc)))
+        if save_ret.is_err:
+            log.error("Payment plan change not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
+            return Result.err(FatalError("Payment plan change not saved"))
+
+        log.info("Payment plan changed", user_id=user_id, external_id=subscription.external_id, plan=plan.name.value)
+
+    return Result.ok(change)
 
 
 @Result.shield_exception()

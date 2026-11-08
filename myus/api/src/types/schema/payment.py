@@ -8,6 +8,10 @@ class PaymentCheckoutIn(BaseModel):
     locale: Locale
 
 
+class PaymentChangeIn(BaseModel):
+    plan: str
+
+
 class PaymentCheckoutOut(BaseModel):
     url: str
 
