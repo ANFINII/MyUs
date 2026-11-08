@@ -13,7 +13,7 @@
 - 各 PR は **独立してマージ可能** な単位に切る。旧テーブルの削除は、読み手を全部移した後にまとめて行う
 - 業務判断と状態遷移は純粋な関数にする。時刻・採番・外部 API の応答は呼び出し側が渡し、保存・配信・外部操作も呼び出し側が担う
 - BE は Result 型の規約（[backend.md](backend.md)）に従う
-- mypy・ruff・pytest を pass させる。集約ごとに `apply`・`replay`・競合のテストを必ず書く
+- mypy・ruff・pytest を pass させる。集約やイベントストアのテストは、ドメインと実装が固まるまで書かない（各 PR の Acceptance のテストもそれまでは書かない）
 
 ---
 
@@ -268,7 +268,7 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 - Finder も作らない（引く表がないため）
 - イベントストアは `EsModule` で injector に登録した。集約が増えたら、渡す対応表（`SUBSCRIPTION_EVENT_CLASSES`）をつなげる
 - コマンドは `accept_provider_subscription`。Receiver はまだ作らず、今の `apply_payment_event` のサブスクリプションの分岐から呼ぶ。集約への追記は、worker の反映（`Subscription` への書き込み）と同じトランザクションに入る
-- Stripe CLI での確認はまだ（テストでは、届いた順に関係なく必要なイベントだけが追記され、流し直してもイベントが増えないことを確かめた）
+- ドメインと実装が固まるまでテストは書かないことにし、`test_event_store.py`・`test_subscription_aggregate.py` も消した。Stripe CLI での確認はまだ
 
 
 **Goal**: Subscription を実際に保存する。
