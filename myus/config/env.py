@@ -35,12 +35,6 @@ class Environment:
     redis_port: int
     redis_password: str
 
-    # Email
-    email_host: str
-    email_port: int
-    email_host_user: str
-    email_host_password: str
-
     # Stripe
     stripe_secret_key: str
     stripe_public_key: str

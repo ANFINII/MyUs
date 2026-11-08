@@ -418,7 +418,7 @@ flowchart TB
 
 ### 外部連携
 - **決済**: Stripe（Checkout・Billing・webhook）
-- **メール**: SMTP
+- **メール**: 今はコンソールに出すだけ（`MAILERS` の `default` が console。送信するときは SES などに切り替える）
 - **動画変換**: ffmpeg
 
 ### パフォーマンス最適化
