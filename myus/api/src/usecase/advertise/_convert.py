@@ -7,14 +7,6 @@ from api.utils.common.result import FatalError, Result
 from api.utils.enum.access_log import AccessType
 
 
-def is_active(ad: AdvertiseData, today: date) -> bool:
-    if ad.type != "one":
-        return False
-    if ad.period is None:
-        return True
-    return ad.period >= today
-
-
 @Result.shield_exception()
 def save_read_data(advertise_id: int, read: int, ip_address: str) -> Result[int, FatalError]:
     repo = injector.get(AdvertiseInterface)
@@ -32,3 +24,11 @@ def save_read_data(advertise_id: int, read: int, ip_address: str) -> Result[int,
 
     new_read = read_ret.ok_value
     return Result.ok(new_read)
+
+
+def is_active(ad: AdvertiseData, today: date) -> bool:
+    if ad.type != "one":
+        return False
+    if ad.period is None:
+        return True
+    return ad.period >= today

@@ -23,12 +23,6 @@ def get_active_user(user_id: int) -> Result[UserAllData | None, FatalError]:
     return Result.ok(users[0])
 
 
-def is_same_password(fingerprint: object, password_hash: str) -> bool:
-    if not isinstance(fingerprint, str):
-        return False
-    return hmac.compare_digest(fingerprint, password_fingerprint(password_hash))
-
-
 @Result.shield_exception()
 def create_user_data(data: UserAllData, channel_name: str) -> Result[None, FatalError]:
     repo = injector.get(UserInterface)
@@ -53,3 +47,9 @@ def create_user_data(data: UserAllData, channel_name: str) -> Result[None, Fatal
         return Result.err(channel_ret.err_value)
 
     return Result.ok(None)
+
+
+def is_same_password(fingerprint: object, password_hash: str) -> bool:
+    if not isinstance(fingerprint, str):
+        return False
+    return hmac.compare_digest(fingerprint, password_fingerprint(password_hash))

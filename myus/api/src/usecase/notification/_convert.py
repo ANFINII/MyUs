@@ -52,22 +52,6 @@ def get_notification_user_map(user_ids: list[int]) -> Result[dict[int, Notificat
     })
 
 
-def get_enabled_types(setting: UserNotificationData) -> tuple[NotificationTypeNo, ...]:
-    enabled = {
-        NotificationTypeNo.VIDEO: setting.is_video,
-        NotificationTypeNo.MUSIC: setting.is_music,
-        NotificationTypeNo.BLOG: setting.is_blog,
-        NotificationTypeNo.COMIC: setting.is_comic,
-        NotificationTypeNo.PICTURE: setting.is_picture,
-        NotificationTypeNo.CHAT: setting.is_chat,
-        NotificationTypeNo.FOLLOW: setting.is_follow,
-        NotificationTypeNo.LIKE: setting.is_like,
-        NotificationTypeNo.REPLY: setting.is_reply,
-        NotificationTypeNo.VIEWS: setting.is_views,
-    }
-    return tuple(type_no for type_no, is_enabled in enabled.items() if is_enabled)
-
-
 @Result.shield_exception()
 def get_user_enabled_types(user_id: int) -> Result[tuple[NotificationTypeNo, ...], FatalError]:
     repo = injector.get(UserInterface)
@@ -148,3 +132,19 @@ def delete_object_notifications(object_type: NotificationObjectType, object_ids:
         return Result.err(delete_ret.err_value)
 
     return Result.ok(None)
+
+
+def get_enabled_types(setting: UserNotificationData) -> tuple[NotificationTypeNo, ...]:
+    enabled = {
+        NotificationTypeNo.VIDEO: setting.is_video,
+        NotificationTypeNo.MUSIC: setting.is_music,
+        NotificationTypeNo.BLOG: setting.is_blog,
+        NotificationTypeNo.COMIC: setting.is_comic,
+        NotificationTypeNo.PICTURE: setting.is_picture,
+        NotificationTypeNo.CHAT: setting.is_chat,
+        NotificationTypeNo.FOLLOW: setting.is_follow,
+        NotificationTypeNo.LIKE: setting.is_like,
+        NotificationTypeNo.REPLY: setting.is_reply,
+        NotificationTypeNo.VIEWS: setting.is_views,
+    }
+    return tuple(type_no for type_no, is_enabled in enabled.items() if is_enabled)
