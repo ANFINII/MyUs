@@ -13,7 +13,7 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.injectors.container import injector
-from api.src.usecase.notification._convert import delete_object_notifications
+from api.src.usecase.notification._convert import delete_notification_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType
@@ -116,7 +116,7 @@ def delete_video_data(ids: list[int]) -> Result[None, FatalError]:
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    notification_ret = delete_object_notifications(NotificationObjectType.VIDEO, ids)
+    notification_ret = delete_notification_data(NotificationObjectType.VIDEO, ids)
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
@@ -130,7 +130,7 @@ def delete_music_data(ids: list[int]) -> Result[None, FatalError]:
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    notification_ret = delete_object_notifications(NotificationObjectType.MUSIC, ids)
+    notification_ret = delete_notification_data(NotificationObjectType.MUSIC, ids)
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
@@ -144,7 +144,7 @@ def delete_blog_data(ids: list[int]) -> Result[None, FatalError]:
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    notification_ret = delete_object_notifications(NotificationObjectType.BLOG, ids)
+    notification_ret = delete_notification_data(NotificationObjectType.BLOG, ids)
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
@@ -158,7 +158,7 @@ def delete_comic_data(ids: list[int]) -> Result[None, FatalError]:
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    notification_ret = delete_object_notifications(NotificationObjectType.COMIC, ids)
+    notification_ret = delete_notification_data(NotificationObjectType.COMIC, ids)
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
@@ -172,7 +172,7 @@ def delete_picture_data(ids: list[int]) -> Result[None, FatalError]:
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    notification_ret = delete_object_notifications(NotificationObjectType.PICTURE, ids)
+    notification_ret = delete_notification_data(NotificationObjectType.PICTURE, ids)
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
@@ -186,11 +186,11 @@ def delete_chat_data(ids: list[int], reply_ids: list[int]) -> Result[None, Fatal
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    chat_notification_ret = delete_object_notifications(NotificationObjectType.CHAT, ids)
+    chat_notification_ret = delete_notification_data(NotificationObjectType.CHAT, ids)
     if chat_notification_ret.is_err:
         return Result.err(chat_notification_ret.err_value)
 
-    message_notification_ret = delete_object_notifications(NotificationObjectType.MESSAGE, reply_ids)
+    message_notification_ret = delete_notification_data(NotificationObjectType.MESSAGE, reply_ids)
     if message_notification_ret.is_err:
         return Result.err(message_notification_ret.err_value)
 

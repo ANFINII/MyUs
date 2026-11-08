@@ -17,8 +17,8 @@ from api.src.domain.interface.notification.interface import NotificationInterfac
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.user import MediaUserDTO
-from api.src.usecase.access_log._convert import record_access
-from api.src.usecase.notification._convert import create_notification
+from api.src.usecase.access_log._convert import save_access_data
+from api.src.usecase.notification._convert import create_notification_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.access_log import AccessType
 from api.utils.enum.media import MediaType
@@ -49,7 +49,7 @@ def get_media_repository(media_type: MediaType) -> MediaInterfaceType:
 
 
 @Result.shield_exception()
-def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Result[MediaUserDTO, FatalError]:
+def get_media_user_data(is_like: bool, channel_id: int, user_id: int | None) -> Result[MediaUserDTO, FatalError]:
     subscribe_repo = injector.get(SubscribeInterface)
     subscribe = None
     if user_id is not None:
@@ -178,7 +178,7 @@ def create_chat_data(data: ChatData, category_data: CategoryData) -> Result[int,
 @Result.shield_exception()
 def save_read_data(media_type: MediaType, media_id: int, read: int, owner_id: int, ip_address: str) -> Result[int, FatalError]:
     repo = get_media_repository(media_type)
-    access_ret = record_access(ip_address, AccessType(media_type.value), media_id)
+    access_ret = save_access_data(ip_address, AccessType(media_type.value), media_id)
     if access_ret.is_err:
         return Result.err(access_ret.err_value)
 
@@ -192,7 +192,7 @@ def save_read_data(media_type: MediaType, media_id: int, read: int, owner_id: in
 
     new_read = read_ret.ok_value
     if new_read in VIEWS_THRESHOLDS:
-        notification_ret = create_views_notification(owner_id, NotificationObjectType(media_type.value), media_id)
+        notification_ret = create_views_notification_data(owner_id, NotificationObjectType(media_type.value), media_id)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 
@@ -200,13 +200,13 @@ def save_read_data(media_type: MediaType, media_id: int, read: int, owner_id: in
 
 
 @Result.shield_exception()
-def create_views_notification(owner_id: int, object_type: NotificationObjectType, object_id: int) -> Result[None, FatalError]:
+def create_views_notification_data(owner_id: int, object_type: NotificationObjectType, object_id: int) -> Result[None, FatalError]:
     repo = injector.get(NotificationInterface)
     delete_ret = repo.delete(NotificationTypeNo.VIEWS, object_type, object_id, owner_id)
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    create_ret = create_notification(owner_id, owner_id, NotificationTypeNo.VIEWS, object_id, object_type)
+    create_ret = create_notification_data(owner_id, owner_id, NotificationTypeNo.VIEWS, object_id, object_type)
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 

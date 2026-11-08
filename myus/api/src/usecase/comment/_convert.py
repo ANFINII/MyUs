@@ -4,8 +4,8 @@ from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
-from api.src.usecase.notification._convert import delete_object_notifications
-from api.src.usecase.user._convert import get_author_data_map
+from api.src.usecase.notification._convert import delete_notification_data
+from api.src.usecase.user._convert import get_author_map_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import CommentTypeNo
 from api.utils.enum.notification import NotificationObjectType
@@ -48,7 +48,7 @@ def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    notification_ret = delete_object_notifications(NotificationObjectType.COMMENT, [data.id])
+    notification_ret = delete_notification_data(NotificationObjectType.COMMENT, [data.id])
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
@@ -56,7 +56,7 @@ def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> Result[list[CommentDTO], FatalError]:
+def get_comments_data(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> Result[list[CommentDTO], FatalError]:
     repo = injector.get(CommentInterface)
     ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption())
     if ids_ret.is_err:
@@ -71,7 +71,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
     comments = [c for c in all_comments if c.parent_id is None]
     replies = [c for c in all_comments if c.parent_id is not None]
     author_ids = list({c.author_id for c in comments} | {r.author_id for r in replies})
-    author_map_ret = get_author_data_map(author_ids)
+    author_map_ret = get_author_map_data(author_ids)
     if author_map_ret.is_err:
         return Result.err(author_map_ret.err_value)
 

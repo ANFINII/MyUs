@@ -11,7 +11,7 @@ from api.src.types.dto.user import LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.src.usecase.media._convert import get_media_repository
-from api.src.usecase.notification._convert import create_notification
+from api.src.usecase.notification._convert import create_notification_data
 from api.src.usecase.user._convert import save_user_data
 from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result
 from api.utils.enum.media import MediaType
@@ -195,7 +195,7 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
 
         comments = comments_ret.ok_value
         comment = comments[0]
-        create_ret = create_notification(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
+        create_ret = create_notification_data(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
         if create_ret.is_err:
             return Result.err(create_ret.err_value)
     else:

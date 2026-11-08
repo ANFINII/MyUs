@@ -32,7 +32,7 @@ def get_notification_data(receiver_id: int, enabled_types: tuple[NotificationTyp
 
 
 @Result.shield_exception()
-def get_notification_user_map(user_ids: list[int]) -> Result[dict[int, NotificationUserDTO], FatalError]:
+def get_notification_user_map_data(user_ids: list[int]) -> Result[dict[int, NotificationUserDTO], FatalError]:
     if len(user_ids) == 0:
         return Result.ok({})
 
@@ -53,7 +53,7 @@ def get_notification_user_map(user_ids: list[int]) -> Result[dict[int, Notificat
 
 
 @Result.shield_exception()
-def get_user_enabled_types(user_id: int) -> Result[tuple[NotificationTypeNo, ...], FatalError]:
+def get_user_enabled_types_data(user_id: int) -> Result[tuple[NotificationTypeNo, ...], FatalError]:
     repo = injector.get(UserInterface)
     ret = repo.bulk_get([user_id])
     if ret.is_err:
@@ -67,11 +67,11 @@ def get_user_enabled_types(user_id: int) -> Result[tuple[NotificationTypeNo, ...
 
 
 @Result.shield_exception()
-def create_notification(user_from_id: int, user_to_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> Result[None, FatalError]:
+def create_notification_data(user_from_id: int, user_to_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> Result[None, FatalError]:
     if user_to_id != 0:
         if user_to_id == user_from_id and type_no != NotificationTypeNo.VIEWS:
             return Result.ok(None)
-        enabled_types_ret = get_user_enabled_types(user_to_id)
+        enabled_types_ret = get_user_enabled_types_data(user_to_id)
         if enabled_types_ret.is_err:
             return Result.err(enabled_types_ret.err_value)
 
@@ -99,7 +99,7 @@ def create_notification(user_from_id: int, user_to_id: int, type_no: Notificatio
 
 
 @Result.shield_exception()
-def create_publish_notification(owner_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> Result[None, FatalError]:
+def create_publish_notification_data(owner_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> Result[None, FatalError]:
     repo = injector.get(NotificationInterface)
     ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=[object_id]), SortOption(), limit=1)
     if ids_ret.is_err:
@@ -109,7 +109,7 @@ def create_publish_notification(owner_id: int, type_no: NotificationTypeNo, obje
     if len(ids) > 0:
         return Result.ok(None)
 
-    create_ret = create_notification(owner_id, 0, type_no, object_id, object_type)
+    create_ret = create_notification_data(owner_id, 0, type_no, object_id, object_type)
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
@@ -117,7 +117,7 @@ def create_publish_notification(owner_id: int, type_no: NotificationTypeNo, obje
 
 
 @Result.shield_exception()
-def delete_object_notifications(object_type: NotificationObjectType, object_ids: list[int]) -> Result[None, FatalError]:
+def delete_notification_data(object_type: NotificationObjectType, object_ids: list[int]) -> Result[None, FatalError]:
     if len(object_ids) == 0:
         return Result.ok(None)
 

@@ -287,7 +287,7 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 
 計画から変えたこと：
 
-- `Subscription`・`UserPlan` を、webhook の内容ではなく、集約が返す状態から同じトランザクションで作るようにした（`update_subscription`・`update_user_plan` が `SubscriptionState` を受け取る）。`Subscription` の `last_event_at` の比較をやめ、届く順番の判断を集約だけにした
+- `Subscription`・`UserPlan` を、webhook の内容ではなく、集約が返す状態から同じトランザクションで作るようにした（`save_subscription_data`・`save_user_plan_data` が `SubscriptionState` を受け取る）。`Subscription` の `last_event_at` の比較をやめ、届く順番の判断を集約だけにした
 - `migrate_subscriptions_to_es` は作らない。`replay_payment_events` で全イベントを流し直すと、まだ無い集約は古い順に作られる
 - 突き合わせのコマンドは作らない。`Subscription`・`UserPlan` を集約の状態から作るので、比べる相手がない
 - 画面は集約から読まず、今まで通り `Subscription`・`UserPlan` を読む。集約と同じトランザクションで書くので、表示はずれない
@@ -300,7 +300,7 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 - `migrate_subscriptions_to_es` コマンド：Inbox を古い順に Receiver に流し、集約を作る（D6）
 - 流した結果の状態と、今の `Subscription`・`UserPlan` を突き合わせるコマンド。違いがあれば一覧を出す
 - マイページ・料金プランの画面は、Repository で集約1件を読んで表示する
-- `update_user_plan` を、`Subscription` の Projector にする（ユーザーのプランは query model）
+- `save_user_plan_data` を、`Subscription` の Projector にする（ユーザーのプランは query model）
 
 **Acceptance**:
 - 突き合わせで違いが0件

@@ -5,7 +5,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
 from api.src.usecase.media._convert import get_media_repository
-from api.src.usecase.hashtag._convert import normalize_name, validate_name, get_ng_words
+from api.src.usecase.hashtag._convert import normalize_name, validate_name, get_ng_words_data
 from api.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 
@@ -65,7 +65,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
         for tag in existing_hashtags:
             ulid_data_map[tag.ulid] = tag
 
-    ng_words_ret = get_ng_words()
+    ng_words_ret = get_ng_words_data()
     if ng_words_ret.is_err:
         return Result.err(ng_words_ret.err_value)
 

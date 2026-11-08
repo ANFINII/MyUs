@@ -45,9 +45,11 @@
 | 層 | 動詞 | injector | 例 |
 |------|------|------|-----|
 | entity の `_convert.py` | `convert`（Model → Data）・`marshal`（Data → Model） | 使わない | `convert_data`・`marshal_data`、1つのファイルに複数あるときは `profile_data`・`marshal_profile_data` |
-| usecase の補助の関数 | `get`・`create`・`save`・`delete` | 使う（Repository を通して読み書きする） | `get_user_data`・`create_video_data`・`save_comment_data`・`delete_video_data` |
+| usecase の補助の関数 | 取ってくるなら `get`、書き込むなら `create`（新しく作る）・`save`（保存・更新）・`delete`（消す） | 使う（Repository を通して読み書きする） | `get_user_data`・`create_video_data`・`save_comment_data`・`delete_video_data`・`save_access_data` |
 | usecase の入口 | `get`・`create`・`update`・`delete` など | 使う | `get_user`・`create_video`（`_data` を付けない） |
 
+- usecase の `_convert.py` で injector を使う関数（Repository を取り出す関数を通して使うものも含む）は、すべて `_data` で終える
+- ただし Repository そのものを取り出す関数は、Data を扱わないので `get_xxx_repository` とし、`_data` を付けない（`get_media_repository`・`get_payment_repository`）
 - Data 以外を変換する関数は `_data` を付けない（`convert_content`・`marshal_content`・`marshal_outbox`）
 
 ## 条件判定
@@ -265,9 +267,9 @@ return Result.ok(new_ids)
 - domain/interface層は他の層に依存しない（純粋なPython）
 - usecaseはドメインごとのディレクトリ（`usecase/<ドメイン>/`）にし、次の2つに分ける
   - `core.py`：adapter・コマンドから呼ぶ関数
-  - `_convert.py`：補助の関数（`save_xxx_data`・`delete_xxx_data`、Repositoryを取り出す`get_media_repository`、ほかのusecaseから使う`create_notification`・`record_access`など）。補助の関数がなければ作らない
+  - `_convert.py`：補助の関数（`save_xxx_data`・`delete_xxx_data`、Repositoryを取り出す`get_media_repository`、ほかのusecaseから使う`create_notification_data`・`save_access_data`など）。補助の関数がなければ作らない
   - `_convert.py`は同じディレクトリの`core.py`をimportしない（`core.py`が`_convert.py`を使う向きだけにする）
-  - adapter からも呼ぶ関数（`get_user_data`・`get_channel_data`・`get_search_tag_data`など）は、ほかの usecase から使っていても`core.py`に置く。adapter から呼ばないものだけを`_convert.py`に置く（`get_author_data`・`get_author_data_map`など）
+  - adapter からも呼ぶ関数（`get_user_data`・`get_channel_data`・`get_search_tag_data`など）は、ほかの usecase から使っていても`core.py`に置く。adapter から呼ばないものだけを`_convert.py`に置く（`get_author_data`・`get_author_map_data`など）
 - domainに触れる補助の関数は`utils`に置かず、usecaseの`_convert.py`に置く
 
 ## パフォーマンス

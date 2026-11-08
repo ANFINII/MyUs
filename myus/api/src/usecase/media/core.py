@@ -21,11 +21,11 @@ from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, Mus
 from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
 from api.src.usecase.category._convert import get_category_data
 from api.src.usecase.channel.core import get_channel_data
-from api.src.usecase.comment._convert import get_comments
-from api.src.usecase.message._convert import get_messages
-from api.src.usecase.notification._convert import create_notification
+from api.src.usecase.comment._convert import get_comments_data
+from api.src.usecase.message._convert import get_messages_data
+from api.src.usecase.notification._convert import create_notification_data
 from api.src.usecase.user.core import get_user_data
-from api.src.usecase.media._convert import get_media_repository, get_media_user, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
+from api.src.usecase.media._convert import get_media_repository, get_media_user_data, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
 from api.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from api.utils.enum.media import CommentType, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -123,7 +123,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
             return
 
         if publish:
-            notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
+            notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
             if notification_ret.is_err:
                 log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, video_id=obj.id)
 
@@ -190,7 +190,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
     objs = objs_ret.ok_value
     obj = objs[0]
     if input.publish:
-        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
         if notification_ret.is_err:
             log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, music_id=obj.id)
 
@@ -255,7 +255,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
     objs = objs_ret.ok_value
     obj = objs[0]
     if input.publish:
-        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
+        notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
         if notification_ret.is_err:
             log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, blog_id=obj.id)
 
@@ -319,7 +319,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
     objs = objs_ret.ok_value
     obj = objs[0]
     if input.publish:
-        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
+        notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
         if notification_ret.is_err:
             log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, comic_id=obj.id)
 
@@ -382,7 +382,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
     objs = objs_ret.ok_value
     obj = objs[0]
     if input.publish:
-        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
+        notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
         if notification_ret.is_err:
             log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, picture_id=obj.id)
 
@@ -446,7 +446,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
     objs = objs_ret.ok_value
     obj = objs[0]
     if input.publish:
-        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
+        notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
         if notification_ret.is_err:
             log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, chat_id=obj.id)
 
@@ -697,7 +697,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.VIDEO)
-    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments_data(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
@@ -710,7 +710,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
         is_like = like_ret.ok_value
 
-    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    media_user_ret = get_media_user_data(is_like, obj.channel.id, user_id)
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
@@ -757,7 +757,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.MUSIC)
-    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments_data(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
@@ -770,7 +770,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
         is_like = like_ret.ok_value
 
-    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    media_user_ret = get_media_user_data(is_like, obj.channel.id, user_id)
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
@@ -827,7 +827,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.BLOG)
-    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments_data(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
@@ -840,7 +840,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
 
         is_like = like_ret.ok_value
 
-    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    media_user_ret = get_media_user_data(is_like, obj.channel.id, user_id)
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
@@ -887,7 +887,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.COMIC)
-    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments_data(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
@@ -900,7 +900,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
         is_like = like_ret.ok_value
 
-    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    media_user_ret = get_media_user_data(is_like, obj.channel.id, user_id)
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
@@ -946,7 +946,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.PICTURE)
-    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments_data(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
@@ -959,7 +959,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
 
         is_like = like_ret.ok_value
 
-    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    media_user_ret = get_media_user_data(is_like, obj.channel.id, user_id)
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
@@ -1003,7 +1003,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     objs = objs_ret.ok_value
     obj = objs[0]
 
-    messages_ret = get_messages(chat_id=obj.id)
+    messages_ret = get_messages_data(chat_id=obj.id)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
@@ -1016,7 +1016,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
 
         is_like = like_ret.ok_value
 
-    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    media_user_ret = get_media_user_data(is_like, obj.channel.id, user_id)
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
