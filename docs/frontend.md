@@ -233,6 +233,7 @@ components/pages/media/video/
 | `lib/query/` | TanStack Queryの設定（`client.ts`）・クエリキー（`keys.ts`）・`queryOptions`（`options.ts`）・ルートのローダー（`loaders.ts`） |
 | `lib/i18n/` | 翻訳ファイルと i18next の設定 |
 | `lib/axios/` | API の通信の設定 |
+| `lib/gtm.ts` | Google Tag Manager の読み込み（本番で `VITE_GTM_ID` があるときだけ） |
 | `styles/` | グローバルな CSS と mixin（[css.md](css.md)） |
 | `types/` | 型定義 |
 | `utils/` | ユーティリティ関数 |

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from '@tanstack/react-router'
+import { loadGtm } from 'lib/gtm'
 import { router } from 'lib/router'
 import { reloadOnPreloadError, watchVersion } from 'lib/version'
 import 'video.js/dist/video-js.css'
@@ -14,6 +15,7 @@ import 'styles/internal/videojs-myus.scss'
 
 watchVersion()
 reloadOnPreloadError()
+loadGtm()
 
 const root = document.getElementById('root')
 
