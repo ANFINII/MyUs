@@ -247,6 +247,44 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 決済会社から届いたイベントを `PaymentEvent` に追記し、これを正とする（イベントソーシング）。ほかのテーブルはイベントから作る投影で、イベントを流し直せば作り直せる。確定申告・帳簿のために、期間ごとの売上・返金・決済手数料・消費税の集計と、銀行への入金の照合ができるようにする。
 
+#### 全体像
+
+```mermaid
+flowchart TB
+    User[利用者] -->|申し込み・解約| API["API<br/>/payment/checkout・/payment/cancel"]
+    API -->|PaymentInterface| Stripe[Stripe]
+    Stripe -->|webhook| Webhook["API /payment/webhook<br/>署名を検証して記録し、すぐ 200 を返す"]
+    Webhook --> PE[(PaymentEvent<br/>受信の記録)]
+    PE --> Worker["worker<br/>process_payment_events<br/>10秒ごとに古い順に反映"]
+    Worker --> Apply{apply_payment_event<br/>イベントの種類}
+
+    Apply -->|サブスクリプション| Command["accept_provider_subscription<br/>Subscription 集約"]
+    Command -->|必要なイベントだけ追記| ES[(es_event<br/>集約の履歴)]
+    Command -->|追記後の状態| SubProj["update_subscription<br/>update_user_plan"]
+    SubProj --> SubTables[(Subscription<br/>UserPlan<br/>PaymentCustomer)]
+
+    Apply -->|支払い・返金・入金| PayProj["record_payment・record_refund<br/>record_payout など"]
+    PayProj --> PayTables[(PaymentTransaction<br/>PaymentLedgerEntry<br/>PaymentPayout)]
+
+    SubTables --> Screen[マイページ・料金プランの画面]
+    PayTables --> Ledger[export_ledger<br/>帳簿の CSV]
+```
+
+- `PaymentEvent`（届いた事実）と `es_event`（集約の履歴）が正で、ほかのテーブルはそこから作る投影。`replay_payment_events` で作り直せる
+- worker の反映は1件ずつ1つのトランザクションで行い、集約への追記と投影の保存も同じトランザクションに入る。失敗したら全部戻り、次の回にもう一度反映する
+
+| 観点 | 仕組み |
+|---|---|
+| 決済会社 | `PaymentInterface` の裏に隠し、Stripe の実装は `api/src/adapter/external/payment/stripe/` に置く |
+| 受信 | webhook は検証と記録だけにし、反映は worker が行う（Inbox） |
+| 重複 | `PaymentEvent` の `(provider, event_id)` 一意制約。同じ webhook は1回だけ処理する |
+| 届く順番 | サブスクリプションは集約が判断する（古い事実・同じ状態ではイベントを生まない）。取引・入金は `last_event_at` を比べる |
+| 同時に届いたとき | `es_event` の `(aggregate_type, aggregate_id, seq)` 一意制約でぶつけ、コマンドを取り直す（楽観ロック） |
+| 集約 | `state.py`・`event.py`・`decide.py`・`apply.py` に分けた、I/O を持たない関数 |
+| 失敗 | worker が再試行し、30回で諦めて `log.error`。直したら `requeue_payment_events` で戻す |
+| 帳簿 | 明細は追記だけ。売上・返金・決済手数料を符号付きの金額と消費税額で持つ |
+| イベントの形 | 保存した JSON スキーマと比べ、過去のイベントを読めなくなる変更を検査する |
+
 #### PaymentEvent
 - 決済会社から届いたイベント（webhook）を1件ずつ追記する（本文・内容は更新・削除しない）。`provider` と `event_id` で一意。同じイベントが何度届いても1回だけ処理する
 - webhook は検証して記録したら 200 を返すだけにし、投影への反映は worker（`process_payment_events`）が古い順に行う
