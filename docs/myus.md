@@ -275,7 +275,7 @@ flowchart TB
     PE --> Worker["worker<br/>process_payment_events<br/>10秒ごとに古い順に反映"]
     Worker --> Apply{apply_payment_event<br/>イベントの種類}
 
-    Apply -->|サブスクリプション| Command["accept_provider_subscription<br/>Subscription 集約"]
+    Apply -->|サブスクリプション| Command["save_subscription_event_data<br/>Subscription 集約"]
     Command -->|必要なイベントだけ追記| ES[(es_event<br/>集約の履歴)]
     Command -->|追記後の状態| SubProj["save_subscription_data<br/>save_user_plan_data"]
     SubProj --> SubTables[(Subscription<br/>UserPlan<br/>PaymentCustomer)]
@@ -350,7 +350,7 @@ flowchart TB
 
 `PaymentTransaction`・`PaymentPayout` は、最後に反映したイベントの日時（`last_event_at`）を持ち、それより古いイベントが後から届いても反映しない。明細は届いた順に関係なく、まだ無いものだけ追記する。
 
-サブスクリプションのイベントは、まず Subscription 集約（`api/src/domain/aggregate/subscription/`）に通す（`api/src/usecase/command/subscription.py` の `accept_provider_subscription`）。集約は決済会社の状態と今の状態を比べて、必要なイベントだけを `es_event` に追記し、追記後の状態を返す。`Subscription`・`UserPlan` は、この集約の状態から同じトランザクションで作る（届く順番の判断は集約だけが行い、`Subscription` は `last_event_at` を比べない。`last_event_at` には集約が最後に受け入れた日時を入れる）。画面は今まで通り `Subscription`・`UserPlan` を読む。集約の ID は決済会社のサブスクリプションの ID から `stripe:sub_xxx` の形で決めるので、ID を引くための表は持たない。同じサブスクリプションの最初のイベントが同時に届いても、`es_event` の `(aggregate_type, aggregate_id, seq)` の一意制約でぶつかり、コマンドの再試行で片方にまとまる。`replay_payment_events` で流し直すと、まだ集約の無いサブスクリプションは古い順に集約が作られ、既にある集約はイベントが増えずに同じ状態から `Subscription`・`UserPlan` を作り直す（既存データの移行もこれで行う）。
+サブスクリプションのイベントは、まず Subscription 集約（`api/src/domain/aggregate/subscription/`）に通す（`api/src/usecase/payment/_convert.py` の `save_subscription_event_data`）。集約は決済会社の状態と今の状態を比べて、必要なイベントだけを `es_event` に追記し、追記後の状態を返す。`Subscription`・`UserPlan` は、この集約の状態から同じトランザクションで作る（届く順番の判断は集約だけが行い、`Subscription` は `last_event_at` を比べない。`last_event_at` には集約が最後に受け入れた日時を入れる）。画面は今まで通り `Subscription`・`UserPlan` を読む。集約の ID は決済会社のサブスクリプションの ID から `stripe:sub_xxx` の形で決めるので、ID を引くための表は持たない。同じサブスクリプションの最初のイベントが同時に届いても、`es_event` の `(aggregate_type, aggregate_id, seq)` の一意制約でぶつかり、コマンドの再試行で片方にまとまる。`replay_payment_events` で流し直すと、まだ集約の無いサブスクリプションは古い順に集約が作られ、既にある集約はイベントが増えずに同じ状態から `Subscription`・`UserPlan` を作り直す（既存データの移行もこれで行う）。
 
 支払いのイベントが、対象のサブスクリプションより先に届いたときは、反映を失敗にして、worker が次の回にもう一度反映する（返金が取引より先に届いたときも同じ）。失敗が30回（10秒ごとで約5分）に達したら反映を諦めて `log.error` を出す。原因を直したら `requeue_payment_events` で戻す。
 
