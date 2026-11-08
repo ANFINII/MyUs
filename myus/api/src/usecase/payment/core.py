@@ -195,7 +195,7 @@ def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputE
             log.error("Payment plan change not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
             return Result.err(FatalError("Payment plan change not saved"))
 
-        log.info("Payment plan changed", user_id=user_id, external_id=subscription.external_id, plan=plan.name.value)
+        log.info("Payment plan changed", user_id=user_id, external_id=subscription.external_id, plan=plan_name)
 
     return Result.ok(change)
 
