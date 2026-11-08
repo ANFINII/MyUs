@@ -235,7 +235,7 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 - worker を2つ動かしても、同じ行を二重に処理しない
 - わざと失敗させた行が dead letter に移り、再投入で処理される
 
-### 🔶 Phase 4: 最初の集約（Subscription）
+### ✅ Phase 4: 最初の集約（Subscription）
 
 #### ✅ PR #7: Subscription 集約
 
@@ -283,7 +283,16 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 **Acceptance**:
 - Stripe CLI で webhook を送り、`es_event` と今の `Subscription` の両方が正しく更新される
 
-#### PR #9: 既存データを移して、読み手を切り替える
+#### ✅ PR #9: Subscription・UserPlan を集約の状態から作る
+
+計画から変えたこと：
+
+- `Subscription`・`UserPlan` を、webhook の内容ではなく、集約が返す状態から同じトランザクションで作るようにした（`update_subscription`・`update_user_plan` が `SubscriptionState` を受け取る）。`Subscription` の `last_event_at` の比較をやめ、届く順番の判断を集約だけにした
+- `migrate_subscriptions_to_es` は作らない。`replay_payment_events` で全イベントを流し直すと、まだ無い集約は古い順に作られる
+- 突き合わせのコマンドは作らない。`Subscription`・`UserPlan` を集約の状態から作るので、比べる相手がない
+- 画面は集約から読まず、今まで通り `Subscription`・`UserPlan` を読む。集約と同じトランザクションで書くので、表示はずれない
+- 反映のあと、`replay_payment_events` を1回流して既存のサブスクリプションの集約を作る
+
 
 **Goal**: プランの表示を集約から読むようにする。
 
@@ -421,7 +430,7 @@ PR #5・#6 を1つの PR にまとめた。計画から変えたこと：
 
 | リスク | 対策 |
 |---|---|
-| 移行中に、旧テーブルと集約の状態が食い違う | Phase 4 は並行して書き、突き合わせのコマンドで違いが0件になってから読み手を切り替える |
+| 移行中に、旧テーブルと集約の状態が食い違う | 旧テーブルを集約の状態から同じトランザクションで作る（Phase 4 の PR #9） |
 | 非同期の投影で、書いた直後に画面へ反映されない | 集約1件の表示は Repository から読む。一覧・集計だけを query model から読む |
 | worker が止まって投影や外部操作が進まない | 未処理の件数と最も古い行の時刻をログに出し、閾値を超えたら通知する |
 | 1人で進めるには部品が多い | Phase ごとに止めても動く形にしてある。Phase 4 までで、順序の問題（同じ時刻のイベント）は解消できる |

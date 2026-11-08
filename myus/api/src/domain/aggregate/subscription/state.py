@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import assert_never
 from api.src.domain.interface.payment.data import Money
 from api.utils.enum.payment import PaymentProvider, SubscriptionStatus
 
@@ -47,3 +48,17 @@ class EndedSubscription:
 
 
 type SubscriptionState = IncompleteSubscription | ActiveSubscription | PastDueSubscription | EndedSubscription
+
+
+def convert_status(state: SubscriptionState) -> SubscriptionStatus:
+    match state:
+        case IncompleteSubscription():
+            return SubscriptionStatus.INCOMPLETE
+        case ActiveSubscription():
+            return SubscriptionStatus.ACTIVE
+        case PastDueSubscription():
+            return SubscriptionStatus.PAST_DUE
+        case EndedSubscription(status=status):
+            return status
+        case _:
+            assert_never(state)
