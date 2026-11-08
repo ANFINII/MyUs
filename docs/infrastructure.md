@@ -1,28 +1,28 @@
 # MyUs インフラ構成案（AWS）
 
-2026-10-31 時点のコードベースをもとにした、本番インフラの推奨構成。
+2026-11-08 時点のコードベースをもとにした、本番インフラの推奨構成。
 
 ## 前提（現状の構成）
 
 | 領域 | 現状 |
 |---|---|
 | フロントエンド | Vite + React（SPA）。`frontend/vercel.json` で Vercel にデプロイ |
-| バックエンド | Django 6 + django-ninja。ASGI（daphne）で HTTP と WebSocket（Channels）を処理する |
+| バックエンド | Django 6.1 + django-ninja。ASGI（daphne）で HTTP と WebSocket（Channels）を処理する。docker-compose では `runserver`（daphne が入っているので ASGI で動く）で `myus_backend:8000` を起動している |
 | DB | MySQL 8.4（docker-compose のコンテナ） |
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
-| メディア | `MEDIA_ROOT`（ローカルディスク）に保存。動画・音楽は ffmpeg で HLS に変換（`api/utils/functions/convert/`） |
+| メディア | `MEDIA_ROOT`（ローカルディスク）に保存。動画・音楽は ffmpeg で HLS に変換（`myus/api/utils/functions/convert/`） |
 | 決済 | Stripe（webhook あり） |
 | 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する |
 | メール | `console.EmailBackend`（送信されない） |
-| CI | GitHub Actions（`backend.yml`：lint・テストのみ。デプロイなし） |
+| CI | GitHub Actions（デプロイなし）。`backend.yml`：mypy・ruff・`manage.py check`・pytest、`frontend.yml`：`pnpm check`・`pnpm test`・ビルド、`github-actions.yml`：ワークフロー自体の検査（actionlint・zizmor） |
 
 ### 本番化する前に解決すべき課題
 
 1. **メディアがローカルディスクにある**: サーバーの入れ替えやスケールアウトでファイルが消える・共有できない
 2. **HLS 変換が API サーバー上で動く**: CPU を占有し、API や WebSocket の応答が遅くなる
 3. **メールが送信されない**: パスワードリセットや通知が機能しない
-4. **シークレットが `envs/*.env` にある**: 本番では安全な保管場所が必要
-5. **`nginx/nginx.conf` が今の構成と合っていない**: `uwsgi_pass` で `django:8056` を向いているが、実際には daphne/gunicorn で `myus_backend:8000` が動いている
+4. **シークレットが `myus/envs/*.env` にある**: 本番では安全な保管場所が必要。`envs/sample.env` の `AWS_*` の項目は、まだどこからも使われていない（`django-storages`・`django-ses` は未導入）
+5. **`nginx/nginx.conf` が今の構成と合っていない**: `uwsgi_pass` で `django:8056` を向いているが、実際には daphne（`runserver`）で `myus_backend:8000` が動いている。`gunicorn` は依存に入っているが使っていない
 
 ---
 
@@ -154,7 +154,7 @@ flowchart LR
 | Redis | EC2 上のコンテナ | **ElastiCache for Valkey** |
 | 非同期処理 | DB の outbox をワーカーがポーリング | outbox → **SQS**（DLQ 付き）→ `worker` |
 | 動画変換 | ffmpeg（`worker` コンテナ） | **MediaConvert**（S3 へのアップロードをトリガーに実行、ABR 対応） |
-| 予約公開（`publish_at`） | `worker` 内の定期処理 | **EventBridge Scheduler** |
+| 予約公開（`publish_at`。未実装） | `worker` 内の定期処理（今後足す） | **EventBridge Scheduler** |
 | 不適切コンテンツ対策 | なし | **Rekognition** のモデレーション（任意） |
 
 ### NAT Gateway を避ける工夫

@@ -25,6 +25,7 @@ MyUsは「My Idea Know Us」を由来とする、YouTube型UIを採用した総�
 - いいね機能
 - コメント・リプライ
 - フォロー/フォロワー機能
+- チャンネル登録
 - 検索機能
 - 通知システム
 
@@ -88,16 +89,27 @@ Message
   └─ TipTap エディタ対応
 
 Follow
+Subscribe (チャンネル登録)
 Notification
   └─ 確認済み/削除済み管理
 
+【Payment】（詳しくは「決済システム」）
+PaymentEvent (決済会社から届いたイベント)
+PaymentCustomer
+  ├─ Subscription
+  └─ PaymentTransaction
+       └─ PaymentLedgerEntry
+PaymentPayout
+EsEvent / EsOutbox (集約のイベント)
+
 【Master & Others】
-Plan (料金プラン)
 Category
 HashTag
+NgWord
 SearchTag (ユーザー検索タグ)
 AccessLog
 Advertise
+※ 料金プランはテーブルではなく `api/utils/plan.py` の定数
 ```
 
 ## データモデル詳細
@@ -213,6 +225,9 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - フォロワー/フォロー関係管理
 - 双方向の関係を記録
 
+#### Subscribe
+- ユーザーのチャンネル登録
+
 #### Notification
 - 送信者/受信者
 - 通知タイプとオブジェクトの汎用的な関連付け
@@ -220,14 +235,16 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 ### マスターデータ・その他
 
-#### Plan
-- 料金プラン定義
-- Stripe API ID
-- 価格、広告表示上限
+#### 料金プラン（`api/utils/plan.py`）
+- テーブルではなくコードの定数（Free・Basic・Standard・Premium・Ultimate）
+- 価格、広告表示上限など。Stripe の価格 ID は環境変数（`STRIPE_PRICE_ID_*`）
 
 #### Category / HashTag
 - 日本語/英語名称管理
 - メディアコンテンツとの多対多関連
+
+#### NgWord
+- ハッシュタグに使えない語
 
 #### SearchTag
 - ユーザー毎の検索タグ管理
@@ -356,7 +373,7 @@ flowchart TB
 
 ### バックエンド
 - **言語**: Python 3.15
-- **フレームワーク**: Django 6.0
+- **フレームワーク**: Django 6.1
 - **API**: django-ninja
 - **ASGI サーバ**: Daphne
 - **WebSocket**: Django Channels + channels-redis
@@ -366,35 +383,41 @@ flowchart TB
 - **静的解析**: mypy + ruff
 
 ### バックエンドのレイヤー構成（`myus/api/src/`）
-ドメイン駆動の 3 層構造で構成。
+詳しい決まりは [backend.md](backend.md) の「層の責務」。
 
+- **adapter/**: HTTP エンドポイント・WebSocket
+  - `external/`: 外部サービス（Stripe）の Interface の実装
+- **usecase/**: ビジネスロジック。ドメインごとのディレクトリに `core.py`（adapter から呼ぶ関数）と `_convert.py`（補助の関数）を置く
+  - `command/`: 集約へのコマンド
 - **domain/**
-  - `interface/`: dataclass による DTO と repository interface
-  - `entity/`: Django ORM Model
-- **usecase/**: ビジネスロジック層
-- **adapter/**: HTTP エンドポイント
-- **types/schema/**: API の入出力スキーマ
+  - `interface/`: dataclass の Data と Repository の Interface
+  - `entity/`: Repository の実装（Django ORM）
+  - `aggregate/`: Event Sourcing の集約（状態・イベント・判断・適用）
+- **types/**: API の入出力スキーマ（`schema/`）と DTO（`dto/`）
+- **injectors/**: DI（Interface と実装の対応）
 - **routers.py**: ルータの集約・登録
-- **injectors/**: DI ヘルパ
+- モデルは `myus/api/db/models/`、管理コマンドは `myus/api/db/management/commands/`
 
 ### フロントエンド
-- **フレームワーク**: Next.js 16
-- **言語**: TypeScript 5.9
+- **ビルド**: Vite
+- **ルーティング**: TanStack Router（データ取得は TanStack Query）
+- **言語**: TypeScript 6
 - **ライブラリ**: React 19
 - **HTTP**: axios + neverthrow
 - **エディタ**: TipTap
 - **動画**: video.js + HLS
-- **国際化**: next-i18next
+- **国際化**: i18next + react-i18next
 - **依存管理**: pnpm
-- **静的解析**: ESLint + Prettier
-- **テスト**: Jest + Testing Library
+- **静的解析**: ESLint + TypeScript（`pnpm check`）
+- **テスト**: Vitest + Testing Library
+- **ホスティング**: Vercel
 
 ### リアルタイム通信
 - **WebSocket**: Django Channels + Redis
 - **対象**: Chat メッセージ、スレッド機能
 
 ### 外部連携
-- **決済**: Stripe API
+- **決済**: Stripe（Checkout・Billing・webhook）
 - **メール**: SMTP
 - **動画変換**: ffmpeg
 
@@ -406,14 +429,16 @@ flowchart TB
 ## セキュリティ設計
 
 ### 認証・認可
-- メール認証必須
-- パスワードハッシュ化
-- セッション管理
+- 会員登録はメールに送ったリンクから行う
+- JWT（access 1日・refresh 30日）を Cookie で渡す。ログアウトでトークンの `jti` を失効させる（Redis のキャッシュ）。パスワードを変えると、それまでのトークンは使えなくなる
+- パスワードは Django の `validate_password` で確かめる（よくあるパスワードや、ユーザー名に似たものを弾く）
+- ログイン・メール送信に回数の制限（IP ごと）。ログインはアカウントごとにも失敗の回数で止める。本番は回数を Redis に記録し、プロセスをまたいで数える
+- 管理画面は Django admin の `/admin/` だけ
 
 ### データ保護
-- CSRF対策
-- XSS対策
-- SQLインジェクション対策
+- CSRF：`/api/` への書き込みは `Origin` ヘッダーを確かめる（`OriginCheckMiddleware`）
+- アップロード：画像は中身（マジックバイト）を確かめる。動画・音声は ffprobe で形式を調べ、許可した形式だけを変換する（ffmpeg・ffprobe はファイル以外のプロトコルを読まない）
+- SQL は Django ORM を通す
 
 ### プライバシー
 - 個人情報の適切な分離
@@ -431,14 +456,15 @@ flowchart TB
 - 日本語/英語の併記
 
 ### スケーラビリティ
-- 非同期処理
+- 決済のイベントの反映は worker（`myus_worker`）で非同期に行う
 - インデックス最適化
-- キャッシュ機構（実装予定）
 
 ## 今後の展開
 
-### 開発中機能
-- 決済システムの完全統合
+### 残っているもの
+- 決済：クリエイターが売る機能（Stripe Connect・Store・Product）、多通貨、Stripe のテスト環境での確認（[roadmap_payment.md](roadmap_payment.md)）
+- Event Sourcing：外部操作の要求と結果・Projector・帳簿の集約（保留。[roadmap_event_sourcing.md](roadmap_event_sourcing.md)）
+- Google Tag Manager（サイト全体と、投稿者ごとの `tag_manager_id`）：今も使うか未定。マイページで ID は登録できるが、読み込みはしていない
 
 ### 改善ポイント
 - モバイルアプリ対応
@@ -446,23 +472,3 @@ flowchart TB
 - コンテンツモデレーション機能
 - 分析ダッシュボード
 
----
-
-## 更新履歴
-
-- **2026-04-30**: ドキュメントを実装に合わせて更新
-  - 技術アーキテクチャを実態に合わせて記述
-  - バックエンドのレイヤー構成を追記
-  - 開発・実行環境セクションを新設
-  - 実装済み項目を「開発中」から除外
-- **2026-04 直近の主な変更**:
-  - パスワード変更 / パスワードリセット / 退会機能を追加
-  - 通知の `object_type` マッチを網羅的に検証するよう改善
-  - `media bulk_get` / `chat bulk_get` の N+1 問題を解消
-  - メディア取得・更新で `category_ulid` を扱えるよう拡張
-  - docker-compose を現状リポジトリ構成に整合
-  - **Quill エディタ依存を全廃**し TipTap に一本化
-- **2026-01-21**: チャンネルシステムを追加
-  - Channelモデルの追加
-  - 全メディアが Channel 経由で管理されるよう変更
-  - チャンネルの利用フローを文書化

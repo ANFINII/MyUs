@@ -259,6 +259,8 @@ return Result.ok(new_ids)
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
 | domain/interface | 抽象定義（ABC, dataclass） | なし |
 | domain/entity | Repository実装、DBアクセス | Django ORM, interface |
+| domain/aggregate | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数 | interface（Data）, utils |
+| adapter/external | 外部サービス（Stripe など）の Interface の実装 | interface, 外部の SDK |
 | utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase・types を import しない） |
 
 - adapter → usecase → interface の方向にのみ依存する
@@ -295,11 +297,15 @@ return Result.ok(new_ids)
 
 ## リンターチェック（必須）
 
-コードを書いた後、必ず実行:
+コードを書いた後、`myus/` で必ず実行:
 
 ```bash
-uv run mypy api/src/path/to/file.py
+uv run mypy api config
+uv run ruff check api config --extend-ignore I
 ```
+
+- ruff の `I`（import の並べ替え）は、上の「インポート」の決まりと合わないため除く
+- lint の抑制コメント（`# noqa`）は書かない。外すときは例外を絞るか、`pyproject.toml` の `per-file-ignores` に書く
 
 ## 更新履歴
 - 2025-09-29: 初版作成
@@ -314,3 +320,5 @@ uv run mypy api/src/path/to/file.py
 - 2026-10-22: Interfaceで雛形と違う形を認める場合を追記
 - 2026-11-08: `utils`はdomainに依存しないこと、domainに触れる補助の関数はusecaseの`_convert.py`に置くことを追記
 - 2026-11-08: usecaseをドメインごとのディレクトリにし、`core.py`と`_convert.py`に分けることを追記
+- 2026-11-08: `_data` の付く関数の決まり（usecase の `_convert.py` で injector を使う関数は `_data` で終え、取るなら `get`、書き込むなら `create`・`save`・`delete`）を追記
+- 2026-11-08: 層の表に `domain/aggregate`・`adapter/external` を足し、リンターチェックを `mypy api config`・`ruff` にした
