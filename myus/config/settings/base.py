@@ -121,7 +121,6 @@ ROOT_URLCONF = "config.urls"
 
 AUTH_USER_MODEL = "myus.User"
 AUTHENTICATION_BACKENDS = ["api.backends.MyBackend"]
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Proxy
 NINJA_NUM_PROXIES = 0
@@ -192,8 +191,8 @@ STRIPE_PRICE_ID_PREMIUM = env.stripe_price_id_premium
 STRIPE_PRICE_ID_ULTIMATE = env.stripe_price_id_ultimate
 
 # Email
-EMAIL_HOST = env.email_host
-EMAIL_PORT = env.email_port
-EMAIL_HOST_USER = env.email_host_user
-EMAIL_HOST_PASSWORD = env.email_host_password
-EMAIL_USE_TLS = True
+MAILERS = {
+    "default": {
+        "BACKEND": "django.core.mail.backends.console.EmailBackend",
+    },
+}
