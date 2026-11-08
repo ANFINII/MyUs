@@ -211,7 +211,7 @@ infra/
 1. **Terraform の土台**: `infra/bootstrap` と `network`・`media` モジュールを作る
 2. **メディアを S3 へ**: `django-storages` を導入して `STORAGES` を切り替え、既存の `media/` を `aws s3 sync` で移す
 3. **HLS 変換をワーカーへ分離**: アップロード時はジョブを積むだけにし、`worker` コンテナで変換する
-4. **SES 対応**: `MAILERS` の `default` の `BACKEND` を SES に切り替え、本番利用申請を出す
+4. **SES 対応**: 本番の `EMAIL_HOST` などを SES の SMTP に向け、本番利用申請を出す
 5. **フェーズ 1 の本番環境構築**: EC2・RDS・CloudFront を作り、GitHub Actions にデプロイを追加する
 6. **監視**: CloudWatch Alarms と Budgets を設定する
 7. （利用者が増えたら）**フェーズ 2 へ移行**
