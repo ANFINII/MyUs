@@ -4,7 +4,7 @@ from api.modules.logger import log
 from api.src.adapter.auth import auth_check
 from api.src.types.schema.category import CategoryOut
 from api.src.types.schema.common import ErrorOut, ErrorType
-from api.src.usecase.category import get_categories
+from api.src.usecase.category.core import get_categories
 
 
 class CategoryAPI:

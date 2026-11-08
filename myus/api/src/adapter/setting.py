@@ -5,7 +5,7 @@ from api.modules.logger import log
 from api.src.adapter.auth import auth_check
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
-from api.src.usecase.user import get_user_data, profile_check, update_mypage, update_notification, update_profile
+from api.src.usecase.user.core import get_user_data, profile_check, update_mypage, update_notification, update_profile
 from api.utils.common.result import FatalError, NotFoundError, ValidationError
 from api.utils.functions.index import create_url
 from api.utils.functions.validation import has_email

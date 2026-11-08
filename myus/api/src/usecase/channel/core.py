@@ -6,6 +6,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.channel import ChannelIn
+from api.src.usecase.channel._convert import save_channel_data
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidateError, WriteError
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.media import save_upload, validate_uploads
@@ -30,16 +31,6 @@ def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
     channels = channels_ret.ok_value
     data = channels[0]
     return Result.ok(data)
-
-
-@Result.shield_exception()
-def save_channel_data(data: ChannelData) -> Result[None, FatalError]:
-    repo = injector.get(ChannelInterface)
-    ret = repo.bulk_save([data])
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    return Result.ok(None)
 
 
 @Result.shield_exception()

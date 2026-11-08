@@ -1,4 +1,4 @@
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from api.modules.logger import log
@@ -22,18 +22,7 @@ class MessagePayload:
     author: AuthorPayload
 
 
-@dataclass(frozen=True, slots=True)
-class UpdateMessagePayload:
-    ulid: str
-    text: str
-
-
-@dataclass(frozen=True, slots=True)
-class DeleteMessagePayload:
-    ulid: str
-
-
-def _send_to_group(group_name: str, command: str, message: dict[str, object]) -> None:
+def send_to_group(group_name: str, command: str, message: dict[str, object]) -> None:
     channel_layer = get_channel_layer()
     if channel_layer is None:
         log.warning("channel_layer is None")
@@ -54,7 +43,7 @@ def _send_to_group(group_name: str, command: str, message: dict[str, object]) ->
         log.error("WebSocket broadcast failed", exc=e, group_name=group_name, command=command)
 
 
-def _build_message_payload(data: MessageDTO) -> MessagePayload:
+def build_message_payload(data: MessageDTO) -> MessagePayload:
     return MessagePayload(
         ulid=data.ulid,
         text=data.text,
@@ -67,22 +56,3 @@ def _build_message_payload(data: MessageDTO) -> MessagePayload:
             follower_count=data.author.follower_count,
         ),
     )
-
-
-def broadcast_create_message(chat_ulid: str, data: MessageDTO, parent_ulid: str) -> None:
-    is_reply = len(parent_ulid) > 0
-    command = "create_reply_message" if is_reply else "create_message"
-    payload: dict[str, object] = asdict(_build_message_payload(data))
-    if is_reply:
-        payload["parent_ulid"] = parent_ulid
-    _send_to_group(f"chat_detail_{chat_ulid}", command, payload)
-
-
-def broadcast_update_message(chat_ulid: str, message_ulid: str, text: str) -> None:
-    payload = UpdateMessagePayload(ulid=message_ulid, text=text)
-    _send_to_group(f"chat_detail_{chat_ulid}", "update_message", asdict(payload))
-
-
-def broadcast_delete_message(chat_ulid: str, message_ulid: str) -> None:
-    payload = DeleteMessagePayload(ulid=message_ulid)
-    _send_to_group(f"chat_detail_{chat_ulid}", "delete_message", asdict(payload))

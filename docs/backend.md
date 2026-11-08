@@ -250,7 +250,11 @@ return Result.ok(new_ids)
 - usecase層からadapter層の型（`HttpRequest`等）をインポートしない
 - usecase層からDjangoのモデル（`User.objects`等）や`authenticate`を直接使わない。リポジトリ（Interface）のメソッドを通す
 - domain/interface層は他の層に依存しない（純粋なPython）
-- Repositoryを取り出す・複数のusecaseで使うといった、domainに触れる補助の関数は`utils`に置かず、usecaseのディレクトリの`_convert.py`に置く（例：`usecase/media/_convert.py`の`get_media_repository`・`get_media_user`、`usecase/payment/_convert.py`の`get_payment_repository`）
+- usecaseはドメインごとのディレクトリ（`usecase/<ドメイン>/`）にし、次の2つに分ける
+  - `core.py`：adapter・コマンドから呼ぶ関数
+  - `_convert.py`：補助の関数（`save_xxx_data`・`delete_xxx_data`、Repositoryを取り出す`get_media_repository`、ほかのusecaseから使う`create_notification`・`record_access`など）。補助の関数がなければ作らない
+  - `_convert.py`は同じディレクトリの`core.py`をimportしない（`core.py`が`_convert.py`を使う向きだけにする）
+- domainに触れる補助の関数は`utils`に置かず、usecaseの`_convert.py`に置く
 
 ## パフォーマンス
 
@@ -293,3 +297,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-10-21: CSRF対策として`OriginCheckMiddleware`を追加
 - 2026-10-22: Interfaceで雛形と違う形を認める場合を追記
 - 2026-11-08: `utils`はdomainに依存しないこと、domainに触れる補助の関数はusecaseの`_convert.py`に置くことを追記
+- 2026-11-08: usecaseをドメインごとのディレクトリにし、`core.py`と`_convert.py`に分けることを追記

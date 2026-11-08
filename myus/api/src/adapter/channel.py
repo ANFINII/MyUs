@@ -6,8 +6,8 @@ from api.src.adapter.auth import auth_check
 from api.src.types.schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
-from api.src.usecase.channel import create_user_channel, get_user_channels, update_user_channel
-from api.src.usecase.subscribe import get_subscribe_channels, upsert_subscribe
+from api.src.usecase.channel.core import create_user_channel, get_user_channels, update_user_channel
+from api.src.usecase.subscribe.core import get_subscribe_channels, upsert_subscribe
 from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from api.utils.functions.index import create_url
 

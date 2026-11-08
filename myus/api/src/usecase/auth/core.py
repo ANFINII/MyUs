@@ -1,17 +1,13 @@
-import hmac
 import jwt
 from dataclasses import replace
 from datetime import UTC, date, datetime
 from smtplib import SMTPException
 from typing import assert_never
-from django_ulid.models import ulid
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from api.modules.logger import log
-from api.src.domain.interface.channel.data import ChannelData
-from api.src.domain.interface.channel.interface import ChannelInterface
 from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.utils.enum.user import PlanName
@@ -19,11 +15,12 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
 from api.src.usecase.payment.core import cancel_subscription
+from api.src.usecase.auth._convert import get_active_user, is_same_password, create_user_data
 from api.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
 from api.utils.constants.auth import LOGIN_FAILURE_LIMIT
 from api.utils.enum.payment import CancelError
 from api.utils.functions.auth import add_failure, clear_failures, get_failure_count
-from api.utils.functions.token import access_token, is_revoked, password_fingerprint, password_reset_token, refresh_token, revoke, signup_token
+from api.utils.functions.token import access_token, is_revoked, password_reset_token, refresh_token, revoke, signup_token
 from api.utils.functions.transaction import atomic_result
 from api.utils.functions.validation import has_email, has_password, has_weak_password
 
@@ -67,26 +64,6 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
         return Result.ok(None)
 
     return Result.ok(user_id)
-
-
-@Result.shield_exception()
-def get_active_user(user_id: int) -> Result[UserAllData | None, FatalError]:
-    repo = injector.get(UserInterface)
-    ret = repo.bulk_get([user_id])
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    users = ret.ok_value
-    if len(users) == 0 or not users[0].user.is_active:
-        return Result.ok(None)
-
-    return Result.ok(users[0])
-
-
-def is_same_password(fingerprint: object, password_hash: str) -> bool:
-    if not isinstance(fingerprint, str):
-        return False
-    return hmac.compare_digest(fingerprint, password_fingerprint(password_hash))
 
 
 @Result.shield_exception()
@@ -484,29 +461,3 @@ def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
         return Result.err(save_ret.err_value)
 
     return Result.ok("")
-
-
-@Result.shield_exception()
-def create_user_data(data: UserAllData, channel_name: str) -> Result[None, FatalError]:
-    repo = injector.get(UserInterface)
-    channel_repo = injector.get(ChannelInterface)
-    user_ret = repo.bulk_save(objs=[data])
-    if user_ret.is_err:
-        return Result.err(user_ret.err_value)
-
-    user_ids = user_ret.ok_value
-    channel_ret = channel_repo.bulk_save([ChannelData(
-        id=0,
-        ulid=str(ulid.new()),
-        owner_id=user_ids[0],
-        owner_ulid="",
-        avatar="",
-        name=channel_name,
-        description="",
-        is_default=True,
-        count=0,
-    )])
-    if channel_ret.is_err:
-        return Result.err(channel_ret.err_value)
-
-    return Result.ok(None)

@@ -117,7 +117,7 @@ known-first-party = ["api", "app", "config"]
 "api/utils/common/result/fatal.py" = ["BLE001"]                # 同上
 "api/utils/functions/convert/encode_worker.py" = ["BLE001"]    # バックグラウンドのスレッドの一番外側
 "api/utils/functions/convert/video_encoding.py" = ["BLE001"]   # 動画の変換の一番外側（失敗したら空の結果を返す）
-"api/src/usecase/broadcast.py" = ["BLE001"]                    # WebSocket の配信は失敗しても本処理を止めない
+"api/src/usecase/broadcast/_convert.py" = ["BLE001"]                 # WebSocket の配信は失敗しても本処理を止めない
 "api/modules/logger.py" = ["BLE001"]                           # ログを取る処理の失敗でアプリを落とさない
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]

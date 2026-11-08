@@ -5,122 +5,17 @@ from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from api.src.injectors.container import injector
-from api.src.types.dto.comment import CommentDTO, ReplyDTO
+from api.src.types.dto.comment import CommentDTO
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.media._convert import get_media_repository
-from api.src.usecase.notification import create_notification, delete_object_notifications
-from api.src.usecase.user import get_author_data, get_author_data_map
-from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
-from api.utils.enum.media import CommentTypeNo, MediaType
+from api.src.usecase.notification._convert import create_notification
+from api.src.usecase.user.core import get_author_data
+from api.src.usecase.comment._convert import get_comment_data, save_comment_data, delete_comment_data
+from api.utils.common.result import AccessError, FindError, ForbiddenError, NotFoundError, Result
+from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.transaction import atomic_result
-
-
-@Result.shield_exception()
-def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError]:
-    repo = injector.get(CommentInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=comment_ulid), SortOption())
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
-
-    ids = ids_ret.ok_value
-    if len(ids) == 0:
-        log.warning("コメントが見つかりませんでした")
-        return Result.ok(None)
-
-    comments_ret = repo.bulk_get(ids)
-    if comments_ret.is_err:
-        return Result.err(comments_ret.err_value)
-
-    comments = comments_ret.ok_value
-    return Result.ok(comments[0])
-
-
-@Result.shield_exception()
-def save_comment_data(data: CommentData) -> Result[None, FatalError]:
-    repo = injector.get(CommentInterface)
-    ret = repo.bulk_save([data])
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    return Result.ok(None)
-
-
-@Result.shield_exception()
-def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
-    repo = injector.get(CommentInterface)
-    save_ret = repo.bulk_save([replace(data, deleted=True)])
-    if save_ret.is_err:
-        return Result.err(save_ret.err_value)
-
-    notification_ret = delete_object_notifications(NotificationObjectType.COMMENT, [data.id])
-    if notification_ret.is_err:
-        return Result.err(notification_ret.err_value)
-
-    return Result.ok(None)
-
-
-@Result.shield_exception()
-def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> Result[list[CommentDTO], FatalError]:
-    repo = injector.get(CommentInterface)
-    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption())
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
-
-    ids = ids_ret.ok_value
-    all_comments_ret = repo.bulk_get(ids)
-    if all_comments_ret.is_err:
-        return Result.err(all_comments_ret.err_value)
-
-    all_comments = all_comments_ret.ok_value
-    comments = [c for c in all_comments if c.parent_id is None]
-    replies = [c for c in all_comments if c.parent_id is not None]
-    author_ids = list({c.author_id for c in comments} | {r.author_id for r in replies})
-    author_map_ret = get_author_data_map(author_ids)
-    if author_map_ret.is_err:
-        return Result.err(author_map_ret.err_value)
-
-    author_map = author_map_ret.ok_value
-
-    reply_map: dict[int, list[CommentData]] = {}
-    for r in replies:
-        if r.parent_id is not None:
-            reply_map.setdefault(r.parent_id, []).append(r)
-
-    liked_ids: set[int] = set()
-    if user_id is not None:
-        liked_ids_ret = repo.get_liked_ids(ids, user_id)
-        if liked_ids_ret.is_err:
-            return Result.err(liked_ids_ret.err_value)
-
-        liked_comment_ids = liked_ids_ret.ok_value
-        liked_ids = set(liked_comment_ids)
-
-    data = [
-        CommentDTO(
-            ulid=c.ulid,
-            text=c.text,
-            created=c.created,
-            updated=c.updated,
-            is_comment_like=c.id in liked_ids,
-            like_count=c.like_count,
-            author=author_map[c.author_id],
-            replys=[
-                ReplyDTO(
-                    ulid=r.ulid,
-                    text=r.text,
-                    created=r.created,
-                    updated=r.updated,
-                    is_comment_like=r.id in liked_ids,
-                    like_count=r.like_count,
-                    author=author_map[r.author_id],
-                )
-                for r in reply_map.get(c.id, [])
-            ],
-        ) for c in comments
-    ]
-    return Result.ok(data)
 
 
 @Result.shield_exception()

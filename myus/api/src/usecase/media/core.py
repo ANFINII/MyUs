@@ -19,12 +19,12 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PA
 from api.src.injectors.container import injector
 from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
 from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
-from api.src.usecase.category import get_category_data
-from api.src.usecase.channel import get_channel_data
-from api.src.usecase.comment import get_comments
-from api.src.usecase.message import get_messages
-from api.src.usecase.notification import create_notification
-from api.src.usecase.user import get_user_data
+from api.src.usecase.category._convert import get_category_data
+from api.src.usecase.channel.core import get_channel_data
+from api.src.usecase.comment._convert import get_comments
+from api.src.usecase.message._convert import get_messages
+from api.src.usecase.notification._convert import create_notification
+from api.src.usecase.user.core import get_user_data
 from api.src.usecase.media._convert import get_media_repository, get_media_user, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
 from api.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from api.utils.enum.media import CommentType, MediaType

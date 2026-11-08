@@ -1,16 +1,14 @@
 import random
 from dataclasses import replace
-from datetime import date
 from django.utils import timezone
 from api.modules.logger import log
 from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.injectors.container import injector
-from api.src.usecase.access_log import record_access
-from api.src.usecase.user import get_user_data
+from api.src.usecase.user.core import get_user_data
+from api.src.usecase.advertise._convert import is_active, save_read_data
 from api.utils.common.result import FatalError, FindError, NotFoundError, Result
-from api.utils.enum.access_log import AccessType
 from api.utils.enum.user import PlanName
 from api.utils.functions.index import create_url
 from api.utils.functions.transaction import atomic_result
@@ -119,30 +117,3 @@ def increment_advertise_read(ulid: str, ip_address: str) -> Result[int, FindErro
 
     read = read_ret.ok_value
     return Result.ok(read)
-
-
-def is_active(ad: AdvertiseData, today: date) -> bool:
-    if ad.type != "one":
-        return False
-    if ad.period is None:
-        return True
-    return ad.period >= today
-
-
-@Result.shield_exception()
-def save_read_data(advertise_id: int, read: int, ip_address: str) -> Result[int, FatalError]:
-    repo = injector.get(AdvertiseInterface)
-    access_ret = record_access(ip_address, AccessType.ADVERTISE, advertise_id)
-    if access_ret.is_err:
-        return Result.err(access_ret.err_value)
-
-    is_accessed = access_ret.ok_value
-    if not is_accessed:
-        return Result.ok(read)
-
-    read_ret = repo.save_read(advertise_id)
-    if read_ret.is_err:
-        return Result.err(read_ret.err_value)
-
-    new_read = read_ret.ok_value
-    return Result.ok(new_read)

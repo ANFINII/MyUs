@@ -13,7 +13,7 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.injectors.container import injector
-from api.src.usecase.notification import delete_object_notifications
+from api.src.usecase.notification._convert import delete_object_notifications
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType

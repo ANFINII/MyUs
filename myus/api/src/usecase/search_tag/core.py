@@ -2,6 +2,7 @@ from api.src.domain.interface.search_tag.data import SearchTagData
 from api.src.domain.interface.search_tag.interface import FilterOption, SearchTagInterface, SortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.user import SearchTagIn
+from api.src.usecase.search_tag._convert import save_search_tag_data
 from api.utils.common.result import FatalError, Result
 from api.utils.functions.transaction import atomic_result
 
@@ -20,20 +21,6 @@ def get_search_tag_data(author_id: int) -> Result[list[SearchTagData], FatalErro
 
     tags = tags_ret.ok_value
     return Result.ok(tags)
-
-
-@Result.shield_exception()
-def save_search_tag_data(delete_ids: list[int], save_objs: list[SearchTagData]) -> Result[None, FatalError]:
-    repo = injector.get(SearchTagInterface)
-    delete_ret = repo.bulk_delete(delete_ids)
-    if delete_ret.is_err:
-        return Result.err(delete_ret.err_value)
-
-    save_ret = repo.bulk_save(save_objs)
-    if save_ret.is_err:
-        return Result.err(save_ret.err_value)
-
-    return Result.ok(None)
 
 
 @Result.shield_exception()

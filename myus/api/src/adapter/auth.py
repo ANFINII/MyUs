@@ -6,8 +6,8 @@ from ninja.throttling import AnonRateThrottle
 from api.modules.logger import log
 from api.src.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from api.src.usecase.auth import change_password, create_auth_tokens, login_user, logout_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
-from api.src.usecase.user import signup_check
+from api.src.usecase.auth.core import change_password, create_auth_tokens, login_user, logout_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
+from api.src.usecase.user.core import signup_check
 from api.utils.common.result import FatalError, Result, ValidationError
 
 
