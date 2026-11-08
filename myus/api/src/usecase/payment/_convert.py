@@ -2,7 +2,11 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from api.modules.logger import log
+from api.src.domain.aggregate.subscription.apply import replay
+from api.src.domain.aggregate.subscription.decide import accept_provider_state
+from api.src.domain.aggregate.subscription.event import SUBSCRIPTION_AGGREGATE_TYPE
 from api.src.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionState, convert_status
+from api.src.domain.interface.es.interface import EventStoreInterface
 from api.src.domain.interface.payment.customer.data import PaymentCustomerData
 from api.src.domain.interface.payment.customer.interface import FilterOption as PaymentCustomerFilterOption, SortOption as PaymentCustomerSortOption, PaymentCustomerInterface
 from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, RefundContent
@@ -18,7 +22,7 @@ from api.src.domain.interface.payment.transaction.data import TransactionData
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.user.data import UserAllData
 from api.src.injectors.container import injector
-from api.src.usecase.command.subscription import accept_provider_subscription
+from api.src.usecase.es._convert import handle_command
 from api.src.usecase.user.core import get_user_data
 from api.src.usecase.user._convert import save_user_data
 from api.utils.common.result import CommandError, FatalError, Result
@@ -73,7 +77,7 @@ def save_payment_event_data(event: PaymentEventData) -> Result[int | None, Fatal
 def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
     match event.content:
         case ProviderSubscriptionData() as provider_subscription:
-            command_ret = accept_provider_subscription(provider_subscription, event.occurred_at)
+            command_ret = save_subscription_event_data(provider_subscription, event.occurred_at)
             if command_ret.is_err:
                 return Result.err(command_ret.err_value)
 
@@ -94,6 +98,30 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
         return Result.err(ret.err_value)
 
     return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_subscription_event_data(provider_subscription: ProviderSubscriptionData, occurred_at: datetime) -> Result[SubscriptionState, CommandError]:
+    repo = injector.get(EventStoreInterface)
+    aggregate_id = f"{provider_subscription.provider.value}:{provider_subscription.external_id}"
+    command_ret = handle_command(repo, SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id, replay, lambda state: accept_provider_state(state, provider_subscription, occurred_at), occurred_at)
+    if command_ret.is_err:
+        return Result.err(command_ret.err_value)
+
+    load_ret = repo.load(SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id, 0)
+    if load_ret.is_err:
+        return Result.err(load_ret.err_value)
+
+    history = load_ret.ok_value
+    state_ret = replay(history)
+    if state_ret.is_err:
+        return Result.err(state_ret.err_value)
+
+    state = state_ret.ok_value
+    if state is None:
+        return Result.err(FatalError(f"Subscription aggregate not found aggregate_id={aggregate_id}"))
+
+    return Result.ok(state)
 
 
 @Result.shield_exception()

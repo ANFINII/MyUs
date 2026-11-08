@@ -52,7 +52,8 @@ flowchart LR
 | 置き場 | 内容 | 状態 |
 |---|---|---|
 | `api/src/domain/aggregate/<集約>/` | `state.py`・`event.py`・`decide.py`・`apply.py`。I/O を持たない | あり |
-| `api/src/usecase/command/` | `handler.py`（`handle_command`）と集約ごとのコマンド | あり |
+| `api/src/usecase/es/_convert.py` | `handle_command`（集約に書き込む共通の手順） | あり |
+| `api/src/usecase/<ドメイン>/_convert.py` | 集約ごとのコマンド（`payment` の `save_subscription_event_data` など） | あり |
 | `api/src/usecase/receiver/` | Receiver（外の事実やほかの集約のイベントを受けてコマンドを打つ） | Phase 5 以降 |
 | `api/src/usecase/projector/`・`query/` | Projector と専用の Writer、query usecase と Reader | Phase 6 |
 
