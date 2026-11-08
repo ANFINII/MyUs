@@ -10,7 +10,7 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.dto.user import LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
-from api.src.usecase.media._convert import get_media_repository_data
+from api.src.usecase.media._convert import get_media_repository
 from api.src.usecase.notification._convert import create_notification_data
 from api.src.usecase.user._convert import save_user_data
 from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result
@@ -154,7 +154,7 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> Result[No
 @Result.shield_exception()
 def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO, FindError]:
     repo = injector.get(UserInterface)
-    media_repo = get_media_repository_data(media_type)
+    media_repo = get_media_repository(media_type)
     ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)

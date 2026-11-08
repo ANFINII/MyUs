@@ -388,7 +388,7 @@ match result:
 
 **実装**:
 - `injectors/index.py` の `PaymentModule` で、`dict[PaymentProvider, PaymentInterface]` に実装を登録する（今は Stripe だけ）
-- `api/src/usecase/payment/_convert.py` の `get_payment_repository_data(provider)` で、辞書から取り出す
+- `api/src/usecase/payment/_convert.py` の `get_payment_repository(provider)` で、辞書から取り出す
 - どの決済会社を使うか
   - 決済の画面の作成：`usecase/payment/core.py` の `CHECKOUT_PROVIDER`（今は Stripe）
   - 解約：サブスクリプションの顧客（`PaymentCustomer`）の `provider`

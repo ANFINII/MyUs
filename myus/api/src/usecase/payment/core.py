@@ -14,7 +14,7 @@ from api.src.domain.interface.payment.transaction.interface import TransactionIn
 from api.src.injectors.container import injector
 from api.src.types.dto.ledger import LedgerRowDTO
 from api.src.usecase.user.core import get_user_data
-from api.src.usecase.payment._convert import get_payment_repository_data, save_payment_event_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
+from api.src.usecase.payment._convert import get_payment_repository, save_payment_event_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from api.utils.common.result import CommandError, FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentType, SubscriptionStatus
@@ -56,7 +56,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         locale=locale,
     )
 
-    repo = get_payment_repository_data(CHECKOUT_PROVIDER)
+    repo = get_payment_repository(CHECKOUT_PROVIDER)
     checkout_ret = repo.create_checkout(data)
     if checkout_ret.is_err:
         return Result.err(checkout_ret.err_value)
@@ -67,7 +67,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
 
 @Result.shield_exception()
 def verify_webhook(provider: PaymentProvider, payload: bytes, signature: str) -> Result[WebhookVerifyResult, FatalError]:
-    repo = get_payment_repository_data(provider)
+    repo = get_payment_repository(provider)
     ret = repo.verify_webhook(payload, signature)
     if ret.is_err:
         return Result.err(ret.err_value)
@@ -102,7 +102,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
         return Result.err(customers_ret.err_value)
 
     customers = customers_ret.ok_value
-    payment_repo = get_payment_repository_data(customers[0].provider)
+    payment_repo = get_payment_repository(customers[0].provider)
     cancel_ret = payment_repo.cancel_subscription(subscription.external_id)
     if cancel_ret.is_err:
         return Result.err(cancel_ret.err_value)

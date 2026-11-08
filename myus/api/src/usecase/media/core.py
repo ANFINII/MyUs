@@ -25,7 +25,7 @@ from api.src.usecase.comment._convert import get_comments_data
 from api.src.usecase.message._convert import get_messages_data
 from api.src.usecase.notification._convert import create_notification_data
 from api.src.usecase.user.core import get_user_data
-from api.src.usecase.media._convert import get_media_repository_data, get_media_user_data, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
+from api.src.usecase.media._convert import get_media_repository, get_media_user_data, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
 from api.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from api.utils.enum.media import CommentType, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -1056,7 +1056,7 @@ def is_public_chat(ulid: str) -> Result[bool, FatalError]:
 
 @Result.shield_exception()
 def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> Result[int, FindError]:
-    repo = get_media_repository_data(media_type)
+    repo = get_media_repository(media_type)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)

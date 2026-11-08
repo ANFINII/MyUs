@@ -30,7 +30,7 @@ type MediaInterfaceType = VideoInterface | MusicInterface | BlogInterface | Comi
 VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 
 
-def get_media_repository_data(media_type: MediaType) -> MediaInterfaceType:
+def get_media_repository(media_type: MediaType) -> MediaInterfaceType:
     match media_type:
         case MediaType.VIDEO:
             return injector.get(VideoInterface)
@@ -177,7 +177,7 @@ def create_chat_data(data: ChatData, category_data: CategoryData) -> Result[int,
 
 @Result.shield_exception()
 def save_read_data(media_type: MediaType, media_id: int, read: int, owner_id: int, ip_address: str) -> Result[int, FatalError]:
-    repo = get_media_repository_data(media_type)
+    repo = get_media_repository(media_type)
     access_ret = save_access_data(ip_address, AccessType(media_type.value), media_id)
     if access_ret.is_err:
         return Result.err(access_ret.err_value)

@@ -34,7 +34,7 @@ REPLAY_BATCH_SIZE = 100
 PAYMENT_EVENT_MAX_ATTEMPTS = 30
 
 
-def get_payment_repository_data(provider: PaymentProvider) -> PaymentInterface:
+def get_payment_repository(provider: PaymentProvider) -> PaymentInterface:
     providers = injector.get(dict[PaymentProvider, PaymentInterface])
     return providers[provider]
 
