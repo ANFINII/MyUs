@@ -77,12 +77,11 @@ def save_payment_event_data(event: PaymentEventData) -> Result[int | None, Fatal
 def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
     match event.content:
         case ProviderSubscriptionData() as provider_subscription:
-            command_ret = save_subscription_event_data(provider_subscription, event.occurred_at)
-            if command_ret.is_err:
-                return Result.err(command_ret.err_value)
+            subscription_ret = save_provider_subscription_data(provider_subscription, event.occurred_at)
+            if subscription_ret.is_err:
+                return Result.err(subscription_ret.err_value)
 
-            state = command_ret.ok_value
-            ret = save_subscription_data(event, state)
+            return Result.ok(None)
         case PaymentPaidContent() as paid:
             ret = save_payment_data(event, paid)
         case PaymentFailedContent():
@@ -125,14 +124,28 @@ def save_subscription_event_data(provider_subscription: ProviderSubscriptionData
 
 
 @Result.shield_exception()
-def save_subscription_data(event: PaymentEventData, state: SubscriptionState) -> Result[None, FatalError]:
+def save_provider_subscription_data(provider_subscription: ProviderSubscriptionData, occurred_at: datetime) -> Result[None, CommandError]:
+    command_ret = save_subscription_event_data(provider_subscription, occurred_at)
+    if command_ret.is_err:
+        return Result.err(command_ret.err_value)
+
+    state = command_ret.ok_value
+    save_ret = save_subscription_data(state)
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_subscription_data(state: SubscriptionState) -> Result[None, FatalError]:
     detail = state.detail
     if get_plan(detail.product_code) is None:
-        log.error("Subscription unknown plan", external_id=event.external_id, product_code=detail.product_code)
+        log.error("Subscription unknown plan", external_id=detail.external_id, product_code=detail.product_code)
         return Result.ok(None)
 
     if len(detail.user_ulid) == 0:
-        log.error("Subscription user_ulid missing", external_id=event.external_id)
+        log.error("Subscription user_ulid missing", external_id=detail.external_id)
         return Result.ok(None)
 
     user_ret = get_user_data(ulid=detail.user_ulid)
@@ -141,7 +154,7 @@ def save_subscription_data(event: PaymentEventData, state: SubscriptionState) ->
 
     user = user_ret.ok_value
     if user is None:
-        log.error("Subscription user not found", external_id=event.external_id, user_ulid=detail.user_ulid)
+        log.error("Subscription user not found", external_id=detail.external_id, user_ulid=detail.user_ulid)
         return Result.ok(None)
 
     repo = injector.get(SubscriptionInterface)
@@ -177,7 +190,7 @@ def save_subscription_data(event: PaymentEventData, state: SubscriptionState) ->
     if user_plan_ret.is_err:
         return Result.err(user_plan_ret.err_value)
 
-    log.info("Subscription updated", external_id=event.external_id, status=status.value)
+    log.info("Subscription updated", external_id=detail.external_id, status=status.value)
     return Result.ok(None)
 
 

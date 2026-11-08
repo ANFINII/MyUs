@@ -14,7 +14,7 @@ from api.src.domain.interface.payment.transaction.interface import TransactionIn
 from api.src.injectors.container import injector
 from api.src.types.dto.ledger import LedgerRowDTO
 from api.src.usecase.user.core import get_user_data
-from api.src.usecase.payment._convert import get_payment_repository, save_payment_event_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
+from api.src.usecase.payment._convert import get_payment_repository, save_payment_event_data, save_provider_subscription_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from api.utils.common.result import CommandError, FatalError, FindError, NotFoundError, Result
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentType, SubscriptionStatus
@@ -109,10 +109,15 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
 
     cancellation = cancel_ret.ok_value
     if isinstance(cancellation, CancelSuccess):
-        updated = replace(subscription, canceled_at=cancellation.canceled_at, current_period_end=cancellation.period_end)
-        save_ret = repo.bulk_save([updated])
+        provider_subscription_ret = payment_repo.get_subscription(subscription.external_id)
+        if provider_subscription_ret.is_err:
+            return Result.err(provider_subscription_ret.err_value)
+
+        provider_subscription = provider_subscription_ret.ok_value
+        save_ret = atomic_result(lambda: save_provider_subscription_data(provider_subscription, datetime.now(timezone.utc)))
         if save_ret.is_err:
-            return Result.err(save_ret.err_value)
+            log.error("Payment cancel not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
+            return Result.err(FatalError("Payment cancel not saved"))
 
         log.info("Payment cancel succeeded", user_id=user_id, external_id=subscription.external_id)
 

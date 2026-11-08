@@ -8,12 +8,13 @@ from api.src.types.schema.auth import WithdrawalIn
 from api.src.usecase.auth.core import withdraw_user
 from api.src.usecase.payment.core import cancel_subscription
 from api.tests.conftest import PASSWORD
-from api.tests.fakes import FakePayment
+from api.tests.fakes import FakePayment, provider_subscription
 from api.utils.enum.payment import CancelError, PaymentProvider, SubscriptionStatus
 from api.utils.enum.user import PlanName
 
 
-def add_subscription(user: User, external_id: str, status: SubscriptionStatus, month: int) -> None:
+def add_subscription(fake_payment: FakePayment, user: User, external_id: str, status: SubscriptionStatus, month: int) -> None:
+    fake_payment.subscriptions[external_id] = provider_subscription(external_id, user.ulid, PlanName.PREMIUM, status)
     customer, _ = PaymentCustomer.objects.get_or_create(user=user, provider=PaymentProvider.STRIPE, defaults={"external_id": "cus_test"})
     Subscription.objects.create(
         payment_customer=customer,
@@ -49,7 +50,7 @@ def test_free_user_withdraws_without_cancel(make_user: Callable[[str], User], fa
 @pytest.mark.django_db
 def test_active_subscription_is_canceled_before_withdraw(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
-    add_subscription(user, "sub_1", SubscriptionStatus.ACTIVE, 9)
+    add_subscription(fake_payment, user, "sub_1", SubscriptionStatus.ACTIVE, 9)
 
     assert withdraw(user) == ""
 
@@ -61,7 +62,7 @@ def test_active_subscription_is_canceled_before_withdraw(make_user: Callable[[st
 @pytest.mark.django_db
 def test_cancel_failure_keeps_user_active(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
-    add_subscription(user, "sub_1", SubscriptionStatus.ACTIVE, 9)
+    add_subscription(fake_payment, user, "sub_1", SubscriptionStatus.ACTIVE, 9)
     fake_payment.cancel_result = CancelFailed(error=CancelError.NETWORK_ERROR, message="timeout")
 
     assert withdraw(user) == "error.cancelFailed"
@@ -72,7 +73,7 @@ def test_cancel_failure_keeps_user_active(make_user: Callable[[str], User], fake
 @pytest.mark.django_db
 def test_subscription_missing_on_stripe_still_withdraws(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
-    add_subscription(user, "sub_1", SubscriptionStatus.ACTIVE, 9)
+    add_subscription(fake_payment, user, "sub_1", SubscriptionStatus.ACTIVE, 9)
     fake_payment.cancel_result = CancelFailed(error=CancelError.NOT_FOUND, message="no such subscription")
 
     assert withdraw(user) == ""
@@ -83,7 +84,7 @@ def test_subscription_missing_on_stripe_still_withdraws(make_user: Callable[[str
 @pytest.mark.django_db
 def test_wrong_password_does_not_cancel(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
-    add_subscription(user, "sub_1", SubscriptionStatus.ACTIVE, 9)
+    add_subscription(fake_payment, user, "sub_1", SubscriptionStatus.ACTIVE, 9)
 
     assert withdraw(user, "wrong-password") == "error.passwordWrong"
 
@@ -94,9 +95,9 @@ def test_wrong_password_does_not_cancel(make_user: Callable[[str], User], fake_p
 @pytest.mark.django_db
 def test_latest_cancelable_subscription_is_canceled(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
-    add_subscription(user, "sub_old", SubscriptionStatus.ACTIVE, 8)
-    add_subscription(user, "sub_new", SubscriptionStatus.CANCELED, 10)
-    add_subscription(user, "sub_due", SubscriptionStatus.PAST_DUE, 9)
+    add_subscription(fake_payment, user, "sub_old", SubscriptionStatus.ACTIVE, 8)
+    add_subscription(fake_payment, user, "sub_new", SubscriptionStatus.CANCELED, 10)
+    add_subscription(fake_payment, user, "sub_due", SubscriptionStatus.PAST_DUE, 9)
 
     assert withdraw(user) == ""
 
@@ -106,7 +107,7 @@ def test_latest_cancelable_subscription_is_canceled(make_user: Callable[[str], U
 @pytest.mark.django_db
 def test_scheduled_cancel_is_not_canceled_again(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
-    add_subscription(user, "sub_1", SubscriptionStatus.ACTIVE, 9)
+    add_subscription(fake_payment, user, "sub_1", SubscriptionStatus.ACTIVE, 9)
 
     first_ret = cancel_subscription(user.id)
     second_ret = cancel_subscription(user.id)
