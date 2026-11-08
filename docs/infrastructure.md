@@ -22,7 +22,6 @@
 2. **HLS 変換が API サーバー上で動く**: CPU を占有し、API や WebSocket の応答が遅くなる
 3. **メールが送信されない**: パスワードリセットや通知が機能しない
 4. **シークレットが `myus/envs/*.env` にある**: 本番では安全な保管場所が必要。`envs/sample.env` の `AWS_*` の項目は、まだどこからも使われていない（`django-storages`・`django-ses` は未導入）
-5. **`nginx/nginx.conf` が今の構成と合っていない**: `uwsgi_pass` で `django:8056` を向いているが、実際には daphne（`runserver`）で `myus_backend:8000` が動いている。`gunicorn` は依存に入っているが使っていない
 
 ---
 

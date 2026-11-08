@@ -18,7 +18,6 @@ dependencies = [
     "django-js-asset>=4.2.0",
     "django-ninja>=1.7.1",
     "django-ulid>=0.0.4",
-    "gunicorn>=26.2.0",
     "injector>=0.24.0",
     "mysqlclient>=2.3.0",
     "pillow>=13.0.0",
