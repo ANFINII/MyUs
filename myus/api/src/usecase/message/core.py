@@ -8,7 +8,7 @@ from api.src.domain.interface.message.interface import FilterOption, MessageInte
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
 from api.src.usecase.notification._convert import create_notification
-from api.src.usecase.user.core import get_author_data, get_author_data_map
+from api.src.usecase.user._convert import get_author_data, get_author_data_map
 from api.src.usecase.message._convert import get_message_data, save_message_data, delete_message_data
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo

@@ -9,7 +9,7 @@ from api.src.types.dto.comment import CommentDTO
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.media._convert import get_media_repository
 from api.src.usecase.notification._convert import create_notification
-from api.src.usecase.user.core import get_author_data
+from api.src.usecase.user._convert import get_author_data
 from api.src.usecase.comment._convert import get_comment_data, save_comment_data, delete_comment_data
 from api.utils.common.result import AccessError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import MediaType

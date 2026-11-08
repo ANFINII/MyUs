@@ -7,7 +7,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption as 
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
-from api.src.types.dto.user import AuthorDTO, LikeDTO
+from api.src.types.dto.user import LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.src.usecase.media._convert import get_media_repository
@@ -17,7 +17,6 @@ from api.utils.common.result import FatalError, FindError, InputError, NotFoundE
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
-from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload, validate_uploads
 from api.utils.functions.validation import has_birthday, has_email, has_number, has_password, has_phone, has_postal_code, has_username, has_weak_password
 
@@ -39,49 +38,6 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None
 
     users = users_ret.ok_value
     return Result.ok(users[0])
-
-
-@Result.shield_exception()
-def get_author_data(user_id: int) -> Result[AuthorDTO, FatalError]:
-    ret = get_user_data(user_id=user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    user = ret.ok_value
-    if user is None:
-        return Result.ok(AuthorDTO(avatar="", ulid="", nickname="", follower_count=0))
-
-    data = AuthorDTO(
-        avatar=create_url(user.user.avatar),
-        ulid=user.user.ulid,
-        nickname=user.user.nickname,
-        follower_count=user.mypage.follower_count,
-    )
-
-    return Result.ok(data)
-
-
-@Result.shield_exception()
-def get_author_data_map(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalError]:
-    if len(ids) == 0:
-        return Result.ok({})
-
-    repo = injector.get(UserInterface)
-    ret = repo.bulk_get(ids)
-    if ret.is_err:
-        return Result.err(ret.err_value)
-
-    authors = ret.ok_value
-    author_map: dict[int, AuthorDTO] = {id: AuthorDTO(avatar="", ulid="", nickname="", follower_count=0) for id in ids}
-    for author in authors:
-        author_map[author.user.id] = AuthorDTO(
-            avatar=create_url(author.user.avatar),
-            ulid=author.user.ulid,
-            nickname=author.user.nickname,
-            follower_count=author.mypage.follower_count,
-        )
-
-    return Result.ok(author_map)
 
 
 @Result.shield_exception()

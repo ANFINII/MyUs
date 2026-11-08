@@ -5,7 +5,7 @@ from api.src.domain.interface.comment.interface import CommentInterface, FilterO
 from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.usecase.notification._convert import delete_object_notifications
-from api.src.usecase.user.core import get_author_data_map
+from api.src.usecase.user._convert import get_author_data_map
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import CommentTypeNo
 from api.utils.enum.notification import NotificationObjectType
