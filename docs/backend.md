@@ -38,6 +38,18 @@
 | プライベート | 先頭に`_` | `_internal_method()` |
 | Django Model | 単数形 | `User`, `Video` |
 
+### `_data` の付く関数
+
+`_data` は「Data（dataclass）を扱う関数」に付け、どの層の関数かは動詞で見分ける。
+
+| 層 | 動詞 | injector | 例 |
+|------|------|------|-----|
+| entity の `_convert.py` | `convert`（Model → Data）・`marshal`（Data → Model） | 使わない | `convert_data`・`marshal_data`、1つのファイルに複数あるときは `profile_data`・`marshal_profile_data` |
+| usecase の補助の関数 | `get`・`create`・`save`・`delete` | 使う（Repository を通して読み書きする） | `get_user_data`・`create_video_data`・`save_comment_data`・`delete_video_data` |
+| usecase の入口 | `get`・`create`・`update`・`delete` など | 使う | `get_user`・`create_video`（`_data` を付けない） |
+
+- Data 以外を変換する関数は `_data` を付けない（`convert_content`・`marshal_content`・`marshal_outbox`）
+
 ## 条件判定
 
 - 空チェック: `len(items) == 0`（truthy判定は使わない）
@@ -218,6 +230,7 @@ if ret.is_err:
 - `_convert.py`に変換関数を定義
 - `convert_data`: Django ORM → dataclass
 - `marshal_data`: dataclass → Django ORM
+- 1つのファイルに複数あるときは `xxx_data`・`marshal_xxx_data`（例：`profile_data`・`marshal_profile_data`）
 
 ### bulk操作
 - `bulk_save`は`get_save_new_ids`（`api/src/domain/entity/index.py`）で保存する

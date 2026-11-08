@@ -5,7 +5,7 @@ from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.entity.index import get_save_new_ids, sort_ids
-from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan, sort_field
+from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage_data, marshal_user_notification_data, marshal_profile_data, marshal_user_data, marshal_user_plan_data, sort_field
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
 from api.utils.common.result import FatalError, Result
@@ -69,27 +69,27 @@ class UserRepository(UserInterface):
         if len(objs) == 0:
             return Result.ok([])
 
-        models = [marshal_user(o.user) for o in objs]
+        models = [marshal_user_data(o.user) for o in objs]
 
         with transaction.atomic():
             new_ids = get_save_new_ids(models, USER_FIELDS)
             Profile.objects.bulk_create(
-                [marshal_profile(user, o) for user, o in zip(models, objs)],
+                [marshal_profile_data(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
                 update_fields=PROFILE_FIELDS,
             )
             MyPage.objects.bulk_create(
-                [marshal_mypage(user, o) for user, o in zip(models, objs)],
+                [marshal_mypage_data(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
                 update_fields=MYPAGE_FIELDS,
             )
             UserNotification.objects.bulk_create(
-                [marshal_notification(user, o) for user, o in zip(models, objs)],
+                [marshal_user_notification_data(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
                 update_fields=NOTIFICATION_FIELDS,
             )
             UserPlan.objects.bulk_create(
-                [marshal_user_plan(user, o) for user, o in zip(models, objs)],
+                [marshal_user_plan_data(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
                 update_fields=USER_PLAN_FIELDS,
             )

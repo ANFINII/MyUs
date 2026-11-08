@@ -110,7 +110,7 @@ def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[B
 
 
 # dataclass -> Django model
-def marshal_user(data: UserData) -> User:
+def marshal_user_data(data: UserData) -> User:
     return User(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid if data.ulid else ulid.new(),
@@ -123,7 +123,7 @@ def marshal_user(data: UserData) -> User:
     )
 
 
-def marshal_profile(user: User, data: UserAllData) -> Profile:
+def marshal_profile_data(user: User, data: UserAllData) -> Profile:
     profile = data.profile
     return Profile(
         user=user,
@@ -141,7 +141,7 @@ def marshal_profile(user: User, data: UserAllData) -> Profile:
     )
 
 
-def marshal_mypage(user: User, data: UserAllData) -> MyPage:
+def marshal_mypage_data(user: User, data: UserAllData) -> MyPage:
     mypage = data.mypage
     return MyPage(
         user=user,
@@ -155,7 +155,7 @@ def marshal_mypage(user: User, data: UserAllData) -> MyPage:
     )
 
 
-def marshal_notification(user: User, data: UserAllData) -> UserNotification:
+def marshal_user_notification_data(user: User, data: UserAllData) -> UserNotification:
     notification = data.notification
     return UserNotification(
         user=user,
@@ -172,7 +172,7 @@ def marshal_notification(user: User, data: UserAllData) -> UserNotification:
     )
 
 
-def marshal_user_plan(user: User, data: UserAllData) -> UserPlan:
+def marshal_user_plan_data(user: User, data: UserAllData) -> UserPlan:
     user_plan = data.user_plan
     return UserPlan(
         user=user,
