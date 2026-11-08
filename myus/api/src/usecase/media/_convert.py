@@ -17,7 +17,7 @@ from api.src.domain.interface.notification.interface import NotificationInterfac
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.user import MediaUserDTO
-from api.src.usecase.access_log._convert import record_access_data
+from api.src.usecase.access_log._convert import save_access_data
 from api.src.usecase.notification._convert import create_notification_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.access_log import AccessType
@@ -178,7 +178,7 @@ def create_chat_data(data: ChatData, category_data: CategoryData) -> Result[int,
 @Result.shield_exception()
 def save_read_data(media_type: MediaType, media_id: int, read: int, owner_id: int, ip_address: str) -> Result[int, FatalError]:
     repo = get_media_repository_data(media_type)
-    access_ret = record_access_data(ip_address, AccessType(media_type.value), media_id)
+    access_ret = save_access_data(ip_address, AccessType(media_type.value), media_id)
     if access_ret.is_err:
         return Result.err(access_ret.err_value)
 
