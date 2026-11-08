@@ -64,7 +64,6 @@ flowchart LR
 - **解約：** `POST /payment/cancel` は `Subscription.CancellationRequested.V1` を記録するだけにする。外部操作の worker が、その EventId を冪等キーにして Stripe を呼び、結果を `CancellationAccepted`・`CancellationFailed` として記録する。結果が分からないとき（タイムアウトなど）は、同じキーで再試行する
 - **checkout：** すぐに URL を返す必要があるので、リクエストの中で「要求を保存 → Stripe を呼ぶ → 結果を保存」を順に行う。`Subscription.Requested.V1` から webhook の `Activated` までを1つの集約の履歴でたどれるようにする
 - **冪等キー：** 通信の失敗で送り直すときのキーは Stripe の SDK が自動で付けている。要求の EventId をキーにするのは、上の2つと一緒に行う
-- 今の解約は、集約を通さずに `Subscription` の `canceled_at` を直接書いている（2回目の解約を止めるため）。数秒後の webhook で集約から同じ内容に作り直されるので実害はないが、Phase 5 で集約を通す形にそろえる
 
 ## ⏸ Phase 6: Projector と query model
 

@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import datetime, timezone
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
@@ -25,6 +26,8 @@ class FakePayment(PaymentInterface):
 
     def cancel_subscription(self, external_id: str) -> Result[CancelResult, FatalError]:
         self.canceled_ids.append(external_id)
+        if isinstance(self.cancel_result, CancelSuccess) and external_id in self.subscriptions:
+            self.subscriptions[external_id] = replace(self.subscriptions[external_id], canceled_at=self.cancel_result.canceled_at, current_period_end=self.cancel_result.period_end)
         return Result.ok(self.cancel_result)
 
     def get_subscription(self, external_id: str) -> Result[ProviderSubscriptionData, FatalError]:
