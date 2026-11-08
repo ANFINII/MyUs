@@ -1,5 +1,6 @@
 from dataclasses import replace
 from datetime import datetime, timezone
+from typing import assert_never
 from django.conf import settings
 from api.modules.logger import log
 from api.src.domain.interface.payment.customer.interface import PaymentCustomerInterface
@@ -8,16 +9,16 @@ from api.src.domain.interface.payment.event.data import PaymentEventData
 from api.src.domain.interface.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from api.src.domain.interface.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from api.src.domain.interface.payment.payout.interface import PayoutInterface
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, RedirectUrls, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, RedirectUrls, WebhookVerifyResult
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.ledger import LedgerRowDTO
 from api.src.usecase.user.core import get_user_data
-from api.src.usecase.payment._convert import get_payment_repository, save_payment_event_data, save_provider_subscription_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
-from api.utils.common.result import CommandError, FatalError, FindError, NotFoundError, Result
+from api.src.usecase.payment._convert import get_payment_repository, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
+from api.utils.common.result import CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, NotFoundError, Result, ValidationError
 from api.utils.enum.i18n import Currency, Locale
-from api.utils.enum.payment import PaymentProvider, PaymentType, SubscriptionStatus
+from api.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
 from api.utils.functions.map import locale_path
 from api.utils.functions.transaction import atomic_result
 from api.utils.plan import get_plan
@@ -102,12 +103,37 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
         return Result.err(customers_ret.err_value)
 
     customers = customers_ret.ok_value
-    payment_repo = get_payment_repository(customers[0].provider)
-    cancel_ret = payment_repo.cancel_subscription(subscription.external_id)
+    provider = customers[0].provider
+    request_ret = atomic_result(lambda: save_cancellation_request_data(provider, subscription.external_id))
+    if request_ret.is_err:
+        match request_ret.err_value:
+            case ValidationError() as error:
+                return Result.err(NotFoundError(error.message))
+            case ConflictError() | HistoryCorruptedError() | FatalError() as error:
+                log.error("Payment cancel request not saved", user_id=user_id, external_id=subscription.external_id, error=str(error))
+                return Result.err(FatalError("Payment cancel request not saved"))
+            case _:
+                assert_never(request_ret.err_value)
+
+    request_id = request_ret.ok_value
+    payment_repo = get_payment_repository(provider)
+    cancel_ret = payment_repo.cancel_subscription(subscription.external_id, request_id)
     if cancel_ret.is_err:
         return Result.err(cancel_ret.err_value)
 
     cancellation = cancel_ret.ok_value
+    if isinstance(cancellation, CancelFailed):
+        if cancellation.error == CancelError.NETWORK_ERROR:
+            log.warning("Payment cancel result unknown", user_id=user_id, external_id=subscription.external_id, request_id=request_id)
+            return Result.ok(cancellation)
+
+        failure_ret = atomic_result(lambda: save_cancellation_failure_data(provider, subscription.external_id, cancellation.error))
+        if failure_ret.is_err:
+            log.error("Payment cancel failure not saved", user_id=user_id, external_id=subscription.external_id, error=str(failure_ret.err_value))
+            return Result.err(FatalError("Payment cancel failure not saved"))
+
+        return Result.ok(cancellation)
+
     if isinstance(cancellation, CancelSuccess):
         provider_subscription_ret = payment_repo.get_subscription(subscription.external_id)
         if provider_subscription_ret.is_err:

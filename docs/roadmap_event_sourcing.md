@@ -10,7 +10,7 @@
 
 Phase 1〜4 は完了した（ES の基盤・保存形式の検査・webhook の受け口と worker・Subscription 集約）。今の仕組みは [myus.md](myus.md) の「決済システム」、コードの決まりは [backend.md](backend.md) にある。
 
-Phase 5 以降は **保留**（進めるかは未定）。今の規模では、Phase 4 まで（届く順番の問題の解消）で実用上の効果はほぼ出ている。たとえば解約は Stripe の `cancel_at_period_end` を付けるだけで、2回呼んでも二重には解約されない。進めるときは、その時点の規模と問題を見て Phase ごとに決める。
+Phase 5 は解約から進めている（外部操作の worker は作らず、リクエストの中で要求と結果を記録する形）。checkout と Phase 6 以降は **保留**。進めるときは、その時点の規模と問題を見て Phase ごとに決める。
 
 ## 進め方の原則
 
@@ -59,11 +59,11 @@ flowchart LR
 
 ---
 
-## ⏸ Phase 5: 外部操作を要求と結果に分ける
+## 🔶 Phase 5: 外部操作を要求と結果に分ける
 
-- **解約：** `POST /payment/cancel` は `Subscription.CancellationRequested.V1` を記録するだけにする。外部操作の worker が、その EventId を冪等キーにして Stripe を呼び、結果を `CancellationAccepted`・`CancellationFailed` として記録する。結果が分からないとき（タイムアウトなど）は、同じキーで再試行する
+- ✅ **解約：** 要求（`Subscription.CancellationRequested.V1`）を記録し、その EventId を冪等キーにして Stripe を呼ぶ。成功したら Stripe から今の状態を取り直して受理し（`CancellationScheduled`）、断られたら `CancellationFailed` を記録する。結果が分からないとき（通信の失敗）は要求を残し、次の解約で同じキーを使って呼び直す。外部操作の worker は作らず、リクエストの中で行う（未決着の要求を自動で呼び直すのは、必要になったら worker で足す）
 - **checkout：** すぐに URL を返す必要があるので、リクエストの中で「要求を保存 → Stripe を呼ぶ → 結果を保存」を順に行う。`Subscription.Requested.V1` から webhook の `Activated` までを1つの集約の履歴でたどれるようにする
-- **冪等キー：** 通信の失敗で送り直すときのキーは Stripe の SDK が自動で付けている。要求の EventId をキーにするのは、上の2つと一緒に行う
+- **冪等キー：** 解約は要求の EventId をキーにした。checkout も同じ形にする
 
 ## ⏸ Phase 6: Projector と query model
 

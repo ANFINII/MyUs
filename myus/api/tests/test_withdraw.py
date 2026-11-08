@@ -1,28 +1,25 @@
 from collections.abc import Callable
+from dataclasses import replace
 from datetime import datetime, timezone
 import pytest
-from api.db.models.payment import PaymentCustomer, Subscription
+from api.db.models.payment import Subscription
 from api.db.models.user import User
 from api.src.domain.interface.payment.provider.data import CancelFailed
 from api.src.types.schema.auth import WithdrawalIn
 from api.src.usecase.auth.core import withdraw_user
 from api.src.usecase.payment.core import cancel_subscription
+from api.src.usecase.payment._convert import save_provider_subscription_data
 from api.tests.conftest import PASSWORD
 from api.tests.fakes import FakePayment, provider_subscription
-from api.utils.enum.payment import CancelError, PaymentProvider, SubscriptionStatus
+from api.utils.enum.payment import CancelError, SubscriptionStatus
 from api.utils.enum.user import PlanName
 
 
 def add_subscription(fake_payment: FakePayment, user: User, external_id: str, status: SubscriptionStatus, month: int) -> None:
-    fake_payment.subscriptions[external_id] = provider_subscription(external_id, user.ulid, PlanName.PREMIUM, status)
-    customer, _ = PaymentCustomer.objects.get_or_create(user=user, provider=PaymentProvider.STRIPE, defaults={"external_id": "cus_test"})
-    Subscription.objects.create(
-        payment_customer=customer,
-        external_id=external_id,
-        product_code=PlanName.PREMIUM,
-        status=status,
-        started_at=datetime(2026, month, 1, tzinfo=timezone.utc),
-    )
+    subscription = replace(provider_subscription(external_id, user.ulid, PlanName.PREMIUM, status), started_at=datetime(2026, month, 1, tzinfo=timezone.utc))
+    fake_payment.subscriptions[external_id] = subscription
+    ret = save_provider_subscription_data(subscription, datetime(2026, month, 1, tzinfo=timezone.utc))
+    assert ret.is_ok, ret
 
 
 def withdraw(user: User, password: str = PASSWORD) -> str:

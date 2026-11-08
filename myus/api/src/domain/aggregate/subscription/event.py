@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any
 from api.src.domain.aggregate.subscription.state import SubscriptionDetail
 from api.src.domain.interface.payment.data import Money
-from api.utils.enum.payment import SubscriptionStatus
+from api.utils.enum.payment import CancelError, PaymentProvider, SubscriptionStatus
 
 
 SUBSCRIPTION_AGGREGATE_TYPE = "Subscription"
@@ -42,12 +42,22 @@ class SubscriptionCancellationScheduled:
 
 
 @dataclass(frozen=True, slots=True)
+class SubscriptionCancellationRequested:
+    pass
+
+
+@dataclass(frozen=True, slots=True)
+class SubscriptionCancellationFailed:
+    error: CancelError
+
+
+@dataclass(frozen=True, slots=True)
 class SubscriptionEnded:
     status: SubscriptionStatus
     canceled_at: datetime
 
 
-type SubscriptionEvent = SubscriptionOpened | SubscriptionActivated | SubscriptionRenewed | SubscriptionPlanChanged | SubscriptionPaymentPastDue | SubscriptionCancellationScheduled | SubscriptionEnded
+type SubscriptionEvent = SubscriptionOpened | SubscriptionActivated | SubscriptionRenewed | SubscriptionPlanChanged | SubscriptionPaymentPastDue | SubscriptionCancellationScheduled | SubscriptionCancellationRequested | SubscriptionCancellationFailed | SubscriptionEnded
 
 
 SUBSCRIPTION_EVENT_CLASSES: dict[str, type[Any]] = {
@@ -57,5 +67,11 @@ SUBSCRIPTION_EVENT_CLASSES: dict[str, type[Any]] = {
     "Subscription.PlanChanged.V1": SubscriptionPlanChanged,
     "Subscription.PaymentPastDue.V1": SubscriptionPaymentPastDue,
     "Subscription.CancellationScheduled.V1": SubscriptionCancellationScheduled,
+    "Subscription.CancellationRequested.V1": SubscriptionCancellationRequested,
+    "Subscription.CancellationFailed.V1": SubscriptionCancellationFailed,
     "Subscription.Ended.V1": SubscriptionEnded,
 }
+
+
+def subscription_aggregate_id(provider: PaymentProvider, external_id: str) -> str:
+    return f"{provider.value}:{external_id}"

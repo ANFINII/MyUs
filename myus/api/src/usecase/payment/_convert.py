@@ -3,8 +3,8 @@ from datetime import datetime, timezone
 from typing import assert_never
 from api.modules.logger import log
 from api.src.domain.aggregate.subscription.apply import replay
-from api.src.domain.aggregate.subscription.decide import accept_provider_state
-from api.src.domain.aggregate.subscription.event import SUBSCRIPTION_AGGREGATE_TYPE
+from api.src.domain.aggregate.subscription.decide import accept_provider_state, request_cancellation, fail_cancellation
+from api.src.domain.aggregate.subscription.event import SUBSCRIPTION_AGGREGATE_TYPE, subscription_aggregate_id
 from api.src.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionState, convert_status
 from api.src.domain.interface.es.interface import EventStoreInterface
 from api.src.domain.interface.payment.customer.data import PaymentCustomerData
@@ -25,8 +25,8 @@ from api.src.injectors.container import injector
 from api.src.usecase.es._convert import handle_command
 from api.src.usecase.user.core import get_user_data
 from api.src.usecase.user._convert import save_user_data
-from api.utils.common.result import CommandError, FatalError, Result
-from api.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, SubscriptionStatus
+from api.utils.common.result import CommandError, FatalError, HistoryError, Result
+from api.utils.enum.payment import CancelError, LedgerEntryType, PaymentProvider, PaymentStatus, SubscriptionStatus
 from api.utils.enum.user import PlanName
 from api.utils.functions.map import payment_status_rank
 from api.utils.functions.payment import included_tax
@@ -100,13 +100,8 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
 
 
 @Result.shield_exception()
-def save_subscription_event_data(provider_subscription: ProviderSubscriptionData, occurred_at: datetime) -> Result[SubscriptionState, CommandError]:
+def get_subscription_state_data(aggregate_id: str) -> Result[SubscriptionState, HistoryError]:
     repo = injector.get(EventStoreInterface)
-    aggregate_id = f"{provider_subscription.provider.value}:{provider_subscription.external_id}"
-    command_ret = handle_command(repo, SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id, replay, lambda state: accept_provider_state(state, provider_subscription, occurred_at), occurred_at)
-    if command_ret.is_err:
-        return Result.err(command_ret.err_value)
-
     load_ret = repo.load(SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id, 0)
     if load_ret.is_err:
         return Result.err(load_ret.err_value)
@@ -121,6 +116,52 @@ def save_subscription_event_data(provider_subscription: ProviderSubscriptionData
         return Result.err(FatalError(f"Subscription aggregate not found aggregate_id={aggregate_id}"))
 
     return Result.ok(state)
+
+
+@Result.shield_exception()
+def save_subscription_event_data(provider_subscription: ProviderSubscriptionData, occurred_at: datetime) -> Result[SubscriptionState, CommandError]:
+    repo = injector.get(EventStoreInterface)
+    aggregate_id = subscription_aggregate_id(provider_subscription.provider, provider_subscription.external_id)
+    command_ret = handle_command(repo, SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id, replay, lambda state: accept_provider_state(state, provider_subscription, occurred_at), occurred_at)
+    if command_ret.is_err:
+        return Result.err(command_ret.err_value)
+
+    state_ret = get_subscription_state_data(aggregate_id)
+    if state_ret.is_err:
+        return Result.err(state_ret.err_value)
+
+    state = state_ret.ok_value
+    return Result.ok(state)
+
+
+@Result.shield_exception()
+def save_cancellation_request_data(provider: PaymentProvider, external_id: str) -> Result[str, CommandError]:
+    repo = injector.get(EventStoreInterface)
+    aggregate_id = subscription_aggregate_id(provider, external_id)
+    command_ret = handle_command(repo, SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id, replay, request_cancellation, datetime.now(timezone.utc))
+    if command_ret.is_err:
+        return Result.err(command_ret.err_value)
+
+    state_ret = get_subscription_state_data(aggregate_id)
+    if state_ret.is_err:
+        return Result.err(state_ret.err_value)
+
+    state = state_ret.ok_value
+    if not isinstance(state, ActiveSubscription | PastDueSubscription):
+        return Result.err(FatalError(f"Subscription cancellation request not found aggregate_id={aggregate_id}"))
+
+    return Result.ok(state.cancellation_request_id)
+
+
+@Result.shield_exception()
+def save_cancellation_failure_data(provider: PaymentProvider, external_id: str, error: CancelError) -> Result[None, CommandError]:
+    repo = injector.get(EventStoreInterface)
+    aggregate_id = subscription_aggregate_id(provider, external_id)
+    command_ret = handle_command(repo, SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id, replay, lambda state: fail_cancellation(state, error), datetime.now(timezone.utc))
+    if command_ret.is_err:
+        return Result.err(command_ret.err_value)
+
+    return Result.ok(None)
 
 
 @Result.shield_exception()
