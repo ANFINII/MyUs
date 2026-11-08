@@ -434,6 +434,7 @@ flowchart TB
 - パスワードは Django の `validate_password` で確かめる（よくあるパスワードや、ユーザー名に似たものを弾く）
 - ログイン・メール送信に回数の制限（IP ごと）。ログインはアカウントごとにも失敗の回数で止める。本番は回数を Redis に記録し、プロセスをまたいで数える
 - 管理画面は Django admin の `/admin/` だけ
+- 本番は HTTP を HTTPS へ転送し（`SECURE_SSL_REDIRECT`）、HSTS を1時間（`SECURE_HSTS_SECONDS = 3600`）で返す。問題なく動いたら期間を延ばす（1日 → 1週間 → 1年）。サブドメイン（`SECURE_HSTS_INCLUDE_SUBDOMAINS`）と preload（`SECURE_HSTS_PRELOAD`）は、ドメインの全サブドメインが HTTPS だと確かめるまで入れない（preload は取り消しに数か月かかる）
 
 ### データ保護
 - CSRF：`/api/` への書き込みは `Origin` ヘッダーを確かめる（`OriginCheckMiddleware`）
