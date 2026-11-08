@@ -260,10 +260,10 @@ flowchart TB
 
     Apply -->|サブスクリプション| Command["accept_provider_subscription<br/>Subscription 集約"]
     Command -->|必要なイベントだけ追記| ES[(es_event<br/>集約の履歴)]
-    Command -->|追記後の状態| SubProj["update_subscription<br/>update_user_plan"]
+    Command -->|追記後の状態| SubProj["update_subscription_data<br/>update_user_plan_data"]
     SubProj --> SubTables[(Subscription<br/>UserPlan<br/>PaymentCustomer)]
 
-    Apply -->|支払い・返金・入金| PayProj["record_payment・record_refund<br/>record_payout など"]
+    Apply -->|支払い・返金・入金| PayProj["record_payment_data・record_refund<br/>record_payout_data など"]
     PayProj --> PayTables[(PaymentTransaction<br/>PaymentLedgerEntry<br/>PaymentPayout)]
 
     SubTables --> Screen[マイページ・料金プランの画面]

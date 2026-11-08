@@ -34,13 +34,13 @@ REPLAY_BATCH_SIZE = 100
 PAYMENT_EVENT_MAX_ATTEMPTS = 30
 
 
-def get_payment_repository(provider: PaymentProvider) -> PaymentInterface:
+def get_payment_repository_data(provider: PaymentProvider) -> PaymentInterface:
     providers = injector.get(dict[PaymentProvider, PaymentInterface])
     return providers[provider]
 
 
 @Result.shield_exception()
-def record_payment_event(event: PaymentEventData) -> Result[int | None, FatalError]:
+def record_payment_event_data(event: PaymentEventData) -> Result[int | None, FatalError]:
     repo = injector.get(PaymentEventInterface)
     filter = PaymentEventFilterOption(provider=event.provider.value, event_id=event.event_id)
     ids_ret = repo.get_ids(filter, PaymentEventSortOption(), limit=1)
@@ -78,15 +78,15 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
                 return Result.err(command_ret.err_value)
 
             state = command_ret.ok_value
-            ret = update_subscription(event, state)
+            ret = update_subscription_data(event, state)
         case PaymentPaidContent() as paid:
-            ret = record_payment(event, paid)
+            ret = record_payment_data(event, paid)
         case PaymentFailedContent():
             ret = update_transaction_status(event, PaymentStatus.FAILED)
         case RefundContent() as refund:
             ret = record_refund(event, refund)
         case PayoutContent() as payout:
-            ret = record_payout(event, payout)
+            ret = record_payout_data(event, payout)
         case _:
             assert_never(event.content)
 
@@ -97,7 +97,7 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
 
 
 @Result.shield_exception()
-def update_subscription(event: PaymentEventData, state: SubscriptionState) -> Result[None, FatalError]:
+def update_subscription_data(event: PaymentEventData, state: SubscriptionState) -> Result[None, FatalError]:
     detail = state.detail
     if get_plan(detail.product_code) is None:
         log.error("Subscription unknown plan", external_id=event.external_id, product_code=detail.product_code)
@@ -145,7 +145,7 @@ def update_subscription(event: PaymentEventData, state: SubscriptionState) -> Re
     if subscription_ret.is_err:
         return Result.err(subscription_ret.err_value)
 
-    user_plan_ret = update_user_plan(user, state)
+    user_plan_ret = update_user_plan_data(user, state)
     if user_plan_ret.is_err:
         return Result.err(user_plan_ret.err_value)
 
@@ -154,7 +154,7 @@ def update_subscription(event: PaymentEventData, state: SubscriptionState) -> Re
 
 
 @Result.shield_exception()
-def update_user_plan(user: UserAllData, state: SubscriptionState) -> Result[None, FatalError]:
+def update_user_plan_data(user: UserAllData, state: SubscriptionState) -> Result[None, FatalError]:
     detail = state.detail
     match state:
         case ActiveSubscription() | PastDueSubscription():
@@ -195,7 +195,7 @@ def update_user_plan(user: UserAllData, state: SubscriptionState) -> Result[None
 
 
 @Result.shield_exception()
-def record_payment(event: PaymentEventData, paid: PaymentPaidContent) -> Result[None, FatalError]:
+def record_payment_data(event: PaymentEventData, paid: PaymentPaidContent) -> Result[None, FatalError]:
     user_ret = get_user_data(ulid=paid.user_ulid)
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
@@ -284,7 +284,7 @@ def record_refund(event: PaymentEventData, refund: RefundContent) -> Result[None
 
 
 @Result.shield_exception()
-def record_payout(event: PaymentEventData, payout: PayoutContent) -> Result[None, FatalError]:
+def record_payout_data(event: PaymentEventData, payout: PayoutContent) -> Result[None, FatalError]:
     repo = injector.get(PayoutInterface)
     ids_ret = repo.get_ids(PayoutFilterOption(provider=event.provider.value, external_id=event.external_id), PayoutSortOption(), limit=1)
     if ids_ret.is_err:

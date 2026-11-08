@@ -4,7 +4,7 @@ from api.src.domain.interface.follow.interface import FilterOption, FollowInterf
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.usecase.notification._convert import create_notification
+from api.src.usecase.notification._convert import create_notification_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
@@ -27,7 +27,7 @@ def save_follow_data(follower: UserAllData, following: UserAllData, follow: Foll
 
         new_ids = new_ids_ret.ok_value
         if is_follow:
-            notification_ret = create_notification(follower_id, following_id, NotificationTypeNo.FOLLOW, new_ids[0], NotificationObjectType.FOLLOW)
+            notification_ret = create_notification_data(follower_id, following_id, NotificationTypeNo.FOLLOW, new_ids[0], NotificationObjectType.FOLLOW)
             if notification_ret.is_err:
                 return Result.err(notification_ret.err_value)
     else:

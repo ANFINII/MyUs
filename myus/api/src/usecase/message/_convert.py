@@ -4,7 +4,7 @@ from api.src.domain.interface.message.interface import FilterOption, MessageInte
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO
-from api.src.usecase.user._convert import get_author_data_map
+from api.src.usecase.user._convert import get_author_map_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
@@ -57,7 +57,7 @@ def delete_message_data(data: MessageDomainData, user_id: int) -> Result[None, F
 
 
 @Result.shield_exception()
-def get_messages(chat_id: int) -> Result[list[MessageDTO], FatalError]:
+def get_messages_data(chat_id: int) -> Result[list[MessageDTO], FatalError]:
     repo = injector.get(MessageInterface)
     ids_ret = repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True))
     if ids_ret.is_err:
@@ -69,7 +69,7 @@ def get_messages(chat_id: int) -> Result[list[MessageDTO], FatalError]:
         return Result.err(messages_ret.err_value)
 
     messages = messages_ret.ok_value
-    author_map_ret = get_author_data_map(list({m.author_id for m in messages}))
+    author_map_ret = get_author_map_data(list({m.author_id for m in messages}))
     if author_map_ret.is_err:
         return Result.err(author_map_ret.err_value)
 

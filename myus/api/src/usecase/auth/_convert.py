@@ -10,7 +10,7 @@ from api.utils.functions.token import password_fingerprint
 
 
 @Result.shield_exception()
-def get_active_user(user_id: int) -> Result[UserAllData | None, FatalError]:
+def get_active_user_data(user_id: int) -> Result[UserAllData | None, FatalError]:
     repo = injector.get(UserInterface)
     ret = repo.bulk_get([user_id])
     if ret.is_err:

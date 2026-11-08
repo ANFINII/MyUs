@@ -7,8 +7,8 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption as 
 from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO
 from api.src.types.schema.comment import CommentCreateIn
-from api.src.usecase.media._convert import get_media_repository
-from api.src.usecase.notification._convert import create_notification
+from api.src.usecase.media._convert import get_media_repository_data
+from api.src.usecase.notification._convert import create_notification_data
 from api.src.usecase.user._convert import get_author_data
 from api.src.usecase.comment._convert import get_comment_data, save_comment_data, delete_comment_data
 from api.utils.common.result import AccessError, FindError, ForbiddenError, NotFoundError, Result
@@ -21,7 +21,7 @@ from api.utils.functions.transaction import atomic_result
 @Result.shield_exception()
 def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, FindError]:
     repo = injector.get(CommentInterface)
-    media_repo = get_media_repository(MediaType(input.type_name.value))
+    media_repo = get_media_repository_data(MediaType(input.type_name.value))
     media_ids_ret = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if media_ids_ret.is_err:
         return Result.err(media_ids_ret.err_value)
@@ -83,7 +83,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
     comment = comments[0]
 
     if parent is not None:
-        notification_ret = create_notification(user_id, parent.author_id, NotificationTypeNo.REPLY, comment.id, NotificationObjectType.COMMENT)
+        notification_ret = create_notification_data(user_id, parent.author_id, NotificationTypeNo.REPLY, comment.id, NotificationObjectType.COMMENT)
         if notification_ret.is_err:
             log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, comment_id=comment.id)
 

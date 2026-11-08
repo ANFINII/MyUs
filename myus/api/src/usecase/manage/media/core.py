@@ -19,7 +19,7 @@ from api.src.domain.interface.message.interface import FilterOption as MessageFi
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.category._convert import get_category_data
-from api.src.usecase.notification._convert import create_publish_notification
+from api.src.usecase.notification._convert import create_publish_notification_data
 from api.src.usecase.manage.media._convert import save_video_data, save_music_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_music_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
 from api.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -126,7 +126,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
         return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish and obj.convert != "":
-        notification_ret = create_publish_notification(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 
@@ -233,7 +233,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
         return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
-        notification_ret = create_publish_notification(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 
@@ -347,7 +347,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
         return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
-        notification_ret = create_publish_notification(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 
@@ -467,7 +467,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
         return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
-        notification_ret = create_publish_notification(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 
@@ -581,7 +581,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
         return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
-        notification_ret = create_publish_notification(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 
@@ -688,7 +688,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
         return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
-        notification_ret = create_publish_notification(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 

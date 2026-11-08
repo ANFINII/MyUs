@@ -15,7 +15,7 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
 from api.src.usecase.payment.core import cancel_subscription
-from api.src.usecase.auth._convert import get_active_user, is_same_password, create_user_data
+from api.src.usecase.auth._convert import get_active_user_data, is_same_password, create_user_data
 from api.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
 from api.utils.constants.auth import LOGIN_FAILURE_LIMIT
 from api.utils.enum.payment import CancelError
@@ -50,7 +50,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
         log.warning("ログアウト済みのトークンです", user_id=user_id)
         return Result.ok(None)
 
-    ret = get_active_user(user_id)
+    ret = get_active_user_data(user_id)
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -68,7 +68,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
 
 @Result.shield_exception()
 def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalError]:
-    ret = get_active_user(user_id)
+    ret = get_active_user_data(user_id)
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -96,7 +96,7 @@ def login_user(username: str, password: str) -> Result[int | None, ValidateError
         add_failure(username)
         return Result.ok(None)
 
-    user_ret = get_active_user(user_id)
+    user_ret = get_active_user_data(user_id)
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
 
@@ -356,7 +356,7 @@ def password_reset_verify_token(token: str) -> Result[tuple[int, str] | None, Fa
         log.warning("Invalid password reset token email")
         return Result.ok(None)
 
-    ret = get_active_user(user_id)
+    ret = get_active_user_data(user_id)
     if ret.is_err:
         return Result.err(ret.err_value)
 

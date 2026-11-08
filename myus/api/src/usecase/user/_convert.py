@@ -8,7 +8,7 @@ from api.utils.functions.index import create_url
 
 @Result.shield_exception()
 def get_author_data(user_id: int) -> Result[AuthorDTO, FatalError]:
-    author_map_ret = get_author_data_map([user_id])
+    author_map_ret = get_author_map_data([user_id])
     if author_map_ret.is_err:
         return Result.err(author_map_ret.err_value)
 
@@ -17,7 +17,7 @@ def get_author_data(user_id: int) -> Result[AuthorDTO, FatalError]:
 
 
 @Result.shield_exception()
-def get_author_data_map(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalError]:
+def get_author_map_data(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalError]:
     if len(ids) == 0:
         return Result.ok({})
 

@@ -1,13 +1,13 @@
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.notification import NotificationContentData, NotificationItemDTO, NotificationDTO
-from api.src.usecase.notification._convert import get_notification_data, get_notification_user_map, get_user_enabled_types
+from api.src.usecase.notification._convert import get_notification_data, get_notification_user_map_data, get_user_enabled_types_data
 from api.utils.common.result import FatalError, Result
 
 
 @Result.shield_exception()
 def get_notification(user_id: int) -> Result[NotificationDTO, FatalError]:
-    enabled_types_ret = get_user_enabled_types(user_id)
+    enabled_types_ret = get_user_enabled_types_data(user_id)
     if enabled_types_ret.is_err:
         return Result.err(enabled_types_ret.err_value)
 
@@ -29,7 +29,7 @@ def get_notification(user_id: int) -> Result[NotificationDTO, FatalError]:
     confirmed_ids = set(confirmed_notification_ids)
 
     user_ids = list({n.user_from_id for n in objs} | {n.user_to_id for n in objs if n.user_to_id != 0})
-    user_map_ret = get_notification_user_map(user_ids)
+    user_map_ret = get_notification_user_map_data(user_ids)
     if user_map_ret.is_err:
         return Result.err(user_map_ret.err_value)
 

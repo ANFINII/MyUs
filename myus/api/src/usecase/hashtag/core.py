@@ -4,8 +4,8 @@ from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFi
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
-from api.src.usecase.media._convert import get_media_repository
-from api.src.usecase.hashtag._convert import normalize_name, validate_name, get_ng_words
+from api.src.usecase.media._convert import get_media_repository_data
+from api.src.usecase.hashtag._convert import normalize_name, validate_name, get_ng_words_data
 from api.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 
@@ -28,7 +28,7 @@ def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
 
 @Result.shield_exception()
 def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, AccessError]:
-    media_repo = get_media_repository(media_type)
+    media_repo = get_media_repository_data(media_type)
     repo = injector.get(HashtagInterface)
     media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
     if media_ids_ret.is_err:
@@ -65,7 +65,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
         for tag in existing_hashtags:
             ulid_data_map[tag.ulid] = tag
 
-    ng_words_ret = get_ng_words()
+    ng_words_ret = get_ng_words_data()
     if ng_words_ret.is_err:
         return Result.err(ng_words_ret.err_value)
 

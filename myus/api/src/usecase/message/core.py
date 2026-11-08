@@ -7,8 +7,8 @@ from api.src.domain.interface.message.data import MessageData as MessageDomainDa
 from api.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
-from api.src.usecase.notification._convert import create_notification
-from api.src.usecase.user._convert import get_author_data, get_author_data_map
+from api.src.usecase.notification._convert import create_notification_data
+from api.src.usecase.user._convert import get_author_data, get_author_map_data
 from api.src.usecase.message._convert import get_message_data, save_message_data, delete_message_data
 from api.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -28,7 +28,7 @@ def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
         return Result.err(messages_ret.err_value)
 
     messages = messages_ret.ok_value
-    author_map_ret = get_author_data_map(list({m.author_id for m in messages}))
+    author_map_ret = get_author_map_data(list({m.author_id for m in messages}))
     if author_map_ret.is_err:
         return Result.err(author_map_ret.err_value)
 
@@ -111,7 +111,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
         parent_messages = parent_messages_ret.ok_value
         if len(parent_messages) > 0:
-            notification_ret = create_notification(user_id, parent_messages[0].author_id, NotificationTypeNo.REPLY, message.id, NotificationObjectType.MESSAGE)
+            notification_ret = create_notification_data(user_id, parent_messages[0].author_id, NotificationTypeNo.REPLY, message.id, NotificationObjectType.MESSAGE)
             if notification_ret.is_err:
                 log.error("通知の作成に失敗しました", error=notification_ret.err_value.message, message_id=message.id)
 
