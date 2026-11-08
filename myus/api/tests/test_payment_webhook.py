@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import pytest
 from django.core.management import call_command
 from django.db import connection
+from api.db.models.es import EsEvent, EsSubscriptionLookup
 from api.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Subscription
 from api.db.models.user import User, UserPlan
 from api.src.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
@@ -80,6 +81,11 @@ def transaction_status(external_id: str) -> str:
     return transaction.status
 
 
+def aggregate_event_types(external_id: str) -> list[str]:
+    lookup = EsSubscriptionLookup.objects.get(provider=PaymentProvider.STRIPE, external_id=external_id)
+    return list(EsEvent.objects.filter(aggregate_id=lookup.aggregate_id).order_by("seq").values_list("event_type", flat=True))
+
+
 def ledger(entry_type: LedgerEntryType) -> list[tuple[str, int, int]]:
     return list(PaymentLedgerEntry.objects.filter(entry_type=entry_type).order_by("id").values_list("external_id", "amount", "tax_amount"))
 
@@ -117,6 +123,19 @@ def test_cancel_keeps_plan_until_subscription_deleted(make_user: Callable[[str],
 
 
 @pytest.mark.django_db
+def test_subscription_events_are_stored_in_aggregate(make_user: Callable[[str], User]) -> None:
+    user = make_user("alice")
+    send_subscription(WebhookEventType.SUBSCRIPTION_CREATED, user, "sub_1", SubscriptionStatus.INCOMPLETE, "evt_1", occurred_at=datetime(2026, 10, 1, tzinfo=timezone.utc))
+    send_subscription(WebhookEventType.SUBSCRIPTION_UPDATED, user, "sub_1", SubscriptionStatus.ACTIVE, "evt_2", occurred_at=datetime(2026, 10, 1, 1, tzinfo=timezone.utc))
+    send_subscription(WebhookEventType.SUBSCRIPTION_UPDATED, user, "sub_1", SubscriptionStatus.ACTIVE, "evt_3", occurred_at=datetime(2026, 10, 1, 2, tzinfo=timezone.utc))
+    send_subscription(WebhookEventType.SUBSCRIPTION_CANCELED, user, "sub_1", SubscriptionStatus.CANCELED, "evt_4", occurred_at=datetime(2026, 10, 2, tzinfo=timezone.utc))
+
+    assert aggregate_event_types("sub_1") == ["Subscription.Opened.V1", "Subscription.Activated.V1", "Subscription.Ended.V1"]
+    assert EsSubscriptionLookup.objects.count() == 1
+    assert Subscription.objects.get(external_id="sub_1").status == SubscriptionStatus.CANCELED
+
+
+@pytest.mark.django_db
 def test_old_subscription_end_does_not_downgrade_new_plan(make_user: Callable[[str], User]) -> None:
     user = make_user("alice")
     send_subscription(WebhookEventType.SUBSCRIPTION_CREATED, user, "sub_old", SubscriptionStatus.ACTIVE, "evt_1")
@@ -138,6 +157,7 @@ def test_older_subscription_event_is_not_applied(make_user: Callable[[str], User
     assert subscription.status == SubscriptionStatus.ACTIVE
     assert subscription.last_event_at == datetime(2026, 11, 2, tzinfo=timezone.utc)
     assert PaymentEvent.objects.count() == 2
+    assert aggregate_event_types("sub_1") == ["Subscription.Opened.V1"]
 
 
 @pytest.mark.django_db
@@ -321,6 +341,7 @@ def test_replay_rebuilds_same_ledger(make_user: Callable[[str], User]) -> None:
     user = make_user("alice")
     record_all(user)
     before = ledger_snapshot()
+    event_count = EsEvent.objects.count()
 
     ret = replay_payment_events()
 
@@ -330,6 +351,7 @@ def test_replay_rebuilds_same_ledger(make_user: Callable[[str], User]) -> None:
     assert transaction_status("pi_1") == PaymentStatus.REFUNDED
     assert Subscription.objects.get(external_id="sub_1").status == SubscriptionStatus.ACTIVE
     assert user_plan(user).plan == PlanName.PREMIUM
+    assert EsEvent.objects.count() == event_count
 
 
 @pytest.mark.django_db

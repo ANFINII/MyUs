@@ -17,9 +17,10 @@ from api.src.domain.interface.payment.transaction.data import TransactionData
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.user.data import UserAllData
 from api.src.injectors.container import injector
+from api.src.usecase.command.subscription import accept_provider_subscription
 from api.src.usecase.user.core import get_user_data
 from api.src.usecase.user._convert import save_user_data
-from api.utils.common.result import FatalError, Result
+from api.utils.common.result import CommandError, FatalError, Result
 from api.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, SubscriptionStatus
 from api.utils.enum.user import PlanName
 from api.utils.functions.map import payment_status_rank
@@ -68,9 +69,13 @@ def record_payment_event(event: PaymentEventData) -> Result[int | None, FatalErr
 
 
 @Result.shield_exception()
-def apply_payment_event(event: PaymentEventData) -> Result[None, FatalError]:
+def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
     match event.content:
         case ProviderSubscriptionData() as provider_subscription:
+            command_ret = accept_provider_subscription(provider_subscription, event.occurred_at)
+            if command_ret.is_err:
+                return Result.err(command_ret.err_value)
+
             ret = update_subscription(event, provider_subscription)
         case PaymentPaidContent() as paid:
             ret = record_payment(event, paid)
@@ -386,7 +391,7 @@ def update_transaction_status(event: PaymentEventData, status: PaymentStatus) ->
 
 
 @Result.shield_exception()
-def save_processed_payment_event_data(event: PaymentEventData) -> Result[None, FatalError]:
+def save_processed_payment_event_data(event: PaymentEventData) -> Result[None, CommandError]:
     apply_ret = apply_payment_event(event)
     if apply_ret.is_err:
         return Result.err(apply_ret.err_value)
@@ -504,7 +509,7 @@ def save_ledger_entry_data(transaction_id: int, event_id: int, entry_type: Ledge
 
 
 @Result.shield_exception()
-def save_payment_projection_data() -> Result[int, FatalError]:
+def save_payment_projection_data() -> Result[int, CommandError]:
     delete_ret = delete_payment_projection_data()
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)

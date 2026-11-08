@@ -1,4 +1,5 @@
 from django.db import models
+from api.utils.constants.choice import PROVIDER_CHOICES
 
 
 class EsEvent(models.Model):
@@ -40,4 +41,22 @@ class EsOutbox(models.Model):
         verbose_name_plural = "002 EsOutbox"
         constraints = [
             models.UniqueConstraint(fields=["aggregate_type", "aggregate_id", "seq"], name="es_outbox_aggregate_seq_uniq"),
+        ]
+
+
+class EsSubscriptionLookup(models.Model):
+    """EsSubscriptionLookup"""
+    id           = models.BigAutoField(primary_key=True)
+    aggregate_id = models.CharField(max_length=26, unique=True)
+    provider     = models.CharField(max_length=20, choices=PROVIDER_CHOICES)
+    external_id  = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.provider}:{self.external_id}:{self.aggregate_id}"
+
+    class Meta:
+        db_table = "es_subscription_lookup"
+        verbose_name_plural = "002 EsSubscriptionLookup"
+        constraints = [
+            models.UniqueConstraint(fields=["provider", "external_id"], name="es_subscription_lookup_external_uniq"),
         ]
