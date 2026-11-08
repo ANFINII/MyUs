@@ -117,7 +117,7 @@ def create_publish_notification_data(owner_id: int, type_no: NotificationTypeNo,
 
 
 @Result.shield_exception()
-def delete_object_notifications_data(object_type: NotificationObjectType, object_ids: list[int]) -> Result[None, FatalError]:
+def delete_notification_data(object_type: NotificationObjectType, object_ids: list[int]) -> Result[None, FatalError]:
     if len(object_ids) == 0:
         return Result.ok(None)
 

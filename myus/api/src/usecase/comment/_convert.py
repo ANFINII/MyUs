@@ -4,7 +4,7 @@ from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
-from api.src.usecase.notification._convert import delete_object_notifications_data
+from api.src.usecase.notification._convert import delete_notification_data
 from api.src.usecase.user._convert import get_author_map_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import CommentTypeNo
@@ -48,7 +48,7 @@ def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    notification_ret = delete_object_notifications_data(NotificationObjectType.COMMENT, [data.id])
+    notification_ret = delete_notification_data(NotificationObjectType.COMMENT, [data.id])
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
