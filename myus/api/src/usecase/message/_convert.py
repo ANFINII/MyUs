@@ -4,7 +4,7 @@ from api.src.domain.interface.message.interface import FilterOption, MessageInte
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO
-from api.src.usecase.user.core import get_author_data_map
+from api.src.usecase.user._convert import get_author_data_map
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 

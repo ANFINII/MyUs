@@ -254,6 +254,7 @@ return Result.ok(new_ids)
   - `core.py`：adapter・コマンドから呼ぶ関数
   - `_convert.py`：補助の関数（`save_xxx_data`・`delete_xxx_data`、Repositoryを取り出す`get_media_repository`、ほかのusecaseから使う`create_notification`・`record_access`など）。補助の関数がなければ作らない
   - `_convert.py`は同じディレクトリの`core.py`をimportしない（`core.py`が`_convert.py`を使う向きだけにする）
+  - adapter からも呼ぶ関数（`get_user_data`・`get_channel_data`・`get_search_tag_data`など）は、ほかの usecase から使っていても`core.py`に置く。adapter から呼ばないものだけを`_convert.py`に置く（`get_author_data`・`get_author_data_map`など）
 - domainに触れる補助の関数は`utils`に置かず、usecaseの`_convert.py`に置く
 
 ## パフォーマンス
