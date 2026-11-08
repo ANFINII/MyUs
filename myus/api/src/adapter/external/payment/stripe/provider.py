@@ -3,13 +3,13 @@ from datetime import datetime, timezone
 from typing import Any, assert_never
 from django.conf import settings
 from api.modules.logger import log
-from api.src.adapter.external.payment.stripe._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_period_end
+from api.src.adapter.external.payment.stripe._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_period_end, stripe_price_id
 from api.src.adapter.external.payment.stripe._type import stripe_event_type
 from api.src.domain.interface.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent
-from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.common.result import FatalError, Result
-from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, WebhookEventType, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PlanChangeError, WebhookEventType, WebhookVerifyError
 
 
 class StripeProvider(PaymentInterface):
@@ -81,6 +81,34 @@ class StripeProvider(PaymentInterface):
             canceled_at=datetime.now(timezone.utc),
             period_end=stripe_period_end(subscription),
         ))
+
+    @Result.shield_exception()
+    def change_plan(self, external_id: str, product_code: str) -> Result[PlanChangeResult, FatalError]:
+        price_id = stripe_price_id(product_code)
+        if len(price_id) == 0:
+            return Result.ok(PlanChangeFailed(error=PlanChangeError.UNKNOWN_PRODUCT, message=f"price_id not configured for product_code={product_code}"))
+
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
+            current = stripe.Subscription.retrieve(external_id)
+            item_id = current["items"]["data"][0]["id"]
+            subscription = stripe.Subscription.modify(
+                external_id,
+                items=[{"id": item_id, "price": price_id}],
+                metadata={"product_code": product_code},
+                proration_behavior="create_prorations",
+            )
+        except stripe.InvalidRequestError as e:
+            log.warning("Stripe subscription not found for plan change", external_id=external_id, exc=e)
+            return Result.ok(PlanChangeFailed(error=PlanChangeError.NOT_FOUND, message=str(e)))
+        except stripe.APIConnectionError as e:
+            log.error("Stripe network error on plan change", exc=e)
+            return Result.ok(PlanChangeFailed(error=PlanChangeError.NETWORK_ERROR, message=str(e)))
+        except stripe.StripeError as e:
+            log.error("Stripe plan change error", exc=e)
+            return Result.ok(PlanChangeFailed(error=PlanChangeError.PROVIDER_REJECTED, message=str(e)))
+
+        return Result.ok(PlanChangeSuccess(subscription=convert_stripe_subscription(subscription)))
 
     @Result.shield_exception()
     def get_subscription(self, external_id: str) -> Result[ProviderSubscriptionData, FatalError]:
