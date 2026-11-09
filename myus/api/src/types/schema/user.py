@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from typing import Annotated
+from pydantic import BaseModel, Field
 from api.utils.enum.media import MediaType
 
 
@@ -24,7 +25,7 @@ class MediaUserOut(BaseModel):
 
 class SearchTagIn(BaseModel):
     sequence: int
-    name: str
+    name: Annotated[str, Field(max_length=30)]
 
 
 class SearchTagOut(BaseModel):
