@@ -153,7 +153,7 @@ flowchart LR
 | Redis | EC2 上のコンテナ | **ElastiCache for Valkey** |
 | 非同期処理 | DB の outbox をワーカーがポーリング | outbox → **SQS**（DLQ 付き）→ `worker` |
 | 動画変換 | ffmpeg（`worker` コンテナ） | **MediaConvert**（S3 へのアップロードをトリガーに実行、ABR 対応） |
-| 予約公開（`publish_at`。未実装） | `worker` 内の定期処理（今後足す） | **EventBridge Scheduler** |
+| 予約公開（`publish_at`） | 定期処理は持たない。一覧・詳細・通知を取るときに `publish_at` が今より前のものだけに絞る | **EventBridge Scheduler**（公開の瞬間に通知を送るなど、その時点で処理が要るようになったら） |
 | 不適切コンテンツ対策 | なし | **Rekognition** のモデレーション（任意） |
 
 ### NAT Gateway を避ける工夫
