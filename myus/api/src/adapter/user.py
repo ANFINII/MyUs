@@ -96,7 +96,14 @@ class UserAPI:
 
         update_ret = update_search_tags(user_id, input)
         if update_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            message = update_ret.err_value.message
+            match update_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 200, SuccessOut(message="更新しました")
 

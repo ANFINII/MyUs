@@ -3,8 +3,11 @@ from api.src.domain.interface.search_tag.interface import FilterOption, SearchTa
 from api.src.injectors.container import injector
 from api.src.types.schema.user import SearchTagIn
 from api.src.usecase.search_tag._convert import save_search_tag_data
-from api.utils.common.result import FatalError, Result
+from api.utils.common.result import FatalError, Result, ValidateError, ValidationError
 from api.utils.functions.transaction import atomic_result
+
+
+SEARCH_TAG_MAX_COUNT = 20
 
 
 @Result.shield_exception()
@@ -24,7 +27,10 @@ def get_search_tag_data(author_id: int) -> Result[list[SearchTagData], FatalErro
 
 
 @Result.shield_exception()
-def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> Result[None, FatalError]:
+def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> Result[None, ValidateError]:
+    if len(tags) > SEARCH_TAG_MAX_COUNT:
+        return Result.err(ValidationError("error.searchTagLimit"))
+
     objs_ret = get_search_tag_data(author_id)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
