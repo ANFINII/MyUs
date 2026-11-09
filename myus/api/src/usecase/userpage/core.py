@@ -1,9 +1,9 @@
 from dataclasses import replace
 from django.utils import timezone
 from api.src.domain.interface.advertise.data import AdvertiseData
-from api.src.domain.interface.advertise.interface import AdvertiseInterface
+from api.src.domain.interface.advertise.interface import AdvertiseInterface, SortOption as AdvertiseSortOption
 from api.src.domain.interface.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption
 from api.src.injectors.container import injector
 from api.src.types.dto.media import HomeDTO
 from api.src.usecase.advertise._convert import is_active
@@ -50,7 +50,7 @@ def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int =
 @Result.shield_exception()
 def get_userpage_advertises(search: str, owner_id: int) -> Result[list[AdvertiseData], FatalError]:
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(MediaFilterOption(search=search, publish=True, owner_id=owner_id), ExcludeOption(), MediaSortOption(is_asc=True), PageOption())
+    ids_ret = repo.get_ids(MediaFilterOption(search=search, publish=True, owner_id=owner_id), ExcludeOption(), AdvertiseSortOption(is_asc=True), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
