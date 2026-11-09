@@ -233,6 +233,7 @@ if ret.is_err:
 - `convert_data`: Django ORM → dataclass
 - `marshal_data`: dataclass → Django ORM
 - 1つのファイルに複数あるときは `xxx_data`・`marshal_xxx_data`（例：`profile_data`・`marshal_profile_data`）
+- 並び順は、`convert`系（Model → Data。`convert_data`・`xxx_data`・`convert_content`）→ `marshal`系（Data → Model）→ それ以外（`get_media_model`・`through_model`など）
 
 ### bulk操作
 - `bulk_save`は`get_save_new_ids`（`api/src/domain/entity/index.py`）で保存する

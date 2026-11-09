@@ -22,22 +22,6 @@ def convert_data(obj: PaymentEvent) -> PaymentEventData:
     )
 
 
-def marshal_data(data: PaymentEventData) -> PaymentEvent:
-    return PaymentEvent(
-        id=data.id if data.id != 0 else None,
-        provider=data.provider,
-        event_id=data.event_id,
-        event_type=data.event_type,
-        external_id=data.external_id,
-        payload=data.payload,
-        content=marshal_content(data.content),
-        occurred_at=data.occurred_at,
-        processed_at=data.processed_at,
-        attempts=data.attempts,
-        last_error=data.last_error,
-    )
-
-
 def convert_content(event_type: WebhookEventType, content: str) -> PaymentEventContent:
     match event_type:
         case WebhookEventType.SUBSCRIPTION_CREATED | WebhookEventType.SUBSCRIPTION_UPDATED | WebhookEventType.SUBSCRIPTION_CANCELED:
@@ -52,6 +36,22 @@ def convert_content(event_type: WebhookEventType, content: str) -> PaymentEventC
             return TypeAdapter(PayoutContent).validate_json(content)
         case _:
             assert_never(event_type)
+
+
+def marshal_data(data: PaymentEventData) -> PaymentEvent:
+    return PaymentEvent(
+        id=data.id if data.id != 0 else None,
+        provider=data.provider,
+        event_id=data.event_id,
+        event_type=data.event_type,
+        external_id=data.external_id,
+        payload=data.payload,
+        content=marshal_content(data.content),
+        occurred_at=data.occurred_at,
+        processed_at=data.processed_at,
+        attempts=data.attempts,
+        last_error=data.last_error,
+    )
 
 
 def marshal_content(content: PaymentEventContent) -> str:

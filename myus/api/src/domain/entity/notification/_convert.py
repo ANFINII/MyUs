@@ -26,6 +26,19 @@ def convert_data(obj: Notification, content_obj: Any | None, comment_media_ulids
     )
 
 
+def marshal_data(data: NotificationData) -> Notification:
+    return Notification(
+        id=data.id if data.id != 0 else None,
+        ulid=data.ulid if data.ulid else ulid.new(),
+        user_from_id=data.user_from_id,
+        user_to_id=data.user_to_id if data.user_to_id != 0 else None,
+        type_no=data.type_no,
+        type_name=data.type_name,
+        object_id=data.object_id,
+        object_type=data.object_type,
+    )
+
+
 def get_content(object_type: NotificationObjectType, obj: Any | None, comment_media_ulids: dict[int, str]) -> NotificationContentData | None:
     if obj is None:
         return None
@@ -74,16 +87,3 @@ def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[B
             return Chat
         case _:
             assert_never(media_type)
-
-
-def marshal_data(data: NotificationData) -> Notification:
-    return Notification(
-        id=data.id if data.id != 0 else None,
-        ulid=data.ulid if data.ulid else ulid.new(),
-        user_from_id=data.user_from_id,
-        user_to_id=data.user_to_id if data.user_to_id != 0 else None,
-        type_no=data.type_no,
-        type_name=data.type_name,
-        object_id=data.object_id,
-        object_type=data.object_type,
-    )

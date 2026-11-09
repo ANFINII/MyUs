@@ -89,24 +89,6 @@ def user_plan_data(user_plan: UserPlan) -> UserPlanData:
     )
 
 
-def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
-    match media_type:
-        case MediaType.VIDEO:
-            return Video
-        case MediaType.MUSIC:
-            return Music
-        case MediaType.BLOG:
-            return Blog
-        case MediaType.COMIC:
-            return Comic
-        case MediaType.PICTURE:
-            return Picture
-        case MediaType.CHAT:
-            return Chat
-        case _:
-            assert_never(media_type)
-
-
 def marshal_user_data(data: UserData) -> User:
     return User(
         id=data.id if data.id != 0 else None,
@@ -178,3 +160,21 @@ def marshal_user_plan_data(user: User, data: UserAllData) -> UserPlan:
         start_date=user_plan.start_date,
         end_date=user_plan.end_date,
     )
+
+
+def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
+    match media_type:
+        case MediaType.VIDEO:
+            return Video
+        case MediaType.MUSIC:
+            return Music
+        case MediaType.BLOG:
+            return Blog
+        case MediaType.COMIC:
+            return Comic
+        case MediaType.PICTURE:
+            return Picture
+        case MediaType.CHAT:
+            return Chat
+        case _:
+            assert_never(media_type)

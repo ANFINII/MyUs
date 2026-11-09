@@ -22,6 +22,11 @@ def marshal_data(data: HashtagData) -> HashTag:
     )
 
 
+def marshal_through(media_type: MediaType, media_id: int, hashtag_id: int, sequence: int) -> Model:
+    ModelClass, fk_name = through_model(media_type)
+    return ModelClass(**{fk_name: media_id}, hashtag_id=hashtag_id, sequence=sequence)
+
+
 def through_model(media_type: MediaType) -> tuple[type[Model], str]:
     match media_type:
         case MediaType.VIDEO:
@@ -38,8 +43,3 @@ def through_model(media_type: MediaType) -> tuple[type[Model], str]:
             return (ChatHashtag, "chat_id")
         case _:
             assert_never(media_type)
-
-
-def marshal_through(media_type: MediaType, media_id: int, hashtag_id: int, sequence: int) -> Model:
-    ModelClass, fk_name = through_model(media_type)
-    return ModelClass(**{fk_name: media_id}, hashtag_id=hashtag_id, sequence=sequence)
