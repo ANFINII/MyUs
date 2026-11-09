@@ -219,9 +219,10 @@ if ret.is_err:
 - 必須型: `FilterOption` / `SortOption` dataclass + `SortType` enum
 - メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
 - 「使わないから書く」「使うから簡略化する」のどちらも禁止：使う分だけ既存の形で書く
+- 条件で消す・取る専用のメソッド（`delete(type_no, object_id, ...)` など）は作らない。`FilterOption`に条件を足し、`get_ids`で ID を取ってから`bulk_delete`・`bulk_get`する
 - private メソッド（`_` プレフィックス）を Interface に宣言しない（抽象化は公開 API のみ。private ヘルパーは Repository 実装側に置く）
 - 雛形と違う形を認めるのは次の場合だけ（新しく足すときも、同じ種類の既存の形に合わせる）
-  - `bulk_save`で表せない更新：加算・切り替え・既読など（`save_read`・`save_count`・`save_follow_count`・`media_like`・`comment_like`、通知の`delete`・`delete_by_user`・`confirm`）
+  - `bulk_save`で表せない更新：加算・切り替え・既読など（`save_read`・`save_count`・`save_follow_count`・`media_like`・`comment_like`、通知の`delete_by_user`・`confirm`）
   - 一覧に付ける判定：`is_liked`・`get_liked_ids`
   - 認証：`UserInterface.authenticate`
   - メディア・広告の`get_ids(filter, exclude, sort, page, user_id)`：ページング（`PageOption`）とスコア順の`user_id`が要るメディア共通の形。広告にはスコアがないので、`SortOption`・`SortType`（`ID`・`CREATED`）だけは`domain/interface/advertise/interface.py`に広告用を置く

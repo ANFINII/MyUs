@@ -14,7 +14,7 @@ from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
-from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from api.utils.enum.notification import NotificationObjectType
 
 
 NOTIFICATION_FIELDS = ["user_from_id", "user_to_id", "type_no", "type_name", "object_id", "object_type"]
@@ -53,6 +53,8 @@ class NotificationRepository(NotificationInterface):
             q_list.append(Q(object_type=filter.object_type))
         if filter.object_ids:
             q_list.append(Q(object_id__in=filter.object_ids))
+        if filter.user_from_id:
+            q_list.append(Q(user_from_id=filter.user_from_id))
         if filter.user_to_id:
             q_list.append(Q(user_to_id=filter.user_to_id))
         if filter.receiver_id:
@@ -133,11 +135,6 @@ class NotificationRepository(NotificationInterface):
         if len(ids) == 0:
             return Result.ok(None)
         Notification.objects.filter(id__in=ids).delete()
-        return Result.ok(None)
-
-    @Result.shield_exception()
-    def delete(self, type_no: NotificationTypeNo, object_type: NotificationObjectType, object_id: int, user_from_id: int) -> Result[None, FatalError]:
-        Notification.objects.filter(type_no=type_no, object_type=object_type, object_id=object_id, user_from_id=user_from_id).delete()
         return Result.ok(None)
 
     @Result.shield_exception()

@@ -117,12 +117,12 @@ def create_publish_notification_data(owner_id: int, type_no: NotificationTypeNo,
 
 
 @Result.shield_exception()
-def delete_notification_data(object_type: NotificationObjectType, object_ids: list[int]) -> Result[None, FatalError]:
+def delete_notification_data(object_type: NotificationObjectType, object_ids: list[int], type_no: NotificationTypeNo | None = None, user_from_id: int = 0) -> Result[None, FatalError]:
     if len(object_ids) == 0:
         return Result.ok(None)
 
     repo = injector.get(NotificationInterface)
-    ids_ret = repo.get_ids(FilterOption(object_type=object_type, object_ids=object_ids), SortOption())
+    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=object_ids, user_from_id=user_from_id), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
