@@ -13,7 +13,7 @@ from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn,
 from api.src.usecase.media._convert import get_media_repository
 from api.src.usecase.notification._convert import create_notification_data
 from api.src.usecase.user._convert import save_user_data
-from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result
+from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
@@ -55,6 +55,24 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
         return Result.err(NotFoundError("error.saveFailed"))
 
     base = data.user
+    repo = injector.get(UserInterface)
+    registered_checks = [
+        (input.email, base.email, FilterOption(email=input.email), "error.emailTaken"),
+        (input.username, base.username, FilterOption(username=input.username), "error.usernameTaken"),
+        (input.nickname, base.nickname, FilterOption(nickname=input.nickname), "error.nicknameTaken"),
+    ]
+    for value, current, filter, message in registered_checks:
+        if len(value) == 0 or value == current:
+            continue
+
+        ids_ret = repo.get_ids(filter)
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        ids = ids_ret.ok_value
+        if any(id != user_id for id in ids):
+            return Result.err(ValidationError(message))
+
     avatar = save_upload(avatar_file, ImageUpload.USER, base.ulid) if avatar_file else base.avatar
 
     user = replace(

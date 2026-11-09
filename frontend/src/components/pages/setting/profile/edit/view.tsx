@@ -130,7 +130,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
           <Input name="email" value={values.email} maxLength={120} required error={error} onChange={handleInput} />
         </TableRow>
         <TableRow label={t('setting.profile.username')}>
-          <Input name="username" value={values.username} maxLength={30} placeholder={t('setting.profile.usernamePlaceholder')} required error={error} onChange={handleInput} />
+          <Input name="username" value={values.username} maxLength={20} placeholder={t('setting.profile.usernamePlaceholder')} required error={error} onChange={handleInput} />
         </TableRow>
         <TableRow label={t('setting.profile.nickname')}>
           <Input name="nickname" value={values.nickname} maxLength={60} required error={error} onChange={handleInput} />
