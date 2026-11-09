@@ -71,7 +71,7 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False,
                 score_expr = ExpressionWrapper(base * multiplier, output_field=FloatField())
             else:
                 score_expr = ExpressionWrapper(base, output_field=FloatField())
-        qs = cast(QuerySet[T], qs.annotate(score=score_expr))  # django-stubs は TypeVar モデルの annotate を上限の Model 型で返すため
+        qs = cast(QuerySet[T], qs.annotate(score=score_expr))
         key = "score"
     else:
         key = sort.sort_type.name.lower()
