@@ -34,6 +34,7 @@ export const apiSettingMypage = base + '/setting/mypage'
 export const apiSettingNotification = base + '/setting/notification'
 
 // Payment
+export const apiPaymentSubscription = base + '/payment/subscription'
 export const apiPaymentCheckout = base + '/payment/checkout'
 export const apiPaymentCancel = base + '/payment/cancel'
 export const apiPaymentChange = base + '/payment/change'

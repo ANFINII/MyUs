@@ -10,6 +10,7 @@ from api.src.domain.interface.payment.event.interface import FilterOption as Pay
 from api.src.domain.interface.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from api.src.domain.interface.payment.payout.interface import PayoutInterface
 from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PlanChangeResult, PlanChangeSuccess, RedirectUrls, WebhookVerifyResult
+from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
 from api.src.injectors.container import injector
@@ -91,6 +92,26 @@ def verify_webhook(provider: PaymentProvider, payload: bytes, signature: str) ->
 
     verification = ret.ok_value
     return Result.ok(verification)
+
+
+@Result.shield_exception()
+def get_subscription(user_id: int) -> Result[SubscriptionData | None, FatalError]:
+    repo = injector.get(SubscriptionInterface)
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    subscriptions_ret = repo.bulk_get(ids)
+    if subscriptions_ret.is_err:
+        return Result.err(subscriptions_ret.err_value)
+
+    subscriptions = subscriptions_ret.ok_value
+    current_subscriptions = [s for s in subscriptions if s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE)]
+    if len(current_subscriptions) == 0:
+        return Result.ok(None)
+
+    return Result.ok(current_subscriptions[0])
 
 
 @Result.shield_exception()

@@ -23,3 +23,8 @@ class PaymentWebhookOut(BaseModel):
 class PaymentCancelOut(BaseModel):
     canceled_at: datetime
     period_end: datetime
+
+
+class PaymentSubscriptionOut(BaseModel):
+    is_canceled: bool
+    period_end: datetime
