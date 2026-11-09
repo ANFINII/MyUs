@@ -372,6 +372,8 @@
       "cancelScheduled": "Your plan will be canceled on {{periodEnd}}",
       "revoke": "Undo cancellation",
       "revoked": "Your cancellation has been undone",
+      "method": "Update payment method",
+      "pastDue": "Your payment failed. Please check your payment method",
       "changed": "Your plan has been changed",
       "changeTitle": "Change plan",
       "successTitle": "Payment complete",

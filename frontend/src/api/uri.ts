@@ -39,6 +39,7 @@ export const apiPaymentCheckout = base + '/payment/checkout'
 export const apiPaymentCancel = base + '/payment/cancel'
 export const apiPaymentCancelRevoke = base + '/payment/cancel/revoke'
 export const apiPaymentChange = base + '/payment/change'
+export const apiPaymentMethod = base + '/payment/method'
 
 // Channel
 export const apiChannelCreate = base + '/channel'
