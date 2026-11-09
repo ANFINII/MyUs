@@ -33,6 +33,7 @@ export default function Payment(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [selectedPlan, setSelectedPlan] = useState<string>('')
+  const [isMethodLoading, setIsMethodLoading] = useState<boolean>(false)
 
   const currentPlan = mypage.plan
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
@@ -57,11 +58,11 @@ export default function Payment(props: Props): React.JSX.Element {
   }
 
   const handleMethod = async () => {
-    handleLoading(true)
+    setIsMethodLoading(true)
     const locale = router.locale === 'en' ? Locale.En : Locale.Ja
     const ret = await postPaymentMethod({ locale })
     if (ret.isErr()) {
-      handleLoading(false)
+      setIsMethodLoading(false)
       handleToast(toErrorMessage(ret.error, FetchError.Post), true)
       return
     }
@@ -112,13 +113,14 @@ export default function Payment(props: Props): React.JSX.Element {
         {isCanceled && (
           <div className={style.actions}>
             <Button color="green" name={t('setting.payment.revoke')} loading={loading} onClick={handleRevoke} />
+            <Button color="blue" name={t('setting.payment.method')} loading={isMethodLoading} onClick={handleMethod} />
           </div>
         )}
 
         {isPaid && !isCanceled && (
           <div className={style.actions}>
             <Button color="green" name={t('setting.payment.change')} onClick={handleChange} />
-            <Button color="blue" name={t('setting.payment.method')} loading={loading} onClick={handleMethod} />
+            <Button color="blue" name={t('setting.payment.method')} loading={isMethodLoading} onClick={handleMethod} />
             <Button color="red" name={t('setting.payment.cancel')} onClick={handleModal} />
           </div>
         )}
