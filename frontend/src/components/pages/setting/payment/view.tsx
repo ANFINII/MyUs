@@ -12,6 +12,7 @@ import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import Link from 'components/parts/Link'
 import Modal from 'components/parts/Modal'
 import CurrentBanner from './CurrentBanner'
 import style from './Payment.module.scss'
@@ -124,6 +125,21 @@ export default function Payment(props: Props): React.JSX.Element {
             <Button color="red" name={t('setting.payment.cancel')} onClick={handleModal} />
           </div>
         )}
+
+        <footer className={style.footer}>
+          <p className={style.notice}>{t('setting.payment.renewalNotice')}</p>
+          <nav className={style.links}>
+            <Link href="/menu/commerce" className={style.link}>
+              {t('menu.commerce.title')}
+            </Link>
+            <Link href="/menu/privacy" className={style.link}>
+              {t('menu.privacy.title')}
+            </Link>
+            <Link href="/menu/userpolicy" className={style.link}>
+              {t('menu.userpolicy.title')}
+            </Link>
+          </nav>
+        </footer>
       </div>
 
       <Modal
