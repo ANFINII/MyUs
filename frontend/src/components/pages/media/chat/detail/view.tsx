@@ -88,13 +88,13 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   useEffect(() => scrollToBottom(), [messages, scrollToBottom])
 
-  const threadInitRef = useRef<boolean>(false)
+  const threadUlidRef = useRef<string>('')
   useEffect(() => {
-    if (threadInitRef.current || !threadUlid) return
+    if (!threadUlid || threadUlidRef.current === threadUlid) return
     const target = messages.find((m) => m.ulid === threadUlid)
     if (!target) return
 
-    threadInitRef.current = true
+    threadUlidRef.current = threadUlid
     const fetchReplies = async () => {
       const ret = await getReplies(target.ulid)
       if (ret.isErr()) return
@@ -187,11 +187,13 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           selectedMessage: message,
           replies: { ...prev.replies, [message.ulid]: replyData },
         }))
+        threadUlidRef.current = message.ulid
         router.replace(`/media/chat/${chatUlid}/thread/${message.ulid}`)
         return
       }
     }
     resetThreadWidth()
+    threadUlidRef.current = ''
     setFormState((prev) => ({ ...prev, selectedMessage: message !== null && message.ulid === prev.selectedMessage?.ulid ? null : message }))
     router.replace(`/media/chat/${chatUlid}`)
   }
