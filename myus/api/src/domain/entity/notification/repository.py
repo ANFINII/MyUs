@@ -109,7 +109,7 @@ class NotificationRepository(NotificationInterface):
                     comment_media_ulids.update(get_comment_media_ulids(comments))
                     content_map.update({f"{object_type.value}:{o.id}": o for o in comments if o.id in comment_media_ulids})
                 case NotificationObjectType.MESSAGE:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Message.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Message.objects.select_related("chat", "parent").filter(id__in=obj_ids)})
                 case _:
                     assert_never(object_type)
 
