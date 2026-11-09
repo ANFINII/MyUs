@@ -13,12 +13,11 @@ from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
-from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.user import MediaUserDTO
 from api.src.usecase.access_log._convert import save_access_data
-from api.src.usecase.notification._convert import create_notification_data
+from api.src.usecase.notification._convert import create_notification_data, delete_notification_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.access_log import AccessType
 from api.utils.enum.media import MediaType
@@ -201,8 +200,7 @@ def save_read_data(media_type: MediaType, media_id: int, read: int, owner_id: in
 
 @Result.shield_exception()
 def create_views_notification_data(owner_id: int, object_type: NotificationObjectType, object_id: int) -> Result[None, FatalError]:
-    repo = injector.get(NotificationInterface)
-    delete_ret = repo.delete(NotificationTypeNo.VIEWS, object_type, object_id, owner_id)
+    delete_ret = delete_notification_data(object_type, [object_id], NotificationTypeNo.VIEWS, owner_id)
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 

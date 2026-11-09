@@ -1,9 +1,9 @@
 from api.modules.logger import log
 from api.src.domain.interface.message.data import MessageData
 from api.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
-from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO
+from api.src.usecase.notification._convert import delete_notification_data
 from api.src.usecase.user._convert import get_author_map_data
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -43,8 +43,7 @@ def save_message_data(data: MessageData) -> Result[None, FatalError]:
 def delete_message_data(data: MessageData, user_id: int) -> Result[None, FatalError]:
     # 返信の場合はNotificationも削除
     if data.parent_id is not None:
-        notification_repo = injector.get(NotificationInterface)
-        notification_ret = notification_repo.delete(NotificationTypeNo.REPLY, NotificationObjectType.MESSAGE, data.id, user_id)
+        notification_ret = delete_notification_data(NotificationObjectType.MESSAGE, [data.id], NotificationTypeNo.REPLY, user_id)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 

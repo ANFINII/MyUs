@@ -4,14 +4,13 @@ from ninja import UploadedFile
 from api.src.injectors.container import injector
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
-from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
 from api.src.types.dto.user import LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.src.usecase.media._convert import get_media_repository
-from api.src.usecase.notification._convert import create_notification_data
+from api.src.usecase.notification._convert import create_notification_data, delete_notification_data
 from api.src.usecase.user._convert import save_user_data
 from api.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
 from api.utils.enum.media import MediaType
@@ -217,8 +216,7 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
         if create_ret.is_err:
             return Result.err(create_ret.err_value)
     else:
-        notification_repo = injector.get(NotificationInterface)
-        delete_ret = notification_repo.delete(NotificationTypeNo.LIKE, NotificationObjectType.COMMENT, ids[0], user_id)
+        delete_ret = delete_notification_data(NotificationObjectType.COMMENT, [ids[0]], NotificationTypeNo.LIKE, user_id)
         if delete_ret.is_err:
             return Result.err(delete_ret.err_value)
 
