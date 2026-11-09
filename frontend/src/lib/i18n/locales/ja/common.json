@@ -153,7 +153,9 @@
     "recommend": "急上昇",
     "follow": "フォロー",
     "channel": "チャンネル",
-    "userpolicy": "利用規約"
+    "userpolicy": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "commerce": "特定商取引法に基づく表記"
   },
   "cloudMenu": {
     "manage": "投稿管理",
@@ -531,6 +533,92 @@
         "title": "第4条 広告・アフィリエイト",
         "p1": "ブログには、アフィリエイトリンクなどの広告を自由に掲載できます。",
         "p2": "広告を含むブログは、作成・編集画面で「PR を含む」をオンにしてください。記事に「この記事はプロモーションを含みます」と表示され、読者に安心して読んでもらえます。"
+      }
+    },
+    "privacy": {
+      "title": "プライバシーポリシー",
+      "collect": {
+        "title": "取得する情報",
+        "content": ""
+      },
+      "purpose": {
+        "title": "利用目的",
+        "content": ""
+      },
+      "thirdParty": {
+        "title": "第三者への提供",
+        "content": ""
+      },
+      "external": {
+        "title": "外部サービスの利用",
+        "content": ""
+      },
+      "security": {
+        "title": "安全管理",
+        "content": ""
+      },
+      "request": {
+        "title": "開示・訂正・削除の請求",
+        "content": ""
+      },
+      "contact": {
+        "title": "お問い合わせ窓口",
+        "content": ""
+      },
+      "revision": {
+        "title": "改定",
+        "content": ""
+      }
+    },
+    "commerce": {
+      "title": "特定商取引法に基づく表記",
+      "seller": {
+        "label": "販売事業者",
+        "content": ""
+      },
+      "representative": {
+        "label": "運営責任者",
+        "content": ""
+      },
+      "address": {
+        "label": "所在地",
+        "content": ""
+      },
+      "phone": {
+        "label": "電話番号",
+        "content": ""
+      },
+      "email": {
+        "label": "メールアドレス",
+        "content": ""
+      },
+      "price": {
+        "label": "販売価格",
+        "content": ""
+      },
+      "extraFee": {
+        "label": "商品代金以外の必要料金",
+        "content": ""
+      },
+      "payment": {
+        "label": "支払方法",
+        "content": ""
+      },
+      "paymentTiming": {
+        "label": "支払時期",
+        "content": ""
+      },
+      "delivery": {
+        "label": "提供時期",
+        "content": ""
+      },
+      "cancel": {
+        "label": "解約・返金",
+        "content": ""
+      },
+      "environment": {
+        "label": "動作環境",
+        "content": ""
       }
     },
     "knowledge": {
