@@ -2,7 +2,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.hashtag import HashTag
-from api.src.domain.entity.hashtag._convert import convert_data, marshal_data, marshal_through, through_model
+from api.src.domain.entity.hashtag._convert import convert_data, marshal_data, marshal_through, get_through_model
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption, HashtagInterface, SortOption
@@ -54,10 +54,10 @@ class HashtagRepository(HashtagInterface):
                     existing_map[m.name] = m.id
                 hashtag_ids = [existing_map[o.name] for o in objs]
 
-            ModelClass, fk_name = through_model(media_type)
-            ModelClass._default_manager.filter(**{fk_name: media_id}).delete()
+            model_class, fk_name = get_through_model(media_type)
+            model_class._default_manager.filter(**{fk_name: media_id}).delete()
             if len(hashtag_ids) > 0:
                 rows = [marshal_through(media_type, media_id, hid, i) for i, hid in enumerate(hashtag_ids)]
-                ModelClass._default_manager.bulk_create(rows)
+                model_class._default_manager.bulk_create(rows)
 
         return Result.ok(hashtag_ids)
