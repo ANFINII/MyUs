@@ -3,7 +3,7 @@ from datetime import datetime
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.event.data import PaymentEventData, ProviderSubscriptionData
 from api.utils.enum.i18n import Locale
-from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, PlanChangeError, RevokeError, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentMethodSessionError, PaymentProvider, PaymentType, PlanChangeError, RevokeError, WebhookVerifyError
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,3 +112,17 @@ class PlanChangeFailed:
 
 
 type PlanChangeResult = PlanChangeSuccess | PlanChangeFailed
+
+
+@dataclass(frozen=True, slots=True)
+class PaymentMethodSessionCreated:
+    redirect_url: str
+
+
+@dataclass(frozen=True, slots=True)
+class PaymentMethodSessionFailed:
+    error: PaymentMethodSessionError
+    message: str
+
+
+type PaymentMethodSessionResult = PaymentMethodSessionCreated | PaymentMethodSessionFailed

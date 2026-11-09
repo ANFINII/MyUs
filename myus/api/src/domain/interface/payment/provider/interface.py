@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
-from api.src.domain.interface.payment.provider.data import CancelResult, CheckoutData, CheckoutResult, PlanChangeResult, RevokeResult, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, WebhookVerifyResult
 from api.utils.common.result import FatalError, Result
+from api.utils.enum.i18n import Locale
 
 
 class PaymentInterface(ABC):
@@ -27,4 +28,8 @@ class PaymentInterface(ABC):
 
     @abstractmethod
     def get_subscription(self, external_id: str) -> Result[ProviderSubscriptionData, FatalError]:
+        ...
+
+    @abstractmethod
+    def create_payment_method_session(self, customer_id: str, return_url: str, locale: Locale) -> Result[PaymentMethodSessionResult, FatalError]:
         ...

@@ -4,12 +4,12 @@ from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
 from api.src.adapter.auth import auth_check
-from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, WebhookVerified, WebhookVerifyFailed
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, WebhookVerified, WebhookVerifyFailed
 from api.src.types.schema.common import ErrorOut, ErrorType
-from api.src.types.schema.payment import PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentSubscriptionOut, PaymentWebhookOut
-from api.src.usecase.payment.core import cancel_subscription, change_plan, create_checkout, get_subscription, receive_payment_event, revoke_cancellation, verify_webhook
+from api.src.types.schema.payment import PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentSubscriptionOut, PaymentWebhookOut
+from api.src.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, get_subscription, receive_payment_event, revoke_cancellation, verify_webhook
 from api.utils.common.result import FatalError, NotFoundError, ValidationError
-from api.utils.enum.payment import PaymentProvider, WebhookVerifyError
+from api.utils.enum.payment import PaymentProvider, SubscriptionStatus, WebhookVerifyError
 
 
 class PaymentAPI:
@@ -34,10 +34,11 @@ class PaymentAPI:
 
         subscription = subscription_ret.ok_value
         if subscription is None:
-            return 200, PaymentSubscriptionOut(is_canceled=False, period_end=datetime.min.replace(tzinfo=timezone.utc))
+            return 200, PaymentSubscriptionOut(is_canceled=False, is_past_due=False, period_end=datetime.min.replace(tzinfo=timezone.utc))
 
         is_canceled = subscription.canceled_at != datetime.min.replace(tzinfo=timezone.utc)
-        return 200, PaymentSubscriptionOut(is_canceled=is_canceled, period_end=subscription.current_period_end)
+        is_past_due = subscription.status == SubscriptionStatus.PAST_DUE
+        return 200, PaymentSubscriptionOut(is_canceled=is_canceled, is_past_due=is_past_due, period_end=subscription.current_period_end)
 
     @staticmethod
     @router.post("/checkout", response={200: PaymentCheckoutOut, 400: ErrorOut, 500: ErrorOut})
@@ -199,3 +200,33 @@ class PaymentAPI:
             case PlanChangeFailed(error=error, message=message):
                 log.error("Payment plan change failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.planChangeFailed")
+
+    @staticmethod
+    @router.post("/method", response={200: PaymentMethodOut, 400: ErrorOut, 500: ErrorOut})
+    def method(request: HttpRequest, input: PaymentMethodIn):
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        session_ret = create_payment_method_session(user_id, input.locale)
+        if session_ret.is_err:
+            message = session_ret.err_value.message
+            match session_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(session_ret.err_value)
+
+        session = session_ret.ok_value
+        match session:
+            case PaymentMethodSessionCreated(redirect_url=redirect_url):
+                return 200, PaymentMethodOut(url=redirect_url)
+            case PaymentMethodSessionFailed(error=error, message=message):
+                log.error("Payment method session failed", error=error.value, message=message)
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.paymentMethodFailed")
