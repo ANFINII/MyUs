@@ -5,7 +5,7 @@ from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.entity.index import get_save_new_ids, sort_ids
-from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage_data, marshal_user_notification_data, marshal_profile_data, marshal_user_data, marshal_user_plan_data, sort_field
+from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage_data, marshal_user_notification_data, marshal_profile_data, marshal_user_data, marshal_user_plan_data
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
 from api.utils.common.result import FatalError, Result
@@ -30,7 +30,7 @@ class UserRepository(UserInterface):
         return User.objects.select_related("profile", "mypage", "notification", "user_plan")
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption | None = None, limit: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.id:
             q_list.append(Q(id=filter.id))
@@ -43,12 +43,9 @@ class UserRepository(UserInterface):
         if filter.nickname:
             q_list.append(Q(nickname=filter.nickname))
 
-        qs = User.objects.filter(*q_list)
-
-        if sort is not None:
-            field_name = sort_field(sort.sort_type)
-            order_by_key = field_name if sort.is_asc else f"-{field_name}"
-            qs = qs.order_by(order_by_key)
+        field_name = sort.sort_type.name.lower()
+        order_by_key = field_name if sort.is_asc else f"-{field_name}"
+        qs = User.objects.filter(*q_list).order_by(order_by_key)
 
         if limit is not None:
             qs = qs[:limit]

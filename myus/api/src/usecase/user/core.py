@@ -6,7 +6,7 @@ from api.src.domain.interface.comment.interface import CommentInterface, FilterO
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
-from api.src.domain.interface.user.interface import FilterOption, UserInterface
+from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
 from api.src.types.dto.user import LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
@@ -24,7 +24,7 @@ from api.utils.functions.validation import has_birthday, has_email, has_number, 
 @Result.shield_exception()
 def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None, FatalError]:
     repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid))
+    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -65,7 +65,7 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
         if len(value) == 0 or value == current:
             continue
 
-        ids_ret = repo.get_ids(filter)
+        ids_ret = repo.get_ids(filter, SortOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -289,7 +289,7 @@ def signup_check(data: SignupIn) -> Result[str, FatalError]:
         if len(value) == 0:
             continue
 
-        ids_ret = repo.get_ids(filter)
+        ids_ret = repo.get_ids(filter, SortOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 

@@ -11,7 +11,7 @@ from api.modules.logger import log
 from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.utils.enum.user import PlanName
-from api.src.domain.interface.user.interface import FilterOption, UserInterface
+from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
 from api.src.usecase.payment.core import cancel_subscription
@@ -135,7 +135,7 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.emailInvalid")
 
     repo = injector.get(UserInterface)
-    ret = repo.get_ids(FilterOption(email=email))
+    ret = repo.get_ids(FilterOption(email=email), SortOption())
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -294,7 +294,7 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.emailInvalid")
 
     repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(email=email))
+    ids_ret = repo.get_ids(FilterOption(email=email), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
