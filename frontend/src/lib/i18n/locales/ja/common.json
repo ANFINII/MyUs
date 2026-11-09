@@ -366,6 +366,7 @@
       "cancelTitle": "解約の確認",
       "cancelConfirm": "本当に解約しますか？",
       "cancelNotice": "解約後は次回更新日まで現在のプランをご利用いただけます。",
+      "renewalNotice": "有料プランは毎月自動で更新されます。いつでも解約でき、解約後も次回更新日まではご利用いただけます。",
       "cancelReserved": "解約予約完了。{{periodEnd}} まで利用可能です",
       "cancelScheduled": "{{periodEnd}} に解約されます",
       "revoke": "解約を取り消す",

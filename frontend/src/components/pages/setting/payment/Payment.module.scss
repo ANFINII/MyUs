@@ -17,4 +17,40 @@
     justify-content: center;
     gap: 12px;
   }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 20px;
+    border-top: 1px solid rgb(230, 230, 230);
+
+    .notice {
+      font-size: 12px;
+      text-align: center;
+      color: rgb(120, 120, 120);
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .link {
+      color: rgb(120, 120, 120);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:not(:first-child)::before {
+        content: '・';
+        color: rgb(180, 180, 180);
+      }
+    }
+  }
 }

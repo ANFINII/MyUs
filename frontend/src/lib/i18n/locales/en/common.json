@@ -370,6 +370,7 @@
       "cancelTitle": "Cancel subscription",
       "cancelConfirm": "Are you sure you want to cancel?",
       "cancelNotice": "You can keep using your current plan until the next renewal date.",
+      "renewalNotice": "Paid plans renew automatically every month. You can cancel at any time and keep using your plan until the next renewal date.",
       "cancelReserved": "Cancellation scheduled. You can use your plan until {{periodEnd}}",
       "cancelScheduled": "Your plan will be canceled on {{periodEnd}}",
       "revoke": "Undo cancellation",
