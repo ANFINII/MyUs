@@ -25,4 +25,34 @@
     font-size: 28px;
     color: rgb(50, 50, 50);
   }
+
+  .agreement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 24px;
+    font-size: 12px;
+    text-align: center;
+    color: rgb(120, 120, 120);
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .link {
+      color: rgb(0, 130, 255);
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:not(:first-child)::before {
+        content: '・';
+        color: rgb(180, 180, 180);
+      }
+    }
+  }
 }
