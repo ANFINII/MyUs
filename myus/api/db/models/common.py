@@ -29,7 +29,7 @@ class Advertise(models.Model):
     ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
-    url     = models.URLField(max_length=2048)
+    url     = models.URLField(max_length=500)
     content = models.TextField()
     image   = models.ImageField(upload_to=advertise_image_upload, max_length=255, blank=True)
     video   = models.FileField(upload_to=advertise_video_upload, max_length=255, blank=True)
