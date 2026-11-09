@@ -12,6 +12,7 @@ import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import Link from 'components/parts/Link'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../../Account.module.scss'
 
@@ -53,6 +54,18 @@ export default function SignupEmail(): React.JSX.Element {
               {t('account.signup.expiry')}
             </Alert>
           </VStack>
+
+          <div className={style.agreement}>
+            <p>{t('account.signup.agreement')}</p>
+            <nav className={style.links}>
+              <Link href="/menu/userpolicy" className={style.link}>
+                {t('menu.userpolicy.title')}
+              </Link>
+              <Link href="/menu/privacy" className={style.link}>
+                {t('menu.privacy.title')}
+              </Link>
+            </nav>
+          </div>
 
           <VStack gap="12" className="mv_40">
             <Button color="green" size="l" name={t('account.form.send')} type="submit" loading={loading} />

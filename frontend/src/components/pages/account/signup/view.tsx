@@ -15,7 +15,6 @@ import Input from 'components/parts/Input'
 import Password from 'components/parts/Input/Password'
 import Radio from 'components/parts/Input/Radio'
 import SelectBox from 'components/parts/Input/SelectBox'
-import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../Account.module.scss'
@@ -122,18 +121,6 @@ export default function Signup(): React.JSX.Element {
                   </HStack>
                 </VStack>
               </VStack>
-
-              <div className={style.agreement}>
-                <p>{t('account.signup.agreement')}</p>
-                <nav className={style.links}>
-                  <Link href="/menu/userpolicy" className={style.link}>
-                    {t('menu.userpolicy.title')}
-                  </Link>
-                  <Link href="/menu/privacy" className={style.link}>
-                    {t('menu.privacy.title')}
-                  </Link>
-                </nav>
-              </div>
 
               <VStack gap="12" className="mv_40">
                 <Button color="green" size="l" name={t('account.signup.submit')} type="submit" loading={loading} />
