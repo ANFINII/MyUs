@@ -56,6 +56,7 @@
     "deleteFailed": "Failed to delete",
     "fileTypeInvalid": "Unsupported file type",
     "fileTooLarge": "The file is too large",
+    "searchTagLimit": "You can add up to 20 search tags",
     "checkoutFailed": "Failed to start the payment",
     "cancelFailed": "Failed to cancel the subscription. Please try again later",
     "cancellationNotScheduled": "No cancellation is scheduled",

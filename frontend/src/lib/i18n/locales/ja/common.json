@@ -56,6 +56,7 @@
     "deleteFailed": "削除に失敗しました",
     "fileTypeInvalid": "対応していないファイル形式です",
     "fileTooLarge": "ファイルサイズが大きすぎます",
+    "searchTagLimit": "検索タグは20個までです",
     "checkoutFailed": "決済セッションの作成に失敗しました",
     "cancelFailed": "解約処理に失敗しました。時間をおいて再度お試しください",
     "cancellationNotScheduled": "解約の予定はありません",
