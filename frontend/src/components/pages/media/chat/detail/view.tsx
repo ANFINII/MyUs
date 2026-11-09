@@ -29,7 +29,7 @@ interface ChatDetailState {
   replies: Record<string, ChatReply[]>
   message: string
   reply: string
-  selectedMessage: ChatMessage | null
+  selectedUlid: string
   joined: number
   thread: number
   likeCount: number
@@ -52,7 +52,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     replies: {},
     message: '',
     reply: '',
-    selectedMessage: null,
+    selectedUlid: '',
     joined: detail.joined,
     thread: detail.thread,
     likeCount: detail.like,
@@ -74,7 +74,8 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const [isContentExpand, setIsContentExpand] = useState<boolean>(false)
   const [formState, setFormState] = useState<ChatDetailState>(initFormState)
 
-  const { messages, replies, message, reply, selectedMessage, joined, thread, likeCount, subscribeCount, isLike, isSubscribe } = formState
+  const { messages, replies, message, reply, selectedUlid, joined, thread, likeCount, subscribeCount, isLike, isSubscribe } = formState
+  const selectedMessage = messages.find((m) => m.ulid === selectedUlid) ?? null
   const isPeriod = new Date(detail.period) < new Date()
   const isDisabled = isPeriod || !user.isActive
   const isFollowDisable = !user.isActive || user.ulid === detail.channel.ownerUlid
@@ -101,7 +102,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
       const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: target.ulid }))
       setFormState((prev) => ({
         ...prev,
-        selectedMessage: target,
+        selectedUlid: target.ulid,
         replies: { ...prev.replies, [target.ulid]: replyData },
       }))
     }
@@ -178,13 +179,13 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   const handleThread = async (message: ChatMessage | null = null) => {
     const chatUlid = String(router.query.ulid ?? '')
-    if (message !== null && message.ulid !== selectedMessage?.ulid) {
+    if (message !== null && message.ulid !== selectedUlid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
         const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: message.ulid }))
         setFormState((prev) => ({
           ...prev,
-          selectedMessage: message,
+          selectedUlid: message.ulid,
           replies: { ...prev.replies, [message.ulid]: replyData },
         }))
         threadUlidRef.current = message.ulid
@@ -194,7 +195,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     }
     resetThreadWidth()
     threadUlidRef.current = ''
-    setFormState((prev) => ({ ...prev, selectedMessage: message !== null && message.ulid === prev.selectedMessage?.ulid ? null : message }))
+    setFormState((prev) => ({ ...prev, selectedUlid: message !== null && message.ulid !== prev.selectedUlid ? message.ulid : '' }))
     router.replace(`/media/chat/${chatUlid}`)
   }
 
