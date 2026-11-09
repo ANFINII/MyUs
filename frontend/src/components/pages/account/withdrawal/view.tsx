@@ -24,6 +24,7 @@ export default function Withdrawal(): React.JSX.Element {
               <br />
               {t('account.withdrawal.irreversible')}
             </Alert>
+            <Alert type="warning">{t('account.withdrawal.planNotice')}</Alert>
           </VStack>
 
           <VStack gap="12" className="mv_40">

@@ -279,6 +279,7 @@
       "title": "Delete account",
       "warning": "Once you delete your account, you can no longer use it!",
       "irreversible": "This action cannot be undone.",
+      "planNotice": "If you have a paid plan, it will be canceled when you delete your account, and you will not be billed again. You will not be able to use the remaining period after deleting your account.",
       "next": "Continue to delete account",
       "confirm": "Are you sure you want to delete your account?",
       "submit": "Delete account"
