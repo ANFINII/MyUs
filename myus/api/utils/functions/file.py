@@ -5,34 +5,43 @@ from api.utils.functions.convert.audio_converter import is_conversion
 from api.utils.functions.index import new_ulid
 
 
+FILENAME_STEM_MAX_LENGTH = 50
+FILENAME_SUFFIX_MAX_LENGTH = 10
+
+
+def unique_filename(filename: str) -> str:
+    path = Path(filename)
+    return f"{new_ulid()}_{path.stem[:FILENAME_STEM_MAX_LENGTH]}{path.suffix[:FILENAME_SUFFIX_MAX_LENGTH]}"
+
+
 def avatar_path(type: ImageUpload, ulid: str, filename: str) -> str:
-    return f"images/{type.value}/{ulid}/{new_ulid()}_{filename}"
+    return f"images/{type.value}/{ulid}/{unique_filename(filename)}"
 
 
 def image_path(type: ImageUpload, ulid: str, filename: str) -> str:
-    return f"images/{type.value}/channel_{ulid}/{new_ulid()}_{filename}"
+    return f"images/{type.value}/channel_{ulid}/{unique_filename(filename)}"
 
 
 def video_path(type: MediaUpload, ulid: str, filename: str) -> str:
-    return f"videos/{type.value}/channel_{ulid}/{new_ulid()}_{filename}"
+    return f"videos/{type.value}/channel_{ulid}/{unique_filename(filename)}"
 
 
 def musics_path(ulid: str, filename: str) -> str:
     if is_conversion(filename):
         filename = Path(filename).with_suffix(".mp3").name
-    return f"musics/channel_{ulid}/{new_ulid()}_{filename}"
+    return f"musics/channel_{ulid}/{unique_filename(filename)}"
 
 
 def comic_path(ulid: str, filename: str) -> str:
-    return f"comics/channel_{ulid}/{new_ulid()}_{filename}"
+    return f"comics/channel_{ulid}/{unique_filename(filename)}"
 
 
 def advertise_image_path(ulid: str, filename: str) -> str:
-    return f"images/advertise/user_{ulid}/{new_ulid()}_{filename}"
+    return f"images/advertise/user_{ulid}/{unique_filename(filename)}"
 
 
 def advertise_video_path(ulid: str, filename: str) -> str:
-    return f"videos/advertise/user_{ulid}/{new_ulid()}_{filename}"
+    return f"videos/advertise/user_{ulid}/{unique_filename(filename)}"
 
 
 def avatar_upload(obj: Any, filename: str) -> str:
