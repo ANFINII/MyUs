@@ -162,7 +162,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 | 用途 | ルール |
 |------|------|
-| 取得データを`useState`の初期値に使う（作成・編集フォーム） | そのまま使う（`loader`が遷移のたびに最新を取ってから表示するため、古いキャッシュでフォームが初期化されない） |
+| 取得データを`useState`の初期値に使う（作成・編集フォーム） | そのまま使う（`loader`が遷移のたびに最新を取ってから表示するため、古いキャッシュでフォームが初期化されない。5分以内に同じページへ戻ったときも待つように、`lib/router.ts`で`defaultStaleReloadMode: 'blocking'`にしている） |
 | ページ送り・検索等で`queryKey`が変わる一覧 | `keepPreviousData`は使わない（URLのクエリが変わると`loader`が動き、前のページを表示したまま待つ） |
 
 ### キャッシュ

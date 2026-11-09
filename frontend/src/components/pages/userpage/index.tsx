@@ -19,6 +19,6 @@ export default function UserpagePage(): React.JSX.Element {
   const advertises = useQuery(userPageAdvertisesQuery(ulid, params))
 
   return (
-    <Userpage key={params.search ?? ''} userPage={userPage} ulid={ulid} channelUlid={channelUlid} media={media.data ?? initMedia} advertises={advertises.data?.items ?? []} />
+    <Userpage key={`${ulid}${params.search ?? ''}`} userPage={userPage} ulid={ulid} channelUlid={channelUlid} media={media.data ?? initMedia} advertises={advertises.data?.items ?? []} />
   )
 }

@@ -46,6 +46,7 @@ export const router = createRouter({
   defaultPendingComponent: PageLoading,
   defaultNotFoundComponent: Custom404,
   defaultErrorComponent: RouteError,
+  defaultStaleReloadMode: 'blocking',
 })
 
 router.subscribe('onBeforeNavigate', ({ fromLocation, toLocation, pathChanged }) => {
