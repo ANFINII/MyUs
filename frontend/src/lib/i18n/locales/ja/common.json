@@ -153,9 +153,7 @@
     "recommend": "急上昇",
     "follow": "フォロー",
     "channel": "チャンネル",
-    "userpolicy": "利用規約",
-    "privacy": "プライバシーポリシー",
-    "commerce": "特定商取引法に基づく表記"
+    "userpolicy": "利用規約"
   },
   "cloudMenu": {
     "manage": "投稿管理",

@@ -155,9 +155,7 @@
     "recommend": "Trending",
     "follow": "Following",
     "channel": "Channels",
-    "userpolicy": "Terms of Service",
-    "privacy": "Privacy Policy",
-    "commerce": "Specified Commercial Transactions Act"
+    "userpolicy": "Terms of Service"
   },
   "cloudMenu": {
     "manage": "Manage posts",
