@@ -1,8 +1,9 @@
-from pydantic import BaseModel
+from typing import Annotated
+from pydantic import BaseModel, Field
 
 
 class ChannelIn(BaseModel):
-    name: str
+    name: Annotated[str, Field(max_length=100)]
     description: str
 
 

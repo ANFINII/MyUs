@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from typing import Annotated
+from pydantic import BaseModel, Field
 from api.utils.enum.user import GenderType
 
 
@@ -13,13 +14,13 @@ class SignupEmailIn(BaseModel):
 
 class SignupIn(BaseModel):
     token: str
-    email: str
+    email: Annotated[str, Field(max_length=255)]
     username: str
-    nickname: str
+    nickname: Annotated[str, Field(max_length=80)]
     password1: str
     password2: str
-    last_name: str
-    first_name: str
+    last_name: Annotated[str, Field(max_length=50)]
+    first_name: Annotated[str, Field(max_length=50)]
     year: int
     month: int
     day: int

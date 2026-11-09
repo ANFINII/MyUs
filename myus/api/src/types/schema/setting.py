@@ -1,28 +1,30 @@
 from datetime import date
-from pydantic import BaseModel
+from typing import Annotated
+from pydantic import BaseModel, Field
+from api.utils.enum.user import GenderType
 
 
 class SettingProfileIn(BaseModel):
-    email: str
+    email: Annotated[str, Field(max_length=255)]
     username: str
-    nickname: str
-    last_name: str
-    first_name: str
-    gender: str
+    nickname: Annotated[str, Field(max_length=80)]
+    last_name: Annotated[str, Field(max_length=50)]
+    first_name: Annotated[str, Field(max_length=50)]
+    gender: GenderType
     year: int
     month: int
     day: int
-    phone: str
-    postal_code: str
-    prefecture: str
-    city: str
-    street: str
+    phone: Annotated[str, Field(max_length=15)]
+    postal_code: Annotated[str, Field(max_length=255)]
+    prefecture: Annotated[str, Field(max_length=255)]
+    city: Annotated[str, Field(max_length=255)]
+    street: Annotated[str, Field(max_length=255)]
     introduction: str
 
 
 class SettingMyPageIn(BaseModel):
-    email: str
-    tag_manager_id: str
+    email: Annotated[str, Field(max_length=255)]
+    tag_manager_id: Annotated[str, Field(max_length=10)]
     content: str
     is_advertise: bool
 
