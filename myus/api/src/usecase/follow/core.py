@@ -14,7 +14,7 @@ from api.utils.functions.transaction import atomic_result
 def get_follows(user_id: int, search: str, limit: int) -> Result[list[FollowUserDTO], FatalError]:
     repo = injector.get(FollowInterface)
     user_repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(follower_id=user_id, search=search), SortOption(), limit)
+    ids_ret = repo.get_ids(FilterOption(follower_id=user_id, is_follow=True, search=search), SortOption(), limit)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -46,7 +46,7 @@ def get_follows(user_id: int, search: str, limit: int) -> Result[list[FollowUser
 def get_followers(user_id: int, search: str, limit: int) -> Result[list[FollowUserDTO], FatalError]:
     repo = injector.get(FollowInterface)
     user_repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(following_id=user_id, search=search), SortOption(), limit)
+    ids_ret = repo.get_ids(FilterOption(following_id=user_id, is_follow=True, search=search), SortOption(), limit)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
