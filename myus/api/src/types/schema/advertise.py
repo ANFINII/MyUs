@@ -1,18 +1,19 @@
 from datetime import date, datetime
 from pydantic import BaseModel
+from api.src.types.schema.common import Title, Url
 
 
 class AdvertiseIn(BaseModel):
-    title: str
-    url: str
+    title: Title
+    url: Url
     content: str
     publish: bool
     period: date
 
 
 class AdvertiseUpdateIn(BaseModel):
-    title: str
-    url: str
+    title: Title
+    url: Url
     content: str
     publish: bool
     period: date

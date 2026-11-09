@@ -75,7 +75,7 @@ export default function ChatCreate(props: Props): React.JSX.Element {
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label={t('manage.form.title')} name="title" required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <DatePicker label={t('manage.form.period')} name="period" value={values.period} required error={error} onChange={handlePeriod} />
         </VStack>

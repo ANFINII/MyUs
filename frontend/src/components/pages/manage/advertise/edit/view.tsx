@@ -65,8 +65,8 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
-          <Input label={t('manage.form.title')} name="title" value={values.title} required error={error} onChange={handleInput} />
-          <Input label={t('manage.form.url')} name="url" type="url" value={values.url} required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.url')} name="url" type="url" maxLength={200} value={values.url} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.image')} accept="image/*" required error={error} onChange={handleImage} />
           <InputFile label={t('manage.form.video')} accept="video/*" onChange={handleVideo} />
