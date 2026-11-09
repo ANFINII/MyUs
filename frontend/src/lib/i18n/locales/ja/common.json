@@ -365,6 +365,8 @@
       "cancelNotice": "解約後は次回更新日まで現在のプランをご利用いただけます。",
       "cancelReserved": "解約予約完了。{{periodEnd}} まで利用可能です",
       "cancelScheduled": "{{periodEnd}} に解約されます",
+      "revoke": "解約を取り消す",
+      "revoked": "解約を取り消しました",
       "changed": "プランを変更しました",
       "changeTitle": "プラン変更",
       "successTitle": "決済完了",

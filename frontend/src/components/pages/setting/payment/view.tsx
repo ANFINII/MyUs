@@ -5,7 +5,7 @@ import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { PaymentSubscriptionOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
-import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
+import { postPaymentCancel, postPaymentCancelRevoke, postPaymentCheckout } from 'api/internal/payment'
 import { FetchError, Locale } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
@@ -71,6 +71,19 @@ export default function Payment(props: Props): React.JSX.Element {
     await queryClient.invalidateQueries({ queryKey: queryKeys.paymentSubscription })
   }
 
+  const handleRevoke = async () => {
+    handleLoading(true)
+    const ret = await postPaymentCancelRevoke()
+    handleLoading(false)
+    if (ret.isErr()) {
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      return
+    }
+    handleToast(t('setting.payment.revoked'), false)
+    await queryClient.invalidateQueries({ queryKey: queryKeys.settingMypage })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.paymentSubscription })
+  }
+
   return (
     <Main metaTitle={t('setting.payment.title')} toast={toast}>
       <div className={style.payment}>
@@ -81,6 +94,12 @@ export default function Payment(props: Props): React.JSX.Element {
             <PlanCard key={plan.name} plan={plan} active={currentPlan === plan.name} disabled={isPaid} loading={selectedPlan === plan.name} onPurchase={handlePurchase} />
           ))}
         </div>
+
+        {isCanceled && (
+          <div className={style.actions}>
+            <Button color="green" name={t('setting.payment.revoke')} loading={loading} onClick={handleRevoke} />
+          </div>
+        )}
 
         {isPaid && !isCanceled && (
           <div className={style.actions}>
