@@ -5,7 +5,7 @@ import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { PaymentSubscriptionOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
-import { postPaymentCancel, postPaymentCancelRevoke, postPaymentCheckout } from 'api/internal/payment'
+import { postPaymentCancel, postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod } from 'api/internal/payment'
 import { FetchError, Locale } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
@@ -38,7 +38,9 @@ export default function Payment(props: Props): React.JSX.Element {
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
   const isPaid = currentPlan !== 'Free'
   const isCanceled = isPaid && subscription.isCanceled
-  const notice = isCanceled ? t('setting.payment.cancelScheduled', { periodEnd: new Date(subscription.periodEnd).toLocaleDateString(i18n.language) }) : ''
+  const isPastDue = isPaid && subscription.isPastDue
+  const cancelNotice = isCanceled ? t('setting.payment.cancelScheduled', { periodEnd: new Date(subscription.periodEnd).toLocaleDateString(i18n.language) }) : ''
+  const notice = isPastDue ? t('setting.payment.pastDue') : cancelNotice
 
   const handleChange = () => router.push('/setting/payment/change')
 
@@ -48,6 +50,18 @@ export default function Payment(props: Props): React.JSX.Element {
     const ret = await postPaymentCheckout({ plan, locale })
     if (ret.isErr()) {
       setSelectedPlan('')
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      return
+    }
+    router.push(ret.value.url)
+  }
+
+  const handleMethod = async () => {
+    handleLoading(true)
+    const locale = router.locale === 'en' ? Locale.En : Locale.Ja
+    const ret = await postPaymentMethod({ locale })
+    if (ret.isErr()) {
+      handleLoading(false)
       handleToast(toErrorMessage(ret.error, FetchError.Post), true)
       return
     }
@@ -104,6 +118,7 @@ export default function Payment(props: Props): React.JSX.Element {
         {isPaid && !isCanceled && (
           <div className={style.actions}>
             <Button color="green" name={t('setting.payment.change')} onClick={handleChange} />
+            <Button color="blue" name={t('setting.payment.method')} loading={loading} onClick={handleMethod} />
             <Button color="red" name={t('setting.payment.cancel')} onClick={handleModal} />
           </div>
         )}

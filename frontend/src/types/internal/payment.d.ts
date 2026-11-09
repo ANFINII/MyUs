@@ -2,6 +2,7 @@ import { Locale } from 'utils/constants/enum'
 
 export interface PaymentSubscriptionOut {
   isCanceled: boolean
+  isPastDue: boolean
   periodEnd: string
 }
 
@@ -16,6 +17,14 @@ export interface PaymentCheckoutOut {
 
 export interface PaymentChangeIn {
   plan: string
+}
+
+export interface PaymentMethodIn {
+  locale: Locale
+}
+
+export interface PaymentMethodOut {
+  url: string
 }
 
 export interface PaymentCancelOut {

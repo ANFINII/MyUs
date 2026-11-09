@@ -368,6 +368,8 @@
       "cancelScheduled": "{{periodEnd}} に解約されます",
       "revoke": "解約を取り消す",
       "revoked": "解約を取り消しました",
+      "method": "支払い方法を変更",
+      "pastDue": "お支払いに失敗しています。支払い方法をご確認ください",
       "changed": "プランを変更しました",
       "changeTitle": "プラン変更",
       "successTitle": "決済完了",
