@@ -3,7 +3,7 @@ from datetime import datetime
 from api.modules.logger import log
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
-from api.src.domain.interface.message.data import MessageData as MessageDomainData
+from api.src.domain.interface.message.data import MessageData
 from api.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
@@ -78,7 +78,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         return Result.err(author_ret.err_value)
 
     author = author_ret.ok_value
-    new_message = MessageDomainData(
+    new_message = MessageData(
         id=0,
         ulid="",
         author_id=user_id,

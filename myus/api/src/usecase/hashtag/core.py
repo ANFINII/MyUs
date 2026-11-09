@@ -1,6 +1,6 @@
 from api.modules.logger import log
 from api.src.domain.interface.hashtag.data import HashtagData
-from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType as HashtagSortType
+from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
@@ -13,7 +13,7 @@ from api.utils.enum.media import MediaType
 @Result.shield_exception()
 def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
     repo = injector.get(HashtagInterface)
-    ids_ret = repo.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=HashtagSortType.NAME))
+    ids_ret = repo.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=SortType.NAME))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
