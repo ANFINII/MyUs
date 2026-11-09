@@ -7,7 +7,7 @@ from api.utils.enum.media import MediaType
 
 
 class SortType(Enum):
-    CREATED = auto()
+    ID = auto()
     NICKNAME = auto()
 
 
@@ -23,12 +23,12 @@ class FilterOption:
 @dataclass(frozen=True, slots=True)
 class SortOption:
     is_asc: bool = False
-    sort_type: SortType = SortType.CREATED
+    sort_type: SortType = SortType.ID
 
 
 class UserInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption | None = None, limit: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
