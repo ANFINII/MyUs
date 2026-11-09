@@ -8,7 +8,6 @@ from api.src.domain.interface.user.interface import SortType
 from api.utils.enum.media import MediaType
 
 
-# Django model -> dataclass
 def convert_data(user: User) -> UserAllData:
     assert hasattr(user, "profile"), "Profile is required"
     assert hasattr(user, "mypage"), "Mypage is required"
@@ -109,7 +108,6 @@ def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[B
             assert_never(media_type)
 
 
-# dataclass -> Django model
 def marshal_user_data(data: UserData) -> User:
     return User(
         id=data.id if data.id != 0 else None,
