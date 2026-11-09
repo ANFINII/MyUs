@@ -3,7 +3,7 @@ from datetime import datetime
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.event.data import PaymentEventData, ProviderSubscriptionData
 from api.utils.enum.i18n import Locale
-from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, PlanChangeError, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, PlanChangeError, RevokeError, WebhookVerifyError
 
 
 @dataclass(frozen=True, slots=True)
@@ -84,6 +84,20 @@ class CancelFailed:
 
 
 type CancelResult = CancelSuccess | CancelFailed
+
+
+@dataclass(frozen=True, slots=True)
+class RevokeSuccess:
+    subscription: ProviderSubscriptionData
+
+
+@dataclass(frozen=True, slots=True)
+class RevokeFailed:
+    error: RevokeError
+    message: str
+
+
+type RevokeResult = RevokeSuccess | RevokeFailed
 
 
 @dataclass(frozen=True, slots=True)

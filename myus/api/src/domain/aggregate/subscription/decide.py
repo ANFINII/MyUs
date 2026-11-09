@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import assert_never
-from api.src.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
+from api.src.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRevoked, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
 from api.src.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionDetail, SubscriptionState
 from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
 from api.utils.common.result import Result, ValidateError, ValidationError
@@ -48,7 +48,10 @@ def accept_provider_state(state: SubscriptionState | None, provider: ProviderSub
             assert_never(provider.status)
 
     if detail.canceled_at != state.detail.canceled_at:
-        events.append(SubscriptionCancellationScheduled(canceled_at=detail.canceled_at))
+        if detail.canceled_at == datetime.min.replace(tzinfo=timezone.utc):
+            events.append(SubscriptionCancellationRevoked())
+        else:
+            events.append(SubscriptionCancellationScheduled(canceled_at=detail.canceled_at))
     return Result.ok(events)
 
 

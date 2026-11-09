@@ -6,10 +6,10 @@ from api.modules.logger import log
 from api.src.adapter.external.payment.stripe._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_period_end, stripe_price_id
 from api.src.adapter.external.payment.stripe._type import stripe_event_type
 from api.src.domain.interface.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent
-from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.common.result import FatalError, Result
-from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PlanChangeError, WebhookEventType, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PlanChangeError, RevokeError, WebhookEventType, WebhookVerifyError
 
 
 class StripeProvider(PaymentInterface):
@@ -81,6 +81,23 @@ class StripeProvider(PaymentInterface):
             canceled_at=datetime.now(timezone.utc),
             period_end=stripe_period_end(subscription),
         ))
+
+    @Result.shield_exception()
+    def revoke_cancellation(self, external_id: str) -> Result[RevokeResult, FatalError]:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
+            subscription = stripe.Subscription.modify(external_id, cancel_at_period_end=False)
+        except stripe.InvalidRequestError as e:
+            log.warning("Stripe subscription not found for revoke", external_id=external_id, exc=e)
+            return Result.ok(RevokeFailed(error=RevokeError.NOT_FOUND, message=str(e)))
+        except stripe.APIConnectionError as e:
+            log.error("Stripe network error on revoke", exc=e)
+            return Result.ok(RevokeFailed(error=RevokeError.NETWORK_ERROR, message=str(e)))
+        except stripe.StripeError as e:
+            log.error("Stripe revoke error", exc=e)
+            return Result.ok(RevokeFailed(error=RevokeError.PROVIDER_REJECTED, message=str(e)))
+
+        return Result.ok(RevokeSuccess(subscription=convert_stripe_subscription(subscription)))
 
     @Result.shield_exception()
     def change_plan(self, external_id: str, product_code: str) -> Result[PlanChangeResult, FatalError]:

@@ -9,7 +9,7 @@ from api.src.domain.interface.payment.event.data import PaymentEventData
 from api.src.domain.interface.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from api.src.domain.interface.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from api.src.domain.interface.payment.payout.interface import PayoutInterface
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PlanChangeResult, PlanChangeSuccess, RedirectUrls, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, WebhookVerifyResult
 from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
@@ -175,6 +175,42 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
         log.info("Payment cancel succeeded", user_id=user_id, external_id=subscription.external_id)
 
     return Result.ok(cancellation)
+
+
+@Result.shield_exception()
+def revoke_cancellation(user_id: int) -> Result[RevokeResult, InputError]:
+    subscription_ret = get_subscription(user_id)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
+
+    subscription = subscription_ret.ok_value
+    if subscription is None:
+        return Result.err(NotFoundError("error.subscriptionNotFound"))
+
+    if subscription.canceled_at == datetime.min.replace(tzinfo=timezone.utc):
+        return Result.err(ValidationError("error.cancellationNotScheduled"))
+
+    customer_repo = injector.get(PaymentCustomerInterface)
+    customers_ret = customer_repo.bulk_get([subscription.payment_customer_id])
+    if customers_ret.is_err:
+        return Result.err(customers_ret.err_value)
+
+    customers = customers_ret.ok_value
+    repo = get_payment_repository(customers[0].provider)
+    revoke_ret = repo.revoke_cancellation(subscription.external_id)
+    if revoke_ret.is_err:
+        return Result.err(revoke_ret.err_value)
+
+    revoke = revoke_ret.ok_value
+    if isinstance(revoke, RevokeSuccess):
+        save_ret = atomic_result(lambda: save_provider_subscription_data(revoke.subscription, datetime.now(timezone.utc)))
+        if save_ret.is_err:
+            log.error("Payment cancel revoke not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
+            return Result.err(FatalError("Payment cancel revoke not saved"))
+
+        log.info("Payment cancel revoked", user_id=user_id, external_id=subscription.external_id)
+
+    return Result.ok(revoke)
 
 
 @Result.shield_exception()

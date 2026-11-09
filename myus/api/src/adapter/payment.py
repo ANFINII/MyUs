@@ -4,10 +4,10 @@ from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
 from api.src.adapter.auth import auth_check
-from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PlanChangeFailed, PlanChangeSuccess, WebhookVerified, WebhookVerifyFailed
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, WebhookVerified, WebhookVerifyFailed
 from api.src.types.schema.common import ErrorOut, ErrorType
 from api.src.types.schema.payment import PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentSubscriptionOut, PaymentWebhookOut
-from api.src.usecase.payment.core import cancel_subscription, change_plan, create_checkout, get_subscription, receive_payment_event, verify_webhook
+from api.src.usecase.payment.core import cancel_subscription, change_plan, create_checkout, get_subscription, receive_payment_event, revoke_cancellation, verify_webhook
 from api.utils.common.result import FatalError, NotFoundError, ValidationError
 from api.utils.enum.payment import PaymentProvider, WebhookVerifyError
 
@@ -133,6 +133,38 @@ class PaymentAPI:
             case CancelFailed(error=error, message=message):
                 log.error("Payment cancel failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.cancelFailed")
+
+    @staticmethod
+    @router.post("/cancel/revoke", response={200: None, 400: ErrorOut, 500: ErrorOut})
+    def revoke(request: HttpRequest):
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        revoke_ret = revoke_cancellation(user_id)
+        if revoke_ret.is_err:
+            message = revoke_ret.err_value.message
+            match revoke_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(revoke_ret.err_value)
+
+        revoke = revoke_ret.ok_value
+        match revoke:
+            case RevokeSuccess():
+                return 200, None
+            case RevokeFailed(error=error, message=message):
+                log.error("Payment cancel revoke failed", error=error.value, message=message)
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.cancellationRevokeFailed")
 
     @staticmethod
     @router.post("/change", response={200: None, 400: ErrorOut, 500: ErrorOut})

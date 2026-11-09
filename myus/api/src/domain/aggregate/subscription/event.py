@@ -42,6 +42,11 @@ class SubscriptionCancellationScheduled:
 
 
 @dataclass(frozen=True, slots=True)
+class SubscriptionCancellationRevoked:
+    pass
+
+
+@dataclass(frozen=True, slots=True)
 class SubscriptionCancellationRequested:
     pass
 
@@ -57,7 +62,7 @@ class SubscriptionEnded:
     canceled_at: datetime
 
 
-type SubscriptionEvent = SubscriptionOpened | SubscriptionActivated | SubscriptionRenewed | SubscriptionPlanChanged | SubscriptionPaymentPastDue | SubscriptionCancellationScheduled | SubscriptionCancellationRequested | SubscriptionCancellationFailed | SubscriptionEnded
+type SubscriptionEvent = SubscriptionOpened | SubscriptionActivated | SubscriptionRenewed | SubscriptionPlanChanged | SubscriptionPaymentPastDue | SubscriptionCancellationScheduled | SubscriptionCancellationRevoked | SubscriptionCancellationRequested | SubscriptionCancellationFailed | SubscriptionEnded
 
 
 SUBSCRIPTION_EVENT_CLASSES: dict[str, type[Any]] = {
@@ -67,6 +72,7 @@ SUBSCRIPTION_EVENT_CLASSES: dict[str, type[Any]] = {
     "Subscription.PlanChanged.V1": SubscriptionPlanChanged,
     "Subscription.PaymentPastDue.V1": SubscriptionPaymentPastDue,
     "Subscription.CancellationScheduled.V1": SubscriptionCancellationScheduled,
+    "Subscription.CancellationRevoked.V1": SubscriptionCancellationRevoked,
     "Subscription.CancellationRequested.V1": SubscriptionCancellationRequested,
     "Subscription.CancellationFailed.V1": SubscriptionCancellationFailed,
     "Subscription.Ended.V1": SubscriptionEnded,
