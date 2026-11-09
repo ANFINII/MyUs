@@ -1,6 +1,7 @@
+from api.src.domain.interface.notification.data import NotificationContentData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.src.injectors.container import injector
-from api.src.types.dto.notification import NotificationContentData, NotificationItemDTO, NotificationDTO
+from api.src.types.dto.notification import NotificationItemDTO, NotificationDTO
 from api.src.usecase.notification._convert import get_notification_data, get_notification_user_map_data, get_user_enabled_types_data
 from api.utils.common.result import FatalError, Result
 

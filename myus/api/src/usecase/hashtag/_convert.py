@@ -1,5 +1,5 @@
 import re
-from api.src.domain.interface.ng_word.interface import FilterOption as NgWordFilterOption, NgWordInterface, SortOption as NgWordSortOption
+from api.src.domain.interface.ng_word.interface import FilterOption, NgWordInterface, SortOption
 from api.src.injectors.container import injector
 from api.utils.common.result import FatalError, Result
 
@@ -11,7 +11,7 @@ ALLOWED_PATTERN = re.compile(r"^[ぁ-んァ-ヶー一-龯a-zA-Z]+$")
 @Result.shield_exception()
 def get_ng_words_data() -> Result[list[str], FatalError]:
     repo = injector.get(NgWordInterface)
-    ids_ret = repo.get_ids(NgWordFilterOption(), NgWordSortOption())
+    ids_ret = repo.get_ids(FilterOption(), SortOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

@@ -1,5 +1,5 @@
 from api.modules.logger import log
-from api.src.domain.interface.message.data import MessageData as MessageDomainData
+from api.src.domain.interface.message.data import MessageData
 from api.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
@@ -10,7 +10,7 @@ from api.utils.enum.notification import NotificationObjectType, NotificationType
 
 
 @Result.shield_exception()
-def get_message_data(message_ulid: str) -> Result[MessageDomainData | None, FatalError]:
+def get_message_data(message_ulid: str) -> Result[MessageData | None, FatalError]:
     repo = injector.get(MessageInterface)
     ids_ret = repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption())
     if ids_ret.is_err:
@@ -30,7 +30,7 @@ def get_message_data(message_ulid: str) -> Result[MessageDomainData | None, Fata
 
 
 @Result.shield_exception()
-def save_message_data(data: MessageDomainData) -> Result[None, FatalError]:
+def save_message_data(data: MessageData) -> Result[None, FatalError]:
     repo = injector.get(MessageInterface)
     ret = repo.bulk_save([data])
     if ret.is_err:
@@ -40,7 +40,7 @@ def save_message_data(data: MessageDomainData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def delete_message_data(data: MessageDomainData, user_id: int) -> Result[None, FatalError]:
+def delete_message_data(data: MessageData, user_id: int) -> Result[None, FatalError]:
     # 返信の場合はNotificationも削除
     if data.parent_id is not None:
         notification_repo = injector.get(NotificationInterface)
