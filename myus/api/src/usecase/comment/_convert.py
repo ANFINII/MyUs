@@ -48,7 +48,19 @@ def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    notification_ret = delete_notification_data(NotificationObjectType.COMMENT, [data.id])
+    reply_ids: list[int] = []
+    if data.parent_id is None:
+        ids_ret = repo.get_ids(FilterOption(type_no=CommentTypeNo(data.type_no), object_id=data.object_id, is_parent=False), SortOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        replies_ret = repo.bulk_get(ids_ret.ok_value)
+        if replies_ret.is_err:
+            return Result.err(replies_ret.err_value)
+
+        reply_ids = [r.id for r in replies_ret.ok_value if r.parent_id == data.id]
+
+    notification_ret = delete_notification_data(NotificationObjectType.COMMENT, [data.id, *reply_ids])
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
