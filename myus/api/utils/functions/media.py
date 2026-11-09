@@ -13,7 +13,7 @@ from api.utils.common.result import Result, ValidationError
 from api.utils.constants.upload import IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_FORMATS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
 from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
-from api.utils.functions.file import advertise_image_path, advertise_video_path, avatar_path, comic_path, image_path, musics_path, video_path
+from api.utils.functions.file import advertise_image_path, advertise_video_path, avatar_path, comic_path, file_extension, image_path, musics_path, video_path
 
 
 type UploadType = ImageUpload | MediaUpload
@@ -118,15 +118,16 @@ def probe_formats(path: str) -> set[str]:
 
 def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
     filename = file.name or "upload"
+    extension = file_extension(filename)
     match upload_type:
         case ImageUpload():
-            path = image_upload_path(upload_type, ulid, filename)
+            path = image_upload_path(upload_type, ulid, extension)
         case MediaUpload.VIDEO:
-            path = video_path(upload_type, ulid, filename)
+            path = video_path(upload_type, ulid, extension)
         case MediaUpload.ADVERTISE:
-            path = advertise_video_path(ulid, filename)
+            path = advertise_video_path(ulid, extension)
         case MediaUpload.MUSIC:
-            path = musics_path(ulid, filename)
+            path = musics_path(ulid, extension)
             if is_conversion(filename):
                 return save_converted_mp3(file, path)
         case _:
@@ -134,15 +135,15 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
     return default_storage.save(path, file)
 
 
-def image_upload_path(upload_type: ImageUpload, ulid: str, filename: str) -> str:
+def image_upload_path(upload_type: ImageUpload, ulid: str, extension: str) -> str:
     match upload_type:
         case ImageUpload.USER | ImageUpload.CHANNEL:
-            return avatar_path(upload_type, ulid, filename)
+            return avatar_path(upload_type, ulid, extension)
         case ImageUpload.VIDEO | ImageUpload.BLOG | ImageUpload.COMIC | ImageUpload.PICTURE:
-            return image_path(upload_type, ulid, filename)
+            return image_path(upload_type, ulid, extension)
         case ImageUpload.COMIC_PAGE:
-            return comic_path(ulid, filename)
+            return comic_path(ulid, extension)
         case ImageUpload.ADVERTISE:
-            return advertise_image_path(ulid, filename)
+            return advertise_image_path(ulid, extension)
         case _:
             assert False, f"未対応のUploadType: {upload_type}"
