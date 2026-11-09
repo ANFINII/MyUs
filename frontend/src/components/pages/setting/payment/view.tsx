@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
+import { PaymentSubscriptionOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
 import { FetchError, Locale } from 'utils/constants/enum'
@@ -19,10 +20,11 @@ import { plans } from './plans'
 
 interface Props {
   mypage: MypageOut
+  subscription: PaymentSubscriptionOut
 }
 
 export default function Payment(props: Props): React.JSX.Element {
-  const { mypage } = props
+  const { mypage, subscription } = props
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -35,6 +37,8 @@ export default function Payment(props: Props): React.JSX.Element {
   const currentPlan = mypage.plan
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
   const isPaid = currentPlan !== 'Free'
+  const isCanceled = isPaid && subscription.isCanceled
+  const notice = isCanceled ? t('setting.payment.cancelScheduled', { periodEnd: new Date(subscription.periodEnd).toLocaleDateString(i18n.language) }) : ''
 
   const handleChange = () => router.push('/setting/payment/change')
 
@@ -64,12 +68,13 @@ export default function Payment(props: Props): React.JSX.Element {
     const periodEnd = new Date(ret.value.periodEnd).toLocaleDateString(i18n.language)
     handleToast(t('setting.payment.cancelReserved', { periodEnd }), false)
     await queryClient.invalidateQueries({ queryKey: queryKeys.settingMypage })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.paymentSubscription })
   }
 
   return (
     <Main metaTitle={t('setting.payment.title')} toast={toast}>
       <div className={style.payment}>
-        <CurrentBanner planName={currentPlan} />
+        <CurrentBanner planName={currentPlan} notice={notice} />
 
         <div className={style.plans}>
           {purchasable.map((plan) => (
@@ -77,7 +82,7 @@ export default function Payment(props: Props): React.JSX.Element {
           ))}
         </div>
 
-        {isPaid && (
+        {isPaid && !isCanceled && (
           <div className={style.actions}>
             <Button color="green" name={t('setting.payment.change')} onClick={handleChange} />
             <Button color="red" name={t('setting.payment.cancel')} onClick={handleModal} />

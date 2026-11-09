@@ -23,6 +23,7 @@ import {
 } from 'api/internal/manage/get'
 import { getBlog, getChat, getComic, getMusic, getPicture, getVideo } from 'api/internal/media/detail'
 import { getBlogs, getChats, getComics, getHome, getMusics, getPictures, getRecommend, getVideos } from 'api/internal/media/list'
+import { getPaymentSubscription } from 'api/internal/payment'
 import { getSettingMypage, getSettingNotification, getSettingProfile } from 'api/internal/setting'
 import { getFollow, getFollower, getUser, getUserPage, getUserPageAdvertises, getUserPageMedia } from 'api/internal/user'
 
@@ -60,6 +61,7 @@ export const followersQuery = (params: SearchParams) => queryOptions({ queryKey:
 export const settingProfileQuery = () => queryOptions({ queryKey: queryKeys.settingProfile, queryFn: () => toQuery(getSettingProfile()), refetchOnMount: false })
 export const settingMypageQuery = () => queryOptions({ queryKey: queryKeys.settingMypage, queryFn: () => toQuery(getSettingMypage()), refetchOnMount: false })
 export const settingNotificationQuery = () => queryOptions({ queryKey: queryKeys.settingNotification, queryFn: () => toQuery(getSettingNotification()), refetchOnMount: false })
+export const paymentSubscriptionQuery = () => queryOptions({ queryKey: queryKeys.paymentSubscription, queryFn: () => toQuery(getPaymentSubscription()), refetchOnMount: false })
 
 export const manageVideosQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.manageVideos(params), queryFn: () => toQuery(getManageVideos(params)), refetchOnMount: false })

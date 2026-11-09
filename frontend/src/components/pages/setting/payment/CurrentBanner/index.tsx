@@ -3,10 +3,11 @@ import style from './CurrentBanner.module.scss'
 
 interface Props {
   planName: string
+  notice: string
 }
 
 export default function CurrentBanner(props: Props): React.JSX.Element {
-  const { planName } = props
+  const { planName, notice } = props
 
   const { t } = useTranslation()
 
@@ -14,6 +15,7 @@ export default function CurrentBanner(props: Props): React.JSX.Element {
     <div className={style.current}>
       <span className={style.label}>{t('setting.payment.currentPlan')}</span>
       <span className={style.plan}>{planName}</span>
+      {notice !== '' && <span className={style.notice}>{notice}</span>}
     </div>
   )
 }

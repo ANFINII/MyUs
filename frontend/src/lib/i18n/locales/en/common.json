@@ -366,6 +366,7 @@
       "cancelConfirm": "Are you sure you want to cancel?",
       "cancelNotice": "You can keep using your current plan until the next renewal date.",
       "cancelReserved": "Cancellation scheduled. You can use your plan until {{periodEnd}}",
+      "cancelScheduled": "Your plan will be canceled on {{periodEnd}}",
       "changed": "Your plan has been changed",
       "changeTitle": "Change plan",
       "successTitle": "Payment complete",

@@ -51,7 +51,7 @@ export default function PaymentChange(props: Props): React.JSX.Element {
   return (
     <Main metaTitle={t('setting.payment.changeTitle')} toast={toast}>
       <div className={style.change}>
-        <CurrentBanner planName={currentPlanName} />
+        <CurrentBanner planName={currentPlanName} notice="" />
 
         <div className={style.plans}>
           {plans.map((plan) => (

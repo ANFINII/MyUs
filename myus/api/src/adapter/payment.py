@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
@@ -5,8 +6,8 @@ from api.modules.logger import log
 from api.src.adapter.auth import auth_check
 from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PlanChangeFailed, PlanChangeSuccess, WebhookVerified, WebhookVerifyFailed
 from api.src.types.schema.common import ErrorOut, ErrorType
-from api.src.types.schema.payment import PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
-from api.src.usecase.payment.core import cancel_subscription, change_plan, create_checkout, receive_payment_event, verify_webhook
+from api.src.types.schema.payment import PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentSubscriptionOut, PaymentWebhookOut
+from api.src.usecase.payment.core import cancel_subscription, change_plan, create_checkout, get_subscription, receive_payment_event, verify_webhook
 from api.utils.common.result import FatalError, NotFoundError, ValidationError
 from api.utils.enum.payment import PaymentProvider, WebhookVerifyError
 
@@ -15,6 +16,28 @@ class PaymentAPI:
     """料金プランAPI"""
 
     router = Router()
+
+    @staticmethod
+    @router.get("/subscription", response={200: PaymentSubscriptionOut, 400: ErrorOut, 500: ErrorOut})
+    def subscription(request: HttpRequest):
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        subscription_ret = get_subscription(user_id)
+        if subscription_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        subscription = subscription_ret.ok_value
+        if subscription is None:
+            return 200, PaymentSubscriptionOut(is_canceled=False, period_end=datetime.min.replace(tzinfo=timezone.utc))
+
+        is_canceled = subscription.canceled_at != datetime.min.replace(tzinfo=timezone.utc)
+        return 200, PaymentSubscriptionOut(is_canceled=is_canceled, period_end=subscription.current_period_end)
 
     @staticmethod
     @router.post("/checkout", response={200: PaymentCheckoutOut, 400: ErrorOut, 500: ErrorOut})
