@@ -5,13 +5,8 @@ from api.utils.functions.convert.audio_converter import is_conversion
 from api.utils.functions.index import new_ulid
 
 
-FILENAME_STEM_MAX_LENGTH = 50
-FILENAME_SUFFIX_MAX_LENGTH = 10
-
-
 def unique_filename(filename: str) -> str:
-    path = Path(filename)
-    return f"{new_ulid()}_{path.stem[:FILENAME_STEM_MAX_LENGTH]}{path.suffix[:FILENAME_SUFFIX_MAX_LENGTH]}"
+    return f"{new_ulid()}{Path(filename).suffix.lower()}"
 
 
 def avatar_path(type: ImageUpload, ulid: str, filename: str) -> str:
