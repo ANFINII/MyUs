@@ -1,7 +1,20 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from enum import Enum, auto
 from api.src.domain.interface.advertise.data import AdvertiseData
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption
 from api.utils.common.result import FatalError, Result
+
+
+class SortType(Enum):
+    ID = auto()
+    CREATED = auto()
+
+
+@dataclass(frozen=True, slots=True)
+class SortOption:
+    is_asc: bool = False
+    sort_type: SortType = SortType.ID
 
 
 class AdvertiseInterface(ABC):
