@@ -3,13 +3,14 @@ from datetime import datetime, timezone
 from typing import Any, assert_never
 from django.conf import settings
 from api.modules.logger import log
-from api.src.adapter.external.payment.stripe._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_period_end, stripe_price_id
+from api.src.adapter.external.payment.stripe._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_locale, stripe_period_end, stripe_price_id
 from api.src.adapter.external.payment.stripe._type import stripe_event_type
 from api.src.domain.interface.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent
-from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PaymentMethodSessionResult, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.common.result import FatalError, Result
-from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PlanChangeError, RevokeError, WebhookEventType, WebhookVerifyError
+from api.utils.enum.i18n import Locale
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentMethodSessionError, PaymentProvider, PlanChangeError, RevokeError, WebhookEventType, WebhookVerifyError
 
 
 class StripeProvider(PaymentInterface):
@@ -132,6 +133,28 @@ class StripeProvider(PaymentInterface):
         stripe.api_key = settings.STRIPE_SECRET_KEY
         subscription = stripe.Subscription.retrieve(external_id)
         return Result.ok(convert_stripe_subscription(subscription))
+
+    @Result.shield_exception()
+    def create_payment_method_session(self, customer_id: str, return_url: str, locale: Locale) -> Result[PaymentMethodSessionResult, FatalError]:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
+            session = stripe.billing_portal.Session.create(
+                customer=customer_id,
+                return_url=return_url,
+                locale=stripe_locale(locale),
+                flow_data={"type": "payment_method_update", "after_completion": {"type": "redirect", "redirect": {"return_url": return_url}}},
+            )
+        except stripe.InvalidRequestError as e:
+            log.warning("Stripe customer not found for payment method", customer_id=customer_id, exc=e)
+            return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.NOT_FOUND, message=str(e)))
+        except stripe.APIConnectionError as e:
+            log.error("Stripe network error on payment method", exc=e)
+            return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.NETWORK_ERROR, message=str(e)))
+        except stripe.StripeError as e:
+            log.error("Stripe payment method error", exc=e)
+            return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.PROVIDER_REJECTED, message=str(e)))
+
+        return Result.ok(PaymentMethodSessionCreated(redirect_url=session.url))
 
 
 def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> tuple[str, PaymentEventContent] | None:

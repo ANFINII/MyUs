@@ -9,7 +9,7 @@ from api.src.domain.interface.payment.event.data import PaymentEventData
 from api.src.domain.interface.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from api.src.domain.interface.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from api.src.domain.interface.payment.payout.interface import PayoutInterface
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, WebhookVerifyResult
 from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
@@ -255,6 +255,32 @@ def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputE
         log.info("Payment plan changed", user_id=user_id, external_id=subscription.external_id, plan=plan_name)
 
     return Result.ok(change)
+
+
+@Result.shield_exception()
+def create_payment_method_session(user_id: int, locale: Locale) -> Result[PaymentMethodSessionResult, FindError]:
+    subscription_ret = get_subscription(user_id)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
+
+    subscription = subscription_ret.ok_value
+    if subscription is None:
+        return Result.err(NotFoundError("error.subscriptionNotFound"))
+
+    customer_repo = injector.get(PaymentCustomerInterface)
+    customers_ret = customer_repo.bulk_get([subscription.payment_customer_id])
+    if customers_ret.is_err:
+        return Result.err(customers_ret.err_value)
+
+    customer = customers_ret.ok_value[0]
+    return_url = f"{settings.FRONTEND_URL}{locale_path(locale)}/setting/payment"
+    repo = get_payment_repository(customer.provider)
+    session_ret = repo.create_payment_method_session(customer.external_id, return_url, locale)
+    if session_ret.is_err:
+        return Result.err(session_ret.err_value)
+
+    session = session_ret.ok_value
+    return Result.ok(session)
 
 
 @Result.shield_exception()

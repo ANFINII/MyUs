@@ -60,6 +60,7 @@
     "cancelFailed": "Failed to cancel the subscription. Please try again later",
     "cancellationNotScheduled": "No cancellation is scheduled",
     "cancellationRevokeFailed": "Failed to undo the cancellation. Please try again later",
+    "paymentMethodFailed": "Could not open the payment method page. Please try again later",
     "planChangeFailed": "Failed to change the plan. Please try again later",
     "planChangeSame": "This is your current plan",
     "planChangeToFree": "To switch to the free plan, please cancel your subscription",

@@ -12,7 +12,15 @@ class PaymentChangeIn(BaseModel):
     plan: str
 
 
+class PaymentMethodIn(BaseModel):
+    locale: Locale
+
+
 class PaymentCheckoutOut(BaseModel):
+    url: str
+
+
+class PaymentMethodOut(BaseModel):
     url: str
 
 
@@ -27,4 +35,5 @@ class PaymentCancelOut(BaseModel):
 
 class PaymentSubscriptionOut(BaseModel):
     is_canceled: bool
+    is_past_due: bool
     period_end: datetime

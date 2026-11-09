@@ -2,10 +2,10 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PlanChangeResult, RevokeResult, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.common.result import FatalError, Result
-from api.utils.enum.i18n import Currency
+from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, SubscriptionStatus
 
 
@@ -40,6 +40,9 @@ class FakePayment(PaymentInterface):
 
     def get_subscription(self, external_id: str) -> Result[ProviderSubscriptionData, FatalError]:
         return Result.ok(self.subscriptions[external_id])
+
+    def create_payment_method_session(self, customer_id: str, return_url: str, locale: Locale) -> Result[PaymentMethodSessionResult, FatalError]:
+        raise NotImplementedError
 
 
 def provider_subscription(external_id: str, user_ulid: str, product_code: str, status: SubscriptionStatus) -> ProviderSubscriptionData:
