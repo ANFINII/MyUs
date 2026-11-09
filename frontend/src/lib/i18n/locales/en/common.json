@@ -265,6 +265,7 @@
       "nickname": "Display name",
       "birthday": "Date of birth",
       "gender": "Gender",
+      "agreement": "By creating an account, you agree to the following.",
       "submit": "Sign up"
     },
     "reset": {
