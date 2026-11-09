@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from pydantic import BaseModel
+from api.src.types.schema.common import Title
 from api.utils.enum.media import MediaType
 
 
@@ -8,7 +9,7 @@ class VideoIn(BaseModel):
     category_ulid: str
     publish: bool
     publish_at: datetime
-    title: str
+    title: Title
     content: str
 
 
@@ -17,7 +18,7 @@ class MusicIn(BaseModel):
     category_ulid: str
     publish: bool
     publish_at: datetime
-    title: str
+    title: Title
     content: str
     lyric: str
     download: bool
@@ -28,7 +29,7 @@ class BlogIn(BaseModel):
     category_ulid: str
     publish: bool
     publish_at: datetime
-    title: str
+    title: Title
     content: str
     richtext: str
     is_promotion: bool
@@ -39,7 +40,7 @@ class ComicIn(BaseModel):
     category_ulid: str
     publish: bool
     publish_at: datetime
-    title: str
+    title: Title
     content: str
 
 
@@ -48,7 +49,7 @@ class PictureIn(BaseModel):
     category_ulid: str
     publish: bool
     publish_at: datetime
-    title: str
+    title: Title
     content: str
 
 
@@ -57,14 +58,14 @@ class ChatIn(BaseModel):
     category_ulid: str
     publish: bool
     publish_at: datetime
-    title: str
+    title: Title
     content: str
     period: date
 
 
 class VideoUpdateIn(BaseModel):
     category_ulid: str
-    title: str
+    title: Title
     content: str
     publish: bool
     publish_at: datetime
@@ -72,7 +73,7 @@ class VideoUpdateIn(BaseModel):
 
 class MusicUpdateIn(BaseModel):
     category_ulid: str
-    title: str
+    title: Title
     content: str
     lyric: str
     download: bool
@@ -82,7 +83,7 @@ class MusicUpdateIn(BaseModel):
 
 class BlogUpdateIn(BaseModel):
     category_ulid: str
-    title: str
+    title: Title
     content: str
     richtext: str
     is_promotion: bool
@@ -92,7 +93,7 @@ class BlogUpdateIn(BaseModel):
 
 class ComicUpdateIn(BaseModel):
     category_ulid: str
-    title: str
+    title: Title
     content: str
     publish: bool
     publish_at: datetime
@@ -100,7 +101,7 @@ class ComicUpdateIn(BaseModel):
 
 class PictureUpdateIn(BaseModel):
     category_ulid: str
-    title: str
+    title: Title
     content: str
     publish: bool
     publish_at: datetime
@@ -108,7 +109,7 @@ class PictureUpdateIn(BaseModel):
 
 class ChatUpdateIn(BaseModel):
     category_ulid: str
-    title: str
+    title: Title
     content: str
     period: date
     publish: bool

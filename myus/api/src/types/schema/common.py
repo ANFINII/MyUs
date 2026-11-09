@@ -22,6 +22,10 @@ class SuccessOut(BaseModel):
 
 
 MAX_OFFSET = 10000
+TITLE_MAX_LENGTH = 100
+URL_MAX_LENGTH = 500
 
 Limit = Annotated[int, Field(ge=1, le=PAGE_SIZE)]
 Offset = Annotated[int, Field(ge=0, le=MAX_OFFSET)]
+Title = Annotated[str, Field(max_length=TITLE_MAX_LENGTH)]
+Url = Annotated[str, Field(max_length=URL_MAX_LENGTH)]
