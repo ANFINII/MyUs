@@ -12,7 +12,7 @@ PASSWORD_MAX_LENGTH = 64
 
 # バリデーション関数定義
 def has_username(text: str) -> bool:
-    if re.fullmatch(r"^[a-zA-Z0-9_]+$", text):
+    if re.fullmatch(r"^[a-zA-Z0-9_]{1,20}$", text):
         return False
     return True
 

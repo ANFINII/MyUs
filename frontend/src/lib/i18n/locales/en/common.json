@@ -23,7 +23,7 @@
     "urlInvalid": "URL must start with https",
     "emailMismatch": "The email address does not match",
     "emailTaken": "This email address is already registered",
-    "usernameInvalid": "Username can only contain letters and numbers",
+    "usernameInvalid": "Username must be up to 20 letters and numbers",
     "usernameTaken": "This username is already registered",
     "nicknameTaken": "This display name is already registered",
     "lastNameInvalid": "Last name cannot contain numbers",
