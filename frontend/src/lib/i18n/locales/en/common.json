@@ -155,7 +155,9 @@
     "recommend": "Trending",
     "follow": "Following",
     "channel": "Channels",
-    "userpolicy": "Terms of Service"
+    "userpolicy": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "commerce": "Specified Commercial Transactions Act"
   },
   "cloudMenu": {
     "manage": "Manage posts",
@@ -538,6 +540,92 @@
         "title": "Article 4. Advertising and Affiliate Links",
         "p1": "You are free to include advertising, such as affiliate links, in your blogs.",
         "p2": "If your blog contains advertising, turn on \"Contains promotion\" on the create or edit screen. The post will show \"This post contains promotions\" so readers can read it with confidence."
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "collect": {
+        "title": "Information We Collect",
+        "content": ""
+      },
+      "purpose": {
+        "title": "Purpose of Use",
+        "content": ""
+      },
+      "thirdParty": {
+        "title": "Disclosure to Third Parties",
+        "content": ""
+      },
+      "external": {
+        "title": "Use of External Services",
+        "content": ""
+      },
+      "security": {
+        "title": "Security",
+        "content": ""
+      },
+      "request": {
+        "title": "Requests for Disclosure, Correction, or Deletion",
+        "content": ""
+      },
+      "contact": {
+        "title": "Contact",
+        "content": ""
+      },
+      "revision": {
+        "title": "Changes to This Policy",
+        "content": ""
+      }
+    },
+    "commerce": {
+      "title": "Specified Commercial Transactions Act",
+      "seller": {
+        "label": "Seller",
+        "content": ""
+      },
+      "representative": {
+        "label": "Representative",
+        "content": ""
+      },
+      "address": {
+        "label": "Address",
+        "content": ""
+      },
+      "phone": {
+        "label": "Phone",
+        "content": ""
+      },
+      "email": {
+        "label": "Email",
+        "content": ""
+      },
+      "price": {
+        "label": "Price",
+        "content": ""
+      },
+      "extraFee": {
+        "label": "Additional fees",
+        "content": ""
+      },
+      "payment": {
+        "label": "Payment method",
+        "content": ""
+      },
+      "paymentTiming": {
+        "label": "Payment timing",
+        "content": ""
+      },
+      "delivery": {
+        "label": "Delivery",
+        "content": ""
+      },
+      "cancel": {
+        "label": "Cancellation and refunds",
+        "content": ""
+      },
+      "environment": {
+        "label": "System requirements",
+        "content": ""
       }
     },
     "knowledge": {

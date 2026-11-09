@@ -3,6 +3,8 @@ import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
 import ExImage from 'components/parts/ExImage'
 import IconArrow from 'components/parts/Icon/Arrow'
+import IconCredit from 'components/parts/Icon/Credit'
+import IconDocument from 'components/parts/Icon/Document'
 import IconFile from 'components/parts/Icon/File'
 import IconGlobe from 'components/parts/Icon/Globe'
 import IconGrid from 'components/parts/Icon/Grid'
@@ -44,6 +46,8 @@ export default function SideMenu(props: Props): React.JSX.Element {
 
         <ul className={style.footer}>
           <NavItem label={t('sideMenu.userpolicy')} icon={<IconFile size="1.5em" type="earmark" />} className={style.item} onClick={handleClick('/menu/userpolicy')} />
+          <NavItem label={t('sideMenu.privacy')} icon={<IconDocument size="1.5em" />} className={style.item} onClick={handleClick('/menu/privacy')} />
+          <NavItem label={t('sideMenu.commerce')} icon={<IconCredit size="1.5em" />} className={style.item} onClick={handleClick('/menu/commerce')} />
           <NavItem label="Knowledge Base" icon={<IconGlobe size="1.5em" />} className={style.item} onClick={handleClick('/menu/knowledge')} />
         </ul>
       </nav>

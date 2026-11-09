@@ -52,6 +52,8 @@ export const routeTree = rootRoute.addChildren([
   page('/menu/follower', () => import('components/pages/menu/follower'), followersLoader),
   page('/menu/knowledge', () => import('components/pages/menu/knowledge')),
   page('/menu/userpolicy', () => import('components/pages/menu/userpolicy')),
+  page('/menu/privacy', () => import('components/pages/menu/privacy')),
+  page('/menu/commerce', () => import('components/pages/menu/commerce')),
 
   page('/account/login', () => import('components/pages/account/login')),
   page('/account/signup', () => import('components/pages/account/signup')),
