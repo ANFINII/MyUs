@@ -1,7 +1,7 @@
 from dataclasses import replace
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import assert_never
-from api.src.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
+from api.src.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRevoked, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
 from api.src.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionDetail, SubscriptionState
 from api.src.domain.interface.es.data import EventEnvelope
 from api.utils.common.result import HistoryCorruptedError, Result
@@ -43,6 +43,10 @@ def apply(state: SubscriptionState | None, envelope: EventEnvelope[SubscriptionE
             return Result.ok(replace(state, detail=replace(state.detail, canceled_at=canceled_at), seq=seq, last_occurred_at=occurred_at))
         case ActiveSubscription() | PastDueSubscription(), SubscriptionCancellationScheduled(canceled_at=canceled_at):
             return Result.ok(replace(state, detail=replace(state.detail, canceled_at=canceled_at), seq=seq, last_occurred_at=occurred_at, cancellation_request_id=""))
+        case IncompleteSubscription(), SubscriptionCancellationRevoked():
+            return Result.ok(replace(state, detail=replace(state.detail, canceled_at=datetime.min.replace(tzinfo=timezone.utc)), seq=seq, last_occurred_at=occurred_at))
+        case ActiveSubscription() | PastDueSubscription(), SubscriptionCancellationRevoked():
+            return Result.ok(replace(state, detail=replace(state.detail, canceled_at=datetime.min.replace(tzinfo=timezone.utc)), seq=seq, last_occurred_at=occurred_at, cancellation_request_id=""))
         case ActiveSubscription() | PastDueSubscription(), SubscriptionCancellationRequested():
             return Result.ok(replace(state, seq=seq, cancellation_request_id=str(envelope.event_id)))
         case ActiveSubscription() | PastDueSubscription(), SubscriptionCancellationFailed():

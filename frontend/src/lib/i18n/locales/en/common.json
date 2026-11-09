@@ -58,6 +58,8 @@
     "fileTooLarge": "The file is too large",
     "checkoutFailed": "Failed to start the payment",
     "cancelFailed": "Failed to cancel the subscription. Please try again later",
+    "cancellationNotScheduled": "No cancellation is scheduled",
+    "cancellationRevokeFailed": "Failed to undo the cancellation. Please try again later",
     "planChangeFailed": "Failed to change the plan. Please try again later",
     "planChangeSame": "This is your current plan",
     "planChangeToFree": "To switch to the free plan, please cancel your subscription",

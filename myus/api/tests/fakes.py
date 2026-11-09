@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.event.data import ProviderSubscriptionData
-from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PlanChangeResult, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PlanChangeResult, RevokeResult, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.i18n import Currency
@@ -31,6 +31,9 @@ class FakePayment(PaymentInterface):
         if isinstance(self.cancel_result, CancelSuccess) and external_id in self.subscriptions:
             self.subscriptions[external_id] = replace(self.subscriptions[external_id], canceled_at=self.cancel_result.canceled_at, current_period_end=self.cancel_result.period_end)
         return Result.ok(self.cancel_result)
+
+    def revoke_cancellation(self, external_id: str) -> Result[RevokeResult, FatalError]:
+        raise NotImplementedError
 
     def change_plan(self, external_id: str, product_code: str) -> Result[PlanChangeResult, FatalError]:
         raise NotImplementedError

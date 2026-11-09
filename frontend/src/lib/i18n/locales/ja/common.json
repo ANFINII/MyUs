@@ -58,6 +58,8 @@
     "fileTooLarge": "ファイルサイズが大きすぎます",
     "checkoutFailed": "決済セッションの作成に失敗しました",
     "cancelFailed": "解約処理に失敗しました。時間をおいて再度お試しください",
+    "cancellationNotScheduled": "解約の予定はありません",
+    "cancellationRevokeFailed": "解約の取り消しに失敗しました。時間をおいて再度お試しください",
     "planChangeFailed": "プランの変更に失敗しました。時間をおいて再度お試しください",
     "planChangeSame": "今のプランと同じです",
     "planChangeToFree": "無料プランにするときは解約してください",
