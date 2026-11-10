@@ -167,56 +167,51 @@ def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> Result[None, 
 1. 複数のフィールド・複数のデータにまたがる不変条件がある（例: 検索タグの数・名前の重複）
 2. そのデータを作る経路がいくつもあり、それぞれで確かめると漏れが出る
 
-そのときもクラスにメソッドとして持たせず、Data はそのままにして、**ルールを確かめてから Data を作る関数を domain に置く**。
+そのときもクラスにメソッドとして持たせず、Data はそのままにして、**ルールを確かめる関数を domain の `validation.py` に置く**。決まりは `docs/backend.md` の「Validation（ドメインのルール）」に書く。
 
 ### 置き場所
 
-ルールは domain の外（adapter・usecase）に置かない。Event Sourcing でない集約も、`domain/aggregate/<集約>/decide.py` に置く。
+ルールは domain の外（adapter・usecase）に置かない。
 
 | ファイル | 置くもの |
 |---|---|
-| `domain/aggregate/<集約>/decide.py` | ルールを確かめて、保存する Data を決める関数。I/O を持たない |
-| `domain/interface/<集約>/data.py` | Data（今のまま。メソッドは持たない） |
-| `usecase/<集約>/core.py` | 取得 → `decide.py` の関数 → 保存の段取りだけ。ルールは持たない |
+| `domain/interface/<ドメイン>/validation.py` | ルールを確かめる関数 `validate_data`（1 つのファイルに複数あるときは `validate_xxx_data`）と、ルールに使う定数。I/O を持たない |
+| `domain/interface/<ドメイン>/data.py` | Data（今のまま。メソッドは持たない） |
+| `usecase/<ドメイン>/core.py` | 取得 → 保存する Data を組み立てる → `validate_xxx_data` → 保存の段取りだけ。ルールは持たない |
 
-- `decide.py` は interface（Data）と utils だけを import する。adapter の型（`SearchTagIn` などの schema）は受け取らず、usecase で Data に詰め替えてから渡す
+- `entity` ではなく `interface` に置くのは、usecase が import してよいのは interface までだから
+- 引数は保存する Data、戻り値は `Result[None, ValidationError]`。usecase は入力から保存する Data を組み立ててから呼び、作成と更新で同じ関数を通す
+- `validation.py` は Data と utils だけを import する。adapter の型（`SearchTagIn` などの schema）は受け取らず、usecase で Data に詰め替えてから渡す
 - adapter の schema（`Field(max_length=30)` など）は入力の形を確かめるものとして残してよい。ただし同じルールを domain でも必ず確かめる
-- DB を見ないと決まらないルール（カテゴリがある・NG ワードを含まないなど）も domain が持つ。DB を読むのは usecase・adapter で、読んだ結果を domain の関数に渡す（「[DB を見ないと決まらないルール](#db-を見ないと決まらないルール)」を参照）
-- `docs/backend.md` の層の表では、`domain/aggregate` は Event Sourcing の集約だけになっている。この形を取り入れるときは、表を「集約のルール（Event Sourcing の集約は `state.py`・`event.py`・`decide.py`・`apply.py`）」に広げる
+- DB を見ないと決まらないルール（カテゴリがある・NG ワードを含まないなど）も domain が持つ。DB を読むのは usecase・adapter で、読んだ結果を `validation.py` の関数に渡す（「[DB を見ないと決まらないルール](#db-を見ないと決まらないルール)」を参照）
+- 確かめるルールがないデータには作らない（中身が空の関数は置かない）
 
 ### 検索タグの例
 
-`domain/aggregate/search_tag/decide.py`
+`domain/interface/search_tag/validation.py`
 
 ```python
-from dataclasses import replace
 from api.src.domain.interface.search_tag.data import SearchTagData
-from api.utils.common.result import Result, ValidateError, ValidationError
+from api.utils.common.result import Result, ValidationError
 
 
 SEARCH_TAG_MAX_COUNT = 20
 SEARCH_TAG_NAME_MAX_LENGTH = 30
 
 
-def replace_search_tags(current: list[SearchTagData], tags: list[SearchTagData]) -> Result[list[SearchTagData], ValidateError]:
-    if len(tags) > SEARCH_TAG_MAX_COUNT:
+def validate_data(objs: list[SearchTagData]) -> Result[None, ValidationError]:
+    if len(objs) > SEARCH_TAG_MAX_COUNT:
         return Result.err(ValidationError("error.searchTagLimit"))
 
-    names = [tag.name for tag in tags]
-    sequences = [tag.sequence for tag in tags]
+    names = [obj.name for obj in objs]
+    sequences = [obj.sequence for obj in objs]
     if len(names) != len(set(names)) or len(sequences) != len(set(sequences)):
         return Result.err(ValidationError("error.searchTagDuplicate"))
 
     if any(len(name) == 0 or len(name) > SEARCH_TAG_NAME_MAX_LENGTH for name in names):
         return Result.err(ValidationError("error.searchTagNameLength"))
 
-    id_map = {obj.name: obj.id for obj in current}
-    return Result.ok([replace(tag, id=id_map.get(tag.name, 0)) for tag in tags])
-
-
-def select_delete_ids(current: list[SearchTagData], updated: list[SearchTagData]) -> list[int]:
-    keep_ids = {obj.id for obj in updated}
-    return [obj.id for obj in current if obj.id not in keep_ids]
+    return Result.ok(None)
 ```
 
 `usecase/search_tag/core.py`
@@ -224,71 +219,32 @@ def select_delete_ids(current: list[SearchTagData], updated: list[SearchTagData]
 ```python
 @Result.shield_exception()
 def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> Result[None, ValidateError]:
-    current_ret = get_search_tag_data(author_id)
-    if current_ret.is_err:
-        return Result.err(current_ret.err_value)
+    objs_ret = get_search_tag_data(author_id)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
 
-    current = current_ret.ok_value
-    new_tags = [SearchTagData(id=0, author_id=author_id, sequence=tag.sequence, name=tag.name) for tag in tags]
-    updated_ret = replace_search_tags(current, new_tags)
-    if updated_ret.is_err:
-        return Result.err(updated_ret.err_value)
+    objs = objs_ret.ok_value
+    id_map = {obj.name: obj.id for obj in objs}
+    save_objs = [SearchTagData(id=id_map.get(tag.name, 0), author_id=author_id, sequence=tag.sequence, name=tag.name) for tag in tags]
 
-    updated = updated_ret.ok_value
-    delete_ids = select_delete_ids(current, updated)
-    save_ret = atomic_result(lambda: save_search_tag_data(delete_ids, updated))
+    validate_ret = validate_data(save_objs)
+    if validate_ret.is_err:
+        return Result.err(validate_ret.err_value)
+
+    keep_ids = {obj.id for obj in save_objs}
+    delete_ids = [obj.id for obj in objs if obj.id not in keep_ids]
+    save_ret = atomic_result(lambda: save_search_tag_data(delete_ids, save_objs))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
     return Result.ok(None)
 ```
 
-- 1 つのデータのルール（名前の長さ）と、まとめたときのルール（数・重複）を `decide.py` の 1 つの関数で確かめる
-- usecase から `SEARCH_TAG_MAX_COUNT` と `name_map` の処理がなくなり、取得・判断・保存の段取りだけになる
-- `decide.py` は I/O を持たないので、Data を渡すだけで DB なしにテストできる
-- 確かめるルールがないデータには作らない（中身が空の関数は置かない）
-
-### 別案: usecase の `_convert.py` に置く
-
-ルールの関数を domain ではなく、usecase の `_convert.py`（ハッシュタグの `validate_name` と同じ場所）に置く形。
-
-- 置き場所: Event Sourcing の集約なら `domain/aggregate/<集約>/`、それ以外は usecase の `_convert.py`
-- 呼ぶ側は Data を直接作らず、この関数を通して `is_err` なら返す
-
-`usecase/search_tag/_convert.py`
-
-```python
-SEARCH_TAG_MAX_COUNT = 20
-SEARCH_TAG_NAME_MAX_LENGTH = 30
-
-
-def convert_search_tags(author_id: int, current: list[SearchTagData], tags: list[SearchTagIn]) -> Result[list[SearchTagData], ValidateError]:
-    if len(tags) > SEARCH_TAG_MAX_COUNT:
-        return Result.err(ValidationError("error.searchTagLimit"))
-
-    names = [tag.name for tag in tags]
-    sequences = [tag.sequence for tag in tags]
-    if len(names) != len(set(names)) or len(sequences) != len(set(sequences)):
-        return Result.err(ValidationError("error.searchTagDuplicate"))
-
-    if any(len(name) == 0 or len(name) > SEARCH_TAG_NAME_MAX_LENGTH for name in names):
-        return Result.err(ValidationError("error.searchTagNameLength"))
-
-    id_map = {obj.name: obj.id for obj in current}
-    return Result.ok([SearchTagData(id=id_map.get(tag.name, 0), author_id=author_id, sequence=tag.sequence, name=tag.name) for tag in tags])
-```
-
-- 1 つのデータのルール（名前の長さ）と、まとめたときのルール（数・重複）を 1 つの関数で確かめる
-- 確かめるルールがないデータには作らない（中身が空の関数は置かない）
-
-### domain に置く形と別案の比べ方
-
-| 観点 | domain に置く形 | 別案（usecase の `_convert.py`） |
-|---|---|---|
-| ルールの置き場所 | domain に集まる。クリーンアーキテクチャの考え方に合う | usecase に残る |
-| 受け取る型 | Data だけ。usecase で詰め替える手間がある | adapter の `SearchTagIn` をそのまま受け取れる |
-| `docs/backend.md` の変更 | `domain/aggregate` の範囲を広げる必要がある | 今の決まりのままでよい |
-| 向いている場面 | ルールが多い、ほかの usecase からも同じルールを使う | ルールが少なく、1 つの usecase でしか使わない |
+- 1 つのデータのルール（名前の長さ）と、まとめたときのルール（数・重複）を `validate_data` の 1 つの関数で確かめる
+- usecase から `SEARCH_TAG_MAX_COUNT` と個数のチェックがなくなり、取得・組み立て・確かめる・保存の段取りだけになる
+- id の引き継ぎ（名前が同じなら id を引き継ぐ）は保存する Data の組み立てなので usecase に残す。`validation.py` は確かめるだけで、Data を作り変えない
+- `validation.py` は I/O を持たないので、Data を渡すだけで DB なしにテストできる
+- #1265 で数の上限（`error.searchTagLimit`）だけを移した。重複・名前の長さは、FE の i18n にキーを足すときに移す
 
 ## media（マンガ）でやった場合
 
@@ -382,46 +338,46 @@ class Comic:
 
 ### MyUs で使うときの形（domain に置く）
 
-`ComicData` はそのままにして、ルールを `domain/aggregate/comic/decide.py` の関数に集める。作成と更新の usecase は、どちらもこの関数を通す。
+`ComicData` はそのままにして、ルールを `validation.py` の関数に集める。作成と更新の usecase は、どちらもこの関数を通す。
 
-`domain/aggregate/comic/decide.py`
+`domain/interface/media/comic/validation.py`
 
 ```python
-from dataclasses import replace
-from datetime import datetime
-from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.comic.data import ComicData
-from api.utils.common.result import ForbiddenError, Result, ValidationError, WriteError
+from api.utils.common.result import Result, ValidationError
 
 
 COMIC_TITLE_MAX_LENGTH = 100
 
 
-def create_comic(user_id: int, channel: ChannelData, title: str, content: str, image: str, pages: list[str], publish: bool, publish_at: datetime) -> Result[ComicData, WriteError]:
-    if channel.owner_id != user_id:
-        return Result.err(ForbiddenError("Forbidden"))
-
-    comic = ComicData(id=0, ulid="", title=title, content=content, image=image, pages=pages, read=0, like=0, publish=publish, publish_at=publish_at, created=datetime.min, updated=datetime.min, category_ulid="", channel=channel, hashtags=[])
-    return validate_comic(comic)
-
-
-def update_comic(user_id: int, obj: ComicData, title: str, content: str, image: str, publish: bool, publish_at: datetime) -> Result[ComicData, WriteError]:
-    if obj.channel.owner_id != user_id:
-        return Result.err(ForbiddenError("Forbidden"))
-
-    comic = replace(obj, title=title, content=content, image=image, publish=publish, publish_at=publish_at)
-    return validate_comic(comic)
-
-
-def validate_comic(comic: ComicData) -> Result[ComicData, WriteError]:
-    if len(comic.title) > COMIC_TITLE_MAX_LENGTH:
+def validate_data(obj: ComicData) -> Result[None, ValidationError]:
+    if len(obj.title) > COMIC_TITLE_MAX_LENGTH:
         return Result.err(ValidationError("error.titleLength"))
-    if len(comic.pages) == 0:
+    if len(obj.pages) == 0:
         return Result.err(ValidationError("error.comicPageRequired"))
-    return Result.ok(comic)
+    return Result.ok(None)
+
+
+def validate_update_data(current: ComicData, update: ComicData) -> Result[None, ValidationError]:
+    if current.pages != update.pages:
+        return Result.err(ValidationError("error.comicPageNotChangeable"))
+    return Result.ok(None)
 ```
 
-`usecase/manage/media/core.py`（`usecase/media/core.py` の `create_comic` も同じ形になる）
+`domain/interface/media/validation.py`（media で共通のルール）
+
+```python
+from api.src.domain.interface.channel.data import ChannelData
+from api.utils.common.result import ForbiddenError, Result
+
+
+def validate_owner_data(user_id: int, channel: ChannelData) -> Result[None, ForbiddenError]:
+    if channel.owner_id != user_id:
+        return Result.err(ForbiddenError("error.forbidden"))
+    return Result.ok(None)
+```
+
+`usecase/manage/media/core.py`（`usecase/media/core.py` の `create_comic` も同じ形になる。作成では `validate_update_data` を呼ばない）
 
 ```python
 @Result.shield_exception()
@@ -430,32 +386,34 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    obj_ret = get_manage_comic(user_id, ulid)
-    if obj_ret.is_err:
-        return Result.err(obj_ret.err_value)
+    ...  # 今と同じく repo.get_ids → repo.bulk_get で obj を取る
 
-    obj = obj_ret.ok_value
+    owner_ret = validate_owner_data(user_id, obj.channel)
+    if owner_ret.is_err:
+        return Result.err(owner_ret.err_value)
+
     image_path = obj.image if image is None else save_upload(image, ImageUpload.COMIC, obj.channel.ulid)
-    update_ret = update_comic(user_id, obj, input.title, input.content, image_path, input.publish, input.publish_at)
+    update_data = replace(obj, title=input.title, content=input.content, image=image_path, publish=input.publish, publish_at=input.publish_at)
+    update_ret = validate_update_data(obj, update_data)
     if update_ret.is_err:
         return Result.err(update_ret.err_value)
 
-    update_data = update_ret.ok_value
-    category_data_ret = get_category_data(input.category_ulid)
+    validate_ret = validate_data(update_data)
+    if validate_ret.is_err:
+        return Result.err(validate_ret.err_value)
     ...
 ```
 
-- 持ち主・タイトルの長さ・ページの枚数のルールが `decide.py` の 1 か所にまとまり、作成と更新で食い違わなくなる。エラーの文言もそろう
-- 「更新ではページを変えられない」は、`update_comic` が `pages` を引数に取らないことで表す。検索タグの `update` と同じく、変え方のルールは更新の関数に書く
-- 画像ファイルの形式・大きさ（`validate_uploads`）はファイルの中身を読むので、usecase に残す。保存したあとのパス（`str`）だけを `decide.py` に渡す
-- カテゴリがあるかどうかは DB を見ないとわからないが、「カテゴリは必ず要る」というルールは `decide.py` が持つ。usecase が `get_category_data` で読み、その結果を `decide.py` に渡す（「[DB を見ないと決まらないルール](#db-を見ないと決まらないルール)」を参照）
-- 持ち主のチェックはほかの media にもあるので、取り入れるなら `domain/aggregate/media/decide.py` に `check_owner(user_id, channel)` のような共通の関数を置き、各 media の `decide.py` から呼ぶ
-- usecase の例は `get_manage_comic`（持ち主で絞って探す）で取得している。この形にすると、持ち主でないときのエラーは今の `ForbiddenError("error.saveFailed")` ではなく `NotFoundError` になる
-- `error.titleLength`・`error.comicPageRequired` は説明のための仮のキーで、FE の i18n にはまだない
+- 持ち主・タイトルの長さ・ページの枚数のルールが `validation.py` にまとまり、作成と更新で食い違わなくなる。エラーの文言もそろう
+- 「更新ではページを変えられない」は、今の値と新しい値を比べる `validate_update_data` で確かめる。repository に隠れていたルールを domain に出す
+- 持ち主のチェックはほかの media にもあるので、`domain/interface/media/validation.py` に 1 つだけ置き、各 media の作成・更新から呼ぶ。返すのは `ValidationError` ではなく `ForbiddenError`（403）
+- 画像ファイルの形式・大きさ（`validate_uploads`）はファイルの中身を読むので utils に残す。保存したあとのパス（`str`）を Data に入れてから `validate_data` に渡す
+- カテゴリがあるかどうかは DB を見ないとわからないが、「カテゴリは必ず要る」というルールは domain が持つ（「[DB を見ないと決まらないルール](#db-を見ないと決まらないルール)」を参照）
+- `error.titleLength`・`error.comicPageRequired`・`error.comicPageNotChangeable`・`error.forbidden` は説明のための仮のキーで、FE の i18n にはまだない
 
 ### 子のエンティティにする形（recustomer に寄せる）
 
-ページを子のエンティティとして扱い、ページのルールも `decide.py` で確かめる。repository は確かめ済みの Data を保存するだけにして、ルールを持たせない。
+ページを子のエンティティとして扱い、ページのルールも `validation.py` で確かめる。repository は確かめ済みの Data を保存するだけにして、ルールを持たせない。
 
 `domain/interface/media/comic/data.py`
 
@@ -475,47 +433,42 @@ class ComicData:
     ...
 ```
 
-`domain/aggregate/comic/decide.py`
+`domain/interface/media/comic/validation.py`
 
 ```python
-def validate_comic_page(page: ComicPageData) -> Result[ComicPageData, WriteError]:
+def validate_page_data(page: ComicPageData) -> Result[None, ValidationError]:
     if len(page.image) == 0:
         return Result.err(ValidationError("error.comicPageRequired"))
-    return Result.ok(page)
+    return Result.ok(None)
 
 
-def validate_comic(comic: ComicData) -> Result[ComicData, WriteError]:
-    if len(comic.title) > COMIC_TITLE_MAX_LENGTH:
+def validate_data(obj: ComicData) -> Result[None, ValidationError]:
+    if len(obj.title) > COMIC_TITLE_MAX_LENGTH:
         return Result.err(ValidationError("error.titleLength"))
-    if len(comic.pages) == 0:
+    if len(obj.pages) == 0:
         return Result.err(ValidationError("error.comicPageRequired"))
 
-    sequences = [page.sequence for page in comic.pages]
+    sequences = [page.sequence for page in obj.pages]
     if len(sequences) != len(set(sequences)):
         return Result.err(ValidationError("error.comicPageDuplicate"))
 
-    for page in comic.pages:
-        if (ret := validate_comic_page(page)).is_err:
+    for page in obj.pages:
+        if (ret := validate_page_data(page)).is_err:
             return Result.err(ret.err_value)
-    return Result.ok(comic)
+    return Result.ok(None)
 
 
-def update_comic(user_id: int, obj: ComicData, title: str, content: str, image: str, pages: list[ComicPageData], publish: bool, publish_at: datetime) -> Result[ComicData, WriteError]:
-    if obj.channel.owner_id != user_id:
-        return Result.err(ForbiddenError("Forbidden"))
-
-    if {page.id for page in obj.pages} != {page.id for page in pages}:
+def validate_update_data(current: ComicData, update: ComicData) -> Result[None, ValidationError]:
+    if {page.id for page in current.pages} != {page.id for page in update.pages}:
         return Result.err(ValidationError("error.comicPageNotChangeable"))
-
-    comic = replace(obj, title=title, content=content, image=image, pages=pages, publish=publish, publish_at=publish_at)
-    return validate_comic(comic)
+    return Result.ok(None)
 ```
 
-- 1 枚のページのルール（画像がある）は `validate_comic_page`、まとめたときのルール（1 枚以上・`sequence` が重複しない）は `validate_comic` で確かめる。recustomer の子の `_validate` と親の `_validate` の分け方と同じ
-- 「更新ではページを変えられない」は、`update_comic` でページの id の集まりが変わっていないかを確かめる。recustomer の `update` の `old_ids != new_ids` と同じ形で、repository に隠れていたルールを domain に出す
-- この形にすると、並び替えなど id を変えない更新は受け付けられる。ページの追加・削除は、別の関数（例: `add_comic_page`）でルールを決めてから足す
+- 1 枚のページのルール（画像がある）は `validate_page_data`、まとめたときのルール（1 枚以上・`sequence` が重複しない）は `validate_data` で確かめる。recustomer の子の `_validate` と親の `_validate` の分け方と同じ
+- 「更新ではページを変えられない」は、`validate_update_data` でページの id の集まりが変わっていないかを確かめる。recustomer の `update` の `old_ids != new_ids` と同じ形
+- この形にすると、並び替えなど id を変えない更新は受け付けられる。ページの追加・削除を足すときは、そのルールを `validation.py` に足してから usecase で使う
 - repository の `bulk_save` は、新しく作ったマンガかどうかで分けず、`ComicPageData` をそのまま保存する形に直す
-- `error.comicPageDuplicate`・`error.comicPageNotChangeable` は説明のための仮のキーで、FE の i18n にはまだない
+- `error.comicPageDuplicate` は説明のための仮のキーで、FE の i18n にはまだない
 
 ## DB を見ないと決まらないルール
 
@@ -523,28 +476,28 @@ def update_comic(user_id: int, obj: ComicData, title: str, content: str, image: 
 
 | 分けるもの | 置く場所 |
 |---|---|
-| ルール（何を満たせば通るか・だめなときに返すエラー） | domain（`decide.py`） |
+| ルール（何を満たせば通るか・だめなときに返すエラー） | domain（`domain/interface/<ドメイン>/validation.py`） |
 | DB を読む処理 | usecase（`_convert.py` の `get_xxx_data`）と、その先の entity（adapter） |
 | 読んだ値を渡してルールを呼ぶ段取り | usecase（`core.py`） |
 
-- `decide.py` は I/O を持たないまま。DB を読んだ結果を引数で受け取って確かめる
+- `validation.py` は I/O を持たないまま。DB を読んだ結果を引数で受け取って確かめる
 - usecase は値を読んで渡すだけで、`if category_data is None:` のような判定やエラーのキーを書かない
-- 作成と更新など経路がいくつあっても、同じ `decide.py` の関数を通すので、ルールとエラーの文言が食い違わない
+- 作成と更新など経路がいくつあっても、同じ関数を通すので、ルールとエラーの文言が食い違わない
 
 ### 形 1: 読んだ値を渡す（基本）
 
-usecase が DB から読んだ値（なければ `None`・一覧なら `list`）をそのまま domain の関数に渡し、domain が確かめる。
+usecase が DB から読んだ値（なければ `None`・一覧なら `list`）をそのまま `validation.py` の関数に渡し、domain が確かめる。
 
 カテゴリ（今は `usecase/media/core.py`・`usecase/manage/media/core.py` の作成・更新 12 か所に `if category_data is None: return Result.err(ValidationError("error.categoryRequired"))` が書かれている）
 
-`domain/aggregate/media/decide.py`
+`domain/interface/media/validation.py`
 
 ```python
 from api.src.domain.interface.category.data import CategoryData
 from api.utils.common.result import Result, ValidationError
 
 
-def require_category(category: CategoryData | None) -> Result[CategoryData, ValidationError]:
+def validate_category_data(category: CategoryData | None) -> Result[CategoryData, ValidationError]:
     if category is None:
         return Result.err(ValidationError("error.categoryRequired"))
     return Result.ok(category)
@@ -557,28 +510,31 @@ category_data_ret = get_category_data(input.category_ulid)
 if category_data_ret.is_err:
     return Result.err(category_data_ret.err_value)
 
-category_ret = require_category(category_data_ret.ok_value)
+category_ret = validate_category_data(category_data_ret.ok_value)
 if category_ret.is_err:
     return Result.err(category_ret.err_value)
 
 category_data = category_ret.ok_value
 ```
 
+- 「あるかどうか」を確かめる関数は、戻り値を `Result[None, ValidationError]` ではなく、見つかった Data（`Result[CategoryData, ValidationError]`）にする。`None` を返すと usecase 側で `CategoryData | None` のままになり、もう一度 `None` を確かめることになるため
+
 ハッシュタグの名前（今は `usecase/hashtag/_convert.py` の `validate_name` が NG ワードを受け取って確かめている）
 
 - `get_ng_words_data`（DB を読む）は usecase の `_convert.py` に残す
-- `validate_name`（長さ・使える文字・NG ワード）と `HASHTAG_MAX_LENGTH`・`ALLOWED_PATTERN` は `domain/aggregate/hashtag/decide.py` に移す。引数の `ng_words: list[str]` はそのまま。今の形がすでに「読んだ値を渡す」形なので、置き場所を変えるだけでよい
+- `validate_name`（長さ・使える文字・NG ワード）と `HASHTAG_MAX_LENGTH`・`ALLOWED_PATTERN` は `domain/interface/hashtag/validation.py` の `validate_name_data(name: str, ng_words: list[str]) -> Result[None, ValidationError]` に移す。引数の `ng_words` はそのままで、今の形がすでに「読んだ値を渡す」形になっている
+- だめな名前はエラーにせず読み飛ばす今の動きは変えない。usecase は `is_err` なら `continue` する
 
 ### 形 2: Interface を渡す（探す条件そのものがルールのとき）
 
-「同じチャンネルに同じ名前のものがまだない」のように、**どう探すか（FilterOption の条件）** がルールの中身になるときは、形 1 だと条件が usecase に残る。このときは domain の関数が Interface（ABC）を受け取り、探す条件も domain に書く。
+「同じチャンネルに同じ名前のものがまだない」のように、**どう探すか（FilterOption の条件）** がルールの中身になるときは、形 1 だと条件が usecase に残る。このときは `validation.py` の関数が Interface（ABC）を受け取り、探す条件も domain に書く。
 
 ```python
 from api.src.domain.interface.xxx.interface import FilterOption, SortOption, XxxInterface
 from api.utils.common.result import FatalError, Result, ValidationError
 
 
-def check_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Result[None, ValidationError | FatalError]:
+def validate_name_unused_data(repo: XxxInterface, channel_id: int, name: str) -> Result[None, ValidationError | FatalError]:
     ids_ret = repo.get_ids(FilterOption(channel_id=channel_id, name=name), SortOption(), limit=1)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -587,21 +543,17 @@ def check_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Result[
     return Result.ok(None)
 ```
 
-- 実際に DB を読むのは Interface の先の entity（adapter）。domain は Interface（domain/interface）だけを import し、entity・injector は import しない。usecase が `injector.get(XxxInterface)` で取った repo を渡す
+- 実際に DB を読むのは Interface の先の entity（adapter）。`validation.py` は Interface（同じ domain/interface）だけを import し、entity・injector は import しない。usecase が `injector.get(XxxInterface)` で取った repo を渡す
 - テストでは Interface を満たす偽物を渡せば DB なしで確かめられる
 - 探すのに使うメソッドは今ある `get_ids` と `FilterOption` の組み合わせにする。条件が足りないときは FilterOption に足す（ルール専用のメソッドを Repository に作らない）
-- `decide.py` が I/O を持つことになるので、形 1 で書けるときは形 1 にする。今の MyUs にはこの形が要るルールはまだない（`error.nameDuplicate`・`XxxInterface` は説明のための仮の名前）
+- `validation.py` が I/O を持つことになるので、形 1 で書けるときは形 1 にする。今の MyUs にはこの形が要るルールはまだない（`error.nameDuplicate`・`XxxInterface` は説明のための仮の名前）。取り入れるときは `docs/backend.md` の「Validation」に「Interface を受け取ってよい」を足す
 
 ### DB の制約（UniqueConstraint など）との関係
 
 - `subscribe` の `UniqueConstraint(fields=["user", "channel"])` のような DB の制約は、domain のルールをすり抜けたときの最後の守りとして残す
 - 制約に引っかかったとき（`IntegrityError`）に adapter で `ValidationError` に変えて返す形にはしない。Interface は `Result[T, FatalError]` を返す決まりなので、ルールとして利用者に返すエラーは domain の関数（形 1・形 2）で先に確かめる
 
-### `docs/backend.md` との関係
-
-- 層の表では `domain/aggregate` を「I/O を持たない純粋な関数」としている。形 1 はこのままでよい
-- 形 2 を取り入れるときは、表に「Interface を受け取って探す関数は置いてよい（entity・injector は import しない）」を足す
-
 ## 更新履歴
+- 2026-11-11: ルールの置き場所を `domain/aggregate/<集約>/decide.py` から `domain/interface/<ドメイン>/validation.py`（#1265 の決まり）にそろえる。usecase の `_convert.py` に置く別案は、domain に置くと決めたので消す
 - 2026-11-10: DB を見ないと決まらないルールも domain が持つ形（読んだ値を渡す・Interface を渡す）を足す。マンガのカテゴリを usecase に残すとしていたところを直す
 - 2026-11-10: 初版作成
