@@ -181,6 +181,7 @@ def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> Result[None, 
 
 - `decide.py` は interface（Data）と utils だけを import する。adapter の型（`SearchTagIn` などの schema）は受け取らず、usecase で Data に詰め替えてから渡す
 - adapter の schema（`Field(max_length=30)` など）は入力の形を確かめるものとして残してよい。ただし同じルールを domain でも必ず確かめる
+- DB を見ないと決まらないルール（カテゴリがある・NG ワードを含まないなど）も domain が持つ。DB を読むのは usecase・adapter で、読んだ結果を domain の関数に渡す（「[DB を見ないと決まらないルール](#db-を見ないと決まらないルール)」を参照）
 - `docs/backend.md` の層の表では、`domain/aggregate` は Event Sourcing の集約だけになっている。この形を取り入れるときは、表を「集約のルール（Event Sourcing の集約は `state.py`・`event.py`・`decide.py`・`apply.py`）」に広げる
 
 ### 検索タグの例
@@ -447,7 +448,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
 - 持ち主・タイトルの長さ・ページの枚数のルールが `decide.py` の 1 か所にまとまり、作成と更新で食い違わなくなる。エラーの文言もそろう
 - 「更新ではページを変えられない」は、`update_comic` が `pages` を引数に取らないことで表す。検索タグの `update` と同じく、変え方のルールは更新の関数に書く
 - 画像ファイルの形式・大きさ（`validate_uploads`）はファイルの中身を読むので、usecase に残す。保存したあとのパス（`str`）だけを `decide.py` に渡す
-- カテゴリがあるかどうかは DB を見ないとわからないので、usecase に残す（`decide.py` は I/O を持たない）
+- カテゴリがあるかどうかは DB を見ないとわからないが、「カテゴリは必ず要る」というルールは `decide.py` が持つ。usecase が `get_category_data` で読み、その結果を `decide.py` に渡す（「[DB を見ないと決まらないルール](#db-を見ないと決まらないルール)」を参照）
 - 持ち主のチェックはほかの media にもあるので、取り入れるなら `domain/aggregate/media/decide.py` に `check_owner(user_id, channel)` のような共通の関数を置き、各 media の `decide.py` から呼ぶ
 - usecase の例は `get_manage_comic`（持ち主で絞って探す）で取得している。この形にすると、持ち主でないときのエラーは今の `ForbiddenError("error.saveFailed")` ではなく `NotFoundError` になる
 - `error.titleLength`・`error.comicPageRequired` は説明のための仮のキーで、FE の i18n にはまだない
@@ -516,5 +517,91 @@ def update_comic(user_id: int, obj: ComicData, title: str, content: str, image: 
 - repository の `bulk_save` は、新しく作ったマンガかどうかで分けず、`ComicPageData` をそのまま保存する形に直す
 - `error.comicPageDuplicate`・`error.comicPageNotChangeable` は説明のための仮のキーで、FE の i18n にはまだない
 
+## DB を見ないと決まらないルール
+
+カテゴリがある・NG ワードを含まない・同じものがまだない、のように DB を読まないと確かめられないルールも、**ルールを持つのは domain** にする。DB を読む（判定に使う値を取ってくる）のは usecase・adapter でよい。
+
+| 分けるもの | 置く場所 |
+|---|---|
+| ルール（何を満たせば通るか・だめなときに返すエラー） | domain（`decide.py`） |
+| DB を読む処理 | usecase（`_convert.py` の `get_xxx_data`）と、その先の entity（adapter） |
+| 読んだ値を渡してルールを呼ぶ段取り | usecase（`core.py`） |
+
+- `decide.py` は I/O を持たないまま。DB を読んだ結果を引数で受け取って確かめる
+- usecase は値を読んで渡すだけで、`if category_data is None:` のような判定やエラーのキーを書かない
+- 作成と更新など経路がいくつあっても、同じ `decide.py` の関数を通すので、ルールとエラーの文言が食い違わない
+
+### 形 1: 読んだ値を渡す（基本）
+
+usecase が DB から読んだ値（なければ `None`・一覧なら `list`）をそのまま domain の関数に渡し、domain が確かめる。
+
+カテゴリ（今は `usecase/media/core.py`・`usecase/manage/media/core.py` の作成・更新 12 か所に `if category_data is None: return Result.err(ValidationError("error.categoryRequired"))` が書かれている）
+
+`domain/aggregate/media/decide.py`
+
+```python
+from api.src.domain.interface.category.data import CategoryData
+from api.utils.common.result import Result, ValidationError
+
+
+def require_category(category: CategoryData | None) -> Result[CategoryData, ValidationError]:
+    if category is None:
+        return Result.err(ValidationError("error.categoryRequired"))
+    return Result.ok(category)
+```
+
+`usecase/media/core.py`
+
+```python
+category_data_ret = get_category_data(input.category_ulid)
+if category_data_ret.is_err:
+    return Result.err(category_data_ret.err_value)
+
+category_ret = require_category(category_data_ret.ok_value)
+if category_ret.is_err:
+    return Result.err(category_ret.err_value)
+
+category_data = category_ret.ok_value
+```
+
+ハッシュタグの名前（今は `usecase/hashtag/_convert.py` の `validate_name` が NG ワードを受け取って確かめている）
+
+- `get_ng_words_data`（DB を読む）は usecase の `_convert.py` に残す
+- `validate_name`（長さ・使える文字・NG ワード）と `HASHTAG_MAX_LENGTH`・`ALLOWED_PATTERN` は `domain/aggregate/hashtag/decide.py` に移す。引数の `ng_words: list[str]` はそのまま。今の形がすでに「読んだ値を渡す」形なので、置き場所を変えるだけでよい
+
+### 形 2: Interface を渡す（探す条件そのものがルールのとき）
+
+「同じチャンネルに同じ名前のものがまだない」のように、**どう探すか（FilterOption の条件）** がルールの中身になるときは、形 1 だと条件が usecase に残る。このときは domain の関数が Interface（ABC）を受け取り、探す条件も domain に書く。
+
+```python
+from api.src.domain.interface.xxx.interface import FilterOption, SortOption, XxxInterface
+from api.utils.common.result import FatalError, Result, ValidationError
+
+
+def check_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Result[None, ValidationError | FatalError]:
+    ids_ret = repo.get_ids(FilterOption(channel_id=channel_id, name=name), SortOption(), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+    if len(ids_ret.ok_value) > 0:
+        return Result.err(ValidationError("error.nameDuplicate"))
+    return Result.ok(None)
+```
+
+- 実際に DB を読むのは Interface の先の entity（adapter）。domain は Interface（domain/interface）だけを import し、entity・injector は import しない。usecase が `injector.get(XxxInterface)` で取った repo を渡す
+- テストでは Interface を満たす偽物を渡せば DB なしで確かめられる
+- 探すのに使うメソッドは今ある `get_ids` と `FilterOption` の組み合わせにする。条件が足りないときは FilterOption に足す（ルール専用のメソッドを Repository に作らない）
+- `decide.py` が I/O を持つことになるので、形 1 で書けるときは形 1 にする。今の MyUs にはこの形が要るルールはまだない（`error.nameDuplicate`・`XxxInterface` は説明のための仮の名前）
+
+### DB の制約（UniqueConstraint など）との関係
+
+- `subscribe` の `UniqueConstraint(fields=["user", "channel"])` のような DB の制約は、domain のルールをすり抜けたときの最後の守りとして残す
+- 制約に引っかかったとき（`IntegrityError`）に adapter で `ValidationError` に変えて返す形にはしない。Interface は `Result[T, FatalError]` を返す決まりなので、ルールとして利用者に返すエラーは domain の関数（形 1・形 2）で先に確かめる
+
+### `docs/backend.md` との関係
+
+- 層の表では `domain/aggregate` を「I/O を持たない純粋な関数」としている。形 1 はこのままでよい
+- 形 2 を取り入れるときは、表に「Interface を受け取って探す関数は置いてよい（entity・injector は import しない）」を足す
+
 ## 更新履歴
+- 2026-11-10: DB を見ないと決まらないルールも domain が持つ形（読んだ値を渡す・Interface を渡す）を足す。マンガのカテゴリを usecase に残すとしていたところを直す
 - 2026-11-10: 初版作成
