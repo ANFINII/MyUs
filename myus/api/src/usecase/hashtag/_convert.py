@@ -1,11 +1,6 @@
-import re
 from api.src.domain.interface.ng_word.interface import FilterOption, NgWordInterface, SortOption
 from api.src.injectors.container import injector
 from api.utils.common.result import FatalError, Result
-
-
-HASHTAG_MAX_LENGTH = 30
-ALLOWED_PATTERN = re.compile(r"^[ぁ-んァ-ヶー一-龯a-zA-Z]+$")
 
 
 @Result.shield_exception()
@@ -26,15 +21,3 @@ def get_ng_words_data() -> Result[list[str], FatalError]:
 
 def normalize_name(name: str) -> str:
     return name.strip().lstrip("#").lower()
-
-
-def validate_name(name: str, ng_words: list[str]) -> bool:
-    if len(name) == 0:
-        return False
-    if len(name) > HASHTAG_MAX_LENGTH:
-        return False
-    if ALLOWED_PATTERN.match(name) is None:
-        return False
-    if any(ng in name for ng in ng_words):
-        return False
-    return True

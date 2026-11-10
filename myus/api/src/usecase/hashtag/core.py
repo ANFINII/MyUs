@@ -1,11 +1,12 @@
 from api.modules.logger import log
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType
+from api.src.domain.interface.hashtag.validation import validate_name_data
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
 from api.src.usecase.media._convert import get_media_repository
-from api.src.usecase.hashtag._convert import normalize_name, validate_name, get_ng_words_data
+from api.src.usecase.hashtag._convert import normalize_name, get_ng_words_data
 from api.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 
@@ -83,7 +84,8 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
             continue
 
         normalized = normalize_name(h.name)
-        if not validate_name(normalized, ng_words):
+        validate_ret = validate_name_data(normalized, ng_words)
+        if validate_ret.is_err:
             continue
         if normalized in seen_name:
             continue
