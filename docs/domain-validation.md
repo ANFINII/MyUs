@@ -103,7 +103,7 @@ if len(errors) > 0:
 
 ## DB を見ないと決まらないルール
 
-カテゴリがある・NG ワードを含まない・同じものがまだない、のように DB を読まないと確かめられないルールも、**ルールを持つのは domain** にする。DB を読む（判定に使う値を取ってくる）のは usecase・adapter でよい。
+NG ワードを含まない・同じものがまだない、のように DB を読まないと確かめられないルールも、**ルールを持つのは domain** にする。DB を読む（判定に使う値を取ってくる）のは usecase・adapter でよい。
 
 | 分けるもの | 置く場所 |
 |---|---|
@@ -112,43 +112,13 @@ if len(errors) > 0:
 | 読んだ値を渡してルールを呼ぶ段取り | usecase（`core.py`） |
 
 - `validation.py` は I/O を持たないまま。DB を読んだ結果を引数で受け取って確かめる
-- usecase は値を読んで渡すだけで、`if category_data is None:` のような判定やエラーのキーを書かない
+- usecase は値を読んで渡すだけで、判定やエラーのキーを書かない
 - 作成と更新など経路がいくつあっても、同じ関数を通すので、ルールとエラーの文言が食い違わない
+- リクエストにある参照先（カテゴリ・チャンネルの ulid など）を探して見つからないのは、ルールではない。`validation.py` には置かず、探す関数（`get_xxx_data`）で扱う。カテゴリは FE が必ず選ばせていて見つからないことはないので、`get_category_data` が見つからなければ `FatalError` を返す
 
 ### 形 1: 読んだ値を渡す（基本）
 
 usecase が DB から読んだ値（なければ `None`・一覧なら `list`）をそのまま `validation.py` の関数に渡し、domain が確かめる。
-
-カテゴリ（今は `usecase/media/core.py`・`usecase/manage/media/core.py` の作成・更新 12 か所に `if category_data is None: return Result.err(ValidationError("error.categoryRequired"))` が書かれている）
-
-`domain/interface/media/validation.py`
-
-```python
-from api.src.domain.interface.category.data import CategoryData
-from api.utils.common.result import Result, ValidationError
-
-
-def validate_category(category: CategoryData | None) -> Result[CategoryData, ValidationError]:
-    if category is None:
-        return Result.err(ValidationError("error.categoryRequired"))
-    return Result.ok(category)
-```
-
-`usecase/media/core.py`
-
-```python
-category_data_ret = get_category_data(input.category_ulid)
-if category_data_ret.is_err:
-    return Result.err(category_data_ret.err_value)
-
-category_ret = validate_category(category_data_ret.ok_value)
-if category_ret.is_err:
-    return Result.err(category_ret.err_value)
-
-category_data = category_ret.ok_value
-```
-
-- 「あるかどうか」を確かめる関数は、戻り値を `Result[None, ValidationError]` ではなく、見つかった Data（`Result[CategoryData, ValidationError]`）にする。`None` を返すと usecase 側で `CategoryData | None` のままになり、もう一度 `None` を確かめることになるため
 
 ハッシュタグの名前（今は `usecase/hashtag/_convert.py` の `validate_name` が NG ワードを受け取って確かめている）
 
@@ -188,6 +158,7 @@ def validate_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Resu
 - 2026-11-11: Data 1 つでは決まらないルール（数・重複）は `validate(objs)` で list を受け取る形を足す（検索タグ）
 - 2026-11-11: `__post_init__`・ファクトリで確かめない理由と、状態遷移のルール（aggregate の `decide.py`）との分け方を足す
 - 2026-11-11: 作りが決まったので、検討の文章（`_validate`・`_new` のパターン、recustomer との比べ、マンガで試した形など）を消し、決まった形だけにする
+- 2026-11-11: カテゴリの例を消す。参照先が見つからないのはルールではないので、`get_category_data` で `FatalError` にする
 - 2026-11-11: 関数名を `validate_data`（`validate_xxx_data`）から `validate`（`validate_xxx`）にする。ルールを `validation.py` の `validate` に書き、repository の `bulk_save` で保存する前に確かめる形を足す。マンガをこの形にした
 - 2026-11-11: ルールの置き場所を `domain/aggregate/<集約>/decide.py` から `domain/interface/<ドメイン>/validation.py`（#1265 の決まり）にそろえる。usecase の `_convert.py` に置く別案は、domain に置くと決めたので消す
 - 2026-11-10: DB を見ないと決まらないルールも domain が持つ形（読んだ値を渡す・Interface を渡す）を足す。マンガのカテゴリを usecase に残すとしていたところを直す
