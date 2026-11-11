@@ -2,7 +2,6 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.hashtag import HashTag
-from api.db.models.master import NgWord
 from api.src.domain.entity.hashtag._convert import convert_data, marshal_data, marshal_through, get_through_model
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.hashtag.data import HashtagData
@@ -50,8 +49,7 @@ class HashtagRepository(HashtagInterface):
             else:
                 names = [o.name for o in objs]
                 existing_map = {h.name: h.id for h in HashTag.objects.filter(name__in=names)}
-                ng_words = list(NgWord.objects.values_list("word", flat=True))
-                errors = [ret.err_value.message for obj in objs if obj.name not in existing_map and (ret := validate(obj, ng_words)).is_err]
+                errors = [ret.err_value.message for obj in objs if obj.name not in existing_map and (ret := validate(obj)).is_err]
                 if len(errors) > 0:
                     return Result.err(FatalError(f"Invalid Data: {errors}"))
 
