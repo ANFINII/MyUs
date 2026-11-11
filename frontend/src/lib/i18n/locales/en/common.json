@@ -65,7 +65,6 @@
     "planChangeFailed": "Failed to change the plan. Please try again later",
     "planChangeSame": "This is your current plan",
     "planChangeToFree": "To switch to the free plan, please cancel your subscription",
-    "categoryRequired": "Please select a category",
     "publishAtAfterPeriod": "Set the publish date on or before the end of the period"
   },
   "gender": {

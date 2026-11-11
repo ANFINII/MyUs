@@ -5,6 +5,7 @@ from api.src.domain.entity.search_tag._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.interface.search_tag.data import SearchTagData
 from api.src.domain.interface.search_tag.interface import FilterOption, SearchTagInterface, SortOption
+from api.src.domain.interface.search_tag.validation import validate
 from api.utils.common.result import FatalError, Result
 
 
@@ -43,6 +44,10 @@ class SearchTagRepository(SearchTagInterface):
     def bulk_save(self, objs: list[SearchTagData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             return Result.ok([])
+
+        errors = [ret.err_value.message for ret in [validate(objs)] if ret.is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_save_new_ids(models, SEARCH_TAG_FIELDS)

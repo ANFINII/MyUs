@@ -204,6 +204,7 @@ if ret.is_err:
 - `@dataclass(frozen=True, slots=True)`
 - サフィックス: `Data`
 - domain interfaceのdataclassにはフィールドの初期値を設定しない
+- dataclass はフィールドだけを持ち、メソッドを持たない。ルールは `validation.py` の `validate` に書き、repository の `bulk_save` が保存する前に呼ぶ（「Validation（ドメインのルール）」を参照）
 
 ## アーキテクチャ
 
@@ -276,6 +277,28 @@ return Result.ok(new_ids)
   - adapter からも呼ぶ関数（`get_user_data`・`get_channel_data`・`get_search_tag_data`など）は、ほかの usecase から使っていても`core.py`に置く。adapter から呼ばないものだけを`_convert.py`に置く（`get_author_data`・`get_author_map_data`など）
 - domainに触れる補助の関数は`utils`に置かず、usecaseの`_convert.py`に置く
 
+## Validation（ドメインのルール）
+
+目的は「DB に不正なデータを入れない」こと。画面に出すエラー（入力の確かめ・文言）は FE で扱い、BE のルールは画面向けにしない。
+
+- データのルール（長さ・数など）は `domain/interface/<ドメイン>/validation.py` の関数 `validate(obj)` に書く。adapter・usecase に置かない
+  - 名前は `validate`（`_data` を付けない）。1 つのファイルに複数あるときは `validate_xxx` にする
+  - 引数は保存する Data、戻り値は `Result[None, ValidationError]`
+  - 数・重複のように Data 1 つでは決まらないルールだけは、`validate(objs)` で list を受け取る（例：検索タグの 20 個まで）
+  - Data（`data.py`）はフィールドだけを持ち、メソッドを持たない
+  - `validation.py` は Data と utils だけを import し、I/O を持たない
+  - エラーの文言は media（ドメイン）ごとに分けず、`error.titleLength`・`error.pageRequired` のように共通にする。画面には出さない（BE のログにだけ出る）ので、FE の i18n には足さない
+  - ルールに使う定数（`COMIC_TITLE_MAX_LENGTH` など）は同じ `validation.py` に置く
+- repository の `bulk_save` は、保存する前に各 Data を `validate` に通し、だめなら保存せずに `FatalError` を返す
+  - usecase・コマンドなど、どの経路から保存しても必ずルールを通る
+  - Interface の `Result[T, FatalError]` の決まりはそのまま
+  - ここで止まるのは FE をすり抜けた不正なリクエストかバグのときだけなので、500 で返してよい
+- usecase は今までどおり `XxxData(...)`・`replace(...)` で Data を組み立てる。ルールを確かめる処理は書かない
+- DB から読むとき（entity の `convert_data`）は確かめない（読み込みは止めない）
+- adapter の schema（`Field(max_length=...)`）は入力の形を確かめるものとして残してよい。DB に入れてよいかの判断は `validate` が持つ
+- 確かめるルールがない Data には `validation.py` を作らない
+- 例とDB を見ないと決まらないルールは [domain-validation.md](domain-validation.md) を参照
+
 ## パフォーマンス
 
 - `select_related()`/`prefetch_related()`でN+1回避
@@ -324,3 +347,4 @@ uv run ruff check api config --extend-ignore I
 - 2026-11-08: usecaseをドメインごとのディレクトリにし、`core.py`と`_convert.py`に分けることを追記
 - 2026-11-08: `_data` の付く関数の決まり（usecase の `_convert.py` で injector を使う関数は `_data` で終え、取るなら `get`、書き込むなら `create`・`save`・`delete`）を追記
 - 2026-11-08: 層の表に `domain/aggregate`・`adapter/external` を足し、リンターチェックを `mypy api config`・`ruff` にした
+- 2026-11-11: Validation（ドメインのルール）を追記

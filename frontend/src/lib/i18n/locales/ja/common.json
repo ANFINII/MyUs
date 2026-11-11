@@ -65,7 +65,6 @@
     "planChangeFailed": "プランの変更に失敗しました。時間をおいて再度お試しください",
     "planChangeSame": "今のプランと同じです",
     "planChangeToFree": "無料プランにするときは解約してください",
-    "categoryRequired": "カテゴリを選択してください",
     "publishAtAfterPeriod": "公開日時は期間の終わりより前にしてください"
   },
   "gender": {

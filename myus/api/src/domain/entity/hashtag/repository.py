@@ -6,6 +6,7 @@ from api.src.domain.entity.hashtag._convert import convert_data, marshal_data, m
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption, HashtagInterface, SortOption
+from api.src.domain.interface.hashtag.validation import validate
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
 
@@ -48,6 +49,10 @@ class HashtagRepository(HashtagInterface):
             else:
                 names = [o.name for o in objs]
                 existing_map = {h.name: h.id for h in HashTag.objects.filter(name__in=names)}
+                errors = [ret.err_value.message for obj in objs if obj.name not in existing_map and (ret := validate(obj)).is_err]
+                if len(errors) > 0:
+                    return Result.err(FatalError(f"Invalid Data: {errors}"))
+
                 new_models = [marshal_data(o) for o in objs if o.name not in existing_map]
                 for m in new_models:
                     m.save(force_insert=True)
