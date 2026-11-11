@@ -10,12 +10,13 @@ from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.comic.interface import ComicInterface
+from api.src.domain.interface.media.comic.validation import validate_data, validate_update_data
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption
-from api.src.domain.interface.media.validation import validate_category_data
+from api.src.domain.interface.media.validation import validate_owner_data, validate_category_data
 from api.src.domain.interface.message.interface import FilterOption as MessageFilterOption, MessageInterface, SortOption as MessageSortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
@@ -456,13 +457,22 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
+    owner_ret = validate_owner_data(user_id, obj.channel)
+    if owner_ret.is_err:
         log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(ForbiddenError("error.saveFailed"))
+        return Result.err(owner_ret.err_value)
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
+
+    update_ret = validate_update_data(obj, update_data)
+    if update_ret.is_err:
+        return Result.err(update_ret.err_value)
+
+    validate_ret = validate_data(update_data)
+    if validate_ret.is_err:
+        return Result.err(validate_ret.err_value)
 
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:

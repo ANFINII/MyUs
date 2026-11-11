@@ -409,7 +409,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
 - 持ち主のチェックはほかの media にもあるので、`domain/interface/media/validation.py` に 1 つだけ置き、各 media の作成・更新から呼ぶ。返すのは `ValidationError` ではなく `ForbiddenError`（403）
 - 画像ファイルの形式・大きさ（`validate_uploads`）はファイルの中身を読むので utils に残す。保存したあとのパス（`str`）を Data に入れてから `validate_data` に渡す
 - カテゴリがあるかどうかは DB を見ないとわからないが、「カテゴリは必ず要る」というルールは domain が持つ（「[DB を見ないと決まらないルール](#db-を見ないと決まらないルール)」を参照）
-- `error.titleLength`・`error.comicPageRequired`・`error.comicPageNotChangeable`・`error.forbidden` は説明のための仮のキーで、FE の i18n にはまだない
+- この形でマンガを実装した。`error.titleLength`・`error.comicPageRequired`・`error.comicPageNotChangeable`・`error.forbidden` は FE の i18n に足した。持ち主のチェックはまだマンガだけで、ほかの media は今の `"Forbidden"`・`"error.saveFailed"` のまま
 
 ### 子のエンティティにする形（recustomer に寄せる）
 
@@ -554,6 +554,7 @@ def validate_name_unused_data(repo: XxxInterface, channel_id: int, name: str) ->
 - 制約に引っかかったとき（`IntegrityError`）に adapter で `ValidationError` に変えて返す形にはしない。Interface は `Result[T, FatalError]` を返す決まりなので、ルールとして利用者に返すエラーは domain の関数（形 1・形 2）で先に確かめる
 
 ## 更新履歴
+- 2026-11-11: マンガを「MyUs で使うときの形（domain に置く）」で実装したことを書く
 - 2026-11-11: ルールの置き場所を `domain/aggregate/<集約>/decide.py` から `domain/interface/<ドメイン>/validation.py`（#1265 の決まり）にそろえる。usecase の `_convert.py` に置く別案は、domain に置くと決めたので消す
 - 2026-11-10: DB を見ないと決まらないルールも domain が持つ形（読んだ値を渡す・Interface を渡す）を足す。マンガのカテゴリを usecase に残すとしていたところを直す
 - 2026-11-10: 初版作成
