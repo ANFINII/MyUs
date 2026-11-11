@@ -1,7 +1,7 @@
 from api.modules.logger import log
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType
-from api.src.domain.interface.hashtag.validation import validate_name_data
+from api.src.domain.interface.hashtag.validation import validate_name
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
@@ -84,7 +84,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
             continue
 
         normalized = normalize_name(h.name)
-        validate_ret = validate_name_data(normalized, ng_words)
+        validate_ret = validate_name(normalized, ng_words)
         if validate_ret.is_err:
             continue
         if normalized in seen_name:
