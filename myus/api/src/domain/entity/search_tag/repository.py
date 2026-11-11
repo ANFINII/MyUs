@@ -45,9 +45,9 @@ class SearchTagRepository(SearchTagInterface):
         if len(objs) == 0:
             return Result.ok([])
 
-        ret = validate(objs)
-        if ret.is_err:
-            return Result.err(FatalError(f"Invalid Data: {ret.err_value.message}"))
+        errors = [ret.err_value.message for ret in [validate(objs)] if ret.is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_save_new_ids(models, SEARCH_TAG_FIELDS)
