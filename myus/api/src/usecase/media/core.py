@@ -280,7 +280,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
-    new_comic = ComicData(
+    new_data = ComicData(
         id=0,
         ulid="",
         title=input.title,
@@ -307,7 +307,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    create_ret = atomic_result(lambda: create_comic_data(new_comic, category_data))
+    create_ret = atomic_result(lambda: create_comic_data(new_data, category_data))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
