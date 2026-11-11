@@ -59,7 +59,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
 
-    new_video = VideoData(
+    new_data = VideoData(
         id=0,
         ulid="",
         title=input.title,
@@ -87,7 +87,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    create_ret = atomic_result(lambda: create_video_data(new_video, category_data))
+    create_ret = atomic_result(lambda: create_video_data(new_data, category_data))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
@@ -150,7 +150,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
-    new_music = MusicData(
+    new_data = MusicData(
         id=0,
         ulid="",
         title=input.title,
@@ -178,7 +178,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    create_ret = atomic_result(lambda: create_music_data(new_music, category_data))
+    create_ret = atomic_result(lambda: create_music_data(new_data, category_data))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
@@ -215,7 +215,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
-    new_blog = BlogData(
+    new_data = BlogData(
         id=0,
         ulid="",
         title=input.title,
@@ -243,7 +243,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    create_ret = atomic_result(lambda: create_blog_data(new_blog, category_data))
+    create_ret = atomic_result(lambda: create_blog_data(new_data, category_data))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
@@ -344,7 +344,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
-    new_picture = PictureData(
+    new_data = PictureData(
         id=0,
         ulid="",
         title=input.title,
@@ -370,7 +370,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    create_ret = atomic_result(lambda: create_picture_data(new_picture, category_data))
+    create_ret = atomic_result(lambda: create_picture_data(new_data, category_data))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
@@ -406,7 +406,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
     if timezone.localdate(input.publish_at) > input.period:
         return Result.err(ValidationError("error.publishAtAfterPeriod"))
 
-    new_chat = ChatData(
+    new_data = ChatData(
         id=0,
         ulid="",
         title=input.title,
@@ -434,7 +434,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
     if category_data is None:
         return Result.err(ValidationError("error.categoryRequired"))
 
-    create_ret = atomic_result(lambda: create_chat_data(new_chat, category_data))
+    create_ret = atomic_result(lambda: create_chat_data(new_data, category_data))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
