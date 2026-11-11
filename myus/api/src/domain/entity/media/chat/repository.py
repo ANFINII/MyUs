@@ -6,6 +6,7 @@ from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.chat.interface import ChatInterface
+from api.src.domain.interface.media.chat.validation import validate
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.utils.common.result import FatalError, Result
 
@@ -43,6 +44,10 @@ class ChatRepository(ChatInterface):
     def bulk_save(self, objs: list[ChatData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             return Result.ok([])
+
+        errors = [ret.err_value.message for obj in objs if (ret := validate(obj)).is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_save_new_ids(models, CHAT_FIELDS)

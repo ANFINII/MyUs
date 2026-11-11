@@ -6,6 +6,7 @@ from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.music.interface import MusicInterface
+from api.src.domain.interface.media.music.validation import validate
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.utils.common.result import FatalError, Result
 
@@ -39,6 +40,10 @@ class MusicRepository(MusicInterface):
     def bulk_save(self, objs: list[MusicData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             return Result.ok([])
+
+        errors = [ret.err_value.message for obj in objs if (ret := validate(obj)).is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_save_new_ids(models, MUSIC_FIELDS)
