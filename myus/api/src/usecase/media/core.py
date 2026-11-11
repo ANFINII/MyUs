@@ -16,7 +16,7 @@ from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption, SortType
-from api.src.domain.interface.media.validation import validate_category
+from api.src.domain.interface.media.validation import validate_category_data
 from api.src.injectors.container import injector
 from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
 from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
@@ -85,7 +85,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    category_ret = validate_category(category_data)
+    category_ret = validate_category_data(category_data)
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
 
@@ -179,7 +179,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    category_ret = validate_category(category_data)
+    category_ret = validate_category_data(category_data)
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
 
@@ -247,7 +247,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    category_ret = validate_category(category_data)
+    category_ret = validate_category_data(category_data)
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
 
@@ -314,7 +314,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    category_ret = validate_category(category_data)
+    category_ret = validate_category_data(category_data)
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
 
@@ -380,7 +380,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    category_ret = validate_category(category_data)
+    category_ret = validate_category_data(category_data)
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
 
@@ -447,7 +447,7 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    category_ret = validate_category(category_data)
+    category_ret = validate_category_data(category_data)
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
 
