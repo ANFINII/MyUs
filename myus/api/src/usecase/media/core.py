@@ -16,8 +16,7 @@ from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption, SortType
-from api.src.domain.interface.media.comic.validation import validate_data
-from api.src.domain.interface.media.validation import validate_owner_data, validate_category_data
+from api.src.domain.interface.media.validation import validate_category_data
 from api.src.injectors.container import injector
 from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
 from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
@@ -287,10 +286,9 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
     if channel is None:
         return Result.err(NotFoundError("error.channelNotFound"))
 
-    owner_ret = validate_owner_data(user_id, channel)
-    if owner_ret.is_err:
+    if channel.owner_id != user_id:
         log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
-        return Result.err(owner_ret.err_value)
+        return Result.err(ForbiddenError("Forbidden"))
 
     new_comic = ComicData(
         id=0,
@@ -309,10 +307,6 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
         category_ulid="",
         hashtags=[],
     )
-
-    validate_ret = validate_data(new_comic)
-    if validate_ret.is_err:
-        return Result.err(validate_ret.err_value)
 
     repo = injector.get(ComicInterface)
     category_data_ret = get_category_data(input.category_ulid)

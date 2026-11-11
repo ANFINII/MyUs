@@ -66,11 +66,7 @@
     "planChangeSame": "This is your current plan",
     "planChangeToFree": "To switch to the free plan, please cancel your subscription",
     "categoryRequired": "Please select a category",
-    "publishAtAfterPeriod": "Set the publish date on or before the end of the period",
-    "forbidden": "You don't have permission to do this",
-    "titleLength": "Title must be 100 characters or less",
-    "comicPageRequired": "Please select at least one page",
-    "comicPageNotChangeable": "Pages cannot be changed"
+    "publishAtAfterPeriod": "Set the publish date on or before the end of the period"
   },
   "gender": {
     "Male": "Male",
