@@ -56,7 +56,7 @@ def bulk_save(self, objs: list[ComicData]) -> Result[list[int], FatalError]:
 
 ## Data 1 つでは決まらないルール（数・重複）
 
-検索タグの「20 個まで」のように、保存する Data をまとめて見ないと決まらないルールだけは、`validate` が list を受け取る。`bulk_save` では 1 回だけ呼ぶ。エラーは 1 件なので、文言は list にせずそのまま出す。
+検索タグの「20 個まで」のように、保存する Data をまとめて見ないと決まらないルールだけは、`validate` が list を受け取る。`bulk_save` では 1 回だけ呼ぶが、書き方はマンガと同じ `errors` の形にそろえる。
 
 `domain/interface/search_tag/validation.py`
 
@@ -73,9 +73,9 @@ def validate(objs: list[SearchTagData]) -> Result[None, ValidationError]:
 `domain/entity/search_tag/repository.py`
 
 ```python
-ret = validate(objs)
-if ret.is_err:
-    return Result.err(FatalError(f"Invalid Data: {ret.err_value.message}"))
+errors = [ret.err_value.message for ret in [validate(objs)] if ret.is_err]
+if len(errors) > 0:
+    return Result.err(FatalError(f"Invalid Data: {errors}"))
 ```
 
 - `bulk_save` に渡す list が、ルールの対象をすべて含んでいるときだけ使える。検索タグは `update_search_tags` が作者の検索タグをすべて `bulk_save` に渡している
