@@ -99,7 +99,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
         log.error("User not found", user_id=user_id)
         return Result.err(NotFoundError("error.createFailed"))
 
-    new_advertise = AdvertiseData(
+    new_data = AdvertiseData(
         id=0,
         ulid="",
         author_id=user_id,
@@ -116,7 +116,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
         updated=datetime.min,
     )
 
-    new_ids_ret = repo.bulk_save([new_advertise])
+    new_ids_ret = repo.bulk_save([new_data])
     if new_ids_ret.is_err:
         return Result.err(new_ids_ret.err_value)
 
