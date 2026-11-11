@@ -54,6 +54,32 @@ def bulk_save(self, objs: list[ComicData]) -> Result[list[int], FatalError]:
 - エラーの文言は media（ドメイン）ごとに分けず、`error.titleLength`・`error.pageRequired` のように共通にする。画面には出さない（BE のログにだけ出る）ので、FE の i18n には足さない
 - DB から読むとき（entity の `convert_data`）は確かめないので、ルールを満たさない既存のデータがあっても読み込みは止まらない
 
+## Data 1 つでは決まらないルール（数・重複）
+
+検索タグの「20 個まで」のように、保存する Data をまとめて見ないと決まらないルールだけは、`validate` が list を受け取る。`bulk_save` では 1 回だけ呼び、エラーの文言はマンガと同じ list の形にする。
+
+`domain/interface/search_tag/validation.py`
+
+```python
+SEARCH_TAG_MAX_COUNT = 20
+
+
+def validate(objs: list[SearchTagData]) -> Result[None, ValidationError]:
+    if len(objs) > SEARCH_TAG_MAX_COUNT:
+        return Result.err(ValidationError("error.searchTagLimit"))
+    return Result.ok(None)
+```
+
+`domain/entity/search_tag/repository.py`
+
+```python
+ret = validate(objs)
+if ret.is_err:
+    return Result.err(FatalError(f"Invalid Data: {[ret.err_value.message]}"))
+```
+
+- `bulk_save` に渡す list が、ルールの対象をすべて含んでいるときだけ使える。検索タグは `update_search_tags` が作者の検索タグをすべて `bulk_save` に渡している
+
 ## `__post_init__`・ファクトリで確かめない理由
 
 「Data を作るとき（`__post_init__` やファクトリ）に確かめれば、保存時に確かめなくてよい」という形もあるが、MyUs では使わない。
@@ -69,7 +95,7 @@ def bulk_save(self, objs: list[ComicData]) -> Result[list[int], FatalError]:
 
 | ルール | 置く場所 |
 |---|---|
-| 値のルール（長さ・範囲・必須など、保存する Data 1 つを見れば決まるもの） | `domain/interface/<ドメイン>/validation.py` の `validate` |
+| 値のルール（長さ・範囲・必須など、保存する Data 1 つを見れば決まるもの。数・重複は Data の list） | `domain/interface/<ドメイン>/validation.py` の `validate` |
 | 状態遷移のルール（「終わった状態からは遷移できない」など、今の状態と次の操作で決まるもの） | `domain/aggregate/<集約>/decide.py` |
 
 - 状態遷移は `validate` で確かめない。サブスクリプション（`domain/aggregate/subscription`）は状態ごとに型を分け（`IncompleteSubscription`・`ActiveSubscription`・`PastDueSubscription`・`EndedSubscription`）、遷移してよいかは `decide.py` が決める
@@ -159,6 +185,7 @@ def validate_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Resu
 - 制約に引っかかったとき（`IntegrityError`）に adapter で `ValidationError` に変えて返す形にはしない。Interface は `Result[T, FatalError]` を返す決まりなので、ルールとして利用者に返すエラーは domain の関数（形 1・形 2）で先に確かめる
 
 ## 更新履歴
+- 2026-11-11: Data 1 つでは決まらないルール（数・重複）は `validate(objs)` で list を受け取る形を足す（検索タグ）
 - 2026-11-11: `__post_init__`・ファクトリで確かめない理由と、状態遷移のルール（aggregate の `decide.py`）との分け方を足す
 - 2026-11-11: 作りが決まったので、検討の文章（`_validate`・`_new` のパターン、recustomer との比べ、マンガで試した形など）を消し、決まった形だけにする
 - 2026-11-11: 関数名を `validate_data`（`validate_xxx_data`）から `validate`（`validate_xxx`）にする。ルールを `validation.py` の `validate` に書き、repository の `bulk_save` で保存する前に確かめる形を足す。マンガをこの形にした

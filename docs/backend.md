@@ -284,6 +284,7 @@ return Result.ok(new_ids)
 - データのルール（長さ・数など）は `domain/interface/<ドメイン>/validation.py` の関数 `validate(obj)` に書く。adapter・usecase に置かない
   - 名前は `validate`（`_data` を付けない）。1 つのファイルに複数あるときは `validate_xxx` にする
   - 引数は保存する Data、戻り値は `Result[None, ValidationError]`
+  - 数・重複のように Data 1 つでは決まらないルールだけは、`validate(objs)` で list を受け取る（例：検索タグの 20 個まで）
   - Data（`data.py`）はフィールドだけを持ち、メソッドを持たない
   - `validation.py` は Data と utils だけを import し、I/O を持たない
   - エラーの文言は media（ドメイン）ごとに分けず、`error.titleLength`・`error.pageRequired` のように共通にする。画面には出さない（BE のログにだけ出る）ので、FE の i18n には足さない
