@@ -5,7 +5,7 @@ from api.utils.common.result import FatalError, Result
 
 
 @Result.shield_exception()
-def get_category_data(ulid: str) -> Result[CategoryData | None, FatalError]:
+def get_category_data(ulid: str) -> Result[CategoryData, FatalError]:
     repo = injector.get(CategoryInterface)
     ids_ret = repo.get_ids(FilterOption(ulids=[ulid]), SortOption(), limit=1)
     if ids_ret.is_err:
@@ -13,7 +13,7 @@ def get_category_data(ulid: str) -> Result[CategoryData | None, FatalError]:
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        return Result.ok(None)
+        return Result.err(FatalError(f"Category not found ulid={ulid}"))
 
     categories_ret = repo.bulk_get(ids)
     if categories_ret.is_err:

@@ -118,8 +118,6 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     save_ret = atomic_result(lambda: save_video_data(update_data, category_data))
     if save_ret.is_err:
@@ -225,8 +223,6 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     save_ret = atomic_result(lambda: save_music_data(update_data, category_data))
     if save_ret.is_err:
@@ -339,8 +335,6 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     save_ret = atomic_result(lambda: save_blog_data(update_data, category_data))
     if save_ret.is_err:
@@ -459,8 +453,6 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     save_ret = atomic_result(lambda: save_comic_data(update_data, category_data))
     if save_ret.is_err:
@@ -573,8 +565,6 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     save_ret = atomic_result(lambda: save_picture_data(update_data, category_data))
     if save_ret.is_err:
@@ -680,8 +670,6 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     save_ret = atomic_result(lambda: save_chat_data(update_data, category_data))
     if save_ret.is_err:

@@ -84,8 +84,6 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     create_ret = atomic_result(lambda: create_video_data(new_video, category_data))
     if create_ret.is_err:
@@ -175,8 +173,6 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     create_ret = atomic_result(lambda: create_music_data(new_music, category_data))
     if create_ret.is_err:
@@ -240,8 +236,6 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     create_ret = atomic_result(lambda: create_blog_data(new_blog, category_data))
     if create_ret.is_err:
@@ -304,8 +298,6 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     create_ret = atomic_result(lambda: create_comic_data(new_data, category_data))
     if create_ret.is_err:
@@ -367,8 +359,6 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     create_ret = atomic_result(lambda: create_picture_data(new_picture, category_data))
     if create_ret.is_err:
@@ -431,8 +421,6 @@ def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteErro
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
-    if category_data is None:
-        return Result.err(ValidationError("error.categoryRequired"))
 
     create_ret = atomic_result(lambda: create_chat_data(new_chat, category_data))
     if create_ret.is_err:
