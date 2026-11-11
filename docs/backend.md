@@ -228,18 +228,6 @@ if ret.is_err:
   - カテゴリ・ハッシュタグの`bulk_save(media_type, media_id, objs)`：メディアへの紐づけの保存
   - 外部サービスの窓口（`PaymentInterface`）：DBのリポジトリではないため`get_ids`・`bulk_get`を持たない
 
-### Validation（ドメインのルール）
-- 作成・更新で共通のルールは `domain/interface/<ドメイン>/validation.py` に置く（雛形：`api/src/domain/interface/search_tag/validation.py`）
-- 関数名は `validate_data`、1つのファイルに複数あるときは `validate_xxx_data`
-- 引数は保存する Data、戻り値は `Result[None, ValidationError]`（メッセージは `error.*` のキー）。I/O を持たない純粋な関数にし、injector・Repository・Django を使わない
-- usecase は、入力から保存する Data を組み立ててから `validate_xxx_data` を呼び、通ったら保存する。作成と更新で同じ関数を通す
-- DB を見ないと決まらないルール（存在・重複・NG ワードなど）も、ルールは `validation.py` が持つ。DB を読むのは usecase（`_convert.py` の `get_xxx_data`）で、読んだ値を引数で渡す。usecase に `if xxx is None:` のような判定やエラーのキーを書かない
-  - あるかどうかを確かめる関数は、usecase で型を絞れるよう見つかった Data を返す（例：`validate_category_data(category: CategoryData | None) -> Result[CategoryData, ValidationError]`）
-- 詳しい形は [domain-validation.md](domain-validation.md) を参照
-- ここに置かないもの
-  - DB の列に収まるかの文字数の上限：入力のスキーマ（`Annotated[str, Field(max_length=N)]`）に置く
-  - ファイルの中身の検査（`validate_uploads`）：utils に置く
-
 ### Converterパターン
 - `_convert.py`に変換関数を定義
 - `convert_data`: Django ORM → dataclass
@@ -269,7 +257,7 @@ return Result.ok(new_ids)
 |------|------|------|
 | adapter | HTTPリクエスト/レスポンス変換、認証チェック | usecase, schema |
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
-| domain/interface | 抽象定義（ABC, dataclass）と、Data を確かめる `validation.py` | utils |
+| domain/interface | 抽象定義（ABC, dataclass） | なし |
 | domain/entity | Repository実装、DBアクセス | Django ORM, interface |
 | domain/aggregate | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数 | interface（Data）, utils |
 | adapter/external | 外部サービス（Stripe など）の Interface の実装 | interface, 外部の SDK |
@@ -278,7 +266,7 @@ return Result.ok(new_ids)
 - adapter → usecase → interface の方向にのみ依存する
 - usecase層からadapter層の型（`HttpRequest`等）をインポートしない
 - usecase層からDjangoのモデル（`User.objects`等）や`authenticate`を直接使わない。リポジトリ（Interface）のメソッドを通す
-- domain/interface層は utils 以外に依存しない（純粋なPython）
+- domain/interface層は他の層に依存しない（純粋なPython）
 - usecaseはドメインごとのディレクトリ（`usecase/<ドメイン>/`）にし、次の2つに分ける
   - `core.py`：adapter・コマンドから呼ぶ関数
   - `_convert.py`：補助の関数（`save_xxx_data`・`delete_xxx_data`、Repositoryを取り出す`get_media_repository`、ほかのusecaseから使う`create_notification_data`・`save_access_data`など）。補助の関数がなければ作らない
@@ -334,5 +322,3 @@ uv run ruff check api config --extend-ignore I
 - 2026-11-08: usecaseをドメインごとのディレクトリにし、`core.py`と`_convert.py`に分けることを追記
 - 2026-11-08: `_data` の付く関数の決まり（usecase の `_convert.py` で injector を使う関数は `_data` で終え、取るなら `get`、書き込むなら `create`・`save`・`delete`）を追記
 - 2026-11-08: 層の表に `domain/aggregate`・`adapter/external` を足し、リンターチェックを `mypy api config`・`ruff` にした
-- 2026-11-09: 作成・更新で共通のルールを `domain/interface/<ドメイン>/validation.py` に置く決まりを追記
-- 2026-11-11: DB を見ないと決まらないルールも `validation.py` が持ち、usecase は読んだ値を渡すだけにする決まりに直した

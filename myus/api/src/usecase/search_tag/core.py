@@ -1,6 +1,5 @@
 from api.src.domain.interface.search_tag.data import SearchTagData
 from api.src.domain.interface.search_tag.interface import FilterOption, SearchTagInterface, SortOption
-from api.src.domain.interface.search_tag.validation import validate_data
 from api.src.injectors.container import injector
 from api.src.types.schema.user import SearchTagIn
 from api.src.usecase.search_tag._convert import save_search_tag_data
@@ -41,10 +40,6 @@ def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> Result[None, 
         if existing_id != 0:
             keep_ids.add(existing_id)
         save_objs.append(SearchTagData(id=existing_id, author_id=author_id, sequence=tag.sequence, name=tag.name))
-
-    validate_ret = validate_data(save_objs)
-    if validate_ret.is_err:
-        return Result.err(validate_ret.err_value)
 
     delete_ids = [id for id in existing_ids if id not in keep_ids]
 
