@@ -54,7 +54,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
         return Result.err(author_ret.err_value)
 
     author = author_ret.ok_value
-    new_data = CommentData(
+    new_comment = CommentData(
         id=0,
         ulid="",
         author_id=user_id,
@@ -69,7 +69,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, F
         like_count=0,
     )
 
-    new_ids_ret = repo.bulk_save([new_data])
+    new_ids_ret = repo.bulk_save([new_comment])
     if new_ids_ret.is_err:
         return Result.err(new_ids_ret.err_value)
 

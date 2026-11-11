@@ -78,7 +78,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         return Result.err(author_ret.err_value)
 
     author = author_ret.ok_value
-    new_data = MessageData(
+    new_message = MessageData(
         id=0,
         ulid="",
         author_id=user_id,
@@ -91,7 +91,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         updated=datetime.min,
     )
 
-    new_ids_ret = repo.bulk_save([new_data])
+    new_ids_ret = repo.bulk_save([new_message])
     if new_ids_ret.is_err:
         return Result.err(new_ids_ret.err_value)
 
