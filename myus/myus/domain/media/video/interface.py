@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from myus.utils.common.result import FatalError, Result
-from ..index import ExcludeOption, FilterOption, PageOption, SortOption
 from .data import VideoData
+from ..option import ExcludeOption, FilterOption, PageOption, SortOption
 
 
 class VideoInterface(ABC):

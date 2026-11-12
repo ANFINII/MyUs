@@ -4,8 +4,8 @@ from myus.db.models.channel import Channel
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
-from ..index import get_save_new_ids, sort_ids
 from ._convert import convert_data, marshal_data
+from ..base import get_save_new_ids, sort_ids
 
 
 CHANNEL_FIELDS = ["owner_id", "avatar", "name", "description", "is_default", "updated"]

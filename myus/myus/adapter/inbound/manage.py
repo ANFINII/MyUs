@@ -1,7 +1,6 @@
 from typing import assert_never
 from ninja import File, Form, Router, UploadedFile
 from django.http import HttpRequest
-from myus.domain.media.index import PAGE_SIZE
 from myus.usecase.dto.advertise import AdvertiseDTO
 from myus.usecase.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.usecase.manage.advertise.core import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise
@@ -15,6 +14,7 @@ from myus.usecase.manage.media.core import (
 )
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
+from myus.utils.constants.page import PAGE_SIZE
 from .advertise import convert_advertises
 from .auth import auth_check
 from .media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats

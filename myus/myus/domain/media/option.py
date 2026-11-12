@@ -1,11 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum, auto
-
-
-PAGE_SIZE = 50
-RECOMMEND_DAYS = 200
-RECOMMEND_MIN_SCORE = 10.0
-SUBSCRIBE_BOOST = 2.0
+from myus.utils.constants.page import PAGE_SIZE
 
 
 class SortType(Enum):

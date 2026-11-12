@@ -3,8 +3,8 @@ from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, S
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result, ValidateError
 from myus.utils.functions.transaction import atomic_result
-from ..dto.user import SearchTagDTO
 from ._convert import save_search_tag_data
+from ..dto.user import SearchTagDTO
 
 
 @Result.shield_exception()

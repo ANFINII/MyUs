@@ -1,5 +1,5 @@
 from injector import Injector, Module
-from .index import (
+from .module import (
     UserModule,
     ChannelModule,
     MediaModule,

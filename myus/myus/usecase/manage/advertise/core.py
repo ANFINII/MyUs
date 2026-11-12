@@ -3,10 +3,11 @@ from datetime import datetime
 from ninja import UploadedFile
 from myus.domain.advertise.data import AdvertiseData
 from myus.domain.advertise.interface import AdvertiseInterface, SortOption
-from myus.domain.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption
+from myus.domain.media.option import ExcludeOption, FilterOption, PageOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
+from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.index import create_url
 from myus.utils.functions.media import save_upload, validate_uploads

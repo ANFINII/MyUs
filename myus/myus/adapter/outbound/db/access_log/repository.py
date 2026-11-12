@@ -4,8 +4,8 @@ from myus.db.models.common import AccessLog
 from myus.domain.access_log.data import AccessLogData
 from myus.domain.access_log.interface import AccessLogInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
-from ..index import get_save_new_ids, sort_ids
 from ._convert import convert_data, marshal_data
+from ..base import get_save_new_ids, sort_ids
 
 
 ACCESS_LOG_FIELDS = ["ip_address", "type", "type_id", "updated"]

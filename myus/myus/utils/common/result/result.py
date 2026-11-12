@@ -2,8 +2,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from functools import wraps
 from typing import cast
-from ..logger import log
 from .errors import AnyError, FatalError
+from ..logger import log
 
 
 class _Nil:

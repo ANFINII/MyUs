@@ -4,8 +4,8 @@ from myus.db.models.master import NgWord
 from myus.domain.ng_word.data import NgWordData
 from myus.domain.ng_word.interface import FilterOption, NgWordInterface, SortOption
 from myus.utils.common.result import FatalError, Result
-from ..index import sort_ids
 from ._convert import convert_data
+from ..base import sort_ids
 
 
 class NgWordRepository(NgWordInterface):

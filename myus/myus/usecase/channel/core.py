@@ -8,8 +8,8 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidateError, WriteError
 from myus.utils.enum.upload import ImageUpload
 from myus.utils.functions.media import save_upload, validate_uploads
-from ..dto.channel import ChannelDTO
 from ._convert import save_channel_data
+from ..dto.channel import ChannelDTO
 
 
 @Result.shield_exception()
