@@ -6,7 +6,7 @@ from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, S
 from myus.domain.search_tag.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..base import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, sort_ids
 
 
 SEARCH_TAG_FIELDS = ["author_id", "sequence", "name"]

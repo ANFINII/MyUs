@@ -5,7 +5,7 @@ from myus.domain.payment.ledger.interface import FilterOption, SortOption, Ledge
 from myus.domain.payment.ledger.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ...base import get_save_new_ids, sort_ids
+from ...common import get_save_new_ids, sort_ids
 
 
 LEDGER_ENTRY_FIELDS = ["payout_id"]

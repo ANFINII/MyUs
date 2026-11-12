@@ -5,7 +5,7 @@ from myus.domain.comment.data import CommentData
 from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..base import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, sort_ids
 
 
 COMMENT_FIELDS = ["author_id", "parent_id", "type_no", "type_name", "object_id", "text", "deleted", "updated"]

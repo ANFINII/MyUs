@@ -5,7 +5,7 @@ from myus.domain.subscribe.data import SubscribeData
 from myus.domain.subscribe.interface import FilterOption, SubscribeInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..base import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, sort_ids
 
 
 SUBSCRIBE_FIELDS = ["user_id", "channel_id", "is_subscribe"]

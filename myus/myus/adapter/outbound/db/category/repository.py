@@ -6,7 +6,7 @@ from myus.domain.category.interface import CategoryInterface, FilterOption, Sort
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from ._convert import convert_data, get_media_model
-from ..base import sort_ids
+from ..common import sort_ids
 
 
 class CategoryRepository(CategoryInterface):

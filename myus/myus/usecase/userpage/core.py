@@ -1,9 +1,8 @@
 from dataclasses import replace
 from django.utils import timezone
 from myus.domain.advertise.data import AdvertiseData
-from myus.domain.advertise.interface import AdvertiseInterface, SortOption
+from myus.domain.advertise.interface import AdvertiseInterface, ExcludeOption, FilterOption, PageOption, SortOption
 from myus.domain.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
-from myus.domain.media.option import ExcludeOption, FilterOption as MediaFilterOption, PageOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.common import create_url
@@ -50,7 +49,7 @@ def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int =
 @Result.shield_exception()
 def get_userpage_advertises(search: str, owner_id: int) -> Result[list[AdvertiseData], FatalError]:
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(MediaFilterOption(search=search, publish=True, owner_id=owner_id), ExcludeOption(), SortOption(is_asc=True), PageOption())
+    ids_ret = repo.get_ids(FilterOption(search=search, publish=True, owner_id=owner_id), ExcludeOption(), SortOption(is_asc=True), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

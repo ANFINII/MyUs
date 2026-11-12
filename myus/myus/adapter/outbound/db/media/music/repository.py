@@ -1,14 +1,14 @@
 from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from myus.db.models.media import Music
+from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.music.validation import validate
-from myus.domain.media.option import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..query import distinct_queryset, filter_q_list, sort_queryset
-from ...base import get_save_new_ids, sort_ids
+from ..common import distinct_queryset, filter_q_list, sort_queryset
+from ...common import get_save_new_ids, sort_ids
 
 
 MUSIC_FIELDS = ["channel_id", "title", "content", "lyric", "music", "download", "publish", "publish_at", "updated"]

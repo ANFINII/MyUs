@@ -8,7 +8,7 @@ from myus.domain.hashtag.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from ._convert import convert_data, marshal_data, marshal_through, get_through_model
-from ..base import sort_ids
+from ..common import sort_ids
 
 
 class HashtagRepository(HashtagInterface):

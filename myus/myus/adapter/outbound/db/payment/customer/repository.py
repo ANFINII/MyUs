@@ -5,7 +5,7 @@ from myus.domain.payment.customer.interface import FilterOption, SortOption, Pay
 from myus.domain.payment.customer.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ...base import get_save_new_ids, sort_ids
+from ...common import get_save_new_ids, sort_ids
 
 
 PAYMENT_CUSTOMER_FIELDS = ["user_id", "provider", "external_id"]

@@ -20,18 +20,17 @@ class FilterOption:
     category_id: int = 0
     is_recommend: bool = False
     search: str = ""
-    advertise_type: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class ExcludeOption:
+    id: int = 0
 
 
 @dataclass(frozen=True, slots=True)
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.ID
-
-
-@dataclass(frozen=True, slots=True)
-class ExcludeOption:
-    id: int = 0
 
 
 @dataclass(frozen=True, slots=True)

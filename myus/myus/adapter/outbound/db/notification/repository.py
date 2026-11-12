@@ -13,7 +13,7 @@ from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType
 from ._convert import convert_data, get_media_model, marshal_data
-from ..base import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, sort_ids
 
 
 NOTIFICATION_FIELDS = ["user_from_id", "user_to_id", "type_no", "type_name", "object_id", "object_type"]

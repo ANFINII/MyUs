@@ -5,7 +5,7 @@ from myus.domain.payment.transaction.interface import FilterOption, SortOption, 
 from myus.domain.payment.transaction.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ...base import get_save_new_ids, sort_ids
+from ...common import get_save_new_ids, sort_ids
 
 
 TRANSACTION_FIELDS = ["payment_customer_id", "subscription_id", "external_id", "currency", "tax_rate", "receipt_number", "status", "paid_at", "last_event_at"]

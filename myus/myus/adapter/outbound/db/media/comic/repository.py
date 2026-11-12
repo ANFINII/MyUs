@@ -5,11 +5,11 @@ from myus.db.models.media import Comic, ComicPage
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
 from myus.domain.media.comic.validation import validate
-from myus.domain.media.option import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..query import distinct_queryset, filter_q_list, sort_queryset
-from ...base import get_save_new_ids, sort_ids
+from ..common import distinct_queryset, filter_q_list, sort_queryset
+from ...common import get_save_new_ids, sort_ids
 
 
 COMIC_FIELDS = ["channel_id", "title", "content", "image", "publish", "publish_at", "updated"]
