@@ -5,6 +5,8 @@ from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.adapter.inbound.advertise import convert_advertises
 from myus.adapter.inbound.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
+from myus.types.dto.advertise import AdvertiseCreateDTO, AdvertiseUpdateDTO
+from myus.types.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.types.schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from myus.types.schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
 from myus.types.schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
@@ -88,7 +90,7 @@ class ManageVideoAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_video(user_id, ulid, input, image)
+        update_ret = update_manage_video(user_id, ulid, VideoUpdateDTO(**input.model_dump()), image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -197,7 +199,7 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_music(user_id, ulid, input)
+        update_ret = update_manage_music(user_id, ulid, MusicUpdateDTO(**input.model_dump()))
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -306,7 +308,7 @@ class ManageBlogAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_blog(user_id, ulid, input, image)
+        update_ret = update_manage_blog(user_id, ulid, BlogUpdateDTO(**input.model_dump()), image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -415,7 +417,7 @@ class ManageComicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_comic(user_id, ulid, input, image)
+        update_ret = update_manage_comic(user_id, ulid, ComicUpdateDTO(**input.model_dump()), image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -524,7 +526,7 @@ class ManagePictureAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_picture(user_id, ulid, input, image)
+        update_ret = update_manage_picture(user_id, ulid, PictureUpdateDTO(**input.model_dump()), image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -633,7 +635,7 @@ class ManageChatAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_chat(user_id, ulid, input)
+        update_ret = update_manage_chat(user_id, ulid, ChatUpdateDTO(**input.model_dump()))
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -742,7 +744,7 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        create_ret = create_manage_advertise(user_id, input, image, video)
+        create_ret = create_manage_advertise(user_id, AdvertiseCreateDTO(**input.model_dump()), image, video)
         if create_ret.is_err:
             message = create_ret.err_value.message
             match create_ret.err_value:
@@ -771,7 +773,7 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_advertise(user_id, ulid, input, image, video)
+        update_ret = update_manage_advertise(user_id, ulid, AdvertiseUpdateDTO(**input.model_dump()), image, video)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
