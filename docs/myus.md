@@ -292,7 +292,7 @@ flowchart TB
 
 | 観点 | 仕組み |
 |---|---|
-| 決済会社 | `PaymentInterface` の裏に隠し、Stripe の実装は `myus/adapter/outbound/payment/stripe/` に置く |
+| 決済会社 | `PaymentInterface` の裏に隠し、Stripe の実装は `myus/adapter/external/payment/stripe/` に置く |
 | 受信 | webhook は検証と記録だけにし、反映は worker が行う（Inbox） |
 | 重複 | `PaymentEvent` の `(provider, event_id)` 一意制約。同じ webhook は1回だけ処理する |
 | 届く順番 | サブスクリプションは集約が判断する（古い事実・同じ状態ではイベントを生まない）。取引・入金は `last_event_at` を比べる |
@@ -385,10 +385,9 @@ flowchart TB
 ### バックエンドのレイヤー構成（`myus/myus/`）
 詳しい決まりは [backend.md](backend.md) の「層の責務」。
 
-- **adapter/**
-  - `inbound/`: HTTP エンドポイント・WebSocket（入ってくる側）
-    - `routers.py`: ルータの集約・登録（`config/urls.py` から読む）
-  - `outbound/`: 外部サービス（Stripe）の Interface の実装（出ていく側）
+- **adapter/**: HTTP エンドポイント・WebSocket
+  - `external/`: 外部サービス（Stripe）の Interface の実装
+  - `routers.py`: ルータの集約・登録（`config/urls.py` から読む）
 - **usecase/**: ビジネスロジック。ドメインごとのディレクトリに `core.py`（adapter から呼ぶ関数）と `_convert.py`（補助の関数）を置く
   - `command/`: 集約へのコマンド
 - **domain/**

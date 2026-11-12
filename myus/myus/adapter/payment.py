@@ -3,7 +3,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from myus.utils.common.logger import log
-from myus.adapter.inbound.auth import auth_check
+from myus.adapter.auth import auth_check
 from myus.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, WebhookVerified, WebhookVerifyFailed
 from myus.types.schema.common import ErrorOut, ErrorType
 from myus.types.schema.payment import PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentSubscriptionOut, PaymentWebhookOut

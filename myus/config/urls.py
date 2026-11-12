@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import URLPattern, URLResolver, include, path
-from myus.adapter.inbound.routers import api
+from myus.adapter.routers import api
 from config.views import serve_media
 
 
