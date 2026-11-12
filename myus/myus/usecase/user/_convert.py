@@ -2,7 +2,7 @@ from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
-from myus.utils.functions.url import create_url
+from myus.utils.functions.common import create_url
 from ..dto.user import AuthorDTO
 
 

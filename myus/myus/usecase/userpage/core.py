@@ -6,7 +6,7 @@ from myus.domain.follow.interface import FilterOption as FollowFilterOption, Fol
 from myus.domain.media.option import ExcludeOption, FilterOption as MediaFilterOption, PageOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
-from myus.utils.functions.url import create_url
+from myus.utils.functions.common import create_url
 from ..advertise._convert import is_active
 from ..dto.media import HomeDTO
 from ..media.core import get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats

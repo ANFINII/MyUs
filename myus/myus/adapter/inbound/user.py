@@ -10,7 +10,7 @@ from myus.usecase.user.core import get_user_data, like_comment, like_media
 from myus.usecase.userpage.core import get_userpage_advertises, get_userpage_media, is_following
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, NotFoundError, ValidationError
-from myus.utils.functions.url import create_url
+from myus.utils.functions.common import create_url
 from .advertise import convert_advertises
 from .auth import auth_check
 from .media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats

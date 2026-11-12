@@ -9,8 +9,8 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
 from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.enum.upload import ImageUpload, MediaUpload
+from myus.utils.functions.common import create_url
 from myus.utils.functions.media import save_upload, validate_uploads
-from myus.utils.functions.url import create_url
 from myus.utils.functions.validation import has_url
 from ...dto.advertise import AdvertiseDTO
 from ...user.core import get_user_data

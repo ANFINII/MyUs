@@ -374,5 +374,5 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-12: DTO を `types/dto` から `usecase/dto` に移し、`types` をなくした
 - 2026-11-12: import の並び（section の中はパスの名前順、最後に相対パス）と、同じ層の中は相対パスにする決まりを足した
 - 2026-11-13: 相対パスの並びを、FE に合わせて近いものから（`.` → `..` → `...`）にした
-- 2026-11-13: `utils/functions/index.py` を分けた（`new_ulid` → `utils/functions/id.py`、`create_url` → `utils/functions/url.py`、`get_client_ip` → `adapter/inbound/_common.py`。使われていない `message` は消した）
+- 2026-11-13: `utils/functions/index.py` を分けた（汎用の `new_ulid`・`create_url` → `utils/functions/common.py`、HTTP のリクエストを扱う `get_client_ip` → `adapter/inbound/_common.py`。使われていない `message` は消した）
 - 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
