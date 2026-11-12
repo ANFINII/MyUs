@@ -23,14 +23,14 @@ class FilterOption:
 
 
 @dataclass(frozen=True, slots=True)
-class SortOption:
-    is_asc: bool = False
-    sort_type: SortType = SortType.ID
+class ExcludeOption:
+    id: int = 0
 
 
 @dataclass(frozen=True, slots=True)
-class ExcludeOption:
-    id: int = 0
+class SortOption:
+    is_asc: bool = False
+    sort_type: SortType = SortType.ID
 
 
 @dataclass(frozen=True, slots=True)

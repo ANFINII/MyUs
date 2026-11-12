@@ -6,6 +6,11 @@ from myus.utils.constants.page import PAGE_SIZE
 from .data import AdvertiseData
 
 
+class SortType(Enum):
+    ID = auto()
+    CREATED = auto()
+
+
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     ulid: str = ""
@@ -22,20 +27,15 @@ class ExcludeOption:
 
 
 @dataclass(frozen=True, slots=True)
-class PageOption:
-    limit: int = PAGE_SIZE
-    offset: int = 0
-
-
-class SortType(Enum):
-    ID = auto()
-    CREATED = auto()
-
-
-@dataclass(frozen=True, slots=True)
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.ID
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = PAGE_SIZE
+    offset: int = 0
 
 
 class AdvertiseInterface(ABC):
