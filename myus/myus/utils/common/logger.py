@@ -328,28 +328,3 @@ class Log:
 
 
 log = Log
-
-if __name__ == "__main__":
-    # シンプルな使用例
-    log.info("アプリケーション開始")
-    log.debug("デバッグ情報", user_id=123)
-    log.warning("警告メッセージ")
-
-    # クラス内での使用例
-    class SampleClass:
-        def sample_method(self) -> None:
-            log.info("クラスメソッドからのログ")
-
-            try:
-                # エラーを発生させる
-                1 / 0
-            except ZeroDivisionError as e:
-                log.error("ゼロ除算エラーが発生", exc=e)
-
-    # テスト実行
-    obj = SampleClass()
-    obj.sample_method()
-
-    # ログレベル変更
-    log.set_level("DEBUG")
-    log.debug("これはデバッグメッセージです")
