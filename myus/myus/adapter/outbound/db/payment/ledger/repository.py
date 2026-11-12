@@ -2,9 +2,9 @@ from django.db.models import Q
 from myus.db.models.payment import PaymentLedgerEntry
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.adapter.outbound.db.payment.ledger._convert import convert_data, marshal_data
-from myus.domain.interface.payment.ledger.data import LedgerEntryData
-from myus.domain.interface.payment.ledger.interface import FilterOption, SortOption, LedgerEntryInterface
-from myus.domain.interface.payment.ledger.validation import validate
+from myus.domain.payment.ledger.data import LedgerEntryData
+from myus.domain.payment.ledger.interface import FilterOption, SortOption, LedgerEntryInterface
+from myus.domain.payment.ledger.validation import validate
 from myus.utils.common.result import FatalError, Result
 
 

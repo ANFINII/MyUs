@@ -4,9 +4,9 @@ from django.db.models.query import QuerySet
 from myus.db.models.hashtag import HashTag
 from myus.adapter.outbound.db.hashtag._convert import convert_data, marshal_data, marshal_through, get_through_model
 from myus.adapter.outbound.db.index import sort_ids
-from myus.domain.interface.hashtag.data import HashtagData
-from myus.domain.interface.hashtag.interface import FilterOption, HashtagInterface, SortOption
-from myus.domain.interface.hashtag.validation import validate
+from myus.domain.hashtag.data import HashtagData
+from myus.domain.hashtag.interface import FilterOption, HashtagInterface, SortOption
+from myus.domain.hashtag.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 

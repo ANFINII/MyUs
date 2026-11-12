@@ -4,10 +4,10 @@ from myus.db.models.media import Music
 from myus.adapter.outbound.db.media.music._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.adapter.outbound.db.media.index import distinct_queryset, filter_q_list, sort_queryset
-from myus.domain.interface.media.music.data import MusicData
-from myus.domain.interface.media.music.interface import MusicInterface
-from myus.domain.interface.media.music.validation import validate
-from myus.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.music.data import MusicData
+from myus.domain.media.music.interface import MusicInterface
+from myus.domain.media.music.validation import validate
+from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

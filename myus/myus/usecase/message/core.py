@@ -1,10 +1,10 @@
 from dataclasses import replace
 from datetime import datetime
 from myus.utils.common.logger import log
-from myus.domain.interface.media.chat.interface import ChatInterface
-from myus.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
-from myus.domain.interface.message.data import MessageData
-from myus.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
+from myus.domain.media.chat.interface import ChatInterface
+from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.message.data import MessageData
+from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
 from myus.injectors.container import injector
 from myus.types.dto.message import MessageDTO, MessageReplyDTO
 from myus.usecase.notification._convert import create_notification_data

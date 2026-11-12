@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password
 from django_ulid.models import ulid
 from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from myus.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
+from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from myus.utils.enum.media import MediaType
 
 

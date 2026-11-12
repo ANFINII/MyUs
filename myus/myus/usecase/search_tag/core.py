@@ -1,5 +1,5 @@
-from myus.domain.interface.search_tag.data import SearchTagData
-from myus.domain.interface.search_tag.interface import FilterOption, SearchTagInterface, SortOption
+from myus.domain.search_tag.data import SearchTagData
+from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, SortOption
 from myus.injectors.container import injector
 from myus.types.schema.user import SearchTagIn
 from myus.usecase.search_tag._convert import save_search_tag_data

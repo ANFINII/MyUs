@@ -1,5 +1,5 @@
-from myus.domain.interface.search_tag.data import SearchTagData
-from myus.domain.interface.search_tag.interface import SearchTagInterface
+from myus.domain.search_tag.data import SearchTagData
+from myus.domain.search_tag.interface import SearchTagInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 

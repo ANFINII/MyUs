@@ -1,5 +1,5 @@
 from myus.db.models.subscribe import Subscribe
-from myus.domain.interface.subscribe.data import SubscribeData
+from myus.domain.subscribe.data import SubscribeData
 
 
 def convert_data(obj: Subscribe) -> SubscribeData:

@@ -3,19 +3,19 @@ from datetime import datetime
 from django.utils import timezone
 from ninja import UploadedFile
 from myus.utils.common.logger import log
-from myus.domain.interface.media.video.data import VideoData
-from myus.domain.interface.media.music.data import MusicData
-from myus.domain.interface.media.blog.data import BlogData
-from myus.domain.interface.media.comic.data import ComicData
-from myus.domain.interface.media.picture.data import PictureData
-from myus.domain.interface.media.chat.data import ChatData
-from myus.domain.interface.media.video.interface import VideoInterface
-from myus.domain.interface.media.music.interface import MusicInterface
-from myus.domain.interface.media.blog.interface import BlogInterface
-from myus.domain.interface.media.comic.interface import ComicInterface
-from myus.domain.interface.media.picture.interface import PictureInterface
-from myus.domain.interface.media.chat.interface import ChatInterface
-from myus.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption, SortType
+from myus.domain.media.video.data import VideoData
+from myus.domain.media.music.data import MusicData
+from myus.domain.media.blog.data import BlogData
+from myus.domain.media.comic.data import ComicData
+from myus.domain.media.picture.data import PictureData
+from myus.domain.media.chat.data import ChatData
+from myus.domain.media.video.interface import VideoInterface
+from myus.domain.media.music.interface import MusicInterface
+from myus.domain.media.blog.interface import BlogInterface
+from myus.domain.media.comic.interface import ComicInterface
+from myus.domain.media.picture.interface import PictureInterface
+from myus.domain.media.chat.interface import ChatInterface
+from myus.domain.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption, SortType
 from myus.injectors.container import injector
 from myus.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
 from myus.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn

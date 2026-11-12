@@ -1,9 +1,9 @@
 from dataclasses import replace
 from django.utils import timezone
-from myus.domain.interface.advertise.data import AdvertiseData
-from myus.domain.interface.advertise.interface import AdvertiseInterface, SortOption
-from myus.domain.interface.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
-from myus.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption
+from myus.domain.advertise.data import AdvertiseData
+from myus.domain.advertise.interface import AdvertiseInterface, SortOption
+from myus.domain.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
+from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption
 from myus.injectors.container import injector
 from myus.types.dto.media import HomeDTO
 from myus.usecase.advertise._convert import is_active

@@ -1,9 +1,9 @@
 from dataclasses import replace
 from datetime import datetime
 from myus.utils.common.logger import log
-from myus.domain.interface.comment.data import CommentData
-from myus.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
-from myus.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.comment.data import CommentData
+from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
+from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.injectors.container import injector
 from myus.types.dto.comment import CommentDTO
 from myus.types.schema.comment import CommentCreateIn

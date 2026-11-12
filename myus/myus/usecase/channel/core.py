@@ -2,8 +2,8 @@ from dataclasses import replace
 from django_ulid.models import ulid
 from ninja import UploadedFile
 from myus.utils.common.logger import log
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption
+from myus.domain.channel.data import ChannelData
+from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
 from myus.injectors.container import injector
 from myus.types.schema.channel import ChannelIn
 from myus.usecase.channel._convert import save_channel_data

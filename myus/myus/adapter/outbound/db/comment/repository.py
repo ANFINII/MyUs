@@ -3,8 +3,8 @@ from django.db.models.query import QuerySet
 from myus.db.models.comment import Comment
 from myus.adapter.outbound.db.comment._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.domain.interface.comment.data import CommentData
-from myus.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
+from myus.domain.comment.data import CommentData
+from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

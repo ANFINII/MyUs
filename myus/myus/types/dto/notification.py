@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from myus.domain.interface.notification.data import NotificationContentData
+from myus.domain.notification.data import NotificationContentData
 
 
 @dataclass(frozen=True, slots=True)

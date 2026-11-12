@@ -1,5 +1,5 @@
 from myus.db.models.users import Follow
-from myus.domain.interface.follow.data import FollowData
+from myus.domain.follow.data import FollowData
 
 
 def convert_data(obj: Follow) -> FollowData:

@@ -1,7 +1,7 @@
 from dataclasses import replace
 from myus.utils.common.logger import log
-from myus.domain.interface.comment.data import CommentData
-from myus.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
+from myus.domain.comment.data import CommentData
+from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
 from myus.injectors.container import injector
 from myus.types.dto.comment import CommentDTO, ReplyDTO
 from myus.usecase.notification._convert import delete_notification_data

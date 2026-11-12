@@ -1,8 +1,8 @@
 from django_ulid.models import ulid
 from myus.db.models.media import Comic
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.hashtag.data import HashtagData
-from myus.domain.interface.media.comic.data import ComicData
+from myus.domain.channel.data import ChannelData
+from myus.domain.hashtag.data import HashtagData
+from myus.domain.media.comic.data import ComicData
 
 
 def convert_data(obj: Comic) -> ComicData:

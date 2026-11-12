@@ -1,8 +1,8 @@
 from dataclasses import replace
-from myus.domain.interface.follow.data import FollowData
-from myus.domain.interface.follow.interface import FilterOption, FollowInterface
-from myus.domain.interface.user.data import UserAllData
-from myus.domain.interface.user.interface import UserInterface
+from myus.domain.follow.data import FollowData
+from myus.domain.follow.interface import FilterOption, FollowInterface
+from myus.domain.user.data import UserAllData
+from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
 from myus.usecase.notification._convert import create_notification_data
 from myus.utils.common.result import FatalError, Result

@@ -6,21 +6,21 @@
 
 ## 形
 
-ルールは `domain/interface/<ドメイン>/validation.py` の `validate` に書き、repository の `bulk_save` が保存する前に必ず呼ぶ。usecase はルールについて何もしない。
+ルールは `domain/<ドメイン>/validation.py` の `validate` に書き、repository の `bulk_save` が保存する前に必ず呼ぶ。usecase はルールについて何もしない。
 
 | ファイル | 置くもの |
 |---|---|
-| `domain/interface/<ドメイン>/validation.py` | ルールを確かめる関数 `validate`（1 つのファイルに複数あるときは `validate_xxx`）と、ルールに使う定数。I/O を持たない |
-| `domain/interface/<ドメイン>/data.py` | Data（フィールドだけ。メソッドは持たない） |
+| `domain/<ドメイン>/validation.py` | ルールを確かめる関数 `validate`（1 つのファイルに複数あるときは `validate_xxx`）と、ルールに使う定数。I/O を持たない |
+| `domain/<ドメイン>/data.py` | Data（フィールドだけ。メソッドは持たない） |
 | `adapter/outbound/db/<ドメイン>/repository.py` | `bulk_save` で保存する前に `validate` を呼ぶ。だめなら保存せずに `FatalError` を返す |
 | `usecase/<ドメイン>/core.py` | 今までどおり `XxxData(...)`・`replace(...)` で Data を組み立てて保存する。ルールは持たない |
 
 ## マンガの例
 
-`domain/interface/media/comic/validation.py`
+`domain/media/comic/validation.py`
 
 ```python
-from myus.domain.interface.media.comic.data import ComicData
+from myus.domain.media.comic.data import ComicData
 from myus.utils.common.result import Result, ValidationError
 
 
@@ -58,7 +58,7 @@ def bulk_save(self, objs: list[ComicData]) -> Result[list[int], FatalError]:
 
 検索タグの「20 個まで」のように、保存する Data をまとめて見ないと決まらないルールだけは、`validate` が list を受け取る。`bulk_save` では 1 回だけ呼ぶが、書き方はマンガと同じ `errors` の形にそろえる。
 
-`domain/interface/search_tag/validation.py`
+`domain/search_tag/validation.py`
 
 ```python
 SEARCH_TAG_MAX_COUNT = 20
@@ -95,7 +95,7 @@ if len(errors) > 0:
 
 | ルール | 置く場所 |
 |---|---|
-| 値のルール（長さ・範囲・必須など、保存する Data 1 つを見れば決まるもの。数・重複は Data の list） | `domain/interface/<ドメイン>/validation.py` の `validate` |
+| 値のルール（長さ・範囲・必須など、保存する Data 1 つを見れば決まるもの。数・重複は Data の list） | `domain/<ドメイン>/validation.py` の `validate` |
 | 状態遷移のルール（「終わった状態からは遷移できない」など、今の状態と次の操作で決まるもの） | `domain/aggregate/<集約>/decide.py` |
 
 - 状態遷移は `validate` で確かめない。サブスクリプション（`domain/aggregate/subscription`）は状態ごとに型を分け（`IncompleteSubscription`・`ActiveSubscription`・`PastDueSubscription`・`EndedSubscription`）、遷移してよいかは `decide.py` が決める
@@ -107,7 +107,7 @@ NG ワードを含まない・同じものがまだない、のように DB を�
 
 | 分けるもの | 置く場所 |
 |---|---|
-| ルール（何を満たせば通るか・だめなときに返すエラー） | domain（`domain/interface/<ドメイン>/validation.py`） |
+| ルール（何を満たせば通るか・だめなときに返すエラー） | domain（`domain/<ドメイン>/validation.py`） |
 | DB を読む処理 | usecase（`_convert.py` の `get_xxx_data`）と、その先の repository（adapter/outbound/db） |
 | 読んだ値を渡してルールを呼ぶ段取り | usecase（`core.py`） |
 
@@ -123,7 +123,7 @@ usecase が DB から読んだ値（なければ `None`・一覧なら `list`）
 ハッシュタグの名前（今は `usecase/hashtag/_convert.py` の `validate_name` が NG ワードを受け取って確かめている）
 
 - `get_ng_words_data`（DB を読む）は usecase の `_convert.py` に残す
-- `validate_name`（長さ・使える文字・NG ワード）と `HASHTAG_MAX_LENGTH`・`ALLOWED_PATTERN` は `domain/interface/hashtag/validation.py` の `validate_name(name: str, ng_words: list[str]) -> Result[None, ValidationError]` に移す。引数の `ng_words` はそのままで、今の形がすでに「読んだ値を渡す」形になっている
+- `validate_name`（長さ・使える文字・NG ワード）と `HASHTAG_MAX_LENGTH`・`ALLOWED_PATTERN` は `domain/hashtag/validation.py` の `validate_name(name: str, ng_words: list[str]) -> Result[None, ValidationError]` に移す。引数の `ng_words` はそのままで、今の形がすでに「読んだ値を渡す」形になっている
 - だめな名前はエラーにせず読み飛ばす今の動きは変えない。usecase は `is_err` なら `continue` する
 
 ### 形 2: Interface を渡す（探す条件そのものがルールのとき）
@@ -131,7 +131,7 @@ usecase が DB から読んだ値（なければ `None`・一覧なら `list`）
 「同じチャンネルに同じ名前のものがまだない」のように、**どう探すか（FilterOption の条件）** がルールの中身になるときは、形 1 だと条件が usecase に残る。このときは `validation.py` の関数が Interface（ABC）を受け取り、探す条件も domain に書く。
 
 ```python
-from myus.domain.interface.xxx.interface import FilterOption, SortOption, XxxInterface
+from myus.domain.xxx.interface import FilterOption, SortOption, XxxInterface
 from myus.utils.common.result import FatalError, Result, ValidationError
 
 
@@ -144,7 +144,7 @@ def validate_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Resu
     return Result.ok(None)
 ```
 
-- 実際に DB を読むのは Interface の先の repository（adapter/outbound/db）。`validation.py` は Interface（同じ domain/interface）だけを import し、adapter・injector は import しない。usecase が `injector.get(XxxInterface)` で取った repo を渡す
+- 実際に DB を読むのは Interface の先の repository（adapter/outbound/db）。`validation.py` は Interface（同じ domain）だけを import し、adapter・injector は import しない。usecase が `injector.get(XxxInterface)` で取った repo を渡す
 - テストでは Interface を満たす偽物を渡せば DB なしで確かめられる
 - 探すのに使うメソッドは今ある `get_ids` と `FilterOption` の組み合わせにする。条件が足りないときは FilterOption に足す（ルール専用のメソッドを Repository に作らない）
 - `validation.py` が I/O を持つことになるので、形 1 で書けるときは形 1 にする。今の MyUs にはこの形が要るルールはまだない（`error.nameDuplicate`・`XxxInterface` は説明のための仮の名前）。取り入れるときは `docs/backend.md` の「Validation」に「Interface を受け取ってよい」を足す

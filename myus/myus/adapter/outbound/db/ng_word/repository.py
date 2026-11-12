@@ -3,8 +3,8 @@ from django.db.models.query import QuerySet
 from myus.db.models.master import NgWord
 from myus.adapter.outbound.db.index import sort_ids
 from myus.adapter.outbound.db.ng_word._convert import convert_data
-from myus.domain.interface.ng_word.data import NgWordData
-from myus.domain.interface.ng_word.interface import FilterOption, NgWordInterface, SortOption
+from myus.domain.ng_word.data import NgWordData
+from myus.domain.ng_word.interface import FilterOption, NgWordInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

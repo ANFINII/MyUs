@@ -5,10 +5,10 @@ from myus.db.models.media import Comic, ComicPage
 from myus.adapter.outbound.db.media.comic._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.adapter.outbound.db.media.index import distinct_queryset, filter_q_list, sort_queryset
-from myus.domain.interface.media.comic.data import ComicData
-from myus.domain.interface.media.comic.interface import ComicInterface
-from myus.domain.interface.media.comic.validation import validate
-from myus.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.comic.data import ComicData
+from myus.domain.media.comic.interface import ComicInterface
+from myus.domain.media.comic.validation import validate
+from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

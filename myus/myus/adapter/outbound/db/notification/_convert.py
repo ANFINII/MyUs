@@ -5,7 +5,7 @@ from django_ulid.models import ulid
 
 from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from myus.db.models.notification import Notification
-from myus.domain.interface.notification.data import NotificationContentData, NotificationData
+from myus.domain.notification.data import NotificationContentData, NotificationData
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType
 

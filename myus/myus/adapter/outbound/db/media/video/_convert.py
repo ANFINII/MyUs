@@ -1,8 +1,8 @@
 from django_ulid.models import ulid
 from myus.db.models.media import Video
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.hashtag.data import HashtagData
-from myus.domain.interface.media.video.data import VideoData
+from myus.domain.channel.data import ChannelData
+from myus.domain.hashtag.data import HashtagData
+from myus.domain.media.video.data import VideoData
 
 
 def convert_data(obj: Video) -> VideoData:

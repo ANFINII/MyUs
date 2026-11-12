@@ -4,7 +4,7 @@ from pydantic import TypeAdapter
 from django.core.management.base import BaseCommand
 from config.env import BASE_DIR
 from myus.domain.aggregate.subscription.event import SUBSCRIPTION_EVENT_CLASSES
-from myus.domain.interface.payment.event.data import PaymentEventContent
+from myus.domain.payment.event.data import PaymentEventContent
 from myus.utils.functions.schema_compatibility import breaking_changes, read_schema, write_schema
 
 

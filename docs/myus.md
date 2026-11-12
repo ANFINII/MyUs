@@ -394,7 +394,7 @@ flowchart TB
 - **usecase/**: ビジネスロジック。ドメインごとのディレクトリに `core.py`（adapter から呼ぶ関数）と `_convert.py`（補助の関数）を置く
   - `command/`: 集約へのコマンド
 - **domain/**
-  - `interface/`: dataclass の Data と Repository の Interface
+  - `<ドメイン>/`: dataclass の Data（`data.py`）と Repository の Interface（`interface.py`）、ルール（`validation.py`）
   - `aggregate/`: Event Sourcing の集約（状態・イベント・判断・適用）
 - **types/**: API の入出力スキーマ（`schema/`）と DTO（`dto/`）
 - **injectors/**: DI（Interface と実装の対応）

@@ -8,10 +8,10 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from myus.utils.common.logger import log
-from myus.domain.interface.payment.provider.data import CancelFailed, CancelSuccess
-from myus.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
+from myus.domain.payment.provider.data import CancelFailed, CancelSuccess
+from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from myus.utils.enum.user import PlanName
-from myus.domain.interface.user.interface import FilterOption, SortOption, UserInterface
+from myus.domain.user.interface import FilterOption, SortOption, UserInterface
 from myus.injectors.container import injector
 from myus.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
 from myus.usecase.payment.core import cancel_subscription

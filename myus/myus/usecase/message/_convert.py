@@ -1,6 +1,6 @@
 from myus.utils.common.logger import log
-from myus.domain.interface.message.data import MessageData
-from myus.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
+from myus.domain.message.data import MessageData
+from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
 from myus.injectors.container import injector
 from myus.types.dto.message import MessageDTO
 from myus.usecase.notification._convert import delete_notification_data

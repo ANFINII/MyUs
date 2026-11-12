@@ -5,14 +5,14 @@ from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.types.dto.comment import CommentDTO, ReplyDTO
-from myus.domain.interface.media.video.data import VideoData
-from myus.domain.interface.media.music.data import MusicData
-from myus.domain.interface.media.blog.data import BlogData
-from myus.domain.interface.media.comic.data import ComicData
-from myus.domain.interface.media.picture.data import PictureData
-from myus.domain.interface.media.chat.data import ChatData
-from myus.domain.interface.hashtag.data import HashtagData
-from myus.domain.interface.channel.data import ChannelData
+from myus.domain.media.video.data import VideoData
+from myus.domain.media.music.data import MusicData
+from myus.domain.media.blog.data import BlogData
+from myus.domain.media.comic.data import ComicData
+from myus.domain.media.picture.data import PictureData
+from myus.domain.media.chat.data import ChatData
+from myus.domain.hashtag.data import HashtagData
+from myus.domain.channel.data import ChannelData
 from myus.utils.functions.index import create_url, get_client_ip
 from myus.types.dto.message import MessageDTO
 from myus.types.dto.user import AuthorDTO, MediaUserDTO
@@ -26,7 +26,7 @@ from myus.types.schema.media.output import VideoDetailsOut, MusicDetailsOut, Blo
 from myus.types.schema.message import MessageOut
 from myus.types.schema.channel import ChannelOut
 from myus.types.schema.user import AuthorOut, MediaUserOut
-from myus.domain.interface.media.index import PAGE_SIZE
+from myus.domain.media.index import PAGE_SIZE
 from myus.usecase.media.core import create_video, create_music, create_blog, create_comic, create_picture, create_chat
 from myus.usecase.media.core import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from myus.usecase.media.core import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail

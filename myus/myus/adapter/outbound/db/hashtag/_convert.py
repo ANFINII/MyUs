@@ -2,7 +2,7 @@ from typing import assert_never
 from django.db.models import Model
 from django_ulid.models import ulid
 from myus.db.models.hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
-from myus.domain.interface.hashtag.data import HashtagData
+from myus.domain.hashtag.data import HashtagData
 from myus.utils.enum.media import MediaType
 
 

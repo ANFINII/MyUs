@@ -1,6 +1,6 @@
 from django_ulid.models import ulid
 from myus.db.models.comment import Comment
-from myus.domain.interface.comment.data import CommentData
+from myus.domain.comment.data import CommentData
 
 
 def convert_data(obj: Comment) -> CommentData:

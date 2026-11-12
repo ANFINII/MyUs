@@ -1,5 +1,5 @@
 from myus.db.models.payment import PaymentCustomer
-from myus.domain.interface.payment.customer.data import PaymentCustomerData
+from myus.domain.payment.customer.data import PaymentCustomerData
 from myus.utils.enum.payment import PaymentProvider
 
 

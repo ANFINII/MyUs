@@ -12,9 +12,9 @@ from stripe.params.checkout import (
     SessionCreateParamsSubscriptionData,
     SessionCreateParamsSubscriptionDataTransferData,
 )
-from myus.domain.interface.payment.data import Money
-from myus.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentPaidContent, PayoutContent, ProviderSubscriptionData
-from myus.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed
+from myus.domain.payment.data import Money
+from myus.domain.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentPaidContent, PayoutContent, ProviderSubscriptionData
+from myus.domain.payment.provider.data import CheckoutData, CheckoutFailed
 from myus.utils.enum.i18n import Currency, Locale
 from myus.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, PayoutStatus, SubscriptionStatus, WebhookEventType
 from myus.utils.enum.user import PlanName

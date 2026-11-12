@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from datetime import datetime
-from myus.domain.interface.es.data import EventEnvelope
-from myus.domain.interface.es.interface import EventStoreInterface
+from myus.domain.es.data import EventEnvelope
+from myus.domain.es.interface import EventStoreInterface
 from myus.utils.common.result import CommandError, ConflictError, FatalError, HistoryCorruptedError, Result, ValidateError
 from myus.utils.functions.es import new_event_id
 

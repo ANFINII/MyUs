@@ -1,6 +1,6 @@
 from myus.db.models.payment import Subscription
-from myus.domain.interface.payment.data import Money
-from myus.domain.interface.payment.subscription.data import SubscriptionData
+from myus.domain.payment.data import Money
+from myus.domain.payment.subscription.data import SubscriptionData
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import SubscriptionStatus
 

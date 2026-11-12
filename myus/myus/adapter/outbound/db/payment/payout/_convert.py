@@ -1,5 +1,5 @@
 from myus.db.models.payment import PaymentPayout
-from myus.domain.interface.payment.payout.data import PayoutData
+from myus.domain.payment.payout.data import PayoutData
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import PaymentProvider, PayoutStatus
 

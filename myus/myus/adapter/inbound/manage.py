@@ -10,7 +10,7 @@ from myus.types.schema.common import ErrorOut, ErrorType, Limit, Offset, Success
 from myus.types.schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from myus.types.schema.media.output import MediaCreateOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
 from myus.types.schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
-from myus.domain.interface.media.index import PAGE_SIZE
+from myus.domain.media.index import PAGE_SIZE
 from myus.usecase.manage.advertise.core import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise
 from myus.usecase.manage.media.core import (
     get_manage_videos, get_manage_video, update_manage_video, delete_manage_video,

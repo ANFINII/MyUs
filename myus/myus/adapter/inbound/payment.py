@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from ninja import Router
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
-from myus.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, WebhookVerified, WebhookVerifyFailed
+from myus.domain.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, WebhookVerified, WebhookVerifyFailed
 from myus.types.schema.common import ErrorOut, ErrorType
 from myus.types.schema.payment import PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentSubscriptionOut, PaymentWebhookOut
 from myus.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, get_subscription, receive_payment_event, revoke_cancellation, verify_webhook

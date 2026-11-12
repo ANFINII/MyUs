@@ -2,9 +2,9 @@ import random
 from dataclasses import replace
 from django.utils import timezone
 from myus.utils.common.logger import log
-from myus.domain.interface.advertise.data import AdvertiseData
-from myus.domain.interface.advertise.interface import AdvertiseInterface, SortOption
-from myus.domain.interface.media.index import ExcludeOption, FilterOption, PageOption
+from myus.domain.advertise.data import AdvertiseData
+from myus.domain.advertise.interface import AdvertiseInterface, SortOption
+from myus.domain.media.index import ExcludeOption, FilterOption, PageOption
 from myus.injectors.container import injector
 from myus.usecase.user.core import get_user_data
 from myus.usecase.advertise._convert import is_active, save_read_data

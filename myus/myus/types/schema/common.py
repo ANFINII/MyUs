@@ -1,7 +1,7 @@
 from enum import StrEnum
 from typing import Annotated
 from pydantic import BaseModel, Field
-from myus.domain.interface.media.index import PAGE_SIZE
+from myus.domain.media.index import PAGE_SIZE
 
 
 class ErrorType(StrEnum):

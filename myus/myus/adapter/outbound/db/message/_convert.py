@@ -1,6 +1,6 @@
 from django_ulid.models import ulid
 from myus.db.models.message import Message
-from myus.domain.interface.message.data import MessageData
+from myus.domain.message.data import MessageData
 
 
 def convert_data(obj: Message) -> MessageData:

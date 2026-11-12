@@ -2,9 +2,9 @@ from django.db.models import Q
 from myus.db.models.payment import PaymentCustomer
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.adapter.outbound.db.payment.customer._convert import convert_data, marshal_data
-from myus.domain.interface.payment.customer.data import PaymentCustomerData
-from myus.domain.interface.payment.customer.interface import FilterOption, SortOption, PaymentCustomerInterface
-from myus.domain.interface.payment.customer.validation import validate
+from myus.domain.payment.customer.data import PaymentCustomerData
+from myus.domain.payment.customer.interface import FilterOption, SortOption, PaymentCustomerInterface
+from myus.domain.payment.customer.validation import validate
 from myus.utils.common.result import FatalError, Result
 
 

@@ -10,8 +10,8 @@ from myus.db.models.notification import Notification
 from myus.db.models.users import Follow
 from myus.adapter.outbound.db.notification._convert import convert_data, get_media_model, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.domain.interface.notification.data import NotificationData
-from myus.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
+from myus.domain.notification.data import NotificationData
+from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType

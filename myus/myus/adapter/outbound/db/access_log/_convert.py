@@ -1,5 +1,5 @@
 from myus.db.models.common import AccessLog
-from myus.domain.interface.access_log.data import AccessLogData
+from myus.domain.access_log.data import AccessLogData
 from myus.utils.enum.access_log import AccessType
 
 

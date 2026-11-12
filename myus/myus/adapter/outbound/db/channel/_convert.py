@@ -1,6 +1,6 @@
 from django_ulid.models import ulid
 from myus.db.models.channel import Channel
-from myus.domain.interface.channel.data import ChannelData
+from myus.domain.channel.data import ChannelData
 
 
 def convert_data(obj: Channel) -> ChannelData:

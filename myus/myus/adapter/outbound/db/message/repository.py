@@ -3,8 +3,8 @@ from django.db.models.query import QuerySet
 from myus.db.models.message import Message
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.adapter.outbound.db.message._convert import convert_data, marshal_data
-from myus.domain.interface.message.data import MessageData
-from myus.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
+from myus.domain.message.data import MessageData
+from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

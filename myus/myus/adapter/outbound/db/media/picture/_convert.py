@@ -1,8 +1,8 @@
 from django_ulid.models import ulid
 from myus.db.models.media import Picture
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.hashtag.data import HashtagData
-from myus.domain.interface.media.picture.data import PictureData
+from myus.domain.channel.data import ChannelData
+from myus.domain.hashtag.data import HashtagData
+from myus.domain.media.picture.data import PictureData
 
 
 def convert_data(obj: Picture) -> PictureData:

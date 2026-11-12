@@ -1,6 +1,6 @@
-from myus.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
-from myus.domain.interface.user.data import UserAllData
-from myus.domain.interface.user.interface import UserInterface
+from myus.domain.follow.interface import FilterOption, FollowInterface, SortOption
+from myus.domain.user.data import UserAllData
+from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
 from myus.types.dto.follow import FollowDTO, FollowUserDTO
 from myus.usecase.user.core import get_user_data

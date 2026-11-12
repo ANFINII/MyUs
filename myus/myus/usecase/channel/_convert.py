@@ -1,5 +1,5 @@
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.channel.interface import ChannelInterface
+from myus.domain.channel.data import ChannelData
+from myus.domain.channel.interface import ChannelInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 
