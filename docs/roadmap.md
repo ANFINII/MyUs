@@ -151,3 +151,21 @@ flowchart LR
 | worker が止まって投影や外部操作が進まない | 未処理の件数と最も古い行の時刻をログに出し、閾値を超えたら通知する |
 | 1人で進めるには部品が多い | Phase ごとに止めても動く形にしてある |
 | イベントの形を変えて、過去のイベントが読めなくなる | 保存したスキーマとの比較（`test_schema_compatibility.py`）で止める |
+
+## バックエンドの構成
+
+ディレクトリ構成の見直し（#1289〜#1310）の結果は [architecture.md](architecture.md) の「バックエンド」と [backend.md](backend.md) に書いた。
+
+### 決めていないこと
+
+- `es` を `event_store` にするか（`domain/es`・`adapter/outbound/db/es`・`usecase/es`・`utils/functions/es.py`。`es_event` テーブルの名前は変えない）
+- `usecase/<ドメイン>/core.py` の名前
+
+### やらないこと
+
+- `db/models/` の `users.py`・`common.py`・`master.py` をモデルごとのファイルに分ける
+
+### 気づいたが手を付けていないこと
+
+- `utils/functions/validation.py` が `has_weak_password` のために Django の `User` モデルを import しているので、`domain/user/validation.py` も間接的に Django を読み込む（`has_weak_password` を別のファイルに分けるとよい）
+- `usecase/channel/core.py` で `new_ulid = str(ulid.new())` と、関数の `new_ulid()`（`utils/functions/common.py`）と同じ名前の変数を使っている
