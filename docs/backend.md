@@ -132,7 +132,7 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 
 - エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`myus/types/schema/common.py`）。`type`は必須
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
-- `auth_check`（`myus/adapter/auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
+- `auth_check`（`myus/adapter/inbound/auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
 - `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く（`response={...}`に無いステータスを返すとNinjaが実行時に例外にする）
 - 成功で返すものが無いときは`200: None`・`return 200, None`にする
@@ -258,12 +258,12 @@ return Result.ok(new_ids)
 
 | 層 | 責務 | 依存してよいもの |
 |------|------|------|
-| adapter | HTTPリクエスト/レスポンス変換、認証チェック | usecase, schema |
+| adapter/inbound | HTTP・WebSocket のリクエスト/レスポンス変換、認証チェック | usecase, schema |
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
 | domain/interface | 抽象定義（ABC, dataclass） | なし |
 | domain/entity | Repository実装、DBアクセス | Django ORM, interface |
 | domain/aggregate | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数 | interface（Data）, utils |
-| adapter/external | 外部サービス（Stripe など）の Interface の実装 | interface, 外部の SDK |
+| adapter/outbound | 外部サービス（Stripe など）の Interface の実装 | interface, 外部の SDK |
 | utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase・types を import しない） |
 
 - adapter → usecase → interface の方向にのみ依存する
@@ -350,3 +350,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-11: Validation（ドメインのルール）を追記
 - 2026-11-12: パッケージ名を `api` から `myus` にした（Django の app の label・テーブル名は変えない）
 - 2026-11-12: テストをパッケージの外（`tests/`）に出し、リンターチェックを `mypy myus config tests`・`ruff check myus config tests` にした
+- 2026-11-12: adapter を `inbound/`（HTTP・WebSocket）と `outbound/`（外部サービス。もとの `adapter/external`）に分けた

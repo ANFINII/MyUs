@@ -38,9 +38,9 @@
 ### 別の決済会社を足すときの手順
 
 1. `myus/utils/enum/payment.py` の `PaymentProvider` に値を足す（DB の `provider` の選択肢も変わるので、マイグレーションを作る）
-2. `myus/adapter/external/payment/<provider>/` に `PaymentInterface` の実装（`provider.py`・`_convert.py`）を置く
+2. `myus/adapter/outbound/payment/<provider>/` に `PaymentInterface` の実装（`provider.py`・`_convert.py`）を置く
 3. `injectors/index.py` の `provide_payment_providers` の辞書に1行足す
-4. `adapter/payment.py` に、その決済会社の webhook の入口（例：`/payment/webhook/gmo`）を足し、署名を取り出して `verify_webhook(PaymentProvider.XXX, payload, signature)` を呼ぶ
+4. `adapter/inbound/payment.py` に、その決済会社の webhook の入口（例：`/payment/webhook/gmo`）を足し、署名を取り出して `verify_webhook(PaymentProvider.XXX, payload, signature)` を呼ぶ
 5. キーなどを `config/env.py` と `envs/sample.env` に足す
 6. 新しく始める決済をその会社にするなら、`usecase/payment/core.py` の `CHECKOUT_PROVIDER` を変える（ユーザーや契約ごとに選ぶなら、そこを選ぶ処理に置き換える）
 
