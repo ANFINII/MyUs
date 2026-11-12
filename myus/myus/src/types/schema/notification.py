@@ -1,0 +1,39 @@
+from pydantic import BaseModel
+from myus.utils.enum.media import MediaType
+
+
+class NotificationIn(BaseModel):
+    ulid: str
+
+
+class NotificationUserOut(BaseModel):
+    avatar: str
+    ulid: str
+    nickname: str
+
+
+class NotificationContentOut(BaseModel):
+    id: int
+    ulid: str
+    title: str
+    text: str
+    read: int
+    media_type: MediaType | None
+    media_ulid: str
+    thread_ulid: str
+
+
+class NotificationItemOut(BaseModel):
+    ulid: str
+    user_from: NotificationUserOut
+    user_to: NotificationUserOut
+    type_no: int
+    type_name: str
+    object_type: str
+    content_object: NotificationContentOut
+    is_confirmed: bool
+
+
+class NotificationOut(BaseModel):
+    count: int
+    items: list[NotificationItemOut]

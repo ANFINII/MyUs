@@ -1,0 +1,24 @@
+from dataclasses import dataclass
+from datetime import datetime
+from myus.src.domain.interface.channel.data import ChannelData
+from myus.src.domain.interface.hashtag.data import HashtagData
+
+
+@dataclass(frozen=True, slots=True)
+class MusicData:
+    id: int
+    ulid: str
+    title: str
+    content: str
+    lyric: str
+    music: str
+    read: int
+    like: int
+    download: bool
+    publish: bool
+    publish_at: datetime
+    created: datetime
+    updated: datetime
+    category_ulid: str
+    channel: ChannelData
+    hashtags: list[HashtagData]

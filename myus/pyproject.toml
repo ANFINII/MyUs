@@ -67,21 +67,21 @@ plugins = ["mypy_django_plugin.main"]    # Django stubsプラグイン
 
 # 特定のモジュールの設定
 [[tool.mypy.overrides]]
-module = ["django.*", "api.tests.*"]
+module = ["django.*", "myus.tests.*"]
 ignore_missing_imports = true  # 外部ライブラリの型情報が見つからない場合はエラーを無視
 
 [[tool.mypy.overrides]]
-module = ["api.src.adapter.websocket"]
+module = ["myus.src.adapter.websocket"]
 disallow_subclassing_any = false  # channels の WebsocketConsumer は型情報が無いため継承を許可
 disallow_any_unimported = false   # 同上
 
 [[tool.mypy.overrides]]
-module = ["api.db.admin"]
+module = ["myus.db.admin"]
 disallow_subclassing_any = false  # import_export の ImportExportModelAdmin は型情報が無いため継承を許可
 disallow_any_unimported = false   # 同上
 
 [[tool.mypy.overrides]]
-module = ["api.modules.logger"]
+module = ["myus.modules.logger"]
 disallow_subclassing_any = false  # coloredlogs の ColoredFormatter は型情報が無いため継承を許可
 disallow_any_unimported = false   # 同上
 
@@ -92,7 +92,7 @@ ignore_missing_imports = true     # Windows でだけ使う任意のライブラ
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.local"
 addopts = "--nomigrations"                # マイグレーションは git 管理外のため、テスト用 DB はモデルから直接作る
-testpaths = ["api/tests"]
+testpaths = ["myus/tests"]
 
 [tool.django-stubs]
 django_settings_module = "config.settings.base"
@@ -109,15 +109,15 @@ combine-as-imports = true
 lines-after-imports = 2                                        # import後の空行
 no-lines-before = ["third-party", "first-party", "local-folder"]  # セクション間の改行なし
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
-known-first-party = ["api", "app", "config"]
+known-first-party = ["myus", "app", "config"]
 
 [tool.ruff.lint.per-file-ignores]
-"api/utils/common/result/result.py" = ["BLE001"]               # shield_exception：想定外の例外を FatalError に変える
-"api/utils/common/result/fatal.py" = ["BLE001"]                # 同上
-"api/utils/functions/convert/encode_worker.py" = ["BLE001"]    # バックグラウンドのスレッドの一番外側
-"api/utils/functions/convert/video_encoding.py" = ["BLE001"]   # 動画の変換の一番外側（失敗したら空の結果を返す）
-"api/src/usecase/broadcast/_convert.py" = ["BLE001"]                 # WebSocket の配信は失敗しても本処理を止めない
-"api/modules/logger.py" = ["BLE001"]                           # ログを取る処理の失敗でアプリを落とさない
+"myus/utils/common/result/result.py" = ["BLE001"]               # shield_exception：想定外の例外を FatalError に変える
+"myus/utils/common/result/fatal.py" = ["BLE001"]                # 同上
+"myus/utils/functions/convert/encode_worker.py" = ["BLE001"]    # バックグラウンドのスレッドの一番外側
+"myus/utils/functions/convert/video_encoding.py" = ["BLE001"]   # 動画の変換の一番外側（失敗したら空の結果を返す）
+"myus/src/usecase/broadcast/_convert.py" = ["BLE001"]                 # WebSocket の配信は失敗しても本処理を止めない
+"myus/modules/logger.py" = ["BLE001"]                           # ログを取る処理の失敗でアプリを落とさない
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "django.test.TestCase".msg = "pytest を使う（docs/backend.md の「テスト」）"

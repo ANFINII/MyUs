@@ -1,0 +1,211 @@
+from django.contrib import admin
+from django.db import models
+from django.utils import timezone
+from django_ulid.models import ulid
+from myus.db.models.base import MediaModel
+from myus.db.models.channel import Channel
+from myus.db.models.hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
+from myus.db.models.master import Category
+from myus.db.models.user import User
+from myus.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
+
+
+# Video
+class Video(models.Model, MediaModel):
+    """Video"""
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    video      = models.FileField(upload_to=video_upload, max_length=255, blank=True)
+    convert    = models.FileField(upload_to=video_upload, max_length=255, blank=True)
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="video_like", blank=True)
+    read       = models.IntegerField(default=0)
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "video"
+        verbose_name_plural = "01 Video"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="video_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="video_publish_created_idx"),
+        ]
+
+
+# Music
+class Music(models.Model, MediaModel):
+    """Music"""
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    lyric      = models.TextField()
+    music      = models.FileField(upload_to=music_upload, max_length=255, blank=True)
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=MusicHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="music_like", blank=True)
+    read       = models.IntegerField(default=0)
+    download   = models.BooleanField(default=True)
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "music"
+        verbose_name_plural = "02 Music"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="music_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="music_publish_created_idx"),
+        ]
+
+
+# Blog
+class Blog(models.Model, MediaModel):
+    """Blog"""
+    id           = models.BigAutoField(primary_key=True)
+    ulid         = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel      = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="blogs")
+    title        = models.CharField(max_length=100)
+    content      = models.TextField()
+    richtext     = models.TextField()
+    image        = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    category     = models.ManyToManyField(Category, blank=True)
+    hashtag      = models.ManyToManyField(HashTag, through=BlogHashtag, blank=True)
+    like         = models.ManyToManyField(User, related_name="blog_like", blank=True)
+    read         = models.IntegerField(default=0)
+    publish      = models.BooleanField(default=True)
+    publish_at   = models.DateTimeField(default=timezone.now)
+    is_promotion = models.BooleanField(default=False)
+    created      = models.DateTimeField(auto_now_add=True)
+    updated      = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "blog"
+        verbose_name_plural = "03 Blog"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="blog_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="blog_publish_created_idx"),
+        ]
+
+
+# Comic
+class Comic(models.Model, MediaModel):
+    """Comic"""
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=ComicHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="comic_like", blank=True)
+    read       = models.IntegerField(default=0)
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "comic"
+        verbose_name_plural = "04 Comic"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="comic_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="comic_publish_created_idx"),
+        ]
+
+
+class ComicPage(models.Model):
+    """ComicPage"""
+    id    = models.BigAutoField(primary_key=True)
+    comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name="comic")
+    image = models.ImageField(upload_to=comic_upload, max_length=255, blank=True)
+    sequence = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = "comic_page"
+        verbose_name_plural = "04 ComicPage"
+        constraints = [
+            models.UniqueConstraint(fields=["comic", "sequence"], name="lesson_unique")
+        ]
+
+
+# Picture
+class Picture(models.Model, MediaModel):
+    """Picture"""
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=PictureHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="picture_like", blank=True)
+    read       = models.IntegerField(default=0)
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "picture"
+        verbose_name_plural = "05 Picture"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="picture_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="picture_publish_created_idx"),
+        ]
+
+
+# Chat
+class Chat(models.Model):
+    """Chat"""
+    id         = models.BigAutoField(primary_key=True)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="chats")
+    title      = models.CharField(max_length=100)
+    content    = models.TextField()
+    category   = models.ManyToManyField(Category, blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=ChatHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="chat_like", blank=True)
+    read       = models.IntegerField(default=0)
+    period     = models.DateField()
+    publish    = models.BooleanField(default=True)
+    publish_at = models.DateTimeField(default=timezone.now)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    @admin.display(description="like")
+    def total_like(self):
+        return self.like.count()
+
+    @admin.display(description="thread")
+    def thread_count(self) -> int:
+        return self.message.filter(parent__isnull=True).count()
+
+    @admin.display(description="joined")
+    def joined_count(self) -> int:
+        return self.message.values_list("author").distinct().count()
+
+    def score(self):
+        return int(self.read + self.like.count()*10 + self.read*self.like.count()/(self.read+1)*20)
+
+    class Meta:
+        db_table = "chat"
+        verbose_name_plural = "06 Chat"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="chat_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="chat_publish_created_idx"),
+        ]

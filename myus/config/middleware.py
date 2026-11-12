@@ -2,8 +2,8 @@ import json
 from collections.abc import Callable
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from api.modules.logger import log
-from api.src.types.schema.common import ErrorOut, ErrorType
+from myus.modules.logger import log
+from myus.src.types.schema.common import ErrorOut, ErrorType
 
 
 API_PATH_PREFIX = "/api/"
