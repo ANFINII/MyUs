@@ -5,7 +5,7 @@ from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.adapter.inbound.advertise import convert_advertises
 from myus.adapter.inbound.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
-from myus.types.dto.user import SearchTagDTO
+from myus.usecase.dto.user import SearchTagDTO
 from myus.adapter.inbound.schema.advertise import AdvertiseListOut
 from myus.adapter.inbound.schema.channel import ChannelOut
 from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut

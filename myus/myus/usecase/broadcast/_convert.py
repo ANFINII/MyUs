@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from myus.utils.common.logger import log
-from myus.types.dto.message import MessageDTO
+from myus.usecase.dto.message import MessageDTO
 
 
 @dataclass(frozen=True, slots=True)

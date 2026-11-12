@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from ninja import Router
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
-from myus.types.dto.comment import CommentCreateDTO
+from myus.usecase.dto.comment import CommentCreateDTO
 from myus.adapter.inbound.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn
 from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.adapter.inbound.schema.user import AuthorOut

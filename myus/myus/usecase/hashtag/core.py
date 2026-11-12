@@ -3,7 +3,7 @@ from myus.domain.hashtag.data import HashtagData
 from myus.domain.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType
 from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
-from myus.types.dto.hashtag import HashtagDTO
+from myus.usecase.dto.hashtag import HashtagDTO
 from myus.usecase.media._convert import get_media_repository
 from myus.usecase.hashtag._convert import normalize_name, has_ng_word, get_ng_words_data
 from myus.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result

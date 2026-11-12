@@ -59,7 +59,7 @@ flowchart LR
 | `domain/<ドメイン>/<集約>/` | Event Sourcing の集約（状態・イベント・判断・適用）。I/O を持たない関数。いまは `domain/payment/subscription/` |
 | `injectors/` | interface と実装の対応付け |
 | `adapter/inbound/schema/` | API の入出力スキーマ（django-ninja の Pydantic のモデル）。adapter/inbound だけが使う |
-| `types/dto/` | usecase の入出力の DTO（dataclass） |
+| `usecase/dto/` | usecase の入出力の DTO（dataclass）。adapter/inbound も usecase の結果を受け取るのに使う |
 
 usecase は interface にだけ依存し、実装は `injector` から取得する。Django ORM や Stripe の SDK は usecase から直接使わない。テストでは repository を fake に差し替える。
 

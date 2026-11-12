@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from myus.types.dto.user import AuthorDTO
+from myus.usecase.dto.user import AuthorDTO
 from myus.utils.enum.media import CommentType
 
 

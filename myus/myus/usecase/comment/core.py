@@ -5,7 +5,7 @@ from myus.domain.comment.data import CommentData
 from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
 from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.injectors.container import injector
-from myus.types.dto.comment import CommentCreateDTO, CommentDTO
+from myus.usecase.dto.comment import CommentCreateDTO, CommentDTO
 from myus.usecase.media._convert import get_media_repository
 from myus.usecase.notification._convert import create_notification_data
 from myus.usecase.user._convert import get_author_data

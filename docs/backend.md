@@ -201,7 +201,7 @@ if ret.is_err:
 - 置き場所: `adapter/inbound/schema/`（adapter/inbound だけが使う。usecase からは import しない）
 - サフィックス: 入力`In`、出力`Out`
 
-### usecase の入出力: dataclass（`types/dto/`）
+### usecase の入出力: dataclass（`usecase/dto/`）
 - `@dataclass(frozen=True, slots=True)`
 - サフィックス: `DTO`
 - 入力は`XxxDTO`にする（`SignupDTO`・`SettingProfileDTO`・`SearchTagDTO`）。項目はschemaの`XxxIn`と同じ名前にする
@@ -274,7 +274,7 @@ return Result.ok(new_ids)
 | domain/<ドメイン>/<集約> | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数。いまは `domain/payment/subscription` | Data, utils |
 | adapter/outbound/db | Repository の実装、DBアクセス | Django ORM, interface |
 | adapter/outbound/payment | 決済会社（Stripe など）の Interface の実装 | interface, 外部の SDK |
-| utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase・types を import しない） |
+| utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase を import しない） |
 
 - adapter → usecase → interface の方向にのみ依存する
 - usecase層からadapter層の型（`HttpRequest`、schemaの`XxxIn`等）をインポートしない。入力はadapterでDTOに組み替えて受け取る（「型定義」を参照）
@@ -365,3 +365,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-12: `domain/interface` をなくし、Data・Interface・ルールを `domain/<ドメイン>/` に置いた
 - 2026-11-12: `domain/aggregate` をなくし、集約を `domain/<ドメイン>/<集約>/`（サブスクリプションは `domain/payment/subscription`）に置いた
 - 2026-11-12: usecase の入力を DTO にし、schema を `types/schema` から `adapter/inbound/schema` に移した
+- 2026-11-12: DTO を `types/dto` から `usecase/dto` に移し、`types` をなくした

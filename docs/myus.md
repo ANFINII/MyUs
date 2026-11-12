@@ -393,11 +393,11 @@ flowchart TB
     - `db/`: Repository の実装（Django ORM）
     - `payment/`: 決済会社（Stripe）の `PaymentInterface` の実装
 - **usecase/**: ビジネスロジック。ドメインごとのディレクトリに `core.py`（adapter から呼ぶ関数）と `_convert.py`（補助の関数）を置く
+  - `dto/`: usecase の入出力の DTO（dataclass）
   - `command/`: 集約へのコマンド
 - **domain/**
   - `<ドメイン>/`: dataclass の Data（`data.py`）と Repository の Interface（`interface.py`）、ルール（`validation.py`）
   - `<ドメイン>/<集約>/`: Event Sourcing の集約（状態 `state.py`・イベント `event.py`・判断 `decide.py`・適用 `apply.py`）。いまは `payment/subscription/`
-- **types/dto/**: usecase の入出力の DTO（dataclass）
 - **injectors/**: DI（Interface と実装の対応）
 - モデルは `myus/myus/db/models/`、管理コマンドは `myus/myus/db/management/commands/`
 

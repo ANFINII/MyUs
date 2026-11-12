@@ -3,7 +3,7 @@ from myus.domain.notification.interface import FilterOption, NotificationInterfa
 from myus.domain.user.data import UserNotificationData
 from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
-from myus.types.dto.notification import NotificationUserDTO
+from myus.usecase.dto.notification import NotificationUserDTO
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.notification import NotificationObjectType, NotificationType, NotificationTypeNo
 from myus.utils.functions.index import create_url
