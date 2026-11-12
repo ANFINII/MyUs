@@ -87,3 +87,127 @@ class ChatDetailDTO(MediaDetailDTO):
     joined: int
     period: date
     messages: list[MessageDTO]
+
+
+@dataclass(frozen=True, slots=True)
+class VideoCreateDTO:
+    channel_ulid: str
+    category_ulid: str
+    publish: bool
+    publish_at: datetime
+    title: str
+    content: str
+
+
+@dataclass(frozen=True, slots=True)
+class MusicCreateDTO:
+    channel_ulid: str
+    category_ulid: str
+    publish: bool
+    publish_at: datetime
+    title: str
+    content: str
+    lyric: str
+    download: bool
+
+
+@dataclass(frozen=True, slots=True)
+class BlogCreateDTO:
+    channel_ulid: str
+    category_ulid: str
+    publish: bool
+    publish_at: datetime
+    title: str
+    content: str
+    richtext: str
+    is_promotion: bool
+
+
+@dataclass(frozen=True, slots=True)
+class ComicCreateDTO:
+    channel_ulid: str
+    category_ulid: str
+    publish: bool
+    publish_at: datetime
+    title: str
+    content: str
+
+
+@dataclass(frozen=True, slots=True)
+class PictureCreateDTO:
+    channel_ulid: str
+    category_ulid: str
+    publish: bool
+    publish_at: datetime
+    title: str
+    content: str
+
+
+@dataclass(frozen=True, slots=True)
+class ChatCreateDTO:
+    channel_ulid: str
+    category_ulid: str
+    publish: bool
+    publish_at: datetime
+    title: str
+    content: str
+    period: date
+
+
+@dataclass(frozen=True, slots=True)
+class VideoUpdateDTO:
+    category_ulid: str
+    title: str
+    content: str
+    publish: bool
+    publish_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class MusicUpdateDTO:
+    category_ulid: str
+    title: str
+    content: str
+    lyric: str
+    download: bool
+    publish: bool
+    publish_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class BlogUpdateDTO:
+    category_ulid: str
+    title: str
+    content: str
+    richtext: str
+    is_promotion: bool
+    publish: bool
+    publish_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class ComicUpdateDTO:
+    category_ulid: str
+    title: str
+    content: str
+    publish: bool
+    publish_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class PictureUpdateDTO:
+    category_ulid: str
+    title: str
+    content: str
+    publish: bool
+    publish_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class ChatUpdateDTO:
+    category_ulid: str
+    title: str
+    content: str
+    period: date
+    publish: bool
+    publish_at: datetime

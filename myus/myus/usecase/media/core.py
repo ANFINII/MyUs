@@ -17,8 +17,7 @@ from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption, SortType
 from myus.injectors.container import injector
-from myus.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
-from myus.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
+from myus.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from myus.usecase.category._convert import get_category_data
 from myus.usecase.channel.core import get_channel_data
 from myus.usecase.comment._convert import get_comments_data
@@ -40,7 +39,7 @@ from myus.utils.plan import get_plan
 
 
 @Result.shield_exception()
-def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
+def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
     upload_ret = validate_uploads([(video, MediaUpload.VIDEO), (image, ImageUpload.VIDEO)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -131,7 +130,7 @@ def create_video(user_id: int, input: VideoIn, image: UploadedFile, video: Uploa
 
 
 @Result.shield_exception()
-def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
+def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
     upload_ret = validate_uploads([(music, MediaUpload.MUSIC)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -194,7 +193,7 @@ def create_music(user_id: int, input: MusicIn, music: UploadedFile) -> Result[Me
 
 
 @Result.shield_exception()
-def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
+def create_blog(user_id: int, input: BlogCreateDTO, image: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.BLOG)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -257,7 +256,7 @@ def create_blog(user_id: int, input: BlogIn, image: UploadedFile) -> Result[Medi
 
 
 @Result.shield_exception()
-def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, WriteError]:
+def create_comic(user_id: int, input: ComicCreateDTO, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.COMIC), *[(p, ImageUpload.COMIC_PAGE) for p in pages]])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -319,7 +318,7 @@ def create_comic(user_id: int, input: ComicIn, image: UploadedFile, pages: list[
 
 
 @Result.shield_exception()
-def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
+def create_picture(user_id: int, input: PictureCreateDTO, image: UploadedFile) -> Result[MediaCreateDTO, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.PICTURE)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -380,7 +379,7 @@ def create_picture(user_id: int, input: PictureIn, image: UploadedFile) -> Resul
 
 
 @Result.shield_exception()
-def create_chat(user_id: int, input: ChatIn) -> Result[MediaCreateDTO, WriteError]:
+def create_chat(user_id: int, input: ChatCreateDTO) -> Result[MediaCreateDTO, WriteError]:
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)

@@ -200,6 +200,14 @@ if ret.is_err:
 ### アダプター（API）: Pydantic BaseModel
 - サフィックス: 入力`In`、出力`Out`
 
+### usecase の入出力: dataclass（`types/dto/`）
+- `@dataclass(frozen=True, slots=True)`
+- サフィックス: `DTO`
+- 入力は、作成なら`XxxCreateDTO`、更新なら`XxxUpdateDTO`（`VideoCreateDTO`・`VideoUpdateDTO`）。項目はschemaの`XxxIn`と同じ名前にする
+- 作成と更新で項目がまったく同じなら、1つにまとめて`XxxInDTO`にする（`AdvertiseInDTO`）
+- usecaseはschema（`XxxIn`）を受け取らない。adapterで`dto = VideoCreateDTO(**input.model_dump())`と組み替えて渡す
+- 項目が1つだけなら、DTOを作らず値で渡す
+
 ### 内部データ構造: dataclass
 - `@dataclass(frozen=True, slots=True)`
 - サフィックス: `Data`

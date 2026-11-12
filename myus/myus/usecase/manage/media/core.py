@@ -17,7 +17,7 @@ from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption
 from myus.domain.message.interface import FilterOption as MessageFilterOption, MessageInterface, SortOption as MessageSortOption
 from myus.injectors.container import injector
-from myus.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
+from myus.types.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.usecase.category._convert import get_category_data
 from myus.usecase.notification._convert import create_publish_notification_data
 from myus.usecase.manage.media._convert import save_video_data, save_music_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_music_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
@@ -84,7 +84,7 @@ def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
+def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.VIDEO)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -196,7 +196,7 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, WriteError]:
+def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO) -> Result[None, WriteError]:
     repo = injector.get(MusicInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -301,7 +301,7 @@ def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
+def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.BLOG)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -419,7 +419,7 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
+def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.COMIC)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -531,7 +531,7 @@ def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, FindError
 
 
 @Result.shield_exception()
-def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
+def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateDTO, image: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(image, ImageUpload.PICTURE)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -640,7 +640,7 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, WriteError]:
+def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateDTO) -> Result[None, WriteError]:
     repo = injector.get(ChatInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
