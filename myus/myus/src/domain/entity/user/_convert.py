@@ -1,0 +1,180 @@
+from typing import assert_never
+from django.contrib.auth.hashers import make_password
+from django_ulid.models import ulid
+from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
+from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
+from myus.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
+from myus.utils.enum.media import MediaType
+
+
+def convert_data(user: User) -> UserAllData:
+    assert hasattr(user, "profile"), "Profile is required"
+    assert hasattr(user, "mypage"), "Mypage is required"
+    assert hasattr(user, "notification"), "Notification is required"
+    assert hasattr(user, "user_plan"), "User plan is required"
+
+    return UserAllData(
+        user=user_data(user),
+        profile=profile_data(user.profile),
+        mypage=mypage_data(user.mypage),
+        notification=user_notification_data(user.notification),
+        user_plan=user_plan_data(user.user_plan),
+    )
+
+
+def user_data(user: User) -> UserData:
+    return UserData(
+        id=user.id,
+        ulid=user.ulid,
+        avatar=user.avatar.name or "",
+        password=user.password,
+        email=user.email,
+        username=user.username,
+        nickname=user.nickname,
+        is_active=user.is_active,
+        is_staff=user.is_staff,
+        date_joined=user.date_joined,
+    )
+
+
+def profile_data(profile: Profile) -> ProfileData:
+    return ProfileData(
+        last_name=profile.last_name,
+        first_name=profile.first_name,
+        gender=profile.gender,
+        birthday=profile.birthday,
+        phone=profile.phone,
+        country_code=profile.country_code,
+        postal_code=profile.postal_code,
+        prefecture=profile.prefecture,
+        city=profile.city,
+        street=profile.street,
+        introduction=profile.introduction,
+    )
+
+
+def mypage_data(mypage: MyPage) -> MyPageData:
+    return MyPageData(
+        banner=mypage.banner.name or "",
+        email=mypage.email,
+        content=mypage.content,
+        follower_count=mypage.follower_count,
+        following_count=mypage.following_count,
+        tag_manager_id=mypage.tag_manager_id,
+        is_advertise=mypage.is_advertise,
+    )
+
+
+def user_notification_data(user_notification: UserNotification) -> UserNotificationData:
+    return UserNotificationData(
+        is_video=user_notification.is_video,
+        is_music=user_notification.is_music,
+        is_blog=user_notification.is_blog,
+        is_comic=user_notification.is_comic,
+        is_picture=user_notification.is_picture,
+        is_chat=user_notification.is_chat,
+        is_follow=user_notification.is_follow,
+        is_reply=user_notification.is_reply,
+        is_like=user_notification.is_like,
+        is_views=user_notification.is_views,
+    )
+
+
+def user_plan_data(user_plan: UserPlan) -> UserPlanData:
+    return UserPlanData(
+        plan=user_plan.plan,
+        is_paid=user_plan.is_paid,
+        start_date=user_plan.start_date,
+        end_date=user_plan.end_date,
+    )
+
+
+def marshal_user_data(data: UserData) -> User:
+    return User(
+        id=data.id if data.id != 0 else None,
+        ulid=data.ulid if data.ulid else ulid.new(),
+        avatar=data.avatar,
+        password=make_password(data.password) if data.id == 0 else data.password,
+        email=data.email,
+        username=data.username,
+        nickname=data.nickname,
+        is_active=data.is_active,
+    )
+
+
+def marshal_profile_data(user: User, data: UserAllData) -> Profile:
+    profile = data.profile
+    return Profile(
+        user=user,
+        last_name=profile.last_name,
+        first_name=profile.first_name,
+        gender=profile.gender,
+        birthday=profile.birthday,
+        phone=profile.phone,
+        country_code=profile.country_code,
+        postal_code=profile.postal_code,
+        prefecture=profile.prefecture,
+        city=profile.city,
+        street=profile.street,
+        introduction=profile.introduction,
+    )
+
+
+def marshal_mypage_data(user: User, data: UserAllData) -> MyPage:
+    mypage = data.mypage
+    return MyPage(
+        user=user,
+        banner=mypage.banner,
+        email=mypage.email,
+        content=mypage.content,
+        follower_count=mypage.follower_count,
+        following_count=mypage.following_count,
+        tag_manager_id=mypage.tag_manager_id,
+        is_advertise=mypage.is_advertise,
+    )
+
+
+def marshal_user_notification_data(user: User, data: UserAllData) -> UserNotification:
+    notification = data.notification
+    return UserNotification(
+        user=user,
+        is_video=notification.is_video,
+        is_music=notification.is_music,
+        is_blog=notification.is_blog,
+        is_comic=notification.is_comic,
+        is_picture=notification.is_picture,
+        is_chat=notification.is_chat,
+        is_follow=notification.is_follow,
+        is_reply=notification.is_reply,
+        is_like=notification.is_like,
+        is_views=notification.is_views,
+    )
+
+
+def marshal_user_plan_data(user: User, data: UserAllData) -> UserPlan:
+    user_plan = data.user_plan
+    return UserPlan(
+        user=user,
+        plan=user_plan.plan,
+        is_paid=user_plan.is_paid,
+        start_date=user_plan.start_date,
+        end_date=user_plan.end_date,
+    )
+
+
+def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
+    match media_type:
+        case MediaType.VIDEO:
+            return Video
+        case MediaType.MUSIC:
+            return Music
+        case MediaType.BLOG:
+            return Blog
+        case MediaType.COMIC:
+            return Comic
+        case MediaType.PICTURE:
+            return Picture
+        case MediaType.CHAT:
+            return Chat
+        case _:
+            assert_never(media_type)

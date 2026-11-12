@@ -37,8 +37,8 @@
 
 ### 別の決済会社を足すときの手順
 
-1. `api/utils/enum/payment.py` の `PaymentProvider` に値を足す（DB の `provider` の選択肢も変わるので、マイグレーションを作る）
-2. `api/src/adapter/external/payment/<provider>/` に `PaymentInterface` の実装（`provider.py`・`_convert.py`）を置く
+1. `myus/utils/enum/payment.py` の `PaymentProvider` に値を足す（DB の `provider` の選択肢も変わるので、マイグレーションを作る）
+2. `myus/src/adapter/external/payment/<provider>/` に `PaymentInterface` の実装（`provider.py`・`_convert.py`）を置く
 3. `injectors/index.py` の `provide_payment_providers` の辞書に1行足す
 4. `adapter/payment.py` に、その決済会社の webhook の入口（例：`/payment/webhook/gmo`）を足し、署名を取り出して `verify_webhook(PaymentProvider.XXX, payload, signature)` を呼ぶ
 5. キーなどを `config/env.py` と `envs/sample.env` に足す
@@ -101,11 +101,11 @@ flowchart LR
 
 | 置き場 | 内容 | 状態 |
 |---|---|---|
-| `api/src/domain/aggregate/<集約>/` | `state.py`・`event.py`・`decide.py`・`apply.py`。I/O を持たない | あり |
-| `api/src/usecase/es/_convert.py` | `handle_command`（集約に書き込む共通の手順） | あり |
-| `api/src/usecase/<ドメイン>/_convert.py` | 集約ごとのコマンド（`payment` の `save_subscription_event_data` など） | あり |
-| `api/src/usecase/receiver/` | Receiver（外の事実やほかの集約のイベントを受けてコマンドを打つ） | Phase 5 以降 |
-| `api/src/usecase/projector/`・`query/` | Projector と専用の Writer、query usecase と Reader | Phase 6 |
+| `myus/src/domain/aggregate/<集約>/` | `state.py`・`event.py`・`decide.py`・`apply.py`。I/O を持たない | あり |
+| `myus/src/usecase/es/_convert.py` | `handle_command`（集約に書き込む共通の手順） | あり |
+| `myus/src/usecase/<ドメイン>/_convert.py` | 集約ごとのコマンド（`payment` の `save_subscription_event_data` など） | あり |
+| `myus/src/usecase/receiver/` | Receiver（外の事実やほかの集約のイベントを受けてコマンドを打つ） | Phase 5 以降 |
+| `myus/src/usecase/projector/`・`query/` | Projector と専用の Writer、query usecase と Reader | Phase 6 |
 
 ---
 

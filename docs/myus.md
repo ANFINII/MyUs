@@ -109,7 +109,7 @@ NgWord
 SearchTag (ユーザー検索タグ)
 AccessLog
 Advertise
-※ 料金プランはテーブルではなく `api/utils/plan.py` の定数
+※ 料金プランはテーブルではなく `myus/utils/plan.py` の定数
 ```
 
 ## データモデル詳細
@@ -235,7 +235,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 ### マスターデータ・その他
 
-#### 料金プラン（`api/utils/plan.py`）
+#### 料金プラン（`myus/utils/plan.py`）
 - テーブルではなくコードの定数（Free・Basic・Standard・Premium・Ultimate）
 - 価格、広告表示上限など。Stripe の価格 ID は環境変数（`STRIPE_PRICE_ID_*`）
 
@@ -292,7 +292,7 @@ flowchart TB
 
 | 観点 | 仕組み |
 |---|---|
-| 決済会社 | `PaymentInterface` の裏に隠し、Stripe の実装は `api/src/adapter/external/payment/stripe/` に置く |
+| 決済会社 | `PaymentInterface` の裏に隠し、Stripe の実装は `myus/src/adapter/external/payment/stripe/` に置く |
 | 受信 | webhook は検証と記録だけにし、反映は worker が行う（Inbox） |
 | 重複 | `PaymentEvent` の `(provider, event_id)` 一意制約。同じ webhook は1回だけ処理する |
 | 届く順番 | サブスクリプションは集約が判断する（古い事実・同じ状態ではイベントを生まない）。取引・入金は `last_event_at` を比べる |
@@ -350,7 +350,7 @@ flowchart TB
 
 `PaymentTransaction`・`PaymentPayout` は、最後に反映したイベントの日時（`last_event_at`）を持ち、それより古いイベントが後から届いても反映しない。明細は届いた順に関係なく、まだ無いものだけ追記する。
 
-サブスクリプションのイベントは、まず Subscription 集約（`api/src/domain/aggregate/subscription/`）に通す（`api/src/usecase/payment/_convert.py` の `save_subscription_event_data`）。集約は決済会社の状態と今の状態を比べて、必要なイベントだけを `es_event` に追記し、追記後の状態を返す。`Subscription`・`UserPlan` は、この集約の状態から同じトランザクションで作る（届く順番の判断は集約だけが行い、`Subscription` は `last_event_at` を比べない。`last_event_at` には集約が最後に受け入れた日時を入れる）。画面は今まで通り `Subscription`・`UserPlan` を読む。プランの変更（`POST /payment/change`・`change_plan`）は、Stripe のサブスクリプションの価格を差し替え（すぐに変わり、差額は日割りで次の請求で精算する。Stripe の `proration_behavior=create_prorations`）、Stripe が返したサブスクリプションを集約に通す（`Subscription.PlanChanged.V1`）。無料プランへの変更は解約で行う。解約（`cancel_subscription`）は、まず集約に解約の要求（`Subscription.CancellationRequested.V1`）を記録し、そのイベントの ID を冪等キーにして Stripe で期間の終わりの解約を予約する。成功したら Stripe から今のサブスクリプションを取り直して同じように集約に通す（`Subscription` を直接書かない）。webhook を待たずに `canceled_at` が入るので、2回目の解約は Stripe を呼ばずに止まる。決済の画面は `GET /payment/subscription`（`get_subscription`）で今のサブスクリプションが解約予定かどうかと期間の終わりを読み、解約予定なら「〇〇に解約されます」と出して、変更・解約のボタンを隠す。解約の取り消し（`POST /payment/cancel/revoke`・`revoke_cancellation`）は、解約予定のときだけ受け付け、Stripe の期間の終わりの解約の予約を外して（`cancel_at_period_end=false`）、Stripe が返したサブスクリプションを集約に通す。集約は、決済会社の側で解約の日時が空に戻ったら `Subscription.CancellationRevoked.V1` を記録する（Stripe のダッシュボードで取り消したときも同じ）。支払い方法（カード）の変更（`POST /payment/method`・`create_payment_method_session`）は、決済会社が用意する画面に送る（Stripe の Billing Portal を、支払い方法の変更だけの流れ `payment_method_update` で開く）。変更が終わると決済の画面に戻る。Stripe に断られたら `Subscription.CancellationFailed.V1` を記録する。通信に失敗して結果が分からないときは要求を残し、次の解約で同じ冪等キーを使って呼び直す（Stripe 側で二重にならない）。要求や失敗の記録は、届く順番の判断に使う日時（`last_occurred_at`）を変えない。集約の ID は決済会社のサブスクリプションの ID から `stripe:sub_xxx` の形で決めるので、ID を引くための表は持たない。同じサブスクリプションの最初のイベントが同時に届いても、`es_event` の `(aggregate_type, aggregate_id, seq)` の一意制約でぶつかり、コマンドの再試行で片方にまとまる。`replay_payment_events` で流し直すと、まだ集約の無いサブスクリプションは古い順に集約が作られ、既にある集約はイベントが増えずに同じ状態から `Subscription`・`UserPlan` を作り直す（既存データの移行もこれで行う）。
+サブスクリプションのイベントは、まず Subscription 集約（`myus/src/domain/aggregate/subscription/`）に通す（`myus/src/usecase/payment/_convert.py` の `save_subscription_event_data`）。集約は決済会社の状態と今の状態を比べて、必要なイベントだけを `es_event` に追記し、追記後の状態を返す。`Subscription`・`UserPlan` は、この集約の状態から同じトランザクションで作る（届く順番の判断は集約だけが行い、`Subscription` は `last_event_at` を比べない。`last_event_at` には集約が最後に受け入れた日時を入れる）。画面は今まで通り `Subscription`・`UserPlan` を読む。プランの変更（`POST /payment/change`・`change_plan`）は、Stripe のサブスクリプションの価格を差し替え（すぐに変わり、差額は日割りで次の請求で精算する。Stripe の `proration_behavior=create_prorations`）、Stripe が返したサブスクリプションを集約に通す（`Subscription.PlanChanged.V1`）。無料プランへの変更は解約で行う。解約（`cancel_subscription`）は、まず集約に解約の要求（`Subscription.CancellationRequested.V1`）を記録し、そのイベントの ID を冪等キーにして Stripe で期間の終わりの解約を予約する。成功したら Stripe から今のサブスクリプションを取り直して同じように集約に通す（`Subscription` を直接書かない）。webhook を待たずに `canceled_at` が入るので、2回目の解約は Stripe を呼ばずに止まる。決済の画面は `GET /payment/subscription`（`get_subscription`）で今のサブスクリプションが解約予定かどうかと期間の終わりを読み、解約予定なら「〇〇に解約されます」と出して、変更・解約のボタンを隠す。解約の取り消し（`POST /payment/cancel/revoke`・`revoke_cancellation`）は、解約予定のときだけ受け付け、Stripe の期間の終わりの解約の予約を外して（`cancel_at_period_end=false`）、Stripe が返したサブスクリプションを集約に通す。集約は、決済会社の側で解約の日時が空に戻ったら `Subscription.CancellationRevoked.V1` を記録する（Stripe のダッシュボードで取り消したときも同じ）。支払い方法（カード）の変更（`POST /payment/method`・`create_payment_method_session`）は、決済会社が用意する画面に送る（Stripe の Billing Portal を、支払い方法の変更だけの流れ `payment_method_update` で開く）。変更が終わると決済の画面に戻る。Stripe に断られたら `Subscription.CancellationFailed.V1` を記録する。通信に失敗して結果が分からないときは要求を残し、次の解約で同じ冪等キーを使って呼び直す（Stripe 側で二重にならない）。要求や失敗の記録は、届く順番の判断に使う日時（`last_occurred_at`）を変えない。集約の ID は決済会社のサブスクリプションの ID から `stripe:sub_xxx` の形で決めるので、ID を引くための表は持たない。同じサブスクリプションの最初のイベントが同時に届いても、`es_event` の `(aggregate_type, aggregate_id, seq)` の一意制約でぶつかり、コマンドの再試行で片方にまとまる。`replay_payment_events` で流し直すと、まだ集約の無いサブスクリプションは古い順に集約が作られ、既にある集約はイベントが増えずに同じ状態から `Subscription`・`UserPlan` を作り直す（既存データの移行もこれで行う）。
 
 支払いのイベントが、対象のサブスクリプションより先に届いたときは、反映を失敗にして、worker が次の回にもう一度反映する（返金が取引より先に届いたときも同じ）。失敗が30回（10秒ごとで約5分）に達したら反映を諦めて `log.error` を出す。原因を直したら `requeue_payment_events` で戻す。
 
@@ -361,7 +361,7 @@ flowchart TB
 - `uv run python manage.py requeue_payment_events`：反映を諦めたイベントの失敗回数を 0 に戻し、worker がもう一度反映するようにする
 - `uv run python manage.py export_ledger --from 2026-01-01 --to 2026-12-31`：期間の明細を CSV で出す（日本時間。`--to` の日も含む）。列は日時・決済会社・種類・金額・消費税額・通貨・取引ID・請求書番号・入金ID・入金日
 - `uv run python manage.py replay_payment_events --confirm`：取引・明細・入金・サブスクリプションを消し、反映済みの `PaymentEvent` を古い順に流し直して作り直す。`--confirm` が無いと何もしない。途中で失敗したら全部元に戻る。worker を止めてから実行する
-- `uv run python manage.py export_event_schema`：`PaymentEvent` の `content` と集約のイベントの JSON スキーマを `api/tests/schema_compatibility/payment_event/`・`es_event/` に書き出す。過去のイベントを読めなくなる変更（項目の削除・型の変更・必須の項目の追加・enum の値の削除）は書き出さず、テストでも落ちる
+- `uv run python manage.py export_event_schema`：`PaymentEvent` の `content` と集約のイベントの JSON スキーマを `myus/tests/schema_compatibility/payment_event/`・`es_event/` に書き出す。過去のイベントを読めなくなる変更（項目の削除・型の変更・必須の項目の追加・enum の値の削除）は書き出さず、テストでも落ちる
 
 #### クリエイターへの支払い（Connect を作るときに足す）
 決済の時点でクリエイターに送金する形（Stripe の destination charge）では、MyUs が決済の主体になり、全額がいったん MyUs に入る。Connect を作るときに次を足す。

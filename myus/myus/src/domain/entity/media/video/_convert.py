@@ -1,0 +1,54 @@
+from django_ulid.models import ulid
+from myus.db.models.media import Video
+from myus.src.domain.interface.channel.data import ChannelData
+from myus.src.domain.interface.hashtag.data import HashtagData
+from myus.src.domain.interface.media.video.data import VideoData
+
+
+def convert_data(obj: Video) -> VideoData:
+    assert hasattr(obj, "like_count"), "like_count is required"
+    category = next(iter(obj.category.all()), None)
+    return VideoData(
+        id=obj.id,
+        ulid=obj.ulid,
+        title=obj.title,
+        content=obj.content,
+        image=obj.image.name or "",
+        video=obj.video.name or "",
+        convert=obj.convert.name or "",
+        read=obj.read,
+        like=obj.like_count,
+        publish=obj.publish,
+        publish_at=obj.publish_at,
+        created=obj.created,
+        updated=obj.updated,
+        category_ulid=category.ulid if category is not None else "",
+        channel=ChannelData(
+            id=obj.channel.id,
+            ulid=obj.channel.ulid,
+            owner_id=obj.channel.owner_id,
+            owner_ulid=obj.channel.owner.ulid,
+            avatar=obj.channel.avatar.name or "",
+            name=obj.channel.name,
+            description=obj.channel.description,
+            is_default=obj.channel.is_default,
+            count=obj.channel.count,
+        ),
+        hashtags=[HashtagData(id=t.id, ulid=t.ulid, name=t.name) for t in obj.hashtag.all()],
+    )
+
+
+def marshal_data(data: VideoData) -> Video:
+    return Video(
+        id=data.id if data.id != 0 else None,
+        ulid=data.ulid if data.ulid else ulid.new(),
+        channel_id=data.channel.id,
+        title=data.title,
+        content=data.content,
+        image=data.image,
+        video=data.video,
+        convert=data.convert,
+        read=data.read,
+        publish=data.publish,
+        publish_at=data.publish_at,
+    )

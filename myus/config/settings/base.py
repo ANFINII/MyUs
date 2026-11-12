@@ -61,7 +61,7 @@ INSTALLED_APPS += [
 
 # Add Application
 INSTALLED_APPS += [
-    "api.apps.ApiConfig",
+    "myus.apps.MyusConfig",
     "corsheaders",
     "channels",
     "django_cleanup",
@@ -84,7 +84,7 @@ MIDDLEWARE = [
 
 TEMPLATES = [{
     "BACKEND": "django.template.backends.django.DjangoTemplates",
-    "DIRS": [os.path.join(BASE_DIR, "api", "templates")],
+    "DIRS": [os.path.join(BASE_DIR, "myus", "templates")],
     "APP_DIRS": True,
     "OPTIONS": {
         "context_processors": [
@@ -120,7 +120,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 ROOT_URLCONF = "config.urls"
 
 AUTH_USER_MODEL = "myus.User"
-AUTHENTICATION_BACKENDS = ["api.backends.AdminBackend"]
+AUTHENTICATION_BACKENDS = ["myus.backends.AdminBackend"]
 
 # Proxy
 NINJA_NUM_PROXIES = 0

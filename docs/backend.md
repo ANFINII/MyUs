@@ -8,7 +8,7 @@
 
 ## ロギング
 
-- `print()`禁止、`api.modules.logger`の`log`を使用
+- `print()`禁止、`myus.modules.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
 
@@ -25,7 +25,7 @@
   - 例: `import jwt` は `from dataclasses import replace` より上
 - **`from X import Y` 文は section 順**: 標準ライブラリ → サードパーティ → Django → プロジェクト内
 - **`from x import a, b, c` の中身は domain 順序を維持する**（alphabetical にしない）
-  - 例: `from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat` は `MediaType` enum の定義順を保つ
+  - 例: `from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat` は `MediaType` enum の定義順を保つ
 - **`ruff check --fix` を勝手に実行しない**: ruff の isort 挙動は上記ルールと衝突するため、import 整理が必要なときは手動で対応する
 
 ## 命名規則
@@ -84,7 +84,7 @@
 ## エラーハンドリング（Result型）
 
 ### Repository・usecase
-- Interface・Repository・usecaseは`Result[T, E]`を返す（`from api.utils.common.result import FatalError, NotFoundError, Result`）
+- Interface・Repository・usecaseは`Result[T, E]`を返す（`from myus.utils.common.result import FatalError, NotFoundError, Result`）
 - 公開メソッド・usecase関数には`@Result.shield_exception()`を付け、想定外の例外を`FatalError`に変換する
 - Resultを受けたらその場で`is_err`を確認し、Errならそのまま返す
 - 受け取る変数名: 関数内で受けるResultが1つなら`ret`、複数なら`ids_ret`・`follows_ret`のように`<名前>_ret`
@@ -92,7 +92,7 @@
   - 例: `create_video_data`は`repo`（動画）と`category_repo`、`save_follow_data`は`repo`（フォロー）と`user_repo`
   - 外部サービス（`PaymentInterface`）も同じ扱い（メインなら`repo`、ほかにメインがあれば`payment_repo`）
 - `ok_value`は直接使わず、`ids = ids_ret.ok_value`のように1行で変数に取り出してから使う
-- 複数の書き込みを1つのトランザクションにまとめるときは、書き込みを`Result`を返す関数に切り出し、`atomic_result`（`api/utils/functions/transaction.py`）に渡す。関数がErrを返すとロールバックしてそのErrを返し、例外が出てもロールバックする（Errは例外ではないため、`transaction.atomic()`の中でErrを返すだけではロールバックされない）
+- 複数の書き込みを1つのトランザクションにまとめるときは、書き込みを`Result`を返す関数に切り出し、`atomic_result`（`myus/utils/functions/transaction.py`）に渡す。関数がErrを返すとロールバックしてそのErrを返し、例外が出てもロールバックする（Errは例外ではないため、`transaction.atomic()`の中でErrを返すだけではロールバックされない）
   - 切り出す関数は、作成なら`create_xxx_data`、保存なら`save_xxx_data`、削除なら`delete_xxx_data`と名付け、`@Result.shield_exception()`を付ける。頭に`_`は付けない。置き場所は、似た関数があればその隣、無ければファイルの末尾にまとめる
   - usecaseで`with transaction.atomic():`と`transaction.set_rollback(True)`は使わない（`set_rollback`はruffの`TID251`で禁止している）
 
@@ -117,7 +117,7 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 ```
 
 ### エラー型
-- エラー型は`api/utils/common/result/errors.py`の共通型を使う（usecaseごとの`errors.py`は作らない）
+- エラー型は`myus/utils/common/result/errors.py`の共通型を使う（usecaseごとの`errors.py`は作らない）
 - 条件の意味で型を選ぶ（エンドポイントの種類では決めない）
 - エラー型に`@final`は付けない
 
@@ -130,9 +130,9 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `ConflictError` | 同じ集約に同時に書き込み、取り直しても保存できなかった（イベントストア） | adapter で返すときに `CONFLICT` を足す | 400 | `message` |
 | `HistoryCorruptedError` | 集約の履歴が壊れている（`seq` の抜け・未登録の種類・読めない中身）。再試行しても直らない | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
 
-- エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`api/src/types/schema/common.py`）。`type`は必須
+- エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`myus/src/types/schema/common.py`）。`type`は必須
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
-- `auth_check`（`api/src/adapter/auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
+- `auth_check`（`myus/src/adapter/auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
 - `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く（`response={...}`に無いステータスを返すとNinjaが実行時に例外にする）
 - 成功で返すものが無いときは`200: None`・`return 200, None`にする
@@ -214,7 +214,7 @@ if ret.is_err:
 
 ### Interface層（抽象クラス）
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
-- 雛形: `api/src/domain/interface/search_tag/interface.py` を参照
+- 雛形: `myus/src/domain/interface/search_tag/interface.py` を参照
 - 必須メソッド: `get_ids(filter, sort, limit)` / `bulk_get(ids)` の読み取り2点
 - 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
 - 必須型: `FilterOption` / `SortOption` dataclass + `SortType` enum
@@ -238,7 +238,7 @@ if ret.is_err:
 - 並び順は、`convert`系（Model → Data。`convert_data`・`xxx_data`・`convert_content`）→ `marshal`系（Data → Model）→ それ以外（`get_media_model`・`get_through_model`など）
 
 ### bulk操作
-- `bulk_save`は`get_save_new_ids`（`api/src/domain/entity/index.py`）で保存する
+- `bulk_save`は`get_save_new_ids`（`myus/src/domain/entity/index.py`）で保存する
   - id未設定（`pk is None`）の行は`save(force_insert=True)`でINSERTし（IDはDBの自動採番）、既存の行は`bulk_create(update_conflicts=True)`でupsertする
   - 新しく振られたIDを返す。INSERTとupsertは`get_save_new_ids`の中で`transaction.atomic()`に入る
   - 関連テーブルなどと一緒に保存するときは、`get_save_new_ids`と関連テーブルの保存を`transaction.atomic()`で包む
@@ -310,12 +310,12 @@ return Result.ok(new_ids)
 - pytestを使用（Django TestCase不可）
 - 今は決済など絶対に失敗できない箇所だけテストを書く（webhook・Stripeの署名の検証・退会時のサブスク解約・決済のイベントの反映）
 - `@pytest.mark.django_db`でDB接続
-- 実行: `uv run pytest`（`api/tests/`。CIでも実行する）
+- 実行: `uv run pytest`（`myus/tests/`。CIでも実行する）
 - テスト用DBは`--nomigrations`でモデルから直接作る（マイグレーションはgit管理外のため）。DBを作る権限のあるユーザーで実行する
-- 共通のfixtureは`api/tests/conftest.py`
+- 共通のfixtureは`myus/tests/conftest.py`
   - `make_user`: User・Profile・MyPage・UserNotification・UserPlanをまとめて作る
-  - `fake_payment`: `PaymentInterface`を`api/tests/fakes.py`の`FakePayment`に差し替える（Stripeを呼ばない。テストごとに元に戻る）
-- `PaymentEvent`の`content`（`PaymentEventContent`）と集約のイベント（`SUBSCRIPTION_EVENT_CLASSES`など）の形は、`api/tests/schema_compatibility/payment_event/*.json`・`es_event/*.json`に保存したJSONスキーマと比べて検査する（`test_schema_compatibility.py`）。比べる処理は`api/utils/functions/schema_compatibility.py`、確かめるイベントの一覧は`export_event_schema`の`event_schemas`
+  - `fake_payment`: `PaymentInterface`を`myus/tests/fakes.py`の`FakePayment`に差し替える（Stripeを呼ばない。テストごとに元に戻る）
+- `PaymentEvent`の`content`（`PaymentEventContent`）と集約のイベント（`SUBSCRIPTION_EVENT_CLASSES`など）の形は、`myus/tests/schema_compatibility/payment_event/*.json`・`es_event/*.json`に保存したJSONスキーマと比べて検査する（`test_schema_compatibility.py`）。比べる処理は`myus/utils/functions/schema_compatibility.py`、確かめるイベントの一覧は`export_event_schema`の`event_schemas`
   - 過去のイベントを読めなくなる変更（項目の削除・型の変更・必須の項目の追加・enumの値の削除）はテストが落ちる
   - 項目を足すときは初期値を付ける。形を変えたら`uv run python manage.py export_event_schema`でスキーマを書き出す（読めなくなる変更は書き出さない）
   - 保存したスキーマを手で直して検査を通さない
@@ -325,8 +325,8 @@ return Result.ok(new_ids)
 コードを書いた後、`myus/` で必ず実行:
 
 ```bash
-uv run mypy api config
-uv run ruff check api config --extend-ignore I
+uv run mypy myus config
+uv run ruff check myus config --extend-ignore I
 ```
 
 - ruff の `I`（import の並べ替え）は、上の「インポート」の決まりと合わないため除く
@@ -348,3 +348,4 @@ uv run ruff check api config --extend-ignore I
 - 2026-11-08: `_data` の付く関数の決まり（usecase の `_convert.py` で injector を使う関数は `_data` で終え、取るなら `get`、書き込むなら `create`・`save`・`delete`）を追記
 - 2026-11-08: 層の表に `domain/aggregate`・`adapter/external` を足し、リンターチェックを `mypy api config`・`ruff` にした
 - 2026-11-11: Validation（ドメインのルール）を追記
+- 2026-11-12: パッケージ名を `api` から `myus` にした（Django の app の label・テーブル名は変えない）
