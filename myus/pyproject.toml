@@ -113,7 +113,6 @@ known-first-party = ["myus", "app", "config"]
 
 [tool.ruff.lint.per-file-ignores]
 "myus/utils/common/result/result.py" = ["BLE001"]               # shield_exception：想定外の例外を FatalError に変える
-"myus/utils/common/result/fatal.py" = ["BLE001"]                # 同上
 "myus/utils/functions/convert/encode_worker.py" = ["BLE001"]    # バックグラウンドのスレッドの一番外側
 "myus/utils/functions/convert/video_encoding.py" = ["BLE001"]   # 動画の変換の一番外側（失敗したら空の結果を返す）
 "myus/usecase/broadcast/_convert.py" = ["BLE001"]               # WebSocket の配信は失敗しても本処理を止めない
