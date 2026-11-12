@@ -5,8 +5,7 @@ from myus.domain.comment.data import CommentData
 from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
 from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.injectors.container import injector
-from myus.types.dto.comment import CommentDTO
-from myus.types.schema.comment import CommentCreateIn
+from myus.types.dto.comment import CommentCreateDTO, CommentDTO
 from myus.usecase.media._convert import get_media_repository
 from myus.usecase.notification._convert import create_notification_data
 from myus.usecase.user._convert import get_author_data
@@ -19,7 +18,7 @@ from myus.utils.functions.transaction import atomic_result
 
 
 @Result.shield_exception()
-def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, FindError]:
+def create_comment(user_id: int, input: CommentCreateDTO) -> Result[CommentDTO, FindError]:
     repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
     media_ids_ret = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())

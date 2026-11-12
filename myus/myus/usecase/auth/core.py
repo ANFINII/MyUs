@@ -13,7 +13,7 @@ from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData
 from myus.utils.enum.user import PlanName
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
 from myus.injectors.container import injector
-from myus.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
+from myus.types.dto.user import PasswordChangeInDTO, PasswordResetInDTO, SignupInDTO
 from myus.usecase.payment.core import cancel_subscription
 from myus.usecase.auth._convert import get_active_user_data, is_same_password, create_user_data
 from myus.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
@@ -186,7 +186,7 @@ def signup_verify_token(token: str) -> str | None:
 
 
 @Result.shield_exception()
-def signup_user(input: SignupIn) -> Result[None, FatalError]:
+def signup_user(input: SignupInDTO) -> Result[None, FatalError]:
     user_data = UserAllData(
         user=UserData(
             id=0,
@@ -250,7 +250,7 @@ def signup_user(input: SignupIn) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def change_password(user_id: int, input: PasswordChangeIn) -> Result[str, FatalError]:
+def change_password(user_id: int, input: PasswordChangeInDTO) -> Result[str, FatalError]:
     old_password = input.old_password
     password1 = input.password1
     password2 = input.password2
@@ -373,7 +373,7 @@ def password_reset_verify_token(token: str) -> Result[tuple[int, str] | None, Fa
 
 
 @Result.shield_exception()
-def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
+def reset_password(input: PasswordResetInDTO) -> Result[str, FatalError]:
     verify_ret = password_reset_verify_token(input.token)
     if verify_ret.is_err:
         return Result.err(verify_ret.err_value)
@@ -417,8 +417,7 @@ def reset_password(input: PasswordResetIn) -> Result[str, FatalError]:
 
 
 @Result.shield_exception()
-def withdraw_user(user_id: int, input: WithdrawalIn) -> Result[str, FatalError]:
-    password = input.password
+def withdraw_user(user_id: int, password: str) -> Result[str, FatalError]:
     repo = injector.get(UserInterface)
     users_ret = repo.bulk_get([user_id])
     if users_ret.is_err:

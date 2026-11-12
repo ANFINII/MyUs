@@ -5,7 +5,6 @@ import pytest
 from myus.db.models.payment import Subscription
 from myus.db.models.user import User
 from myus.domain.payment.provider.data import CancelFailed
-from myus.types.schema.auth import WithdrawalIn
 from myus.usecase.auth.core import withdraw_user
 from myus.usecase.payment.core import cancel_subscription
 from myus.usecase.payment._convert import save_provider_subscription_data
@@ -23,7 +22,7 @@ def add_subscription(fake_payment: FakePayment, user: User, external_id: str, st
 
 
 def withdraw(user: User, password: str = PASSWORD) -> str:
-    ret = withdraw_user(user.id, WithdrawalIn(password=password))
+    ret = withdraw_user(user.id, password)
     assert ret.is_ok, ret
     message = ret.ok_value
     return message

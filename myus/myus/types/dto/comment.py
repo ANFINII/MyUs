@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from myus.types.dto.user import AuthorDTO
+from myus.utils.enum.media import CommentType
 
 
 @dataclass(frozen=True, slots=True)
@@ -24,3 +25,11 @@ class CommentDTO:
     like_count: int
     author: AuthorDTO
     replys: list[ReplyDTO]
+
+
+@dataclass(frozen=True, slots=True)
+class CommentCreateDTO:
+    text: str
+    type_name: CommentType
+    object_ulid: str
+    parent_ulid: str | None

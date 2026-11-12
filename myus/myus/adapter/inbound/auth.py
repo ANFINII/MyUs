@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from ninja.throttling import AnonRateThrottle
 from myus.utils.common.logger import log
+from myus.types.dto.user import PasswordChangeInDTO, PasswordResetInDTO, SignupInDTO
 from myus.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.usecase.auth.core import change_password, create_auth_tokens, login_user, logout_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
@@ -124,7 +125,8 @@ class AuthAPI:
             log.warning("Signup email mismatch")
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailMismatch")
 
-        check_ret = signup_check(input)
+        dto = SignupInDTO(**input.model_dump())
+        check_ret = signup_check(dto)
         if check_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -133,7 +135,7 @@ class AuthAPI:
             log.warning("Signup validation failed", message=message)
             return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
-        ret = signup_user(input)
+        ret = signup_user(dto)
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.signupFailed")
 
@@ -205,7 +207,8 @@ class AuthAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        change_ret = change_password(user_id, input)
+        dto = PasswordChangeInDTO(**input.model_dump())
+        change_ret = change_password(user_id, dto)
         if change_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -263,7 +266,8 @@ class AuthAPI:
     def password_reset(request: HttpRequest, input: PasswordResetIn):
         log.info("AuthAPI password_reset")
 
-        ret = reset_password(input)
+        dto = PasswordResetInDTO(**input.model_dump())
+        ret = reset_password(dto)
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -286,7 +290,7 @@ class AuthAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        withdraw_ret = withdraw_user(user_id, input)
+        withdraw_ret = withdraw_user(user_id, input.password)
         if withdraw_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 

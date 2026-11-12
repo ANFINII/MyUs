@@ -275,7 +275,7 @@ return Result.ok(new_ids)
 | utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase・types を import しない） |
 
 - adapter → usecase → interface の方向にのみ依存する
-- usecase層からadapter層の型（`HttpRequest`等）をインポートしない
+- usecase層からadapter層の型（`HttpRequest`、schemaの`XxxIn`等）をインポートしない。入力はadapterでDTOに組み替えて受け取る（「型定義」を参照）
 - usecase層からDjangoのモデル（`User.objects`等）や`authenticate`を直接使わない。リポジトリ（Interface）のメソッドを通す
 - domain層（`domain/<ドメイン>/`）は他の層に依存しない（純粋なPython）
 - usecaseはドメインごとのディレクトリ（`usecase/<ドメイン>/`）にし、次の2つに分ける

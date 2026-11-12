@@ -5,6 +5,7 @@ from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.adapter.inbound.advertise import convert_advertises
 from myus.adapter.inbound.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
+from myus.types.dto.user import SearchTagUpdateDTO
 from myus.types.schema.advertise import AdvertiseListOut
 from myus.types.schema.channel import ChannelOut
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
@@ -94,7 +95,8 @@ class UserAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_search_tags(user_id, input)
+        dto = [SearchTagUpdateDTO(**tag.model_dump()) for tag in input]
+        update_ret = update_search_tags(user_id, dto)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
