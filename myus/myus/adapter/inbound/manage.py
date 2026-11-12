@@ -90,13 +90,7 @@ class ManageVideoAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = VideoUpdateDTO(
-            category_ulid=input.category_ulid,
-            title=input.title,
-            content=input.content,
-            publish=input.publish,
-            publish_at=input.publish_at,
-        )
+        dto = VideoUpdateDTO(**input.model_dump())
         update_ret = update_manage_video(user_id, ulid, dto, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
@@ -206,15 +200,7 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = MusicUpdateDTO(
-            category_ulid=input.category_ulid,
-            title=input.title,
-            content=input.content,
-            lyric=input.lyric,
-            download=input.download,
-            publish=input.publish,
-            publish_at=input.publish_at,
-        )
+        dto = MusicUpdateDTO(**input.model_dump())
         update_ret = update_manage_music(user_id, ulid, dto)
         if update_ret.is_err:
             message = update_ret.err_value.message
@@ -324,15 +310,7 @@ class ManageBlogAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = BlogUpdateDTO(
-            category_ulid=input.category_ulid,
-            title=input.title,
-            content=input.content,
-            richtext=input.richtext,
-            is_promotion=input.is_promotion,
-            publish=input.publish,
-            publish_at=input.publish_at,
-        )
+        dto = BlogUpdateDTO(**input.model_dump())
         update_ret = update_manage_blog(user_id, ulid, dto, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
@@ -442,13 +420,7 @@ class ManageComicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = ComicUpdateDTO(
-            category_ulid=input.category_ulid,
-            title=input.title,
-            content=input.content,
-            publish=input.publish,
-            publish_at=input.publish_at,
-        )
+        dto = ComicUpdateDTO(**input.model_dump())
         update_ret = update_manage_comic(user_id, ulid, dto, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
@@ -558,13 +530,7 @@ class ManagePictureAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = PictureUpdateDTO(
-            category_ulid=input.category_ulid,
-            title=input.title,
-            content=input.content,
-            publish=input.publish,
-            publish_at=input.publish_at,
-        )
+        dto = PictureUpdateDTO(**input.model_dump())
         update_ret = update_manage_picture(user_id, ulid, dto, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
@@ -674,14 +640,7 @@ class ManageChatAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = ChatUpdateDTO(
-            category_ulid=input.category_ulid,
-            title=input.title,
-            content=input.content,
-            period=input.period,
-            publish=input.publish,
-            publish_at=input.publish_at,
-        )
+        dto = ChatUpdateDTO(**input.model_dump())
         update_ret = update_manage_chat(user_id, ulid, dto)
         if update_ret.is_err:
             message = update_ret.err_value.message
@@ -791,13 +750,7 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = AdvertiseCreateDTO(
-            title=input.title,
-            url=input.url,
-            content=input.content,
-            publish=input.publish,
-            period=input.period,
-        )
+        dto = AdvertiseCreateDTO(**input.model_dump())
         create_ret = create_manage_advertise(user_id, dto, image, video)
         if create_ret.is_err:
             message = create_ret.err_value.message
@@ -827,13 +780,7 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = AdvertiseUpdateDTO(
-            title=input.title,
-            url=input.url,
-            content=input.content,
-            publish=input.publish,
-            period=input.period,
-        )
+        dto = AdvertiseUpdateDTO(**input.model_dump())
         update_ret = update_manage_advertise(user_id, ulid, dto, image, video)
         if update_ret.is_err:
             message = update_ret.err_value.message

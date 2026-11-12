@@ -112,14 +112,7 @@ class VideoAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = VideoCreateDTO(
-            channel_ulid=input.channel_ulid,
-            category_ulid=input.category_ulid,
-            publish=input.publish,
-            publish_at=input.publish_at,
-            title=input.title,
-            content=input.content,
-        )
+        dto = VideoCreateDTO(**input.model_dump())
         obj_ret = create_video(user_id=user_id, input=dto, image=image, video=video)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
@@ -227,16 +220,7 @@ class MusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = MusicCreateDTO(
-            channel_ulid=input.channel_ulid,
-            category_ulid=input.category_ulid,
-            publish=input.publish,
-            publish_at=input.publish_at,
-            title=input.title,
-            content=input.content,
-            lyric=input.lyric,
-            download=input.download,
-        )
+        dto = MusicCreateDTO(**input.model_dump())
         obj_ret = create_music(user_id=user_id, input=dto, music=music)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
@@ -344,16 +328,7 @@ class BlogAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = BlogCreateDTO(
-            channel_ulid=input.channel_ulid,
-            category_ulid=input.category_ulid,
-            publish=input.publish,
-            publish_at=input.publish_at,
-            title=input.title,
-            content=input.content,
-            richtext=input.richtext,
-            is_promotion=input.is_promotion,
-        )
+        dto = BlogCreateDTO(**input.model_dump())
         obj_ret = create_blog(user_id=user_id, input=dto, image=image)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
@@ -461,14 +436,7 @@ class ComicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = ComicCreateDTO(
-            channel_ulid=input.channel_ulid,
-            category_ulid=input.category_ulid,
-            publish=input.publish,
-            publish_at=input.publish_at,
-            title=input.title,
-            content=input.content,
-        )
+        dto = ComicCreateDTO(**input.model_dump())
         obj_ret = create_comic(user_id=user_id, input=dto, image=image, pages=pages)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
@@ -575,14 +543,7 @@ class PictureAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = PictureCreateDTO(
-            channel_ulid=input.channel_ulid,
-            category_ulid=input.category_ulid,
-            publish=input.publish,
-            publish_at=input.publish_at,
-            title=input.title,
-            content=input.content,
-        )
+        dto = PictureCreateDTO(**input.model_dump())
         obj_ret = create_picture(user_id=user_id, input=dto, image=image)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
@@ -688,15 +649,7 @@ class ChatAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = ChatCreateDTO(
-            channel_ulid=input.channel_ulid,
-            category_ulid=input.category_ulid,
-            publish=input.publish,
-            publish_at=input.publish_at,
-            title=input.title,
-            content=input.content,
-            period=input.period,
-        )
+        dto = ChatCreateDTO(**input.model_dump())
         obj_ret = create_chat(user_id=user_id, input=dto)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
