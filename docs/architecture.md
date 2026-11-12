@@ -48,9 +48,9 @@ flowchart LR
 
 | ディレクトリ | 役割 |
 |---|---|
-| `adapter/` | django-ninja のエンドポイントと WebSocket の consumer。入力の検証と、`Result` から HTTP レスポンスへの変換 |
-| `adapter/external/` | 外部サービスの実装（`PaymentInterface` の Stripe 実装） |
-| `adapter/routers.py` | django-ninja のルーターをまとめて登録する（`config/urls.py` が読む） |
+| `adapter/inbound/` | django-ninja のエンドポイントと WebSocket の consumer。入力の検証と、`Result` から HTTP レスポンスへの変換 |
+| `adapter/outbound/` | 外部サービスの実装（`PaymentInterface` の Stripe 実装） |
+| `adapter/inbound/routers.py` | django-ninja のルーターをまとめて登録する（`config/urls.py` が読む） |
 | `usecase/` | 業務ロジック |
 | `domain/interface/` | repository の interface と Data（dataclass） |
 | `domain/entity/` | repository の実装（Django ORM） |

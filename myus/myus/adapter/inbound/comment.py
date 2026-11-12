@@ -2,7 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from myus.utils.common.logger import log
-from myus.adapter.auth import auth_check
+from myus.adapter.inbound.auth import auth_check
 from myus.types.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.types.schema.user import AuthorOut
