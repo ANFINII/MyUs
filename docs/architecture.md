@@ -167,8 +167,8 @@ pnpm dev  # http://127.0.0.1:3000
 
 ```bash
 # myus/
-uv run mypy myus config
-uv run ruff check myus config --extend-ignore I
+uv run mypy myus config tests
+uv run ruff check myus config tests --extend-ignore I
 uv run pytest
 
 # frontend/

@@ -9,8 +9,8 @@ from myus.types.schema.auth import WithdrawalIn
 from myus.usecase.auth.core import withdraw_user
 from myus.usecase.payment.core import cancel_subscription
 from myus.usecase.payment._convert import save_provider_subscription_data
-from myus.tests.conftest import PASSWORD
-from myus.tests.fakes import FakePayment, provider_subscription
+from tests.conftest import PASSWORD
+from tests.fakes import FakePayment, provider_subscription
 from myus.utils.enum.payment import CancelError, SubscriptionStatus
 from myus.utils.enum.user import PlanName
 

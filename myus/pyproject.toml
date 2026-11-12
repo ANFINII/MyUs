@@ -67,7 +67,7 @@ plugins = ["mypy_django_plugin.main"]    # Django stubsプラグイン
 
 # 特定のモジュールの設定
 [[tool.mypy.overrides]]
-module = ["django.*", "myus.tests.*"]
+module = ["django.*", "tests.*"]
 ignore_missing_imports = true  # 外部ライブラリの型情報が見つからない場合はエラーを無視
 
 [[tool.mypy.overrides]]
@@ -92,7 +92,7 @@ ignore_missing_imports = true     # Windows でだけ使う任意のライブラ
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.local"
 addopts = "--nomigrations"                # マイグレーションは git 管理外のため、テスト用 DB はモデルから直接作る
-testpaths = ["myus/tests"]
+testpaths = ["tests"]
 
 [tool.django-stubs]
 django_settings_module = "config.settings.base"

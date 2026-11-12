@@ -4,7 +4,7 @@ import pytest
 from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from myus.domain.interface.payment.provider.interface import PaymentInterface
 from myus.injectors.container import injector
-from myus.tests.fakes import FakePayment
+from tests.fakes import FakePayment
 from myus.utils.enum.payment import PaymentProvider
 
 
