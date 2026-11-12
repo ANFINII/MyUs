@@ -30,7 +30,6 @@ from api.utils.enum.payment import CancelError, LedgerEntryType, PaymentProvider
 from api.utils.enum.user import PlanName
 from api.utils.functions.map import payment_status_rank
 from api.utils.functions.payment import included_tax
-from api.utils.plan import get_plan
 
 
 TAX_RATE = 10
@@ -202,10 +201,6 @@ def save_provider_subscription_data(provider_subscription: ProviderSubscriptionD
 @Result.shield_exception()
 def save_subscription_data(state: SubscriptionState) -> Result[None, FatalError]:
     detail = state.detail
-    if get_plan(detail.product_code) is None:
-        log.error("Subscription unknown plan", external_id=detail.external_id, product_code=detail.product_code)
-        return Result.ok(None)
-
     if len(detail.user_ulid) == 0:
         log.error("Subscription user_ulid missing", external_id=detail.external_id)
         return Result.ok(None)

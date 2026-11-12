@@ -4,6 +4,7 @@ from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.payment.event._convert import convert_data, marshal_data
 from api.src.domain.interface.payment.event.data import PaymentEventData
 from api.src.domain.interface.payment.event.interface import FilterOption, SortOption, PaymentEventInterface
+from api.src.domain.interface.payment.event.validation import validate
 from api.utils.common.result import FatalError, Result
 
 
@@ -45,6 +46,10 @@ class PaymentEventRepository(PaymentEventInterface):
     def bulk_save(self, objs: list[PaymentEventData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             return Result.ok([])
+
+        errors = [ret.err_value.message for obj in objs if (ret := validate(obj)).is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_save_new_ids(models, PAYMENT_EVENT_FIELDS)

@@ -4,6 +4,7 @@ from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.payment.transaction._convert import convert_data, marshal_data
 from api.src.domain.interface.payment.transaction.data import TransactionData
 from api.src.domain.interface.payment.transaction.interface import FilterOption, SortOption, TransactionInterface
+from api.src.domain.interface.payment.transaction.validation import validate
 from api.utils.common.result import FatalError, Result
 
 
@@ -45,6 +46,10 @@ class TransactionRepository(TransactionInterface):
     def bulk_save(self, objs: list[TransactionData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             return Result.ok([])
+
+        errors = [ret.err_value.message for obj in objs if (ret := validate(obj)).is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_save_new_ids(models, TRANSACTION_FIELDS)

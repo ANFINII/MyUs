@@ -4,6 +4,7 @@ from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.payment.subscription._convert import convert_data, marshal_data
 from api.src.domain.interface.payment.subscription.data import SubscriptionData
 from api.src.domain.interface.payment.subscription.interface import FilterOption, SortOption, SubscriptionInterface
+from api.src.domain.interface.payment.subscription.validation import validate
 from api.utils.common.result import FatalError, Result
 
 
@@ -43,6 +44,10 @@ class SubscriptionRepository(SubscriptionInterface):
     def bulk_save(self, objs: list[SubscriptionData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             return Result.ok([])
+
+        errors = [ret.err_value.message for obj in objs if (ret := validate(obj)).is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_save_new_ids(models, SUBSCRIPTION_FIELDS)
