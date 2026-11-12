@@ -387,6 +387,7 @@ flowchart TB
 
 - **adapter/**: HTTP エンドポイント・WebSocket
   - `external/`: 外部サービス（Stripe）の Interface の実装
+  - `routers.py`: ルータの集約・登録（`config/urls.py` から読む）
 - **usecase/**: ビジネスロジック。ドメインごとのディレクトリに `core.py`（adapter から呼ぶ関数）と `_convert.py`（補助の関数）を置く
   - `command/`: 集約へのコマンド
 - **domain/**
@@ -395,7 +396,6 @@ flowchart TB
   - `aggregate/`: Event Sourcing の集約（状態・イベント・判断・適用）
 - **types/**: API の入出力スキーマ（`schema/`）と DTO（`dto/`）
 - **injectors/**: DI（Interface と実装の対応）
-- **routers.py**: ルータの集約・登録
 - モデルは `myus/myus/db/models/`、管理コマンドは `myus/myus/db/management/commands/`
 
 ### フロントエンド
