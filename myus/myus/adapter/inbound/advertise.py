@@ -5,7 +5,7 @@ from myus.domain.advertise.data import AdvertiseData
 from myus.usecase.advertise.core import get_global_advertises, get_user_advertises, increment_advertise_read
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, NotFoundError
-from ._common import get_client_ip
+from myus.utils.functions.common import get_client_ip
 from .auth import auth_check
 from .schema.advertise import AdvertiseListOut, AdvertiseOut, AdvertiseReadOut
 from .schema.common import ErrorOut, ErrorType
