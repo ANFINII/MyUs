@@ -203,8 +203,9 @@ if ret.is_err:
 ### usecase の入出力: dataclass（`types/dto/`）
 - `@dataclass(frozen=True, slots=True)`
 - サフィックス: `DTO`
-- 入力は、作成なら`XxxCreateDTO`、更新なら`XxxUpdateDTO`（`VideoCreateDTO`・`VideoUpdateDTO`）。項目はschemaの`XxxIn`と同じ名前にする
-- 作成と更新で項目がまったく同じものや、作成・更新に当てはまらない入力は、`XxxDTO`にする（`AdvertiseDTO`・`ChannelDTO`・`SignupDTO`・`PasswordChangeDTO`）
+- 入力は`XxxDTO`にする（`SignupDTO`・`SettingProfileDTO`・`SearchTagDTO`）。項目はschemaの`XxxIn`と同じ名前にする
+- 作成と更新で項目が違い、両方の入力があるときだけ`XxxCreateDTO`・`XxxUpdateDTO`に分ける（`VideoCreateDTO`・`VideoUpdateDTO`）。作成と更新で項目が同じなら1つの`XxxDTO`にする（`AdvertiseDTO`・`ChannelDTO`）
+- `XxxDTO`がすでに出力などに使われているときは、`XxxCreateDTO`のように付けて分ける（`CommentDTO`があるので`CommentCreateDTO`）
 - usecaseはschema（`XxxIn`）を受け取らない。adapterで`dto = VideoCreateDTO(**input.model_dump())`と組み替えて渡す
 - 項目が1つだけなら、DTOを作らず値で渡す
 

@@ -6,7 +6,7 @@ from myus.domain.comment.interface import CommentInterface, FilterOption as Comm
 from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.domain.user.data import ProfileData, UserAllData, UserNotificationData
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
-from myus.types.dto.user import LikeDTO, SettingMyPageUpdateDTO, SettingNotificationUpdateDTO, SettingProfileUpdateDTO, SignupDTO
+from myus.types.dto.user import LikeDTO, SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO, SignupDTO
 from myus.usecase.media._convert import get_media_repository
 from myus.usecase.notification._convert import create_notification_data, delete_notification_data
 from myus.usecase.user._convert import save_user_data
@@ -38,7 +38,7 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None
 
 
 @Result.shield_exception()
-def update_profile(user_id: int, input: SettingProfileUpdateDTO, avatar_file: UploadedFile) -> Result[None, InputError]:
+def update_profile(user_id: int, input: SettingProfileDTO, avatar_file: UploadedFile) -> Result[None, InputError]:
     upload_ret = validate_uploads([(avatar_file, ImageUpload.USER)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -103,7 +103,7 @@ def update_profile(user_id: int, input: SettingProfileUpdateDTO, avatar_file: Up
 
 
 @Result.shield_exception()
-def update_mypage(user_id: int, input: SettingMyPageUpdateDTO, banner_file: UploadedFile) -> Result[None, InputError]:
+def update_mypage(user_id: int, input: SettingMyPageDTO, banner_file: UploadedFile) -> Result[None, InputError]:
     upload_ret = validate_uploads([(banner_file, ImageUpload.USER)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -136,7 +136,7 @@ def update_mypage(user_id: int, input: SettingMyPageUpdateDTO, banner_file: Uplo
 
 
 @Result.shield_exception()
-def update_notification(user_id: int, input: SettingNotificationUpdateDTO) -> Result[None, FindError]:
+def update_notification(user_id: int, input: SettingNotificationDTO) -> Result[None, FindError]:
     data_ret = get_user_data(user_id)
     if data_ret.is_err:
         return Result.err(data_ret.err_value)

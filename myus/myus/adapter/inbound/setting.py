@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
-from myus.types.dto.user import SettingMyPageUpdateDTO, SettingNotificationUpdateDTO, SettingProfileUpdateDTO
+from myus.types.dto.user import SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from myus.usecase.user.core import get_user_data, update_mypage, update_notification, update_profile
@@ -80,7 +80,7 @@ class SettingProfileAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = SettingProfileUpdateDTO(**input.model_dump())
+        dto = SettingProfileDTO(**input.model_dump())
         update_ret = update_profile(user_id, dto, avatar_file)
         if update_ret.is_err:
             message = update_ret.err_value.message
@@ -159,7 +159,7 @@ class SettingMyPageAPI:
         if has_email(input.email):
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailInvalid")
 
-        dto = SettingMyPageUpdateDTO(**input.model_dump())
+        dto = SettingMyPageDTO(**input.model_dump())
         update_ret = update_mypage(user_id, dto, banner_file)
         if update_ret.is_err:
             message = update_ret.err_value.message
@@ -234,7 +234,7 @@ class SettingNotificationAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = SettingNotificationUpdateDTO(**input.model_dump())
+        dto = SettingNotificationDTO(**input.model_dump())
         update_ret = update_notification(user_id, dto)
         if update_ret.is_err:
             message = update_ret.err_value.message

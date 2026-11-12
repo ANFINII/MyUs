@@ -1,7 +1,7 @@
 from myus.domain.search_tag.data import SearchTagData
 from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, SortOption
 from myus.injectors.container import injector
-from myus.types.dto.user import SearchTagUpdateDTO
+from myus.types.dto.user import SearchTagDTO
 from myus.usecase.search_tag._convert import save_search_tag_data
 from myus.utils.common.result import FatalError, Result, ValidateError
 from myus.utils.functions.transaction import atomic_result
@@ -24,7 +24,7 @@ def get_search_tag_data(author_id: int) -> Result[list[SearchTagData], FatalErro
 
 
 @Result.shield_exception()
-def update_search_tags(author_id: int, tags: list[SearchTagUpdateDTO]) -> Result[None, ValidateError]:
+def update_search_tags(author_id: int, tags: list[SearchTagDTO]) -> Result[None, ValidateError]:
     objs_ret = get_search_tag_data(author_id)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)

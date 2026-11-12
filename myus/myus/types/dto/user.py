@@ -53,7 +53,7 @@ class PasswordResetDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class SettingProfileUpdateDTO:
+class SettingProfileDTO:
     email: str
     username: str
     nickname: str
@@ -72,7 +72,7 @@ class SettingProfileUpdateDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class SettingMyPageUpdateDTO:
+class SettingMyPageDTO:
     email: str
     tag_manager_id: str
     content: str
@@ -80,7 +80,7 @@ class SettingMyPageUpdateDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class SettingNotificationUpdateDTO:
+class SettingNotificationDTO:
     is_video: bool
     is_music: bool
     is_blog: bool
@@ -94,6 +94,6 @@ class SettingNotificationUpdateDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class SearchTagUpdateDTO:
+class SearchTagDTO:
     sequence: int
     name: str
