@@ -24,10 +24,10 @@ from myus.utils.enum.notification import NotificationObjectType, NotificationTyp
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.convert.encode_worker import EncodeWorker
 from myus.utils.functions.convert.video_encoding import convert_video
-from myus.utils.functions.index import create_url
 from myus.utils.functions.map import comment_type_no_map
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
+from myus.utils.functions.url import create_url
 from myus.utils.plan import get_plan
 from ._convert import get_media_repository, get_media_user_data, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
 from ..category._convert import get_category_data

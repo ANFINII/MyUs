@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any
 from .convert.audio_converter import CONVERTIBLE_EXTENSIONS
-from .index import new_ulid
+from .id import new_ulid
 from ..enum.upload import ImageUpload, MediaUpload
 
 

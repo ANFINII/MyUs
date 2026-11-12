@@ -8,8 +8,8 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, NotFoundError, Result
 from myus.utils.enum.user import PlanName
-from myus.utils.functions.index import create_url
 from myus.utils.functions.transaction import atomic_result
+from myus.utils.functions.url import create_url
 from myus.utils.plan import get_plan
 from ._convert import is_active, save_read_data
 from ..user.core import get_user_data

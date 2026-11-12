@@ -6,7 +6,7 @@ from myus.usecase.dto.channel import ChannelDTO
 from myus.usecase.subscribe.core import get_subscribe_channels, upsert_subscribe
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
-from myus.utils.functions.index import create_url
+from myus.utils.functions.url import create_url
 from .auth import auth_check
 from .schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
 from .schema.common import ErrorOut, ErrorType, SuccessOut
