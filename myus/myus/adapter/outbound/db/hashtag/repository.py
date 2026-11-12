@@ -7,7 +7,7 @@ from myus.domain.hashtag.interface import FilterOption, HashtagInterface, SortOp
 from myus.domain.hashtag.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
-from ..bulk import sort_ids
+from ..base import sort_ids
 from ._convert import convert_data, marshal_data, marshal_through, get_through_model
 
 

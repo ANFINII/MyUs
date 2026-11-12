@@ -4,7 +4,7 @@ from myus.db.models.message import Message
 from myus.domain.message.data import MessageData
 from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
 from myus.utils.common.result import FatalError, Result
-from ..bulk import get_save_new_ids, sort_ids
+from ..base import get_save_new_ids, sort_ids
 from ._convert import convert_data, marshal_data
 
 

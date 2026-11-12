@@ -254,7 +254,7 @@ if ret.is_err:
 - 並び順は、`convert`系（Model → Data。`convert_data`・`xxx_data`・`convert_content`）→ `marshal`系（Data → Model）→ それ以外（`get_media_model`・`get_through_model`など）
 
 ### bulk操作
-- `bulk_save`は`get_save_new_ids`（`myus/adapter/outbound/db/bulk.py`）で保存する
+- `bulk_save`は`get_save_new_ids`（`myus/adapter/outbound/db/base.py`）で保存する
   - id未設定（`pk is None`）の行は`save(force_insert=True)`でINSERTし（IDはDBの自動採番）、既存の行は`bulk_create(update_conflicts=True)`でupsertする
   - 新しく振られたIDを返す。INSERTとupsertは`get_save_new_ids`の中で`transaction.atomic()`に入る
   - 関連テーブルなどと一緒に保存するときは、`get_save_new_ids`と関連テーブルの保存を`transaction.atomic()`で包む
@@ -373,4 +373,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-12: usecase の入力を DTO にし、schema を `types/schema` から `adapter/inbound/schema` に移した
 - 2026-11-12: DTO を `types/dto` から `usecase/dto` に移し、`types` をなくした
 - 2026-11-12: import の並び（section の中はパスの名前順、最後に相対パス）と、同じ層の中は相対パスにする決まりを足した
-- 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/bulk.py`・`adapter/outbound/db/media/query.py`）
+- 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）

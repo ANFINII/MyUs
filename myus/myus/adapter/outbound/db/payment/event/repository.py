@@ -4,7 +4,7 @@ from myus.domain.payment.event.data import PaymentEventData
 from myus.domain.payment.event.interface import FilterOption, SortOption, PaymentEventInterface
 from myus.domain.payment.event.validation import validate
 from myus.utils.common.result import FatalError, Result
-from ...bulk import get_save_new_ids, sort_ids
+from ...base import get_save_new_ids, sort_ids
 from ._convert import convert_data, marshal_data
 
 
