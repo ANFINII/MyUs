@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime
 from myus.domain.comment.data import CommentData
 from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
-from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.media.option import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FindError, ForbiddenError, NotFoundError, Result

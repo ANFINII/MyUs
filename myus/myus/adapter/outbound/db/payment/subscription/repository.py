@@ -4,7 +4,7 @@ from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption, SortOption, SubscriptionInterface
 from myus.domain.payment.subscription.validation import validate
 from myus.utils.common.result import FatalError, Result
-from ...index import get_save_new_ids, sort_ids
+from ...bulk import get_save_new_ids, sort_ids
 from ._convert import convert_data, marshal_data
 
 

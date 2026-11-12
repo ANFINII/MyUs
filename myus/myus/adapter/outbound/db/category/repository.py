@@ -5,7 +5,7 @@ from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
-from ..index import sort_ids
+from ..bulk import sort_ids
 from ._convert import convert_data, get_media_model
 
 

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
-from ..media.index import ExcludeOption, FilterOption, PageOption
+from ..media.option import ExcludeOption, FilterOption, PageOption
 from .data import AdvertiseData
 
 

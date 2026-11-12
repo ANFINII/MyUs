@@ -4,7 +4,7 @@ from myus.domain.payment.customer.data import PaymentCustomerData
 from myus.domain.payment.customer.interface import FilterOption, SortOption, PaymentCustomerInterface
 from myus.domain.payment.customer.validation import validate
 from myus.utils.common.result import FatalError, Result
-from ...index import get_save_new_ids, sort_ids
+from ...bulk import get_save_new_ids, sort_ids
 from ._convert import convert_data, marshal_data
 
 

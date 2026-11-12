@@ -12,7 +12,7 @@ from myus.domain.notification.interface import FilterOption, NotificationInterfa
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType
-from ..index import get_save_new_ids, sort_ids
+from ..bulk import get_save_new_ids, sort_ids
 from ._convert import convert_data, get_media_model, marshal_data
 
 

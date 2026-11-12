@@ -1,7 +1,7 @@
 from typing import assert_never
 from ninja import File, Form, Router, UploadedFile
 from django.http import HttpRequest
-from myus.domain.media.index import PAGE_SIZE
+from myus.domain.media.option import PAGE_SIZE
 from myus.usecase.dto.advertise import AdvertiseDTO
 from myus.usecase.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.usecase.manage.advertise.core import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise

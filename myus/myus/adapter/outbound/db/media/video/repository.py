@@ -1,13 +1,13 @@
 from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from myus.db.models.media import Video
-from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.option import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.media.video.validation import validate
 from myus.utils.common.result import FatalError, Result
-from ...index import get_save_new_ids, sort_ids
-from ..index import distinct_queryset, filter_q_list, sort_queryset
+from ...bulk import get_save_new_ids, sort_ids
+from ..query import distinct_queryset, filter_q_list, sort_queryset
 from ._convert import convert_data, marshal_data
 
 

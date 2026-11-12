@@ -3,7 +3,7 @@ from django.utils import timezone
 from myus.domain.advertise.data import AdvertiseData
 from myus.domain.advertise.interface import AdvertiseInterface, SortOption
 from myus.domain.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
-from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption
+from myus.domain.media.option import ExcludeOption, FilterOption as MediaFilterOption, PageOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.index import create_url

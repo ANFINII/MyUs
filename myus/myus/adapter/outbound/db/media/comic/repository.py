@@ -5,10 +5,10 @@ from myus.db.models.media import Comic, ComicPage
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
 from myus.domain.media.comic.validation import validate
-from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.option import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
-from ...index import get_save_new_ids, sort_ids
-from ..index import distinct_queryset, filter_q_list, sort_queryset
+from ...bulk import get_save_new_ids, sort_ids
+from ..query import distinct_queryset, filter_q_list, sort_queryset
 from ._convert import convert_data, marshal_data
 
 

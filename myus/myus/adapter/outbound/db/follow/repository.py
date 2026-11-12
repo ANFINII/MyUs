@@ -4,7 +4,7 @@ from myus.db.models.users import Follow
 from myus.domain.follow.data import FollowData
 from myus.domain.follow.interface import FilterOption, FollowInterface, SortOption
 from myus.utils.common.result import FatalError, Result
-from ..index import get_save_new_ids, sort_ids
+from ..bulk import get_save_new_ids, sort_ids
 from ._convert import convert_data, marshal_data
 
 
