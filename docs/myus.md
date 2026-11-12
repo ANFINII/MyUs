@@ -388,12 +388,13 @@ flowchart TB
 - **adapter/**
   - `inbound/`: HTTP エンドポイント・WebSocket（入ってくる側）
     - `routers.py`: ルータの集約・登録（`config/urls.py` から読む）
-  - `outbound/`: 外部サービス（Stripe）の Interface の実装（出ていく側）
+  - `outbound/`: 出ていく側
+    - `db/`: Repository の実装（Django ORM）
+    - `payment/`: 決済会社（Stripe）の `PaymentInterface` の実装
 - **usecase/**: ビジネスロジック。ドメインごとのディレクトリに `core.py`（adapter から呼ぶ関数）と `_convert.py`（補助の関数）を置く
   - `command/`: 集約へのコマンド
 - **domain/**
   - `interface/`: dataclass の Data と Repository の Interface
-  - `entity/`: Repository の実装（Django ORM）
   - `aggregate/`: Event Sourcing の集約（状態・イベント・判断・適用）
 - **types/**: API の入出力スキーマ（`schema/`）と DTO（`dto/`）
 - **injectors/**: DI（Interface と実装の対応）
