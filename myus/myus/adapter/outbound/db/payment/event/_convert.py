@@ -1,7 +1,7 @@
 from typing import assert_never
 from pydantic import TypeAdapter
 from myus.db.models.payment import PaymentEvent
-from myus.domain.interface.payment.event.data import PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, RefundContent
+from myus.domain.payment.event.data import PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, RefundContent
 from myus.utils.enum.payment import PaymentProvider, WebhookEventType
 
 

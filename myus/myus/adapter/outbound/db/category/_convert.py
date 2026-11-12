@@ -1,7 +1,7 @@
 from typing import assert_never
 from myus.db.models.master import Category
 from myus.db.models.media import Blog, Chat, Comic, Music, Picture, Video
-from myus.domain.interface.category.data import CategoryData
+from myus.domain.category.data import CategoryData
 from myus.utils.enum.media import MediaType
 
 

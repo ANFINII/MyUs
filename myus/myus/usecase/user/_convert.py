@@ -1,6 +1,6 @@
 from myus.injectors.container import injector
-from myus.domain.interface.user.data import UserAllData
-from myus.domain.interface.user.interface import UserInterface
+from myus.domain.user.data import UserAllData
+from myus.domain.user.interface import UserInterface
 from myus.types.dto.user import AuthorDTO
 from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.index import create_url

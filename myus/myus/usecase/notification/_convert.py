@@ -1,7 +1,7 @@
-from myus.domain.interface.notification.data import NotificationData
-from myus.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
-from myus.domain.interface.user.data import UserNotificationData
-from myus.domain.interface.user.interface import UserInterface
+from myus.domain.notification.data import NotificationData
+from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
+from myus.domain.user.data import UserNotificationData
+from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
 from myus.types.dto.notification import NotificationUserDTO
 from myus.utils.common.result import FatalError, Result

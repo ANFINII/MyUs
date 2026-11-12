@@ -55,7 +55,7 @@ flowchart LR
 | `adapter/outbound/payment/` | 決済会社の実装（`PaymentInterface` の Stripe 実装は `stripe/`） |
 | `adapter/inbound/routers.py` | django-ninja のルーターをまとめて登録する（`config/urls.py` が読む） |
 | `usecase/` | 業務ロジック |
-| `domain/interface/` | repository の interface と Data（dataclass） |
+| `domain/<ドメイン>/` | repository の interface と Data（dataclass）、ルール（`validation.py`） |
 | `domain/aggregate/` | Event Sourcing の集約（状態・イベント・判断・適用）。I/O を持たない関数 |
 | `injectors/` | interface と実装の対応付け |
 | `types/` | API の入出力スキーマ（`schema/`）と DTO（`dto/`） |

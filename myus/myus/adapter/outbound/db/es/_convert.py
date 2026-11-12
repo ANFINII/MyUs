@@ -1,7 +1,7 @@
 from typing import Any
 from pydantic import TypeAdapter
 from myus.db.models.es import EsEvent, EsOutbox
-from myus.domain.interface.es.data import EventEnvelope
+from myus.domain.es.data import EventEnvelope
 
 
 def convert_data(obj: EsEvent, event_class: type[Any]) -> EventEnvelope[Any]:

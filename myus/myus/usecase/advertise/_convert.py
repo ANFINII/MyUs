@@ -1,6 +1,6 @@
 from datetime import date
-from myus.domain.interface.advertise.data import AdvertiseData
-from myus.domain.interface.advertise.interface import AdvertiseInterface
+from myus.domain.advertise.data import AdvertiseData
+from myus.domain.advertise.interface import AdvertiseInterface
 from myus.injectors.container import injector
 from myus.usecase.access_log._convert import save_access_data
 from myus.utils.common.result import FatalError, Result

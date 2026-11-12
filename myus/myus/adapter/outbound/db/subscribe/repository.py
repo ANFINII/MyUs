@@ -3,8 +3,8 @@ from django.db.models.query import QuerySet
 from myus.db.models.subscribe import Subscribe
 from myus.adapter.outbound.db.subscribe._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.domain.interface.subscribe.data import SubscribeData
-from myus.domain.interface.subscribe.interface import FilterOption, SubscribeInterface, SortOption
+from myus.domain.subscribe.data import SubscribeData
+from myus.domain.subscribe.interface import FilterOption, SubscribeInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

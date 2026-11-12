@@ -1,9 +1,9 @@
 from dataclasses import replace
 from datetime import datetime, timezone
-from myus.domain.interface.payment.data import Money
-from myus.domain.interface.payment.event.data import ProviderSubscriptionData
-from myus.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, WebhookVerifyResult
-from myus.domain.interface.payment.provider.interface import PaymentInterface
+from myus.domain.payment.data import Money
+from myus.domain.payment.event.data import ProviderSubscriptionData
+from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, WebhookVerifyResult
+from myus.domain.payment.provider.interface import PaymentInterface
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Currency, Locale
 from myus.utils.enum.payment import PaymentProvider, SubscriptionStatus

@@ -214,7 +214,7 @@ if ret.is_err:
 
 ### Interface層（抽象クラス）
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
-- 雛形: `myus/domain/interface/search_tag/interface.py` を参照
+- 雛形: `myus/domain/search_tag/interface.py` を参照
 - 必須メソッド: `get_ids(filter, sort, limit)` / `bulk_get(ids)` の読み取り2点
 - 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
 - 必須型: `FilterOption` / `SortOption` dataclass + `SortType` enum
@@ -226,7 +226,7 @@ if ret.is_err:
   - `bulk_save`で表せない更新：加算・切り替え・既読など（`save_read`・`save_count`・`save_follow_count`・`media_like`・`comment_like`、通知の`delete_by_user`・`confirm`）
   - 一覧に付ける判定：`is_liked`・`get_liked_ids`
   - 認証：`UserInterface.authenticate`
-  - メディア・広告の`get_ids(filter, exclude, sort, page, user_id)`：ページング（`PageOption`）とスコア順の`user_id`が要るメディア共通の形。広告にはスコアがないので、`SortOption`・`SortType`（`ID`・`CREATED`）だけは`domain/interface/advertise/interface.py`に広告用を置く
+  - メディア・広告の`get_ids(filter, exclude, sort, page, user_id)`：ページング（`PageOption`）とスコア順の`user_id`が要るメディア共通の形。広告にはスコアがないので、`SortOption`・`SortType`（`ID`・`CREATED`）だけは`domain/advertise/interface.py`に広告用を置く
   - カテゴリ・ハッシュタグの`bulk_save(media_type, media_id, objs)`：メディアへの紐づけの保存
   - 外部サービスの窓口（`PaymentInterface`）：DBのリポジトリではないため`get_ids`・`bulk_get`を持たない
 
@@ -260,7 +260,7 @@ return Result.ok(new_ids)
 |------|------|------|
 | adapter/inbound | HTTP・WebSocket のリクエスト/レスポンス変換、認証チェック | usecase, schema |
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
-| domain/interface | 抽象定義（ABC, dataclass） | なし |
+| domain/<ドメイン> | 抽象定義（ABC, dataclass）とルール（`validation.py`） | なし |
 | domain/aggregate | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数 | interface（Data）, utils |
 | adapter/outbound/db | Repository の実装、DBアクセス | Django ORM, interface |
 | adapter/outbound/payment | 決済会社（Stripe など）の Interface の実装 | interface, 外部の SDK |
@@ -269,7 +269,7 @@ return Result.ok(new_ids)
 - adapter → usecase → interface の方向にのみ依存する
 - usecase層からadapter層の型（`HttpRequest`等）をインポートしない
 - usecase層からDjangoのモデル（`User.objects`等）や`authenticate`を直接使わない。リポジトリ（Interface）のメソッドを通す
-- domain/interface層は他の層に依存しない（純粋なPython）
+- domain層（`domain/<ドメイン>/`・`domain/aggregate/`）は他の層に依存しない（純粋なPython）
 - usecaseはドメインごとのディレクトリ（`usecase/<ドメイン>/`）にし、次の2つに分ける
   - `core.py`：adapter・コマンドから呼ぶ関数
   - `_convert.py`：補助の関数（`save_xxx_data`・`delete_xxx_data`、Repositoryを取り出す`get_media_repository`、ほかのusecaseから使う`create_notification_data`・`save_access_data`など）。補助の関数がなければ作らない
@@ -281,7 +281,7 @@ return Result.ok(new_ids)
 
 目的は「DB に不正なデータを入れない」こと。画面に出すエラー（入力の確かめ・文言）は FE で扱い、BE のルールは画面向けにしない。
 
-- データのルール（長さ・数など）は `domain/interface/<ドメイン>/validation.py` の関数 `validate(obj)` に書く。adapter・usecase に置かない
+- データのルール（長さ・数など）は `domain/<ドメイン>/validation.py` の関数 `validate(obj)` に書く。adapter・usecase に置かない
   - 名前は `validate`（`_data` を付けない）。1 つのファイルに複数あるときは `validate_xxx` にする
   - 引数は保存する Data、戻り値は `Result[None, ValidationError]`
   - 数・重複のように Data 1 つでは決まらないルールだけは、`validate(objs)` で list を受け取る（例：検索タグの 20 個まで）
@@ -352,3 +352,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-12: テストをパッケージの外（`tests/`）に出し、リンターチェックを `mypy myus config tests`・`ruff check myus config tests` にした
 - 2026-11-12: adapter を `inbound/`（HTTP・WebSocket）と `outbound/`（外部サービス。もとの `adapter/external`）に分けた
 - 2026-11-12: `domain/entity`（Repository の実装）を `adapter/outbound/db` に移した。決済会社の実装は `adapter/outbound/payment`
+- 2026-11-12: `domain/interface` をなくし、Data・Interface・ルールを `domain/<ドメイン>/` に置いた

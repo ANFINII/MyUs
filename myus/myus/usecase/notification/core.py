@@ -1,5 +1,5 @@
-from myus.domain.interface.notification.data import NotificationContentData
-from myus.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
+from myus.domain.notification.data import NotificationContentData
+from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
 from myus.injectors.container import injector
 from myus.types.dto.notification import NotificationItemDTO, NotificationDTO
 from myus.usecase.notification._convert import get_notification_data, get_notification_user_map_data, get_user_enabled_types_data

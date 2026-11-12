@@ -2,10 +2,10 @@ import datetime
 from dataclasses import replace
 from ninja import UploadedFile
 from myus.injectors.container import injector
-from myus.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
-from myus.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
-from myus.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
-from myus.domain.interface.user.interface import FilterOption, SortOption, UserInterface
+from myus.domain.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
+from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.user.data import ProfileData, UserAllData, UserNotificationData
+from myus.domain.user.interface import FilterOption, SortOption, UserInterface
 from myus.types.dto.user import LikeDTO
 from myus.types.schema.auth import SignupIn
 from myus.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn

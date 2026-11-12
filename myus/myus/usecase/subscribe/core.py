@@ -1,6 +1,6 @@
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.channel.interface import ChannelInterface
-from myus.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
+from myus.domain.channel.data import ChannelData
+from myus.domain.channel.interface import ChannelInterface
+from myus.domain.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from myus.injectors.container import injector
 from myus.types.dto.subscribe import SubscribeDTO
 from myus.usecase.channel.core import get_channel_data

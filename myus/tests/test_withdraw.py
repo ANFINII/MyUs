@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import pytest
 from myus.db.models.payment import Subscription
 from myus.db.models.user import User
-from myus.domain.interface.payment.provider.data import CancelFailed
+from myus.domain.payment.provider.data import CancelFailed
 from myus.types.schema.auth import WithdrawalIn
 from myus.usecase.auth.core import withdraw_user
 from myus.usecase.payment.core import cancel_subscription

@@ -1,5 +1,5 @@
-from myus.domain.interface.category.data import CategoryData
-from myus.domain.interface.category.interface import CategoryInterface, FilterOption, SortOption
+from myus.domain.category.data import CategoryData
+from myus.domain.category.interface import CategoryInterface, FilterOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 

@@ -1,7 +1,7 @@
 from dataclasses import replace
-from myus.domain.interface.channel.interface import ChannelInterface
-from myus.domain.interface.subscribe.data import SubscribeData
-from myus.domain.interface.subscribe.interface import FilterOption, SubscribeInterface
+from myus.domain.channel.interface import ChannelInterface
+from myus.domain.subscribe.data import SubscribeData
+from myus.domain.subscribe.interface import FilterOption, SubscribeInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 

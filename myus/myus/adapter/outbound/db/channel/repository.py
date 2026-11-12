@@ -3,8 +3,8 @@ from django.db.models.query import QuerySet
 from myus.db.models.channel import Channel
 from myus.adapter.outbound.db.channel._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption
+from myus.domain.channel.data import ChannelData
+from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

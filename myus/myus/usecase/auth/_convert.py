@@ -1,9 +1,9 @@
 import hmac
 from django_ulid.models import ulid
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.channel.interface import ChannelInterface
-from myus.domain.interface.user.data import UserAllData
-from myus.domain.interface.user.interface import UserInterface
+from myus.domain.channel.data import ChannelData
+from myus.domain.channel.interface import ChannelInterface
+from myus.domain.user.data import UserAllData
+from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.token import password_fingerprint

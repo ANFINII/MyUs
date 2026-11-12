@@ -7,7 +7,7 @@ from django.core.management import call_command
 from django.db import connection
 from myus.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Subscription
 from myus.db.models.user import User, UserPlan
-from myus.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
+from myus.domain.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
 from myus.usecase.payment.core import export_ledger, process_payment_events, receive_payment_event, replay_payment_events, requeue_payment_events
 from myus.usecase.payment._convert import PAYMENT_EVENT_MAX_ATTEMPTS
 from tests.fakes import provider_subscription

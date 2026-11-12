@@ -1,8 +1,8 @@
 from django_ulid.models import ulid
 from myus.db.models.media import Chat
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.hashtag.data import HashtagData
-from myus.domain.interface.media.chat.data import ChatData
+from myus.domain.channel.data import ChannelData
+from myus.domain.hashtag.data import HashtagData
+from myus.domain.media.chat.data import ChatData
 
 
 def convert_data(obj: Chat) -> ChatData:

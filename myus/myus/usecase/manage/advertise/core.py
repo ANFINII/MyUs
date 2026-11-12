@@ -2,9 +2,9 @@ from dataclasses import replace
 from datetime import datetime
 from ninja import UploadedFile
 from myus.utils.common.logger import log
-from myus.domain.interface.advertise.data import AdvertiseData
-from myus.domain.interface.advertise.interface import AdvertiseInterface, SortOption
-from myus.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption
+from myus.domain.advertise.data import AdvertiseData
+from myus.domain.advertise.interface import AdvertiseInterface, SortOption
+from myus.domain.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption
 from myus.injectors.container import injector
 from myus.types.schema.advertise import AdvertiseIn, AdvertiseUpdateIn
 from myus.usecase.user.core import get_user_data

@@ -3,8 +3,8 @@ from django.db.models.query import QuerySet
 from myus.db.models.users import Follow
 from myus.adapter.outbound.db.follow._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.domain.interface.follow.data import FollowData
-from myus.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
+from myus.domain.follow.data import FollowData
+from myus.domain.follow.interface import FilterOption, FollowInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

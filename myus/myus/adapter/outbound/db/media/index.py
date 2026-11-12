@@ -5,7 +5,7 @@ from django.db.models.functions import Now
 from django.db.models.query import QuerySet
 from django.utils import timezone
 from myus.db.models.subscribe import Subscribe
-from myus.domain.interface.media.index import ExcludeOption, FilterOption, RECOMMEND_DAYS, SortOption, SortType, SUBSCRIBE_BOOST
+from myus.domain.media.index import ExcludeOption, FilterOption, RECOMMEND_DAYS, SortOption, SortType, SUBSCRIBE_BOOST
 
 T = TypeVar("T", bound=Model)
 

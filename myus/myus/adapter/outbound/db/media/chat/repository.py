@@ -4,10 +4,10 @@ from myus.db.models.media import Chat
 from myus.adapter.outbound.db.media.chat._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.adapter.outbound.db.media.index import distinct_queryset, filter_q_list, sort_queryset
-from myus.domain.interface.media.chat.data import ChatData
-from myus.domain.interface.media.chat.interface import ChatInterface
-from myus.domain.interface.media.chat.validation import validate
-from myus.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.chat.data import ChatData
+from myus.domain.media.chat.interface import ChatInterface
+from myus.domain.media.chat.validation import validate
+from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

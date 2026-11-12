@@ -2,9 +2,9 @@ from django.db.models import Q
 from myus.db.models.payment import Subscription
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.adapter.outbound.db.payment.subscription._convert import convert_data, marshal_data
-from myus.domain.interface.payment.subscription.data import SubscriptionData
-from myus.domain.interface.payment.subscription.interface import FilterOption, SortOption, SubscriptionInterface
-from myus.domain.interface.payment.subscription.validation import validate
+from myus.domain.payment.subscription.data import SubscriptionData
+from myus.domain.payment.subscription.interface import FilterOption, SortOption, SubscriptionInterface
+from myus.domain.payment.subscription.validation import validate
 from myus.utils.common.result import FatalError, Result
 
 

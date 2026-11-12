@@ -3,9 +3,9 @@ from django.db.models.query import QuerySet
 from myus.db.models.users import SearchTag
 from myus.adapter.outbound.db.search_tag._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.domain.interface.search_tag.data import SearchTagData
-from myus.domain.interface.search_tag.interface import FilterOption, SearchTagInterface, SortOption
-from myus.domain.interface.search_tag.validation import validate
+from myus.domain.search_tag.data import SearchTagData
+from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, SortOption
+from myus.domain.search_tag.validation import validate
 from myus.utils.common.result import FatalError, Result
 
 

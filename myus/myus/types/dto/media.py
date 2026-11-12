@@ -1,15 +1,15 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from myus.domain.interface.hashtag.data import HashtagData
-from myus.domain.interface.media.video.data import VideoData
-from myus.domain.interface.media.music.data import MusicData
-from myus.domain.interface.media.blog.data import BlogData
-from myus.domain.interface.media.comic.data import ComicData
-from myus.domain.interface.media.picture.data import PictureData
-from myus.domain.interface.media.chat.data import ChatData
+from myus.domain.hashtag.data import HashtagData
+from myus.domain.media.video.data import VideoData
+from myus.domain.media.music.data import MusicData
+from myus.domain.media.blog.data import BlogData
+from myus.domain.media.comic.data import ComicData
+from myus.domain.media.picture.data import PictureData
+from myus.domain.media.chat.data import ChatData
 from myus.types.dto.comment import CommentDTO
 from myus.types.dto.message import MessageDTO
-from myus.domain.interface.channel.data import ChannelData
+from myus.domain.channel.data import ChannelData
 from myus.types.dto.user import MediaUserDTO
 
 

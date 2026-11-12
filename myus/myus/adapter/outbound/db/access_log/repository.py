@@ -3,8 +3,8 @@ from django.db.models.query import QuerySet
 from myus.db.models.common import AccessLog
 from myus.adapter.outbound.db.access_log._convert import convert_data, marshal_data
 from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.domain.interface.access_log.data import AccessLogData
-from myus.domain.interface.access_log.interface import AccessLogInterface, FilterOption, SortOption
+from myus.domain.access_log.data import AccessLogData
+from myus.domain.access_log.interface import AccessLogInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
 
 

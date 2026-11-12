@@ -1,8 +1,8 @@
 from django_ulid.models import ulid
 from myus.db.models.media import Music
-from myus.domain.interface.channel.data import ChannelData
-from myus.domain.interface.hashtag.data import HashtagData
-from myus.domain.interface.media.music.data import MusicData
+from myus.domain.channel.data import ChannelData
+from myus.domain.hashtag.data import HashtagData
+from myus.domain.media.music.data import MusicData
 
 
 def convert_data(obj: Music) -> MusicData:

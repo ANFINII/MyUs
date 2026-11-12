@@ -1,5 +1,5 @@
 from myus.db.models.payment import PaymentLedgerEntry
-from myus.domain.interface.payment.ledger.data import LedgerEntryData
+from myus.domain.payment.ledger.data import LedgerEntryData
 from myus.utils.enum.payment import LedgerEntryType
 
 

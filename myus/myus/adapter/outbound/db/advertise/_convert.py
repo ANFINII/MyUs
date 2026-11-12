@@ -1,6 +1,6 @@
 from django_ulid.models import ulid
 from myus.db.models.common import Advertise
-from myus.domain.interface.advertise.data import AdvertiseData
+from myus.domain.advertise.data import AdvertiseData
 
 
 def convert_data(obj: Advertise) -> AdvertiseData:

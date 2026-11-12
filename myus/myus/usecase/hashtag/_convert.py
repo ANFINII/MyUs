@@ -1,4 +1,4 @@
-from myus.domain.interface.ng_word.interface import FilterOption, NgWordInterface, SortOption
+from myus.domain.ng_word.interface import FilterOption, NgWordInterface, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 
