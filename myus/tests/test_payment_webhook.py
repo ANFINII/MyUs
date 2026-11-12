@@ -10,7 +10,7 @@ from myus.db.models.user import User, UserPlan
 from myus.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
 from myus.usecase.payment.core import export_ledger, process_payment_events, receive_payment_event, replay_payment_events, requeue_payment_events
 from myus.usecase.payment._convert import PAYMENT_EVENT_MAX_ATTEMPTS
-from myus.tests.fakes import provider_subscription
+from tests.fakes import provider_subscription
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, PayoutStatus, SubscriptionStatus, WebhookEventType

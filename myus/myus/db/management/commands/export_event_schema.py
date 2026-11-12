@@ -8,7 +8,7 @@ from myus.domain.interface.payment.event.data import PaymentEventContent
 from myus.utils.functions.schema_compatibility import breaking_changes, read_schema, write_schema
 
 
-SCHEMA_COMPATIBILITY_DIR = Path(BASE_DIR) / "myus" / "tests" / "schema_compatibility"
+SCHEMA_COMPATIBILITY_DIR = Path(BASE_DIR) / "tests" / "schema_compatibility"
 
 
 def event_schemas() -> dict[Path, dict[str, Any]]:
@@ -18,7 +18,7 @@ def event_schemas() -> dict[Path, dict[str, Any]]:
 
 
 class Command(BaseCommand):
-    help = "PaymentEvent の content と集約のイベントの JSON スキーマを myus/tests/schema_compatibility に出す。過去のイベントを読めなくなる変更は書き出さない"
+    help = "PaymentEvent の content と集約のイベントの JSON スキーマを tests/schema_compatibility に出す。過去のイベントを読めなくなる変更は書き出さない"
 
     def handle(self, *args, **options):
         for path, schema in event_schemas().items():

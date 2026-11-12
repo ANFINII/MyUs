@@ -310,12 +310,12 @@ return Result.ok(new_ids)
 - pytestを使用（Django TestCase不可）
 - 今は決済など絶対に失敗できない箇所だけテストを書く（webhook・Stripeの署名の検証・退会時のサブスク解約・決済のイベントの反映）
 - `@pytest.mark.django_db`でDB接続
-- 実行: `uv run pytest`（`myus/tests/`。CIでも実行する）
+- 実行: `uv run pytest`（`tests/`。CIでも実行する）
 - テスト用DBは`--nomigrations`でモデルから直接作る（マイグレーションはgit管理外のため）。DBを作る権限のあるユーザーで実行する
-- 共通のfixtureは`myus/tests/conftest.py`
+- 共通のfixtureは`tests/conftest.py`
   - `make_user`: User・Profile・MyPage・UserNotification・UserPlanをまとめて作る
-  - `fake_payment`: `PaymentInterface`を`myus/tests/fakes.py`の`FakePayment`に差し替える（Stripeを呼ばない。テストごとに元に戻る）
-- `PaymentEvent`の`content`（`PaymentEventContent`）と集約のイベント（`SUBSCRIPTION_EVENT_CLASSES`など）の形は、`myus/tests/schema_compatibility/payment_event/*.json`・`es_event/*.json`に保存したJSONスキーマと比べて検査する（`test_schema_compatibility.py`）。比べる処理は`myus/utils/functions/schema_compatibility.py`、確かめるイベントの一覧は`export_event_schema`の`event_schemas`
+  - `fake_payment`: `PaymentInterface`を`tests/fakes.py`の`FakePayment`に差し替える（Stripeを呼ばない。テストごとに元に戻る）
+- `PaymentEvent`の`content`（`PaymentEventContent`）と集約のイベント（`SUBSCRIPTION_EVENT_CLASSES`など）の形は、`tests/schema_compatibility/payment_event/*.json`・`es_event/*.json`に保存したJSONスキーマと比べて検査する（`test_schema_compatibility.py`）。比べる処理は`myus/utils/functions/schema_compatibility.py`、確かめるイベントの一覧は`export_event_schema`の`event_schemas`
   - 過去のイベントを読めなくなる変更（項目の削除・型の変更・必須の項目の追加・enumの値の削除）はテストが落ちる
   - 項目を足すときは初期値を付ける。形を変えたら`uv run python manage.py export_event_schema`でスキーマを書き出す（読めなくなる変更は書き出さない）
   - 保存したスキーマを手で直して検査を通さない
@@ -325,8 +325,8 @@ return Result.ok(new_ids)
 コードを書いた後、`myus/` で必ず実行:
 
 ```bash
-uv run mypy myus config
-uv run ruff check myus config --extend-ignore I
+uv run mypy myus config tests
+uv run ruff check myus config tests --extend-ignore I
 ```
 
 - ruff の `I`（import の並べ替え）は、上の「インポート」の決まりと合わないため除く
@@ -349,3 +349,4 @@ uv run ruff check myus config --extend-ignore I
 - 2026-11-08: 層の表に `domain/aggregate`・`adapter/external` を足し、リンターチェックを `mypy api config`・`ruff` にした
 - 2026-11-11: Validation（ドメインのルール）を追記
 - 2026-11-12: パッケージ名を `api` から `myus` にした（Django の app の label・テーブル名は変えない）
+- 2026-11-12: テストをパッケージの外（`tests/`）に出し、リンターチェックを `mypy myus config tests`・`ruff check myus config tests` にした
