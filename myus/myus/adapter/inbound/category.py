@@ -2,8 +2,8 @@ from django.http import HttpRequest
 from ninja import Router
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
-from myus.types.schema.category import CategoryOut
-from myus.types.schema.common import ErrorOut, ErrorType
+from myus.adapter.inbound.schema.category import CategoryOut
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType
 from myus.usecase.category.core import get_categories
 
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
-from myus.types.schema.channel import ChannelOut
-from myus.types.schema.media.output import VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
+from myus.adapter.inbound.schema.channel import ChannelOut
+from myus.adapter.inbound.schema.media.output import VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
 
 
 class UserPageOut(BaseModel):

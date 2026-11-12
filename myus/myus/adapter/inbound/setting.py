@@ -4,8 +4,8 @@ from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.types.dto.user import SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO
-from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from myus.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut
+from myus.adapter.inbound.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from myus.usecase.user.core import get_user_data, update_mypage, update_notification, update_profile
 from myus.utils.common.result import FatalError, NotFoundError, ValidationError
 from myus.utils.functions.index import create_url

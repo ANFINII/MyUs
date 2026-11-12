@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from pydantic import BaseModel
-from myus.types.schema.common import Title, Url
+from myus.adapter.inbound.schema.common import Title, Url
 
 
 class AdvertiseIn(BaseModel):

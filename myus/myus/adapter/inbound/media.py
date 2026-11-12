@@ -17,16 +17,16 @@ from myus.utils.functions.index import create_url, get_client_ip
 from myus.types.dto.media import VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from myus.types.dto.message import MessageDTO
 from myus.types.dto.user import AuthorDTO, MediaUserDTO
-from myus.types.schema.common import ErrorOut, ErrorType, Limit, Offset
-from myus.types.schema.comment import CommentOut, ReplyOut
-from myus.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn
-from myus.types.schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, HashtagOut
-from myus.types.schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
-from myus.types.schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
-from myus.types.schema.media.output import VideoDetailsOut, MusicDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
-from myus.types.schema.message import MessageOut
-from myus.types.schema.channel import ChannelOut
-from myus.types.schema.user import AuthorOut, MediaUserOut
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, Limit, Offset
+from myus.adapter.inbound.schema.comment import CommentOut, ReplyOut
+from myus.adapter.inbound.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn
+from myus.adapter.inbound.schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, HashtagOut
+from myus.adapter.inbound.schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
+from myus.adapter.inbound.schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
+from myus.adapter.inbound.schema.media.output import VideoDetailsOut, MusicDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
+from myus.adapter.inbound.schema.message import MessageOut
+from myus.adapter.inbound.schema.channel import ChannelOut
+from myus.adapter.inbound.schema.user import AuthorOut, MediaUserOut
 from myus.domain.media.index import PAGE_SIZE
 from myus.usecase.media.core import create_video, create_music, create_blog, create_comic, create_picture, create_chat
 from myus.usecase.media.core import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
