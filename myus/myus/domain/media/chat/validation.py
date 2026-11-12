@@ -1,5 +1,5 @@
-from myus.domain.media.chat.data import ChatData
 from myus.utils.common.result import Result, ValidationError
+from .data import ChatData
 
 
 CHAT_TITLE_MAX_LENGTH = 100

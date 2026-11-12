@@ -1,11 +1,11 @@
 from django.db.models import Q
 from myus.db.models.payment import DATETIME_MIN, PaymentEvent
-from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.adapter.outbound.db.payment.event._convert import convert_data, marshal_data
 from myus.domain.payment.event.data import PaymentEventData
 from myus.domain.payment.event.interface import FilterOption, SortOption, PaymentEventInterface
 from myus.domain.payment.event.validation import validate
 from myus.utils.common.result import FatalError, Result
+from ...index import get_save_new_ids, sort_ids
+from ._convert import convert_data, marshal_data
 
 
 PAYMENT_EVENT_FIELDS = ["provider", "event_id", "event_type", "external_id", "payload", "content", "occurred_at", "processed_at", "attempts", "last_error"]

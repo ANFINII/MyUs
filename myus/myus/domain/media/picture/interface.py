@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
-from myus.domain.media.picture.data import PictureData
 from myus.utils.common.result import FatalError, Result
+from ..index import ExcludeOption, FilterOption, PageOption, SortOption
+from .data import PictureData
 
 
 class PictureInterface(ABC):

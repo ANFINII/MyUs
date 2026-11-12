@@ -1,7 +1,6 @@
 import mimetypes
 import re
 from pathlib import Path
-
 from django.conf import settings
 from django.http import FileResponse, HttpRequest, HttpResponse, HttpResponseBase
 

@@ -1,8 +1,8 @@
-from django.db import models
 from django_ulid.models import ulid
-from myus.db.models.user import User
+from django.db import models
 from myus.utils.constants.choice import ADVERTISE_TYPE_CHOICES
 from myus.utils.functions.file import advertise_image_upload, advertise_video_upload
+from .user import User
 
 
 class AccessLog(models.Model):

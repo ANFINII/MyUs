@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from pydantic import BaseModel
-from myus.adapter.inbound.schema.common import Title
 from myus.utils.enum.media import MediaType
+from ..common import Title
 
 
 class VideoIn(BaseModel):

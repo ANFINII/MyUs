@@ -1,5 +1,5 @@
-from myus.domain.media.video.data import VideoData
 from myus.utils.common.result import Result, ValidationError
+from .data import VideoData
 
 
 VIDEO_TITLE_MAX_LENGTH = 100

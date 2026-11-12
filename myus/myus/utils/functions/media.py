@@ -5,15 +5,15 @@ import subprocess
 import tempfile
 from typing import assert_never
 from PIL import Image, UnidentifiedImageError
+from ninja import UploadedFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import TemporaryUploadedFile
-from ninja import UploadedFile
-from myus.utils.common.logger import log
-from myus.utils.common.result import Result, ValidationError
-from myus.utils.constants.upload import IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_FORMATS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
-from myus.utils.enum.upload import ImageUpload, MediaUpload
-from myus.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
-from myus.utils.functions.file import advertise_image_path, advertise_video_path, avatar_path, comic_path, file_extension, image_path, musics_path, video_path
+from ..common.logger import log
+from ..common.result import Result, ValidationError
+from ..constants.upload import IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_FORMATS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
+from ..enum.upload import ImageUpload, MediaUpload
+from .convert.audio_converter import is_conversion, save_converted_mp3
+from .file import advertise_image_path, advertise_video_path, avatar_path, comic_path, file_extension, image_path, musics_path, video_path
 
 
 type UploadType = ImageUpload | MediaUpload

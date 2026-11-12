@@ -1,6 +1,6 @@
-from myus.domain.user.data import UserAllData
 from myus.utils.common.result import Result, ValidationError
 from myus.utils.functions.validation import has_email, has_username, has_number, has_phone, has_postal_code
+from .data import UserAllData
 
 
 def validate(obj: UserAllData) -> Result[None, ValidationError]:

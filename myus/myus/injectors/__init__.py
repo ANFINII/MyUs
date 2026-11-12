@@ -1,4 +1,4 @@
-from myus.injectors.container import injector
+from .container import injector
 
 
 __all__ = ["injector"]

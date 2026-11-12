@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import assert_never
-from myus.domain.payment.data import Money
 from myus.utils.enum.payment import PaymentProvider, SubscriptionStatus
+from ..data import Money
 
 
 @dataclass(frozen=True, slots=True)

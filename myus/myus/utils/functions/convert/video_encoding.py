@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 from django.conf import settings
-from myus.utils.common.logger import log
-from myus.utils.functions.convert.video_converter import VideoConverter
+from ...common.logger import log
+from .video_converter import VideoConverter
 
 
 @dataclass(frozen=True, slots=True)

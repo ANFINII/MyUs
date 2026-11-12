@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from myus.usecase.dto.user import AuthorDTO
+from .user import AuthorDTO
 
 
 @dataclass(frozen=True, slots=True)

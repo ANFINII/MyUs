@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
-from myus.domain.payment.ledger.data import LedgerEntryData
 from myus.utils.common.result import FatalError, Result
+from .data import LedgerEntryData
 
 
 class SortType(Enum):

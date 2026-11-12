@@ -4,9 +4,9 @@ from myus.domain.follow.interface import FilterOption, FollowInterface
 from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
-from myus.usecase.notification._convert import create_notification_data
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from ..notification._convert import create_notification_data
 
 
 @Result.shield_exception()

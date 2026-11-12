@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.comment.data import CommentData
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import CommentTypeNo
+from .data import CommentData
 
 
 class SortType(Enum):

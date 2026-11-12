@@ -1,12 +1,12 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.master import Category
-from myus.adapter.outbound.db.category._convert import convert_data, get_media_model
-from myus.adapter.outbound.db.index import sort_ids
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
+from ..index import sort_ids
+from ._convert import convert_data, get_media_model
 
 
 class CategoryRepository(CategoryInterface):

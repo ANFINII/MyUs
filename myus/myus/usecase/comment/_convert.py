@@ -1,14 +1,14 @@
 from dataclasses import replace
-from myus.utils.common.logger import log
 from myus.domain.comment.data import CommentData
 from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
 from myus.injectors.container import injector
-from myus.usecase.dto.comment import CommentDTO, ReplyDTO
-from myus.usecase.notification._convert import delete_notification_data
-from myus.usecase.user._convert import get_author_map_data
+from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import CommentTypeNo
 from myus.utils.enum.notification import NotificationObjectType
+from ..dto.comment import CommentDTO, ReplyDTO
+from ..notification._convert import delete_notification_data
+from ..user._convert import get_author_map_data
 
 
 @Result.shield_exception()

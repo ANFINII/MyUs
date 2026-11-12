@@ -1,5 +1,5 @@
-from myus.domain.payment.ledger.data import LedgerEntryData
 from myus.utils.common.result import Result, ValidationError
+from .data import LedgerEntryData
 
 
 def validate(obj: LedgerEntryData) -> Result[None, ValidationError]:

@@ -1,14 +1,14 @@
 from typing import Any
+from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db.models import Count
-from import_export.admin import ImportExportModelAdmin
-from myus.db.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
-from myus.db.models import User, Profile, MyPage, SearchTag, HashTag, Category, NgWord, UserNotification
-from myus.db.models import Video, Music, Blog, Comic, Picture, Chat
+from .models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
+from .models import User, Profile, MyPage, SearchTag, HashTag, Category, NgWord, UserNotification
+from .models import Video, Music, Blog, Comic, Picture, Chat
 
 
 ADMIN_LOGIN_FAILURE_LIMIT = 5

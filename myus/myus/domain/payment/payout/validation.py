@@ -1,5 +1,5 @@
-from myus.domain.payment.payout.data import PayoutData
 from myus.utils.common.result import Result, ValidationError
+from .data import PayoutData
 
 
 def validate(obj: PayoutData) -> Result[None, ValidationError]:

@@ -1,6 +1,6 @@
-from myus.domain.payment.subscription.data import SubscriptionData
 from myus.utils.common.result import Result, ValidationError
 from myus.utils.plan import get_plan
+from .data import SubscriptionData
 
 
 def validate(obj: SubscriptionData) -> Result[None, ValidationError]:

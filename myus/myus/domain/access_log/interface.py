@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.access_log.data import AccessLogData
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.access_log import AccessType
+from .data import AccessLogData
 
 
 class SortType(Enum):

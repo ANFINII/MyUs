@@ -1,6 +1,6 @@
 import re
-from myus.domain.hashtag.data import HashtagData
 from myus.utils.common.result import Result, ValidationError
+from .data import HashtagData
 
 
 HASHTAG_MAX_LENGTH = 30

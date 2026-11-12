@@ -1,6 +1,6 @@
 import hashlib
 from django.core.cache import cache
-from myus.utils.constants.auth import LOGIN_LOCK_SECONDS
+from ..constants.auth import LOGIN_LOCK_SECONDS
 
 
 def login_failure_key(username: str) -> str:

@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
-from myus.usecase.dto.message import MessageDTO
-from myus.usecase.broadcast._convert import send_to_group, build_message_payload
+from ..dto.message import MessageDTO
+from ._convert import send_to_group, build_message_payload
 
 
 @dataclass(frozen=True, slots=True)

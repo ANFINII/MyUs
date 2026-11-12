@@ -1,7 +1,7 @@
+from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
-from django_ulid.models import ulid
-from myus.db.models.user import User
+from .user import User
 
 
 class Comment(models.Model):

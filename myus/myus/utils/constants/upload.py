@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from myus.utils.functions.convert.audio_converter import CONVERTIBLE_EXTENSIONS
+from ..functions.convert.audio_converter import CONVERTIBLE_EXTENSIONS
 
 
 @dataclass(frozen=True, slots=True)

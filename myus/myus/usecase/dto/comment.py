@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
-from myus.usecase.dto.user import AuthorDTO
 from myus.utils.enum.media import CommentType
+from .user import AuthorDTO
 
 
 @dataclass(frozen=True, slots=True)

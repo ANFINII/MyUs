@@ -1,6 +1,6 @@
 from django.db import models
-from myus.db.models.channel import Channel
-from myus.db.models.user import User
+from .channel import Channel
+from .user import User
 
 
 class Subscribe(models.Model):

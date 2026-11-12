@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from myus.domain.channel.data import ChannelData
-from myus.domain.hashtag.data import HashtagData
+from ...channel.data import ChannelData
+from ...hashtag.data import HashtagData
 
 
 @dataclass(frozen=True, slots=True)

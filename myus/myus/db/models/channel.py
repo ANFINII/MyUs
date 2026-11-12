@@ -1,7 +1,7 @@
-from django.db import models
 from django_ulid.models import ulid
-from myus.db.models.user import User
+from django.db import models
 from myus.utils.functions.file import avatar_upload
+from .user import User
 
 
 class Channel(models.Model):

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
-from myus.domain.media.blog.data import BlogData
 from myus.utils.common.result import FatalError, Result
+from ..index import ExcludeOption, FilterOption, PageOption, SortOption
+from .data import BlogData
 
 
 class BlogInterface(ABC):

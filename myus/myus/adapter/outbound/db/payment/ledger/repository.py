@@ -1,11 +1,11 @@
 from django.db.models import Q
 from myus.db.models.payment import PaymentLedgerEntry
-from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.adapter.outbound.db.payment.ledger._convert import convert_data, marshal_data
 from myus.domain.payment.ledger.data import LedgerEntryData
 from myus.domain.payment.ledger.interface import FilterOption, SortOption, LedgerEntryInterface
 from myus.domain.payment.ledger.validation import validate
 from myus.utils.common.result import FatalError, Result
+from ...index import get_save_new_ids, sort_ids
+from ._convert import convert_data, marshal_data
 
 
 LEDGER_ENTRY_FIELDS = ["payout_id"]

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
-from myus.domain.payment.data import Money
-from myus.domain.payment.event.data import PaymentEventData, ProviderSubscriptionData
 from myus.utils.enum.i18n import Locale
 from myus.utils.enum.payment import CancelError, CheckoutError, PaymentMethodSessionError, PaymentProvider, PaymentType, PlanChangeError, RevokeError, WebhookVerifyError
+from ..data import Money
+from ..event.data import PaymentEventData, ProviderSubscriptionData
 
 
 @dataclass(frozen=True, slots=True)

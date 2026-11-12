@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.ng_word.data import NgWordData
 from myus.utils.common.result import FatalError, Result
+from .data import NgWordData
 
 
 class SortType(Enum):

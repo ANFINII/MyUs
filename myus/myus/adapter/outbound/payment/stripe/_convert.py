@@ -1,7 +1,6 @@
 import stripe
 from datetime import datetime, timezone
 from typing import assert_never
-from django.conf import settings
 from stripe.params.checkout import (
     SessionCreateParams,
     SessionCreateParamsLineItem,
@@ -12,6 +11,7 @@ from stripe.params.checkout import (
     SessionCreateParamsSubscriptionData,
     SessionCreateParamsSubscriptionDataTransferData,
 )
+from django.conf import settings
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentPaidContent, PayoutContent, ProviderSubscriptionData
 from myus.domain.payment.provider.data import CheckoutData, CheckoutFailed

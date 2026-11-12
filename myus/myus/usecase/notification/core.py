@@ -1,9 +1,9 @@
 from myus.domain.notification.data import NotificationContentData
 from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
 from myus.injectors.container import injector
-from myus.usecase.dto.notification import NotificationItemDTO, NotificationDTO
-from myus.usecase.notification._convert import get_notification_data, get_notification_user_map_data, get_user_enabled_types_data
 from myus.utils.common.result import FatalError, Result
+from ..dto.notification import NotificationItemDTO, NotificationDTO
+from ._convert import get_notification_data, get_notification_user_map_data, get_user_enabled_types_data
 
 
 @Result.shield_exception()

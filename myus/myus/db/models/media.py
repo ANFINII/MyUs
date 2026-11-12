@@ -1,13 +1,13 @@
+from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
 from django.utils import timezone
-from django_ulid.models import ulid
-from myus.db.models.base import MediaModel
-from myus.db.models.channel import Channel
-from myus.db.models.hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
-from myus.db.models.master import Category
-from myus.db.models.user import User
 from myus.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
+from .base import MediaModel
+from .channel import Channel
+from .hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
+from .master import Category
+from .user import User
 
 
 # Video

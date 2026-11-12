@@ -1,5 +1,5 @@
-from myus.domain.media.picture.data import PictureData
 from myus.utils.common.result import Result, ValidationError
+from .data import PictureData
 
 
 PICTURE_TITLE_MAX_LENGTH = 100

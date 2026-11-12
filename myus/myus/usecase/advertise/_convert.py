@@ -2,9 +2,9 @@ from datetime import date
 from myus.domain.advertise.data import AdvertiseData
 from myus.domain.advertise.interface import AdvertiseInterface
 from myus.injectors.container import injector
-from myus.usecase.access_log._convert import save_access_data
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.access_log import AccessType
+from ..access_log._convert import save_access_data
 
 
 @Result.shield_exception()

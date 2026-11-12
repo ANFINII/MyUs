@@ -1,6 +1,6 @@
-from myus.utils.enum.i18n import Currency
-from myus.utils.enum.payment import PaymentProvider, SubscriptionStatus, PaymentStatus, LedgerEntryType, PayoutStatus, WebhookEventType
-from myus.utils.enum.user import GenderType, PlanName
+from ..enum.i18n import Currency
+from ..enum.payment import PaymentProvider, SubscriptionStatus, PaymentStatus, LedgerEntryType, PayoutStatus, WebhookEventType
+from ..enum.user import GenderType, PlanName
 
 
 GENDER_CHOICES = ((GenderType.MALE, "男性"), (GenderType.FEMALE, "女性"), (GenderType.SECRET, "秘密"))

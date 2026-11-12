@@ -1,6 +1,6 @@
 from typing import assert_never
-from django.contrib.auth.hashers import make_password
 from django_ulid.models import ulid
+from django.contrib.auth.hashers import make_password
 from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData

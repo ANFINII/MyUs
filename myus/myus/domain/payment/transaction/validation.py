@@ -1,5 +1,5 @@
-from myus.domain.payment.transaction.data import TransactionData
 from myus.utils.common.result import Result, ValidationError
+from .data import TransactionData
 
 
 TAX_RATE_MAX = 100
