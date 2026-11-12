@@ -1,5 +1,5 @@
 from myus.utils.common.result import Result, ValidationError
-from myus.utils.plan import get_plan
+from myus.utils.constants.plan import get_plan
 from .data import SubscriptionData
 
 

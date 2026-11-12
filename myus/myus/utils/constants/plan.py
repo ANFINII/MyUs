@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from .enum.user import PlanName
+from ..enum.user import PlanName
 
 
 @dataclass(frozen=True, slots=True)
-class PlanDef:
+class Plan:
     name: str
     price: int
     max_advertise: int
@@ -11,36 +11,36 @@ class PlanDef:
     description: str
 
 
-PLANS: list[PlanDef] = [
-    PlanDef(
+PLANS: list[Plan] = [
+    Plan(
         name=PlanName.FREE,
         price=0,
         max_advertise=0,
         is_music_download=False,
         description="・有料プランを解約します\n・アップロード機能\n・コメント機能\n・フォロー機能など",
     ),
-    PlanDef(
+    Plan(
         name=PlanName.BASIC,
         price=550,
         max_advertise=1,
         is_music_download=False,
         description="・個別広告表示1つ\n・全体広告OFF",
     ),
-    PlanDef(
+    Plan(
         name=PlanName.STANDARD,
         price=880,
         max_advertise=2,
         is_music_download=False,
         description="・個別広告表示2つ\n・全体広告OFF",
     ),
-    PlanDef(
+    Plan(
         name=PlanName.PREMIUM,
         price=1200,
         max_advertise=3,
         is_music_download=True,
         description="・個別広告表示3つ\n・全体広告OFF\n・楽曲ダウンロード",
     ),
-    PlanDef(
+    Plan(
         name=PlanName.ULTIMATE,
         price=2000,
         max_advertise=4,
@@ -50,8 +50,8 @@ PLANS: list[PlanDef] = [
 ]
 
 
-PLAN_MAP: dict[str, PlanDef] = {p.name: p for p in PLANS}
+PLAN_MAP: dict[str, Plan] = {p.name: p for p in PLANS}
 
 
-def get_plan(name: str) -> PlanDef | None:
+def get_plan(name: str) -> Plan | None:
     return PLAN_MAP.get(name)

@@ -378,4 +378,5 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-13: `utils/functions/index.py` を `utils/functions/common.py`（汎用の関数 `new_ulid`・`create_url`・`get_client_ip`）にし、使われていない `message` を消した
 - 2026-11-13: 共通で使うものを `common.py` にした（`domain/media/option.py` → `domain/media/common.py`、`adapter/outbound/db/base.py` → `adapter/outbound/db/common.py`、`adapter/outbound/db/media/query.py` → `adapter/outbound/db/media/common.py`）
 - 2026-11-13: 広告の検索の条件をメディアと分け、`domain/advertise/interface.py` に広告用の `FilterOption`・`ExcludeOption`・`PageOption` を置いた
+- 2026-11-13: `utils/plan.py` を `utils/constants/plan.py` に移し、`PlanDef` を `Plan` にした
 - 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
