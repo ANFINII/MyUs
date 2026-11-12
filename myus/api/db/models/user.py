@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
@@ -8,7 +8,7 @@ from api.utils.enum.user import PlanName
 from api.utils.functions.file import avatar_upload
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager["User"]):
     def create_user(self, email: str, username: str, nickname: str, password: str | None = None) -> "User":
         if not email:
             raise ValueError("Users must have an email")
@@ -25,11 +25,10 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, username, nickname, password):
         user = self.create_user(email, username, nickname, password)
         user.is_staff = True
-        user.is_superuser = True
         user.save(using=self._db)
         return user
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser):
     """User"""
     img         = "../static/img/user_icon.png"
     id          = models.BigAutoField(primary_key=True)
@@ -59,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
-    class Meta:
+    class Meta(AbstractBaseUser.Meta):
         db_table = "user"
         verbose_name_plural = "001 User"
 
