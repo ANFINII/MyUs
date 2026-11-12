@@ -5,7 +5,7 @@ from myus.domain.message.data import MessageData
 from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..base import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, sort_ids
 
 
 MESSAGE_FIELDS = ["author_id", "chat_id", "parent_id", "text", "updated"]

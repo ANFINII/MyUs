@@ -5,7 +5,7 @@ from myus.domain.follow.data import FollowData
 from myus.domain.follow.interface import FilterOption, FollowInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..base import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, sort_ids
 
 
 FOLLOW_FIELDS = ["follower_id", "following_id", "is_follow"]

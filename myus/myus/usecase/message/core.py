@@ -1,7 +1,7 @@
 from dataclasses import replace
 from datetime import datetime
+from myus.domain.common import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.domain.media.chat.interface import ChatInterface
-from myus.domain.media.option import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.domain.message.data import MessageData
 from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
 from myus.injectors.container import injector

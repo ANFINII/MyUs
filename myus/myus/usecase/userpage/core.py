@@ -2,8 +2,8 @@ from dataclasses import replace
 from django.utils import timezone
 from myus.domain.advertise.data import AdvertiseData
 from myus.domain.advertise.interface import AdvertiseInterface, SortOption
+from myus.domain.common import ExcludeOption, FilterOption as MediaFilterOption, PageOption
 from myus.domain.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
-from myus.domain.media.option import ExcludeOption, FilterOption as MediaFilterOption, PageOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.common import create_url

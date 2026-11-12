@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
 from .data import AdvertiseData
-from ..media.option import ExcludeOption, FilterOption, PageOption
+from ..common import ExcludeOption, FilterOption, PageOption
 
 
 class SortType(Enum):
