@@ -15,7 +15,7 @@ from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from myus.injectors.container import injector
-from myus.types.dto.user import MediaUserDTO
+from myus.usecase.dto.user import MediaUserDTO
 from myus.usecase.access_log._convert import save_access_data
 from myus.usecase.notification._convert import create_notification_data, delete_notification_data
 from myus.utils.common.result import FatalError, Result

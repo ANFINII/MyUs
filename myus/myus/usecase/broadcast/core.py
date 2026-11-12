@@ -1,5 +1,5 @@
 from dataclasses import asdict, dataclass
-from myus.types.dto.message import MessageDTO
+from myus.usecase.dto.message import MessageDTO
 from myus.usecase.broadcast._convert import send_to_group, build_message_payload
 
 

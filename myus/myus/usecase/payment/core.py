@@ -14,7 +14,7 @@ from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from myus.domain.payment.transaction.interface import TransactionInterface
 from myus.injectors.container import injector
-from myus.types.dto.ledger import LedgerRowDTO
+from myus.usecase.dto.ledger import LedgerRowDTO
 from myus.usecase.user.core import get_user_data
 from myus.usecase.payment._convert import get_payment_repository, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from myus.utils.common.result import CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError

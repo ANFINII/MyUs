@@ -2,7 +2,7 @@ from myus.domain.follow.interface import FilterOption, FollowInterface, SortOpti
 from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
-from myus.types.dto.follow import FollowDTO, FollowUserDTO
+from myus.usecase.dto.follow import FollowDTO, FollowUserDTO
 from myus.usecase.user.core import get_user_data
 from myus.usecase.follow._convert import save_follow_data
 from myus.utils.common.result import FatalError, InputError, NotFoundError, Result, ValidationError

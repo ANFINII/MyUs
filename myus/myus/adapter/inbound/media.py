@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
-from myus.types.dto.comment import CommentDTO, ReplyDTO
+from myus.usecase.dto.comment import CommentDTO, ReplyDTO
 from myus.domain.media.video.data import VideoData
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.blog.data import BlogData
@@ -14,9 +14,9 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.hashtag.data import HashtagData
 from myus.domain.channel.data import ChannelData
 from myus.utils.functions.index import create_url, get_client_ip
-from myus.types.dto.media import VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
-from myus.types.dto.message import MessageDTO
-from myus.types.dto.user import AuthorDTO, MediaUserDTO
+from myus.usecase.dto.media import VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
+from myus.usecase.dto.message import MessageDTO
+from myus.usecase.dto.user import AuthorDTO, MediaUserDTO
 from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, Limit, Offset
 from myus.adapter.inbound.schema.comment import CommentOut, ReplyOut
 from myus.adapter.inbound.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn

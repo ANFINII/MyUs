@@ -6,7 +6,7 @@ from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOp
 from myus.domain.message.data import MessageData
 from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
 from myus.injectors.container import injector
-from myus.types.dto.message import MessageDTO, MessageReplyDTO
+from myus.usecase.dto.message import MessageDTO, MessageReplyDTO
 from myus.usecase.notification._convert import create_notification_data
 from myus.usecase.user._convert import get_author_data, get_author_map_data
 from myus.usecase.message._convert import get_message_data, save_message_data, delete_message_data

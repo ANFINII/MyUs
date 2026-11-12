@@ -6,7 +6,7 @@ from myus.domain.comment.interface import CommentInterface, FilterOption as Comm
 from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.domain.user.data import ProfileData, UserAllData, UserNotificationData
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
-from myus.types.dto.user import LikeDTO, SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO, SignupDTO
+from myus.usecase.dto.user import LikeDTO, SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO, SignupDTO
 from myus.usecase.media._convert import get_media_repository
 from myus.usecase.notification._convert import create_notification_data, delete_notification_data
 from myus.usecase.user._convert import save_user_data

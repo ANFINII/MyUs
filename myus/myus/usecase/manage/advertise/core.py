@@ -6,7 +6,7 @@ from myus.domain.advertise.data import AdvertiseData
 from myus.domain.advertise.interface import AdvertiseInterface, SortOption
 from myus.domain.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption
 from myus.injectors.container import injector
-from myus.types.dto.advertise import AdvertiseDTO
+from myus.usecase.dto.advertise import AdvertiseDTO
 from myus.usecase.user.core import get_user_data
 from myus.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
 from myus.utils.enum.upload import ImageUpload, MediaUpload

@@ -17,7 +17,7 @@ from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption, SortType
 from myus.injectors.container import injector
-from myus.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
+from myus.usecase.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from myus.usecase.category._convert import get_category_data
 from myus.usecase.channel.core import get_channel_data
 from myus.usecase.comment._convert import get_comments_data

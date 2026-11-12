@@ -13,7 +13,7 @@ from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData
 from myus.utils.enum.user import PlanName
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
 from myus.injectors.container import injector
-from myus.types.dto.user import PasswordChangeDTO, PasswordResetDTO, SignupDTO
+from myus.usecase.dto.user import PasswordChangeDTO, PasswordResetDTO, SignupDTO
 from myus.usecase.payment.core import cancel_subscription
 from myus.usecase.auth._convert import get_active_user_data, is_same_password, create_user_data
 from myus.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError

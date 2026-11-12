@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
-from myus.types.dto.channel import ChannelDTO
+from myus.usecase.dto.channel import ChannelDTO
 from myus.adapter.inbound.schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
 from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.adapter.inbound.schema.subscribe import SubscribeIn, SubscribeOut

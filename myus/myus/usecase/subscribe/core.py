@@ -2,7 +2,7 @@ from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface
 from myus.domain.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from myus.injectors.container import injector
-from myus.types.dto.subscribe import SubscribeDTO
+from myus.usecase.dto.subscribe import SubscribeDTO
 from myus.usecase.channel.core import get_channel_data
 from myus.usecase.subscribe._convert import save_subscribe_data
 from myus.utils.common.result import FatalError, FindError, NotFoundError, Result

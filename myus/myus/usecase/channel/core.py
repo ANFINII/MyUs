@@ -5,7 +5,7 @@ from myus.utils.common.logger import log
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
 from myus.injectors.container import injector
-from myus.types.dto.channel import ChannelDTO
+from myus.usecase.dto.channel import ChannelDTO
 from myus.usecase.channel._convert import save_channel_data
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidateError, WriteError
 from myus.utils.enum.upload import ImageUpload

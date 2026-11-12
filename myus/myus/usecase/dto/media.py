@@ -7,10 +7,10 @@ from myus.domain.media.blog.data import BlogData
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.chat.data import ChatData
-from myus.types.dto.comment import CommentDTO
-from myus.types.dto.message import MessageDTO
+from myus.usecase.dto.comment import CommentDTO
+from myus.usecase.dto.message import MessageDTO
 from myus.domain.channel.data import ChannelData
-from myus.types.dto.user import MediaUserDTO
+from myus.usecase.dto.user import MediaUserDTO
 
 
 @dataclass(frozen=True, slots=True)

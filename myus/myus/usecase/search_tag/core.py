@@ -1,7 +1,7 @@
 from myus.domain.search_tag.data import SearchTagData
 from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, SortOption
 from myus.injectors.container import injector
-from myus.types.dto.user import SearchTagDTO
+from myus.usecase.dto.user import SearchTagDTO
 from myus.usecase.search_tag._convert import save_search_tag_data
 from myus.utils.common.result import FatalError, Result, ValidateError
 from myus.utils.functions.transaction import atomic_result

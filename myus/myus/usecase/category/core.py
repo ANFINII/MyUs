@@ -1,6 +1,6 @@
 from myus.domain.category.interface import CategoryInterface, FilterOption, SortOption, SortType
 from myus.injectors.container import injector
-from myus.types.dto.category import CategoryDTO
+from myus.usecase.dto.category import CategoryDTO
 from myus.utils.common.result import FatalError, Result
 
 
