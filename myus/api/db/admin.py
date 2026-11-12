@@ -114,14 +114,13 @@ class UserAdmin(ImportExportModelAdmin):
     list_display = ("id", "email", "username", "nickname")
     search_fields = ("email", "username", "nickname")
     ordering = ("id",)
-    filter_horizontal = ("groups", "user_permissions")
     readonly_fields = ("last_login", "date_joined")
     inlines = [ProfileInline, MyPageInline, UserNotificationInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [
         ("アカウント情報", {"fields": ("avatar", "email", "username", "nickname")}),
-        ("権限情報", {"fields": ("is_active", "is_staff", "is_superuser", "last_login", "date_joined")}),
+        ("権限情報", {"fields": ("is_active", "is_staff", "last_login", "date_joined")}),
     ]
 
 

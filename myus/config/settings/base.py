@@ -120,7 +120,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 ROOT_URLCONF = "config.urls"
 
 AUTH_USER_MODEL = "myus.User"
-AUTHENTICATION_BACKENDS = ["api.backends.MyBackend"]
+AUTHENTICATION_BACKENDS = ["api.backends.AdminBackend"]
 
 # Proxy
 NINJA_NUM_PROXIES = 0

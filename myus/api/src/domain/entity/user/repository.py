@@ -1,4 +1,3 @@
-from django.contrib.auth import authenticate
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
@@ -95,8 +94,11 @@ class UserRepository(UserInterface):
 
     @Result.shield_exception()
     def authenticate(self, login_id: str, password: str) -> Result[int | None, FatalError]:
-        user = authenticate(username=login_id, password=password)
+        user = User.objects.filter(username=login_id).first()
         if user is None:
+            user = User.objects.filter(email=login_id).first()
+
+        if user is None or not user.check_password(password):
             return Result.ok(None)
 
         return Result.ok(user.id)
