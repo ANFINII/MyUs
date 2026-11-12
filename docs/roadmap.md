@@ -101,7 +101,7 @@ flowchart LR
 
 | 置き場 | 内容 | 状態 |
 |---|---|---|
-| `myus/domain/aggregate/<集約>/` | `state.py`・`event.py`・`decide.py`・`apply.py`。I/O を持たない | あり |
+| `myus/domain/<ドメイン>/<集約>/` | `state.py`・`event.py`・`decide.py`・`apply.py`。I/O を持たない | あり |
 | `myus/usecase/es/_convert.py` | `handle_command`（集約に書き込む共通の手順） | あり |
 | `myus/usecase/<ドメイン>/_convert.py` | 集約ごとのコマンド（`payment` の `save_subscription_event_data` など） | あり |
 | `myus/usecase/receiver/` | Receiver（外の事実やほかの集約のイベントを受けてコマンドを打つ） | Phase 5 以降 |

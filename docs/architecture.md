@@ -23,7 +23,7 @@ flowchart LR
     subgraph Backend[バックエンド（Daphne / ASGI）]
         Inbound[adapter/inbound<br/>HTTP・WebSocket]
         Usecase[usecase]
-        Domain[domain<br/>interface・aggregate]
+        Domain[domain<br/>data・interface・集約]
         Outbound[adapter/outbound<br/>db・payment]
     end
     MySQL[(MySQL)]
@@ -56,7 +56,7 @@ flowchart LR
 | `adapter/inbound/routers.py` | django-ninja のルーターをまとめて登録する（`config/urls.py` が読む） |
 | `usecase/` | 業務ロジック |
 | `domain/<ドメイン>/` | repository の interface と Data（dataclass）、ルール（`validation.py`） |
-| `domain/aggregate/` | Event Sourcing の集約（状態・イベント・判断・適用）。I/O を持たない関数 |
+| `domain/<ドメイン>/<集約>/` | Event Sourcing の集約（状態・イベント・判断・適用）。I/O を持たない関数。いまは `domain/payment/subscription/` |
 | `injectors/` | interface と実装の対応付け |
 | `types/` | API の入出力スキーマ（`schema/`）と DTO（`dto/`） |
 

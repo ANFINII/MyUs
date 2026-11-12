@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import assert_never
-from myus.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRevoked, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
-from myus.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionDetail, SubscriptionState
+from myus.domain.payment.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRevoked, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
+from myus.domain.payment.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionDetail, SubscriptionState
 from myus.domain.payment.event.data import ProviderSubscriptionData
 from myus.utils.common.result import Result, ValidateError, ValidationError
 from myus.utils.enum.payment import CancelError, SubscriptionStatus
