@@ -6,9 +6,7 @@ from myus.domain.comment.interface import CommentInterface, FilterOption as Comm
 from myus.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.domain.user.data import ProfileData, UserAllData, UserNotificationData
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
-from myus.types.dto.user import LikeDTO
-from myus.types.schema.auth import SignupIn
-from myus.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
+from myus.types.dto.user import LikeDTO, SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO, SignupDTO
 from myus.usecase.media._convert import get_media_repository
 from myus.usecase.notification._convert import create_notification_data, delete_notification_data
 from myus.usecase.user._convert import save_user_data
@@ -17,7 +15,7 @@ from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload
 from myus.utils.functions.media import save_upload, validate_uploads
-from myus.utils.functions.validation import has_birthday, has_email, has_number, has_password, has_phone, has_postal_code, has_username, has_weak_password
+from myus.utils.functions.validation import has_birthday, has_email, has_number, has_password, has_username, has_weak_password
 
 
 @Result.shield_exception()
@@ -40,7 +38,7 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None
 
 
 @Result.shield_exception()
-def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> Result[None, InputError]:
+def update_profile(user_id: int, input: SettingProfileDTO, avatar_file: UploadedFile) -> Result[None, InputError]:
     upload_ret = validate_uploads([(avatar_file, ImageUpload.USER)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -105,7 +103,7 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
 
 
 @Result.shield_exception()
-def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFile) -> Result[None, InputError]:
+def update_mypage(user_id: int, input: SettingMyPageDTO, banner_file: UploadedFile) -> Result[None, InputError]:
     upload_ret = validate_uploads([(banner_file, ImageUpload.USER)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -138,7 +136,7 @@ def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFil
 
 
 @Result.shield_exception()
-def update_notification(user_id: int, input: SettingNotificationIn) -> Result[None, FindError]:
+def update_notification(user_id: int, input: SettingNotificationDTO) -> Result[None, FindError]:
     data_ret = get_user_data(user_id)
     if data_ret.is_err:
         return Result.err(data_ret.err_value)
@@ -223,33 +221,8 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
     return Result.ok(LikeDTO(is_like=is_like, like_count=like_count))
 
 
-def profile_check(data: SettingProfileIn) -> str:
-    if has_email(data.email):
-        return "error.emailInvalid"
-
-    if has_username(data.username):
-        return "error.usernameInvalid"
-
-    if has_number(data.last_name):
-        return "error.lastNameInvalid"
-
-    if has_number(data.first_name):
-        return "error.firstNameInvalid"
-
-    if has_phone(data.phone):
-        return "error.phoneInvalid"
-
-    if has_postal_code(data.postal_code):
-        return "error.postalCodeInvalid"
-
-    if has_birthday(data.year, data.month, data.day):
-        return "error.birthdayInvalid"
-
-    return ""
-
-
 @Result.shield_exception()
-def signup_check(data: SignupIn) -> Result[str, FatalError]:
+def signup_check(data: SignupDTO) -> Result[str, FatalError]:
     password1 = data.password1
     password2 = data.password2
 

@@ -203,8 +203,9 @@ if ret.is_err:
 ### usecase の入出力: dataclass（`types/dto/`）
 - `@dataclass(frozen=True, slots=True)`
 - サフィックス: `DTO`
-- 入力は、作成なら`XxxCreateDTO`、更新なら`XxxUpdateDTO`（`VideoCreateDTO`・`VideoUpdateDTO`）。項目はschemaの`XxxIn`と同じ名前にする
-- 作成と更新で項目がまったく同じなら、1つにまとめて`XxxInDTO`にする（`AdvertiseInDTO`）
+- 入力は`XxxDTO`にする（`SignupDTO`・`SettingProfileDTO`・`SearchTagDTO`）。項目はschemaの`XxxIn`と同じ名前にする
+- 作成と更新で項目が違い、両方の入力があるときだけ`XxxCreateDTO`・`XxxUpdateDTO`に分ける（`VideoCreateDTO`・`VideoUpdateDTO`）。作成と更新で項目が同じなら1つの`XxxDTO`にする（`AdvertiseDTO`・`ChannelDTO`）
+- `XxxDTO`がすでに出力などに使われているときは、`XxxCreateDTO`のように付けて分ける（`CommentDTO`があるので`CommentCreateDTO`）
 - usecaseはschema（`XxxIn`）を受け取らない。adapterで`dto = VideoCreateDTO(**input.model_dump())`と組み替えて渡す
 - 項目が1つだけなら、DTOを作らず値で渡す
 
@@ -275,7 +276,7 @@ return Result.ok(new_ids)
 | utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase・types を import しない） |
 
 - adapter → usecase → interface の方向にのみ依存する
-- usecase層からadapter層の型（`HttpRequest`等）をインポートしない
+- usecase層からadapter層の型（`HttpRequest`、schemaの`XxxIn`等）をインポートしない。入力はadapterでDTOに組み替えて受け取る（「型定義」を参照）
 - usecase層からDjangoのモデル（`User.objects`等）や`authenticate`を直接使わない。リポジトリ（Interface）のメソッドを通す
 - domain層（`domain/<ドメイン>/`）は他の層に依存しない（純粋なPython）
 - usecaseはドメインごとのディレクトリ（`usecase/<ドメイン>/`）にし、次の2つに分ける

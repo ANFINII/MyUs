@@ -3,6 +3,7 @@ from django.http import HttpRequest
 from ninja import Router
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
+from myus.types.dto.comment import CommentCreateDTO
 from myus.types.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.types.schema.user import AuthorOut
@@ -28,7 +29,8 @@ class CommentAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        comment_ret = create_comment(user_id, input)
+        dto = CommentCreateDTO(**input.model_dump())
+        comment_ret = create_comment(user_id, dto)
         if comment_ret.is_err:
             message = comment_ret.err_value.message
             match comment_ret.err_value:

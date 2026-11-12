@@ -3,6 +3,7 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
+from myus.types.dto.channel import ChannelDTO
 from myus.types.schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.types.schema.subscribe import SubscribeIn, SubscribeOut
@@ -124,7 +125,8 @@ class ChannelAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        create_ret = create_user_channel(user_id, input, avatar_file)
+        dto = ChannelDTO(**input.model_dump())
+        create_ret = create_user_channel(user_id, dto, avatar_file)
         if create_ret.is_err:
             message = create_ret.err_value.message
             match create_ret.err_value:
@@ -151,7 +153,8 @@ class ChannelAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_user_channel(user_id, ulid, input, avatar_file)
+        dto = ChannelDTO(**input.model_dump())
+        update_ret = update_user_channel(user_id, ulid, dto, avatar_file)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:

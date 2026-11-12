@@ -3,12 +3,13 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
+from myus.types.dto.user import SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
-from myus.usecase.user.core import get_user_data, profile_check, update_mypage, update_notification, update_profile
+from myus.usecase.user.core import get_user_data, update_mypage, update_notification, update_profile
 from myus.utils.common.result import FatalError, NotFoundError, ValidationError
 from myus.utils.functions.index import create_url
-from myus.utils.functions.validation import has_email
+from myus.utils.functions.validation import has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
 class SettingProfileAPI:
@@ -79,7 +80,8 @@ class SettingProfileAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_profile(user_id, input, avatar_file)
+        dto = SettingProfileDTO(**input.model_dump())
+        update_ret = update_profile(user_id, dto, avatar_file)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -157,7 +159,8 @@ class SettingMyPageAPI:
         if has_email(input.email):
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailInvalid")
 
-        update_ret = update_mypage(user_id, input, banner_file)
+        dto = SettingMyPageDTO(**input.model_dump())
+        update_ret = update_mypage(user_id, dto, banner_file)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -231,7 +234,8 @@ class SettingNotificationAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_notification(user_id, input)
+        dto = SettingNotificationDTO(**input.model_dump())
+        update_ret = update_notification(user_id, dto)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -243,3 +247,28 @@ class SettingNotificationAPI:
                     assert_never(update_ret.err_value)
 
         return 200, SuccessOut(message="保存しました!")
+
+
+def profile_check(data: SettingProfileIn) -> str:
+    if has_email(data.email):
+        return "error.emailInvalid"
+
+    if has_username(data.username):
+        return "error.usernameInvalid"
+
+    if has_number(data.last_name):
+        return "error.lastNameInvalid"
+
+    if has_number(data.first_name):
+        return "error.firstNameInvalid"
+
+    if has_phone(data.phone):
+        return "error.phoneInvalid"
+
+    if has_postal_code(data.postal_code):
+        return "error.postalCodeInvalid"
+
+    if has_birthday(data.year, data.month, data.day):
+        return "error.birthdayInvalid"
+
+    return ""
