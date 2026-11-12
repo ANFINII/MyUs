@@ -11,8 +11,8 @@ from myus.utils.enum.user import PlanName
 from myus.utils.functions.index import create_url
 from myus.utils.functions.transaction import atomic_result
 from myus.utils.plan import get_plan
-from ..user.core import get_user_data
 from ._convert import is_active, save_read_data
+from ..user.core import get_user_data
 
 
 ADVERTISE_TYPE_ALL = "all"

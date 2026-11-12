@@ -5,9 +5,9 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
 from myus.utils.enum.media import MediaType
+from ._convert import normalize_name, has_ng_word, get_ng_words_data
 from ..dto.hashtag import HashtagDTO
 from ..media._convert import get_media_repository
-from ._convert import normalize_name, has_ng_word, get_ng_words_data
 
 
 @Result.shield_exception()

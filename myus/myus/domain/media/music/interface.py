@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from myus.utils.common.result import FatalError, Result
-from ..option import ExcludeOption, FilterOption, PageOption, SortOption
 from .data import MusicData
+from ..option import ExcludeOption, FilterOption, PageOption, SortOption
 
 
 class MusicInterface(ABC):

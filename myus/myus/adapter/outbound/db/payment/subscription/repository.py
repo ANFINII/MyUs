@@ -4,8 +4,8 @@ from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption, SortOption, SubscriptionInterface
 from myus.domain.payment.subscription.validation import validate
 from myus.utils.common.result import FatalError, Result
-from ...base import get_save_new_ids, sort_ids
 from ._convert import convert_data, marshal_data
+from ...base import get_save_new_ids, sort_ids
 
 
 SUBSCRIPTION_FIELDS = ["payment_customer_id", "seller_id", "external_id", "product_code", "price_amount", "price_currency", "status", "started_at", "current_period_end", "canceled_at", "last_event_at"]

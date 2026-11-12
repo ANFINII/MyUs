@@ -12,10 +12,10 @@ from myus.utils.enum.notification import NotificationObjectType, NotificationTyp
 from myus.utils.enum.upload import ImageUpload
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.validation import has_birthday, has_email, has_number, has_password, has_username, has_weak_password
+from ._convert import save_user_data
 from ..dto.user import LikeDTO, SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO, SignupDTO
 from ..media._convert import get_media_repository
 from ..notification._convert import create_notification_data, delete_notification_data
-from ._convert import save_user_data
 
 
 @Result.shield_exception()

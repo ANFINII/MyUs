@@ -6,9 +6,9 @@ from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.media.video.validation import validate
 from myus.utils.common.result import FatalError, Result
-from ...base import get_save_new_ids, sort_ids
-from ..query import distinct_queryset, filter_q_list, sort_queryset
 from ._convert import convert_data, marshal_data
+from ..query import distinct_queryset, filter_q_list, sort_queryset
+from ...base import get_save_new_ids, sort_ids
 
 
 VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "publish", "publish_at", "updated"]
