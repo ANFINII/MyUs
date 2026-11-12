@@ -2,7 +2,7 @@ from dataclasses import fields
 from typing import Any
 import pytest
 from pydantic import BaseModel
-from myus.types.dto.advertise import AdvertiseCreateDTO, AdvertiseUpdateDTO
+from myus.types.dto.advertise import AdvertiseInDTO
 from myus.types.dto.media import VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from myus.types.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.types.schema.advertise import AdvertiseIn, AdvertiseUpdateIn
@@ -24,8 +24,8 @@ SCHEMA_DTO_PAIRS: list[tuple[type[BaseModel], Any]] = [
     (ComicUpdateIn, ComicUpdateDTO),
     (PictureUpdateIn, PictureUpdateDTO),
     (ChatUpdateIn, ChatUpdateDTO),
-    (AdvertiseIn, AdvertiseCreateDTO),
-    (AdvertiseUpdateIn, AdvertiseUpdateDTO),
+    (AdvertiseIn, AdvertiseInDTO),
+    (AdvertiseUpdateIn, AdvertiseInDTO),
 ]
 
 

@@ -204,6 +204,7 @@ if ret.is_err:
 - `@dataclass(frozen=True, slots=True)`
 - サフィックス: `DTO`
 - 入力は、作成なら`XxxCreateDTO`、更新なら`XxxUpdateDTO`（`VideoCreateDTO`・`VideoUpdateDTO`）。項目はschemaの`XxxIn`と同じ名前にする
+- 作成と更新で項目がまったく同じなら、1つにまとめて`XxxInDTO`にする（`AdvertiseInDTO`）
 - usecaseはschema（`XxxIn`）を受け取らない。adapterで`dto = VideoCreateDTO(**input.model_dump())`と組み替えて渡す
 - schemaとDTOの項目の名前がずれると実行したときに`TypeError`になるので、組を`tests/test_dto_schema.py`の`SCHEMA_DTO_PAIRS`に足し、テストで項目が一致することを確かめる
 - 項目が1つだけなら、DTOを作らず値で渡す

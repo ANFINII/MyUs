@@ -5,7 +5,7 @@ from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.adapter.inbound.advertise import convert_advertises
 from myus.adapter.inbound.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
-from myus.types.dto.advertise import AdvertiseCreateDTO, AdvertiseUpdateDTO
+from myus.types.dto.advertise import AdvertiseInDTO
 from myus.types.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.types.schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from myus.types.schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
@@ -750,7 +750,7 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = AdvertiseCreateDTO(**input.model_dump())
+        dto = AdvertiseInDTO(**input.model_dump())
         create_ret = create_manage_advertise(user_id, dto, image, video)
         if create_ret.is_err:
             message = create_ret.err_value.message
@@ -780,7 +780,7 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = AdvertiseUpdateDTO(**input.model_dump())
+        dto = AdvertiseInDTO(**input.model_dump())
         update_ret = update_manage_advertise(user_id, ulid, dto, image, video)
         if update_ret.is_err:
             message = update_ret.err_value.message
