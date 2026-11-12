@@ -12,7 +12,7 @@
 |---|---|
 | `domain/interface/<ドメイン>/validation.py` | ルールを確かめる関数 `validate`（1 つのファイルに複数あるときは `validate_xxx`）と、ルールに使う定数。I/O を持たない |
 | `domain/interface/<ドメイン>/data.py` | Data（フィールドだけ。メソッドは持たない） |
-| `domain/entity/<ドメイン>/repository.py` | `bulk_save` で保存する前に `validate` を呼ぶ。だめなら保存せずに `FatalError` を返す |
+| `adapter/outbound/db/<ドメイン>/repository.py` | `bulk_save` で保存する前に `validate` を呼ぶ。だめなら保存せずに `FatalError` を返す |
 | `usecase/<ドメイン>/core.py` | 今までどおり `XxxData(...)`・`replace(...)` で Data を組み立てて保存する。ルールは持たない |
 
 ## マンガの例
@@ -35,7 +35,7 @@ def validate(obj: ComicData) -> Result[None, ValidationError]:
     return Result.ok(None)
 ```
 
-`domain/entity/media/comic/repository.py`
+`adapter/outbound/db/media/comic/repository.py`
 
 ```python
 @Result.shield_exception()
@@ -52,7 +52,7 @@ def bulk_save(self, objs: list[ComicData]) -> Result[list[int], FatalError]:
 - usecase・コマンドなど、どの経路から保存しても `bulk_save` を通るので、必ずルールを通る。`ComicData(...)`・`replace(...)` で直接作っても、保存するときに止まる
 - ここで止まるのは FE をすり抜けた不正なリクエストかバグのときだけなので、`FatalError`（500）でよい。Interface の `Result[T, FatalError]` の決まりもそのまま
 - エラーの文言は media（ドメイン）ごとに分けず、`error.titleLength`・`error.pageRequired` のように共通にする。画面には出さない（BE のログにだけ出る）ので、FE の i18n には足さない
-- DB から読むとき（entity の `convert_data`）は確かめないので、ルールを満たさない既存のデータがあっても読み込みは止まらない
+- DB から読むとき（adapter/outbound/db の `convert_data`）は確かめないので、ルールを満たさない既存のデータがあっても読み込みは止まらない
 
 ## Data 1 つでは決まらないルール（数・重複）
 
@@ -70,7 +70,7 @@ def validate(objs: list[SearchTagData]) -> Result[None, ValidationError]:
     return Result.ok(None)
 ```
 
-`domain/entity/search_tag/repository.py`
+`adapter/outbound/db/search_tag/repository.py`
 
 ```python
 errors = [ret.err_value.message for ret in [validate(objs)] if ret.is_err]
@@ -85,7 +85,7 @@ if len(errors) > 0:
 「Data を作るとき（`__post_init__` やファクトリ）に確かめれば、保存時に確かめなくてよい」という形もあるが、MyUs では使わない。
 
 - 組み立てる経路をわざと塞いでいない。Data はフィールドだけを持ち、usecase が `XxxData(...)`・`replace(...)` で自由に組み立てる。どの経路からでも必ず通るのは `bulk_save` だけなので、ここで確かめるのは二重のチェックではなく、ただ 1 つのチェックになる
-- 守りたいのは書き込み（DB に不正なデータを入れない）で、読み込みは止めない。`__post_init__` で確かめると entity の `convert_data` でも止まり、ルールを満たさない既存の行が 1 つあるだけで画面ごと落ちる
+- 守りたいのは書き込み（DB に不正なデータを入れない）で、読み込みは止めない。`__post_init__` で確かめると adapter/outbound/db の `convert_data` でも止まり、ルールを満たさない既存の行が 1 つあるだけで画面ごと落ちる
 - `__post_init__` は例外で止めることになり、エラーを `Result` で返す決まりと合わない。Data にメソッドを持たない決まりにも反する
 - テストの偽物（`tests/fakes.py` など）で一部のフィールドだけを埋めた Data も作れなくなる
 
@@ -108,7 +108,7 @@ NG ワードを含まない・同じものがまだない、のように DB を�
 | 分けるもの | 置く場所 |
 |---|---|
 | ルール（何を満たせば通るか・だめなときに返すエラー） | domain（`domain/interface/<ドメイン>/validation.py`） |
-| DB を読む処理 | usecase（`_convert.py` の `get_xxx_data`）と、その先の entity（adapter） |
+| DB を読む処理 | usecase（`_convert.py` の `get_xxx_data`）と、その先の repository（adapter/outbound/db） |
 | 読んだ値を渡してルールを呼ぶ段取り | usecase（`core.py`） |
 
 - `validation.py` は I/O を持たないまま。DB を読んだ結果を引数で受け取って確かめる
@@ -144,7 +144,7 @@ def validate_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Resu
     return Result.ok(None)
 ```
 
-- 実際に DB を読むのは Interface の先の entity（adapter）。`validation.py` は Interface（同じ domain/interface）だけを import し、entity・injector は import しない。usecase が `injector.get(XxxInterface)` で取った repo を渡す
+- 実際に DB を読むのは Interface の先の repository（adapter/outbound/db）。`validation.py` は Interface（同じ domain/interface）だけを import し、adapter・injector は import しない。usecase が `injector.get(XxxInterface)` で取った repo を渡す
 - テストでは Interface を満たす偽物を渡せば DB なしで確かめられる
 - 探すのに使うメソッドは今ある `get_ids` と `FilterOption` の組み合わせにする。条件が足りないときは FilterOption に足す（ルール専用のメソッドを Repository に作らない）
 - `validation.py` が I/O を持つことになるので、形 1 で書けるときは形 1 にする。今の MyUs にはこの形が要るルールはまだない（`error.nameDuplicate`・`XxxInterface` は説明のための仮の名前）。取り入れるときは `docs/backend.md` の「Validation」に「Interface を受け取ってよい」を足す

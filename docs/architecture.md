@@ -21,21 +21,23 @@
 flowchart LR
     Browser[ブラウザ<br/>React SPA]
     subgraph Backend[バックエンド（Daphne / ASGI）]
-        Adapter[adapter<br/>HTTP・WebSocket]
+        Inbound[adapter/inbound<br/>HTTP・WebSocket]
         Usecase[usecase]
-        Domain[domain<br/>interface・entity・aggregate]
+        Domain[domain<br/>interface・aggregate]
+        Outbound[adapter/outbound<br/>db・payment]
     end
     MySQL[(MySQL)]
     Redis[(Redis<br/>Channel Layer)]
     Stripe[Stripe]
 
-    Browser -->|REST / Cookie の JWT| Adapter
-    Browser <-->|WebSocket| Adapter
-    Adapter --> Usecase --> Domain
-    Domain --> MySQL
-    Adapter --> Redis
-    Stripe -->|webhook| Adapter
-    Usecase -->|PaymentInterface| Stripe
+    Browser -->|REST / Cookie の JWT| Inbound
+    Browser <-->|WebSocket| Inbound
+    Inbound --> Usecase --> Domain
+    Outbound -.->|interface を実装| Domain
+    Outbound --> MySQL
+    Inbound --> Redis
+    Stripe -->|webhook| Inbound
+    Outbound -->|PaymentInterface の実装| Stripe
 ```
 
 - フロントエンドは SPA として Vercel から配信し、バックエンドの REST API を呼ぶ
@@ -49,11 +51,11 @@ flowchart LR
 | ディレクトリ | 役割 |
 |---|---|
 | `adapter/inbound/` | django-ninja のエンドポイントと WebSocket の consumer。入力の検証と、`Result` から HTTP レスポンスへの変換 |
-| `adapter/outbound/` | 外部サービスの実装（`PaymentInterface` の Stripe 実装） |
+| `adapter/outbound/db/` | repository の実装（Django ORM） |
+| `adapter/outbound/payment/` | 決済会社の実装（`PaymentInterface` の Stripe 実装は `stripe/`） |
 | `adapter/inbound/routers.py` | django-ninja のルーターをまとめて登録する（`config/urls.py` が読む） |
 | `usecase/` | 業務ロジック |
 | `domain/interface/` | repository の interface と Data（dataclass） |
-| `domain/entity/` | repository の実装（Django ORM） |
 | `domain/aggregate/` | Event Sourcing の集約（状態・イベント・判断・適用）。I/O を持たない関数 |
 | `injectors/` | interface と実装の対応付け |
 | `types/` | API の入出力スキーマ（`schema/`）と DTO（`dto/`） |

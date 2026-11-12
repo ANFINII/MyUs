@@ -44,7 +44,7 @@
 
 | 層 | 動詞 | injector | 例 |
 |------|------|------|-----|
-| entity の `_convert.py` | `convert`（Model → Data）・`marshal`（Data → Model） | 使わない | `convert_data`・`marshal_data`、1つのファイルに複数あるときは `profile_data`・`marshal_profile_data` |
+| adapter/outbound/db の `_convert.py` | `convert`（Model → Data）・`marshal`（Data → Model） | 使わない | `convert_data`・`marshal_data`、1つのファイルに複数あるときは `profile_data`・`marshal_profile_data` |
 | usecase の補助の関数 | 取ってくるなら `get`、書き込むなら `create`（新しく作る）・`save`（保存・更新）・`delete`（消す） | 使う（Repository を通して読み書きする） | `get_user_data`・`create_video_data`・`save_comment_data`・`delete_video_data`・`save_access_data` |
 | usecase の入口 | `get`・`create`・`update`・`delete` など | 使う | `get_user`・`create_video`（`_data` を付けない） |
 
@@ -210,7 +210,7 @@ if ret.is_err:
 
 ### Repository層
 - 入出力はdataclass（Django ORMモデルを直接返さない）
-- usecase層ではinjector経由でinterfaceを取得（entityを直接インポートしない）
+- usecase層ではinjector経由でinterfaceを取得（adapter/outbound の実装を直接インポートしない）
 
 ### Interface層（抽象クラス）
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
@@ -238,7 +238,7 @@ if ret.is_err:
 - 並び順は、`convert`系（Model → Data。`convert_data`・`xxx_data`・`convert_content`）→ `marshal`系（Data → Model）→ それ以外（`get_media_model`・`get_through_model`など）
 
 ### bulk操作
-- `bulk_save`は`get_save_new_ids`（`myus/domain/entity/index.py`）で保存する
+- `bulk_save`は`get_save_new_ids`（`myus/adapter/outbound/db/index.py`）で保存する
   - id未設定（`pk is None`）の行は`save(force_insert=True)`でINSERTし（IDはDBの自動採番）、既存の行は`bulk_create(update_conflicts=True)`でupsertする
   - 新しく振られたIDを返す。INSERTとupsertは`get_save_new_ids`の中で`transaction.atomic()`に入る
   - 関連テーブルなどと一緒に保存するときは、`get_save_new_ids`と関連テーブルの保存を`transaction.atomic()`で包む
@@ -261,9 +261,9 @@ return Result.ok(new_ids)
 | adapter/inbound | HTTP・WebSocket のリクエスト/レスポンス変換、認証チェック | usecase, schema |
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
 | domain/interface | 抽象定義（ABC, dataclass） | なし |
-| domain/entity | Repository実装、DBアクセス | Django ORM, interface |
 | domain/aggregate | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数 | interface（Data）, utils |
-| adapter/outbound | 外部サービス（Stripe など）の Interface の実装 | interface, 外部の SDK |
+| adapter/outbound/db | Repository の実装、DBアクセス | Django ORM, interface |
+| adapter/outbound/payment | 決済会社（Stripe など）の Interface の実装 | interface, 外部の SDK |
 | utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase・types を import しない） |
 
 - adapter → usecase → interface の方向にのみ依存する
@@ -294,7 +294,7 @@ return Result.ok(new_ids)
   - Interface の `Result[T, FatalError]` の決まりはそのまま
   - ここで止まるのは FE をすり抜けた不正なリクエストかバグのときだけなので、500 で返してよい
 - usecase は今までどおり `XxxData(...)`・`replace(...)` で Data を組み立てる。ルールを確かめる処理は書かない
-- DB から読むとき（entity の `convert_data`）は確かめない（読み込みは止めない）
+- DB から読むとき（adapter/outbound/db の `convert_data`）は確かめない（読み込みは止めない）
 - adapter の schema（`Field(max_length=...)`）は入力の形を確かめるものとして残してよい。DB に入れてよいかの判断は `validate` が持つ
 - 確かめるルールがない Data には `validation.py` を作らない
 - 例とDB を見ないと決まらないルールは [domain-validation.md](domain-validation.md) を参照
@@ -351,3 +351,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-12: パッケージ名を `api` から `myus` にした（Django の app の label・テーブル名は変えない）
 - 2026-11-12: テストをパッケージの外（`tests/`）に出し、リンターチェックを `mypy myus config tests`・`ruff check myus config tests` にした
 - 2026-11-12: adapter を `inbound/`（HTTP・WebSocket）と `outbound/`（外部サービス。もとの `adapter/external`）に分けた
+- 2026-11-12: `domain/entity`（Repository の実装）を `adapter/outbound/db` に移した。決済会社の実装は `adapter/outbound/payment`
