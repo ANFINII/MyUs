@@ -5,9 +5,9 @@ import time
 from typing import Any
 import pytest
 import stripe
-from myus.src.adapter.external.payment.stripe.provider import StripeProvider
-from myus.src.domain.interface.payment.event.data import ProviderSubscriptionData
-from myus.src.domain.interface.payment.provider.data import WebhookVerified, WebhookVerifyFailed
+from myus.adapter.external.payment.stripe.provider import StripeProvider
+from myus.domain.interface.payment.event.data import ProviderSubscriptionData
+from myus.domain.interface.payment.provider.data import WebhookVerified, WebhookVerifyFailed
 from myus.utils.enum.payment import SubscriptionStatus, WebhookEventType, WebhookVerifyError
 
 

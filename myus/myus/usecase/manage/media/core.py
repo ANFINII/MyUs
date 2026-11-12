@@ -1,0 +1,712 @@
+from dataclasses import replace
+from django.utils import timezone
+from ninja import UploadedFile
+from myus.utils.common.logger import log
+from myus.domain.interface.media.video.data import VideoData
+from myus.domain.interface.media.video.interface import VideoInterface
+from myus.domain.interface.media.music.data import MusicData
+from myus.domain.interface.media.music.interface import MusicInterface
+from myus.domain.interface.media.blog.data import BlogData
+from myus.domain.interface.media.blog.interface import BlogInterface
+from myus.domain.interface.media.comic.data import ComicData
+from myus.domain.interface.media.comic.interface import ComicInterface
+from myus.domain.interface.media.picture.data import PictureData
+from myus.domain.interface.media.picture.interface import PictureInterface
+from myus.domain.interface.media.chat.data import ChatData
+from myus.domain.interface.media.chat.interface import ChatInterface
+from myus.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption
+from myus.domain.interface.message.interface import FilterOption as MessageFilterOption, MessageInterface, SortOption as MessageSortOption
+from myus.injectors.container import injector
+from myus.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
+from myus.usecase.category._convert import get_category_data
+from myus.usecase.notification._convert import create_publish_notification_data
+from myus.usecase.manage.media._convert import save_video_data, save_music_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_music_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
+from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
+from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from myus.utils.enum.upload import ImageUpload
+from myus.utils.functions.index import create_url
+from myus.utils.functions.media import save_upload, validate_uploads
+from myus.utils.functions.transaction import atomic_result
+
+
+@Result.shield_exception()
+def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
+    repo = injector.get(VideoInterface)
+    filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
+    count_ret = repo.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    objs_ret = repo.bulk_get(ids=ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+
+    data = [replace(o,
+        image=create_url(o.image),
+        video=create_url(o.video),
+        convert=create_url(o.convert),
+    ) for o in objs]
+
+    return Result.ok((data, total))
+
+
+@Result.shield_exception()
+def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, FindError]:
+    repo = injector.get(VideoInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid, user_id=user_id)
+        return Result.err(NotFoundError("data not found"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    return Result.ok(replace(obj,
+        image=create_url(obj.image),
+        video=create_url(obj.video),
+        convert=create_url(obj.convert),
+    ))
+
+
+@Result.shield_exception()
+def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.VIDEO)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
+    repo = injector.get(VideoInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.error("Video not found", ulid=ulid)
+        return Result.err(NotFoundError("error.saveFailed"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    if obj.channel.owner_id != user_id:
+        log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+        return Result.err(ForbiddenError("error.saveFailed"))
+
+    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.VIDEO, obj.channel.ulid))
+
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
+
+    category_data = category_data_ret.ok_value
+
+    save_ret = atomic_result(lambda: save_video_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    if not obj.publish and input.publish and obj.convert != "":
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+    repo = injector.get(VideoInterface)
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Video not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
+
+    delete_ret = atomic_result(lambda: delete_video_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
+    repo = injector.get(MusicInterface)
+    filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
+    count_ret = repo.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    objs_ret = repo.bulk_get(ids=ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+
+    data = [replace(o, music=create_url(o.music)) for o in objs]
+    return Result.ok((data, total))
+
+
+@Result.shield_exception()
+def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid, user_id=user_id)
+        return Result.err(NotFoundError("data not found"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    return Result.ok(replace(obj, music=create_url(obj.music)))
+
+
+@Result.shield_exception()
+def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, WriteError]:
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.error("Music not found", ulid=ulid)
+        return Result.err(NotFoundError("error.saveFailed"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    if obj.channel.owner_id != user_id:
+        log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+        return Result.err(ForbiddenError("error.saveFailed"))
+
+    update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish, publish_at=input.publish_at)
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
+
+    category_data = category_data_ret.ok_value
+
+    save_ret = atomic_result(lambda: save_music_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    if not obj.publish and input.publish:
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Music not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
+
+    delete_ret = atomic_result(lambda: delete_music_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
+    repo = injector.get(BlogInterface)
+    filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
+    count_ret = repo.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    objs_ret = repo.bulk_get(ids=ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+
+    data = [replace(o, image=create_url(o.image)) for o in objs]
+    return Result.ok((data, total))
+
+
+@Result.shield_exception()
+def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
+    repo = injector.get(BlogInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid, user_id=user_id)
+        return Result.err(NotFoundError("data not found"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    return Result.ok(replace(obj, image=create_url(obj.image)))
+
+
+@Result.shield_exception()
+def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.BLOG)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
+    repo = injector.get(BlogInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.error("Blog not found", ulid=ulid)
+        return Result.err(NotFoundError("error.saveFailed"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    if obj.channel.owner_id != user_id:
+        log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+        return Result.err(ForbiddenError("error.saveFailed"))
+
+    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
+
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
+
+    category_data = category_data_ret.ok_value
+
+    save_ret = atomic_result(lambda: save_blog_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    if not obj.publish and input.publish:
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+    repo = injector.get(BlogInterface)
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Blog not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
+
+    delete_ret = atomic_result(lambda: delete_blog_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
+    repo = injector.get(ComicInterface)
+    filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
+    count_ret = repo.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    objs_ret = repo.bulk_get(ids=ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+
+    data = [replace(o,
+        image=create_url(o.image),
+        pages=[create_url(p) for p in o.pages],
+    ) for o in objs]
+    return Result.ok((data, total))
+
+
+@Result.shield_exception()
+def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
+    repo = injector.get(ComicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid, user_id=user_id)
+        return Result.err(NotFoundError("data not found"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    return Result.ok(replace(obj,
+        image=create_url(obj.image),
+        pages=[create_url(p) for p in obj.pages],
+    ))
+
+
+@Result.shield_exception()
+def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.COMIC)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
+    repo = injector.get(ComicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.error("Comic not found", ulid=ulid)
+        return Result.err(NotFoundError("error.saveFailed"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    if obj.channel.owner_id != user_id:
+        log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+        return Result.err(ForbiddenError("error.saveFailed"))
+
+    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
+
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
+
+    category_data = category_data_ret.ok_value
+
+    save_ret = atomic_result(lambda: save_comic_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    if not obj.publish and input.publish:
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+    repo = injector.get(ComicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Comic not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
+
+    delete_ret = atomic_result(lambda: delete_comic_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
+    repo = injector.get(PictureInterface)
+    filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
+    count_ret = repo.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    objs_ret = repo.bulk_get(ids=ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+
+    data = [replace(o, image=create_url(o.image)) for o in objs]
+    return Result.ok((data, total))
+
+
+@Result.shield_exception()
+def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, FindError]:
+    repo = injector.get(PictureInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid, user_id=user_id)
+        return Result.err(NotFoundError("data not found"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    return Result.ok(replace(obj, image=create_url(obj.image)))
+
+
+@Result.shield_exception()
+def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.PICTURE)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
+    repo = injector.get(PictureInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.error("Picture not found", ulid=ulid)
+        return Result.err(NotFoundError("error.saveFailed"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    if obj.channel.owner_id != user_id:
+        log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+        return Result.err(ForbiddenError("error.saveFailed"))
+
+    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.PICTURE, obj.channel.ulid))
+
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
+
+    category_data = category_data_ret.ok_value
+
+    save_ret = atomic_result(lambda: save_picture_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    if not obj.publish and input.publish:
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+    repo = injector.get(PictureInterface)
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Picture not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
+
+    delete_ret = atomic_result(lambda: delete_picture_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
+    repo = injector.get(ChatInterface)
+    filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
+    count_ret = repo.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    objs_ret = repo.bulk_get(ids=ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    return Result.ok((objs, total))
+
+
+@Result.shield_exception()
+def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
+    repo = injector.get(ChatInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid, user_id=user_id)
+        return Result.err(NotFoundError("data not found"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    return Result.ok(objs[0])
+
+
+@Result.shield_exception()
+def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, WriteError]:
+    repo = injector.get(ChatInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.error("Chat not found", ulid=ulid)
+        return Result.err(NotFoundError("error.saveFailed"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    if obj.channel.owner_id != user_id:
+        log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+        return Result.err(ForbiddenError("error.saveFailed"))
+
+    if timezone.localdate(input.publish_at) > input.period:
+        return Result.err(ValidationError("error.publishAtAfterPeriod"))
+
+    update_data = replace(obj, title=input.title, content=input.content, period=input.period, publish=input.publish, publish_at=input.publish_at)
+    category_data_ret = get_category_data(input.category_ulid)
+    if category_data_ret.is_err:
+        return Result.err(category_data_ret.err_value)
+
+    category_data = category_data_ret.ok_value
+
+    save_ret = atomic_result(lambda: save_chat_data(update_data, category_data))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    if not obj.publish and input.publish:
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+    repo = injector.get(ChatInterface)
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    delete_ids = ids_ret.ok_value
+    if len(delete_ids) != len(set(ulids)):
+        log.error("Chat not found or owner mismatch", ulids=ulids, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
+
+    message_repo = injector.get(MessageInterface)
+    reply_ids: list[int] = []
+    for chat_id in delete_ids:
+        reply_ids_ret = message_repo.get_ids(MessageFilterOption(chat_id=chat_id, is_parent=False), MessageSortOption())
+        if reply_ids_ret.is_err:
+            return Result.err(reply_ids_ret.err_value)
+
+        chat_reply_ids = reply_ids_ret.ok_value
+        reply_ids += chat_reply_ids
+
+    delete_ret = atomic_result(lambda: delete_chat_data(delete_ids, reply_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)

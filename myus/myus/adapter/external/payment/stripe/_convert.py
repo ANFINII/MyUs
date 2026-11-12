@@ -1,0 +1,251 @@
+import stripe
+from datetime import datetime, timezone
+from typing import assert_never
+from django.conf import settings
+from stripe.params.checkout import (
+    SessionCreateParams,
+    SessionCreateParamsLineItem,
+    SessionCreateParamsLineItemPriceData,
+    SessionCreateParamsLineItemPriceDataProductData,
+    SessionCreateParamsPaymentIntentData,
+    SessionCreateParamsPaymentIntentDataTransferData,
+    SessionCreateParamsSubscriptionData,
+    SessionCreateParamsSubscriptionDataTransferData,
+)
+from myus.domain.interface.payment.data import Money
+from myus.domain.interface.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentPaidContent, PayoutContent, ProviderSubscriptionData
+from myus.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed
+from myus.utils.enum.i18n import Currency, Locale
+from myus.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, PayoutStatus, SubscriptionStatus, WebhookEventType
+from myus.utils.enum.user import PlanName
+
+
+def convert_stripe_event(event: stripe.Event, event_type: WebhookEventType, payload: bytes, external_id: str, content: PaymentEventContent) -> PaymentEventData:
+    return PaymentEventData(
+        id=0,
+        provider=PaymentProvider.STRIPE,
+        event_id=event.id,
+        event_type=event_type,
+        external_id=external_id,
+        payload=payload.decode(),
+        content=content,
+        occurred_at=stripe_datetime(event.created),
+        processed_at=datetime.min.replace(tzinfo=timezone.utc),
+        attempts=0,
+        last_error="",
+    )
+
+
+def stripe_price_id(product_code: str) -> str:
+    mapping: dict[str, str] = {
+        PlanName.BASIC: settings.STRIPE_PRICE_ID_BASIC,
+        PlanName.STANDARD: settings.STRIPE_PRICE_ID_STANDARD,
+        PlanName.PREMIUM: settings.STRIPE_PRICE_ID_PREMIUM,
+        PlanName.ULTIMATE: settings.STRIPE_PRICE_ID_ULTIMATE,
+    }
+    return mapping.get(product_code, "")
+
+
+def stripe_locale(locale: Locale) -> str:
+    match locale:
+        case Locale.JA:
+            return "ja"
+        case Locale.EN:
+            return "en"
+        case Locale.ZH:
+            return "zh"
+        case Locale.KO:
+            return "ko"
+        case _:
+            assert_never(locale)
+
+
+def stripe_mode(payment_type: PaymentType) -> str:
+    match payment_type:
+        case PaymentType.SUBSCRIPTION:
+            return "subscription"
+        case PaymentType.ONE_TIME:
+            return "payment"
+        case _:
+            assert_never(payment_type)
+
+
+def fee_percent(fee: Money, price: Money) -> int:
+    if price.amount <= 0:
+        return 0
+    return int(fee.amount * 100 / price.amount)
+
+
+def convert_line_items(input: CheckoutData) -> list[SessionCreateParamsLineItem] | CheckoutFailed:
+    match input.payment_type:
+        case PaymentType.SUBSCRIPTION:
+            price_id = stripe_price_id(input.product_code)
+            if len(price_id) == 0:
+                return CheckoutFailed(error=CheckoutError.UNKNOWN_PRODUCT, message=f"price_id not configured for product_code={input.product_code}")
+            return [SessionCreateParamsLineItem(price=price_id, quantity=1)]
+        case PaymentType.ONE_TIME:
+            if input.price.amount <= 0:
+                return CheckoutFailed(error=CheckoutError.INVALID_AMOUNT, message=f"invalid amount={input.price.amount}")
+            price_data = SessionCreateParamsLineItemPriceData(
+                currency=input.price.currency.value.lower(),
+                unit_amount=input.price.amount,
+                product_data=SessionCreateParamsLineItemPriceDataProductData(name=input.description),
+            )
+            return [SessionCreateParamsLineItem(price_data=price_data, quantity=1)]
+        case _:
+            assert_never(input.payment_type)
+
+
+def convert_payment_params(input: CheckoutData) -> SessionCreateParams:
+    metadata = {"user_ulid": input.customer.user_ulid, "product_code": input.product_code}
+    is_marketplace = len(input.marketplace.seller_id) > 0
+
+    match input.payment_type:
+        case PaymentType.SUBSCRIPTION:
+            sub_data = SessionCreateParamsSubscriptionData(metadata=metadata)
+            if is_marketplace:
+                sub_data["transfer_data"] = SessionCreateParamsSubscriptionDataTransferData(destination=input.marketplace.seller_id)
+                pct = fee_percent(input.marketplace.application_fee, input.price)
+                if pct > 0:
+                    sub_data["application_fee_percent"] = pct
+            return SessionCreateParams(subscription_data=sub_data)
+        case PaymentType.ONE_TIME:
+            pi_data = SessionCreateParamsPaymentIntentData(metadata=metadata)
+            if is_marketplace:
+                pi_data["transfer_data"] = SessionCreateParamsPaymentIntentDataTransferData(destination=input.marketplace.seller_id)
+                if input.marketplace.application_fee.amount > 0:
+                    pi_data["application_fee_amount"] = input.marketplace.application_fee.amount
+            return SessionCreateParams(payment_intent_data=pi_data)
+        case _:
+            assert_never(input.payment_type)
+
+
+def convert_stripe_params(input: CheckoutData) -> SessionCreateParams | CheckoutFailed:
+    line_items = convert_line_items(input)
+    if isinstance(line_items, CheckoutFailed):
+        return line_items
+
+    return SessionCreateParams(
+        mode=stripe_mode(input.payment_type),
+        line_items=line_items,
+        success_url=input.redirect.success_url,
+        cancel_url=input.redirect.cancel_url,
+        client_reference_id=input.customer.user_ulid,
+        customer_email=input.customer.email,
+        locale=stripe_locale(input.locale),
+        **convert_payment_params(input),
+    )
+
+
+def stripe_subscription_status(status: str) -> SubscriptionStatus:
+    match status:
+        case "active" | "trialing":
+            return SubscriptionStatus.ACTIVE
+        case "past_due" | "unpaid":
+            return SubscriptionStatus.PAST_DUE
+        case "canceled":
+            return SubscriptionStatus.CANCELED
+        case "incomplete":
+            return SubscriptionStatus.INCOMPLETE
+        case _:
+            return SubscriptionStatus.EXPIRED
+
+
+def stripe_datetime(timestamp: int | None) -> datetime:
+    if timestamp is None:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    return datetime.fromtimestamp(timestamp, tz=timezone.utc)
+
+
+def stripe_period_end(subscription: stripe.Subscription) -> datetime:
+    items = subscription["items"].data
+    if len(items) == 0:
+        return stripe_datetime(None)
+    return stripe_datetime(items[0].current_period_end)
+
+
+def stripe_price(subscription: stripe.Subscription) -> Money:
+    items = subscription["items"].data
+    if len(items) == 0:
+        return Money(amount=0, currency=Currency.JPY)
+    price = items[0].price
+    return Money(amount=price.unit_amount or 0, currency=Currency(price.currency.capitalize()))
+
+
+def stripe_metadata(subscription: stripe.Subscription, key: str) -> str:
+    metadata = subscription.metadata
+    return metadata[key] if key in metadata else ""
+
+
+def convert_stripe_subscription(subscription: stripe.Subscription) -> ProviderSubscriptionData:
+    customer = subscription.customer
+    return ProviderSubscriptionData(
+        provider=PaymentProvider.STRIPE,
+        external_id=subscription.id,
+        customer_id=customer if isinstance(customer, str) else customer.id,
+        user_ulid=stripe_metadata(subscription, "user_ulid"),
+        product_code=stripe_metadata(subscription, "product_code"),
+        price=stripe_price(subscription),
+        status=stripe_subscription_status(subscription.status),
+        started_at=stripe_datetime(subscription.start_date),
+        current_period_end=stripe_period_end(subscription),
+        canceled_at=stripe_datetime(subscription.canceled_at),
+    )
+
+
+def stripe_id(field: str | stripe.StripeObject | None) -> str:
+    if field is None:
+        return ""
+    if isinstance(field, str):
+        return field
+    return str(field["id"])
+
+
+def stripe_currency(currency: str) -> Currency:
+    return Currency(currency.capitalize())
+
+
+def stripe_payout_status(status: str) -> PayoutStatus:
+    match status:
+        case "paid":
+            return PayoutStatus.PAID
+        case "in_transit":
+            return PayoutStatus.IN_TRANSIT
+        case "failed":
+            return PayoutStatus.FAILED
+        case "canceled":
+            return PayoutStatus.CANCELED
+        case _:
+            return PayoutStatus.PENDING
+
+
+def convert_stripe_balance(balance: stripe.BalanceTransaction) -> BalanceData:
+    return BalanceData(
+        external_id=balance.id,
+        amount=balance.amount,
+        fee=balance.fee,
+        currency=stripe_currency(balance.currency),
+        occurred_at=stripe_datetime(balance.created),
+    )
+
+
+def convert_stripe_paid(invoice: stripe.Invoice, balance: stripe.BalanceTransaction) -> PaymentPaidContent:
+    details = invoice.parent.subscription_details if invoice.parent is not None else None
+    metadata = details.metadata if details is not None else None
+    return PaymentPaidContent(
+        customer_id=stripe_id(invoice.customer),
+        user_ulid=str(metadata["user_ulid"]) if metadata is not None and "user_ulid" in metadata else "",
+        subscription_external_id=stripe_id(details.subscription) if details is not None else "",
+        receipt_number=invoice.number or "",
+        balance=convert_stripe_balance(balance),
+    )
+
+
+def convert_stripe_payout(payout: stripe.Payout, balance_external_ids: list[str]) -> PayoutContent:
+    return PayoutContent(
+        amount=payout.amount,
+        currency=stripe_currency(payout.currency),
+        status=stripe_payout_status(payout.status),
+        arrival_at=stripe_datetime(payout.arrival_date),
+        balance_external_ids=balance_external_ids,
+    )

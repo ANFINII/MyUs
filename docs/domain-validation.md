@@ -20,7 +20,7 @@
 `domain/interface/media/comic/validation.py`
 
 ```python
-from myus.src.domain.interface.media.comic.data import ComicData
+from myus.domain.interface.media.comic.data import ComicData
 from myus.utils.common.result import Result, ValidationError
 
 
@@ -131,7 +131,7 @@ usecase が DB から読んだ値（なければ `None`・一覧なら `list`）
 「同じチャンネルに同じ名前のものがまだない」のように、**どう探すか（FilterOption の条件）** がルールの中身になるときは、形 1 だと条件が usecase に残る。このときは `validation.py` の関数が Interface（ABC）を受け取り、探す条件も domain に書く。
 
 ```python
-from myus.src.domain.interface.xxx.interface import FilterOption, SortOption, XxxInterface
+from myus.domain.interface.xxx.interface import FilterOption, SortOption, XxxInterface
 from myus.utils.common.result import FatalError, Result, ValidationError
 
 

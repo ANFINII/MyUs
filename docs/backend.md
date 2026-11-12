@@ -130,9 +130,9 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `ConflictError` | 同じ集約に同時に書き込み、取り直しても保存できなかった（イベントストア） | adapter で返すときに `CONFLICT` を足す | 400 | `message` |
 | `HistoryCorruptedError` | 集約の履歴が壊れている（`seq` の抜け・未登録の種類・読めない中身）。再試行しても直らない | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
 
-- エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`myus/src/types/schema/common.py`）。`type`は必須
+- エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`myus/types/schema/common.py`）。`type`は必須
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
-- `auth_check`（`myus/src/adapter/auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
+- `auth_check`（`myus/adapter/auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
 - `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く（`response={...}`に無いステータスを返すとNinjaが実行時に例外にする）
 - 成功で返すものが無いときは`200: None`・`return 200, None`にする
@@ -214,7 +214,7 @@ if ret.is_err:
 
 ### Interface層（抽象クラス）
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
-- 雛形: `myus/src/domain/interface/search_tag/interface.py` を参照
+- 雛形: `myus/domain/interface/search_tag/interface.py` を参照
 - 必須メソッド: `get_ids(filter, sort, limit)` / `bulk_get(ids)` の読み取り2点
 - 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
 - 必須型: `FilterOption` / `SortOption` dataclass + `SortType` enum
@@ -238,7 +238,7 @@ if ret.is_err:
 - 並び順は、`convert`系（Model → Data。`convert_data`・`xxx_data`・`convert_content`）→ `marshal`系（Data → Model）→ それ以外（`get_media_model`・`get_through_model`など）
 
 ### bulk操作
-- `bulk_save`は`get_save_new_ids`（`myus/src/domain/entity/index.py`）で保存する
+- `bulk_save`は`get_save_new_ids`（`myus/domain/entity/index.py`）で保存する
   - id未設定（`pk is None`）の行は`save(force_insert=True)`でINSERTし（IDはDBの自動採番）、既存の行は`bulk_create(update_conflicts=True)`でupsertする
   - 新しく振られたIDを返す。INSERTとupsertは`get_save_new_ids`の中で`transaction.atomic()`に入る
   - 関連テーブルなどと一緒に保存するときは、`get_save_new_ids`と関連テーブルの保存を`transaction.atomic()`で包む

@@ -12,7 +12,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.core.asgi import get_asgi_application
-from myus.src.adapter.websocket import websocket_urlpatterns
+from myus.adapter.websocket import websocket_urlpatterns
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
