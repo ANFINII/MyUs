@@ -1,0 +1,50 @@
+from myus.domain.interface.search_tag.data import SearchTagData
+from myus.domain.interface.search_tag.interface import FilterOption, SearchTagInterface, SortOption
+from myus.injectors.container import injector
+from myus.types.schema.user import SearchTagIn
+from myus.usecase.search_tag._convert import save_search_tag_data
+from myus.utils.common.result import FatalError, Result, ValidateError
+from myus.utils.functions.transaction import atomic_result
+
+
+@Result.shield_exception()
+def get_search_tag_data(author_id: int) -> Result[list[SearchTagData], FatalError]:
+    repo = injector.get(SearchTagInterface)
+    ids_ret = repo.get_ids(FilterOption(author_id=author_id), SortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    tags_ret = repo.bulk_get(ids)
+    if tags_ret.is_err:
+        return Result.err(tags_ret.err_value)
+
+    tags = tags_ret.ok_value
+    return Result.ok(tags)
+
+
+@Result.shield_exception()
+def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> Result[None, ValidateError]:
+    objs_ret = get_search_tag_data(author_id)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    existing_ids = [obj.id for obj in objs]
+    name_map: dict[str, int] = {obj.name: obj.id for obj in objs}
+
+    save_objs: list[SearchTagData] = []
+    keep_ids: set[int] = set()
+    for tag in tags:
+        existing_id = name_map.get(tag.name, 0)
+        if existing_id != 0:
+            keep_ids.add(existing_id)
+        save_objs.append(SearchTagData(id=existing_id, author_id=author_id, sequence=tag.sequence, name=tag.name))
+
+    delete_ids = [id for id in existing_ids if id not in keep_ids]
+
+    save_ret = atomic_result(lambda: save_search_tag_data(delete_ids, save_objs))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)
