@@ -7,6 +7,7 @@ from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.adapter.outbound.db.user._convert import convert_data, get_media_model, marshal_mypage_data, marshal_user_notification_data, marshal_profile_data, marshal_user_data, marshal_user_plan_data
 from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
+from myus.domain.user.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 
@@ -64,6 +65,10 @@ class UserRepository(UserInterface):
     def bulk_save(self, objs: list[UserAllData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             return Result.ok([])
+
+        errors = [ret.err_value.message for obj in objs if (ret := validate(obj)).is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_user_data(o.user) for o in objs]
 
