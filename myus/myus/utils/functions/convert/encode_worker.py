@@ -1,7 +1,7 @@
 import os
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 
 
 class EncodeWorker:

@@ -1,7 +1,7 @@
 from dataclasses import replace
 from django_ulid.models import ulid
 from ninja import UploadedFile
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.channel.data import ChannelData
 from myus.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption
 from myus.src.injectors.container import injector

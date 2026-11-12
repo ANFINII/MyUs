@@ -2,7 +2,7 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.urls import path
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.usecase.media.core import is_public_chat
 
 

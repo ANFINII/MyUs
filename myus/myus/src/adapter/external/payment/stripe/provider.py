@@ -2,7 +2,7 @@ import stripe
 from datetime import datetime, timezone
 from typing import Any, assert_never
 from django.conf import settings
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.adapter.external.payment.stripe._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_locale, stripe_period_end, stripe_price_id
 from myus.src.adapter.external.payment.stripe._type import stripe_event_type
 from myus.src.domain.interface.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent

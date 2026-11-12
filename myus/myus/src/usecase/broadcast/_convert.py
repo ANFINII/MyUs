@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.types.dto.message import MessageDTO
 
 

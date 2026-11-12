@@ -1,7 +1,7 @@
 from dataclasses import replace
 from datetime import datetime
 from ninja import UploadedFile
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.advertise.data import AdvertiseData
 from myus.src.domain.interface.advertise.interface import AdvertiseInterface, SortOption
 from myus.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption

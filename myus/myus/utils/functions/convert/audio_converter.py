@@ -6,7 +6,7 @@ from pathlib import Path
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from ninja import UploadedFile
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 
 
 CONVERTIBLE_EXTENSIONS = {".wav", ".flac", ".ogg", ".m4a", ".aac", ".wma", ".aiff"}

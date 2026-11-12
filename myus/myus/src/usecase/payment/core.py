@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from django.conf import settings
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.payment.customer.interface import PaymentCustomerInterface
 from myus.src.domain.interface.payment.data import Money
 from myus.src.domain.interface.payment.event.data import PaymentEventData

@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime
 from django.utils import timezone
 from ninja import UploadedFile
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.media.video.data import VideoData
 from myus.src.domain.interface.media.music.data import MusicData
 from myus.src.domain.interface.media.blog.data import BlogData

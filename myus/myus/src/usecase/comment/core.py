@@ -1,6 +1,6 @@
 from dataclasses import replace
 from datetime import datetime
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.comment.data import CommentData
 from myus.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from myus.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption

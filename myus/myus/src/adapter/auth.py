@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from ninja.throttling import AnonRateThrottle
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from myus.src.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.src.usecase.auth.core import change_password, create_auth_tokens, login_user, logout_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user

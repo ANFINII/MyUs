@@ -8,7 +8,7 @@
 
 ## ロギング
 
-- `print()`禁止、`myus.modules.logger`の`log`を使用
+- `print()`禁止、`myus.utils.common.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
 

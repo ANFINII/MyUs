@@ -4,7 +4,7 @@ from collections.abc import Callable
 from functools import wraps
 from typing import cast
 
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 
 from .errors import AnyError, FatalError
 

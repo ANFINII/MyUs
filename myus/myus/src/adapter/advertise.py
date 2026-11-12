@@ -1,7 +1,7 @@
 from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.adapter.auth import auth_check
 from myus.src.domain.interface.advertise.data import AdvertiseData
 from myus.src.types.schema.advertise import AdvertiseListOut, AdvertiseOut, AdvertiseReadOut

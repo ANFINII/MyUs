@@ -1,7 +1,7 @@
 from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.adapter.auth import auth_check
 from myus.src.adapter.advertise import convert_advertises
 from myus.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats

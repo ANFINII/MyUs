@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 from django.conf import settings
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.utils.functions.convert.video_converter import VideoConverter
 
 
