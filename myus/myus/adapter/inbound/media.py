@@ -112,7 +112,15 @@ class VideoAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        obj_ret = create_video(user_id=user_id, input=VideoCreateDTO(**input.model_dump()), image=image, video=video)
+        dto = VideoCreateDTO(
+            channel_ulid=input.channel_ulid,
+            category_ulid=input.category_ulid,
+            publish=input.publish,
+            publish_at=input.publish_at,
+            title=input.title,
+            content=input.content,
+        )
+        obj_ret = create_video(user_id=user_id, input=dto, image=image, video=video)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
@@ -219,7 +227,17 @@ class MusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        obj_ret = create_music(user_id=user_id, input=MusicCreateDTO(**input.model_dump()), music=music)
+        dto = MusicCreateDTO(
+            channel_ulid=input.channel_ulid,
+            category_ulid=input.category_ulid,
+            publish=input.publish,
+            publish_at=input.publish_at,
+            title=input.title,
+            content=input.content,
+            lyric=input.lyric,
+            download=input.download,
+        )
+        obj_ret = create_music(user_id=user_id, input=dto, music=music)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
@@ -326,7 +344,17 @@ class BlogAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        obj_ret = create_blog(user_id=user_id, input=BlogCreateDTO(**input.model_dump()), image=image)
+        dto = BlogCreateDTO(
+            channel_ulid=input.channel_ulid,
+            category_ulid=input.category_ulid,
+            publish=input.publish,
+            publish_at=input.publish_at,
+            title=input.title,
+            content=input.content,
+            richtext=input.richtext,
+            is_promotion=input.is_promotion,
+        )
+        obj_ret = create_blog(user_id=user_id, input=dto, image=image)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
@@ -433,7 +461,15 @@ class ComicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        obj_ret = create_comic(user_id=user_id, input=ComicCreateDTO(**input.model_dump()), image=image, pages=pages)
+        dto = ComicCreateDTO(
+            channel_ulid=input.channel_ulid,
+            category_ulid=input.category_ulid,
+            publish=input.publish,
+            publish_at=input.publish_at,
+            title=input.title,
+            content=input.content,
+        )
+        obj_ret = create_comic(user_id=user_id, input=dto, image=image, pages=pages)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
@@ -539,7 +575,15 @@ class PictureAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        obj_ret = create_picture(user_id=user_id, input=PictureCreateDTO(**input.model_dump()), image=image)
+        dto = PictureCreateDTO(
+            channel_ulid=input.channel_ulid,
+            category_ulid=input.category_ulid,
+            publish=input.publish,
+            publish_at=input.publish_at,
+            title=input.title,
+            content=input.content,
+        )
+        obj_ret = create_picture(user_id=user_id, input=dto, image=image)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
@@ -644,7 +688,16 @@ class ChatAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        obj_ret = create_chat(user_id=user_id, input=ChatCreateDTO(**input.model_dump()))
+        dto = ChatCreateDTO(
+            channel_ulid=input.channel_ulid,
+            category_ulid=input.category_ulid,
+            publish=input.publish,
+            publish_at=input.publish_at,
+            title=input.title,
+            content=input.content,
+            period=input.period,
+        )
+        obj_ret = create_chat(user_id=user_id, input=dto)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:

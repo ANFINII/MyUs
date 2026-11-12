@@ -204,7 +204,7 @@ if ret.is_err:
 - `@dataclass(frozen=True, slots=True)`
 - サフィックス: `DTO`
 - 入力は、作成なら`XxxCreateDTO`、更新なら`XxxUpdateDTO`（`VideoCreateDTO`・`VideoUpdateDTO`）。項目はschemaの`XxxIn`と同じ名前にする
-- usecaseはschema（`XxxIn`）を受け取らない。adapterで`VideoCreateDTO(**input.model_dump())`のように組み替えて渡す
+- usecaseはschema（`XxxIn`）を受け取らない。adapterで`dto = VideoCreateDTO(title=input.title, ...)`のように項目を1つずつ書いて組み替えて渡す（`model_dump()`で`**`展開しない）
 - 項目が1つだけなら、DTOを作らず値で渡す
 
 ### 内部データ構造: dataclass
