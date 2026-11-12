@@ -206,7 +206,6 @@ if ret.is_err:
 - 入力は、作成なら`XxxCreateDTO`、更新なら`XxxUpdateDTO`（`VideoCreateDTO`・`VideoUpdateDTO`）。項目はschemaの`XxxIn`と同じ名前にする
 - 作成と更新で項目がまったく同じなら、1つにまとめて`XxxInDTO`にする（`AdvertiseInDTO`）
 - usecaseはschema（`XxxIn`）を受け取らない。adapterで`dto = VideoCreateDTO(**input.model_dump())`と組み替えて渡す
-- schemaとDTOの項目の名前がずれると実行したときに`TypeError`になるので、組を`tests/test_dto_schema.py`の`SCHEMA_DTO_PAIRS`に足し、テストで項目が一致することを確かめる
 - 項目が1つだけなら、DTOを作らず値で渡す
 
 ### 内部データ構造: dataclass
@@ -317,7 +316,7 @@ return Result.ok(new_ids)
 ## テスト
 
 - pytestを使用（Django TestCase不可）
-- 今は決済など絶対に失敗できない箇所だけテストを書く（webhook・Stripeの署名の検証・退会時のサブスク解約・決済のイベントの反映）。ほかに、DB を使わない形の検査（イベントのスキーマの互換性・schema と DTO の項目の一致）も書く
+- 今は決済など絶対に失敗できない箇所だけテストを書く（webhook・Stripeの署名の検証・退会時のサブスク解約・決済のイベントの反映）
 - `@pytest.mark.django_db`でDB接続
 - 実行: `uv run pytest`（`tests/`。CIでも実行する）
 - テスト用DBは`--nomigrations`でモデルから直接作る（マイグレーションはgit管理外のため）。DBを作る権限のあるユーザーで実行する
