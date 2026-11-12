@@ -2,10 +2,10 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from myus.utils.common.logger import log
-from myus.domain.aggregate.subscription.apply import replay
-from myus.domain.aggregate.subscription.decide import accept_provider_state, request_cancellation, fail_cancellation
-from myus.domain.aggregate.subscription.event import SUBSCRIPTION_AGGREGATE_TYPE, subscription_aggregate_id
-from myus.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionState, convert_status
+from myus.domain.payment.subscription.apply import replay
+from myus.domain.payment.subscription.decide import accept_provider_state, request_cancellation, fail_cancellation
+from myus.domain.payment.subscription.event import SUBSCRIPTION_AGGREGATE_TYPE, subscription_aggregate_id
+from myus.domain.payment.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionState, convert_status
 from myus.domain.es.interface import EventStoreInterface
 from myus.domain.payment.customer.data import PaymentCustomerData
 from myus.domain.payment.customer.interface import FilterOption as PaymentCustomerFilterOption, SortOption as PaymentCustomerSortOption, PaymentCustomerInterface

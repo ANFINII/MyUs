@@ -1,8 +1,8 @@
 from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
-from myus.domain.aggregate.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRevoked, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
-from myus.domain.aggregate.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionDetail, SubscriptionState
+from myus.domain.payment.subscription.event import SubscriptionActivated, SubscriptionCancellationScheduled, SubscriptionCancellationRevoked, SubscriptionCancellationRequested, SubscriptionCancellationFailed, SubscriptionEnded, SubscriptionEvent, SubscriptionOpened, SubscriptionPaymentPastDue, SubscriptionPlanChanged, SubscriptionRenewed
+from myus.domain.payment.subscription.state import ActiveSubscription, EndedSubscription, IncompleteSubscription, PastDueSubscription, SubscriptionDetail, SubscriptionState
 from myus.domain.es.data import EventEnvelope
 from myus.utils.common.result import HistoryCorruptedError, Result
 from myus.utils.enum.payment import SubscriptionStatus

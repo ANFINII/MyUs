@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
-from myus.domain.aggregate.subscription.state import SubscriptionDetail
+from myus.domain.payment.subscription.state import SubscriptionDetail
 from myus.domain.payment.data import Money
 from myus.utils.enum.payment import CancelError, PaymentProvider, SubscriptionStatus
 

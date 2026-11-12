@@ -96,9 +96,9 @@ if len(errors) > 0:
 | ルール | 置く場所 |
 |---|---|
 | 値のルール（長さ・範囲・必須など、保存する Data 1 つを見れば決まるもの。数・重複は Data の list） | `domain/<ドメイン>/validation.py` の `validate` |
-| 状態遷移のルール（「終わった状態からは遷移できない」など、今の状態と次の操作で決まるもの） | `domain/aggregate/<集約>/decide.py` |
+| 状態遷移のルール（「終わった状態からは遷移できない」など、今の状態と次の操作で決まるもの） | `domain/<ドメイン>/<集約>/decide.py` |
 
-- 状態遷移は `validate` で確かめない。サブスクリプション（`domain/aggregate/subscription`）は状態ごとに型を分け（`IncompleteSubscription`・`ActiveSubscription`・`PastDueSubscription`・`EndedSubscription`）、遷移してよいかは `decide.py` が決める
+- 状態遷移は `validate` で確かめない。サブスクリプション（`domain/payment/subscription`）は状態ごとに型を分け（`IncompleteSubscription`・`ActiveSubscription`・`PastDueSubscription`・`EndedSubscription`）、遷移してよいかは `decide.py` が決める
 - `validate` のエラーのキーは判定と食い違わない名前にする。たとえば 0 を許す判定（`< 0` でだめ）に「正の値」を思わせる名前を付けない
 
 ## DB を見ないと決まらないルール
