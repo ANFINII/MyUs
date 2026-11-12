@@ -17,7 +17,6 @@ T = TypeVar("T", bound=Model)
 class DaysSince(Func):
     function = "TIMESTAMPDIFF"
     template = "(TIMESTAMPDIFF(DAY, %(expressions)s) + 1)"
-    output_field = FloatField()
 
 
 def filter_recommend() -> Q:
@@ -65,7 +64,7 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False,
     if sort.sort_type == SortType.SCORE:
         like_count = Count("like", distinct=True)
         if is_recommend:
-            days_since = DaysSince(F("created"), Now())
+            days_since = DaysSince(F("created"), Now(), output_field=FloatField())
             score_expr = ExpressionWrapper(like_count * 1000.0 / (F("read") + 1) / days_since, output_field=FloatField())
         else:
             base = F("read") + like_count * 10 + F("read") * like_count / (F("read") + 1) * 20
