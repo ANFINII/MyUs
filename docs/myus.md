@@ -109,7 +109,7 @@ NgWord
 SearchTag (ユーザー検索タグ)
 AccessLog
 Advertise
-※ 料金プランはテーブルではなく `myus/utils/plan.py` の定数
+※ 料金プランはテーブルではなく `myus/utils/constants/plan.py` の定数
 ```
 
 ## データモデル詳細
@@ -235,7 +235,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 ### マスターデータ・その他
 
-#### 料金プラン（`myus/utils/plan.py`）
+#### 料金プラン（`myus/utils/constants/plan.py`）
 - テーブルではなくコードの定数（Free・Basic・Standard・Premium・Ultimate）
 - 価格、広告表示上限など。Stripe の価格 ID は環境変数（`STRIPE_PRICE_ID_*`）
 
