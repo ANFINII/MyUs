@@ -8,7 +8,6 @@ from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.music.data import MusicData
-from myus.domain.media.option import PAGE_SIZE
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
 from myus.usecase.dto.comment import CommentDTO, ReplyDTO
@@ -21,6 +20,7 @@ from myus.usecase.media.core import get_video_detail, get_music_detail, get_blog
 from myus.usecase.media.core import increment_media_read
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
+from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.functions.index import create_url, get_client_ip
 from .auth import auth_check
 from .schema.channel import ChannelOut
