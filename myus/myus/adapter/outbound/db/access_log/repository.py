@@ -1,11 +1,11 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.common import AccessLog
-from myus.adapter.outbound.db.access_log._convert import convert_data, marshal_data
-from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.domain.access_log.data import AccessLogData
 from myus.domain.access_log.interface import AccessLogInterface, FilterOption, SortOption
 from myus.utils.common.result import FatalError, Result
+from ..index import get_save_new_ids, sort_ids
+from ._convert import convert_data, marshal_data
 
 
 ACCESS_LOG_FIELDS = ["ip_address", "type", "type_id", "updated"]

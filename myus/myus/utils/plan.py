@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from myus.utils.enum.user import PlanName
+from .enum.user import PlanName
 
 
 @dataclass(frozen=True, slots=True)

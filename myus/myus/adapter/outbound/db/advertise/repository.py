@@ -1,12 +1,12 @@
 from django.db.models import F, Q
 from django.db.models.query import QuerySet
 from myus.db.models.common import Advertise
-from myus.adapter.outbound.db.advertise._convert import convert_data, marshal_data
-from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
 from myus.domain.advertise.data import AdvertiseData
 from myus.domain.advertise.interface import AdvertiseInterface, SortOption
 from myus.domain.media.index import ExcludeOption, FilterOption, PageOption
 from myus.utils.common.result import FatalError, Result
+from ..index import get_save_new_ids, sort_ids
+from ._convert import convert_data, marshal_data
 
 
 ADVERTISE_FIELDS = ["author_id", "title", "url", "content", "image", "video", "type", "period", "publish", "updated"]

@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
-from myus.utils.common.logger import log
 from myus.usecase.payment.core import replay_payment_events
+from myus.utils.common.logger import log
 
 
 class Command(BaseCommand):

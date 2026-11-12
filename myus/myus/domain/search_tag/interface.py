@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.search_tag.data import SearchTagData
 from myus.utils.common.result import FatalError, Result
+from .data import SearchTagData
 
 
 class SortType(Enum):

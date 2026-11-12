@@ -1,5 +1,5 @@
-from myus.domain.media.blog.data import BlogData
 from myus.utils.common.result import Result, ValidationError
+from .data import BlogData
 
 
 BLOG_TITLE_MAX_LENGTH = 100

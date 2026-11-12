@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.user.data import UserAllData
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
+from .data import UserAllData
 
 
 class SortType(Enum):

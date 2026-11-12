@@ -1,5 +1,5 @@
-from myus.domain.search_tag.data import SearchTagData
 from myus.utils.common.result import Result, ValidationError
+from .data import SearchTagData
 
 
 SEARCH_TAG_MAX_COUNT = 20

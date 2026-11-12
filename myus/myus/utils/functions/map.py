@@ -1,7 +1,7 @@
 from typing import assert_never
-from myus.utils.enum.i18n import Locale
-from myus.utils.enum.media import CommentType, CommentTypeNo
-from myus.utils.enum.payment import PaymentStatus
+from ..enum.i18n import Locale
+from ..enum.media import CommentType, CommentTypeNo
+from ..enum.payment import PaymentStatus
 
 
 def comment_type_map(type_no: CommentTypeNo) -> CommentType:

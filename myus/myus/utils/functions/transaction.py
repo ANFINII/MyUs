@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import Any, cast
 from django.db import transaction
-from myus.utils.common.result import AnyError, Result
+from ..common.result import AnyError, Result
 
 
 class _RollbackError(Exception):

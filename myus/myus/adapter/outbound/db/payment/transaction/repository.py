@@ -1,11 +1,11 @@
 from django.db.models import Q
 from myus.db.models.payment import PaymentTransaction
-from myus.adapter.outbound.db.index import get_save_new_ids, sort_ids
-from myus.adapter.outbound.db.payment.transaction._convert import convert_data, marshal_data
 from myus.domain.payment.transaction.data import TransactionData
 from myus.domain.payment.transaction.interface import FilterOption, SortOption, TransactionInterface
 from myus.domain.payment.transaction.validation import validate
 from myus.utils.common.result import FatalError, Result
+from ...index import get_save_new_ids, sort_ids
+from ._convert import convert_data, marshal_data
 
 
 TRANSACTION_FIELDS = ["payment_customer_id", "subscription_id", "external_id", "currency", "tax_rate", "receipt_number", "status", "paid_at", "last_event_at"]

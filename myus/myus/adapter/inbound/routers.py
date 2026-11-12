@@ -1,16 +1,16 @@
 from ninja import NinjaAPI
-from myus.adapter.inbound.advertise import AdvertiseAPI
-from myus.adapter.inbound.auth import AuthAPI
-from myus.adapter.inbound.category import CategoryAPI
-from myus.adapter.inbound.comment import CommentAPI
-from myus.adapter.inbound.hashtag import MediaHashtagAPI
-from myus.adapter.inbound.manage import ManageVideoAPI, ManageMusicAPI, ManageBlogAPI, ManageComicAPI, ManagePictureAPI, ManageChatAPI, ManageAdvertiseAPI
-from myus.adapter.inbound.media import HomeAPI, RecommendAPI, VideoAPI, MusicAPI, BlogAPI, ComicAPI, PictureAPI, ChatAPI, MediaReadAPI
-from myus.adapter.inbound.message import MessageAPI
-from myus.adapter.inbound.channel import ChannelAPI
-from myus.adapter.inbound.payment import PaymentAPI
-from myus.adapter.inbound.setting import SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
-from myus.adapter.inbound.user import UserAPI
+from .advertise import AdvertiseAPI
+from .auth import AuthAPI
+from .category import CategoryAPI
+from .channel import ChannelAPI
+from .comment import CommentAPI
+from .hashtag import MediaHashtagAPI
+from .manage import ManageVideoAPI, ManageMusicAPI, ManageBlogAPI, ManageComicAPI, ManagePictureAPI, ManageChatAPI, ManageAdvertiseAPI
+from .media import HomeAPI, RecommendAPI, VideoAPI, MusicAPI, BlogAPI, ComicAPI, PictureAPI, ChatAPI, MediaReadAPI
+from .message import MessageAPI
+from .payment import PaymentAPI
+from .setting import SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
+from .user import UserAPI
 
 
 api = NinjaAPI(title="MyUs API")

@@ -1,8 +1,8 @@
+from django_ulid.models import ulid
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
-from django_ulid.models import ulid
 from myus.utils.constants.choice import GENDER_CHOICES, PLAN_CHOICES
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.file import avatar_upload

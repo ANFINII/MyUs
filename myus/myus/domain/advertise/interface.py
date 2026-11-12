@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.advertise.data import AdvertiseData
-from myus.domain.media.index import ExcludeOption, FilterOption, PageOption
 from myus.utils.common.result import FatalError, Result
+from ..media.index import ExcludeOption, FilterOption, PageOption
+from .data import AdvertiseData
 
 
 class SortType(Enum):

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from myus.domain.es.data import EventEnvelope
 from myus.utils.common.result import AppendError, HistoryError, Result
+from .data import EventEnvelope
 
 
 class EventStoreInterface(ABC):

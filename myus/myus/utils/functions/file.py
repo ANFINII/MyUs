@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Any
-from myus.utils.enum.upload import ImageUpload, MediaUpload
-from myus.utils.functions.convert.audio_converter import CONVERTIBLE_EXTENSIONS
-from myus.utils.functions.index import new_ulid
+from ..enum.upload import ImageUpload, MediaUpload
+from .convert.audio_converter import CONVERTIBLE_EXTENSIONS
+from .index import new_ulid
 
 
 def file_extension(filename: str) -> str:

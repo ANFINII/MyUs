@@ -1,5 +1,5 @@
-from config.settings.base import *
 from config.env import env
+from config.settings.base import *
 
 DEBUG = False
 

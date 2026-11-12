@@ -1,11 +1,11 @@
-from typing import Any
 import pydantic
+from typing import Any
 from django.db import IntegrityError, transaction
 from myus.db.models.es import EsEvent, EsOutbox
-from myus.adapter.outbound.db.es._convert import convert_data, marshal_data, marshal_outbox
 from myus.domain.es.data import EventEnvelope
 from myus.domain.es.interface import EventStoreInterface
 from myus.utils.common.result import AppendError, ConflictError, FatalError, HistoryCorruptedError, HistoryError, Result
+from ._convert import convert_data, marshal_data, marshal_outbox
 
 
 class EventStoreRepository(EventStoreInterface):

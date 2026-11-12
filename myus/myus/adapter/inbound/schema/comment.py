@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
-from myus.adapter.inbound.schema.user import AuthorOut
 from myus.utils.enum.media import CommentType
+from .user import AuthorOut
 
 
 class CommentCreateIn(BaseModel):

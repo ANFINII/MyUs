@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
-from myus.domain.payment.data import Money
 from myus.utils.enum.payment import SubscriptionStatus
+from ..data import Money
 
 
 @dataclass(frozen=True, slots=True)

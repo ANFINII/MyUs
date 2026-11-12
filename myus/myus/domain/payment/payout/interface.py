@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.payment.payout.data import PayoutData
 from myus.utils.common.result import FatalError, Result
+from .data import PayoutData
 
 
 class SortType(Enum):

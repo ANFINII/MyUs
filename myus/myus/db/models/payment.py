@@ -1,9 +1,9 @@
 import datetime
 from django.db import models
-from myus.db.models.user import User
 from myus.utils.constants.choice import CURRENCY_CHOICES, PROVIDER_CHOICES, PAYMENT_STATUS_CHOICES, LEDGER_ENTRY_TYPE_CHOICES, PAYOUT_STATUS_CHOICES, SUBSCRIPTION_STATUS_CHOICES, WEBHOOK_EVENT_TYPE_CHOICES
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import SubscriptionStatus, PaymentStatus, PayoutStatus
+from .user import User
 
 DATETIME_MIN = datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
 

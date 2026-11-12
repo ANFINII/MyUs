@@ -1,8 +1,6 @@
 from typing import Any, assert_never
-
-from django.utils.html import strip_tags
 from django_ulid.models import ulid
-
+from django.utils.html import strip_tags
 from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from myus.db.models.notification import Notification
 from myus.domain.notification.data import NotificationContentData, NotificationData

@@ -1,9 +1,9 @@
-from myus.injectors.container import injector
 from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import UserInterface
-from myus.usecase.dto.user import AuthorDTO
+from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.index import create_url
+from ..dto.user import AuthorDTO
 
 
 @Result.shield_exception()

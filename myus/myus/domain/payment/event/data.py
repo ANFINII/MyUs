@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
-from myus.domain.payment.data import Money
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import PaymentProvider, PayoutStatus, SubscriptionStatus, WebhookEventType
+from ..data import Money
 
 
 @dataclass(frozen=True, slots=True)

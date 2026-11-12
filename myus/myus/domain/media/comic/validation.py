@@ -1,5 +1,5 @@
-from myus.domain.media.comic.data import ComicData
 from myus.utils.common.result import Result, ValidationError
+from .data import ComicData
 
 
 COMIC_TITLE_MAX_LENGTH = 100

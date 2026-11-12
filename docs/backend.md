@@ -23,7 +23,13 @@
 - ファイルの先頭で行う（ローカルインポート禁止、`TYPE_CHECKING`禁止）
 - **`import X` 文は全て先頭にまとめる**（section に関係なく `from` より上）
   - 例: `import jwt` は `from dataclasses import replace` より上
-- **`from X import Y` 文は section 順**: 標準ライブラリ → サードパーティ → Django → プロジェクト内
+- **`from X import Y` 文は section 順**: 標準ライブラリ → サードパーティ → Django → プロジェクト内（絶対パス）→ 同じ層の中（相対パス）
+  - 各 section の中は、モジュールのパスの名前順に並べる（`myus.adapter` → `myus.db` → `myus.domain` → `myus.injectors` → `myus.usecase` → `myus.utils`）
+- **同じ層の中の import は相対パスにする**: 層は `adapter/inbound`・`adapter/outbound`・`domain`・`usecase`・`injectors`・`utils`・`db`
+  - 同じ層の中は `.`・`..` で書く（例: `usecase/media/core.py` から `from ._convert import ...`・`from ..category._convert import ...`・`from ..dto.media import ...`）
+  - 層をまたぐものは `myus.` から始まる絶対パスで書く（例: usecase から `from myus.domain.media.video.data import VideoData`）
+  - 相対パスは `.` の多いもの（遠いもの）から並べる（`...` → `..` → `.`）
+  - パッケージの外（`config/`・`tests/`）からは絶対パスで書く
 - **`from x import a, b, c` の中身は domain 順序を維持する**（alphabetical にしない）
   - 例: `from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat` は `MediaType` enum の定義順を保つ
 - **`ruff check --fix` を勝手に実行しない**: ruff の isort 挙動は上記ルールと衝突するため、import 整理が必要なときは手動で対応する
@@ -366,3 +372,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-12: `domain/aggregate` をなくし、集約を `domain/<ドメイン>/<集約>/`（サブスクリプションは `domain/payment/subscription`）に置いた
 - 2026-11-12: usecase の入力を DTO にし、schema を `types/schema` から `adapter/inbound/schema` に移した
 - 2026-11-12: DTO を `types/dto` から `usecase/dto` に移し、`types` をなくした
+- 2026-11-12: import の並び（section の中はパスの名前順、最後に相対パス）と、同じ層の中は相対パスにする決まりを足した

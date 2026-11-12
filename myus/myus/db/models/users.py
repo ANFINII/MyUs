@@ -1,6 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from myus.db.models.user import User
+from .user import User
 
 
 class SearchTag(models.Model):

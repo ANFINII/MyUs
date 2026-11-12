@@ -2,6 +2,7 @@ import asyncio
 import multiprocessing
 import os
 import platform
+import psutil
 import shutil
 import subprocess
 import time
@@ -10,8 +11,7 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
-import psutil
-from myus.utils.common.logger import log
+from ...common.logger import log
 
 
 @dataclass

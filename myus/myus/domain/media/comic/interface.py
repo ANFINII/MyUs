@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from myus.domain.media.index import ExcludeOption, FilterOption, PageOption, SortOption
-from myus.domain.media.comic.data import ComicData
 from myus.utils.common.result import FatalError, Result
+from ..index import ExcludeOption, FilterOption, PageOption, SortOption
+from .data import ComicData
 
 
 class ComicInterface(ABC):

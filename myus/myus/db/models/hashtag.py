@@ -1,5 +1,5 @@
-from django.db import models
 from django_ulid.models import ulid
+from django.db import models
 
 
 class HashTag(models.Model):

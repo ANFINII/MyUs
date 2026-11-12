@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from myus.domain.notification.data import NotificationData
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from .data import NotificationData
 
 
 class SortType(Enum):

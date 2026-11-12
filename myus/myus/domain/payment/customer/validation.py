@@ -1,5 +1,5 @@
-from myus.domain.payment.customer.data import PaymentCustomerData
 from myus.utils.common.result import Result, ValidationError
+from .data import PaymentCustomerData
 
 
 def validate(obj: PaymentCustomerData) -> Result[None, ValidationError]:

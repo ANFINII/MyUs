@@ -1,8 +1,8 @@
+from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
-from django_ulid.models import ulid
-from myus.db.models.media import Chat
-from myus.db.models.user import User
+from .media import Chat
+from .user import User
 
 
 class MessageManager(models.Manager):

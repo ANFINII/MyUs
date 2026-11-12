@@ -1,11 +1,8 @@
 from __future__ import annotations
-
 from collections.abc import Callable
 from functools import wraps
 from typing import cast
-
-from myus.utils.common.logger import log
-
+from ..logger import log
 from .errors import AnyError, FatalError
 
 

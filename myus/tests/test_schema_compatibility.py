@@ -1,5 +1,5 @@
-from pathlib import Path
 import pytest
+from pathlib import Path
 from myus.db.management.commands.export_event_schema import event_schemas
 from myus.utils.functions.schema_compatibility import breaking_changes, read_schema
 

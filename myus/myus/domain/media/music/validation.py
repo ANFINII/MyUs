@@ -1,5 +1,5 @@
-from myus.domain.media.music.data import MusicData
 from myus.utils.common.result import Result, ValidationError
+from .data import MusicData
 
 
 MUSIC_TITLE_MAX_LENGTH = 100

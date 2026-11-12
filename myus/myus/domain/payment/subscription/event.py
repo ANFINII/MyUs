@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
-from myus.domain.payment.subscription.state import SubscriptionDetail
-from myus.domain.payment.data import Money
 from myus.utils.enum.payment import CancelError, PaymentProvider, SubscriptionStatus
+from ..data import Money
+from .state import SubscriptionDetail
 
 
 SUBSCRIPTION_AGGREGATE_TYPE = "Subscription"

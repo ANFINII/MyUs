@@ -1,5 +1,5 @@
 from injector import Injector, Module
-from myus.injectors.index import (
+from .index import (
     UserModule,
     ChannelModule,
     MediaModule,

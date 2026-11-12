@@ -1,17 +1,17 @@
+import pytest
 from collections.abc import Callable
 from dataclasses import replace
 from datetime import datetime, timezone
-import pytest
 from myus.db.models.payment import Subscription
 from myus.db.models.user import User
 from myus.domain.payment.provider.data import CancelFailed
 from myus.usecase.auth.core import withdraw_user
-from myus.usecase.payment.core import cancel_subscription
 from myus.usecase.payment._convert import save_provider_subscription_data
-from tests.conftest import PASSWORD
-from tests.fakes import FakePayment, provider_subscription
+from myus.usecase.payment.core import cancel_subscription
 from myus.utils.enum.payment import CancelError, SubscriptionStatus
 from myus.utils.enum.user import PlanName
+from tests.conftest import PASSWORD
+from tests.fakes import FakePayment, provider_subscription
 
 
 def add_subscription(fake_payment: FakePayment, user: User, external_id: str, status: SubscriptionStatus, month: int) -> None:

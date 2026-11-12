@@ -1,8 +1,8 @@
 from typing import Any
 from django.contrib import admin
-from myus.db.models.comment import Comment
 from myus.utils.enum.media import CommentType
 from myus.utils.functions.map import comment_type_no_map
+from .comment import Comment
 
 
 class MediaModel:
