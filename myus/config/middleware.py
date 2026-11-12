@@ -3,7 +3,7 @@ from collections.abc import Callable
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from myus.utils.common.logger import log
-from myus.types.schema.common import ErrorOut, ErrorType
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType
 
 
 API_PATH_PREFIX = "/api/"

@@ -4,9 +4,9 @@ from ninja import Router
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.types.dto.comment import CommentCreateDTO
-from myus.types.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn
-from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from myus.types.schema.user import AuthorOut
+from myus.adapter.inbound.schema.comment import CommentCreateIn, CommentOut, CommentUpdateIn
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut
+from myus.adapter.inbound.schema.user import AuthorOut
 from myus.usecase.comment.core import create_comment, delete_comment, update_comment
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError
 

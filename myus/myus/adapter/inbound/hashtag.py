@@ -4,8 +4,8 @@ from ninja import Router
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.types.dto.hashtag import HashtagDTO
-from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from myus.types.schema.hashtag import HashtagOut, MediaHashtagsUpdateIn
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut
+from myus.adapter.inbound.schema.hashtag import HashtagOut, MediaHashtagsUpdateIn
 from myus.usecase.hashtag.core import get_master_hashtags, update_media_hashtags
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError
 

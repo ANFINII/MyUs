@@ -130,7 +130,7 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `ConflictError` | 同じ集約に同時に書き込み、取り直しても保存できなかった（イベントストア） | adapter で返すときに `CONFLICT` を足す | 400 | `message` |
 | `HistoryCorruptedError` | 集約の履歴が壊れている（`seq` の抜け・未登録の種類・読めない中身）。再試行しても直らない | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
 
-- エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`myus/types/schema/common.py`）。`type`は必須
+- エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`myus/adapter/inbound/schema/common.py`）。`type`は必須
 - 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
 - `auth_check`（`myus/adapter/inbound/auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
@@ -198,6 +198,7 @@ if ret.is_err:
 ## 型定義
 
 ### アダプター（API）: Pydantic BaseModel
+- 置き場所: `adapter/inbound/schema/`（adapter/inbound だけが使う。usecase からは import しない）
 - サフィックス: 入力`In`、出力`Out`
 
 ### usecase の入出力: dataclass（`types/dto/`）
@@ -267,7 +268,7 @@ return Result.ok(new_ids)
 
 | 層 | 責務 | 依存してよいもの |
 |------|------|------|
-| adapter/inbound | HTTP・WebSocket のリクエスト/レスポンス変換、認証チェック | usecase, schema |
+| adapter/inbound | HTTP・WebSocket のリクエスト/レスポンス変換、認証チェック。schema（`adapter/inbound/schema/`）を持つ | usecase, DTO |
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
 | domain/<ドメイン> | 抽象定義（ABC, dataclass）とルール（`validation.py`） | なし |
 | domain/<ドメイン>/<集約> | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数。いまは `domain/payment/subscription` | Data, utils |
@@ -363,3 +364,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-12: `domain/entity`（Repository の実装）を `adapter/outbound/db` に移した。決済会社の実装は `adapter/outbound/payment`
 - 2026-11-12: `domain/interface` をなくし、Data・Interface・ルールを `domain/<ドメイン>/` に置いた
 - 2026-11-12: `domain/aggregate` をなくし、集約を `domain/<ドメイン>/<集約>/`（サブスクリプションは `domain/payment/subscription`）に置いた
+- 2026-11-12: usecase の入力を DTO にし、schema を `types/schema` から `adapter/inbound/schema` に移した

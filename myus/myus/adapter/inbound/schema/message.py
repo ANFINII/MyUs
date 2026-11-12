@@ -1,6 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel
-from myus.types.schema.user import AuthorOut
+from myus.adapter.inbound.schema.user import AuthorOut
 
 
 class MessageCreateIn(BaseModel):

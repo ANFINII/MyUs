@@ -1,9 +1,9 @@
 from datetime import datetime
 from pydantic import BaseModel
-from myus.types.schema.comment import CommentOut
-from myus.types.schema.message import MessageOut
-from myus.types.schema.channel import ChannelOut
-from myus.types.schema.user import MediaUserOut
+from myus.adapter.inbound.schema.comment import CommentOut
+from myus.adapter.inbound.schema.message import MessageOut
+from myus.adapter.inbound.schema.channel import ChannelOut
+from myus.adapter.inbound.schema.user import MediaUserOut
 
 
 class MediaCreateOut(BaseModel):

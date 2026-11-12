@@ -6,13 +6,13 @@ from myus.adapter.inbound.auth import auth_check
 from myus.adapter.inbound.advertise import convert_advertises
 from myus.adapter.inbound.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from myus.types.dto.user import SearchTagDTO
-from myus.types.schema.advertise import AdvertiseListOut
-from myus.types.schema.channel import ChannelOut
-from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from myus.types.schema.follow import FollowIn, FollowOut, FollowUserOut
-from myus.types.schema.notification import NotificationContentOut, NotificationIn, NotificationItemOut, NotificationOut, NotificationUserOut
-from myus.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
-from myus.types.schema.userpage import UserPageMediaOut, UserPageOut
+from myus.adapter.inbound.schema.advertise import AdvertiseListOut
+from myus.adapter.inbound.schema.channel import ChannelOut
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut
+from myus.adapter.inbound.schema.follow import FollowIn, FollowOut, FollowUserOut
+from myus.adapter.inbound.schema.notification import NotificationContentOut, NotificationIn, NotificationItemOut, NotificationOut, NotificationUserOut
+from myus.adapter.inbound.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
+from myus.adapter.inbound.schema.userpage import UserPageMediaOut, UserPageOut
 from myus.usecase.channel.core import get_channel_data, get_user_channels
 from myus.usecase.follow.core import get_followers, get_follows, upsert_follow
 from myus.usecase.notification.core import get_notification, notification_confirm, notification_delete

@@ -4,9 +4,9 @@ from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
 from myus.adapter.inbound.auth import auth_check
 from myus.types.dto.channel import ChannelDTO
-from myus.types.schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
-from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
-from myus.types.schema.subscribe import SubscribeIn, SubscribeOut
+from myus.adapter.inbound.schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut
+from myus.adapter.inbound.schema.subscribe import SubscribeIn, SubscribeOut
 from myus.usecase.channel.core import create_user_channel, get_user_channels, update_user_channel
 from myus.usecase.subscribe.core import get_subscribe_channels, upsert_subscribe
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError

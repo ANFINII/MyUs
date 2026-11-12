@@ -5,8 +5,8 @@ from ninja import Router
 from ninja.throttling import AnonRateThrottle
 from myus.utils.common.logger import log
 from myus.types.dto.user import PasswordChangeDTO, PasswordResetDTO, SignupDTO
-from myus.types.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
-from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
+from myus.adapter.inbound.schema.auth import LoginIn, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
+from myus.adapter.inbound.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.usecase.auth.core import change_password, create_auth_tokens, login_user, logout_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_token, withdraw_user
 from myus.usecase.user.core import signup_check
 from myus.utils.common.result import FatalError, Result, ValidationError
