@@ -1,4 +1,4 @@
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.hashtag.data import HashtagData
 from myus.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType
 from myus.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption

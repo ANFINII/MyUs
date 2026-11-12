@@ -1,6 +1,6 @@
 from django.http import HttpRequest
 from ninja import Router
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.adapter.auth import auth_check
 from myus.src.types.schema.category import CategoryOut
 from myus.src.types.schema.common import ErrorOut, ErrorType

@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.usecase.payment.core import requeue_payment_events
 
 

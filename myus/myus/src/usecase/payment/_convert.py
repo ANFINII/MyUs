@@ -1,7 +1,7 @@
 from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.aggregate.subscription.apply import replay
 from myus.src.domain.aggregate.subscription.decide import accept_provider_state, request_cancellation, fail_cancellation
 from myus.src.domain.aggregate.subscription.event import SUBSCRIPTION_AGGREGATE_TYPE, subscription_aggregate_id

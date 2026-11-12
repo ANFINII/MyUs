@@ -1,4 +1,4 @@
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.message.data import MessageData
 from myus.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
 from myus.src.injectors.container import injector

@@ -11,7 +11,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 import psutil
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 
 
 @dataclass

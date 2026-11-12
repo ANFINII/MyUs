@@ -2,7 +2,7 @@ import json
 from collections.abc import Callable
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.types.schema.common import ErrorOut, ErrorType
 
 

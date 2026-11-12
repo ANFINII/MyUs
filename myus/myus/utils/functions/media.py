@@ -8,7 +8,7 @@ from PIL import Image, UnidentifiedImageError
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import TemporaryUploadedFile
 from ninja import UploadedFile
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.utils.common.result import Result, ValidationError
 from myus.utils.constants.upload import IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_FORMATS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
 from myus.utils.enum.upload import ImageUpload, MediaUpload

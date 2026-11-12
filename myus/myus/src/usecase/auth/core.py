@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess
 from myus.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from myus.utils.enum.user import PlanName

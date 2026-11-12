@@ -1,5 +1,5 @@
 from dataclasses import replace
-from myus.modules.logger import log
+from myus.utils.common.logger import log
 from myus.src.domain.interface.comment.data import CommentData
 from myus.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from myus.src.injectors.container import injector
