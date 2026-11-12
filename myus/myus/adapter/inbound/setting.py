@@ -2,7 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
-from myus.adapter.auth import auth_check
+from myus.adapter.inbound.auth import auth_check
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from myus.usecase.user.core import get_user_data, profile_check, update_mypage, update_notification, update_profile

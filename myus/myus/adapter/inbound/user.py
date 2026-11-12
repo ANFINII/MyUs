@@ -2,9 +2,9 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from myus.utils.common.logger import log
-from myus.adapter.auth import auth_check
-from myus.adapter.advertise import convert_advertises
-from myus.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
+from myus.adapter.inbound.auth import auth_check
+from myus.adapter.inbound.advertise import convert_advertises
+from myus.adapter.inbound.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from myus.types.schema.advertise import AdvertiseListOut
 from myus.types.schema.channel import ChannelOut
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut

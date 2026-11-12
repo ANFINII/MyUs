@@ -1,5 +1,5 @@
 from injector import Module, multiprovider, provider, singleton
-from myus.adapter.external.payment.stripe.provider import StripeProvider
+from myus.adapter.outbound.payment.stripe.provider import StripeProvider
 from myus.domain.aggregate.subscription.event import SUBSCRIPTION_EVENT_CLASSES
 from myus.domain.entity.payment.customer.repository import PaymentCustomerRepository
 from myus.domain.entity.payment.event.repository import PaymentEventRepository

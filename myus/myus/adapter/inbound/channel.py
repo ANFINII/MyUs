@@ -2,7 +2,7 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from myus.utils.common.logger import log
-from myus.adapter.auth import auth_check
+from myus.adapter.inbound.auth import auth_check
 from myus.types.schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
 from myus.types.schema.common import ErrorOut, ErrorType, SuccessOut
 from myus.types.schema.subscribe import SubscribeIn, SubscribeOut

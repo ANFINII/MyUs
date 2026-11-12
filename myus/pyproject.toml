@@ -71,7 +71,7 @@ module = ["django.*", "tests.*"]
 ignore_missing_imports = true  # 外部ライブラリの型情報が見つからない場合はエラーを無視
 
 [[tool.mypy.overrides]]
-module = ["myus.adapter.websocket"]
+module = ["myus.adapter.inbound.websocket"]
 disallow_subclassing_any = false  # channels の WebsocketConsumer は型情報が無いため継承を許可
 disallow_any_unimported = false   # 同上
 
