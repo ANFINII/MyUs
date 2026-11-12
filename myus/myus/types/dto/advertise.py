@@ -3,7 +3,7 @@ from datetime import date
 
 
 @dataclass(frozen=True, slots=True)
-class AdvertiseInDTO:
+class AdvertiseDTO:
     title: str
     url: str
     content: str

@@ -2,6 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
-class ChannelInDTO:
+class ChannelDTO:
     name: str
     description: str

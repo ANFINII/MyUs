@@ -23,7 +23,7 @@ class LikeDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class SignupInDTO:
+class SignupDTO:
     token: str
     email: str
     username: str
@@ -39,14 +39,14 @@ class SignupInDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class PasswordChangeInDTO:
+class PasswordChangeDTO:
     old_password: str
     password1: str
     password2: str
 
 
 @dataclass(frozen=True, slots=True)
-class PasswordResetInDTO:
+class PasswordResetDTO:
     token: str
     password1: str
     password2: str

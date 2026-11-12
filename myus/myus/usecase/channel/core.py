@@ -5,7 +5,7 @@ from myus.utils.common.logger import log
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
 from myus.injectors.container import injector
-from myus.types.dto.channel import ChannelInDTO
+from myus.types.dto.channel import ChannelDTO
 from myus.usecase.channel._convert import save_channel_data
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidateError, WriteError
 from myus.utils.enum.upload import ImageUpload
@@ -54,7 +54,7 @@ def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
 
 
 @Result.shield_exception()
-def create_user_channel(user_id: int, input: ChannelInDTO, avatar_file: UploadedFile) -> Result[str, ValidateError]:
+def create_user_channel(user_id: int, input: ChannelDTO, avatar_file: UploadedFile) -> Result[str, ValidateError]:
     upload_ret = validate_uploads([(avatar_file, ImageUpload.CHANNEL)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -83,7 +83,7 @@ def create_user_channel(user_id: int, input: ChannelInDTO, avatar_file: Uploaded
 
 
 @Result.shield_exception()
-def update_user_channel(user_id: int, ulid: str, input: ChannelInDTO, avatar_file: UploadedFile) -> Result[None, WriteError]:
+def update_user_channel(user_id: int, ulid: str, input: ChannelDTO, avatar_file: UploadedFile) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(avatar_file, ImageUpload.CHANNEL)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)

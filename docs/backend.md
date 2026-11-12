@@ -204,7 +204,7 @@ if ret.is_err:
 - `@dataclass(frozen=True, slots=True)`
 - サフィックス: `DTO`
 - 入力は、作成なら`XxxCreateDTO`、更新なら`XxxUpdateDTO`（`VideoCreateDTO`・`VideoUpdateDTO`）。項目はschemaの`XxxIn`と同じ名前にする
-- 作成と更新で項目がまったく同じなら、1つにまとめて`XxxInDTO`にする（`AdvertiseInDTO`）
+- 作成と更新で項目がまったく同じものや、作成・更新に当てはまらない入力は、`XxxDTO`にする（`AdvertiseDTO`・`ChannelDTO`・`SignupDTO`・`PasswordChangeDTO`）
 - usecaseはschema（`XxxIn`）を受け取らない。adapterで`dto = VideoCreateDTO(**input.model_dump())`と組み替えて渡す
 - 項目が1つだけなら、DTOを作らず値で渡す
 
