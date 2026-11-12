@@ -22,9 +22,9 @@ from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.enum.media import CommentType, MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload, MediaUpload
+from myus.utils.functions.common import create_url
 from myus.utils.functions.convert.encode_worker import EncodeWorker
 from myus.utils.functions.convert.video_encoding import convert_video
-from myus.utils.functions.index import create_url
 from myus.utils.functions.map import comment_type_no_map
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result

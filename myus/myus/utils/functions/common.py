@@ -12,10 +12,6 @@ def create_url(path: str) -> str:
     return f"{DOMAIN_URL}{MEDIA_URL}{path}" if path else ""
 
 
-def message(error: bool, message: str) -> dict[str, str | bool]:
-    return {"error": error, "message": message}
-
-
 def get_client_ip(request: HttpRequest) -> str:
     remote_addr = str(request.META.get("REMOTE_ADDR", ""))
     forwarded_for = str(request.META.get("HTTP_X_FORWARDED_FOR", ""))

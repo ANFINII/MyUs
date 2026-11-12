@@ -3,7 +3,7 @@ from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, InputError, NotFoundError, Result, ValidationError
-from myus.utils.functions.index import create_url
+from myus.utils.functions.common import create_url
 from myus.utils.functions.transaction import atomic_result
 from ._convert import save_follow_data
 from ..dto.follow import FollowDTO, FollowUserDTO

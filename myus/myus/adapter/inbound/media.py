@@ -21,7 +21,7 @@ from myus.usecase.media.core import increment_media_read
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from myus.utils.constants.page import PAGE_SIZE
-from myus.utils.functions.index import create_url, get_client_ip
+from myus.utils.functions.common import create_url, get_client_ip
 from .auth import auth_check
 from .schema.channel import ChannelOut
 from .schema.comment import CommentOut, ReplyOut

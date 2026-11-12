@@ -5,7 +5,7 @@ from myus.usecase.dto.user import SettingMyPageDTO, SettingNotificationDTO, Sett
 from myus.usecase.user.core import get_user_data, update_mypage, update_notification, update_profile
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, NotFoundError, ValidationError
-from myus.utils.functions.index import create_url
+from myus.utils.functions.common import create_url
 from myus.utils.functions.validation import has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 from .auth import auth_check
 from .schema.common import ErrorOut, ErrorType, SuccessOut
