@@ -4,6 +4,7 @@ from api.src.domain.entity.index import get_save_new_ids, sort_ids
 from api.src.domain.entity.payment.customer._convert import convert_data, marshal_data
 from api.src.domain.interface.payment.customer.data import PaymentCustomerData
 from api.src.domain.interface.payment.customer.interface import FilterOption, SortOption, PaymentCustomerInterface
+from api.src.domain.interface.payment.customer.validation import validate
 from api.utils.common.result import FatalError, Result
 
 
@@ -41,6 +42,10 @@ class PaymentCustomerRepository(PaymentCustomerInterface):
     def bulk_save(self, objs: list[PaymentCustomerData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             return Result.ok([])
+
+        errors = [ret.err_value.message for obj in objs if (ret := validate(obj)).is_err]
+        if len(errors) > 0:
+            return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_save_new_ids(models, PAYMENT_CUSTOMER_FIELDS)
