@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from myus.utils.common.result import FatalError, Result
 from .data import ChatData
-from ...common import ExcludeOption, FilterOption, PageOption, SortOption
+from ..common import ExcludeOption, FilterOption, PageOption, SortOption
 
 
 class ChatInterface(ABC):

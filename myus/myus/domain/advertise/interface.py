@@ -1,9 +1,30 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
+from myus.utils.constants.page import PAGE_SIZE
 from .data import AdvertiseData
-from ..common import ExcludeOption, FilterOption, PageOption
+
+
+@dataclass(frozen=True, slots=True)
+class FilterOption:
+    ulid: str = ""
+    ulids: list[str] = field(default_factory=list)
+    publish: bool | None = None
+    owner_id: int = 0
+    search: str = ""
+    advertise_type: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class ExcludeOption:
+    id: int = 0
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = PAGE_SIZE
+    offset: int = 0
 
 
 class SortType(Enum):

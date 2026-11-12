@@ -1,7 +1,7 @@
 from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from myus.db.models.media import Music
-from myus.domain.common import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.music.validation import validate

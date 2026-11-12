@@ -1,7 +1,7 @@
 from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from myus.db.models.media import Picture
-from myus.domain.common import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.picture.validation import validate
