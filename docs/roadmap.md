@@ -25,12 +25,9 @@
 | 3 | `Store`・`Product`・`Price` のテーブル |
 | 4 | 商品を Stripe に同期し（`sync_product`）、`CheckoutData.marketplace.seller_id` に受け取り口座を入れて決済する |
 
-### 🔶 多通貨
-
-言語は対応済み（決済画面を表示中の言語で出し、支払い後もその言語のページに戻す）。多通貨（`Currency` を価格・決済に使う）は、着手するか未定。
-
 ### 確認が残っているもの
 
+- Stripe のダッシュボードで4つの Price（`STRIPE_PRICE_ID_*`）に USD の金額（399・599・799・1299）を足し、テスト環境で国/地域が日本以外のユーザーがドルで checkout・プラン変更できるかを確かめる
 - Stripe のダッシュボードで Billing Portal の設定を保存し（保存するまでは portal を開けない）、支払い方法の変更から決済の画面に戻ってくるかを確かめる
 - 本物の Stripe（テスト環境）で `invoice.paid`・`charge.refunded`・`payout.paid` を通し、取引・明細・入金が正しく作られるかを確かめる
 - Stripe CLI で `customer.subscription.*` を送り、`es_event` と `Subscription`・`UserPlan` が正しく作られるかを確かめる
