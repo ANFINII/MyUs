@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Any
 from .common import new_ulid
-from .convert.audio_converter import CONVERTIBLE_EXTENSIONS
 from ..enum.upload import ImageUpload, MediaUpload
 
 
@@ -21,10 +20,8 @@ def video_path(type: MediaUpload, ulid: str, extension: str) -> str:
     return f"videos/{type.value}/channel_{ulid}/{new_ulid()}{extension}"
 
 
-def musics_path(ulid: str, extension: str) -> str:
-    if extension in CONVERTIBLE_EXTENSIONS:
-        extension = ".mp3"
-    return f"musics/channel_{ulid}/{new_ulid()}{extension}"
+def musics_path(ulid: str) -> str:
+    return f"musics/channel_{ulid}/{new_ulid()}.mp3"
 
 
 def comic_path(ulid: str, extension: str) -> str:
@@ -66,7 +63,7 @@ def video_upload(obj: Any, filename: str) -> str:
 
 
 def music_upload(obj: Any, filename: str) -> str:
-    return musics_path(str(obj.channel.ulid), file_extension(filename))
+    return musics_path(str(obj.channel.ulid))
 
 
 def comic_upload(obj: Any, filename: str) -> str:

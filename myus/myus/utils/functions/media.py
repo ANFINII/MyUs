@@ -127,7 +127,7 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
         case MediaUpload.ADVERTISE:
             path = advertise_video_path(ulid, extension)
         case MediaUpload.MUSIC:
-            path = musics_path(ulid, extension)
+            path = musics_path(ulid)
             if is_conversion(filename):
                 return save_converted_mp3(file, path)
         case _:

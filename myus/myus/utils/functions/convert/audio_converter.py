@@ -9,15 +9,12 @@ from django.core.files.storage import default_storage
 from ...common.logger import log
 
 
-CONVERTIBLE_EXTENSIONS = {".wav", ".flac", ".ogg", ".m4a", ".aac", ".wma", ".aiff"}
-
-
 MP3_TIMEOUT = 600
 
 
 def is_conversion(filename: str) -> bool:
     """MP3以外の変換対象フォーマットかチェック"""
-    return Path(filename).suffix.lower() in CONVERTIBLE_EXTENSIONS
+    return Path(filename).suffix.lower() != ".mp3"
 
 
 def convert_mp3(input_path: str, output_path: str, bitrate: str = "192k") -> None:
