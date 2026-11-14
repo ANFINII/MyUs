@@ -6,7 +6,7 @@ from ..common import FilterOption, PageOption, SortOption
 
 class PictureInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod

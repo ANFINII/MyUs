@@ -33,7 +33,7 @@ class AdvertiseRepository(AdvertiseInterface):
         return Advertise.objects.all()
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         qs = Advertise.objects.filter(*_filter_q_list(filter))
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"

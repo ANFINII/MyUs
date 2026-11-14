@@ -27,6 +27,7 @@ class FilterOption:
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.ID
+    user_id: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
