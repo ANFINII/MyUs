@@ -169,3 +169,12 @@ flowchart LR
 
 - `utils/functions/validation.py` が `has_weak_password` のために Django の `User` モデルを import しているので、`domain/user/validation.py` も間接的に Django を読み込む（`has_weak_password` を別のファイルに分けるとよい）
 - `usecase/channel/core.py` で `new_ulid = str(ulid.new())` と、関数の `new_ulid()`（`utils/functions/common.py`）と同じ名前の変数を使っている
+
+## メディアの一覧の速さ
+
+今は困っていない。一覧が遅いと感じたら、`EXPLAIN` でどこが重いかを確かめてから、次のどちらかを入れる。一覧を取る処理は `adapter/outbound/db/media/common.py`（`filter_queryset`・`sort_queryset`・`get_ids_queryset`）にまとまっている。
+
+### 遅くなったら検討すること
+
+- **多対多の絞り込みを `Exists` にして `DISTINCT` をなくす**：検索（`hashtag__name`）・カテゴリ（`category__id`）・おすすめ（`like__isnull=False`）は多対多の表を join するので、同じ行が何度も出て `distinct_queryset` で `DISTINCT` を掛けている。`Exists(...)` のサブクエリにすれば行が重ならず、`distinct_queryset` を消せる。検索は「タイトル または ハッシュタグ」の OR、おすすめは絞り込みの join を score の `Count("like")` が使い回しているので、書き換えたら実データで結果が変わらないかを確かめる
+- **like 数を列に持つ**：score で並べるたびに、絞り込みに当たる全行の `Count("like")` を数えている。メディアのテーブルに `like_count` を持たせ、いいねのたびに増減すれば集計が要らなくなる。代わりに、いいねの処理で列の更新が要る
