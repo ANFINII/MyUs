@@ -3,13 +3,13 @@ from typing import assert_never
 from ninja import Router
 from django.http import HttpRequest
 from myus.domain.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, WebhookVerified, WebhookVerifyFailed
-from myus.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, get_subscription, receive_payment_event, revoke_cancellation, verify_webhook
+from myus.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, get_plan_prices, get_subscription, receive_payment_event, revoke_cancellation, verify_webhook
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, NotFoundError, ValidationError
 from myus.utils.enum.payment import PaymentProvider, SubscriptionStatus, WebhookVerifyError
 from .auth import auth_check
 from .schema.common import ErrorOut, ErrorType
-from .schema.payment import PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentSubscriptionOut, PaymentWebhookOut
+from .schema.payment import MoneyOut, PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSubscriptionOut, PaymentWebhookOut
 
 
 class PaymentAPI:
@@ -39,6 +39,31 @@ class PaymentAPI:
         is_canceled = subscription.canceled_at != datetime.min.replace(tzinfo=timezone.utc)
         is_past_due = subscription.status == SubscriptionStatus.PAST_DUE
         return 200, PaymentSubscriptionOut(is_canceled=is_canceled, is_past_due=is_past_due, period_end=subscription.current_period_end)
+
+    @staticmethod
+    @router.get("/plans", response={200: list[PaymentPlanOut], 400: ErrorOut, 500: ErrorOut})
+    def plans(request: HttpRequest):
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        plans_ret = get_plan_prices(user_id)
+        if plans_ret.is_err:
+            message = plans_ret.err_value.message
+            match plans_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(plans_ret.err_value)
+
+        plans = plans_ret.ok_value
+        return 200, [PaymentPlanOut(name=p.name, price=MoneyOut(amount=p.price.amount, currency=p.price.currency)) for p in plans]
 
     @staticmethod
     @router.post("/checkout", response={200: PaymentCheckoutOut, 400: ErrorOut, 500: ErrorOut})

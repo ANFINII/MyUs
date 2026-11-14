@@ -1,5 +1,5 @@
 from typing import assert_never
-from ..enum.i18n import Locale
+from ..enum.i18n import Country, Currency, Locale
 from ..enum.media import CommentType, CommentTypeNo
 from ..enum.payment import PaymentStatus
 
@@ -32,3 +32,11 @@ def locale_path(locale: Locale) -> str:
             return "/en"
         case _:
             assert_never(locale)
+
+
+def country_currency(country: Country) -> Currency:
+    match country:
+        case Country.JP:
+            return Currency.JPY
+        case _:
+            return Currency.USD

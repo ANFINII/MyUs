@@ -1,6 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel
-from myus.utils.enum.i18n import Locale
+from myus.utils.enum.i18n import Currency, Locale
 
 
 class PaymentCheckoutIn(BaseModel):
@@ -37,3 +37,13 @@ class PaymentSubscriptionOut(BaseModel):
     is_canceled: bool
     is_past_due: bool
     period_end: datetime
+
+
+class MoneyOut(BaseModel):
+    amount: int
+    currency: Currency
+
+
+class PaymentPlanOut(BaseModel):
+    name: str
+    price: MoneyOut

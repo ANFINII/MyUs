@@ -8,7 +8,7 @@ from myus.domain.payment.event.data import PaymentEventData
 from myus.domain.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
-from myus.domain.payment.plan import get_plan, plan_price
+from myus.domain.payment.plan import PLANS, get_plan, plan_price
 from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, WebhookVerifyResult
 from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
@@ -16,13 +16,14 @@ from myus.domain.payment.transaction.interface import TransactionInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
-from myus.utils.enum.i18n import Currency, Locale
+from myus.utils.enum.i18n import Locale
 from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
-from myus.utils.functions.map import locale_path
+from myus.utils.functions.map import country_currency, locale_path
 from myus.utils.functions.transaction import atomic_result
 from ._convert import get_payment_repository, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from ..dto.ledger import LedgerRowDTO
+from ..dto.plan import PlanPriceDTO
 from ..user.core import get_user_data
 
 
@@ -59,18 +60,19 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         log.warning("Payment checkout already subscribed", user_id=user_id, plan=plan_name)
         return Result.err(ValidationError("error.alreadySubscribed"))
 
+    currency = country_currency(user.profile.country)
     frontend_url = f"{settings.FRONTEND_URL}{locale_path(locale)}"
     data = CheckoutData(
         product_code=plan.name,
         description=plan.description,
-        price=plan_price(plan, Currency.JPY),
+        price=plan_price(plan, currency),
         payment_type=PaymentType.SUBSCRIPTION,
         customer=CustomerData(user_ulid=user.user.ulid, email=user.user.email),
         redirect=RedirectUrls(
             success_url=f"{frontend_url}/setting/payment/success",
             cancel_url=f"{frontend_url}/setting/payment/cancel",
         ),
-        marketplace=MarketplaceData(seller_id="", application_fee=Money(amount=0, currency=Currency.JPY)),
+        marketplace=MarketplaceData(seller_id="", application_fee=Money(amount=0, currency=currency)),
         locale=locale,
     )
 
@@ -112,6 +114,29 @@ def get_subscription(user_id: int) -> Result[SubscriptionData | None, FatalError
         return Result.ok(None)
 
     return Result.ok(current_subscriptions[0])
+
+
+@Result.shield_exception()
+def get_plan_prices(user_id: int) -> Result[list[PlanPriceDTO], FindError]:
+    subscription_ret = get_subscription(user_id)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
+
+    subscription = subscription_ret.ok_value
+    if subscription is not None:
+        currency = subscription.price.currency
+    else:
+        user_ret = get_user_data(user_id=user_id)
+        if user_ret.is_err:
+            return Result.err(user_ret.err_value)
+
+        user = user_ret.ok_value
+        if user is None:
+            return Result.err(NotFoundError("Not Found"))
+
+        currency = country_currency(user.profile.country)
+
+    return Result.ok([PlanPriceDTO(name=p.name, price=plan_price(p, currency)) for p in PLANS])
 
 
 @Result.shield_exception()
