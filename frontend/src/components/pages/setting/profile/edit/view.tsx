@@ -4,7 +4,7 @@ import { ProfileOut, ProfileIn } from 'types/internal/user'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
-import { Country, FetchError, GenderType } from 'utils/constants/enum'
+import { FetchError, GenderType } from 'utils/constants/enum'
 import { selectDate } from 'utils/functions/datetime'
 import { previewUrl } from 'utils/functions/file'
 import { getAge } from 'utils/functions/user'
@@ -47,7 +47,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const [values, setValues] = useState<ProfileOut>(profile)
 
   const { years, months, days } = selectDate()
-  const countryOptions = Object.values(Country).map((c) => ({ label: t(`country.${c}`), value: c }))
+  const countryOptions = Object.entries(t('country', { returnObjects: true })).map(([value, label]) => ({ label, value }))
   const prefectureOptions = prefectures.map((p) => ({ label: t(`prefecture.${p.key}`), value: p.value }))
   const avatarUrl = avatarPreview ?? profile.avatar
   const handleBack = () => router.push('/setting/profile')
