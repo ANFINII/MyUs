@@ -1,6 +1,6 @@
 from myus.utils.common.result import Result, ValidationError
-from myus.utils.constants.plan import get_plan
 from .data import SubscriptionData
+from ..plan import get_plan
 
 
 def validate(obj: SubscriptionData) -> Result[None, ValidationError]:
