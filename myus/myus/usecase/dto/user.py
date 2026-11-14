@@ -37,6 +37,7 @@ class SignupDTO:
     month: int
     day: int
     gender: GenderType
+    country: Country
 
 
 @dataclass(frozen=True, slots=True)

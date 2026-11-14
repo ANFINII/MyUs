@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SignupIn } from 'types/internal/auth'
 import { getSignupVerify, postSignup } from 'api/internal/auth'
-import { FetchError, GenderType } from 'utils/constants/enum'
+import { Country, FetchError, GenderType } from 'utils/constants/enum'
 import { nowDate, selectDate } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -32,6 +32,7 @@ const initSignup: SignupIn = {
   month: 6,
   day: 15,
   gender: GenderType.Male,
+  country: Country.Jp,
 }
 
 export default function Signup(): React.JSX.Element {
@@ -40,10 +41,11 @@ export default function Signup(): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<SignupIn>(initSignup)
+  const [values, setValues] = useState<SignupIn>({ ...initSignup, country: router.locale === 'en' ? Country.Us : Country.Jp })
   const [isVerified, setIsVerified] = useState<boolean>(false)
 
   const { years, months, days } = selectDate()
+  const countryOptions = Object.entries(t('country', { returnObjects: true })).map(([value, label]) => ({ label, value }))
   const handleBack = () => router.push('/account/login')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -119,6 +121,11 @@ export default function Signup(): React.JSX.Element {
                       <Radio key={key} name="gender" label={t(`gender.${value}`)} value={value} checked={value === values.gender} onChange={handleInput} />
                     ))}
                   </HStack>
+                </VStack>
+
+                <VStack gap="4">
+                  <p>{t('account.signup.country')}</p>
+                  <SelectBox name="country" value={values.country} options={countryOptions} onChange={handleSelect} />
                 </VStack>
               </VStack>
 

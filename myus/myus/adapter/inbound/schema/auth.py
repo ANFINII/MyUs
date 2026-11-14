@@ -1,5 +1,6 @@
 from typing import Annotated
 from pydantic import BaseModel, Field
+from myus.utils.enum.i18n import Country
 from myus.utils.enum.user import GenderType
 
 
@@ -25,6 +26,7 @@ class SignupIn(BaseModel):
     month: int
     day: int
     gender: GenderType
+    country: Country
 
 
 class SignupVerifyOut(BaseModel):
