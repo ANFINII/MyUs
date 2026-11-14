@@ -7,7 +7,7 @@ from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.picture.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..common import distinct_queryset, filter_q_list, sort_queryset
+from ..common import distinct_queryset, filter_q_list, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
@@ -20,11 +20,7 @@ class PictureRepository(PictureInterface):
 
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
-        qs = Picture.objects.filter(*filter_q_list(filter))
-        qs = distinct_queryset(qs, filter)
-        qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend)
-        qs = qs.order_by(order_by_key)
-        qs = qs[page.offset:page.offset + page.limit]
+        qs = get_ids_queryset(Picture.objects.all(), filter, sort, page)
         return Result.ok(list(qs.values_list("id", flat=True)))
 
     @Result.shield_exception()

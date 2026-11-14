@@ -5,7 +5,7 @@ from django.db.models.functions import Now
 from django.db.models.query import QuerySet
 from django.utils import timezone
 from myus.db.models.subscribe import Subscribe
-from myus.domain.media.common import FilterOption, SortOption, SortType
+from myus.domain.media.common import FilterOption, PageOption, SortOption, SortType
 
 
 RECOMMEND_DAYS = 200
@@ -60,7 +60,7 @@ def distinct_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
     return qs
 
 
-def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False) -> tuple[QuerySet[T], str]:
+def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False) -> QuerySet[T]:
     if sort.sort_type == SortType.SCORE:
         like_count = Count("like", distinct=True)
         if is_recommend:
@@ -81,4 +81,11 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False)
         key = sort.sort_type.name.lower()
 
     order_by_key = key if sort.is_asc else f"-{key}"
-    return qs, order_by_key
+    return qs.order_by(order_by_key)
+
+
+def get_ids_queryset(qs: QuerySet[T], filter: FilterOption, sort: SortOption, page: PageOption) -> QuerySet[T]:
+    qs = qs.filter(*filter_q_list(filter))
+    qs = distinct_queryset(qs, filter)
+    qs = sort_queryset(qs, sort, filter.is_recommend)
+    return qs[page.offset:page.offset + page.limit]
