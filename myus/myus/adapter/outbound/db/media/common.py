@@ -60,7 +60,7 @@ def distinct_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
     return qs
 
 
-def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False, user_id: int | None = None) -> tuple[QuerySet[T], str]:
+def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False) -> tuple[QuerySet[T], str]:
     if sort.sort_type == SortType.SCORE:
         like_count = Count("like", distinct=True)
         if is_recommend:
@@ -68,6 +68,7 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False,
             score_expr = ExpressionWrapper(like_count * 1000.0 / (F("read") + 1) / days_since, output_field=FloatField())
         else:
             base = F("read") + like_count * 10 + F("read") * like_count / (F("read") + 1) * 20
+            user_id = sort.user_id
             if user_id is not None:
                 is_subscribed = Exists(Subscribe.objects.filter(user_id=user_id, channel=OuterRef("channel"), is_subscribe=True))
                 multiplier = Case(When(is_subscribed, then=Value(SUBSCRIBE_BOOST)), default=Value(1.0), output_field=FloatField())

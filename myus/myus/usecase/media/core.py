@@ -515,13 +515,13 @@ def get_recommend(limit: int, search: str) -> Result[HomeDTO, FatalError]:
 def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
     repo = injector.get(VideoInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
-    sort = SortOption(sort_type=SortType.SCORE)
+    sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -545,13 +545,13 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
     repo = injector.get(MusicInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
-    sort = SortOption(sort_type=SortType.SCORE)
+    sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -569,13 +569,13 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
     repo = injector.get(BlogInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
-    sort = SortOption(sort_type=SortType.SCORE)
+    sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -593,13 +593,13 @@ def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
 def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
     repo = injector.get(ComicInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
-    sort = SortOption(sort_type=SortType.SCORE)
+    sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -622,13 +622,13 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
     repo = injector.get(PictureInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
-    sort = SortOption(sort_type=SortType.SCORE)
+    sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -646,13 +646,13 @@ def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 
 def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
     repo = injector.get(ChatInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
-    sort = SortOption(sort_type=SortType.SCORE)
+    sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset), user_id)
+    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

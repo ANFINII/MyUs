@@ -19,10 +19,10 @@ class BlogRepository(BlogInterface):
         return Blog.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         qs = Blog.objects.filter(*filter_q_list(filter))
         qs = distinct_queryset(qs, filter)
-        qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend, user_id)
+        qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend)
         qs = qs.order_by(order_by_key)
         qs = qs[page.offset:page.offset + page.limit]
         return Result.ok(list(qs.values_list("id", flat=True)))
