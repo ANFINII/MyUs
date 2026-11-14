@@ -14,7 +14,6 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
 from myus.utils.constants.auth import LOGIN_FAILURE_LIMIT
-from myus.utils.enum.i18n import Country
 from myus.utils.enum.payment import CancelError
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.auth import add_failure, clear_failures, get_failure_count
@@ -207,7 +206,7 @@ def signup_user(input: SignupDTO) -> Result[None, FatalError]:
             gender=input.gender,
             birthday=date(year=input.year, month=input.month, day=input.day),
             phone="",
-            country=Country.JP,
+            country=input.country,
             postal_code="",
             prefecture="",
             city="",

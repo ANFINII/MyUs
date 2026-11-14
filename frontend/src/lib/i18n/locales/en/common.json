@@ -388,6 +388,7 @@
       "nickname": "Display name",
       "birthday": "Date of birth",
       "gender": "Gender",
+      "country": "Country/region",
       "agreement": "By sending, you agree to the following.",
       "submit": "Sign up"
     },

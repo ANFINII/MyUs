@@ -385,6 +385,7 @@
       "nickname": "投稿者名",
       "birthday": "生年月日",
       "gender": "性別",
+      "country": "国/地域",
       "agreement": "送信すると、次の内容に同意したものとみなします。",
       "submit": "アカウント登録"
     },

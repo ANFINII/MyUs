@@ -1,4 +1,4 @@
-import { GenderType } from 'utils/constants/enum'
+import { Country, GenderType } from 'utils/constants/enum'
 
 export interface LoginIn {
   username: string
@@ -18,6 +18,7 @@ export interface SignupIn {
   month: number
   day: number
   gender: GenderType
+  country: Country
 }
 
 export interface SignupVerifyOut {
