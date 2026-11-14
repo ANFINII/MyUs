@@ -5,7 +5,7 @@ from django.db.models.functions import Now
 from django.db.models.query import QuerySet
 from django.utils import timezone
 from myus.db.models.subscribe import Subscribe
-from myus.domain.media.common import ExcludeOption, FilterOption, SortOption, SortType
+from myus.domain.media.common import FilterOption, SortOption, SortType
 
 
 RECOMMEND_DAYS = 200
@@ -27,7 +27,7 @@ def filter_search(search: str) -> Q:
     return Q(title__icontains=search) | Q(hashtag__name=search)
 
 
-def filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) -> list[Q]:
+def filter_q_list(filter: FilterOption) -> list[Q]:
     q_list: list[Q] = []
     if filter.ulid:
         q_list.append(Q(ulid=filter.ulid))
@@ -49,8 +49,8 @@ def filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) ->
         q_list.append(filter_recommend())
     if filter.search:
         q_list.append(filter_search(filter.search))
-    if exclude and exclude.id:
-        q_list.append(~Q(id=exclude.id))
+    if filter.exclude_id:
+        q_list.append(~Q(id=filter.exclude_id))
     return q_list
 
 

@@ -243,7 +243,7 @@ if ret.is_err:
   - `bulk_save`で表せない更新：加算・切り替え・既読など（`save_read`・`save_count`・`save_follow_count`・`media_like`・`comment_like`、通知の`delete_by_user`・`confirm`）
   - 一覧に付ける判定：`is_liked`・`get_liked_ids`
   - 認証：`UserInterface.authenticate`
-  - メディア・広告の`get_ids(filter, exclude, sort, page, user_id)`：ページング（`PageOption`）とスコア順の`user_id`が要るメディア共通の形。広告はメディアの種類ではないので、検索の条件（`FilterOption`・`ExcludeOption`・`PageOption`・`SortOption`・`SortType`）は`domain/advertise/interface.py`に広告用を置く（広告にはスコアがないので`SortType`は`ID`・`CREATED`だけ。`FilterOption`に広告の種類の`advertise_type`を持つ）
+  - メディア・広告の`get_ids(filter, sort, page, user_id)`：ページング（`PageOption`）とスコア順の`user_id`が要るメディア共通の形。広告はメディアの種類ではないので、検索の条件（`FilterOption`・`PageOption`・`SortOption`・`SortType`）は`domain/advertise/interface.py`に広告用を置く（広告にはスコアがないので`SortType`は`ID`・`CREATED`だけ。`FilterOption`に広告の種類の`advertise_type`を持つ）。詳細ページで今のメディアを一覧から外すときは、メディアの`FilterOption`の`exclude_id`を使う（通知の`exclude_user_id`と同じ形。条件のためだけの`ExcludeOption`は作らない）
   - カテゴリ・ハッシュタグの`bulk_save(media_type, media_id, objs)`：メディアへの紐づけの保存
   - 外部サービスの窓口（`PaymentInterface`）：DBのリポジトリではないため`get_ids`・`bulk_get`を持たない
 
@@ -380,4 +380,5 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-13: 広告の検索の条件をメディアと分け、`domain/advertise/interface.py` に広告用の `FilterOption`・`ExcludeOption`・`PageOption` を置いた
 - 2026-11-13: `utils/plan.py` を `utils/constants/plan.py` に移し、`PlanDef` を `Plan` にした
 - 2026-11-13: ディレクトリ構成の見直し（#1289〜#1310）を終え、構成の全体と方針を `architecture.md` に、決めていないことを `roadmap.md` にまとめた
+- 2026-11-14: `ExcludeOption` をなくし、メディアの `FilterOption` に `exclude_id` を足した。`get_ids` は `(filter, sort, page, user_id)` になった
 - 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）

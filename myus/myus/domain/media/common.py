@@ -20,11 +20,7 @@ class FilterOption:
     category_id: int = 0
     is_recommend: bool = False
     search: str = ""
-
-
-@dataclass(frozen=True, slots=True)
-class ExcludeOption:
-    id: int = 0
+    exclude_id: int = 0
 
 
 @dataclass(frozen=True, slots=True)

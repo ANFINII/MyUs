@@ -4,7 +4,7 @@ from myus.db.models.media import Chat
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.chat.validation import validate
-from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
 from ..common import distinct_queryset, filter_q_list, sort_queryset
@@ -23,8 +23,8 @@ class ChatRepository(ChatInterface):
         )
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
-        qs = Chat.objects.filter(*filter_q_list(filter, exclude))
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+        qs = Chat.objects.filter(*filter_q_list(filter))
         qs = distinct_queryset(qs, filter)
         qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend, user_id)
         qs = qs.order_by(order_by_key)

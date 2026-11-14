@@ -69,7 +69,7 @@ flowchart LR
 | `usecase/dto/` | usecase の入出力の DTO（dataclass）。adapter/inbound も usecase の結果を受け取るのに使う |
 | `domain/<ドメイン>/` | repository の interface（`interface.py`）と Data（`data.py`）、ルール（`validation.py`）。I/O を持たない |
 | `domain/<ドメイン>/<集約>/` | Event Sourcing の集約（状態・イベント・判断・適用）。I/O を持たない関数。いまは `domain/payment/subscription/` |
-| `domain/media/common.py` | メディアの検索の条件（`FilterOption`・`SortOption`・`ExcludeOption`・`PageOption`） |
+| `domain/media/common.py` | メディアの検索の条件（`FilterOption`・`SortOption`・`PageOption`） |
 | `injectors/` | interface と実装の対応付け（`module.py`） |
 | `utils/` | どの層からも使う部品。`common/`（`Result`・logger）・`constants/`・`enum/`・`functions/`（汎用の関数は `functions/common.py`） |
 | `db/` | Django のモデル（`models/`）・マイグレーション（git の管理外）・管理コマンド（`management/commands/`）・管理画面（`admin.py`） |

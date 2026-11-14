@@ -1,7 +1,7 @@
 from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from myus.db.models.media import Picture
-from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.picture.validation import validate
@@ -19,8 +19,8 @@ class PictureRepository(PictureInterface):
         return Picture.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
-        qs = Picture.objects.filter(*filter_q_list(filter, exclude))
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+        qs = Picture.objects.filter(*filter_q_list(filter))
         qs = distinct_queryset(qs, filter)
         qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend, user_id)
         qs = qs.order_by(order_by_key)

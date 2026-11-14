@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime
 from ninja import UploadedFile
 from myus.domain.advertise.data import AdvertiseData
-from myus.domain.advertise.interface import AdvertiseInterface, ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
@@ -28,7 +28,7 @@ def get_manage_advertises(user_id: int, search: str, limit: int = PAGE_SIZE, off
         return Result.err(total_ret.err_value)
 
     total = total_ret.ok_value
-    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -49,7 +49,7 @@ def get_manage_advertises(user_id: int, search: str, limit: int = PAGE_SIZE, off
 @Result.shield_exception()
 def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, FindError]:
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -141,7 +141,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseDTO, image:
         return Result.err(upload_ret.err_value)
 
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -188,7 +188,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseDTO, image:
 @Result.shield_exception()
 def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

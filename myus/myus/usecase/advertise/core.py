@@ -2,7 +2,7 @@ import random
 from dataclasses import replace
 from django.utils import timezone
 from myus.domain.advertise.data import AdvertiseData
-from myus.domain.advertise.interface import AdvertiseInterface, ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, NotFoundError, Result
@@ -35,7 +35,7 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
         return Result.ok([])
 
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(owner_id=user.user.id, publish=True), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(owner_id=user.user.id, publish=True), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -70,7 +70,7 @@ def get_global_advertises(user_id: int | None) -> Result[list[AdvertiseData], Fa
             return Result.ok([])
 
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -95,7 +95,7 @@ def get_global_advertises(user_id: int | None) -> Result[list[AdvertiseData], Fa
 @Result.shield_exception()
 def increment_advertise_read(ulid: str, ip_address: str) -> Result[int, FindError]:
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=True), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime
 from myus.domain.comment.data import CommentData
 from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
-from myus.domain.media.common import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FindError, ForbiddenError, NotFoundError, Result
@@ -21,7 +21,7 @@ from ..user._convert import get_author_data
 def create_comment(user_id: int, input: CommentCreateDTO) -> Result[CommentDTO, FindError]:
     repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
-    media_ids_ret = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    media_ids_ret = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), MediaSortOption(), PageOption())
     if media_ids_ret.is_err:
         return Result.err(media_ids_ret.err_value)
 

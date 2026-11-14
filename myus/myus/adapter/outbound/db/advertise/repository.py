@@ -2,7 +2,7 @@ from django.db.models import F, Q
 from django.db.models.query import QuerySet
 from myus.db.models.common import Advertise
 from myus.domain.advertise.data import AdvertiseData
-from myus.domain.advertise.interface import AdvertiseInterface, ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
 from ..common import get_save_new_ids, sort_ids
@@ -11,7 +11,7 @@ from ..common import get_save_new_ids, sort_ids
 ADVERTISE_FIELDS = ["author_id", "title", "url", "content", "image", "video", "type", "period", "publish", "updated"]
 
 
-def _filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) -> list[Q]:
+def _filter_q_list(filter: FilterOption) -> list[Q]:
     q_list: list[Q] = []
     if filter.ulid:
         q_list.append(Q(ulid=filter.ulid))
@@ -25,8 +25,6 @@ def _filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) -
         q_list.append(Q(title__icontains=filter.search))
     if filter.advertise_type:
         q_list.append(Q(type=filter.advertise_type))
-    if exclude and exclude.id:
-        q_list.append(~Q(id=exclude.id))
     return q_list
 
 
@@ -35,8 +33,8 @@ class AdvertiseRepository(AdvertiseInterface):
         return Advertise.objects.all()
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
-        qs = Advertise.objects.filter(*_filter_q_list(filter, exclude))
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+        qs = Advertise.objects.filter(*_filter_q_list(filter))
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = qs.order_by(order_by_key)
