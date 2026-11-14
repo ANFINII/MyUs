@@ -72,6 +72,13 @@
     "Female": "女性",
     "Secret": "秘密"
   },
+  "country": {
+    "Jp": "日本",
+    "Us": "アメリカ",
+    "Gb": "イギリス",
+    "Cn": "中国",
+    "Kr": "韓国"
+  },
   "prefecture": {
     "hokkaido": "北海道",
     "aomori": "青森県",
@@ -308,6 +315,7 @@
       "ageValue": "{{count}}歳",
       "gender": "性別",
       "phone": "電話番号",
+      "country": "国",
       "postalCode": "郵便番号",
       "autoAddress": "住所自動入力",
       "addressNotFound": "住所が取得できませんでした!",

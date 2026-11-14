@@ -1,4 +1,4 @@
-from ..enum.i18n import Currency
+from ..enum.i18n import Country, Currency
 from ..enum.payment import PaymentProvider, SubscriptionStatus, PaymentStatus, LedgerEntryType, PayoutStatus, WebhookEventType
 from ..enum.user import GenderType, PlanName
 
@@ -8,6 +8,7 @@ ADVERTISE_TYPE_CHOICES = (("all", "全体"), ("one", "個別"))
 
 PLAN_CHOICES = [(p, p) for p in PlanName]
 CURRENCY_CHOICES = [(c, c) for c in Currency]
+COUNTRY_CHOICES = [(c, c) for c in Country]
 PROVIDER_CHOICES = [(p, p) for p in PaymentProvider]
 PAYMENT_STATUS_CHOICES = [(s, s) for s in PaymentStatus]
 LEDGER_ENTRY_TYPE_CHOICES = [(t, t) for t in LedgerEntryType]

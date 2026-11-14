@@ -34,6 +34,14 @@ export enum Currency {
   Krw = 'KRW',
 }
 
+export enum Country {
+  Jp = 'Jp',
+  Us = 'Us',
+  Gb = 'Gb',
+  Cn = 'Cn',
+  Kr = 'Kr',
+}
+
 export enum Locale {
   Ja = 'Ja',
   En = 'En',

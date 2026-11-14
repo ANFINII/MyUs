@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from myus.utils.enum.i18n import Country
 from myus.utils.enum.user import GenderType
 
 
@@ -64,6 +65,7 @@ class SettingProfileDTO:
     month: int
     day: int
     phone: str
+    country_code: Country
     postal_code: str
     prefecture: str
     city: str

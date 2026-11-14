@@ -72,6 +72,13 @@
     "Female": "Female",
     "Secret": "Prefer not to say"
   },
+  "country": {
+    "Jp": "Japan",
+    "Us": "United States",
+    "Gb": "United Kingdom",
+    "Cn": "China",
+    "Kr": "South Korea"
+  },
   "prefecture": {
     "hokkaido": "Hokkaido",
     "aomori": "Aomori",
@@ -312,6 +319,7 @@
       "ageValue_other": "{{count}} years old",
       "gender": "Gender",
       "phone": "Phone number",
+      "country": "Country",
       "postalCode": "Postal code",
       "autoAddress": "Fill in address",
       "addressNotFound": "Couldn't find an address!",
