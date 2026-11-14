@@ -75,7 +75,7 @@ class Profile(models.Model):
     birthday     = models.DateField()
     gender       = models.CharField(choices=GENDER_CHOICES, max_length=6)
     phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
-    country_code = models.CharField(max_length=255, choices=COUNTRY_CHOICES, default=Country.JP)
+    country      = models.CharField(max_length=255, choices=COUNTRY_CHOICES, default=Country.JP)
     postal_code  = models.CharField(max_length=255, blank=True)
     prefecture   = models.CharField(max_length=255, blank=True)
     city         = models.CharField(max_length=255, blank=True)

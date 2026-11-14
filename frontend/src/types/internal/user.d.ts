@@ -33,7 +33,7 @@ export interface ProfileOut {
   day: number
   gender: GenderType
   phone: string
-  countryCode: Country
+  country: Country
   postalCode: string
   prefecture: string
   city: string
@@ -53,7 +53,7 @@ export interface ProfileIn {
   month: number
   day: number
   phone: string
-  countryCode: Country
+  country: Country
   postalCode: string
   prefecture: string
   city: string

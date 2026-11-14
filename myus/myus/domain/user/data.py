@@ -33,7 +33,7 @@ class ProfileData:
     gender: str
     birthday: date
     phone: str
-    country_code: Country
+    country: Country
     postal_code: str
     prefecture: str
     city: str

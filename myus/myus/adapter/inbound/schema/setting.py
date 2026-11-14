@@ -16,7 +16,7 @@ class SettingProfileIn(BaseModel):
     month: int
     day: int
     phone: Annotated[str, Field(max_length=15)]
-    country_code: Country
+    country: Country
     postal_code: Annotated[str, Field(max_length=255)]
     prefecture: Annotated[str, Field(max_length=255)]
     city: Annotated[str, Field(max_length=255)]
@@ -56,7 +56,7 @@ class SettingProfileOut(BaseModel):
     day: int
     gender: str
     phone: str
-    country_code: Country
+    country: Country
     postal_code: str
     prefecture: str
     city: str

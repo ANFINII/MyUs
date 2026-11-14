@@ -53,7 +53,7 @@ class SettingProfileAPI:
             day=profile.birthday.day,
             gender=profile.gender,
             phone=profile.phone,
-            country_code=profile.country_code,
+            country=profile.country,
             postal_code=profile.postal_code,
             prefecture=profile.prefecture,
             city=profile.city,

@@ -207,7 +207,7 @@ def signup_user(input: SignupDTO) -> Result[None, FatalError]:
             gender=input.gender,
             birthday=date(year=input.year, month=input.month, day=input.day),
             phone="",
-            country_code=Country.JP,
+            country=Country.JP,
             postal_code="",
             prefecture="",
             city="",

@@ -163,7 +163,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
           <Input type="tel" name="phone" value={values.phone} maxLength={15} required error={error} onChange={handleInput} />
         </TableRow>
         <TableRow label={t('setting.profile.country')}>
-          <SelectBox name="countryCode" value={values.countryCode} options={countryOptions} onChange={handleSelect} />
+          <SelectBox name="country" value={values.country} options={countryOptions} onChange={handleSelect} />
         </TableRow>
         <TableRow label={t('setting.profile.postalCode')}>
           <div className="d_flex">

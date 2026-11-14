@@ -44,7 +44,7 @@ admin.site.disable_action("delete_selected")
 
 class ProfileInline(admin.StackedInline):
     model = Profile
-    readonly_fields = ("country_code",)
+    readonly_fields = ("country",)
     verbose_name = "プロファイル情報"
 
     def has_delete_permission(self, request, obj=None):
