@@ -1,4 +1,4 @@
-import { GenderType, MediaType, NotificationObjectType, NotificationType } from 'utils/constants/enum'
+import { Country, GenderType, MediaType, NotificationObjectType, NotificationType } from 'utils/constants/enum'
 
 export interface UserMe {
   avatar: string
@@ -33,7 +33,7 @@ export interface ProfileOut {
   day: number
   gender: GenderType
   phone: string
-  countryCode: string
+  country: Country
   postalCode: string
   prefecture: string
   city: string
@@ -53,7 +53,7 @@ export interface ProfileIn {
   month: number
   day: number
   phone: string
-  countryCode: string
+  country: Country
   postalCode: string
   prefecture: string
   city: string

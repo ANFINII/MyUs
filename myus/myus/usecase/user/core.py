@@ -86,7 +86,7 @@ def update_profile(user_id: int, input: SettingProfileDTO, avatar_file: Uploaded
         gender=input.gender,
         birthday=datetime.date(year=input.year, month=input.month, day=input.day),
         phone=input.phone,
-        country_code="JP",
+        country=input.country,
         postal_code=input.postal_code,
         prefecture=input.prefecture,
         city=input.city,

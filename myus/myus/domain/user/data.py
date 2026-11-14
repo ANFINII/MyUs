@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime
+from myus.utils.enum.i18n import Country
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,7 +33,7 @@ class ProfileData:
     gender: str
     birthday: date
     phone: str
-    country_code: str
+    country: Country
     postal_code: str
     prefecture: str
     city: str

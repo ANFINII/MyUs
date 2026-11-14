@@ -1,6 +1,7 @@
 from datetime import date
 from typing import Annotated
 from pydantic import BaseModel, Field
+from myus.utils.enum.i18n import Country
 from myus.utils.enum.user import GenderType
 
 
@@ -15,6 +16,7 @@ class SettingProfileIn(BaseModel):
     month: int
     day: int
     phone: Annotated[str, Field(max_length=15)]
+    country: Country
     postal_code: Annotated[str, Field(max_length=255)]
     prefecture: Annotated[str, Field(max_length=255)]
     city: Annotated[str, Field(max_length=255)]
@@ -54,7 +56,7 @@ class SettingProfileOut(BaseModel):
     day: int
     gender: str
     phone: str
-    country_code: str
+    country: Country
     postal_code: str
     prefecture: str
     city: str

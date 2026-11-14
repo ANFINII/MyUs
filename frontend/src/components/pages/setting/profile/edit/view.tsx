@@ -47,6 +47,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const [values, setValues] = useState<ProfileOut>(profile)
 
   const { years, months, days } = selectDate()
+  const countryOptions = Object.entries(t('country', { returnObjects: true })).map(([value, label]) => ({ label, value }))
   const prefectureOptions = prefectures.map((p) => ({ label: t(`prefecture.${p.key}`), value: p.value }))
   const avatarUrl = avatarPreview ?? profile.avatar
   const handleBack = () => router.push('/setting/profile')
@@ -160,6 +161,9 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
         </TableRow>
         <TableRow label={t('setting.profile.phone')}>
           <Input type="tel" name="phone" value={values.phone} maxLength={15} required error={error} onChange={handleInput} />
+        </TableRow>
+        <TableRow label={t('setting.profile.country')}>
+          <SelectBox name="country" value={values.country} options={countryOptions} onChange={handleSelect} />
         </TableRow>
         <TableRow label={t('setting.profile.postalCode')}>
           <div className="d_flex">

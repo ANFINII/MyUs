@@ -3,7 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
-from myus.utils.constants.choice import GENDER_CHOICES, PLAN_CHOICES
+from myus.utils.constants.choice import COUNTRY_CHOICES, GENDER_CHOICES, PLAN_CHOICES
+from myus.utils.enum.i18n import Country
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.file import avatar_upload
 
@@ -74,7 +75,7 @@ class Profile(models.Model):
     birthday     = models.DateField()
     gender       = models.CharField(choices=GENDER_CHOICES, max_length=6)
     phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
-    country_code = models.CharField(max_length=255, default="JP")
+    country      = models.CharField(max_length=255, choices=COUNTRY_CHOICES, default=Country.JP)
     postal_code  = models.CharField(max_length=255, blank=True)
     prefecture   = models.CharField(max_length=255, blank=True)
     city         = models.CharField(max_length=255, blank=True)

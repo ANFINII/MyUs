@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
+from myus.utils.enum.i18n import Country
 from myus.utils.enum.media import MediaType
 
 
@@ -44,7 +45,7 @@ def profile_data(profile: Profile) -> ProfileData:
         gender=profile.gender,
         birthday=profile.birthday,
         phone=profile.phone,
-        country_code=profile.country_code,
+        country=Country(profile.country),
         postal_code=profile.postal_code,
         prefecture=profile.prefecture,
         city=profile.city,
@@ -111,7 +112,7 @@ def marshal_profile_data(user: User, data: UserAllData) -> Profile:
         gender=profile.gender,
         birthday=profile.birthday,
         phone=profile.phone,
-        country_code=profile.country_code,
+        country=profile.country,
         postal_code=profile.postal_code,
         prefecture=profile.prefecture,
         city=profile.city,

@@ -68,6 +68,9 @@ export default function SettingProfile(props: Props): React.JSX.Element {
         <TableRow isIndent label={t('setting.profile.phone')}>
           {profile.phone}
         </TableRow>
+        <TableRow isIndent label={t('setting.profile.country')}>
+          {t(`country.${profile.country}`)}
+        </TableRow>
         <TableRow isIndent label={t('setting.profile.postalCode')}>
           {profile.postalCode}
         </TableRow>
