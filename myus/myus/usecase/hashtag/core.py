@@ -1,6 +1,6 @@
 from myus.domain.hashtag.data import HashtagData
 from myus.domain.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType
-from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
@@ -30,7 +30,7 @@ def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
 def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, AccessError]:
     media_repo = get_media_repository(media_type)
     repo = injector.get(HashtagInterface)
-    media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
+    media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), SortOption(), PageOption())
     if media_ids_ret.is_err:
         return Result.err(media_ids_ret.err_value)
 

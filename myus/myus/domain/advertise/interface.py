@@ -22,11 +22,6 @@ class FilterOption:
 
 
 @dataclass(frozen=True, slots=True)
-class ExcludeOption:
-    id: int = 0
-
-
-@dataclass(frozen=True, slots=True)
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.ID
@@ -40,7 +35,7 @@ class PageOption:
 
 class AdvertiseInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod

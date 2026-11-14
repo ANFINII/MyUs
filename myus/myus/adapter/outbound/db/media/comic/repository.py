@@ -5,7 +5,7 @@ from myus.db.models.media import Comic, ComicPage
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
 from myus.domain.media.comic.validation import validate
-from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
 from ..common import distinct_queryset, filter_q_list, sort_queryset
@@ -21,8 +21,8 @@ class ComicRepository(ComicInterface):
         return Comic.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category", pages_prefetch).annotate(like_count=Count("like"))
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
-        qs = Comic.objects.filter(*filter_q_list(filter, exclude))
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+        qs = Comic.objects.filter(*filter_q_list(filter))
         qs = distinct_queryset(qs, filter)
         qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend, user_id)
         qs = qs.order_by(order_by_key)

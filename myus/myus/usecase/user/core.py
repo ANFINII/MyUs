@@ -2,7 +2,7 @@ import datetime
 from dataclasses import replace
 from ninja import UploadedFile
 from myus.domain.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
-from myus.domain.media.common import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.domain.user.data import ProfileData, UserAllData, UserNotificationData
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
 from myus.injectors.container import injector
@@ -170,7 +170,7 @@ def update_notification(user_id: int, input: SettingNotificationDTO) -> Result[N
 def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO, FindError]:
     repo = injector.get(UserInterface)
     media_repo = get_media_repository(media_type)
-    ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), MediaSortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

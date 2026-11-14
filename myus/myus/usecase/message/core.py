@@ -1,7 +1,7 @@
 from dataclasses import replace
 from datetime import datetime
 from myus.domain.media.chat.interface import ChatInterface
-from myus.domain.media.common import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from myus.domain.message.data import MessageData
 from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
 from myus.injectors.container import injector
@@ -50,7 +50,7 @@ def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
 @Result.shield_exception()
 def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> Result[MessageDTO, FindError]:
     chat_repo = injector.get(ChatInterface)
-    chat_ids_ret = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    chat_ids_ret = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), MediaSortOption(), PageOption())
     if chat_ids_ret.is_err:
         return Result.err(chat_ids_ret.err_value)
 

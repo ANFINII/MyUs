@@ -13,6 +13,7 @@ class SortType(Enum):
 class FilterOption:
     ulid: str = ""
     ulids: list[str] = field(default_factory=list)
+    exclude_id: int = 0
     publish: bool | None = None
     owner_id: int = 0
     channel_id: int = 0
@@ -20,11 +21,6 @@ class FilterOption:
     category_id: int = 0
     is_recommend: bool = False
     search: str = ""
-
-
-@dataclass(frozen=True, slots=True)
-class ExcludeOption:
-    id: int = 0
 
 
 @dataclass(frozen=True, slots=True)

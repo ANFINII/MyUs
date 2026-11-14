@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from myus.utils.common.result import FatalError, Result
 from .data import VideoData
-from ..common import ExcludeOption, FilterOption, PageOption, SortOption
+from ..common import FilterOption, PageOption, SortOption
 
 
 class VideoInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod

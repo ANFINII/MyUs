@@ -7,7 +7,7 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.common import ExcludeOption, FilterOption, PageOption, SortOption
+from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.picture.data import PictureData
@@ -39,7 +39,7 @@ def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: 
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -62,7 +62,7 @@ def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: 
 @Result.shield_exception()
 def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, FindError]:
     repo = injector.get(VideoInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -91,7 +91,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: U
         return Result.err(upload_ret.err_value)
 
     repo = injector.get(VideoInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -135,7 +135,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: U
 @Result.shield_exception()
 def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(VideoInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -160,7 +160,7 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -178,7 +178,7 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
 @Result.shield_exception()
 def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
     repo = injector.get(MusicInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -199,7 +199,7 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
 @Result.shield_exception()
 def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO) -> Result[None, WriteError]:
     repo = injector.get(MusicInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -240,7 +240,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO) -> Resul
 @Result.shield_exception()
 def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(MusicInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -265,7 +265,7 @@ def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: i
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -283,7 +283,7 @@ def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: i
 @Result.shield_exception()
 def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
     repo = injector.get(BlogInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -308,7 +308,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
         return Result.err(upload_ret.err_value)
 
     repo = injector.get(BlogInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -352,7 +352,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
 @Result.shield_exception()
 def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(BlogInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -377,7 +377,7 @@ def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: 
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -398,7 +398,7 @@ def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: 
 @Result.shield_exception()
 def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
     repo = injector.get(ComicInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -426,7 +426,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
         return Result.err(upload_ret.err_value)
 
     repo = injector.get(ComicInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -470,7 +470,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
 @Result.shield_exception()
 def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(ComicInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -495,7 +495,7 @@ def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -513,7 +513,7 @@ def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit
 @Result.shield_exception()
 def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, FindError]:
     repo = injector.get(PictureInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -538,7 +538,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateDTO, imag
         return Result.err(upload_ret.err_value)
 
     repo = injector.get(PictureInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -582,7 +582,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateDTO, imag
 @Result.shield_exception()
 def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(PictureInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -607,7 +607,7 @@ def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: i
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -623,7 +623,7 @@ def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: i
 @Result.shield_exception()
 def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
     repo = injector.get(ChatInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -643,7 +643,7 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
 @Result.shield_exception()
 def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateDTO) -> Result[None, WriteError]:
     repo = injector.get(ChatInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -687,7 +687,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateDTO) -> Result[
 @Result.shield_exception()
 def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(ChatInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), ExcludeOption(), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
