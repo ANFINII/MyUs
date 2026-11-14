@@ -35,6 +35,7 @@ export const apiSettingNotification = base + '/setting/notification'
 
 // Payment
 export const apiPaymentSubscription = base + '/payment/subscription'
+export const apiPaymentPlans = base + '/payment/plans'
 export const apiPaymentCheckout = base + '/payment/checkout'
 export const apiPaymentCancel = base + '/payment/cancel'
 export const apiPaymentCancelRevoke = base + '/payment/cancel/revoke'

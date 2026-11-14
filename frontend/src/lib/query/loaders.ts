@@ -27,6 +27,7 @@ import {
   manageVideosQuery,
   musicQuery,
   musicsQuery,
+  paymentPlansQuery,
   paymentSubscriptionQuery,
   pictureQuery,
   picturesQuery,
@@ -125,7 +126,7 @@ export const settingProfileLoader = ({ queryClient }: PageLoad<object>) => query
 export const settingMypageLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(settingMypageQuery()), queryClient.query(channelsQuery())])
 export const settingNotificationLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(settingNotificationQuery())
 export const settingPasswordLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery())
-export const settingPaymentLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(settingMypageQuery()), queryClient.query(paymentSubscriptionQuery())])
+export const settingPaymentLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(settingMypageQuery()), queryClient.query(paymentSubscriptionQuery()), queryClient.query(paymentPlansQuery())])
 
 export const manageLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery())
 export const manageVideoListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageVideosQuery(await manageListParams(queryClient, search)))
