@@ -1,5 +1,4 @@
 from dataclasses import replace
-from django_ulid.models import ulid
 from ninja import UploadedFile
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
@@ -7,6 +6,7 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidateError, WriteError
 from myus.utils.enum.upload import ImageUpload
+from myus.utils.functions.common import new_ulid
 from myus.utils.functions.media import save_upload, validate_uploads
 from ._convert import save_channel_data
 from ..dto.channel import ChannelDTO
@@ -60,12 +60,12 @@ def create_user_channel(user_id: int, input: ChannelDTO, avatar_file: UploadedFi
         return Result.err(upload_ret.err_value)
 
     repo = injector.get(ChannelInterface)
-    new_ulid = str(ulid.new())
-    avatar = save_upload(avatar_file, ImageUpload.CHANNEL, new_ulid) if avatar_file else ""
+    channel_ulid = new_ulid()
+    avatar = save_upload(avatar_file, ImageUpload.CHANNEL, channel_ulid) if avatar_file else ""
 
     data = ChannelData(
         id=0,
-        ulid=new_ulid,
+        ulid=channel_ulid,
         owner_id=user_id,
         owner_ulid="",
         avatar=avatar,
@@ -79,7 +79,7 @@ def create_user_channel(user_id: int, input: ChannelDTO, avatar_file: UploadedFi
     if ret.is_err:
         return Result.err(ret.err_value)
 
-    return Result.ok(new_ulid)
+    return Result.ok(channel_ulid)
 
 
 @Result.shield_exception()
