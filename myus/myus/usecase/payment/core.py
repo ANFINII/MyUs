@@ -8,6 +8,7 @@ from myus.domain.payment.event.data import PaymentEventData
 from myus.domain.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
+from myus.domain.payment.plan import get_plan, plan_price
 from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, WebhookVerifyResult
 from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
@@ -15,7 +16,6 @@ from myus.domain.payment.transaction.interface import TransactionInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
-from myus.utils.constants.plan import get_plan
 from myus.utils.enum.i18n import Currency, Locale
 from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
@@ -63,7 +63,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
     data = CheckoutData(
         product_code=plan.name,
         description=plan.description,
-        price=Money(amount=plan.price, currency=Currency.JPY),
+        price=plan_price(plan, Currency.JPY),
         payment_type=PaymentType.SUBSCRIPTION,
         customer=CustomerData(user_ulid=user.user.ulid, email=user.user.email),
         redirect=RedirectUrls(

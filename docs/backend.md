@@ -382,4 +382,5 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-13: ディレクトリ構成の見直し（#1289〜#1310）を終え、構成の全体と方針を `architecture.md` に、決めていないことを `roadmap.md` にまとめた
 - 2026-11-14: `ExcludeOption` をなくし、メディアの `FilterOption` に `exclude_id` を足した。`get_ids` は `(filter, sort, page, user_id)` になった
 - 2026-11-14: `get_ids` の `user_id` をメディアの `SortOption` に移した。`get_ids` は `(filter, sort, page)` になった
+- 2026-11-14: `utils/constants/plan.py` を `domain/payment/plan.py` に移し、`Plan` の価格を `prices: list[Money]`（円とドル）にした
 - 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
