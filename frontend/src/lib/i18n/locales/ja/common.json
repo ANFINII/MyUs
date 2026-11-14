@@ -431,7 +431,7 @@
       "ageValue": "{{count}}歳",
       "gender": "性別",
       "phone": "電話番号",
-      "country": "住んでいる国",
+      "country": "国/地域",
       "postalCode": "郵便番号",
       "autoAddress": "住所自動入力",
       "addressNotFound": "住所が取得できませんでした!",

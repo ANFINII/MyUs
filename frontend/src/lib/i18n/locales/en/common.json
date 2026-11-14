@@ -435,7 +435,7 @@
       "ageValue_other": "{{count}} years old",
       "gender": "Gender",
       "phone": "Phone number",
-      "country": "Country of residence",
+      "country": "Country/region",
       "postalCode": "Postal code",
       "autoAddress": "Fill in address",
       "addressNotFound": "Couldn't find an address!",
