@@ -302,6 +302,20 @@ flowchart TB
 | 帳簿 | 明細は追記だけ。売上・返金・決済手数料を符号付きの金額と消費税額で持つ |
 | イベントの形 | 保存した JSON スキーマと比べ、過去のイベントを読めなくなる変更を検査する |
 
+#### 通貨
+- 円とドルに対応する。ユーザーの国/地域（`Profile.country`）で決め、日本は円、それ以外はドル（`utils/functions/map.py` の `country_currency`）
+- 契約中は契約の通貨を使う。国/地域を変えても、契約中のプランの請求の通貨は変わらない。契約が無ければ国/地域で決める
+- 価格は `domain/payment/plan.py` の `Plan.prices`（通貨ごとの `Money`。金額は最小単位で、$3.99 は 399）。FE は `GET /payment/plans` から受け取り、価格を直書きしない
+- ドルの価格は、円の価格を為替で換算して端数を .99 にそろえた決まった値（1ドル＝150円前後で 550円 → $3.99）。為替が大きく動いたら見直す。Stripe の Price の金額を変えても、契約中の人の金額は変わらず、新しく契約する人から変わる。Stripe の Adaptive Pricing（請求のたびに為替で換算）は、価格が毎月変わり、画面に正確な金額を出せないので使わない
+- Stripe は Price ID（`STRIPE_PRICE_ID_*`）をそのまま使い、Price の `currency_options` に通貨ごとの金額を持たせる。checkout で `currency` を渡す。プラン変更は契約の通貨を引き継ぐ
+- 国/地域の候補は YouTube Premium の対象国・地域に中国を足した121（`Country`）
+
+通貨を足すときは次の3か所を変える。
+
+1. `domain/payment/plan.py` の各プランの `prices` に、その通貨の `Money` を足す
+2. `utils/functions/map.py` の `country_currency` に、国/地域 → 通貨を1行足す
+3. Stripe のダッシュボードで、4つの Price にその通貨の金額を足す
+
 #### PaymentEvent
 - 決済会社から届いたイベント（webhook）を1件ずつ追記する（本文・内容は更新・削除しない）。`provider` と `event_id` で一意。同じイベントが何度届いても1回だけ処理する
 - webhook は検証して記録したら 200 を返すだけにし、投影への反映は worker（`process_payment_events`）が古い順に行う
@@ -458,6 +472,7 @@ flowchart TB
 ### 国際化対応
 - カテゴリー/ハッシュタグの多言語対応
 - 日本語/英語の併記
+- 料金の通貨（円・ドル。国/地域で決める）
 
 ### スケーラビリティ
 - 決済のイベントの反映は worker（`myus_worker`）で非同期に行う
