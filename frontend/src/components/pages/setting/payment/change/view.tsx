@@ -35,6 +35,7 @@ export default function PaymentChange(props: Props): React.JSX.Element {
   const currentPlanName = mypage.plan
   const isChanged = activeName !== '' && activeName !== currentPlanName
   const priceMap = new Map(planPrices.map((p) => [p.name, p.price]))
+  const currency = planPrices[0]?.price.currency
 
   const handleBack = () => router.push('/setting/payment')
 
@@ -69,6 +70,8 @@ export default function PaymentChange(props: Props): React.JSX.Element {
             />
           ))}
         </div>
+
+        {currency && <p className={style.currency}>{t('setting.payment.currencyBySubscription', { currency: t(`currency.${currency}`) })}</p>}
 
         <div className={style.actions}>
           <Button color="green" name={t('setting.button.change')} disabled={!isChanged} loading={loading} onClick={handleSubmit} />

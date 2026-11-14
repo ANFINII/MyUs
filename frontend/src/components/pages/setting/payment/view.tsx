@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
-import { MypageOut } from 'types/internal/user'
+import { MypageOut, ProfileOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod } from 'api/internal/payment'
 import { FetchError, Locale } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
@@ -21,12 +21,13 @@ import { plans } from './plans'
 
 interface Props {
   mypage: MypageOut
+  profile: ProfileOut
   subscription: PaymentSubscriptionOut
   planPrices: PaymentPlanOut[]
 }
 
 export default function Payment(props: Props): React.JSX.Element {
-  const { mypage, subscription, planPrices } = props
+  const { mypage, profile, subscription, planPrices } = props
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -40,6 +41,7 @@ export default function Payment(props: Props): React.JSX.Element {
   const currentPlan = mypage.plan
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
   const priceMap = new Map(planPrices.map((p) => [p.name, p.price]))
+  const currency = planPrices[0]?.price.currency
   const isPaid = currentPlan !== 'Free'
   const isCanceled = isPaid && subscription.isCanceled
   const isPastDue = isPaid && subscription.isPastDue
@@ -112,6 +114,21 @@ export default function Payment(props: Props): React.JSX.Element {
             <PlanCard key={plan.name} plan={plan} price={priceMap.get(plan.name)} active={currentPlan === plan.name} disabled={isPaid} loading={selectedPlan === plan.name} onPurchase={handlePurchase} />
           ))}
         </div>
+
+        {currency && (
+          <p className={style.currency}>
+            {isPaid ? (
+              t('setting.payment.currencyBySubscription', { currency: t(`currency.${currency}`) })
+            ) : (
+              <>
+                {t('setting.payment.currencyByCountry', { country: t(`country.${profile.country}`), currency: t(`currency.${currency}`) })}
+                <Link href="/setting/profile/edit" className={style.currency_link}>
+                  {t('setting.payment.changeCountry')}
+                </Link>
+              </>
+            )}
+          </p>
+        )}
 
         {isCanceled && (
           <div className={style.actions}>
