@@ -10,8 +10,9 @@ from myus.utils.common.result import FatalError, FindError, InputError, NotFound
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload
+from myus.utils.functions.auth import has_weak_password
 from myus.utils.functions.media import save_upload, validate_uploads
-from myus.utils.functions.validation import has_birthday, has_email, has_number, has_password, has_username, has_weak_password
+from myus.utils.functions.validation import has_birthday, has_email, has_number, has_password, has_username
 from ._convert import save_user_data
 from ..dto.user import LikeDTO, SettingMyPageDTO, SettingNotificationDTO, SettingProfileDTO, SignupDTO
 from ..media._convert import get_media_repository

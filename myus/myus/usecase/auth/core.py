@@ -16,10 +16,10 @@ from myus.utils.common.result import FatalError, NotFoundError, Result, Validate
 from myus.utils.constants.auth import LOGIN_FAILURE_LIMIT
 from myus.utils.enum.payment import CancelError
 from myus.utils.enum.user import PlanName
-from myus.utils.functions.auth import add_failure, clear_failures, get_failure_count
+from myus.utils.functions.auth import add_failure, clear_failures, get_failure_count, has_weak_password
 from myus.utils.functions.token import access_token, is_revoked, password_reset_token, refresh_token, revoke, signup_token
 from myus.utils.functions.transaction import atomic_result
-from myus.utils.functions.validation import has_email, has_password, has_weak_password
+from myus.utils.functions.validation import has_email, has_password
 from ._convert import get_active_user_data, is_same_password, create_user_data
 from ..dto.user import PasswordChangeDTO, PasswordResetDTO, SignupDTO
 from ..payment.core import cancel_subscription
