@@ -128,6 +128,7 @@ def convert_stripe_params(input: CheckoutData) -> SessionCreateParams | Checkout
     return SessionCreateParams(
         mode=stripe_mode(input.payment_type),
         line_items=line_items,
+        currency=input.price.currency.value.lower(),
         success_url=input.redirect.success_url,
         cancel_url=input.redirect.cancel_url,
         client_reference_id=input.customer.user_ulid,
