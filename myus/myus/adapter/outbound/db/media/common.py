@@ -60,6 +60,11 @@ def distinct_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
     return qs
 
 
+def filter_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
+    qs = qs.filter(*filter_q_list(filter))
+    return distinct_queryset(qs, filter)
+
+
 def score_expression(sort: SortOption, is_recommend: bool) -> CombinedExpression:
     like_count = Count("like", distinct=True)
     if is_recommend:
@@ -90,7 +95,6 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False)
 
 
 def get_ids_queryset(qs: QuerySet[T], filter: FilterOption, sort: SortOption, page: PageOption) -> QuerySet[T]:
-    qs = qs.filter(*filter_q_list(filter))
-    qs = distinct_queryset(qs, filter)
+    qs = filter_queryset(qs, filter)
     qs = sort_queryset(qs, sort, filter.is_recommend)
     return qs[page.offset:page.offset + page.limit]

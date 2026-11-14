@@ -7,7 +7,7 @@ from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.picture.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..common import distinct_queryset, filter_q_list, get_ids_queryset
+from ..common import filter_queryset, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
@@ -53,8 +53,8 @@ class PictureRepository(PictureInterface):
 
     @Result.shield_exception()
     def count(self, filter: FilterOption) -> Result[int, FatalError]:
-        qs = Picture.objects.filter(*filter_q_list(filter))
-        return Result.ok(distinct_queryset(qs, filter).count())
+        qs = filter_queryset(Picture.objects.all(), filter)
+        return Result.ok(qs.count())
 
     @Result.shield_exception()
     def is_liked(self, media_id: int, user_id: int) -> Result[bool, FatalError]:
