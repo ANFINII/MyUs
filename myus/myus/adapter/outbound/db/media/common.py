@@ -1,6 +1,7 @@
 from datetime import timedelta
 from typing import TypeVar, cast
 from django.db.models import Case, Count, Exists, ExpressionWrapper, F, FloatField, Func, Model, OuterRef, Q, Value, When
+from django.db.models.expressions import CombinedExpression
 from django.db.models.functions import Now
 from django.db.models.query import QuerySet
 from django.utils import timezone
@@ -60,21 +61,25 @@ def distinct_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
     return qs
 
 
+def score_expression(sort: SortOption, is_recommend: bool) -> CombinedExpression:
+    like_count = Count("like", distinct=True)
+    if is_recommend:
+        days_since = DaysSince(F("created"), Now(), output_field=FloatField())
+        return like_count * 1000.0 / (F("read") + 1) / days_since
+
+    base = F("read") + like_count * 10 + F("read") * like_count / (F("read") + 1) * 20
+    user_id = sort.user_id
+    if user_id is None:
+        return base
+
+    is_subscribed = Exists(Subscribe.objects.filter(user_id=user_id, channel=OuterRef("channel"), is_subscribe=True))
+    multiplier = Case(When(is_subscribed, then=Value(SUBSCRIBE_BOOST)), default=Value(1.0), output_field=FloatField())
+    return base * multiplier
+
+
 def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False) -> QuerySet[T]:
     if sort.sort_type == SortType.SCORE:
-        like_count = Count("like", distinct=True)
-        if is_recommend:
-            days_since = DaysSince(F("created"), Now(), output_field=FloatField())
-            score_expr = ExpressionWrapper(like_count * 1000.0 / (F("read") + 1) / days_since, output_field=FloatField())
-        else:
-            base = F("read") + like_count * 10 + F("read") * like_count / (F("read") + 1) * 20
-            user_id = sort.user_id
-            if user_id is not None:
-                is_subscribed = Exists(Subscribe.objects.filter(user_id=user_id, channel=OuterRef("channel"), is_subscribe=True))
-                multiplier = Case(When(is_subscribed, then=Value(SUBSCRIBE_BOOST)), default=Value(1.0), output_field=FloatField())
-                score_expr = ExpressionWrapper(base * multiplier, output_field=FloatField())
-            else:
-                score_expr = ExpressionWrapper(base, output_field=FloatField())
+        score_expr = ExpressionWrapper(score_expression(sort, is_recommend), output_field=FloatField())
         qs = cast(QuerySet[T], qs.annotate(score=score_expr))
         key = "score"
     else:
