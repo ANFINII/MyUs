@@ -306,6 +306,7 @@ flowchart TB
 - 円とドルに対応する。ユーザーの国/地域（`Profile.country`）で決め、日本は円、それ以外はドル（`utils/functions/map.py` の `country_currency`）
 - 契約中は契約の通貨を使う。国/地域を変えても、契約中のプランの請求の通貨は変わらない。契約が無ければ国/地域で決める
 - 価格は `domain/payment/plan.py` の `Plan.prices`（通貨ごとの `Money`。金額は最小単位で、$3.99 は 399）。FE は `GET /payment/plans` から受け取り、価格を直書きしない
+- ドルの価格は、円の価格を為替で換算して端数を .99 にそろえた決まった値（1ドル＝150円前後で 550円 → $3.99）。為替が大きく動いたら見直す。Stripe の Price の金額を変えても、契約中の人の金額は変わらず、新しく契約する人から変わる。Stripe の Adaptive Pricing（請求のたびに為替で換算）は、価格が毎月変わり、画面に正確な金額を出せないので使わない
 - Stripe は Price ID（`STRIPE_PRICE_ID_*`）をそのまま使い、Price の `currency_options` に通貨ごとの金額を持たせる。checkout で `currency` を渡す。プラン変更は契約の通貨を引き継ぐ
 - 国/地域の候補は YouTube Premium の対象国・地域に中国を足した121（`Country`）
 
