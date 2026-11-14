@@ -84,8 +84,8 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False)
     else:
         key = sort.sort_type.name.lower()
 
-    order_by_key = key if sort.is_asc else f"-{key}"
-    return qs.order_by(order_by_key)
+    keys = [key] if key == "id" else [key, "id"]
+    return qs.order_by(*[k if sort.is_asc else f"-{k}" for k in keys])
 
 
 def get_ids_queryset(qs: QuerySet[T], filter: FilterOption, sort: SortOption, page: PageOption) -> QuerySet[T]:
