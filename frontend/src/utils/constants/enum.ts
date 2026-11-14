@@ -26,12 +26,12 @@ export enum GenderType {
 }
 
 export enum Currency {
-  Jpy = 'JPY',
-  Usd = 'USD',
-  Eur = 'EUR',
-  Gbp = 'GBP',
-  Cny = 'CNY',
-  Krw = 'KRW',
+  Jpy = 'Jpy',
+  Usd = 'Usd',
+  Eur = 'Eur',
+  Gbp = 'Gbp',
+  Cny = 'Cny',
+  Krw = 'Krw',
 }
 
 export enum Country {

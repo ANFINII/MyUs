@@ -1,11 +1,15 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
-import { PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentSubscriptionOut } from 'types/internal/payment'
-import { apiPaymentCancel, apiPaymentCancelRevoke, apiPaymentChange, apiPaymentCheckout, apiPaymentMethod, apiPaymentSubscription } from 'api/uri'
+import { PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
+import { apiPaymentCancel, apiPaymentCancelRevoke, apiPaymentChange, apiPaymentCheckout, apiPaymentMethod, apiPaymentPlans, apiPaymentSubscription } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getPaymentSubscription = async (): Promise<ApiOut<PaymentSubscriptionOut>> => {
   return await apiOut(apiClient('json').get(apiPaymentSubscription))
+}
+
+export const getPaymentPlans = async (): Promise<ApiOut<PaymentPlanOut[]>> => {
+  return await apiOut(apiClient('json').get(apiPaymentPlans))
 }
 
 export const postPaymentCheckout = async (request: PaymentCheckoutIn): Promise<ApiOut<PaymentCheckoutOut>> => {

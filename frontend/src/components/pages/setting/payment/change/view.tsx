@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
+import { PaymentPlanOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentChange } from 'api/internal/payment'
 import { FetchError } from 'utils/constants/enum'
@@ -18,10 +19,11 @@ import { plans } from '../plans'
 
 interface Props {
   mypage: MypageOut
+  planPrices: PaymentPlanOut[]
 }
 
 export default function PaymentChange(props: Props): React.JSX.Element {
-  const { mypage } = props
+  const { mypage, planPrices } = props
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -32,6 +34,7 @@ export default function PaymentChange(props: Props): React.JSX.Element {
 
   const currentPlanName = mypage.plan
   const isChanged = activeName !== '' && activeName !== currentPlanName
+  const priceMap = new Map(planPrices.map((p) => [p.name, p.price]))
 
   const handleBack = () => router.push('/setting/payment')
 
@@ -58,6 +61,7 @@ export default function PaymentChange(props: Props): React.JSX.Element {
             <PlanCard
               key={plan.name}
               plan={plan}
+              price={priceMap.get(plan.name)}
               active={activeName === plan.name}
               onClick={() => setActiveName(plan.name)}
               current={plan.name === currentPlanName}

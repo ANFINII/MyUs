@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
-import { PaymentSubscriptionOut } from 'types/internal/payment'
+import { PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod } from 'api/internal/payment'
 import { FetchError, Locale } from 'utils/constants/enum'
@@ -22,10 +22,11 @@ import { plans } from './plans'
 interface Props {
   mypage: MypageOut
   subscription: PaymentSubscriptionOut
+  planPrices: PaymentPlanOut[]
 }
 
 export default function Payment(props: Props): React.JSX.Element {
-  const { mypage, subscription } = props
+  const { mypage, subscription, planPrices } = props
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -38,6 +39,7 @@ export default function Payment(props: Props): React.JSX.Element {
 
   const currentPlan = mypage.plan
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
+  const priceMap = new Map(planPrices.map((p) => [p.name, p.price]))
   const isPaid = currentPlan !== 'Free'
   const isCanceled = isPaid && subscription.isCanceled
   const isPastDue = isPaid && subscription.isPastDue
@@ -107,7 +109,7 @@ export default function Payment(props: Props): React.JSX.Element {
 
         <div className={style.plans}>
           {purchasable.map((plan) => (
-            <PlanCard key={plan.name} plan={plan} active={currentPlan === plan.name} disabled={isPaid} loading={selectedPlan === plan.name} onPurchase={handlePurchase} />
+            <PlanCard key={plan.name} plan={plan} price={priceMap.get(plan.name)} active={currentPlan === plan.name} disabled={isPaid} loading={selectedPlan === plan.name} onPurchase={handlePurchase} />
           ))}
         </div>
 
