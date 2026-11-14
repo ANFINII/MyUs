@@ -1,6 +1,9 @@
 import re
 from datetime import datetime
 from urllib.parse import urlparse
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from myus.db.models.user import User
 
 
 PASSWORD_MIN_LENGTH = 8
@@ -50,6 +53,13 @@ def has_password(text: str) -> bool:
     if not has_number(text) or not has_alphabet(text):
         return True
     return False
+
+def has_weak_password(password: str, username: str, email: str, nickname: str) -> bool:
+    try:
+        validate_password(password, User(username=username, email=email, nickname=nickname))
+        return False
+    except ValidationError:
+        return True
 
 def has_birthday(year: int, month: int, day: int) -> bool:
     try:

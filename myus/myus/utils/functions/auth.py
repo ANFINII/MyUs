@@ -1,8 +1,5 @@
 import hashlib
-from django.contrib.auth.password_validation import validate_password
 from django.core.cache import cache
-from django.core.exceptions import ValidationError
-from myus.db.models.user import User
 from ..constants.auth import LOGIN_LOCK_SECONDS
 
 
@@ -25,11 +22,3 @@ def add_failure(username: str) -> None:
 
 def clear_failures(username: str) -> None:
     cache.delete(login_failure_key(username))
-
-
-def has_weak_password(password: str, username: str, email: str, nickname: str) -> bool:
-    try:
-        validate_password(password, User(username=username, email=email, nickname=nickname))
-        return False
-    except ValidationError:
-        return True
