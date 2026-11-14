@@ -68,8 +68,9 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False)
             score_expr = ExpressionWrapper(like_count * 1000.0 / (F("read") + 1) / days_since, output_field=FloatField())
         else:
             base = F("read") + like_count * 10 + F("read") * like_count / (F("read") + 1) * 20
-            if sort.user_id is not None:
-                is_subscribed = Exists(Subscribe.objects.filter(user_id=sort.user_id, channel=OuterRef("channel"), is_subscribe=True))
+            user_id = sort.user_id
+            if user_id is not None:
+                is_subscribed = Exists(Subscribe.objects.filter(user_id=user_id, channel=OuterRef("channel"), is_subscribe=True))
                 multiplier = Case(When(is_subscribed, then=Value(SUBSCRIBE_BOOST)), default=Value(1.0), output_field=FloatField())
                 score_expr = ExpressionWrapper(base * multiplier, output_field=FloatField())
             else:
