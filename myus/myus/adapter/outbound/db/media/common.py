@@ -79,8 +79,8 @@ def score_expression(sort: SortOption, is_recommend: bool) -> CombinedExpression
 
 def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False) -> QuerySet[T]:
     if sort.sort_type == SortType.SCORE:
-        score_expr = ExpressionWrapper(score_expression(sort, is_recommend), output_field=FloatField())
-        qs = cast(QuerySet[T], qs.annotate(score=score_expr))
+        score = ExpressionWrapper(score_expression(sort, is_recommend), output_field=FloatField())
+        qs = cast(QuerySet[T], qs.annotate(score=score))
         key = "score"
     else:
         key = sort.sort_type.name.lower()
