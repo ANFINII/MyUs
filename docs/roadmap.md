@@ -165,10 +165,6 @@ flowchart LR
 
 - `db/models/` の `users.py`・`common.py`・`master.py` をモデルごとのファイルに分ける
 
-### 気づいたが手を付けていないこと
-
-- `utils/functions/validation.py` が `has_weak_password` のために Django の `User` モデルを import しているので、`domain/user/validation.py` も間接的に Django を読み込む（`has_weak_password` を別のファイルに分けるとよい）
-
 ## メディアの一覧の速さ
 
 今は困っていない。一覧が遅いと感じたら、`EXPLAIN` でどこが重いかを確かめてから、次のどちらかを入れる。一覧を取る処理は `adapter/outbound/db/media/common.py`（`filter_queryset`・`sort_queryset`・`get_ids_queryset`）にまとまっている。
