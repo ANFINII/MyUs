@@ -168,7 +168,6 @@ flowchart LR
 ### 気づいたが手を付けていないこと
 
 - `utils/functions/validation.py` が `has_weak_password` のために Django の `User` モデルを import しているので、`domain/user/validation.py` も間接的に Django を読み込む（`has_weak_password` を別のファイルに分けるとよい）
-- `usecase/channel/core.py` で `new_ulid = str(ulid.new())` と、関数の `new_ulid()`（`utils/functions/common.py`）と同じ名前の変数を使っている
 
 ## メディアの一覧の速さ
 
