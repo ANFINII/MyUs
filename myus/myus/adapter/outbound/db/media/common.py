@@ -16,7 +16,6 @@ T = TypeVar("T", bound=Model)
 
 
 class DaysSince(Func):
-    function = "TIMESTAMPDIFF"
     template = "(TIMESTAMPDIFF(DAY, %(expressions)s) + 1)"
 
 
