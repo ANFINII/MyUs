@@ -60,12 +60,12 @@ def create_user_channel(user_id: int, input: ChannelDTO, avatar_file: UploadedFi
         return Result.err(upload_ret.err_value)
 
     repo = injector.get(ChannelInterface)
-    channel_ulid = new_ulid()
-    avatar = save_upload(avatar_file, ImageUpload.CHANNEL, channel_ulid) if avatar_file else ""
+    ulid = new_ulid()
+    avatar = save_upload(avatar_file, ImageUpload.CHANNEL, ulid) if avatar_file else ""
 
     data = ChannelData(
         id=0,
-        ulid=channel_ulid,
+        ulid=ulid,
         owner_id=user_id,
         owner_ulid="",
         avatar=avatar,
@@ -79,7 +79,7 @@ def create_user_channel(user_id: int, input: ChannelDTO, avatar_file: UploadedFi
     if ret.is_err:
         return Result.err(ret.err_value)
 
-    return Result.ok(channel_ulid)
+    return Result.ok(ulid)
 
 
 @Result.shield_exception()
