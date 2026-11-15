@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
@@ -54,7 +54,7 @@ export default function Payment(props: Props): React.JSX.Element {
     const ret = await postPaymentCheckout({ plan, locale })
     if (ret.isErr()) {
       setSelectedPlan('')
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push(ret.value.url)
@@ -66,7 +66,7 @@ export default function Payment(props: Props): React.JSX.Element {
     const ret = await postPaymentMethod({ locale })
     if (ret.isErr()) {
       setIsMethodLoading(false)
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push(ret.value.url)
@@ -79,7 +79,7 @@ export default function Payment(props: Props): React.JSX.Element {
     const ret = await postPaymentCancel()
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     setIsModal(false)
@@ -94,7 +94,7 @@ export default function Payment(props: Props): React.JSX.Element {
     const ret = await postPaymentCancelRevoke()
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     handleToast(t('setting.payment.revoked'), false)

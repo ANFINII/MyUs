@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
@@ -73,7 +73,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     else if (threadUlid) handleRouter(`/media/${mediaPaths[mediaType]}/${mediaUlid}/thread/${threadUlid}`)
     else handleRouter(`/media/${mediaPaths[mediaType]}/${mediaUlid}`)
     const ret = await postNotificationConfirmed(ulid)
-    if (ret.isErr()) handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+    if (ret.isErr()) handleToast(errorMessage(ret.error, FetchError.Post), true)
   }
 
   const handleDelete = (notification: Notification) => async (e: React.MouseEvent) => {
@@ -84,7 +84,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
       items: prev.items.filter((n) => n.ulid !== ulid),
     }))
     const ret = await postNotificationDeleted(ulid)
-    if (ret.isErr()) handleToast(toErrorMessage(ret.error, FetchError.Delete), true)
+    if (ret.isErr()) handleToast(errorMessage(ret.error, FetchError.Delete), true)
   }
 
   return (
