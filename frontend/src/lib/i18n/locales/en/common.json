@@ -601,7 +601,8 @@
     "empty": "No suggestions",
     "fetchError": "Failed to load suggestions",
     "saveError": "Failed to save hashtags",
-    "saved": "Hashtags saved"
+    "saved": "Hashtags saved",
+    "limit": "You can add up to 20 hashtags"
   },
   "textEditor": {
     "bold": "Bold",

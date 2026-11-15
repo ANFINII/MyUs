@@ -14,6 +14,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './Hashtags.module.scss'
 
+const HASHTAG_MAX_COUNT = 20
 const HASHTAG_MAX_LENGTH = 30
 const ALLOWED_PATTERN = /^[ぁ-んァ-ヶー一-龯a-zA-Z]+$/
 
@@ -50,6 +51,7 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
+  const isLimit = editTags.length >= HASHTAG_MAX_COUNT
   const normalizedInput = normalizeName(inputTag)
   const editNames = new Set(editTags.map((t) => t.name))
   const filteredMaster = master.filter((m) => !editNames.has(m.name) && (normalizedInput === '' || m.name.includes(normalizedInput)))
@@ -109,7 +111,9 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
     <VStack gap="2" className={style.edit_area}>
       <Input placeholder={t('hashtag.placeholder')} maxLength={HASHTAG_MAX_LENGTH} value={inputTag} onChange={handleInput} className={style.input} />
       <VStack gap="1" className={style.master_list}>
-        {isMasterLoading ? (
+        {isLimit ? (
+          <span className={style.empty}>{t('hashtag.limit')}</span>
+        ) : isMasterLoading ? (
           <HStack justify="center" className={style.loading}>
             <Spinner color="gray" size="s" />
           </HStack>
