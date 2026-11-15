@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
-from myus.utils.constants.page import PAGE_SIZE
 from .data import LedgerEntryData
 
 
@@ -27,7 +26,7 @@ class SortOption:
 
 @dataclass(frozen=True, slots=True)
 class PageOption:
-    limit: int = PAGE_SIZE
+    limit: int = 20
     offset: int = 0
 
 

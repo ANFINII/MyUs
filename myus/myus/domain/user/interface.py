@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
-from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.enum.media import MediaType
 from .data import UserAllData
 
@@ -29,7 +28,7 @@ class SortOption:
 
 @dataclass(frozen=True, slots=True)
 class PageOption:
-    limit: int = PAGE_SIZE
+    limit: int = 0
     offset: int = 0
 
 
