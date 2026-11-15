@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { PictureIn } from 'types/internal/media/input'
@@ -55,7 +56,7 @@ export default function PictureCreate(props: Props): React.JSX.Element {
     const ret = await postPictureCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(FetchError.Post, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push({ pathname: '/manage/picture', query: { channel: channelUlid } })

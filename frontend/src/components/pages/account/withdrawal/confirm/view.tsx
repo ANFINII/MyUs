@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toErrorMessage } from 'lib/error'
 import { WithdrawalIn } from 'types/internal/auth'
 import { postWithdrawal } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -39,7 +40,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
     const ret = await postWithdrawal(request)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(FetchError.Post, true)
+      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
       return
     }
     resetUser()
