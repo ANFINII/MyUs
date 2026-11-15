@@ -5,7 +5,7 @@ from myus.db.models.hashtag import HashTag
 from myus.domain.common import PageOption
 from myus.domain.hashtag.data import HashtagData
 from myus.domain.hashtag.interface import FilterOption, HashtagInterface, SortOption
-from myus.domain.hashtag.validation import validate
+from myus.domain.hashtag.validation import validate, validate_count
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from ._convert import convert_data, marshal_data, marshal_through, get_through_model
@@ -48,7 +48,8 @@ class HashtagRepository(HashtagInterface):
             else:
                 names = [o.name for o in objs]
                 existing_map = {h.name: h.id for h in HashTag.objects.filter(name__in=names)}
-                errors = [ret.err_value.message for obj in objs if obj.name not in existing_map and (ret := validate(obj)).is_err]
+                errors = [ret.err_value.message for ret in [validate_count(objs)] if ret.is_err]
+                errors += [ret.err_value.message for obj in objs if obj.name not in existing_map and (ret := validate(obj)).is_err]
                 if len(errors) > 0:
                     return Result.err(FatalError(f"Invalid Data: {errors}"))
 
