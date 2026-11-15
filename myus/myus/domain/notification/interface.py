@@ -13,6 +13,7 @@ class SortType(Enum):
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     ulid: str = ""
+    ids: list[int] = field(default_factory=list)
     type_no: NotificationTypeNo | None = None
     object_type: NotificationObjectType | None = None
     object_ids: list[int] = field(default_factory=list)

@@ -46,6 +46,8 @@ class NotificationRepository(NotificationInterface):
         q_list: list[Q] = []
         if filter.ulid:
             q_list.append(Q(ulid=filter.ulid))
+        if len(filter.ids) > 0:
+            q_list.append(Q(id__in=filter.ids))
         if filter.type_no is not None:
             q_list.append(Q(type_no=filter.type_no))
         if filter.object_type is not None:
