@@ -7,6 +7,9 @@ from myus.utils.enum.advertise import AdvertiseType
 from .data import AdvertiseData
 
 
+ADVERTISE_PAGE_SIZE = 50
+
+
 class SortType(Enum):
     ID = auto()
     CREATED = auto()

@@ -7,7 +7,7 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.common import FilterOption, PageOption, SortOption
+from myus.domain.media.common import PAGE_SIZE, FilterOption, PageOption, SortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.picture.data import PictureData
@@ -18,7 +18,6 @@ from myus.domain.message.interface import FilterOption as MessageFilterOption, M
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
-from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload
 from myus.utils.functions.common import create_url

@@ -1,7 +1,6 @@
 from enum import StrEnum
 from typing import Annotated
 from pydantic import BaseModel, Field
-from myus.utils.constants.page import PAGE_SIZE
 
 
 class ErrorType(StrEnum):
@@ -21,11 +20,12 @@ class SuccessOut(BaseModel):
     message: str
 
 
+MAX_LIMIT = 50
 MAX_OFFSET = 10000
 TITLE_MAX_LENGTH = 100
 URL_MAX_LENGTH = 500
 
-Limit = Annotated[int, Field(ge=1, le=PAGE_SIZE)]
+Limit = Annotated[int, Field(ge=1, le=MAX_LIMIT)]
 Offset = Annotated[int, Field(ge=0, le=MAX_OFFSET)]
 Title = Annotated[str, Field(max_length=TITLE_MAX_LENGTH)]
 Url = Annotated[str, Field(max_length=URL_MAX_LENGTH)]
