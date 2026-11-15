@@ -101,7 +101,7 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
 @Result.shield_exception()
 def get_active_subscription_data(user_id: int) -> Result[SubscriptionData | None, FatalError]:
     repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), SubscriptionPageOption(limit=20))
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), SubscriptionPageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

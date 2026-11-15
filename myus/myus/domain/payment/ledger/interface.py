@@ -26,7 +26,7 @@ class SortOption:
 
 @dataclass(frozen=True, slots=True)
 class PageOption:
-    limit: int = 20
+    limit: int = 0
     offset: int = 0
 
 

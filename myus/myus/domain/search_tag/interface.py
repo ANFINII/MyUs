@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
 from .data import SearchTagData
+from .validation import SEARCH_TAG_MAX_COUNT
 
 
 class SortType(Enum):
@@ -22,7 +23,7 @@ class SortOption:
 
 @dataclass(frozen=True, slots=True)
 class PageOption:
-    limit: int = 20
+    limit: int = SEARCH_TAG_MAX_COUNT
     offset: int = 0
 
 
