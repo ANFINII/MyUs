@@ -31,7 +31,7 @@ export default function Hashtags(props: Props): React.JSX.Element {
   const canEdit = isOwner && mediaUlid !== undefined
 
   const handleRouter = (name: string) => {
-    router.push(`/media/${mediaPath}?search=${name}`)
+    router.push({ pathname: `/media/${mediaPath}`, query: { search: name } })
   }
 
   const handleStart = async () => {
