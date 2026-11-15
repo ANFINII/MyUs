@@ -71,7 +71,7 @@ class NotificationRepository(NotificationInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = Notification.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page.limit, page.offset)
+        qs = page_queryset(qs, page)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 
