@@ -2,7 +2,8 @@ from dataclasses import replace
 from datetime import datetime
 from myus.domain.comment.data import CommentData
 from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
-from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.common import PageOption
+from myus.domain.media.common import FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FindError, ForbiddenError, NotFoundError, Result
@@ -33,7 +34,7 @@ def create_comment(user_id: int, input: CommentCreateDTO) -> Result[CommentDTO, 
     type_no = comment_type_no_map(input.type_name)
     parent: CommentData | None = None
     if input.parent_ulid:
-        parent_ids_ret = repo.get_ids(FilterOption(ulid=input.parent_ulid, type_no=type_no, object_id=media_ids[0], is_parent=True), SortOption())
+        parent_ids_ret = repo.get_ids(FilterOption(ulid=input.parent_ulid, type_no=type_no, object_id=media_ids[0], is_parent=True), SortOption(), PageOption(limit=0))
         if parent_ids_ret.is_err:
             return Result.err(parent_ids_ret.err_value)
 

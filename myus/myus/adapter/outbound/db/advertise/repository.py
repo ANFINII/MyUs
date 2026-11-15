@@ -2,10 +2,11 @@ from django.db.models import F, Q
 from django.db.models.query import QuerySet
 from myus.db.models.common import Advertise
 from myus.domain.advertise.data import AdvertiseData
-from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, PageOption, SortOption
+from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, SortOption
+from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..common import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, page_queryset, sort_ids
 
 
 ADVERTISE_FIELDS = ["author_id", "title", "url", "content", "image", "video", "type", "period", "publish", "updated"]
@@ -40,7 +41,7 @@ class AdvertiseRepository(AdvertiseInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = qs.order_by(order_by_key)
-        qs = qs[page.offset:page.offset + page.limit]
+        qs = page_queryset(qs, page)
         return Result.ok(list(qs.values_list("id", flat=True)))
 
     @Result.shield_exception()

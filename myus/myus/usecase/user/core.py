@@ -2,7 +2,8 @@ import datetime
 from dataclasses import replace
 from ninja import UploadedFile
 from myus.domain.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
-from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from myus.domain.common import PageOption
+from myus.domain.media.common import FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from myus.domain.user.data import ProfileData, UserAllData, UserNotificationData
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
 from myus.injectors.container import injector
@@ -21,7 +22,7 @@ from ..notification._convert import create_notification_data, delete_notificatio
 @Result.shield_exception()
 def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None, FatalError]:
     repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid), SortOption())
+    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid), SortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -62,7 +63,7 @@ def update_profile(user_id: int, input: SettingProfileDTO, avatar_file: Uploaded
         if len(value) == 0 or value == current:
             continue
 
-        ids_ret = repo.get_ids(filter, SortOption())
+        ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=0))
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -190,7 +191,7 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO
 def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
     repo = injector.get(UserInterface)
     comment_repo = injector.get(CommentInterface)
-    ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
+    ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -260,7 +261,7 @@ def signup_check(data: SignupDTO) -> Result[str, FatalError]:
         if len(value) == 0:
             continue
 
-        ids_ret = repo.get_ids(filter, SortOption())
+        ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=0))
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 

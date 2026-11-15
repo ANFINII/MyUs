@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
+from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from .data import LedgerEntryData
 
@@ -26,7 +27,7 @@ class SortOption:
 
 class LedgerEntryInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = 20) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod

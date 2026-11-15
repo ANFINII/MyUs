@@ -2,6 +2,7 @@ from dataclasses import replace
 from ninja import UploadedFile
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
+from myus.domain.common import PageOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidateError, WriteError
@@ -15,7 +16,7 @@ from ..dto.channel import ChannelDTO
 @Result.shield_exception()
 def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
     repo = injector.get(ChannelInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption())
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -36,7 +37,7 @@ def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
 @Result.shield_exception()
 def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
     repo = injector.get(ChannelInterface)
-    ids_ret = repo.get_ids(FilterOption(owner_id=owner_id), SortOption())
+    ids_ret = repo.get_ids(FilterOption(owner_id=owner_id), SortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

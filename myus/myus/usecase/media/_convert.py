@@ -1,6 +1,7 @@
 from typing import assert_never
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface
+from myus.domain.common import PageOption
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
@@ -52,7 +53,7 @@ def get_media_user_data(is_like: bool, channel_id: int, user_id: int | None) -> 
     subscribe_repo = injector.get(SubscribeInterface)
     subscribe = None
     if user_id is not None:
-        ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption())
+        ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption(), PageOption(limit=0))
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 

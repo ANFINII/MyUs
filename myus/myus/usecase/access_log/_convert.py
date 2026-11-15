@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.utils import timezone
 from myus.domain.access_log.data import AccessLogData
 from myus.domain.access_log.interface import AccessLogInterface, FilterOption, SortOption
+from myus.domain.common import PageOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.access_log import AccessType
@@ -15,7 +16,7 @@ ACCESS_INTERVAL = timedelta(hours=2)
 def save_access_data(ip_address: str, access_type: AccessType, type_id: int) -> Result[bool, FatalError]:
     repo = injector.get(AccessLogInterface)
     now = timezone.now()
-    ids_ret = repo.get_ids(FilterOption(ip_address=ip_address, type=access_type, type_id=type_id), SortOption(), limit=1)
+    ids_ret = repo.get_ids(FilterOption(ip_address=ip_address, type=access_type, type_id=type_id), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

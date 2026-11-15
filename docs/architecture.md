@@ -63,13 +63,14 @@ flowchart LR
 | `adapter/inbound/` | django-ninja のエンドポイントと WebSocket の consumer。入力の検証と、`Result` から HTTP レスポンスへの変換 |
 | `adapter/inbound/schema/` | API の入出力スキーマ（django-ninja の Pydantic のモデル）。adapter/inbound だけが使う |
 | `adapter/inbound/routers.py` | django-ninja のルーターをまとめて登録する（`config/urls.py` が読む） |
-| `adapter/outbound/db/` | repository の実装（Django ORM）。共通の部品は `common.py`（`get_save_new_ids`・`sort_ids`） |
+| `adapter/outbound/db/` | repository の実装（Django ORM）。共通の部品は `common.py`（`get_save_new_ids`・`page_queryset`・`sort_ids`） |
 | `adapter/outbound/payment/` | 決済会社の実装（`PaymentInterface` の Stripe 実装は `stripe/`） |
 | `usecase/<ドメイン>/` | 業務ロジック。adapter から呼ぶ関数は `core.py`、補助の関数は `_convert.py` |
 | `usecase/dto/` | usecase の入出力の DTO（dataclass）。adapter/inbound も usecase の結果を受け取るのに使う |
 | `domain/<ドメイン>/` | repository の interface（`interface.py`）と Data（`data.py`）、ルール（`validation.py`）。I/O を持たない |
 | `domain/<ドメイン>/<集約>/` | Event Sourcing の集約（状態・イベント・判断・適用）。I/O を持たない関数。いまは `domain/payment/subscription/` |
-| `domain/media/common.py` | メディアの検索の条件（`FilterOption`・`SortOption`・`PageOption`） |
+| `domain/common.py` | すべての `get_ids` で使うページング（`PageOption`） |
+| `domain/media/common.py` | メディアの検索の条件（`FilterOption`・`SortOption`） |
 | `injectors/` | interface と実装の対応付け（`module.py`） |
 | `utils/` | どの層からも使う部品。`common/`（`Result`・logger）・`constants/`・`enum/`・`functions/`（汎用の関数は `functions/common.py`） |
 | `db/` | Django のモデル（`models/`）・マイグレーション（git の管理外）・管理コマンド（`management/commands/`）・管理画面（`admin.py`） |

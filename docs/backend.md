@@ -43,7 +43,7 @@
 | 定数 | UPPER_SNAKE_CASE | `MAX_FILE_SIZE` |
 | プライベート | 先頭に`_` | `_internal_method()` |
 | Django Model | 単数形 | `User`, `Video` |
-| 複数のドメイン・ファイルで共通に使う部品 | `common.py` | `domain/media/common.py`（`FilterOption`・`PageOption` など）・`adapter/outbound/db/common.py`（`get_save_new_ids`）・`utils/functions/common.py` |
+| 複数のドメイン・ファイルで共通に使う部品 | `common.py` | `domain/common.py`（`PageOption`）・`domain/media/common.py`（`FilterOption`・`SortOption` など）・`adapter/outbound/db/common.py`（`get_save_new_ids`・`page_queryset`）・`utils/functions/common.py` |
 
 ### `_data` の付く関数
 
@@ -115,7 +115,7 @@ if save_ret.is_err:
 @Result.shield_exception()
 def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError]:
     follow_repo = injector.get(FollowInterface)
-    ids_ret = follow_repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption())
+    ids_ret = follow_repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -234,7 +234,8 @@ if ret.is_err:
 ### Interface層（抽象クラス）
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
 - 雛形: `myus/domain/search_tag/interface.py` を参照
-- 必須メソッド: `get_ids(filter, sort, limit)` / `bulk_get(ids)` の読み取り2点
+- 必須メソッド: `get_ids(filter, sort, page)` / `bulk_get(ids)` の読み取り2点
+- `page`は`domain/common.py`の`PageOption`（`limit`の初期値は`PAGE_SIZE`、`offset`は0）。全部取るときは`PageOption(limit=0)`（`limit`が0なら上限なし。切り出しは`adapter/outbound/db/common.py`の`page_queryset`）
 - 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
 - 必須型: `FilterOption` / `SortOption` dataclass + `SortType` enum
 - メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
@@ -245,7 +246,7 @@ if ret.is_err:
   - `bulk_save`で表せない更新：加算・切り替え・既読など（`save_read`・`save_count`・`save_follow_count`・`media_like`・`comment_like`、通知の`delete_by_user`・`confirm`）
   - 一覧に付ける判定：`is_liked`・`get_liked_ids`
   - 認証：`UserInterface.authenticate`
-  - メディア・広告の`get_ids(filter, sort, page)`：ページング（`PageOption`）が要るメディア共通の形。スコア順で登録しているチャンネルの投稿を上げるときは、メディアの`SortOption`の`user_id`を使う。広告はメディアの種類ではないので、検索の条件（`FilterOption`・`PageOption`・`SortOption`・`SortType`）は`domain/advertise/interface.py`に広告用を置く（広告にはスコアがないので`SortType`は`ID`・`CREATED`だけ。`FilterOption`に広告の種類の`advertise_type`を持つ）。詳細ページで今のメディアを一覧から外すときは、メディアの`FilterOption`の`exclude_id`を使う（通知の`exclude_user_id`と同じ形。条件のためだけの`ExcludeOption`は作らない）
+  - メディアの`SortOption`・`FilterOption`：スコア順で登録しているチャンネルの投稿を上げるときは、メディアの`SortOption`の`user_id`を使う。広告はメディアの種類ではないので、検索の条件（`FilterOption`・`SortOption`・`SortType`）は`domain/advertise/interface.py`に広告用を置く（広告にはスコアがないので`SortType`は`ID`・`CREATED`だけ。`FilterOption`に広告の種類の`advertise_type`を持つ）。詳細ページで今のメディアを一覧から外すときは、メディアの`FilterOption`の`exclude_id`を使う（通知の`exclude_user_id`と同じ形。条件のためだけの`ExcludeOption`は作らない）
   - カテゴリ・ハッシュタグの`bulk_save(media_type, media_id, objs)`：メディアへの紐づけの保存
   - 外部サービスの窓口（`PaymentInterface`）：DBのリポジトリではないため`get_ids`・`bulk_get`を持たない
 
@@ -387,3 +388,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-14: `utils/constants/plan.py` を `domain/payment/plan.py` に移し、`Plan` の価格を `prices: list[Money]`（円とドル）にした
 - 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
 - 2026-11-15: enum 変換の決まりを、対応がずれうる変換だけ `map.py` の match + `assert_never` にし、名前・値が同じ enum どうしはそのまま変換してよいことにした
+- 2026-11-15: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`を`domain/common.py`の1つにした（`limit=0`は上限なし）

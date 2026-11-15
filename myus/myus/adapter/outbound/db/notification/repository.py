@@ -7,13 +7,14 @@ from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from myus.db.models.message import Message
 from myus.db.models.notification import Notification
 from myus.db.models.users import Follow
+from myus.domain.common import PageOption
 from myus.domain.notification.data import NotificationData
 from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType
 from ._convert import convert_data, get_media_model, marshal_data
-from ..common import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, page_queryset, sort_ids
 
 
 NOTIFICATION_FIELDS = ["user_from_id", "user_to_id", "type_no", "type_name", "object_id", "object_type"]
@@ -42,7 +43,7 @@ class NotificationRepository(NotificationInterface):
         return Notification.objects.select_related("user_from", "user_to")
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.ulid:
             q_list.append(Q(ulid=filter.ulid))
@@ -71,9 +72,7 @@ class NotificationRepository(NotificationInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = Notification.objects.filter(*q_list).order_by(order_by_key)
-
-        if limit is not None:
-            qs = qs[:limit]
+        qs = page_queryset(qs, page)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

@@ -1,3 +1,4 @@
+from myus.domain.common import PageOption
 from myus.domain.follow.interface import FilterOption, FollowInterface, SortOption
 from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import UserInterface
@@ -14,7 +15,7 @@ from ..user.core import get_user_data
 def get_follows(user_id: int, search: str, limit: int) -> Result[list[FollowUserDTO], FatalError]:
     repo = injector.get(FollowInterface)
     user_repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(follower_id=user_id, is_follow=True, search=search), SortOption(), limit)
+    ids_ret = repo.get_ids(FilterOption(follower_id=user_id, is_follow=True, search=search), SortOption(), PageOption(limit=limit))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -46,7 +47,7 @@ def get_follows(user_id: int, search: str, limit: int) -> Result[list[FollowUser
 def get_followers(user_id: int, search: str, limit: int) -> Result[list[FollowUserDTO], FatalError]:
     repo = injector.get(FollowInterface)
     user_repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(following_id=user_id, is_follow=True, search=search), SortOption(), limit)
+    ids_ret = repo.get_ids(FilterOption(following_id=user_id, is_follow=True, search=search), SortOption(), PageOption(limit=limit))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -90,7 +91,7 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
     if follower_id == following_id:
         return Result.err(ValidationError("error.followSelf"))
 
-    follow_ids_ret = repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
+    follow_ids_ret = repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption(), PageOption(limit=0))
     if follow_ids_ret.is_err:
         return Result.err(follow_ids_ret.err_value)
 

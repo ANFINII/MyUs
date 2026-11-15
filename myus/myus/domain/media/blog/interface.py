@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
+from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from .data import BlogData
-from ..common import FilterOption, PageOption, SortOption
+from ..common import FilterOption, SortOption
 
 
 class BlogInterface(ABC):

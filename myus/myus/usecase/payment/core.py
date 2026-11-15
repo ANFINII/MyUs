@@ -2,6 +2,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from django.conf import settings
+from myus.domain.common import PageOption
 from myus.domain.payment.customer.interface import PaymentCustomerInterface
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import PaymentEventData
@@ -46,7 +47,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         return Result.err(NotFoundError("Not Found"))
 
     subscription_repo = injector.get(SubscriptionInterface)
-    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), limit=None)
+    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), PageOption(limit=0))
     if subscription_ids_ret.is_err:
         return Result.err(subscription_ids_ret.err_value)
 
@@ -99,7 +100,7 @@ def verify_webhook(provider: PaymentProvider, payload: bytes, signature: str) ->
 @Result.shield_exception()
 def get_subscription(user_id: int) -> Result[SubscriptionData | None, FatalError]:
     repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False))
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), PageOption(limit=20))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -322,7 +323,7 @@ def receive_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
 def process_payment_events(limit: int) -> Result[int, FatalError]:
     repo = injector.get(PaymentEventInterface)
     filter = PaymentEventFilterOption(is_processed=False, max_attempts=PAYMENT_EVENT_MAX_ATTEMPTS)
-    ids_ret = repo.get_ids(filter, PaymentEventSortOption(), limit=limit)
+    ids_ret = repo.get_ids(filter, PaymentEventSortOption(), PageOption(limit=limit))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -349,7 +350,7 @@ def process_payment_events(limit: int) -> Result[int, FatalError]:
 @Result.shield_exception()
 def requeue_payment_events() -> Result[int, FatalError]:
     repo = injector.get(PaymentEventInterface)
-    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=False), PaymentEventSortOption(), limit=None)
+    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=False), PaymentEventSortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -375,7 +376,7 @@ def replay_payment_events() -> Result[int, CommandError]:
 @Result.shield_exception()
 def export_ledger(start: datetime, end: datetime) -> Result[list[LedgerRowDTO], FatalError]:
     repo = injector.get(LedgerEntryInterface)
-    ids_ret = repo.get_ids(LedgerEntryFilterOption(occurred_from=start, occurred_to=end), LedgerEntrySortOption(), limit=None)
+    ids_ret = repo.get_ids(LedgerEntryFilterOption(occurred_from=start, occurred_to=end), LedgerEntrySortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
