@@ -2,8 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.channel import Channel
 from myus.domain.channel.data import ChannelData
-from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
+from myus.domain.channel.interface import ChannelInterface, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
 from ..common import get_save_new_ids, page_queryset, sort_ids

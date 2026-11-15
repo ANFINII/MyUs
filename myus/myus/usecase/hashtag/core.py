@@ -1,7 +1,6 @@
-from myus.domain.common import PageOption
 from myus.domain.hashtag.data import HashtagData
-from myus.domain.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType
-from myus.domain.media.common import FilterOption, SortOption
+from myus.domain.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, PageOption as HashtagPageOption, SortOption as HashtagSortOption, SortType
+from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
@@ -14,7 +13,7 @@ from ..media._convert import get_media_repository
 @Result.shield_exception()
 def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
     repo = injector.get(HashtagInterface)
-    ids_ret = repo.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=SortType.NAME), PageOption(limit=0))
+    ids_ret = repo.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=SortType.NAME), HashtagPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -53,7 +52,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
     ulids = [h.ulid for h in hashtags if h.ulid]
     ulid_data_map: dict[str, HashtagData] = {}
     if len(ulids) > 0:
-        existing_ids_ret = repo.get_ids(HashtagFilterOption(ulids=ulids), HashtagSortOption(), PageOption(limit=0))
+        existing_ids_ret = repo.get_ids(HashtagFilterOption(ulids=ulids), HashtagSortOption(), HashtagPageOption())
         if existing_ids_ret.is_err:
             return Result.err(existing_ids_ret.err_value)
 

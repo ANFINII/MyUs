@@ -1,8 +1,7 @@
 from django.db.models import Q
 from myus.db.models.payment import PaymentCustomer
-from myus.domain.common import PageOption
 from myus.domain.payment.customer.data import PaymentCustomerData
-from myus.domain.payment.customer.interface import FilterOption, SortOption, PaymentCustomerInterface
+from myus.domain.payment.customer.interface import FilterOption, PageOption, SortOption, PaymentCustomerInterface
 from myus.domain.payment.customer.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data

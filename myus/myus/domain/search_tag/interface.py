@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from .data import SearchTagData
+from .validation import SEARCH_TAG_MAX_COUNT
 
 
 class SortType(Enum):
@@ -19,6 +19,12 @@ class FilterOption:
 class SortOption:
     is_asc: bool = True
     sort_type: SortType = SortType.SEQUENCE
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = SEARCH_TAG_MAX_COUNT
+    offset: int = 0
 
 
 class SearchTagInterface(ABC):

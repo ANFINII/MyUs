@@ -3,9 +3,8 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.comment import Comment
 from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from myus.domain.common import PageOption
 from myus.domain.user.data import UserAllData
-from myus.domain.user.interface import FilterOption, SortOption, UserInterface
+from myus.domain.user.interface import FilterOption, PageOption, SortOption, UserInterface
 from myus.domain.user.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType

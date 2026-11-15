@@ -7,9 +7,8 @@ from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from myus.db.models.message import Message
 from myus.db.models.notification import Notification
 from myus.db.models.users import Follow
-from myus.domain.common import PageOption
 from myus.domain.notification.data import NotificationData
-from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
+from myus.domain.notification.interface import FilterOption, NotificationInterface, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType

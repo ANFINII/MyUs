@@ -1,8 +1,7 @@
 from django.db.models import Q
 from myus.db.models.payment import DATETIME_MIN, PaymentEvent
-from myus.domain.common import PageOption
 from myus.domain.payment.event.data import PaymentEventData
-from myus.domain.payment.event.interface import FilterOption, SortOption, PaymentEventInterface
+from myus.domain.payment.event.interface import FilterOption, PageOption, SortOption, PaymentEventInterface
 from myus.domain.payment.event.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data

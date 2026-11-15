@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from .data import FollowData
 
@@ -22,6 +21,12 @@ class FilterOption:
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.CREATED
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = 0
+    offset: int = 0
 
 
 class FollowInterface(ABC):

@@ -1,7 +1,6 @@
 from dataclasses import replace
 from myus.domain.comment.data import CommentData
-from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
+from myus.domain.comment.interface import CommentInterface, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
@@ -15,7 +14,7 @@ from ..user._convert import get_author_map_data
 @Result.shield_exception()
 def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError]:
     repo = injector.get(CommentInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=comment_ulid), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(ulid=comment_ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -51,7 +50,7 @@ def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
 
     reply_ids: list[int] = []
     if data.parent_id is None:
-        ids_ret = repo.get_ids(FilterOption(type_no=CommentTypeNo(data.type_no), object_id=data.object_id, is_parent=False), SortOption(), PageOption(limit=0))
+        ids_ret = repo.get_ids(FilterOption(type_no=CommentTypeNo(data.type_no), object_id=data.object_id, is_parent=False), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -71,7 +70,7 @@ def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
 @Result.shield_exception()
 def get_comments_data(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> Result[list[CommentDTO], FatalError]:
     repo = injector.get(CommentInterface)
-    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

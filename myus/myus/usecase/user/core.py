@@ -1,11 +1,10 @@
 import datetime
 from dataclasses import replace
 from ninja import UploadedFile
-from myus.domain.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
-from myus.domain.common import PageOption
-from myus.domain.media.common import FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from myus.domain.comment.interface import CommentInterface, FilterOption as CommentFilterOption, PageOption as CommentPageOption, SortOption as CommentSortOption
+from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
 from myus.domain.user.data import ProfileData, UserAllData, UserNotificationData
-from myus.domain.user.interface import FilterOption, SortOption, UserInterface
+from myus.domain.user.interface import FilterOption, PageOption, SortOption, UserInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
 from myus.utils.enum.media import MediaType
@@ -22,7 +21,7 @@ from ..notification._convert import create_notification_data, delete_notificatio
 @Result.shield_exception()
 def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None, FatalError]:
     repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -63,7 +62,7 @@ def update_profile(user_id: int, input: SettingProfileDTO, avatar_file: Uploaded
         if len(value) == 0 or value == current:
             continue
 
-        ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=0))
+        ids_ret = repo.get_ids(filter, SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -171,7 +170,7 @@ def update_notification(user_id: int, input: SettingNotificationDTO) -> Result[N
 def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO, FindError]:
     repo = injector.get(UserInterface)
     media_repo = get_media_repository(media_type)
-    ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), MediaSortOption(), PageOption())
+    ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), MediaSortOption(), MediaPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -191,7 +190,7 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO
 def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
     repo = injector.get(UserInterface)
     comment_repo = injector.get(CommentInterface)
-    ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption(), PageOption(limit=0))
+    ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption(), CommentPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -261,7 +260,7 @@ def signup_check(data: SignupDTO) -> Result[str, FatalError]:
         if len(value) == 0:
             continue
 
-        ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=0))
+        ids_ret = repo.get_ids(filter, SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 

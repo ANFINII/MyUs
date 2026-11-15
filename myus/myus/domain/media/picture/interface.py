@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from .data import PictureData
-from ..common import FilterOption, SortOption
+from ..common import FilterOption, PageOption, SortOption
 
 
 class PictureInterface(ABC):

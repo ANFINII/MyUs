@@ -2,8 +2,7 @@ from dataclasses import replace
 from datetime import timedelta
 from django.utils import timezone
 from myus.domain.access_log.data import AccessLogData
-from myus.domain.access_log.interface import AccessLogInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
+from myus.domain.access_log.interface import AccessLogInterface, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.access_log import AccessType

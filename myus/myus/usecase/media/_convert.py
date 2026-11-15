@@ -1,7 +1,6 @@
 from typing import assert_never
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface
-from myus.domain.common import PageOption
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
@@ -14,7 +13,7 @@ from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
-from myus.domain.subscribe.interface import FilterOption, SortOption, SubscribeInterface
+from myus.domain.subscribe.interface import FilterOption, PageOption, SortOption, SubscribeInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.access_log import AccessType
@@ -53,7 +52,7 @@ def get_media_user_data(is_like: bool, channel_id: int, user_id: int | None) -> 
     subscribe_repo = injector.get(SubscribeInterface)
     subscribe = None
     if user_id is not None:
-        ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption(), PageOption(limit=0))
+        ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
