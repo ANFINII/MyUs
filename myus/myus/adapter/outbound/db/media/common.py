@@ -7,7 +7,6 @@ from django.db.models.query import QuerySet
 from django.utils import timezone
 from myus.db.models.subscribe import Subscribe
 from myus.domain.media.common import FilterOption, PageOption, SortOption, SortType
-from ..common import page_queryset
 
 
 RECOMMEND_DAYS = 200
@@ -98,4 +97,4 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False)
 def get_ids_queryset(qs: QuerySet[T], filter: FilterOption, sort: SortOption, page: PageOption) -> QuerySet[T]:
     qs = filter_queryset(qs, filter)
     qs = sort_queryset(qs, sort, filter.is_recommend)
-    return page_queryset(qs, page.limit, page.offset)
+    return qs[page.offset:page.offset + page.limit]
