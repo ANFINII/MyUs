@@ -75,8 +75,9 @@
 
 ## enum変換
 
-- `match-case`を使用
-- 網羅性チェック: `assert_never`推奨
+- 対応がずれうる変換（値の範囲が違う・1対1でない・別の値に読み替える）は、`utils/functions/map.py`に`match-case`の関数を書き、最後を`case _: assert_never(...)`にする（例: `payment_status_rank`・`locale_path`）
+  - 残りをすべて同じ値にする変換（`country_currency`：日本以外はドル）は、`case _:` でその値を返してよい
+- 名前・値が同じ enum どうしの変換（`MediaType.VIDEO = "Video"` → `AccessType.VIDEO = "Video"` など）は、`AccessType(media_type.value)`・`NotificationType[type_no.name]`のようにそのまま変換してよい（`map.py` の `comment_type_map` も同じ書き方）
 - ISO で決まっているコードは、enum の値を ISO の書き方にする（国は ISO 3166-1 の `"JP"`、通貨は ISO 4217 の `"JPY"`、言語は ISO 639-1 の `"ja"`）。頭だけ大文字にする書き方（`"Video"`）は当てはめない
 
 ## リスト内包表記
@@ -385,3 +386,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-14: `get_ids` の `user_id` をメディアの `SortOption` に移した。`get_ids` は `(filter, sort, page)` になった
 - 2026-11-14: `utils/constants/plan.py` を `domain/payment/plan.py` に移し、`Plan` の価格を `prices: list[Money]`（円とドル）にした
 - 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
+- 2026-11-15: enum 変換の決まりを、対応がずれうる変換だけ `map.py` の match + `assert_never` にし、名前・値が同じ enum どうしはそのまま変換してよいことにした
