@@ -7,7 +7,7 @@ from myus.domain.hashtag.data import HashtagData
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
-from myus.domain.media.common import PAGE_SIZE
+from myus.domain.media.common import PAGE_SIZE, PageOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
@@ -141,7 +141,7 @@ class VideoAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
-        videos_ret = get_videos(search, user_id=user_id, limit=limit, offset=offset)
+        videos_ret = get_videos(search, user_id=user_id, page=PageOption(limit=limit, offset=offset))
         if videos_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -249,7 +249,7 @@ class MusicAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
-        musics_ret = get_musics(search, user_id=user_id, limit=limit, offset=offset)
+        musics_ret = get_musics(search, user_id=user_id, page=PageOption(limit=limit, offset=offset))
         if musics_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -357,7 +357,7 @@ class BlogAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
-        blogs_ret = get_blogs(search, user_id=user_id, limit=limit, offset=offset)
+        blogs_ret = get_blogs(search, user_id=user_id, page=PageOption(limit=limit, offset=offset))
         if blogs_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -465,7 +465,7 @@ class ComicAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
-        comics_ret = get_comics(search, user_id=user_id, limit=limit, offset=offset)
+        comics_ret = get_comics(search, user_id=user_id, page=PageOption(limit=limit, offset=offset))
         if comics_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -572,7 +572,7 @@ class PictureAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
-        pictures_ret = get_pictures(search, user_id=user_id, limit=limit, offset=offset)
+        pictures_ret = get_pictures(search, user_id=user_id, page=PageOption(limit=limit, offset=offset))
         if pictures_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -678,7 +678,7 @@ class ChatAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
-        chats_ret = get_chats(search, user_id=user_id, limit=limit, offset=offset)
+        chats_ret = get_chats(search, user_id=user_id, page=PageOption(limit=limit, offset=offset))
         if chats_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 

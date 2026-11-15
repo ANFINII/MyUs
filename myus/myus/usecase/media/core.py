@@ -8,7 +8,7 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.common import PAGE_SIZE, FilterOption, PageOption, SortOption, SortType
+from myus.domain.media.common import FilterOption, PageOption, SortOption, SortType
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.picture.data import PictureData
@@ -442,27 +442,27 @@ def create_chat(user_id: int, input: ChatCreateDTO) -> Result[MediaCreateDTO, Wr
 
 @Result.shield_exception()
 def get_home(limit: int, search: str) -> Result[HomeDTO, FatalError]:
-    videos_ret = get_videos(search, limit=limit)
+    videos_ret = get_videos(search, page=PageOption(limit=limit))
     if videos_ret.is_err:
         return Result.err(videos_ret.err_value)
 
-    musics_ret = get_musics(search, limit=limit)
+    musics_ret = get_musics(search, page=PageOption(limit=limit))
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    blogs_ret = get_blogs(search, limit=limit)
+    blogs_ret = get_blogs(search, page=PageOption(limit=limit))
     if blogs_ret.is_err:
         return Result.err(blogs_ret.err_value)
 
-    comics_ret = get_comics(search, limit=limit)
+    comics_ret = get_comics(search, page=PageOption(limit=limit))
     if comics_ret.is_err:
         return Result.err(comics_ret.err_value)
 
-    pictures_ret = get_pictures(search, limit=limit)
+    pictures_ret = get_pictures(search, page=PageOption(limit=limit))
     if pictures_ret.is_err:
         return Result.err(pictures_ret.err_value)
 
-    chats_ret = get_chats(search, limit=limit)
+    chats_ret = get_chats(search, page=PageOption(limit=limit))
     if chats_ret.is_err:
         return Result.err(chats_ret.err_value)
 
@@ -477,27 +477,27 @@ def get_home(limit: int, search: str) -> Result[HomeDTO, FatalError]:
 
 @Result.shield_exception()
 def get_recommend(limit: int, search: str) -> Result[HomeDTO, FatalError]:
-    videos_ret = get_videos(search, is_recommend=True, limit=limit)
+    videos_ret = get_videos(search, is_recommend=True, page=PageOption(limit=limit))
     if videos_ret.is_err:
         return Result.err(videos_ret.err_value)
 
-    musics_ret = get_musics(search, is_recommend=True, limit=limit)
+    musics_ret = get_musics(search, is_recommend=True, page=PageOption(limit=limit))
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    blogs_ret = get_blogs(search, is_recommend=True, limit=limit)
+    blogs_ret = get_blogs(search, is_recommend=True, page=PageOption(limit=limit))
     if blogs_ret.is_err:
         return Result.err(blogs_ret.err_value)
 
-    comics_ret = get_comics(search, is_recommend=True, limit=limit)
+    comics_ret = get_comics(search, is_recommend=True, page=PageOption(limit=limit))
     if comics_ret.is_err:
         return Result.err(comics_ret.err_value)
 
-    pictures_ret = get_pictures(search, is_recommend=True, limit=limit)
+    pictures_ret = get_pictures(search, is_recommend=True, page=PageOption(limit=limit))
     if pictures_ret.is_err:
         return Result.err(pictures_ret.err_value)
 
-    chats_ret = get_chats(search, is_recommend=True, limit=limit)
+    chats_ret = get_chats(search, is_recommend=True, page=PageOption(limit=limit))
     if chats_ret.is_err:
         return Result.err(chats_ret.err_value)
 
@@ -511,7 +511,7 @@ def get_recommend(limit: int, search: str) -> Result[HomeDTO, FatalError]:
 
 
 @Result.shield_exception()
-def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
+def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, page: PageOption = PageOption()) -> Result[tuple[list[VideoData], int], FatalError]:
     repo = injector.get(VideoInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
@@ -520,7 +520,7 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, sort, page)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -541,7 +541,7 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 
 @Result.shield_exception()
-def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
+def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, page: PageOption = PageOption()) -> Result[tuple[list[MusicData], int], FatalError]:
     repo = injector.get(MusicInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
@@ -550,7 +550,7 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, sort, page)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -565,7 +565,7 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 
 @Result.shield_exception()
-def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
+def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, page: PageOption = PageOption()) -> Result[tuple[list[BlogData], int], FatalError]:
     repo = injector.get(BlogInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
@@ -574,7 +574,7 @@ def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, sort, page)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -589,7 +589,7 @@ def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
 
 
 @Result.shield_exception()
-def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
+def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, page: PageOption = PageOption()) -> Result[tuple[list[ComicData], int], FatalError]:
     repo = injector.get(ComicInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
@@ -598,7 +598,7 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, sort, page)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -618,7 +618,7 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 
 @Result.shield_exception()
-def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
+def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, page: PageOption = PageOption()) -> Result[tuple[list[PictureData], int], FatalError]:
     repo = injector.get(PictureInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
@@ -627,7 +627,7 @@ def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, sort, page)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -642,7 +642,7 @@ def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 
 
 
 @Result.shield_exception()
-def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
+def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, page: PageOption = PageOption()) -> Result[tuple[list[ChatData], int], FatalError]:
     repo = injector.get(ChatInterface)
     filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
@@ -651,7 +651,7 @@ def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
         return Result.err(count_ret.err_value)
 
     total = count_ret.ok_value
-    ids_ret = repo.get_ids(filter, sort, PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, sort, page)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

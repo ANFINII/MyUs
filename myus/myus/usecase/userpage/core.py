@@ -3,6 +3,7 @@ from django.utils import timezone
 from myus.domain.advertise.data import AdvertiseData
 from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, PageOption, SortOption
 from myus.domain.follow.interface import FilterOption as FollowFilterOption, FollowInterface, PageOption as FollowPageOption, SortOption as FollowSortOption
+from myus.domain.media.common import PageOption as MediaPageOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.common import create_url
@@ -13,27 +14,27 @@ from ..media.core import get_videos, get_musics, get_blogs, get_comics, get_pict
 
 @Result.shield_exception()
 def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int = 0) -> Result[HomeDTO, FatalError]:
-    videos_ret = get_videos(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
+    videos_ret = get_videos(search, owner_id=owner_id, channel_id=channel_id, page=MediaPageOption(limit=limit))
     if videos_ret.is_err:
         return Result.err(videos_ret.err_value)
 
-    musics_ret = get_musics(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
+    musics_ret = get_musics(search, owner_id=owner_id, channel_id=channel_id, page=MediaPageOption(limit=limit))
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    blogs_ret = get_blogs(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
+    blogs_ret = get_blogs(search, owner_id=owner_id, channel_id=channel_id, page=MediaPageOption(limit=limit))
     if blogs_ret.is_err:
         return Result.err(blogs_ret.err_value)
 
-    comics_ret = get_comics(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
+    comics_ret = get_comics(search, owner_id=owner_id, channel_id=channel_id, page=MediaPageOption(limit=limit))
     if comics_ret.is_err:
         return Result.err(comics_ret.err_value)
 
-    pictures_ret = get_pictures(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
+    pictures_ret = get_pictures(search, owner_id=owner_id, channel_id=channel_id, page=MediaPageOption(limit=limit))
     if pictures_ret.is_err:
         return Result.err(pictures_ret.err_value)
 
-    chats_ret = get_chats(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
+    chats_ret = get_chats(search, owner_id=owner_id, channel_id=channel_id, page=MediaPageOption(limit=limit))
     if chats_ret.is_err:
         return Result.err(chats_ret.err_value)
 
