@@ -22,7 +22,10 @@ def get_notification(user_id: int) -> Result[NotificationDTO, FatalError]:
         return Result.err(objs_ret.err_value)
 
     objs = objs_ret.ok_value
-    confirmed_ids_ret = repo.get_ids(FilterOption(confirmed_user_id=user_id), SortOption())
+    if len(objs) == 0:
+        return Result.ok(NotificationDTO(count=0, items=[]))
+
+    confirmed_ids_ret = repo.get_ids(FilterOption(ids=[o.id for o in objs], confirmed_user_id=user_id), SortOption())
     if confirmed_ids_ret.is_err:
         return Result.err(confirmed_ids_ret.err_value)
 
