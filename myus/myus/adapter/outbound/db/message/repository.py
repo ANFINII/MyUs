@@ -21,6 +21,8 @@ class MessageRepository(MessageInterface):
         q_list: list[Q] = []
         if filter.chat_id:
             q_list.append(Q(chat_id=filter.chat_id))
+        if len(filter.chat_ids) > 0:
+            q_list.append(Q(chat_id__in=filter.chat_ids))
         if filter.message_ulid:
             q_list.append(Q(ulid=filter.message_ulid))
         if filter.parent_ulid:

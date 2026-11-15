@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime
+from myus.utils.enum.advertise import AdvertiseType
 
 
 @dataclass(frozen=True, slots=True)
@@ -13,7 +14,7 @@ class AdvertiseData:
     image: str
     video: str
     read: int
-    type: str
+    type: AdvertiseType
     period: date | None
     publish: bool
     created: datetime

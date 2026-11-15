@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { SearchTagOut } from 'types/internal/user'
 import { getSearchTag, putSearchTag } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
@@ -56,7 +56,7 @@ export default function SearchTagBar(): React.JSX.Element {
         const ret = await putSearchTag(tags)
         setILoading(false)
         if (ret.isErr()) {
-          handleToast(toErrorMessage(ret.error, FetchError.Put), true)
+          handleToast(errorMessage(ret.error, FetchError.Put), true)
           return
         }
         setSearchTags(tags)

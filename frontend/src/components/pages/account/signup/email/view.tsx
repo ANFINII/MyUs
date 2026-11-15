@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { postSignupEmail } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
@@ -35,7 +35,7 @@ export default function SignupEmail(): React.JSX.Element {
     const ret = await postSignupEmail(email)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Error), true)
+      handleToast(errorMessage(ret.error, FetchError.Error), true)
       return
     }
     handleToast(t('account.form.mailSent'), false)

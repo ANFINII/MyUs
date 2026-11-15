@@ -7,6 +7,7 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
 from myus.utils.constants.page import PAGE_SIZE
+from myus.utils.enum.advertise import AdvertiseType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
 from myus.utils.functions.media import save_upload, validate_uploads
@@ -15,7 +16,6 @@ from ...dto.advertise import AdvertiseDTO
 from ...user.core import get_user_data
 
 
-ADVERTISE_TYPE_PERSONAL = "one"
 ADVERTISE_PERSONAL_LIMIT = 5
 
 
@@ -109,7 +109,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseDTO, image: UploadedFi
         image=save_upload(image, ImageUpload.ADVERTISE, user.user.ulid),
         video=save_upload(video, MediaUpload.ADVERTISE, user.user.ulid) if video is not None else "",
         read=0,
-        type=ADVERTISE_TYPE_PERSONAL,
+        type=AdvertiseType.ONE,
         period=input.period,
         publish=input.publish,
         created=datetime.min,

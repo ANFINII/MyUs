@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { ChatUpdateIn } from 'types/internal/media/input'
@@ -23,6 +23,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../../Form.module.scss'
 
 interface Props {
   channels: Channel[]
@@ -59,7 +60,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
     const ret = await putManageChat(data.ulid, values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Put), true)
+      handleToast(errorMessage(ret.error, FetchError.Put), true)
       return
     }
     handleToast(Fetch.Save, false)
@@ -74,7 +75,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
 
   return (
     <Main title="Chat" type="table" toast={toast} isFooter={false} button={button}>
-      <form method="POST" action="">
+      <form className={style.form} method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />

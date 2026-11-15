@@ -1,6 +1,7 @@
 from django_ulid.models import ulid
 from django.db import models
 from myus.utils.constants.choice import ADVERTISE_TYPE_CHOICES
+from myus.utils.enum.advertise import AdvertiseType
 from myus.utils.functions.file import advertise_image_upload, advertise_video_upload
 from .user import User
 
@@ -34,7 +35,7 @@ class Advertise(models.Model):
     image   = models.ImageField(upload_to=advertise_image_upload, max_length=255, blank=True)
     video   = models.FileField(upload_to=advertise_video_upload, max_length=255, blank=True)
     read    = models.IntegerField(default=0)
-    type    = models.CharField(choices=ADVERTISE_TYPE_CHOICES, max_length=3, default="one")
+    type    = models.CharField(choices=ADVERTISE_TYPE_CHOICES, max_length=3, default=AdvertiseType.ONE)
     period  = models.DateField(blank=True, null=True)
     publish = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)

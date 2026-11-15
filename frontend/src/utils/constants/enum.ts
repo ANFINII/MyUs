@@ -208,6 +208,11 @@ export enum NotificationObjectType {
   Message = 'Message',
 }
 
+export enum AdvertiseType {
+  All = 'All',
+  One = 'One',
+}
+
 export enum CommentType {
   Video = 'Video',
   Music = 'Music',

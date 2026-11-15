@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { Advertise, AdvertiseUpdateIn } from 'types/internal/advertise'
 import { putManageAdvertise } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
@@ -17,6 +17,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../../Form.module.scss'
 
 interface Props {
   data: Advertise
@@ -47,7 +48,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
     const ret = await putManageAdvertise(data.ulid, values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Put), true)
+      handleToast(errorMessage(ret.error, FetchError.Put), true)
       return
     }
     handleToast(Fetch.Save, false)
@@ -62,7 +63,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
 
   return (
     <Main title="Advertise" type="table" toast={toast} isFooter={false} button={button}>
-      <form method="POST" action="" encType="multipart/form-data">
+      <form className={style.form} method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />

@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Music, MusicList } from 'types/internal/media/output'
@@ -55,7 +55,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
     const ret = await deleteManageMusics(ulids)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Delete), true)
+      handleToast(errorMessage(ret.error, FetchError.Delete), true)
       return
     }
     setSelectedKeys(new Set())

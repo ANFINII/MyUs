@@ -15,11 +15,11 @@ export const isApiError = (value: unknown): value is ApiError => {
   return typeof value === 'object' && value !== null && 'status' in value && typeof value.status === 'number'
 }
 
-const toErrorType = (value: unknown): ErrorType | undefined => {
+const errorType = (value: unknown): ErrorType | undefined => {
   return Object.values(ErrorType).find((type) => type === value)
 }
 
-export const toErrorMessage = (error: ApiError, fallback: FetchError): string => {
+export const errorMessage = (error: ApiError, fallback: FetchError): string => {
   return error.message?.startsWith('error.') ? error.message : fallback
 }
 
@@ -30,7 +30,7 @@ export const apiOut = async <T>(apiCall: Promise<AxiosResponse<T>>): Promise<Api
   } catch (e) {
     if (axios.isAxiosError(e)) {
       const data = e.response?.data
-      return err({ status: e.response?.status ?? 500, type: toErrorType(data?.type), message: data?.message })
+      return err({ status: e.response?.status ?? 500, type: errorType(data?.type), message: data?.message })
     }
     return err({ status: 500, message: FetchError.Error })
   }

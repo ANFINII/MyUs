@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { BlogIn } from 'types/internal/media/input'
@@ -24,6 +24,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import BlogModal from 'components/widgets/Modal/Blog'
 import TextEditor from 'components/widgets/TextEditor'
+import style from '../../Form.module.scss'
 
 interface Props {
   channels: Channel[]
@@ -67,7 +68,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
     const ret = await postBlogCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push({ pathname: '/manage/blog', query: { channel: channelUlid } })
@@ -82,7 +83,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
 
   return (
     <Main title="Blog" type="table" toast={toast} isFooter={false} button={button}>
-      <form method="POST" action="">
+      <form className={style.form} method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
