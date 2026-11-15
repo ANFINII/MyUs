@@ -92,17 +92,17 @@ class NotificationRepository(NotificationInterface):
         for object_type, obj_ids in groups.items():
             match object_type:
                 case NotificationObjectType.VIDEO:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Video.objects.filter(id__in=obj_ids, publish_at__lte=Now())})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Video.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
                 case NotificationObjectType.MUSIC:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Music.objects.filter(id__in=obj_ids, publish_at__lte=Now())})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Music.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
                 case NotificationObjectType.BLOG:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Blog.objects.filter(id__in=obj_ids, publish_at__lte=Now())})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Blog.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
                 case NotificationObjectType.COMIC:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Comic.objects.filter(id__in=obj_ids, publish_at__lte=Now())})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Comic.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
                 case NotificationObjectType.PICTURE:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Picture.objects.filter(id__in=obj_ids, publish_at__lte=Now())})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Picture.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
                 case NotificationObjectType.CHAT:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Chat.objects.filter(id__in=obj_ids, publish_at__lte=Now())})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Chat.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
                 case NotificationObjectType.FOLLOW:
                     content_map.update({f"{object_type.value}:{o.id}": o for o in Follow.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.COMMENT:
