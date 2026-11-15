@@ -8,5 +8,5 @@ export default function ComicDetailPage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const { data } = useSuspenseQuery(comicQuery(ulid))
 
-  return <ComicDetail data={data} />
+  return <ComicDetail key={ulid} data={data} />
 }

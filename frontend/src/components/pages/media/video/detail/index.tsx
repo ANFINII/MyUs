@@ -8,5 +8,5 @@ export default function VideoDetailPage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const { data } = useSuspenseQuery(videoQuery(ulid))
 
-  return <VideoDetail data={data} />
+  return <VideoDetail key={ulid} data={data} />
 }
