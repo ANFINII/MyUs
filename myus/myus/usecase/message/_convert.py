@@ -41,13 +41,20 @@ def save_message_data(data: MessageData) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def delete_message_data(data: MessageData, user_id: int) -> Result[None, FatalError]:
-    # 返信の場合はNotificationも削除
+    repo = injector.get(MessageInterface)
     if data.parent_id is not None:
         notification_ret = delete_notification_data(NotificationObjectType.MESSAGE, [data.id], NotificationTypeNo.REPLY, user_id)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
+    else:
+        reply_ids_ret = repo.get_ids(FilterOption(parent_ulid=data.ulid, is_parent=False), SortOption())
+        if reply_ids_ret.is_err:
+            return Result.err(reply_ids_ret.err_value)
 
-    repo = injector.get(MessageInterface)
+        notification_ret = delete_notification_data(NotificationObjectType.MESSAGE, reply_ids_ret.ok_value, NotificationTypeNo.REPLY)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     delete_ret = repo.bulk_delete([data.id])
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
