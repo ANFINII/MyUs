@@ -4,6 +4,7 @@ from myus.domain.advertise.interface import AdvertiseInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.access_log import AccessType
+from myus.utils.enum.advertise import AdvertiseType
 from ..access_log._convert import save_access_data
 
 
@@ -27,7 +28,7 @@ def save_read_data(advertise_id: int, read: int, ip_address: str) -> Result[int,
 
 
 def is_active(ad: AdvertiseData, today: date) -> bool:
-    if ad.type != "one":
+    if ad.type != AdvertiseType.ONE:
         return False
     if ad.period is None:
         return True

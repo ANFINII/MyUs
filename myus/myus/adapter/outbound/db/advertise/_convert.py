@@ -1,6 +1,7 @@
 from django_ulid.models import ulid
 from myus.db.models.common import Advertise
 from myus.domain.advertise.data import AdvertiseData
+from myus.utils.enum.advertise import AdvertiseType
 
 
 def convert_data(obj: Advertise) -> AdvertiseData:
@@ -14,7 +15,7 @@ def convert_data(obj: Advertise) -> AdvertiseData:
         image=obj.image.name or "",
         video=obj.video.name or "",
         read=obj.read,
-        type=obj.type,
+        type=AdvertiseType(obj.type),
         period=obj.period,
         publish=obj.publish,
         created=obj.created,
