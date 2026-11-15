@@ -2,12 +2,12 @@ from enum import Enum
 
 
 class Currency(str, Enum):
-    JPY = "Jpy"
-    USD = "Usd"
-    EUR = "Eur"
-    GBP = "Gbp"
-    CNY = "Cny"
-    KRW = "Krw"
+    JPY = "JPY"
+    USD = "USD"
+    EUR = "EUR"
+    GBP = "GBP"
+    CNY = "CNY"
+    KRW = "KRW"
 
 
 class Locale(str, Enum):

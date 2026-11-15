@@ -170,7 +170,7 @@ def stripe_price(subscription: stripe.Subscription) -> Money:
     if len(items) == 0:
         return Money(amount=0, currency=Currency.JPY)
     price = items[0].price
-    return Money(amount=price.unit_amount or 0, currency=Currency(price.currency.capitalize()))
+    return Money(amount=price.unit_amount or 0, currency=Currency(price.currency.upper()))
 
 
 def stripe_metadata(subscription: stripe.Subscription, key: str) -> str:
@@ -203,7 +203,7 @@ def stripe_id(field: str | stripe.StripeObject | None) -> str:
 
 
 def stripe_currency(currency: str) -> Currency:
-    return Currency(currency.capitalize())
+    return Currency(currency.upper())
 
 
 def stripe_payout_status(status: str) -> PayoutStatus:
