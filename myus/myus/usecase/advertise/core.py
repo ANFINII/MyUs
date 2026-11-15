@@ -7,6 +7,7 @@ from myus.domain.payment.plan import get_plan
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, NotFoundError, Result
+from myus.utils.enum.advertise import AdvertiseType
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.common import create_url
 from myus.utils.functions.transaction import atomic_result
@@ -14,7 +15,6 @@ from ._convert import is_active, save_read_data
 from ..user.core import get_user_data
 
 
-ADVERTISE_TYPE_ALL = "all"
 GLOBAL_ADVERTISE_LIMIT = 1
 
 
@@ -69,8 +69,9 @@ def get_global_advertises(user_id: int | None) -> Result[list[AdvertiseData], Fa
         if user is not None and user.user_plan.plan != PlanName.FREE and not user.mypage.is_advertise:
             return Result.ok([])
 
+    today = timezone.localdate()
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL, period=timezone.localdate()), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=AdvertiseType.ALL, period=today), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

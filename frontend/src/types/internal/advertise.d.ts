@@ -1,3 +1,5 @@
+import { AdvertiseType } from 'utils/constants/enum'
+
 export interface AdvertiseIn {
   title: string
   url: string
@@ -26,7 +28,7 @@ export interface Advertise {
   image: string
   video: string
   read: number
-  type: string
+  type: AdvertiseType
   period: string | null
   publish: boolean
   created: Date

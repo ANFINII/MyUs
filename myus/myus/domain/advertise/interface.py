@@ -4,6 +4,7 @@ from datetime import date
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
 from myus.utils.constants.page import PAGE_SIZE
+from myus.utils.enum.advertise import AdvertiseType
 from .data import AdvertiseData
 
 
@@ -19,7 +20,7 @@ class FilterOption:
     publish: bool | None = None
     owner_id: int = 0
     search: str = ""
-    advertise_type: str = ""
+    advertise_type: AdvertiseType | None = None
     period: date | None = None
 
 

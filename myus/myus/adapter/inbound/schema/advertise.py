@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from pydantic import BaseModel
+from myus.utils.enum.advertise import AdvertiseType
 from .common import Title, Url
 
 
@@ -27,7 +28,7 @@ class AdvertiseOut(BaseModel):
     image: str
     video: str
     read: int
-    type: str
+    type: AdvertiseType
     period: date | None
     publish: bool
     created: datetime
