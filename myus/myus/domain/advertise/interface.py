@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from datetime import date
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
 from myus.utils.constants.page import PAGE_SIZE
@@ -19,6 +20,7 @@ class FilterOption:
     owner_id: int = 0
     search: str = ""
     advertise_type: str = ""
+    period_from: date | None = None
 
 
 @dataclass(frozen=True, slots=True)

@@ -25,6 +25,8 @@ def _filter_q_list(filter: FilterOption) -> list[Q]:
         q_list.append(Q(title__icontains=filter.search))
     if filter.advertise_type:
         q_list.append(Q(type=filter.advertise_type))
+    if filter.period_from is not None:
+        q_list.append(Q(period__isnull=True) | Q(period__gte=filter.period_from))
     return q_list
 
 

@@ -70,7 +70,7 @@ def get_global_advertises(user_id: int | None) -> Result[list[AdvertiseData], Fa
             return Result.ok([])
 
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL, period_from=timezone.localdate()), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -83,12 +83,7 @@ def get_global_advertises(user_id: int | None) -> Result[list[AdvertiseData], Fa
         return Result.err(objs_ret.err_value)
 
     objs = objs_ret.ok_value
-    today = timezone.localdate()
-    active = [o for o in objs if o.period is None or o.period >= today]
-    if len(active) == 0:
-        return Result.ok([])
-
-    picked = random.sample(active, min(GLOBAL_ADVERTISE_LIMIT, len(active)))
+    picked = random.sample(objs, min(GLOBAL_ADVERTISE_LIMIT, len(objs)))
     return Result.ok([replace(a, image=create_url(a.image), video=create_url(a.video)) for a in picked])
 
 
