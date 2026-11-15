@@ -70,7 +70,7 @@ def get_global_advertises(user_id: int | None) -> Result[list[AdvertiseData], Fa
             return Result.ok([])
 
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL, period_from=timezone.localdate()), SortOption(), PageOption())
+    ids_ret = repo.get_ids(FilterOption(publish=True, advertise_type=ADVERTISE_TYPE_ALL, period=timezone.localdate()), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

@@ -20,7 +20,7 @@ class FilterOption:
     owner_id: int = 0
     search: str = ""
     advertise_type: str = ""
-    period_from: date | None = None
+    period: date | None = None
 
 
 @dataclass(frozen=True, slots=True)
