@@ -70,6 +70,8 @@ export default function PaymentChange(props: Props): React.JSX.Element {
           ))}
         </div>
 
+        <p className={style.currency}>{t('setting.payment.currencyBySubscription')}</p>
+
         <div className={style.actions}>
           <Button color="green" name={t('setting.button.change')} disabled={!isChanged} loading={loading} onClick={handleSubmit} />
           <Button color="blue" name={t('setting.button.cancel')} onClick={handleBack} />

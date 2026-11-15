@@ -113,6 +113,19 @@ export default function Payment(props: Props): React.JSX.Element {
           ))}
         </div>
 
+        <p className={style.currency}>
+          {isPaid ? (
+            t('setting.payment.currencyBySubscription')
+          ) : (
+            <>
+              {t('setting.payment.currencyByCountry')}
+              <Link href="/setting/profile/edit" className={style.currency_link}>
+                {t('setting.payment.changeCountry')}
+              </Link>
+            </>
+          )}
+        </p>
+
         {isCanceled && (
           <div className={style.actions}>
             <Button color="green" name={t('setting.payment.revoke')} loading={loading} onClick={handleRevoke} />
