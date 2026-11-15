@@ -512,7 +512,7 @@ def save_failed_payment_event_data(event: PaymentEventData, error: str) -> Resul
 @Result.shield_exception()
 def save_payment_customer_data(user_id: int, provider: PaymentProvider, external_id: str) -> Result[int, FatalError]:
     repo = injector.get(PaymentCustomerInterface)
-    ids_ret = repo.get_ids(PaymentCustomerFilterOption(user_id=user_id, provider=provider.value), PaymentCustomerSortOption(), PaymentCustomerPageOption(limit=1))
+    ids_ret = repo.get_ids(PaymentCustomerFilterOption(user_id=user_id, provider=provider.value), PaymentCustomerSortOption(), PaymentCustomerPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
