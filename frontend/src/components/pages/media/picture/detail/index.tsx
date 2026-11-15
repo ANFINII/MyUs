@@ -8,5 +8,5 @@ export default function PictureDetailPage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const { data } = useSuspenseQuery(pictureQuery(ulid))
 
-  return <PictureDetail data={data} />
+  return <PictureDetail key={ulid} data={data} />
 }

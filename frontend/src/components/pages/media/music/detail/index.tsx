@@ -8,5 +8,5 @@ export default function MusicDetailPage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const { data } = useSuspenseQuery(musicQuery(ulid))
 
-  return <MusicDetail data={data} />
+  return <MusicDetail key={ulid} data={data} />
 }
