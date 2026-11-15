@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { toErrorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
-import { MypageOut, ProfileOut } from 'types/internal/user'
+import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod } from 'api/internal/payment'
 import { FetchError, Locale } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
@@ -21,13 +21,12 @@ import { plans } from './plans'
 
 interface Props {
   mypage: MypageOut
-  profile: ProfileOut
   subscription: PaymentSubscriptionOut
   planPrices: PaymentPlanOut[]
 }
 
 export default function Payment(props: Props): React.JSX.Element {
-  const { mypage, profile, subscription, planPrices } = props
+  const { mypage, subscription, planPrices } = props
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -118,10 +117,10 @@ export default function Payment(props: Props): React.JSX.Element {
         {currency && (
           <p className={style.currency}>
             {isPaid ? (
-              t('setting.payment.currencyBySubscription', { currency: t(`currency.${currency}`) })
+              t('setting.payment.currencyBySubscription')
             ) : (
               <>
-                {t('setting.payment.currencyByCountry', { country: t(`country.${profile.country}`), currency: t(`currency.${currency}`) })}
+                {t('setting.payment.currencyByCountry', { currency: t(`currency.${currency}`) })}
                 <Link href="/setting/profile/edit" className={style.currency_link}>
                   {t('setting.payment.changeCountry')}
                 </Link>
