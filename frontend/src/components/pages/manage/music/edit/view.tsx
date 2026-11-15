@@ -23,6 +23,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../../Form.module.scss'
 
 interface Props {
   channels: Channel[]
@@ -73,7 +74,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
 
   return (
     <Main title="Music" type="table" toast={toast} isFooter={false} button={button}>
-      <form method="POST" action="" encType="multipart/form-data">
+      <form className={style.form} method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
