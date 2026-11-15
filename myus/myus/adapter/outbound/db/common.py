@@ -7,7 +7,7 @@ from django.db.models.query import QuerySet
 T = TypeVar("T", bound=Model)
 
 
-class Page(Protocol):
+class PageOption(Protocol):
     @property
     def limit(self) -> int: ...
 
@@ -20,7 +20,7 @@ def sort_ids(objs: list[T], ids: list[int]) -> list[T]:
     return [obj_map[id] for id in ids if id in obj_map]
 
 
-def page_queryset(qs: QuerySet[T], page: Page) -> QuerySet[T]:
+def page_queryset(qs: QuerySet[T], page: PageOption) -> QuerySet[T]:
     if page.limit == 0:
         return qs[page.offset:]
     return qs[page.offset:page.offset + page.limit]
