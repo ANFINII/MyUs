@@ -20,6 +20,7 @@ import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../../Form.module.scss'
 
 interface Props {
   channels: Channel[]
@@ -69,7 +70,7 @@ export default function PictureCreate(props: Props): React.JSX.Element {
       isFooter={false}
       button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}
     >
-      <form method="POST" action="">
+      <form className={style.form} method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
