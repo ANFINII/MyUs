@@ -1,6 +1,5 @@
-from myus.domain.common import PageOption
 from myus.domain.notification.data import NotificationData
-from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
+from myus.domain.notification.interface import FilterOption, NotificationInterface, PageOption, SortOption
 from myus.domain.user.data import UserNotificationData
 from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
@@ -123,7 +122,7 @@ def delete_notification_data(object_type: NotificationObjectType, object_ids: li
         return Result.ok(None)
 
     repo = injector.get(NotificationInterface)
-    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=object_ids, user_from_id=user_from_id), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=object_ids, user_from_id=user_from_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

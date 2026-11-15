@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
-from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from .data import LedgerEntryData
 
@@ -23,6 +22,12 @@ class FilterOption:
 class SortOption:
     is_asc: bool = True
     sort_type: SortType = SortType.OCCURRED_AT
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = 0
+    offset: int = 0
 
 
 class LedgerEntryInterface(ABC):

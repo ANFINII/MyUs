@@ -1,10 +1,9 @@
 from dataclasses import replace
 from datetime import datetime
-from myus.domain.common import PageOption
 from myus.domain.media.chat.interface import ChatInterface
-from myus.domain.media.common import FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
 from myus.domain.message.data import MessageData
-from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
+from myus.domain.message.interface import FilterOption, MessageInterface, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result
@@ -19,7 +18,7 @@ from ..user._convert import get_author_data, get_author_map_data
 @Result.shield_exception()
 def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
     repo = injector.get(MessageInterface)
-    ids_ret = repo.get_ids(FilterOption(parent_ulid=message_ulid, is_parent=False), SortOption(is_asc=True), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(parent_ulid=message_ulid, is_parent=False), SortOption(is_asc=True), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -51,7 +50,7 @@ def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
 @Result.shield_exception()
 def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> Result[MessageDTO, FindError]:
     chat_repo = injector.get(ChatInterface)
-    chat_ids_ret = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), MediaSortOption(), PageOption())
+    chat_ids_ret = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), MediaSortOption(), MediaPageOption())
     if chat_ids_ret.is_err:
         return Result.err(chat_ids_ret.err_value)
 
@@ -64,7 +63,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
     parent_id: int | None = None
     if parent_ulid:
-        parent_ids_ret = repo.get_ids(FilterOption(chat_id=chat_ids[0], message_ulid=parent_ulid, is_parent=True), SortOption(), PageOption(limit=0))
+        parent_ids_ret = repo.get_ids(FilterOption(chat_id=chat_ids[0], message_ulid=parent_ulid, is_parent=True), SortOption(), PageOption())
         if parent_ids_ret.is_err:
             return Result.err(parent_ids_ret.err_value)
 

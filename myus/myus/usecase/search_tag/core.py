@@ -1,6 +1,5 @@
-from myus.domain.common import PageOption
 from myus.domain.search_tag.data import SearchTagData
-from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, SortOption
+from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result, ValidateError
 from myus.utils.functions.transaction import atomic_result
@@ -11,7 +10,7 @@ from ..dto.user import SearchTagDTO
 @Result.shield_exception()
 def get_search_tag_data(author_id: int) -> Result[list[SearchTagData], FatalError]:
     repo = injector.get(SearchTagInterface)
-    ids_ret = repo.get_ids(FilterOption(author_id=author_id), SortOption(), PageOption(limit=20))
+    ids_ret = repo.get_ids(FilterOption(author_id=author_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

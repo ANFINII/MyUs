@@ -2,9 +2,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.hashtag import HashTag
-from myus.domain.common import PageOption
 from myus.domain.hashtag.data import HashtagData
-from myus.domain.hashtag.interface import FilterOption, HashtagInterface, SortOption
+from myus.domain.hashtag.interface import FilterOption, HashtagInterface, PageOption, SortOption
 from myus.domain.hashtag.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType

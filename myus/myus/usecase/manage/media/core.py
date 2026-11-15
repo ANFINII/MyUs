@@ -1,21 +1,20 @@
 from dataclasses import replace
 from ninja import UploadedFile
 from django.utils import timezone
-from myus.domain.common import PageOption
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.common import FilterOption, SortOption
+from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
-from myus.domain.message.interface import FilterOption as MessageFilterOption, MessageInterface, SortOption as MessageSortOption
+from myus.domain.message.interface import FilterOption as MessageFilterOption, MessageInterface, PageOption as MessagePageOption, SortOption as MessageSortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
@@ -698,7 +697,7 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError
         return Result.err(NotFoundError("error.deleteFailed"))
 
     message_repo = injector.get(MessageInterface)
-    reply_ids_ret = message_repo.get_ids(MessageFilterOption(chat_ids=delete_ids, is_parent=False), MessageSortOption(), PageOption(limit=0))
+    reply_ids_ret = message_repo.get_ids(MessageFilterOption(chat_ids=delete_ids, is_parent=False), MessageSortOption(), MessagePageOption())
     if reply_ids_ret.is_err:
         return Result.err(reply_ids_ret.err_value)
 

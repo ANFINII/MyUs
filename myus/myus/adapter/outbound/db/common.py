@@ -1,11 +1,18 @@
-from typing import TypeVar
+from typing import Protocol, TypeVar
 from django.db import transaction
 from django.db.models import Model
 from django.db.models.query import QuerySet
-from myus.domain.common import PageOption
 
 
 T = TypeVar("T", bound=Model)
+
+
+class PageOption(Protocol):
+    @property
+    def limit(self) -> int: ...
+
+    @property
+    def offset(self) -> int: ...
 
 
 def sort_ids(objs: list[T], ids: list[int]) -> list[T]:

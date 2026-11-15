@@ -2,8 +2,7 @@ from dataclasses import replace
 from datetime import datetime
 from ninja import UploadedFile
 from myus.domain.advertise.data import AdvertiseData
-from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
+from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
@@ -189,7 +188,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseDTO, image:
 @Result.shield_exception()
 def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

@@ -1,9 +1,8 @@
 from django.db.models import Count, Q
 from django.db.models.query import QuerySet
 from myus.db.models.message import Message
-from myus.domain.common import PageOption
 from myus.domain.message.data import MessageData
-from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
+from myus.domain.message.interface import FilterOption, MessageInterface, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
 from ..common import get_save_new_ids, page_queryset, sort_ids

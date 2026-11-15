@@ -1,8 +1,7 @@
 from django.db.models import Q
 from myus.db.models.payment import PaymentTransaction
-from myus.domain.common import PageOption
 from myus.domain.payment.transaction.data import TransactionData
-from myus.domain.payment.transaction.interface import FilterOption, SortOption, TransactionInterface
+from myus.domain.payment.transaction.interface import FilterOption, PageOption, SortOption, TransactionInterface
 from myus.domain.payment.transaction.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data

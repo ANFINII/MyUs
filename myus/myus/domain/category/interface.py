@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from .data import CategoryData
@@ -21,6 +20,12 @@ class FilterOption:
 class SortOption:
     is_asc: bool = True
     sort_type: SortType = SortType.ID
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = 0
+    offset: int = 0
 
 
 class CategoryInterface(ABC):
