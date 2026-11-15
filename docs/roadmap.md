@@ -55,9 +55,9 @@
 
 ### 今の状態
 
-Phase 1〜4 は完了した（ES の基盤・保存形式の検査・webhook の受け口と worker・Subscription 集約）。今の仕組みは [myus.md](myus.md) の「決済システム」、コードの決まりは [backend.md](backend.md) にある。
+Phase 1〜5 は完了した（ES の基盤・保存形式の検査・webhook の受け口と worker・Subscription 集約・解約の要求と結果の記録）。今の仕組みは [myus.md](myus.md) の「決済システム」、コードの決まりは [backend.md](backend.md) にある。
 
-Phase 5 は解約から進めている（外部操作の worker は作らず、リクエストの中で要求と結果を記録する形）。checkout と Phase 6 以降は **保留**。進めるときは、その時点の規模と問題を見て Phase ごとに決める。
+checkout を要求と結果に分けることと Phase 6 以降は **保留**。進めるときは、その時点の規模と問題を見て Phase ごとに決める。解約で結果が分からないまま残った要求を自動で呼び直す worker は、必要になったら足す（今は次の解約で同じ冪等キーを使って呼び直す）。
 
 ### 進め方の原則
 
@@ -101,16 +101,15 @@ flowchart LR
 | `myus/domain/<ドメイン>/<集約>/` | `state.py`・`event.py`・`decide.py`・`apply.py`。I/O を持たない | あり |
 | `myus/usecase/es/_convert.py` | `handle_command`（集約に書き込む共通の手順） | あり |
 | `myus/usecase/<ドメイン>/_convert.py` | 集約ごとのコマンド（`payment` の `save_subscription_event_data` など） | あり |
-| `myus/usecase/receiver/` | Receiver（外の事実やほかの集約のイベントを受けてコマンドを打つ） | Phase 5 以降 |
+| `myus/usecase/receiver/` | Receiver（外の事実やほかの集約のイベントを受けてコマンドを打つ） | Phase 6 以降 |
 | `myus/usecase/projector/`・`query/` | Projector と専用の Writer、query usecase と Reader | Phase 6 |
 
 ---
 
-### 🔶 Phase 5: 外部操作を要求と結果に分ける
+### ⏸ checkout を要求と結果に分ける
 
-- ✅ **解約：** 要求（`Subscription.CancellationRequested.V1`）を記録し、その EventId を冪等キーにして Stripe を呼ぶ。成功したら Stripe から今の状態を取り直して受理し（`CancellationScheduled`）、断られたら `CancellationFailed` を記録する。結果が分からないとき（通信の失敗）は要求を残し、次の解約で同じキーを使って呼び直す。外部操作の worker は作らず、リクエストの中で行う（未決着の要求を自動で呼び直すのは、必要になったら worker で足す）
-- ⏸ **checkout：** 保留。Stripe のサブスクリプションは支払いが終わってから作られるので、checkout の時点ではサブスクリプションの ID（集約の ID）が無く、今の Subscription 集約には載せられない。載せるには checkout 用の別の集約が要るが、checkout の画面は二重に作っても支払われるのは1つだけで、得るものが小さい。有料プランの契約中に新しく checkout できないことは、`create_checkout` で今の `Subscription` を見て止めている
-- **冪等キー：** 解約は要求の EventId をキーにした。checkout も同じ形にする
+- Stripe のサブスクリプションは支払いが終わってから作られるので、checkout の時点ではサブスクリプションの ID（集約の ID）が無く、今の Subscription 集約には載せられない。載せるには checkout 用の別の集約が要るが、checkout の画面は二重に作っても支払われるのは1つだけで、得るものが小さい。有料プランの契約中に新しく checkout できないことは、`create_checkout` で今の `Subscription` を見て止めている
+- 進めるときは、解約と同じく要求の EventId を冪等キーにする（解約の形は myus.md の「決済システム」）
 
 ### ⏸ Phase 6: Projector と query model
 
