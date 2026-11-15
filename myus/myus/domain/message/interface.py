@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
 from .data import MessageData
@@ -12,6 +12,7 @@ class SortType(Enum):
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     chat_id: int = 0
+    chat_ids: list[int] = field(default_factory=list)
     message_ulid: str = ""
     parent_ulid: str = ""
     is_parent: bool | None = True
