@@ -27,8 +27,8 @@ export default function MusicDetail(props: Props): React.JSX.Element {
 
   const { t } = useTranslation()
   const { toast, handleToast } = useToast()
-  const [speed, setSpeed] = useState(1)
-  const [isLyricView, setIsLyricView] = useState(false)
+  const [speed, setSpeed] = useState<number>(1)
+  const [isLyricView, setIsLyricView] = useState<boolean>(false)
 
   const handleSpeed = (e: ChangeEvent<HTMLInputElement>) => setSpeed(Number(e.target.value))
   const handleLyricView = () => setIsLyricView(!isLyricView)
