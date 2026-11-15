@@ -8,5 +8,5 @@ export default function BlogDetailPage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const { data } = useSuspenseQuery(blogQuery(ulid))
 
-  return <BlogDetail data={data} />
+  return <BlogDetail key={ulid} data={data} />
 }

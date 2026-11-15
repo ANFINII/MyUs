@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { errorMessage } from 'lib/error'
 import { AdvertiseIn } from 'types/internal/advertise'
 import { postAdvertiseCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
@@ -41,7 +42,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
     const ret = await postAdvertiseCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(FetchError.Post, true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push('/manage/advertise')

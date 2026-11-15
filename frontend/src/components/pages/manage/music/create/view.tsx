@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { MusicIn } from 'types/internal/media/input'
@@ -58,7 +59,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
     const ret = await postMusicCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(FetchError.Post, true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push({ pathname: '/manage/music', query: { channel: channelUlid } })
