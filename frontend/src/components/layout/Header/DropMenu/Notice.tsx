@@ -65,32 +65,32 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   const handleClick = (notification: Notification) => async () => {
     const { ulid, contentObject, userFrom, isConfirmed } = notification
     const { mediaType, mediaUlid, threadUlid } = contentObject
-    updateNotifications((prev) => ({
-      count: isConfirmed ? prev.count : prev.count - 1,
-      items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)),
-    }))
     if (mediaType === null) handleRouter(`/userpage/${userFrom.ulid}`)
     else if (threadUlid) handleRouter(`/media/${mediaPaths[mediaType]}/${mediaUlid}/thread/${threadUlid}`)
     else handleRouter(`/media/${mediaPaths[mediaType]}/${mediaUlid}`)
     const ret = await postNotificationConfirmed(ulid)
     if (ret.isErr()) {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.notification })
       handleToast(errorMessage(ret.error, FetchError.Post), true)
+      return
     }
+    updateNotifications((prev) => ({
+      count: isConfirmed ? prev.count : prev.count - 1,
+      items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)),
+    }))
   }
 
   const handleDelete = (notification: Notification) => async (e: React.MouseEvent) => {
     const { ulid, isConfirmed } = notification
     e.stopPropagation()
+    const ret = await postNotificationDeleted(ulid)
+    if (ret.isErr()) {
+      handleToast(errorMessage(ret.error, FetchError.Delete), true)
+      return
+    }
     updateNotifications((prev) => ({
       count: isConfirmed ? prev.count : prev.count - 1,
       items: prev.items.filter((n) => n.ulid !== ulid),
     }))
-    const ret = await postNotificationDeleted(ulid)
-    if (ret.isErr()) {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.notification })
-      handleToast(errorMessage(ret.error, FetchError.Delete), true)
-    }
   }
 
   return (
