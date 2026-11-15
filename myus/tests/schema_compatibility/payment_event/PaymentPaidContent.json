@@ -35,12 +35,12 @@
     },
     "Currency": {
       "enum": [
-        "Jpy",
-        "Usd",
-        "Eur",
-        "Gbp",
-        "Cny",
-        "Krw"
+        "JPY",
+        "USD",
+        "EUR",
+        "GBP",
+        "CNY",
+        "KRW"
       ],
       "title": "Currency",
       "type": "string"
