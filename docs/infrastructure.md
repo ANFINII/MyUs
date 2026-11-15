@@ -171,25 +171,32 @@ Stripe API など外部への通信が必要なので、プライベートサブ
 
 ### ディレクトリ構成
 
+rcmr-studio の `infra/aws` と同じ形にする。ディレクトリ 1 つが 1 つの state（スタック）になる。
+
 ```
 infra/
-├── bootstrap/            # state 用 S3 バケット・GitHub OIDC ロール（手元から 1 回だけ apply）
-├── modules/
-│   ├── network/          # VPC・サブネット・セキュリティグループ
-│   ├── media/            # S3・CloudFront（OAC・署名キー）
-│   ├── database/         # RDS
-│   ├── compute_ec2/      # フェーズ 1
-│   ├── compute_ecs/      # フェーズ 2
-│   ├── mail/             # SES・Route 53 の DKIM レコード
-│   └── monitoring/       # CloudWatch Alarms・Budgets
-└── envs/
-    ├── stg/
+├── .gitignore
+└── aws/
+    ├── modules/              # 使い回すモジュール（cost・github-actions・cloudfront-oac など）
     └── prod/
+        ├── variables.tf      # params（環境の共通パラメータ）
+        ├── outputs.tf
+        ├── general/          # アカウント全体にかかるもの（cost・iam-role）
+        ├── common/           # 環境の共通基盤（network・parameters・ecr・acm）
+        └── products/
+            └── myus/         # MyUs のリソース（media・database・compute・dns・mail・monitoring）
 ```
+
+- 環境は `prod` の 1 つで始める。`stg` は必要になってから `prod` と同じ形で足す
+- 各スタックは `module "params" { source = "../../" }`（深さに合わせる）で params を読み、`local.p = module.params.params` として使う
+- ほかのスタックの値は `terraform_remote_state` で outputs から読む
 
 ### 運用ルール
 
-- state は S3 に保存し、ロックには `use_lockfile = true` を使う（DynamoDB は不要）
+- state は S3（`terraform-myus-prod`）に保存し、`key` はスタックのパス（例：`general/cost/terraform.tfstate`）にする。ロックには `use_lockfile = true` を使う（DynamoDB は不要）
+- provider のバージョンは固定する（`version = "6.x.y"`）
+- provider の `default_tags` に `Env`・`Product`・`ManagedBy = "terraform"` を付ける
+- AWS CLI のプロファイルは `myus-prod`（params の `profile`）
 - PR を出したら GitHub Actions で `terraform plan` を実行し、結果を PR にコメントする。main にマージされたら `apply` する
 - コンソールでの手作業による変更は禁止する。定期的に `plan` を実行してドリフトを検知する
 - Vercel のドメイン・環境変数も Terraform の Vercel プロバイダで同じリポジトリから管理する
@@ -199,6 +206,7 @@ infra/
 | 項目 | 対応 |
 |---|---|
 | AWS アカウントの作成・ルートユーザーの MFA・請求設定 | 最初に一度だけ手作業で行う |
+| state 用の S3 バケット（`terraform-myus-prod`） | 手作業で作り、バージョニングを有効にする |
 | シークレットの値 | 入れ物（パラメータ名）だけを Terraform で作り、値は CLI で投入する。Git には入れない |
 | SES の本番利用申請・サービスクォータの引き上げ | AWS に申請する |
 | ドメインの購入 | 手作業で行う（DNS レコードはコードで管理する） |
@@ -208,10 +216,4 @@ infra/
 
 ## 移行ステップ
 
-1. **Terraform の土台**: `infra/bootstrap` と `network`・`media` モジュールを作る
-2. **メディアを S3 へ**: `django-storages` を導入して `STORAGES` を切り替え、既存の `media/` を `aws s3 sync` で移す
-3. **HLS 変換をワーカーへ分離**: アップロード時はジョブを積むだけにし、`worker` コンテナで変換する
-4. **SES 対応**: 本番の `EMAIL_HOST` などを SES の SMTP に向け、本番利用申請を出す
-5. **フェーズ 1 の本番環境構築**: EC2・RDS・CloudFront を作り、GitHub Actions にデプロイを追加する
-6. **監視**: CloudWatch Alarms と Budgets を設定する
-7. （利用者が増えたら）**フェーズ 2 へ移行**
+進め方と残りの作業は [roadmap.md](roadmap.md) の「インフラ」にある。
