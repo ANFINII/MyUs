@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { PasswordChangeIn } from 'types/internal/auth'
 import { postPasswordChange } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -38,7 +38,7 @@ export default function PasswordChange(): React.JSX.Element {
     const ret = await postPasswordChange(request)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push('/setting/password/change-done')

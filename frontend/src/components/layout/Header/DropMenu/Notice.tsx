@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
@@ -75,7 +75,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     const ret = await postNotificationConfirmed(ulid)
     if (ret.isErr()) {
       await queryClient.invalidateQueries({ queryKey: queryKeys.notification })
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
     }
   }
 
@@ -89,7 +89,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     const ret = await postNotificationDeleted(ulid)
     if (ret.isErr()) {
       await queryClient.invalidateQueries({ queryKey: queryKeys.notification })
-      handleToast(toErrorMessage(ret.error, FetchError.Delete), true)
+      handleToast(errorMessage(ret.error, FetchError.Delete), true)
     }
   }
 

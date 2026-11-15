@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { Advertise } from 'types/internal/advertise'
 import { Search } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
@@ -85,7 +85,7 @@ export default function Userpage(props: Props): React.JSX.Element {
     }
     const ret = await postFollow({ ulid, isFollow: !isFollow })
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     setIsFollow(ret.value.isFollow)
