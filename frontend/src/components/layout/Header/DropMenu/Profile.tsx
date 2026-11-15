@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { postLogout } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
@@ -36,7 +36,7 @@ export default function DropMenuProfile(props: Props): React.JSX.Element {
   const handleLogout = async () => {
     const ret = await postLogout()
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     resetUser()

@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { ChatIn } from 'types/internal/media/input'
@@ -56,7 +56,7 @@ export default function ChatCreate(props: Props): React.JSX.Element {
     const ret = await postChatCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     router.push({ pathname: '/manage/chat', query: { channel: channelUlid } })

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { toErrorMessage } from 'lib/error'
+import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { PaymentPlanOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
@@ -43,7 +43,7 @@ export default function PaymentChange(props: Props): React.JSX.Element {
     const ret = await postPaymentChange({ plan: activeName })
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(toErrorMessage(ret.error, FetchError.Post), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
     setActiveName('')
