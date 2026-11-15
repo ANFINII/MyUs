@@ -1,11 +1,12 @@
 from django.db.models import Q
 from myus.db.models.payment import PaymentLedgerEntry
+from myus.domain.common import PageOption
 from myus.domain.payment.ledger.data import LedgerEntryData
 from myus.domain.payment.ledger.interface import FilterOption, SortOption, LedgerEntryInterface
 from myus.domain.payment.ledger.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ...common import get_save_new_ids, sort_ids
+from ...common import get_save_new_ids, page_queryset, sort_ids
 
 
 LEDGER_ENTRY_FIELDS = ["payout_id"]
@@ -13,7 +14,7 @@ LEDGER_ENTRY_FIELDS = ["payout_id"]
 
 class LedgerEntryRepository(LedgerEntryInterface):
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = 20) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.transaction_id != 0:
             q_list.append(Q(transaction_id=filter.transaction_id))
@@ -28,8 +29,7 @@ class LedgerEntryRepository(LedgerEntryInterface):
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = PaymentLedgerEntry.objects.filter(*q_list).order_by(order_by_key)
 
-        if limit is not None:
-            qs = qs[:limit]
+        qs = page_queryset(qs, page)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

@@ -3,10 +3,11 @@ from django.db.models.query import QuerySet
 from myus.db.models.master import Category
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface, FilterOption, SortOption
+from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from ._convert import convert_data, get_media_model
-from ..common import sort_ids
+from ..common import page_queryset, sort_ids
 
 
 class CategoryRepository(CategoryInterface):
@@ -14,7 +15,7 @@ class CategoryRepository(CategoryInterface):
         return Category.objects.all()
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if len(filter.ulids) > 0:
             q_list.append(Q(ulid__in=filter.ulids))
@@ -23,8 +24,7 @@ class CategoryRepository(CategoryInterface):
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = Category.objects.filter(*q_list).order_by(order_by_key)
 
-        if limit is not None:
-            qs = qs[:limit]
+        qs = page_queryset(qs, page)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from myus.domain.common import PageOption
 from myus.domain.payment.provider.data import CancelFailed, CancelSuccess
 from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
@@ -135,7 +136,7 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.emailInvalid")
 
     repo = injector.get(UserInterface)
-    ret = repo.get_ids(FilterOption(email=email), SortOption())
+    ret = repo.get_ids(FilterOption(email=email), SortOption(), PageOption(limit=0))
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -294,7 +295,7 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.emailInvalid")
 
     repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(email=email), SortOption())
+    ids_ret = repo.get_ids(FilterOption(email=email), SortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

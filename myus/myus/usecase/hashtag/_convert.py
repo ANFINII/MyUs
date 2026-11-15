@@ -1,3 +1,4 @@
+from myus.domain.common import PageOption
 from myus.domain.ng_word.interface import FilterOption, NgWordInterface, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
@@ -6,7 +7,7 @@ from myus.utils.common.result import FatalError, Result
 @Result.shield_exception()
 def get_ng_words_data() -> Result[list[str], FatalError]:
     repo = injector.get(NgWordInterface)
-    ids_ret = repo.get_ids(FilterOption(), SortOption())
+    ids_ret = repo.get_ids(FilterOption(), SortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

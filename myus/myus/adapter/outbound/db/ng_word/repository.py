@@ -1,11 +1,12 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.master import NgWord
+from myus.domain.common import PageOption
 from myus.domain.ng_word.data import NgWordData
 from myus.domain.ng_word.interface import FilterOption, NgWordInterface, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data
-from ..common import sort_ids
+from ..common import page_queryset, sort_ids
 
 
 class NgWordRepository(NgWordInterface):
@@ -13,7 +14,7 @@ class NgWordRepository(NgWordInterface):
         return NgWord.objects.all()
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.search:
             q_list.append(Q(word__icontains=filter.search))
@@ -22,8 +23,7 @@ class NgWordRepository(NgWordInterface):
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = NgWord.objects.filter(*q_list).order_by(order_by_key)
 
-        if limit is not None:
-            qs = qs[:limit]
+        qs = page_queryset(qs, page)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

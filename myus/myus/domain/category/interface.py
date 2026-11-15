@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, auto
+from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from .data import CategoryData
@@ -24,7 +25,7 @@ class SortOption:
 
 class CategoryInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod

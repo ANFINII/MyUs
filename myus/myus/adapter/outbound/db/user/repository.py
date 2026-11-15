@@ -3,13 +3,14 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.comment import Comment
 from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
+from myus.domain.common import PageOption
 from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import FilterOption, SortOption, UserInterface
 from myus.domain.user.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from ._convert import convert_data, get_media_model, marshal_mypage_data, marshal_user_notification_data, marshal_profile_data, marshal_user_data, marshal_user_plan_data
-from ..common import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, page_queryset, sort_ids
 
 
 USER_FIELDS = ["avatar", "username", "nickname", "email", "password", "is_active"]
@@ -30,7 +31,7 @@ class UserRepository(UserInterface):
         return User.objects.select_related("profile", "mypage", "notification", "user_plan")
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.id:
             q_list.append(Q(id=filter.id))
@@ -47,8 +48,7 @@ class UserRepository(UserInterface):
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = User.objects.filter(*q_list).order_by(order_by_key)
 
-        if limit is not None:
-            qs = qs[:limit]
+        qs = page_queryset(qs, page)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

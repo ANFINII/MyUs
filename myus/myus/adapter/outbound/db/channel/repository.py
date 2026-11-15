@@ -3,9 +3,10 @@ from django.db.models.query import QuerySet
 from myus.db.models.channel import Channel
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
+from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
-from ..common import get_save_new_ids, sort_ids
+from ..common import get_save_new_ids, page_queryset, sort_ids
 
 
 CHANNEL_FIELDS = ["owner_id", "avatar", "name", "description", "is_default", "updated"]
@@ -16,7 +17,7 @@ class ChannelRepository(ChannelInterface):
         return Channel.objects.select_related("owner")
 
     @Result.shield_exception()
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.ulid:
             q_list.append(Q(ulid=filter.ulid))
@@ -29,8 +30,7 @@ class ChannelRepository(ChannelInterface):
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = Channel.objects.filter(*q_list).order_by(order_by_key)
 
-        if limit is not None:
-            qs = qs[:limit]
+        qs = page_queryset(qs, page)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from myus.utils.constants.page import PAGE_SIZE
 
 
 class SortType(Enum):
@@ -29,8 +28,3 @@ class SortOption:
     sort_type: SortType = SortType.ID
     user_id: int | None = None
 
-
-@dataclass(frozen=True, slots=True)
-class PageOption:
-    limit: int = PAGE_SIZE
-    offset: int = 0

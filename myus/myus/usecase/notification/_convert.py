@@ -1,3 +1,4 @@
+from myus.domain.common import PageOption
 from myus.domain.notification.data import NotificationData
 from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
 from myus.domain.user.data import UserNotificationData
@@ -15,7 +16,7 @@ NOTIFICATION_LIMIT = 50
 @Result.shield_exception()
 def get_notification_data(receiver_id: int, enabled_types: tuple[NotificationTypeNo, ...]) -> Result[list[NotificationData], FatalError]:
     repo = injector.get(NotificationInterface)
-    ids_ret = repo.get_ids(FilterOption(receiver_id=receiver_id, enabled_types=enabled_types, exclude_user_id=receiver_id), SortOption(), NOTIFICATION_LIMIT)
+    ids_ret = repo.get_ids(FilterOption(receiver_id=receiver_id, enabled_types=enabled_types, exclude_user_id=receiver_id), SortOption(), PageOption(limit=NOTIFICATION_LIMIT))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -101,7 +102,7 @@ def create_notification_data(user_from_id: int, user_to_id: int, type_no: Notifi
 @Result.shield_exception()
 def create_publish_notification_data(owner_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> Result[None, FatalError]:
     repo = injector.get(NotificationInterface)
-    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=[object_id]), SortOption(), limit=1)
+    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=[object_id]), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -122,7 +123,7 @@ def delete_notification_data(object_type: NotificationObjectType, object_ids: li
         return Result.ok(None)
 
     repo = injector.get(NotificationInterface)
-    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=object_ids, user_from_id=user_from_id), SortOption())
+    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=object_ids, user_from_id=user_from_id), SortOption(), PageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

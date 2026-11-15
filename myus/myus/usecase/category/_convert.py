@@ -1,5 +1,6 @@
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface, FilterOption, SortOption
+from myus.domain.common import PageOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 
@@ -7,7 +8,7 @@ from myus.utils.common.result import FatalError, Result
 @Result.shield_exception()
 def get_category_data(ulid: str) -> Result[CategoryData, FatalError]:
     repo = injector.get(CategoryInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=[ulid]), SortOption(), limit=1)
+    ids_ret = repo.get_ids(FilterOption(ulids=[ulid]), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
