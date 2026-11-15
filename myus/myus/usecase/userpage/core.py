@@ -1,9 +1,8 @@
 from dataclasses import replace
 from django.utils import timezone
 from myus.domain.advertise.data import AdvertiseData
-from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
-from myus.domain.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
+from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, PageOption, SortOption
+from myus.domain.follow.interface import FilterOption as FollowFilterOption, FollowInterface, PageOption as FollowPageOption, SortOption as FollowSortOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.common import create_url
@@ -67,7 +66,7 @@ def get_userpage_advertises(search: str, owner_id: int) -> Result[list[Advertise
 @Result.shield_exception()
 def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError]:
     repo = injector.get(FollowInterface)
-    ids_ret = repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption(), FollowPageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

@@ -1,5 +1,4 @@
-from myus.domain.common import PageOption
-from myus.domain.follow.interface import FilterOption, FollowInterface, SortOption
+from myus.domain.follow.interface import FilterOption, FollowInterface, PageOption, SortOption
 from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector

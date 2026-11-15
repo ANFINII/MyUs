@@ -1,7 +1,6 @@
 from dataclasses import replace
 from myus.domain.comment.data import CommentData
-from myus.domain.comment.interface import CommentInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
+from myus.domain.comment.interface import CommentInterface, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result

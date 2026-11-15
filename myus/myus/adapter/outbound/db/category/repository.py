@@ -2,8 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.master import Category
 from myus.domain.category.data import CategoryData
-from myus.domain.category.interface import CategoryInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
+from myus.domain.category.interface import CategoryInterface, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from ._convert import convert_data, get_media_model
@@ -23,7 +22,7 @@ class CategoryRepository(CategoryInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = Category.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

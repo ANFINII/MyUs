@@ -3,9 +3,8 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.comment import Comment
 from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from myus.domain.common import PageOption
 from myus.domain.user.data import UserAllData
-from myus.domain.user.interface import FilterOption, SortOption, UserInterface
+from myus.domain.user.interface import FilterOption, PageOption, SortOption, UserInterface
 from myus.domain.user.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
@@ -47,7 +46,7 @@ class UserRepository(UserInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = User.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

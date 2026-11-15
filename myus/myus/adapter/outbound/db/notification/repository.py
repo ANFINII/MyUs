@@ -7,9 +7,8 @@ from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from myus.db.models.message import Message
 from myus.db.models.notification import Notification
 from myus.db.models.users import Follow
-from myus.domain.common import PageOption
 from myus.domain.notification.data import NotificationData
-from myus.domain.notification.interface import FilterOption, NotificationInterface, SortOption
+from myus.domain.notification.interface import FilterOption, NotificationInterface, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType
@@ -72,7 +71,7 @@ class NotificationRepository(NotificationInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = Notification.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

@@ -2,8 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.common import AccessLog
 from myus.domain.access_log.data import AccessLogData
-from myus.domain.access_log.interface import AccessLogInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
+from myus.domain.access_log.interface import AccessLogInterface, FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
 from ..common import get_save_new_ids, page_queryset, sort_ids
@@ -29,7 +28,7 @@ class AccessLogRepository(AccessLogInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = AccessLog.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

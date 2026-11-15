@@ -1,8 +1,7 @@
 from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from myus.db.models.media import Video
-from myus.domain.common import PageOption
-from myus.domain.media.common import FilterOption, SortOption
+from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.media.video.validation import validate

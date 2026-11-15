@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
+from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from .data import NotificationData
 
@@ -30,6 +30,12 @@ class FilterOption:
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.CREATED
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = PAGE_SIZE
+    offset: int = 0
 
 
 class NotificationInterface(ABC):

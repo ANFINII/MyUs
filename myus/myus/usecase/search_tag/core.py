@@ -1,6 +1,5 @@
-from myus.domain.common import PageOption
 from myus.domain.search_tag.data import SearchTagData
-from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, SortOption
+from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result, ValidateError
 from myus.utils.functions.transaction import atomic_result

@@ -1,9 +1,8 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.master import NgWord
-from myus.domain.common import PageOption
 from myus.domain.ng_word.data import NgWordData
-from myus.domain.ng_word.interface import FilterOption, NgWordInterface, SortOption
+from myus.domain.ng_word.interface import FilterOption, NgWordInterface, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data
 from ..common import page_queryset, sort_ids
@@ -22,7 +21,7 @@ class NgWordRepository(NgWordInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = NgWord.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

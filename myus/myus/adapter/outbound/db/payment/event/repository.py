@@ -1,8 +1,7 @@
 from django.db.models import Q
 from myus.db.models.payment import DATETIME_MIN, PaymentEvent
-from myus.domain.common import PageOption
 from myus.domain.payment.event.data import PaymentEventData
-from myus.domain.payment.event.interface import FilterOption, SortOption, PaymentEventInterface
+from myus.domain.payment.event.interface import FilterOption, PageOption, SortOption, PaymentEventInterface
 from myus.domain.payment.event.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
@@ -28,7 +27,7 @@ class PaymentEventRepository(PaymentEventInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = PaymentEvent.objects.filter(*q_list).order_by(order_by_key, "id" if sort.is_asc else "-id")
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

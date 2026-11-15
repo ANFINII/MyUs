@@ -43,7 +43,7 @@
 | 定数 | UPPER_SNAKE_CASE | `MAX_FILE_SIZE` |
 | プライベート | 先頭に`_` | `_internal_method()` |
 | Django Model | 単数形 | `User`, `Video` |
-| 複数のドメイン・ファイルで共通に使う部品 | `common.py` | `domain/common.py`（`PageOption`）・`domain/media/common.py`（`FilterOption`・`SortOption` など）・`adapter/outbound/db/common.py`（`get_save_new_ids`・`page_queryset`）・`utils/functions/common.py` |
+| 複数のドメイン・ファイルで共通に使う部品 | `common.py` | `domain/media/common.py`（`FilterOption`・`SortOption`・`PageOption` など）・`adapter/outbound/db/common.py`（`get_save_new_ids`・`page_queryset`）・`utils/functions/common.py` |
 
 ### `_data` の付く関数
 
@@ -115,7 +115,7 @@ if save_ret.is_err:
 @Result.shield_exception()
 def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError]:
     follow_repo = injector.get(FollowInterface)
-    ids_ret = follow_repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption(), PageOption(limit=0))
+    ids_ret = follow_repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption(), FollowPageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -235,9 +235,9 @@ if ret.is_err:
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
 - 雛形: `myus/domain/search_tag/interface.py` を参照
 - 必須メソッド: `get_ids(filter, sort, page)` / `bulk_get(ids)` の読み取り2点
-- `page`は`domain/common.py`の`PageOption`（`limit`の初期値は`PAGE_SIZE`、`offset`は0）。全部取るときは`PageOption(limit=0)`（`limit`が0なら上限なし。切り出しは`adapter/outbound/db/common.py`の`page_queryset`）
+- `page`は各ドメインの`interface.py`の`PageOption`（メディアは`domain/media/common.py`。`limit`の初期値は`PAGE_SIZE`、`offset`は0）。全部取るときは`PageOption(limit=0)`（`limit`が0なら上限なし。切り出しは`adapter/outbound/db/common.py`の`page_queryset`）
 - 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
-- 必須型: `FilterOption` / `SortOption` dataclass + `SortType` enum
+- 必須型: `FilterOption` / `SortOption` / `PageOption` dataclass + `SortType` enum
 - メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
 - 「使わないから書く」「使うから簡略化する」のどちらも禁止：使う分だけ既存の形で書く
 - 条件で消す・取る専用のメソッド（`delete(type_no, object_id, ...)` など）は作らない。`FilterOption`に条件を足し、`get_ids`で ID を取ってから`bulk_delete`・`bulk_get`する
@@ -389,3 +389,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
 - 2026-11-15: enum 変換の決まりを、対応がずれうる変換だけ `map.py` の match + `assert_never` にし、名前・値が同じ enum どうしはそのまま変換してよいことにした
 - 2026-11-15: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`を`domain/common.py`の1つにした（`limit=0`は上限なし）
+- 2026-11-16: `PageOption`を`domain/common.py`の1つから、メディアは`domain/media/common.py`、ほかは各ドメインの`interface.py`に置くように戻した

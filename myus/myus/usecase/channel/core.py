@@ -1,8 +1,7 @@
 from dataclasses import replace
 from ninja import UploadedFile
 from myus.domain.channel.data import ChannelData
-from myus.domain.channel.interface import ChannelInterface, FilterOption, SortOption
-from myus.domain.common import PageOption
+from myus.domain.channel.interface import ChannelInterface, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result, ValidateError, WriteError

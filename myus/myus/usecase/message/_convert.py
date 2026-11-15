@@ -1,6 +1,5 @@
-from myus.domain.common import PageOption
 from myus.domain.message.data import MessageData
-from myus.domain.message.interface import FilterOption, MessageInterface, SortOption
+from myus.domain.message.interface import FilterOption, MessageInterface, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result

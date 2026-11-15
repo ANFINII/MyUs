@@ -2,9 +2,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.hashtag import HashTag
-from myus.domain.common import PageOption
 from myus.domain.hashtag.data import HashtagData
-from myus.domain.hashtag.interface import FilterOption, HashtagInterface, SortOption
+from myus.domain.hashtag.interface import FilterOption, HashtagInterface, PageOption, SortOption
 from myus.domain.hashtag.validation import validate
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import MediaType
@@ -27,7 +26,7 @@ class HashtagRepository(HashtagInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = HashTag.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

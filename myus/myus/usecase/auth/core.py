@@ -7,10 +7,9 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from myus.domain.common import PageOption
 from myus.domain.payment.provider.data import CancelFailed, CancelSuccess
 from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
-from myus.domain.user.interface import FilterOption, SortOption, UserInterface
+from myus.domain.user.interface import FilterOption, PageOption, SortOption, UserInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError

@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from myus.domain.common import PageOption
 from myus.utils.common.result import FatalError, Result
+from myus.utils.constants.page import PAGE_SIZE
 from .data import SubscriptionData
 
 
@@ -21,6 +21,12 @@ class FilterOption:
 class SortOption:
     is_asc: bool = True
     sort_type: SortType = SortType.STARTED_AT
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = PAGE_SIZE
+    offset: int = 0
 
 
 class SubscriptionInterface(ABC):

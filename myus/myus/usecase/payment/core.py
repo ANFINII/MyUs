@@ -2,17 +2,16 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from django.conf import settings
-from myus.domain.common import PageOption
 from myus.domain.payment.customer.interface import PaymentCustomerInterface
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import PaymentEventData
-from myus.domain.payment.event.interface import FilterOption as PaymentEventFilterOption, SortOption as PaymentEventSortOption, PaymentEventInterface
-from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
+from myus.domain.payment.event.interface import FilterOption as PaymentEventFilterOption, PageOption as PaymentEventPageOption, SortOption as PaymentEventSortOption, PaymentEventInterface
+from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
 from myus.domain.payment.plan import PLANS, get_plan, plan_price
 from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, WebhookVerifyResult
 from myus.domain.payment.subscription.data import SubscriptionData
-from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
+from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, PageOption as SubscriptionPageOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from myus.domain.payment.transaction.interface import TransactionInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
@@ -47,7 +46,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         return Result.err(NotFoundError("Not Found"))
 
     subscription_repo = injector.get(SubscriptionInterface)
-    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), PageOption(limit=0))
+    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), SubscriptionPageOption(limit=0))
     if subscription_ids_ret.is_err:
         return Result.err(subscription_ids_ret.err_value)
 
@@ -100,7 +99,7 @@ def verify_webhook(provider: PaymentProvider, payload: bytes, signature: str) ->
 @Result.shield_exception()
 def get_subscription(user_id: int) -> Result[SubscriptionData | None, FatalError]:
     repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), PageOption(limit=20))
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), SubscriptionPageOption(limit=20))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -323,7 +322,7 @@ def receive_payment_event(event: PaymentEventData) -> Result[bool, FatalError]:
 def process_payment_events(limit: int) -> Result[int, FatalError]:
     repo = injector.get(PaymentEventInterface)
     filter = PaymentEventFilterOption(is_processed=False, max_attempts=PAYMENT_EVENT_MAX_ATTEMPTS)
-    ids_ret = repo.get_ids(filter, PaymentEventSortOption(), PageOption(limit=limit))
+    ids_ret = repo.get_ids(filter, PaymentEventSortOption(), PaymentEventPageOption(limit=limit))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -350,7 +349,7 @@ def process_payment_events(limit: int) -> Result[int, FatalError]:
 @Result.shield_exception()
 def requeue_payment_events() -> Result[int, FatalError]:
     repo = injector.get(PaymentEventInterface)
-    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=False), PaymentEventSortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=False), PaymentEventSortOption(), PaymentEventPageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -376,7 +375,7 @@ def replay_payment_events() -> Result[int, CommandError]:
 @Result.shield_exception()
 def export_ledger(start: datetime, end: datetime) -> Result[list[LedgerRowDTO], FatalError]:
     repo = injector.get(LedgerEntryInterface)
-    ids_ret = repo.get_ids(LedgerEntryFilterOption(occurred_from=start, occurred_to=end), LedgerEntrySortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(LedgerEntryFilterOption(occurred_from=start, occurred_to=end), LedgerEntrySortOption(), LedgerEntryPageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

@@ -1,8 +1,7 @@
 from django.db.models import Q
 from myus.db.models.payment import Subscription
-from myus.domain.common import PageOption
 from myus.domain.payment.subscription.data import SubscriptionData
-from myus.domain.payment.subscription.interface import FilterOption, SortOption, SubscriptionInterface
+from myus.domain.payment.subscription.interface import FilterOption, PageOption, SortOption, SubscriptionInterface
 from myus.domain.payment.subscription.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
@@ -26,7 +25,7 @@ class SubscriptionRepository(SubscriptionInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = Subscription.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 

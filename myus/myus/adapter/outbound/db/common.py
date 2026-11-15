@@ -2,7 +2,6 @@ from typing import TypeVar
 from django.db import transaction
 from django.db.models import Model
 from django.db.models.query import QuerySet
-from myus.domain.common import PageOption
 
 
 T = TypeVar("T", bound=Model)
@@ -13,10 +12,10 @@ def sort_ids(objs: list[T], ids: list[int]) -> list[T]:
     return [obj_map[id] for id in ids if id in obj_map]
 
 
-def page_queryset(qs: QuerySet[T], page: PageOption) -> QuerySet[T]:
-    if page.limit == 0:
-        return qs[page.offset:]
-    return qs[page.offset:page.offset + page.limit]
+def page_queryset(qs: QuerySet[T], limit: int, offset: int) -> QuerySet[T]:
+    if limit == 0:
+        return qs[offset:]
+    return qs[offset:offset + limit]
 
 
 def get_save_new_ids(models: list[T], update_fields: list[str]) -> list[int]:

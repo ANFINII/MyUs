@@ -1,9 +1,8 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from myus.db.models.users import SearchTag
-from myus.domain.common import PageOption
 from myus.domain.search_tag.data import SearchTagData
-from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, SortOption
+from myus.domain.search_tag.interface import FilterOption, SearchTagInterface, PageOption, SortOption
 from myus.domain.search_tag.validation import validate
 from myus.utils.common.result import FatalError, Result
 from ._convert import convert_data, marshal_data
@@ -26,7 +25,7 @@ class SearchTagRepository(SearchTagInterface):
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = SearchTag.objects.filter(*q_list).order_by(order_by_key)
-        qs = page_queryset(qs, page)
+        qs = page_queryset(qs, page.limit, page.offset)
 
         return Result.ok(list(qs.values_list("id", flat=True)))
 
