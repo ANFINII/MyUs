@@ -40,7 +40,6 @@ export default function Payment(props: Props): React.JSX.Element {
   const currentPlan = mypage.plan
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
   const priceMap = new Map(planPrices.map((p) => [p.name, p.price]))
-  const currency = planPrices[0]?.price.currency
   const isPaid = currentPlan !== 'Free'
   const isCanceled = isPaid && subscription.isCanceled
   const isPastDue = isPaid && subscription.isPastDue
@@ -114,20 +113,18 @@ export default function Payment(props: Props): React.JSX.Element {
           ))}
         </div>
 
-        {currency && (
-          <p className={style.currency}>
-            {isPaid ? (
-              t('setting.payment.currencyBySubscription')
-            ) : (
-              <>
-                {t('setting.payment.currencyByCountry', { currency: t(`currency.${currency}`) })}
-                <Link href="/setting/profile/edit" className={style.currency_link}>
-                  {t('setting.payment.changeCountry')}
-                </Link>
-              </>
-            )}
-          </p>
-        )}
+        <p className={style.currency}>
+          {isPaid ? (
+            t('setting.payment.currencyBySubscription')
+          ) : (
+            <>
+              {t('setting.payment.currencyByCountry')}
+              <Link href="/setting/profile/edit" className={style.currency_link}>
+                {t('setting.payment.changeCountry')}
+              </Link>
+            </>
+          )}
+        </p>
 
         {isCanceled && (
           <div className={style.actions}>

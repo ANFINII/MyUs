@@ -67,14 +67,6 @@
     "planChangeToFree": "To switch to the free plan, please cancel your subscription",
     "publishAtAfterPeriod": "Set the publish date on or before the end of the period"
   },
-  "currency": {
-    "Jpy": "Japanese yen",
-    "Usd": "US dollars",
-    "Eur": "euros",
-    "Gbp": "British pounds",
-    "Cny": "Chinese yuan",
-    "Krw": "South Korean won"
-  },
   "gender": {
     "Male": "Male",
     "Female": "Female",
@@ -504,7 +496,7 @@
       "cancelConfirm": "Are you sure you want to cancel?",
       "cancelNotice": "You can keep using your current plan until the next renewal date.",
       "renewalNotice": "Paid plans renew automatically every month. You can cancel at any time and keep using your plan until the next renewal date.",
-      "currencyByCountry": "Prices are shown in {{currency}} based on your country/region.",
+      "currencyByCountry": "Prices are shown in the currency for your country/region.",
       "currencyBySubscription": "Prices are shown in your subscription currency.",
       "changeCountry": "Change country/region",
       "cancelReserved": "Cancellation scheduled. You can use your plan until {{periodEnd}}",
