@@ -6,6 +6,7 @@
 - すべての関数の引数・戻り値に型を定義する
 - `undefined`/`null`の可能性がある値は`?.`や`??`でチェックする
 - console.logは使用しない（エラーはサイレント処理またはUI通知）
+- ISO で決まっているコードは、enum の値を ISO の書き方にする（`Country.Jp = 'JP'`・`Locale.Ja = 'ja'`）。値は BE と同じにする
 
 ## React
 
