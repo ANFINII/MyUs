@@ -46,7 +46,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         return Result.err(NotFoundError("Not Found"))
 
     subscription_repo = injector.get(SubscriptionInterface)
-    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), SubscriptionPageOption(limit=0))
+    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), SubscriptionPageOption())
     if subscription_ids_ret.is_err:
         return Result.err(subscription_ids_ret.err_value)
 
@@ -99,7 +99,7 @@ def verify_webhook(provider: PaymentProvider, payload: bytes, signature: str) ->
 @Result.shield_exception()
 def get_subscription(user_id: int) -> Result[SubscriptionData | None, FatalError]:
     repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), SubscriptionPageOption(limit=0))
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), SubscriptionPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -349,7 +349,7 @@ def process_payment_events(limit: int) -> Result[int, FatalError]:
 @Result.shield_exception()
 def requeue_payment_events() -> Result[int, FatalError]:
     repo = injector.get(PaymentEventInterface)
-    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=False), PaymentEventSortOption(), PaymentEventPageOption(limit=0))
+    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=False), PaymentEventSortOption(), PaymentEventPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -375,7 +375,7 @@ def replay_payment_events() -> Result[int, CommandError]:
 @Result.shield_exception()
 def export_ledger(start: datetime, end: datetime) -> Result[list[LedgerRowDTO], FatalError]:
     repo = injector.get(LedgerEntryInterface)
-    ids_ret = repo.get_ids(LedgerEntryFilterOption(occurred_from=start, occurred_to=end), LedgerEntrySortOption(), LedgerEntryPageOption(limit=0))
+    ids_ret = repo.get_ids(LedgerEntryFilterOption(occurred_from=start, occurred_to=end), LedgerEntrySortOption(), LedgerEntryPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

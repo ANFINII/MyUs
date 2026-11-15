@@ -66,7 +66,7 @@ def get_userpage_advertises(search: str, owner_id: int) -> Result[list[Advertise
 @Result.shield_exception()
 def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError]:
     repo = injector.get(FollowInterface)
-    ids_ret = repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption(), FollowPageOption(limit=0))
+    ids_ret = repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption(), FollowPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

@@ -52,7 +52,7 @@ def get_media_user_data(is_like: bool, channel_id: int, user_id: int | None) -> 
     subscribe_repo = injector.get(SubscribeInterface)
     subscribe = None
     if user_id is not None:
-        ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption(), PageOption(limit=0))
+        ids_ret = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 

@@ -135,7 +135,7 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.emailInvalid")
 
     repo = injector.get(UserInterface)
-    ret = repo.get_ids(FilterOption(email=email), SortOption(), PageOption(limit=0))
+    ret = repo.get_ids(FilterOption(email=email), SortOption(), PageOption())
     if ret.is_err:
         return Result.err(ret.err_value)
 
@@ -294,7 +294,7 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.emailInvalid")
 
     repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(email=email), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(email=email), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

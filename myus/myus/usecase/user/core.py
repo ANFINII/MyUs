@@ -21,7 +21,7 @@ from ..notification._convert import create_notification_data, delete_notificatio
 @Result.shield_exception()
 def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None, FatalError]:
     repo = injector.get(UserInterface)
-    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(id=user_id, ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -62,7 +62,7 @@ def update_profile(user_id: int, input: SettingProfileDTO, avatar_file: Uploaded
         if len(value) == 0 or value == current:
             continue
 
-        ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=0))
+        ids_ret = repo.get_ids(filter, SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
@@ -190,7 +190,7 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO
 def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, FindError]:
     repo = injector.get(UserInterface)
     comment_repo = injector.get(CommentInterface)
-    ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption(), CommentPageOption(limit=0))
+    ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption(), CommentPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -260,7 +260,7 @@ def signup_check(data: SignupDTO) -> Result[str, FatalError]:
         if len(value) == 0:
             continue
 
-        ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=0))
+        ids_ret = repo.get_ids(filter, SortOption(), PageOption())
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 

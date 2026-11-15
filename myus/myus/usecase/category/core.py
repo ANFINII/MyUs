@@ -7,7 +7,7 @@ from ..dto.category import CategoryDTO
 @Result.shield_exception()
 def get_categories() -> Result[list[CategoryDTO], FatalError]:
     repo = injector.get(CategoryInterface)
-    ids_ret = repo.get_ids(FilterOption(), SortOption(is_asc=True, sort_type=SortType.ID), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(), SortOption(is_asc=True, sort_type=SortType.ID), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

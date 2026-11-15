@@ -12,7 +12,7 @@ from ..user._convert import get_author_map_data
 @Result.shield_exception()
 def get_message_data(message_ulid: str) -> Result[MessageData | None, FatalError]:
     repo = injector.get(MessageInterface)
-    ids_ret = repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -47,7 +47,7 @@ def delete_message_data(data: MessageData, user_id: int) -> Result[None, FatalEr
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
     else:
-        reply_ids_ret = repo.get_ids(FilterOption(parent_ulid=data.ulid, is_parent=False), SortOption(), PageOption(limit=0))
+        reply_ids_ret = repo.get_ids(FilterOption(parent_ulid=data.ulid, is_parent=False), SortOption(), PageOption())
         if reply_ids_ret.is_err:
             return Result.err(reply_ids_ret.err_value)
 
@@ -65,7 +65,7 @@ def delete_message_data(data: MessageData, user_id: int) -> Result[None, FatalEr
 @Result.shield_exception()
 def get_messages_data(chat_id: int) -> Result[list[MessageDTO], FatalError]:
     repo = injector.get(MessageInterface)
-    ids_ret = repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

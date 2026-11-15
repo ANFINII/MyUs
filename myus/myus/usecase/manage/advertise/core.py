@@ -188,7 +188,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseDTO, image:
 @Result.shield_exception()
 def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, FindError]:
     repo = injector.get(AdvertiseInterface)
-    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
+    ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

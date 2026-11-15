@@ -697,7 +697,7 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError
         return Result.err(NotFoundError("error.deleteFailed"))
 
     message_repo = injector.get(MessageInterface)
-    reply_ids_ret = message_repo.get_ids(MessageFilterOption(chat_ids=delete_ids, is_parent=False), MessageSortOption(), MessagePageOption(limit=0))
+    reply_ids_ret = message_repo.get_ids(MessageFilterOption(chat_ids=delete_ids, is_parent=False), MessageSortOption(), MessagePageOption())
     if reply_ids_ret.is_err:
         return Result.err(reply_ids_ret.err_value)
 

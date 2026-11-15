@@ -90,7 +90,7 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
     if follower_id == following_id:
         return Result.err(ValidationError("error.followSelf"))
 
-    follow_ids_ret = repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption(), PageOption(limit=0))
+    follow_ids_ret = repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption(), PageOption())
     if follow_ids_ret.is_err:
         return Result.err(follow_ids_ret.err_value)
 

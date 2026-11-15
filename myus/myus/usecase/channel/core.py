@@ -15,7 +15,7 @@ from ..dto.channel import ChannelDTO
 @Result.shield_exception()
 def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
     repo = injector.get(ChannelInterface)
-    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -36,7 +36,7 @@ def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
 @Result.shield_exception()
 def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
     repo = injector.get(ChannelInterface)
-    ids_ret = repo.get_ids(FilterOption(owner_id=owner_id), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(owner_id=owner_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

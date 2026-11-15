@@ -33,7 +33,7 @@ def create_comment(user_id: int, input: CommentCreateDTO) -> Result[CommentDTO, 
     type_no = comment_type_no_map(input.type_name)
     parent: CommentData | None = None
     if input.parent_ulid:
-        parent_ids_ret = repo.get_ids(FilterOption(ulid=input.parent_ulid, type_no=type_no, object_id=media_ids[0], is_parent=True), SortOption(), PageOption(limit=0))
+        parent_ids_ret = repo.get_ids(FilterOption(ulid=input.parent_ulid, type_no=type_no, object_id=media_ids[0], is_parent=True), SortOption(), PageOption())
         if parent_ids_ret.is_err:
             return Result.err(parent_ids_ret.err_value)
 

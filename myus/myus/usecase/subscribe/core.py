@@ -13,7 +13,7 @@ from ..dto.subscribe import SubscribeDTO
 def get_subscribe_channels(user_id: int) -> Result[list[ChannelData], FatalError]:
     channel_repo = injector.get(ChannelInterface)
     repo = injector.get(SubscribeInterface)
-    ids_ret = repo.get_ids(FilterOption(user_id=user_id, is_subscribe=True), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(user_id=user_id, is_subscribe=True), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -46,7 +46,7 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
     if channel is None:
         return Result.err(NotFoundError("error.channelNotFound"))
 
-    ids_ret = repo.get_ids(FilterOption(user_id=user_id, channel_id=channel.id), SortOption(), PageOption(limit=0))
+    ids_ret = repo.get_ids(FilterOption(user_id=user_id, channel_id=channel.id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

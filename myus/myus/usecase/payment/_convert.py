@@ -101,7 +101,7 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
 @Result.shield_exception()
 def get_active_subscription_data(user_id: int) -> Result[SubscriptionData | None, FatalError]:
     repo = injector.get(SubscriptionInterface)
-    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), SubscriptionPageOption(limit=0))
+    ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(is_asc=False), SubscriptionPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -265,7 +265,7 @@ def save_user_plan_data(user: UserAllData, state: SubscriptionState) -> Result[N
             )
         case EndedSubscription():
             repo = injector.get(SubscriptionInterface)
-            ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user.user.id), SubscriptionSortOption(), SubscriptionPageOption(limit=0))
+            ids_ret = repo.get_ids(SubscriptionFilterOption(customer_user_id=user.user.id), SubscriptionSortOption(), SubscriptionPageOption())
             if ids_ret.is_err:
                 return Result.err(ids_ret.err_value)
 
@@ -416,7 +416,7 @@ def save_payout_data(event: PaymentEventData, payout: PayoutContent) -> Result[N
     payout_id = ids[0] if len(ids) > 0 else new_ids[0]
 
     ledger_repo = injector.get(LedgerEntryInterface)
-    entry_ids_ret = ledger_repo.get_ids(LedgerEntryFilterOption(external_ids=payout.balance_external_ids), LedgerEntrySortOption(), LedgerEntryPageOption(limit=0))
+    entry_ids_ret = ledger_repo.get_ids(LedgerEntryFilterOption(external_ids=payout.balance_external_ids), LedgerEntrySortOption(), LedgerEntryPageOption())
     if entry_ids_ret.is_err:
         return Result.err(entry_ids_ret.err_value)
 
@@ -543,7 +543,7 @@ def save_transaction_data(data: TransactionData) -> Result[int, FatalError]:
 def save_ledger_entry_data(transaction_id: int, event_id: int, entry_type: LedgerEntryType, balances: list[BalanceData]) -> Result[None, FatalError]:
     repo = injector.get(LedgerEntryInterface)
     external_ids = [b.external_id for b in balances]
-    ids_ret = repo.get_ids(LedgerEntryFilterOption(transaction_id=transaction_id, external_ids=external_ids), LedgerEntrySortOption(), LedgerEntryPageOption(limit=0))
+    ids_ret = repo.get_ids(LedgerEntryFilterOption(transaction_id=transaction_id, external_ids=external_ids), LedgerEntrySortOption(), LedgerEntryPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -595,7 +595,7 @@ def save_payment_projection_data() -> Result[int, CommandError]:
         return Result.err(delete_ret.err_value)
 
     repo = injector.get(PaymentEventInterface)
-    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=True), PaymentEventSortOption(), PaymentEventPageOption(limit=0))
+    ids_ret = repo.get_ids(PaymentEventFilterOption(is_processed=True), PaymentEventSortOption(), PaymentEventPageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -619,7 +619,7 @@ def save_payment_projection_data() -> Result[int, CommandError]:
 @Result.shield_exception()
 def delete_payment_projection_data() -> Result[None, FatalError]:
     ledger_repo = injector.get(LedgerEntryInterface)
-    ledger_ids_ret = ledger_repo.get_ids(LedgerEntryFilterOption(), LedgerEntrySortOption(), LedgerEntryPageOption(limit=0))
+    ledger_ids_ret = ledger_repo.get_ids(LedgerEntryFilterOption(), LedgerEntrySortOption(), LedgerEntryPageOption())
     if ledger_ids_ret.is_err:
         return Result.err(ledger_ids_ret.err_value)
 
@@ -629,7 +629,7 @@ def delete_payment_projection_data() -> Result[None, FatalError]:
         return Result.err(ledger_ret.err_value)
 
     payout_repo = injector.get(PayoutInterface)
-    payout_ids_ret = payout_repo.get_ids(PayoutFilterOption(), PayoutSortOption(), PayoutPageOption(limit=0))
+    payout_ids_ret = payout_repo.get_ids(PayoutFilterOption(), PayoutSortOption(), PayoutPageOption())
     if payout_ids_ret.is_err:
         return Result.err(payout_ids_ret.err_value)
 
@@ -639,7 +639,7 @@ def delete_payment_projection_data() -> Result[None, FatalError]:
         return Result.err(payout_ret.err_value)
 
     transaction_repo = injector.get(TransactionInterface)
-    transaction_ids_ret = transaction_repo.get_ids(TransactionFilterOption(), TransactionSortOption(), TransactionPageOption(limit=0))
+    transaction_ids_ret = transaction_repo.get_ids(TransactionFilterOption(), TransactionSortOption(), TransactionPageOption())
     if transaction_ids_ret.is_err:
         return Result.err(transaction_ids_ret.err_value)
 
@@ -649,7 +649,7 @@ def delete_payment_projection_data() -> Result[None, FatalError]:
         return Result.err(transaction_ret.err_value)
 
     subscription_repo = injector.get(SubscriptionInterface)
-    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(), SubscriptionSortOption(), SubscriptionPageOption(limit=0))
+    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(), SubscriptionSortOption(), SubscriptionPageOption())
     if subscription_ids_ret.is_err:
         return Result.err(subscription_ids_ret.err_value)
 
