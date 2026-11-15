@@ -2,11 +2,10 @@ from dataclasses import replace
 from datetime import datetime
 from ninja import UploadedFile
 from myus.domain.advertise.data import AdvertiseData
-from myus.domain.advertise.interface import AdvertiseInterface, FilterOption, PageOption, SortOption
+from myus.domain.advertise.interface import ADVERTISE_PAGE_SIZE, AdvertiseInterface, FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, InputError, NotFoundError, Result, ValidationError
-from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.enum.advertise import AdvertiseType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
@@ -20,7 +19,7 @@ ADVERTISE_PERSONAL_LIMIT = 5
 
 
 @Result.shield_exception()
-def get_manage_advertises(user_id: int, search: str, limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[AdvertiseData], int], FatalError]:
+def get_manage_advertises(user_id: int, search: str, limit: int = ADVERTISE_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[AdvertiseData], int], FatalError]:
     repo = injector.get(AdvertiseInterface)
     filter = FilterOption(search=search, owner_id=user_id)
     total_ret = repo.count(filter)
