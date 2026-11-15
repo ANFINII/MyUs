@@ -2,7 +2,7 @@ from typing import assert_never
 from ninja import File, Form, Router, UploadedFile
 from django.http import HttpRequest
 from myus.domain.advertise.interface import ADVERTISE_PAGE_SIZE, PageOption as AdvertisePageOption
-from myus.domain.media.common import PAGE_SIZE, PageOption
+from myus.domain.media.common import MEDIA_PAGE_SIZE, PageOption
 from myus.usecase.dto.advertise import AdvertiseDTO
 from myus.usecase.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.usecase.manage.advertise.core import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise
@@ -33,7 +33,7 @@ class ManageVideoAPI:
 
     @staticmethod
     @router.get("", response={200: VideoListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
         log.info("ManageVideoAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -143,7 +143,7 @@ class ManageMusicAPI:
 
     @staticmethod
     @router.get("", response={200: MusicListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
         log.info("ManageMusicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -253,7 +253,7 @@ class ManageBlogAPI:
 
     @staticmethod
     @router.get("", response={200: BlogListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
         log.info("ManageBlogAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -363,7 +363,7 @@ class ManageComicAPI:
 
     @staticmethod
     @router.get("", response={200: ComicListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
         log.info("ManageComicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -473,7 +473,7 @@ class ManagePictureAPI:
 
     @staticmethod
     @router.get("", response={200: PictureListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
         log.info("ManagePictureAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)
@@ -583,7 +583,7 @@ class ManageChatAPI:
 
     @staticmethod
     @router.get("", response={200: ChatListOut, 400: ErrorOut, 500: ErrorOut})
-    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = PAGE_SIZE, offset: Offset = 0):
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
         log.info("ManageChatAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id_ret = auth_check(request)

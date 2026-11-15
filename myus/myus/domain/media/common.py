@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 
 
-PAGE_SIZE = 50
+MEDIA_PAGE_SIZE = 50
 
 
 class SortType(Enum):
@@ -34,5 +34,5 @@ class SortOption:
 
 @dataclass(frozen=True, slots=True)
 class PageOption:
-    limit: int = PAGE_SIZE
+    limit: int = MEDIA_PAGE_SIZE
     offset: int = 0
