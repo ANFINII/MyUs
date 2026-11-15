@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 from datetime import date
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
-from myus.utils.constants.page import PAGE_SIZE
 from myus.utils.enum.advertise import AdvertiseType
 from .data import AdvertiseData
 
@@ -32,7 +31,7 @@ class SortOption:
 
 @dataclass(frozen=True, slots=True)
 class PageOption:
-    limit: int = PAGE_SIZE
+    limit: int = 0
     offset: int = 0
 
 

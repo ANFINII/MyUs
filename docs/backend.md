@@ -235,7 +235,7 @@ if ret.is_err:
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
 - 雛形: `myus/domain/search_tag/interface.py` を参照
 - 必須メソッド: `get_ids(filter, sort, page)` / `bulk_get(ids)` の読み取り2点
-- `page`は各ドメインの`interface.py`の`PageOption`（メディアは`domain/media/common.py`。`limit`の初期値はメディアと広告が`PAGE_SIZE`、決済と`search_tag`が20、ほかは0。`offset`は0）。全部取るときは`PageOption(limit=0)`（`limit`が0なら上限なし。切り出しは`adapter/outbound/db/common.py`の`page_queryset`。メディアと広告は使わない）
+- `page`は各ドメインの`interface.py`の`PageOption`（メディアは`domain/media/common.py`。`limit`の初期値はメディアが`PAGE_SIZE`、決済と`search_tag`が20、ほかは0。`offset`は0）。全部取るときは`PageOption(limit=0)`（`limit`が0なら上限なし。切り出しは`adapter/outbound/db/common.py`の`page_queryset`。メディアは使わない）
 - 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
 - 必須型: `FilterOption` / `SortOption` / `PageOption` dataclass + `SortType` enum
 - メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
