@@ -23,6 +23,8 @@ import {
   manageMusicsQuery,
   managePictureQuery,
   managePicturesQuery,
+  manageSeriesListQuery,
+  manageSeriesQuery,
   manageVideoQuery,
   manageVideosQuery,
   musicQuery,
@@ -142,6 +144,12 @@ export const manageBlogListLoader = async ({ queryClient, search }: PageLoad<obj
 export const manageComicListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageComicsQuery(await manageListParams(queryClient, search)))
 export const managePictureListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(managePicturesQuery(await manageListParams(queryClient, search)))
 export const manageChatListLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageChatsQuery(await manageListParams(queryClient, search)))
+export const manageSeriesListLoader = async ({ queryClient, search }: PageLoad<object>) => {
+  const channels = await queryClient.query(channelsQuery())
+  return queryClient.query(manageSeriesListQuery(search.channel || channels[0]?.ulid || ''))
+}
+
+export const manageSeriesEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => queryClient.query(manageSeriesQuery(params.ulid))
 export const manageAdvertiseListLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageAdvertisesQuery(listParams(search)))
 export const manageCreateLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 

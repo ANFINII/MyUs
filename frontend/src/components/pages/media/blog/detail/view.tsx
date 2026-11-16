@@ -13,7 +13,7 @@ interface Props {
 
 export default function BlogDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { detail, list } = data
+  const { detail, list, series } = data
   const { publish, richtext, isPromotion, ...other } = detail
 
   const { toast, handleToast } = useToast()
@@ -23,7 +23,7 @@ export default function BlogDetail(props: Props): React.JSX.Element {
       <MediaDetail publish={publish}>
         <BlogArticle richtext={richtext} isPromotion={isPromotion} />
         <Divide />
-        <MediaDetailCommon media={{ mediaPath: MediaPath.Blog, ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Blog, ...other }} list={list} series={series} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )

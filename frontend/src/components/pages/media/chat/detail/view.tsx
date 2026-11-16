@@ -7,7 +7,7 @@ import { LikeMediaIn } from 'types/internal/user'
 import { postSubscribeChannel } from 'api/internal/channel'
 import { postMessage, getReplies, putMessage, deleteMessage } from 'api/internal/message'
 import { postLikeMedia } from 'api/internal/user'
-import { FetchError, MediaType } from 'utils/constants/enum'
+import { FetchError, MediaPath, MediaType } from 'utils/constants/enum'
 import { useChatWebSocket } from 'components/hooks/useChatWebSocket'
 import { useLoading } from 'components/hooks/useLoading'
 import { useNavResize } from 'components/hooks/useNavResize'
@@ -16,6 +16,7 @@ import { useThreadResize } from 'components/hooks/useThreadResize'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
+import MediaDetailSeries from 'components/widgets/Media/Series'
 import SectionContent from 'components/widgets/Message/SectionContent'
 import SectionHeader from 'components/widgets/Message/SectionHeader'
 import SectionMain from 'components/widgets/Message/SectionMain'
@@ -45,7 +46,7 @@ interface Props {
 
 export default function ChatDetail(props: Props): React.JSX.Element {
   const { data, threadUlid } = props
-  const { detail, list } = data
+  const { detail, list, series } = data
 
   const initFormState: ChatDetailState = {
     messages: detail.messages,
@@ -266,7 +267,9 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     <Main metaTitle="Chat" toast={toast}>
       <div className={style.chat_section}>
         <div className={style.body_row}>
-          <SectionNav navRef={navRef} list={list} onNav={handleNav} onResize={handleResize} />
+          <SectionNav navRef={navRef} list={list} onNav={handleNav} onResize={handleResize}>
+            <MediaDetailSeries series={series} ulid={detail.ulid} mediaPath={MediaPath.Chat} className={style.series} />
+          </SectionNav>
           <div className={style.main_column}>
             <SectionHeader detail={headerDetail} user={user} onContent={handleContent} onLike={handleLike} />
             <div className={style.main_body}>

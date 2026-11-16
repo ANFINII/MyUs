@@ -104,6 +104,9 @@ export const apiManagePicture = (ulid: string) => base + `/manage/media/picture/
 export const apiManageChats = base + '/manage/media/chat'
 export const apiManageChat = (ulid: string) => base + `/manage/media/chat/${ulid}`
 
+export const apiManageSeriesList = base + '/manage/series'
+export const apiManageSeries = (ulid: string) => base + `/manage/series/${ulid}`
+
 export const apiManageAdvertises = base + '/manage/advertise'
 export const apiManageAdvertise = (ulid: string) => base + `/manage/advertise/${ulid}`
 

@@ -21,6 +21,7 @@ import {
   getManageVideo,
   getManageVideos,
 } from 'api/internal/manage/get'
+import { getManageSeries, getManageSeriesList } from 'api/internal/manage/series'
 import { getBlog, getChat, getComic, getMusic, getPicture, getVideo } from 'api/internal/media/detail'
 import { getBlogs, getChats, getComics, getHome, getMusics, getPictures, getRecommend, getVideos } from 'api/internal/media/list'
 import { getPaymentPlans, getPaymentSubscription } from 'api/internal/payment'
@@ -90,5 +91,8 @@ export const manageComicQuery = (ulid: string) => queryOptions({ queryKey: query
 export const managePictureQuery = (ulid: string) =>
   queryOptions({ queryKey: queryKeys.managePicture(ulid), queryFn: () => toQuery(getManagePicture(ulid)), refetchOnMount: false })
 export const manageChatQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageChat(ulid), queryFn: () => toQuery(getManageChat(ulid)), refetchOnMount: false })
+export const manageSeriesListQuery = (channelUlid: string) =>
+  queryOptions({ queryKey: queryKeys.manageSeriesList(channelUlid), queryFn: () => toQuery(getManageSeriesList(channelUlid)), refetchOnMount: false })
+export const manageSeriesQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageSeries(ulid), queryFn: () => toQuery(getManageSeries(ulid)), refetchOnMount: false })
 export const manageAdvertiseQuery = (ulid: string) =>
   queryOptions({ queryKey: queryKeys.manageAdvertise(ulid), queryFn: () => toQuery(getManageAdvertise(ulid)), refetchOnMount: false })

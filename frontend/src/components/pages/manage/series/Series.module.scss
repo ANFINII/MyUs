@@ -1,0 +1,22 @@
+.title_link {
+  color: rgb(50, 110, 200);
+  cursor: pointer;
+}
+
+.normal {
+  width: 120px;
+}
+
+.number {
+  text-align: right;
+}
+
+.select_box {
+  width: 200px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

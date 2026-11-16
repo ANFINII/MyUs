@@ -24,7 +24,7 @@ interface Props {
 
 export default function MusicDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { detail, list } = data
+  const { detail, list, series } = data
   const { image, music, lyric, download, publish, ...other } = detail
 
   const { t } = useTranslation()
@@ -64,7 +64,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
           </>
         )}
         <Divide />
-        <MediaDetailCommon media={{ mediaPath: MediaPath.Music, ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Music, ...other }} list={list} series={series} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )

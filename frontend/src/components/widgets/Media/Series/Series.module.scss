@@ -1,0 +1,83 @@
+.series {
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 6px;
+  overflow: hidden;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    background: rgb(245, 245, 245);
+  }
+
+  .label {
+    flex-shrink: 0;
+    color: rgb(120, 120, 120);
+  }
+
+  .title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .position {
+    flex-shrink: 0;
+    color: rgb(120, 120, 120);
+  }
+}
+
+.list {
+  max-height: 320px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    color: rgb(30, 30, 30);
+    text-decoration: none;
+
+    &:hover {
+      background: rgb(245, 245, 245);
+    }
+
+    &.current {
+      background: rgb(235, 243, 255);
+    }
+  }
+
+  .index {
+    flex-shrink: 0;
+    width: 20px;
+    font-size: 12px;
+    text-align: center;
+    color: rgb(120, 120, 120);
+  }
+
+  .thumbnail {
+    flex-shrink: 0;
+    width: 64px;
+    height: 36px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  .item_title {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

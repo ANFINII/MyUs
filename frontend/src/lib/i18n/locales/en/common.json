@@ -314,6 +314,16 @@
   },
   "manage": {
     "title": "Manage posts",
+    "series": {
+      "new": "New series",
+      "mediaType": "Type",
+      "count": "Posts",
+      "candidate": "Post to add",
+      "private": "Private",
+      "empty": "No posts yet. Add one above",
+      "deleteTitle": "Delete series",
+      "deleteConfirm": "Delete \"{{title}}\"? Posts will not be deleted"
+    },
     "header": {
       "selected": "{{count}} selected",
       "bulkDelete": "Delete selected"
@@ -851,6 +861,9 @@
     }
   },
   "media": {
+    "series": {
+      "label": "Series"
+    },
     "blog": {
       "promotion": "This post contains promotions",
       "promotionBadge": "PR"
