@@ -13,7 +13,7 @@ export default function MiniPlayer(): React.JSX.Element {
 
   return (
     <div className={style.mini_player}>
-      <ExImage src={current.image || current.channel.avatar} width="40" height="40" className={style.jacket} />
+      <ExImage src={current.image || current.channel.avatar} width="40" height="40" className={style.thumbnail} />
       <div className={style.info}>
         <Link href={`/media/music/${current.ulid}`} className={style.title}>
           {current.title}

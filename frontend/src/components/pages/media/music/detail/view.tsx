@@ -37,20 +37,22 @@ export default function MusicDetail(props: Props): React.JSX.Element {
   return (
     <Main metaTitle="Music" toast={toast}>
       <MediaDetail publish={publish}>
-        <VStack gap="8" className={style.media_detail_music}>
-          <div className={style.jacket}>
-            <ExImage src={image || other.channel.avatar} width="240" height="240" className={style.jacket_image} />
+        <div className={style.media_detail_music}>
+          <div className={style.thumbnail_wrap}>
+            <ExImage src={image || other.channel.avatar} className={style.thumbnail} />
           </div>
-          <AudioPlayer src={music} playbackRate={speed} className={style.player} />
-          <HStack justify="between">
-            <SpeedControl value={speed} onChange={handleSpeed} />
-            {download && (
-              <a href={music} download className={style.download}>
-                <IconDownload size="1.5em" />
-              </a>
-            )}
-          </HStack>
-        </VStack>
+          <VStack gap="6" className={style.controls}>
+            <AudioPlayer src={music} playbackRate={speed} isVolumeInline className={style.player} />
+            <HStack justify="between">
+              <SpeedControl value={speed} onChange={handleSpeed} className={style.speed} />
+              {download && (
+                <a href={music} download className={style.download}>
+                  <IconDownload size="1.5em" />
+                </a>
+              )}
+            </HStack>
+          </VStack>
+        </div>
         {lyric && (
           <>
             <View isView={isLyricView} onView={handleLyricView} content={isLyricView ? t('view.collapse') : t('view.expand')} />
