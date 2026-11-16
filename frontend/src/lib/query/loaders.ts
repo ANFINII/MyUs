@@ -31,6 +31,8 @@ import {
   paymentSubscriptionQuery,
   pictureQuery,
   picturesQuery,
+  playlistQuery,
+  playlistsQuery,
   recommendQuery,
   settingMypageQuery,
   settingNotificationQuery,
@@ -82,6 +84,9 @@ export const musicDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: stri
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Music })
   return queryClient.query(musicQuery(params.ulid))
 }
+
+export const playlistListLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(playlistsQuery())
+export const playlistDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => queryClient.query(playlistQuery(params.ulid))
 
 export const blogDetailLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Blog })

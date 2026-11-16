@@ -14,6 +14,8 @@ export const queryKeys = {
   mediaVideo: (ulid: string) => ['media', 'video', ulid] as const,
   mediaMusics: (params: SearchParams) => ['media', 'music', params] as const,
   mediaMusic: (ulid: string) => ['media', 'music', ulid] as const,
+  mediaPlaylists: ['media', 'playlist'] as const,
+  mediaPlaylist: (ulid: string) => ['media', 'playlist', ulid] as const,
   mediaBlogs: (params: SearchParams) => ['media', 'blog', params] as const,
   mediaBlog: (ulid: string) => ['media', 'blog', ulid] as const,
   mediaComics: (params: SearchParams) => ['media', 'comic', params] as const,
