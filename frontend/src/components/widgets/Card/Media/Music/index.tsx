@@ -18,7 +18,6 @@ export default function MusicCard(props: Props): React.JSX.Element {
   const { ulid, image, music, channel } = item
 
   const { current, play, toggle } = useMusicPlayer()
-
   const [duration, setDuration] = useState<number>(0)
 
   const isCurrent = current?.ulid === ulid
@@ -34,7 +33,13 @@ export default function MusicCard(props: Props): React.JSX.Element {
   const handlePlay = () => {
     handleDuration()
     if (isCurrent) return toggle()
-    play(items, Math.max(items.findIndex((m) => m.ulid === ulid), 0))
+    play(
+      items,
+      Math.max(
+        items.findIndex((m) => m.ulid === ulid),
+        0,
+      ),
+    )
   }
 
   return (
