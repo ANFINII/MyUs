@@ -192,7 +192,6 @@ STRIPE_WEBHOOK_SECRET = env.stripe_webhook_secret
 STRIPE_PRICE_ID_BASIC = env.stripe_price_id_basic
 STRIPE_PRICE_ID_STANDARD = env.stripe_price_id_standard
 STRIPE_PRICE_ID_PREMIUM = env.stripe_price_id_premium
-STRIPE_PRICE_ID_ULTIMATE = env.stripe_price_id_ultimate
 
 # Email
 DEFAULT_FROM_EMAIL = env.email_from

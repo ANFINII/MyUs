@@ -8,7 +8,6 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, NotFoundError, Result
 from myus.utils.enum.advertise import AdvertiseType
-from myus.utils.enum.user import PlanName
 from myus.utils.functions.common import create_url
 from myus.utils.functions.transaction import atomic_result
 from ._convert import is_active, save_read_data
@@ -66,7 +65,8 @@ def get_global_advertises(user_id: int | None) -> Result[list[AdvertiseData], Fa
             return Result.err(user_ret.err_value)
 
         user = user_ret.ok_value
-        if user is not None and user.user_plan.plan != PlanName.FREE and not user.mypage.is_advertise:
+        plan = get_plan(user.user_plan.plan) if user is not None else None
+        if user is not None and plan is not None and plan.is_hide_global_advertise and not user.mypage.is_advertise:
             return Result.ok([])
 
     today = timezone.localdate()

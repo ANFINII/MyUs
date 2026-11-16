@@ -269,7 +269,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 ### マスターデータ・その他
 
 #### 料金プラン（`myus/domain/payment/plan.py`）
-- テーブルではなくコードの定数（Free・Basic・Standard・Premium・Ultimate）
+- テーブルではなくコードの定数（Free・Basic・Standard・Premium）
 - 価格（通貨ごとの `Money`。円とドル）、広告表示上限など。Stripe の価格 ID は環境変数（`STRIPE_PRICE_ID_*`）
 
 #### Category / HashTag

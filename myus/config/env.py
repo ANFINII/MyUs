@@ -49,7 +49,6 @@ class Environment:
     stripe_price_id_basic: str
     stripe_price_id_standard: str
     stripe_price_id_premium: str
-    stripe_price_id_ultimate: str
 
     # Media 本番だけ使う
     aws_storage_bucket_name: str = ""
