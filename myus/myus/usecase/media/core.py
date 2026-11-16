@@ -24,7 +24,7 @@ from myus.utils.enum.notification import NotificationObjectType, NotificationTyp
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
 from myus.utils.functions.map import comment_type_no_map
-from myus.utils.functions.media import media_duration, save_upload, validate_uploads
+from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
 from ._convert import get_media_repository, get_media_user_data, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
 from ..category._convert import get_category_data
@@ -124,7 +124,6 @@ def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile, image
         lyric=input.lyric,
         image=save_upload(image, ImageUpload.MUSIC, channel.ulid) if image is not None else "",
         music=save_upload(music, MediaUpload.MUSIC, channel.ulid),
-        duration=media_duration(music),
         read=0,
         like=0,
         download=input.download,
@@ -751,7 +750,6 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         lyric=obj.lyric,
         image=create_url(obj.image),
         music=create_url(obj.music),
-        duration=obj.duration,
         download=obj.download and is_music_download,
         comments=comments,
         hashtags=obj.hashtags,

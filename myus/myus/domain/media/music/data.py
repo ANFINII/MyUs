@@ -13,7 +13,6 @@ class MusicData:
     lyric: str
     image: str
     music: str
-    duration: int
     read: int
     like: int
     download: bool
