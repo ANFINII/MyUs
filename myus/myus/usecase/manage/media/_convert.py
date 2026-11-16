@@ -14,8 +14,9 @@ from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
-from myus.utils.enum.media import MediaType
+from myus.utils.enum.media import CommentTypeNo, MediaType
 from myus.utils.enum.notification import NotificationObjectType
+from ...comment._convert import delete_comments_data
 from ...notification._convert import delete_notification_data
 
 
@@ -120,6 +121,10 @@ def delete_video_data(ids: list[int]) -> Result[None, FatalError]:
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
+    comment_ret = delete_comments_data(CommentTypeNo.VIDEO, ids)
+    if comment_ret.is_err:
+        return Result.err(comment_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -133,6 +138,10 @@ def delete_music_data(ids: list[int]) -> Result[None, FatalError]:
     notification_ret = delete_notification_data(NotificationObjectType.MUSIC, ids)
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
+
+    comment_ret = delete_comments_data(CommentTypeNo.MUSIC, ids)
+    if comment_ret.is_err:
+        return Result.err(comment_ret.err_value)
 
     return Result.ok(None)
 
@@ -148,6 +157,10 @@ def delete_blog_data(ids: list[int]) -> Result[None, FatalError]:
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
+    comment_ret = delete_comments_data(CommentTypeNo.BLOG, ids)
+    if comment_ret.is_err:
+        return Result.err(comment_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -162,6 +175,10 @@ def delete_comic_data(ids: list[int]) -> Result[None, FatalError]:
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
+    comment_ret = delete_comments_data(CommentTypeNo.COMIC, ids)
+    if comment_ret.is_err:
+        return Result.err(comment_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -175,6 +192,10 @@ def delete_picture_data(ids: list[int]) -> Result[None, FatalError]:
     notification_ret = delete_notification_data(NotificationObjectType.PICTURE, ids)
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
+
+    comment_ret = delete_comments_data(CommentTypeNo.PICTURE, ids)
+    if comment_ret.is_err:
+        return Result.err(comment_ret.err_value)
 
     return Result.ok(None)
 

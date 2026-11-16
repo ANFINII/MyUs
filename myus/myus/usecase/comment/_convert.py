@@ -68,6 +68,33 @@ def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
+def delete_comments_data(type_no: CommentTypeNo, object_ids: list[int]) -> Result[None, FatalError]:
+    repo = injector.get(CommentInterface)
+    ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_ids=object_ids), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        return Result.ok(None)
+
+    comments_ret = repo.bulk_get(ids)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
+    comments = comments_ret.ok_value
+    save_ret = repo.bulk_save([replace(c, deleted=True) for c in comments])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    notification_ret = delete_notification_data(NotificationObjectType.COMMENT, ids)
+    if notification_ret.is_err:
+        return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
 def get_comments_data(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> Result[list[CommentDTO], FatalError]:
     repo = injector.get(CommentInterface)
     ids_ret = repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption(), PageOption())
