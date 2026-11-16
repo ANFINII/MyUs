@@ -11,7 +11,7 @@ variable "key_id" {
 }
 
 variable "secret_parameters" {
-  description = "SecureString のパラメータの名前。apply では値を FIXME で作り、本当の値は CLI で入れる。value_wo は state に残らない"
+  description = "値を手で入れるパラメータの名前 (SecureString)。apply では値を FIXME で作り、本当の値は CLI で入れる。value_wo は state に残らない"
   type        = list(string)
 }
 

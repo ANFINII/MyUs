@@ -1,0 +1,100 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "myus/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "infra/aws/prod/products/myus/compute/deploy/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: ap-northeast-1
+  REPOSITORY: myus-backend
+  INSTANCE_NAME: myus-api-prod
+  PARAMETER_PATH: /myus/prod/
+  DEPLOY_DIR: infra/aws/prod/products/myus/compute/deploy
+
+jobs:
+  deploy:
+    if: vars.AWS_ACCOUNT_ID != ''
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github-actions-deploy
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set image
+        env:
+          ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+        run: echo "IMAGE=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY:$GITHUB_SHA" >> "$GITHUB_ENV"
+
+      - name: Build and push
+        run: |
+          if aws ecr describe-images --repository-name "$REPOSITORY" --image-ids imageTag="$GITHUB_SHA" > /dev/null 2>&1; then
+            echo "$IMAGE はもう push してある"
+            exit 0
+          fi
+          aws ecr get-login-password | docker login --username AWS --password-stdin "${IMAGE%%/*}"
+          docker build --platform linux/arm64 -t "$IMAGE" .
+          docker push "$IMAGE"
+
+      - name: Deploy
+        run: |
+          instance_id=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=$INSTANCE_NAME" "Name=instance-state-name,Values=running" \
+            --query 'Reservations[0].Instances[0].InstanceId' --output text)
+
+          compose_b64=$(base64 -w0 "$DEPLOY_DIR/compose.yml")
+          deploy_b64=$(base64 -w0 "$DEPLOY_DIR/deploy.sh")
+          parameters=$(jq -n \
+            --arg compose "$compose_b64" \
+            --arg deploy "$deploy_b64" \
+            --arg run "AWS_REGION=$AWS_REGION PARAMETER_PATH=$PARAMETER_PATH IMAGE=$IMAGE bash /opt/myus/deploy.sh" \
+            '{commands: [
+              "mkdir -p /opt/myus",
+              "echo \($compose) | base64 -d > /opt/myus/compose.yml",
+              "echo \($deploy) | base64 -d > /opt/myus/deploy.sh",
+              $run
+            ]}')
+
+          command_id=$(aws ssm send-command \
+            --instance-ids "$instance_id" \
+            --document-name AWS-RunShellScript \
+            --parameters "$parameters" \
+            --query 'Command.CommandId' --output text)
+
+          for _ in $(seq 1 120); do
+            status=$(aws ssm get-command-invocation --command-id "$command_id" --instance-id "$instance_id" --query Status --output text 2>/dev/null || echo Pending)
+            case "$status" in
+              Pending|InProgress|Delayed) sleep 10 ;;
+              *) break ;;
+            esac
+          done
+
+          aws ssm get-command-invocation --command-id "$command_id" --instance-id "$instance_id" \
+            --query '[StandardOutputContent, StandardErrorContent]' --output text
+          echo "status: $status"
+          test "$status" = Success

@@ -2,8 +2,8 @@ data "aws_cloudfront_cache_policy" "caching_disabled" {
   name = "Managed-CachingDisabled"
 }
 
-data "aws_cloudfront_origin_request_policy" "all_viewer" {
-  name = "Managed-AllViewer"
+data "aws_cloudfront_origin_request_policy" "all_viewer_and_cloudfront_headers" {
+  name = "Managed-AllViewerAndCloudFrontHeaders-2022-06"
 }
 
 resource "aws_cloudfront_distribution" "api" {
@@ -35,7 +35,7 @@ resource "aws_cloudfront_distribution" "api" {
     cached_methods         = ["GET", "HEAD"]
 
     cache_policy_id          = data.aws_cloudfront_cache_policy.caching_disabled.id
-    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer_and_cloudfront_headers.id
 
     compress = true
   }
