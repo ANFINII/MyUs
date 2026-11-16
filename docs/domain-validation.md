@@ -159,7 +159,7 @@ def validate_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Resu
 - 2026-11-16: ハッシュタグの名前の例を今のコードに合わせる（長さ・使える文字は domain の `validate`、NG ワードは usecase の `has_ng_word`）。形 2 の例の `get_ids` を `PageOption` を受け取る形にし、ハッシュタグの `validate_count` を足す
 - 2026-11-11: Data 1 つでは決まらないルール（数・重複）は `validate(objs)` で list を受け取る形を足す（検索タグ）
 - 2026-11-11: `__post_init__`・ファクトリで確かめない理由と、状態遷移のルール（aggregate の `decide.py`）との分け方を足す
-- 2026-11-11: 作りが決まったので、検討の文章（`_validate`・`_new` のパターン、recustomer との比べ、マンガで試した形など）を消し、決まった形だけにする
+- 2026-11-11: 作りが決まったので、検討の文章（`_validate`・`_new` のパターン、rcmr との比べ、マンガで試した形など）を消し、決まった形だけにする
 - 2026-11-11: カテゴリの例を消す。参照先が見つからないのはルールではないので、`get_category_data` で `FatalError` にする
 - 2026-11-11: 関数名を `validate_data`（`validate_xxx_data`）から `validate`（`validate_xxx`）にする。ルールを `validation.py` の `validate` に書き、repository の `bulk_save` で保存する前に確かめる形を足す。マンガをこの形にした
 - 2026-11-11: ルールの置き場所を `domain/aggregate/<集約>/decide.py` から `domain/interface/<ドメイン>/validation.py`（#1265 の決まり）にそろえる。usecase の `_convert.py` に置く別案は、domain に置くと決めたので消す
