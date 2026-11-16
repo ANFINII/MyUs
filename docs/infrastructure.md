@@ -216,7 +216,7 @@ infra/
 
 ## 構成図
 
-Terraform で作るものを、スタックの依存・リクエストの流れ・デプロイの流れの 3 つに分けて描く。ドメイン関連（ACM・Route 53・SES）と監視はまだ無いので描いていない。
+Terraform で作るものを、スタックの依存・リクエストの流れ・デプロイの流れ・監視の流れの 4 つに分けて描く。ドメイン関連（ACM・Route 53・SES）はまだ無いので描いていない。
 
 ### スタックの依存と apply の順
 
@@ -237,6 +237,7 @@ flowchart LR
         media[6. media<br/>S3・CloudFront]
         database[7. database<br/>RDS MySQL]
         compute[8. compute<br/>EC2・CloudFront・IAM]
+        monitoring[9. monitoring<br/>CloudWatch Alarms・SNS]
     end
 
     network --> database
@@ -244,6 +245,8 @@ flowchart LR
     parameters --> compute
     database --> compute
     media --> compute
+    database --> monitoring
+    compute --> monitoring
 ```
 
 `ecr`・`cost`・`iam-role` はほかのスタックの outputs を読まない。`iam-role` のデプロイ用のロールは、ECR のリポジトリと EC2 を名前（`myus-backend`・`myus-api-prod`）で指している。
@@ -316,6 +319,35 @@ sequenceDiagram
     EC2->>ECR: docker compose pull
     EC2->>EC2: docker compose up -d
     GH->>EC2: 終わるまで get-command-invocation で待つ
+```
+
+### 監視の流れ
+
+CloudFront のメトリクスは us-east-1 にしか無く、アラームの通知先は同じリージョンの SNS でないといけないので、SNS のトピックを東京と us-east-1 の 2 つ作っている。どちらも同じメールアドレスに送る。
+
+```mermaid
+flowchart LR
+    subgraph tokyo[ap-northeast-1]
+        EC2[EC2<br/>ステータスチェック・CPU クレジット]
+        Agent[CloudWatch Agent<br/>ディスクの使用率]
+        RDS[(RDS<br/>空き容量・CPU)]
+        Alarm[CloudWatch Alarms]
+        SNS[SNS<br/>myus-prod-alarm]
+    end
+    subgraph virginia[us-east-1]
+        CF[CloudFront API<br/>5xx の割合]
+        Alarm_US[CloudWatch Alarms]
+        SNS_US[SNS<br/>myus-prod-alarm]
+    end
+    Budgets[AWS Budgets・異常検知<br/>general/cost]
+    Mail[メール]
+
+    EC2 --> Alarm
+    Agent --> Alarm
+    RDS --> Alarm
+    Alarm -->|鳴ったとき・戻ったとき| SNS --> Mail
+    CF --> Alarm_US -->|鳴ったとき・戻ったとき| SNS_US --> Mail
+    Budgets --> Mail
 ```
 
 ---
