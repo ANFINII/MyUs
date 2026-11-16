@@ -89,18 +89,6 @@ export default function ManageMusics(props: Props): React.JSX.Element {
       ),
     },
     {
-      key: 'detail',
-      header: t('manage.table.detail'),
-      align: 'center',
-      className: style.narrow,
-      cellClass: style.detail,
-      cell: (m) => (
-        <Link href={`/media/music/${m.ulid}`} className={style.detail_link}>
-          <IconLink size="16" />
-        </Link>
-      ),
-    },
-    {
       key: 'content',
       header: t('manage.table.content'),
       className: style.content,
@@ -125,6 +113,18 @@ export default function ManageMusics(props: Props): React.JSX.Element {
       className: style.normal,
       cellClass: style.number,
       cell: (m) => m.like,
+    },
+    {
+      key: 'detail',
+      header: t('manage.table.detail'),
+      align: 'center',
+      className: style.narrow,
+      cellClass: style.detail,
+      cell: (m) => (
+        <Link href={`/media/music/${m.ulid}`} className={style.detail_link}>
+          <IconLink size="16" />
+        </Link>
+      ),
     },
     {
       key: 'download',

@@ -89,18 +89,6 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
       ),
     },
     {
-      key: 'detail',
-      header: t('manage.table.detail'),
-      align: 'center',
-      className: style.narrow,
-      cellClass: style.detail,
-      cell: (b) => (
-        <Link href={`/media/blog/${b.ulid}`} className={style.detail_link}>
-          <IconLink size="16" />
-        </Link>
-      ),
-    },
-    {
       key: 'content',
       header: t('manage.table.content'),
       className: style.content,
@@ -125,6 +113,18 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
       className: style.normal,
       cellClass: style.number,
       cell: (b) => b.like,
+    },
+    {
+      key: 'detail',
+      header: t('manage.table.detail'),
+      align: 'center',
+      className: style.narrow,
+      cellClass: style.detail,
+      cell: (b) => (
+        <Link href={`/media/blog/${b.ulid}`} className={style.detail_link}>
+          <IconLink size="16" />
+        </Link>
+      ),
     },
     {
       key: 'publish',
