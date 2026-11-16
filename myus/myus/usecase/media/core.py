@@ -19,12 +19,10 @@ from myus.domain.payment.plan import get_plan
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
-from myus.utils.enum.media import CommentType, MediaType
+from myus.utils.enum.media import CommentType, EncodeStatus, MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
-from myus.utils.functions.convert.encode_worker import EncodeWorker
-from myus.utils.functions.convert.video_encoding import convert_video
 from myus.utils.functions.map import comment_type_no_map
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
@@ -66,9 +64,10 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
         image=save_upload(image, ImageUpload.VIDEO, channel.ulid),
         video=video_path,
         convert="",
+        encode_status=EncodeStatus.ENCODING,
         read=0,
         like=0,
-        publish=False,
+        publish=input.publish,
         publish_at=input.publish_at,
         created=datetime.min,
         updated=datetime.min,
@@ -95,36 +94,6 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
 
     objs = objs_ret.ok_value
     obj = objs[0]
-
-    def encode_task() -> None:
-        result = convert_video(video_path)
-        if result.video == "":
-            log.error("encode failed", video_id=obj.id)
-            return
-
-        videos_ret = repo.bulk_get([obj.id])
-        if videos_ret.is_err:
-            log.error("get failed", error=videos_ret.err_value.message, video_id=obj.id)
-            return
-
-        videos = videos_ret.ok_value
-        if len(videos) == 0:
-            log.error("not found", video_id=obj.id)
-            return
-        video = videos[0]
-        publish = input.publish if video.updated == obj.updated else video.publish
-        updated = replace(video, video=result.video, convert=result.convert, publish=publish)
-        save_ret = repo.bulk_save([updated])
-        if save_ret.is_err:
-            log.error("save failed", error=save_ret.err_value.message, video_id=obj.id)
-            return
-
-        if publish:
-            notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
-            if notification_ret.is_err:
-                log.error("create failed", error=notification_ret.err_value.message, object_type=NotificationObjectType.VIDEO.value, object_id=obj.id)
-
-    EncodeWorker.submit(encode_task)
 
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 

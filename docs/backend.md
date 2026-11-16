@@ -414,3 +414,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: 本番（`DEBUG=False`）のログを1行の JSON（構造化ログ）にした
 - 2026-11-16: Django 本体のログも、本番は`log`と同じ形の1行の JSON にした
 - 2026-11-16: 登録・パスワード再設定のメールに、送ったときの言語（`locale`）でリンクと本文を出すようにした。テンプレートは`templates/registration/email/{ja,en}/`
+- 2026-11-16: 動画の HLS 変換を API のスレッドから worker（`encode_videos`・`myus_encoder`）に分けた。3回続けて失敗したら`Video.encode_status`を`Failed`にし、管理画面で動画を上げ直してもらう

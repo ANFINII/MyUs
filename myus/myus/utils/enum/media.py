@@ -24,3 +24,9 @@ class CommentType(str, Enum):
     BLOG = "Blog"
     COMIC = "Comic"
     PICTURE = "Picture"
+
+
+class EncodeStatus(str, Enum):
+    ENCODING = "Encoding"
+    DONE = "Done"
+    FAILED = "Failed"

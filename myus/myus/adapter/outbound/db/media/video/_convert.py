@@ -3,6 +3,7 @@ from myus.db.models.media import Video
 from myus.domain.channel.data import ChannelData
 from myus.domain.hashtag.data import HashtagData
 from myus.domain.media.video.data import VideoData
+from myus.utils.enum.media import EncodeStatus
 
 
 def convert_data(obj: Video) -> VideoData:
@@ -16,6 +17,7 @@ def convert_data(obj: Video) -> VideoData:
         image=obj.image.name or "",
         video=obj.video.name or "",
         convert=obj.convert.name or "",
+        encode_status=EncodeStatus(obj.encode_status),
         read=obj.read,
         like=obj.like_count,
         publish=obj.publish,
@@ -48,6 +50,7 @@ def marshal_data(data: VideoData) -> Video:
         image=data.image,
         video=data.video,
         convert=data.convert,
+        encode_status=data.encode_status,
         read=data.read,
         publish=data.publish,
         publish_at=data.publish_at,

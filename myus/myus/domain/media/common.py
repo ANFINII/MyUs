@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum, auto
+from myus.utils.enum.media import EncodeStatus
 
 
 MEDIA_PAGE_SIZE = 50
@@ -22,6 +23,7 @@ class FilterOption:
     channel_ulid: str = ""
     category_id: int = 0
     is_recommend: bool = False
+    encode_status: EncodeStatus | None = None
     search: str = ""
 
 

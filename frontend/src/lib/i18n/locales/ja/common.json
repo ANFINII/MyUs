@@ -339,6 +339,11 @@
       "created": "投稿日時",
       "createdAt": "作成日時"
     },
+    "video": {
+      "encoding": "変換中",
+      "encodeFailed": "変換できませんでした",
+      "encodeFailedNotice": "変換できませんでした。動画を上げ直してください。"
+    },
     "form": {
       "publish": "公開する",
       "publishAt": "公開日時",

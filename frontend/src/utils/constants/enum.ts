@@ -174,6 +174,12 @@ export enum MediaType {
   Chat = 'Chat',
 }
 
+export enum EncodeStatus {
+  Encoding = 'Encoding',
+  Done = 'Done',
+  Failed = 'Failed',
+}
+
 export enum MediaPath {
   Video = 'video',
   Music = 'music',

@@ -1,6 +1,7 @@
 import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
 import { ChatMessage } from 'types/internal/message'
+import { EncodeStatus } from 'utils/constants/enum'
 
 export interface Search {
   name?: string
@@ -56,6 +57,7 @@ export interface Video extends Media {
   image: string
   video: string
   convert: string
+  encodeStatus: EncodeStatus
 }
 
 export interface Music extends Media {
