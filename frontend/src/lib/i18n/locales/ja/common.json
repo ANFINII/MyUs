@@ -45,6 +45,7 @@
     "subscriptionNotFound": "有効なサブスクリプションが見つかりません",
     "advertiseNotFound": "広告が見つかりません",
     "playlistNotFound": "プレイリストが見つかりません",
+    "playlistPlanRequired": "プレイリストは有料プランで作成できます",
     "planNotFound": "プランが見つかりません",
     "alreadySubscribed": "すでに有料プランを契約しています",
     "followSelf": "自分自身はフォローできません",
@@ -525,6 +526,7 @@
         "individualAds": "個別広告表示 {{count}}つ",
         "hideGlobalAds": "全体広告 非表示",
         "musicDownload": "楽曲ダウンロード",
+        "playlist": "プレイリスト作成",
         "basic": "基本機能",
         "withAds": "広告あり"
       }
