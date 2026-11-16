@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { KeyboardEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from 'lib/error'
@@ -14,7 +14,9 @@ import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import IconClock from 'components/parts/Icon/Clock'
 import IconCross from 'components/parts/Icon/Cross'
+import IconPlus from 'components/parts/Icon/Plus'
 import HStack from 'components/parts/Stack/Horizontal'
 import AudioPlayer from 'components/widgets/AudioPlayer'
 import Lyric from 'components/widgets/Lyric'
@@ -65,6 +67,24 @@ export default function ManageMusicLyric(props: Props): React.JSX.Element {
   }
 
   const handleClear = (index: number) => updateTime(index, -1)
+  const handleText = (index: number, text: string) => setRows(rows.map((row, i) => (i === index ? { ...row, text } : row)))
+
+  const handleAddRow = (index: number) => {
+    setRows([...rows.slice(0, index + 1), { time: -1, text: '' }, ...rows.slice(index + 1)])
+    setSelected(index + 1)
+  }
+
+  const handleDeleteRow = (index: number) => {
+    if (rows.length === 1) return setRows([{ time: -1, text: '' }])
+    setRows(rows.filter((_, i) => i !== index))
+    setSelected(Math.min(selected, rows.length - 2))
+  }
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key !== 'Enter' || e.nativeEvent.isComposing) return
+    e.preventDefault()
+    handleAddRow(index)
+  }
 
   const handleSeek = (time: number) => {
     const audio = audioRef.current
@@ -106,40 +126,50 @@ export default function ManageMusicLyric(props: Props): React.JSX.Element {
         </div>
         <AudioPlayer src={data.music} isVolumeInline audioRef={audioRef} className={style.player} onTimeUpdate={setCurrentTime} />
 
-        {data.lyric.trim() === '' ? (
-          <p className={style.empty}>{t('manage.lyric.empty')}</p>
-        ) : (
-          <div className={style.body}>
-            <div className={style.rows}>
-              <ol className={style.list}>
-                {rows.map((row, index) => (
-                  <li key={index} className={cx(style.row, index === selected && style.selected)} onClick={() => handleSelect(index)}>
-                    <span className={cx(style.time, row.time < 0 && style.unset)}>{row.time >= 0 ? formatLyricTime(row.time) : '--:--.--'}</span>
-                    <span className={style.text}>{row.text || ' '}</span>
+        <div className={style.body}>
+          <div className={style.rows}>
+            <Button color="purple" name={t('manage.lyric.record')} className={style.record} onClick={handleRecord} />
+            <ol className={style.list}>
+              {rows.map((row, index) => (
+                <li key={index} className={cx(style.row, index === selected && style.selected)} onClick={() => handleSelect(index)}>
+                  <span className={cx(style.time, row.time < 0 && style.unset)}>{row.time >= 0 ? formatLyricTime(row.time) : '--:--.--'}</span>
+                  <input
+                    value={row.text}
+                    placeholder={t('manage.lyric.placeholder')}
+                    className={style.text}
+                    onChange={(e) => handleText(index, e.target.value)}
+                    onFocus={() => setSelected(index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                  />
+                  <span className={style.actions} onClick={(e) => e.stopPropagation()}>
                     {row.time >= 0 && (
-                      <span className={style.actions} onClick={(e) => e.stopPropagation()}>
+                      <>
                         <button type="button" className={style.nudge} onClick={() => handleNudge(index, -NUDGE_SECONDS)}>
                           -0.1
                         </button>
                         <button type="button" className={style.nudge} onClick={() => handleNudge(index, NUDGE_SECONDS)}>
                           +0.1
                         </button>
-                        <button type="button" title={t('manage.lyric.clear')} className={style.clear} onClick={() => handleClear(index)}>
-                          <IconCross size="16" />
+                        <button type="button" title={t('manage.lyric.clear')} className={style.nudge} onClick={() => handleClear(index)}>
+                          <IconClock size="12" />
                         </button>
-                      </span>
+                      </>
                     )}
-                  </li>
-                ))}
-              </ol>
-              <Button color="purple" name={t('manage.lyric.record')} className={style.record} onClick={handleRecord} />
-            </div>
-            <div className={style.preview}>
-              <span className={style.label}>{t('manage.lyric.preview')}</span>
-              <Lyric lyric={lyric} currentTime={currentTime} isExpand onSeek={handleSeek} />
-            </div>
+                    <button type="button" title={t('manage.lyric.addRow')} className={style.icon} onClick={() => handleAddRow(index)}>
+                      <IconPlus size="14" />
+                    </button>
+                    <button type="button" title={t('manage.lyric.deleteRow')} className={cx(style.icon, style.delete)} onClick={() => handleDeleteRow(index)}>
+                      <IconCross size="16" />
+                    </button>
+                  </span>
+                </li>
+              ))}
+            </ol>
           </div>
-        )}
+          <div className={style.preview}>
+            <Lyric lyric={lyric} currentTime={currentTime} isExpand onSeek={handleSeek} />
+          </div>
+        </div>
       </div>
     </Main>
   )

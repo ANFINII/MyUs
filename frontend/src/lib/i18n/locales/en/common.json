@@ -332,8 +332,9 @@
       "hint": "Play the song, pick a line and press \"Record time\" to stamp it and move to the next line. Click a line to jump to its time",
       "record": "Record time",
       "clear": "Clear time",
-      "preview": "Preview",
-      "empty": "No lyrics yet. Add lyrics on the edit page first"
+      "placeholder": "Type lyrics",
+      "addRow": "Add a line below",
+      "deleteRow": "Delete line"
     },
     "header": {
       "selected": "{{count}} selected",
