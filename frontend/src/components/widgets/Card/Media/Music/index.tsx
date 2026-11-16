@@ -16,11 +16,11 @@ export default function MusicCard(props: Props): React.JSX.Element {
   const { item, items = [item] } = props
   const { ulid, image, duration, channel } = item
 
-  const { current, play } = useMusicPlayer()
+  const { current, play, toggle } = useMusicPlayer()
 
   const isCurrent = current?.ulid === ulid
 
-  const handlePlay = () => play(items, Math.max(items.findIndex((m) => m.ulid === ulid), 0))
+  const handlePlay = () => (isCurrent ? toggle() : play(items, Math.max(items.findIndex((m) => m.ulid === ulid), 0)))
 
   return (
     <Card className={style.card}>

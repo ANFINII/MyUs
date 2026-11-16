@@ -13,12 +13,13 @@ interface Props {
   playbackRate?: number
   autoPlay?: boolean
   isVolumeInline?: boolean
+  audioRef?: React.RefObject<HTMLAudioElement | null>
   className?: string
   onEnded?: () => void
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, className, onEnded } = props
+  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, audioRef: sharedAudioRef, className, onEnded } = props
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -121,6 +122,11 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
 
   const handlePause = () => setIsPlaying(false)
 
+  const handleAudioRef = (audio: HTMLAudioElement | null) => {
+    audioRef.current = audio
+    if (sharedAudioRef) sharedAudioRef.current = audio
+  }
+
   const handleEnded = () => {
     setIsPlaying(false)
     onEnded?.()
@@ -193,7 +199,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         </div>
       </div>
       <audio
-        ref={audioRef}
+        ref={handleAudioRef}
         src={src}
         preload="auto"
         autoPlay={autoPlay}
