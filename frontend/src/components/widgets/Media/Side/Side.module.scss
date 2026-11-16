@@ -9,7 +9,7 @@
   border: 1px solid rgb(220, 220, 220);
 }
 
-.music_thumbnail_wrap {
+.thumbnail_box {
   display: flex;
   flex-shrink: 0;
   justify-content: center;
@@ -20,7 +20,7 @@
   overflow: hidden;
 }
 
-.music_thumbnail {
+.square {
   width: 100px;
   height: 100px;
   object-fit: cover;

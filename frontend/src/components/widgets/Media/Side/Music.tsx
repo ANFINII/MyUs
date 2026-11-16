@@ -18,8 +18,8 @@ export default function MediaSideMusic(props: Props): React.JSX.Element {
     <section>
       <Link href={href} className={style.link}>
         <HStack gap="4">
-          <div className={style.music_thumbnail_wrap}>
-            <ExImage src={image || channel.avatar} width="100" height="100" className={style.music_thumbnail} />
+          <div className={style.thumbnail_box}>
+            <ExImage src={image || channel.avatar} width="100" height="100" className={style.square} />
           </div>
           <CardMediaContentBase media={item} />
         </HStack>
