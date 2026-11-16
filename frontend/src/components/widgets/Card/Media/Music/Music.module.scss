@@ -17,7 +17,7 @@
     }
 
     &:hover .play {
-      background: rgba(0, 105, 255, 0.6);
+      background: rgba(0, 105, 255, 0.4);
     }
   }
 
@@ -28,7 +28,6 @@
     width: 56px;
     height: 56px;
     background: rgba(0, 0, 0, 0.1);
-    border: 2px solid rgb(255, 255, 255);
     border-radius: 50%;
     opacity: 0;
     transform: translate(-50%, -50%);
