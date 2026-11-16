@@ -74,7 +74,7 @@ flowchart LR
 | メール | **SES** | 今の SMTP の設定のまま、接続先を SES の SMTP（`email-smtp.ap-northeast-1.amazonaws.com`）にする（`django-ses` は入れなくてよい）。本番利用申請（サンドボックス解除）が必要。SPF・DKIM・DMARC は Route 53 で設定する |
 | シークレット | **SSM Parameter Store**（SecureString） | Stripe キー・JWT シークレットなど。EC2 の IAM ロールで読み取り、起動時に環境変数へ展開する |
 | DNS | **Route 53** | `myus.xxx`（Vercel）・`api.myus.xxx`・`media.myus.xxx` |
-| 監視 | **CloudWatch**（Agent・Logs・Alarms）+ **AWS Budgets** | CPU・ディスク・RDS の空き容量・5xx のアラーム。予算超過はメールで通知する |
+| 監視 | **CloudWatch**（Agent・Alarms）+ **AWS Budgets** | `prod/products/myus/monitoring` が、EC2 のステータスチェック・CPU クレジット・ディスクの使用率（CloudWatch Agent が送る）、RDS の空き容量・CPU、API の CloudFront の 5xx の割合にアラームを付け、SNS からメールで通知する。CloudFront のメトリクスは us-east-1 にあるので、5xx のアラームと SNS のトピックは us-east-1 にも作る。予算超過は `prod/general/cost` がメールで通知する |
 | デプロイ | **GitHub Actions** → **ECR** → EC2（SSM Run Command で `docker compose pull && up -d`） | 認証は OIDC で行う（アクセスキーを使わない）。`.github/workflows/deploy.yml` が arm64 のイメージを作って ECR に push し、`compute/deploy/` の `compose.yml`・`deploy.sh` を EC2 に送って実行する。`deploy.sh` は SSM の `/myus/prod/` から `django.env` を作ってから起動する |
 
 ### HLS 変換の分離

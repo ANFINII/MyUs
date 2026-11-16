@@ -44,6 +44,7 @@
     "commentNotFound": "Comment not found",
     "subscriptionNotFound": "No active subscription found",
     "advertiseNotFound": "Advertisement not found",
+    "playlistNotFound": "Playlist not found",
     "planNotFound": "Plan not found",
     "alreadySubscribed": "You already have a paid plan",
     "followSelf": "You cannot follow yourself",
@@ -563,6 +564,7 @@
     "follow": "Follow"
   },
   "playlist": {
+<<<<<<< HEAD
     "tabAll": "All",
     "tabPlaylist": "Playlists",
     "new": "New playlist",
@@ -574,6 +576,8 @@
     "emptyMusic": "No songs yet",
     "deleteTitle": "Delete playlist",
     "deleteConfirm": "Delete \"{{title}}\"?",
+=======
+>>>>>>> origin/main
     "add": "Add to playlist",
     "added": "Added",
     "public": "Public",
