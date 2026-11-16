@@ -118,6 +118,18 @@ export default function ManageChats(props: Props): React.JSX.Element {
       cell: (c) => c.like,
     },
     {
+      key: 'detail',
+      header: t('manage.table.detail'),
+      align: 'center',
+      className: style.narrow,
+      cellClass: style.detail,
+      cell: (c) => (
+        <Link href={`/media/chat/${c.ulid}`} className={style.detail_link}>
+          <IconLink size="16" />
+        </Link>
+      ),
+    },
+    {
       key: 'publish',
       header: t('manage.table.publish'),
       align: 'center',
@@ -129,18 +141,6 @@ export default function ManageChats(props: Props): React.JSX.Element {
         <div className={style.publish_inner}>
           <Toggle isActive={c.publish} disable />
         </div>
-      ),
-    },
-    {
-      key: 'detail',
-      header: t('manage.table.detail'),
-      align: 'center',
-      className: style.narrow,
-      cellClass: style.detail,
-      cell: (c) => (
-        <Link href={`/media/chat/${c.ulid}`} className={style.detail_link}>
-          <IconLink size="16" />
-        </Link>
       ),
     },
     {

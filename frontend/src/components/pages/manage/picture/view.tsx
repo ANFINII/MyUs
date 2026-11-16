@@ -115,6 +115,18 @@ export default function ManagePictures(props: Props): React.JSX.Element {
       cell: (p) => p.like,
     },
     {
+      key: 'detail',
+      header: t('manage.table.detail'),
+      align: 'center',
+      className: style.narrow,
+      cellClass: style.detail,
+      cell: (p) => (
+        <Link href={`/media/picture/${p.ulid}`} className={style.detail_link}>
+          <IconLink size="16" />
+        </Link>
+      ),
+    },
+    {
       key: 'publish',
       header: t('manage.table.publish'),
       align: 'center',
@@ -126,18 +138,6 @@ export default function ManagePictures(props: Props): React.JSX.Element {
         <div className={style.publish_inner}>
           <Toggle isActive={p.publish} disable />
         </div>
-      ),
-    },
-    {
-      key: 'detail',
-      header: t('manage.table.detail'),
-      align: 'center',
-      className: style.narrow,
-      cellClass: style.detail,
-      cell: (p) => (
-        <Link href={`/media/picture/${p.ulid}`} className={style.detail_link}>
-          <IconLink size="16" />
-        </Link>
       ),
     },
     {
