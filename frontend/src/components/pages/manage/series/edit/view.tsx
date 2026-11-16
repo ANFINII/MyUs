@@ -39,25 +39,27 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
   const [title, setTitle] = useState<string>(data.title)
   const [items, setItems] = useState<SeriesItem[]>(data.items)
   const [candidates, setCandidates] = useState<SeriesItem[]>(data.candidates)
-  const [selectedUlid, setSelectedUlid] = useState<string>(data.candidates[0]?.ulid ?? '')
+  const [search, setSearch] = useState<string>('')
+  const [selectedUlid, setSelectedUlid] = useState<string>('')
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
   const mediaTypeOptions: Option[] = [{ label: data.mediaType, value: data.mediaType }]
-  const candidateOptions: Option[] = candidates.map((c) => ({ label: c.title, value: c.ulid }))
+  const filtered = candidates.filter((c) => c.title.toLowerCase().includes(search.trim().toLowerCase()))
+  const selected = filtered.find((c) => c.ulid === selectedUlid) ?? filtered[0]
+  const candidateOptions: Option[] = filtered.map((c) => ({ label: c.title, value: c.ulid }))
 
   const handleModal = () => setIsModal(!isModal)
   const handleBack = () => router.push({ pathname: '/manage/series', query: { channel: data.channelUlid } })
   const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setSelectedUlid(e.target.value)
 
   const handleAdd = () => {
-    const item = candidates.find((c) => c.ulid === selectedUlid)
-    if (!item) return
-    const rest = candidates.filter((c) => c.ulid !== selectedUlid)
-    setItems([...items, item])
-    setCandidates(rest)
-    setSelectedUlid(rest[0]?.ulid ?? '')
+    if (!selected) return
+    setItems([...items, selected])
+    setCandidates(candidates.filter((c) => c.ulid !== selected.ulid))
+    setSelectedUlid('')
   }
 
   const handleRemove = (index: number) => {
@@ -65,7 +67,6 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
     if (!item) return
     setItems(items.filter((_, i) => i !== index))
     setCandidates([...candidates, item])
-    if (selectedUlid === '') setSelectedUlid(item.ulid)
   }
 
   const handleDragStart = (index: number) => setDragIndex(index)
@@ -122,8 +123,9 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.series.mediaType')} value={data.mediaType} options={mediaTypeOptions} disabled />
           <Input label={t('manage.form.title')} value={title} maxLength={100} required onChange={handleTitle} />
           <div className={style.add}>
-            <SelectBox label={t('manage.series.candidate')} value={selectedUlid} options={candidateOptions} className={style.add_select} onChange={handleSelect} />
-            <Button color="blue" size="s" name={t('action.add')} disabled={selectedUlid === ''} onClick={handleAdd} />
+            <Input label={t('manage.series.candidate')} value={search} placeholder={t('manage.series.search')} className={style.add_select} onChange={handleSearch} />
+            <SelectBox value={selected?.ulid ?? ''} options={candidateOptions} className={style.add_select} onChange={handleSelect} />
+            <Button color="blue" size="s" name={t('action.add')} disabled={!selected} onClick={handleAdd} />
           </div>
           <div className={style.posts}>
             <span className={style.label}>{t('manage.series.posts')}</span>
