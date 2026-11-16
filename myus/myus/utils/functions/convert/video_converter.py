@@ -172,7 +172,7 @@ class VideoConverter:
         if available:
             log.info(f"検出されたアクセラレーター: {[a.name for a in available]}")
         else:
-            log.info("ハードウェアアクセラレーターなし、CPU処理を使用")
+            log.info("No hardware accelerator, using CPU")
 
         return available
 
@@ -216,7 +216,7 @@ class VideoConverter:
             )
             return 'h264_qsv' in result.stdout
         except (OSError, subprocess.SubprocessError) as e:
-            log.error("Intel GPU検出エラー", exc=e)
+            log.error("Intel GPU detection error", exc=e)
             return False
 
     def _check_amd_gpu(self) -> bool:
@@ -513,7 +513,7 @@ class VideoConverter:
                 timeout=300  # 5分タイムアウト
             )
         except asyncio.TimeoutError:
-            log.warning("変換タイムアウト")
+            log.warning("Convert timeout")
             results = []
 
         # 結果集計
@@ -566,7 +566,7 @@ class VideoConverter:
             )
             conversion_stats['mp4_path'] = mp4_path
         except (OSError, KeyError, ValueError) as e:
-            log.error("MP4生成エラー", exc=e)
+            log.error("MP4 generate failed", exc=e)
             conversion_stats['mp4_path'] = None
 
         return conversion_stats

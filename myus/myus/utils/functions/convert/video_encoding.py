@@ -30,7 +30,7 @@ def convert_video(video_path: str) -> VideoConvert:
             convert=os.path.join(video_dir, f"{video_name}_convert.mp4"),
         )
     except Exception as e:
-        log.error("動画エンコードエラー", exc=e, video_path=video_path)
+        log.error("Video encode failed", exc=e, video_path=video_path)
         return VideoConvert(video="", convert="")
 
 
@@ -81,7 +81,7 @@ def encode_video(convert_path: str, output_dir: str, save_log: bool = True) -> d
     )
 
     # 各解像度の処理時間
-    log.info("--- 解像度別処理時間 ---")
+    log.info("--- Processing time by resolution ---")
     if 'resolutions' in conversion_stats:
         for res, info in conversion_stats['resolutions'].items():
             log.info(f"  {res}: {info.get('time', 0):.2f}秒 (エンコーダ: {info.get('encoder', 'unknown')})")
@@ -133,4 +133,4 @@ def save_encoding_log(convert_path: str, encode_duration: float, conversion_stat
             f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
         log.info(f"エンコード履歴を保存: {encoding_log_file}")
     except (OSError, TypeError, ValueError) as e:
-        log.error("エンコード履歴の保存エラー", exc=e)
+        log.error("Encode history save failed", exc=e)
