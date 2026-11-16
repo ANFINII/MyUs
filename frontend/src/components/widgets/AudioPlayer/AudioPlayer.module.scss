@@ -88,7 +88,6 @@
     justify-content: center;
     width: 2.5em;
     height: 100%;
-    font-size: 13px;
     cursor: pointer;
     z-index: 2;
     user-select: none;
@@ -100,41 +99,19 @@
   }
 
   .skip_back {
-    left: 2.5em;
+    right: 5em;
   }
 
   .skip_forward {
-    left: 5em;
-  }
-
-  .time {
-    top: 0;
-    width: 50px;
-    height: 100%;
-    line-height: 38px;
-    text-align: center;
-    font-size: 13px;
-    z-index: 2;
-  }
-
-  .time_current {
-    left: 7.5em;
-    border-left: 0px solid rgb(0, 135, 180);
-    border-left-color: rgba(0, 0, 0, 0.25);
-  }
-
-  .time_duration {
     right: 2.5em;
-    border-right: 0px solid rgb(0, 135, 180);
-    border-right-color: rgba(255, 255, 255, 0.1);
   }
 
   .bar {
     top: 50%;
-    left: calc(85px + 5em);
-    right: 83px;
-    height: 9px;
-    margin-top: -4.5px;
+    left: calc(2.5em + 8px);
+    right: calc(7.5em + 8px);
+    height: 18px;
+    margin-top: -9px;
     border-radius: 10px;
     background: rgb(50, 50, 50);
     cursor: pointer;
@@ -150,7 +127,7 @@
     }
 
     .bar_loaded {
-      background: rgb(255, 255, 255);
+      background: rgba(255, 255, 255, 0.3);
       border-radius: 10px;
       z-index: 1;
     }
@@ -160,6 +137,20 @@
       border-radius: 10px;
       z-index: 2;
       box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+
+    .bar_time {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 8px;
+      font-size: 11px;
+      line-height: 18px;
+      pointer-events: none;
     }
   }
 
@@ -257,12 +248,16 @@
   }
 
   &.volume_inline {
-    .time_duration {
+    .skip_back {
+      right: 10em;
+    }
+
+    .skip_forward {
       right: 7.5em;
     }
 
     .bar {
-      right: calc(83px + 5em);
+      right: calc(12.5em + 8px);
     }
 
     .volume {

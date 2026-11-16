@@ -168,18 +168,20 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>
+      <div className={style.bar} ref={barRef} onMouseDown={handleBarMouseDown}>
+        <div className={style.bar_loaded} style={{ width: `${loaded}%` }} />
+        <div className={style.bar_played} style={{ width: `${playedPercent}%` }} />
+        <span className={style.bar_time}>
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </span>
+      </div>
       <div className={cx(style.skip, style.skip_back)} onClick={handleSkip(-SKIP_SECONDS)}>
         <IconSkip size="1.2em" type="back" />
       </div>
       <div className={cx(style.skip, style.skip_forward)} onClick={handleSkip(SKIP_SECONDS)}>
         <IconSkip size="1.2em" type="forward" />
       </div>
-      <div className={cx(style.time, style.time_current)}>{formatTime(currentTime)}</div>
-      <div className={style.bar} ref={barRef} onMouseDown={handleBarMouseDown}>
-        <div className={style.bar_loaded} style={{ width: `${loaded}%` }} />
-        <div className={style.bar_played} style={{ width: `${playedPercent}%` }} />
-      </div>
-      <div className={cx(style.time, style.time_duration)}>{formatTime(duration)}</div>
       <div className={style.volume}>
         <div className={style.volume_button} onClick={handleMuteToggle}>
           <span className={style.icon} />
