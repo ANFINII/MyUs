@@ -96,7 +96,7 @@ class PaymentAPI:
             case CheckoutCreated(session=session):
                 return 200, PaymentCheckoutOut(url=session.redirect_url)
             case CheckoutFailed(error=error, message=message):
-                log.error("checkout failed", error=error.value, error_message=message)
+                log.error("checkout failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.checkoutFailed")
 
     @staticmethod
@@ -112,10 +112,10 @@ class PaymentAPI:
         verification = verify_ret.ok_value
         match verification:
             case WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=message):
-                log.info("unsupported event", error_message=message)
+                log.info("unsupported event", message=message)
                 return 200, PaymentWebhookOut(message="Unsupported event type")
             case WebhookVerifyFailed(error=error, message=message):
-                log.warning("verify failed", error=error.value, error_message=message)
+                log.warning("verify failed", error=error.value, message=message)
                 return 400, ErrorOut(type=ErrorType.VALIDATION, message="Invalid webhook")
             case WebhookVerified(event=event):
                 log.info("verified", event_id=event.event_id, event_type=event.event_type.value)
@@ -157,7 +157,7 @@ class PaymentAPI:
             case CancelSuccess(canceled_at=canceled_at, period_end=period_end):
                 return 200, PaymentCancelOut(canceled_at=canceled_at, period_end=period_end)
             case CancelFailed(error=error, message=message):
-                log.error("cancel failed", error=error.value, error_message=message)
+                log.error("cancel failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.cancelFailed")
 
     @staticmethod
@@ -189,7 +189,7 @@ class PaymentAPI:
             case RevokeSuccess():
                 return 200, None
             case RevokeFailed(error=error, message=message):
-                log.error("cancel revoke failed", error=error.value, error_message=message)
+                log.error("cancel revoke failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.cancellationRevokeFailed")
 
     @staticmethod
@@ -223,7 +223,7 @@ class PaymentAPI:
             case PlanChangeSuccess():
                 return 200, None
             case PlanChangeFailed(error=error, message=message):
-                log.error("plan change failed", error=error.value, error_message=message)
+                log.error("plan change failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.planChangeFailed")
 
     @staticmethod
@@ -253,5 +253,5 @@ class PaymentAPI:
             case PaymentMethodSessionCreated(redirect_url=redirect_url):
                 return 200, PaymentMethodOut(url=redirect_url)
             case PaymentMethodSessionFailed(error=error, message=message):
-                log.error("payment method session failed", error=error.value, error_message=message)
+                log.error("payment method session failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.paymentMethodFailed")

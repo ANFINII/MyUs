@@ -123,7 +123,6 @@ class Log:
 
     # 本番は1行の JSON、開発は色付きの文字列で出す
     IS_JSON: ClassVar[bool] = not env.debug
-    JSON_RESERVED_KEYS: ClassVar[frozenset[str]] = frozenset({"timestamp", "level", "message", "file", "line", "func", "exception", "traceback"})
 
     # シングルトンインスタンス
     _instance: ClassVar[Self | None] = None
@@ -246,7 +245,7 @@ class Log:
 
     @classmethod
     def _format_json(cls, msg: str, level: str, func_name: str, file_name: str, line_no: int, exception: str, tb: str, **kwargs: Any) -> str:
-        """1行の JSON にする。キーワード引数はそのまま項目にする"""
+        """1行の JSON にする。キーワード引数は data にまとめる"""
         payload: dict[str, Any] = {
             "timestamp": datetime.now(UTC).isoformat(),
             "level": level.lower(),
@@ -259,8 +258,8 @@ class Log:
             payload["exception"] = exception
         if tb:
             payload["traceback"] = tb
-        for key, value in kwargs.items():
-            payload[f"arg_{key}" if key in cls.JSON_RESERVED_KEYS else key] = value
+        if kwargs:
+            payload["data"] = kwargs
         return json.dumps(payload, ensure_ascii=False, default=str)
 
     @classmethod
