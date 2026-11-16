@@ -2,6 +2,7 @@ import { useRef, useState, useCallback, useEffect } from 'react'
 import cx from 'utils/functions/cx'
 import { formatTime } from 'utils/functions/datetime'
 import { getVolume, saveVolume } from 'utils/functions/volume'
+import IconSkip from 'components/parts/Icon/Skip'
 import style from './AudioPlayer.module.scss'
 
 const PLAY_EVENT = 'audioplayer:play'
@@ -168,10 +169,10 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         <span className={style.icon} />
       </div>
       <div className={cx(style.skip, style.skip_back)} onClick={handleSkip(-SKIP_SECONDS)}>
-        -{SKIP_SECONDS}
+        <IconSkip size="1.2em" type="back" />
       </div>
       <div className={cx(style.skip, style.skip_forward)} onClick={handleSkip(SKIP_SECONDS)}>
-        +{SKIP_SECONDS}
+        <IconSkip size="1.2em" type="forward" />
       </div>
       <div className={cx(style.time, style.time_current)}>{formatTime(currentTime)}</div>
       <div className={style.bar} ref={barRef} onMouseDown={handleBarMouseDown}>

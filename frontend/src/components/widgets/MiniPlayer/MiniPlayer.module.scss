@@ -21,8 +21,8 @@
 
   .info {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    width: 200px;
     min-width: 0;
   }
 
@@ -43,7 +43,7 @@
   }
 
   .player {
-    flex: 1;
+    flex: 1.618;
     border-radius: 5px;
   }
 
