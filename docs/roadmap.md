@@ -189,6 +189,7 @@ flowchart LR
 - state 用の S3 バケット `terraform-myus-prod` を作り、バージョニングを有効にする
 - `prod/general/iam-role` と `prod/general/cost` を手元から `apply` する（CI のロールが無いと CI から apply できないため）
 - GitHub のリポジトリの Variables に `AWS_ACCOUNT_ID`、Secrets に `TF_VAR_EMAILS_FOR_COST`・`TF_VAR_EMAILS_FOR_ALARM`（どちらも `["xxx@example.com"]` の形）を入れる。`AWS_ACCOUNT_ID` が空のあいだ、CI は `fmt`・`validate` だけを流す
+- `AWS_ACCOUNT_ID` を入れたら、Actions の `infra` を main で手動実行して、残りのスタックを `stacks.txt` の順に apply する
 - `prod/products/myus/monitoring` を apply したら、SNS から届く確認のメールのリンクを開く（東京と us-east-1 の 2 通）。開くまでアラームは届かない
 - `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる。`FIXME` のままのパラメータがあると、デプロイは止まる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
 - ドメインを決めて買う（順 1 までに）
