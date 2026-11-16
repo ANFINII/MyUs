@@ -22,6 +22,7 @@ from myus.adapter.outbound.db.payment.ledger.repository import LedgerEntryReposi
 from myus.adapter.outbound.db.payment.payout.repository import PayoutRepository
 from myus.adapter.outbound.db.payment.subscription.repository import SubscriptionRepository
 from myus.adapter.outbound.db.payment.transaction.repository import TransactionRepository
+from myus.adapter.outbound.db.playlist.repository import PlaylistRepository
 from myus.adapter.outbound.db.search_tag.repository import SearchTagRepository
 from myus.adapter.outbound.db.subscribe.repository import SubscribeRepository
 from myus.adapter.outbound.db.user.repository import UserRepository
@@ -51,6 +52,7 @@ from myus.domain.payment.provider.interface import PaymentInterface
 from myus.domain.payment.subscription.event import SUBSCRIPTION_EVENT_CLASSES
 from myus.domain.payment.subscription.interface import SubscriptionInterface
 from myus.domain.payment.transaction.interface import TransactionInterface
+from myus.domain.playlist.interface import PlaylistInterface
 from myus.domain.search_tag.interface import SearchTagInterface
 from myus.domain.subscribe.interface import SubscribeInterface
 from myus.domain.user.interface import UserInterface
@@ -123,6 +125,12 @@ class NgWordModule(Module):
     @provider
     def provide_ng_word_repository(self) -> NgWordInterface:
         return NgWordRepository()
+
+
+class PlaylistModule(Module):
+    @provider
+    def provide_playlist_repository(self) -> PlaylistInterface:
+        return PlaylistRepository()
 
 
 class SearchTagModule(Module):

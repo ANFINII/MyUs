@@ -44,6 +44,7 @@
     "commentNotFound": "コメントが見つかりません",
     "subscriptionNotFound": "有効なサブスクリプションが見つかりません",
     "advertiseNotFound": "広告が見つかりません",
+    "playlistNotFound": "プレイリストが見つかりません",
     "planNotFound": "プランが見つかりません",
     "alreadySubscribed": "すでに有料プランを契約しています",
     "followSelf": "自分自身はフォローできません",
