@@ -87,8 +87,8 @@ export default function ManageSeriesList(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name={t('manage.series.new')} onClick={handleModal} />
       <Button color="blue" size="s" name={t('manage.title')} onClick={() => router.push('/manage')} />
+      <Button color="green" size="s" name={t('manage.series.new')} onClick={handleModal} />
       <SelectBox value={channel} options={channelOptions} className={style.select_box} onChange={handleChannel} />
     </HStack>
   )

@@ -315,7 +315,7 @@
   "manage": {
     "title": "Manage posts",
     "series": {
-      "new": "New series",
+      "new": "Create series",
       "mediaType": "Type",
       "count": "Posts",
       "candidate": "Post to add",
@@ -579,7 +579,7 @@
   },
   "playlist": {
     "select": "Playlist",
-    "new": "New playlist",
+    "new": "Create playlist",
     "createOnly": "Create",
     "count_one": "{{count}} song",
     "count_other": "{{count}} songs",
