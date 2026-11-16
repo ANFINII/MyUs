@@ -564,7 +564,6 @@
     "follow": "Follow"
   },
   "playlist": {
-<<<<<<< HEAD
     "tabAll": "All",
     "tabPlaylist": "Playlists",
     "new": "New playlist",
@@ -576,8 +575,6 @@
     "emptyMusic": "No songs yet",
     "deleteTitle": "Delete playlist",
     "deleteConfirm": "Delete \"{{title}}\"?",
-=======
->>>>>>> origin/main
     "add": "Add to playlist",
     "added": "Added",
     "public": "Public",
