@@ -559,6 +559,7 @@
     "follow": "フォローする"
   },
   "playlist": {
+    "select": "プレイリスト",
     "tabAll": "すべて",
     "tabPlaylist": "プレイリスト",
     "new": "新しいプレイリスト",
@@ -570,7 +571,6 @@
     "deleteTitle": "プレイリストの削除",
     "deleteConfirm": "「{{title}}」を削除しますか？",
     "add": "プレイリストに追加",
-    "added": "追加済み",
     "public": "公開",
     "private": "非公開",
     "empty": "プレイリストはまだありません",

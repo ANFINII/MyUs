@@ -150,6 +150,33 @@ def add_playlist_music(user_id: int, ulid: str, music_ulid: str) -> Result[None,
 
 
 @Result.shield_exception()
+def remove_playlist_music(user_id: int, ulid: str, music_ulid: str) -> Result[None, AccessError]:
+    playlist_ret = get_own_playlist_data(user_id, ulid, "error.deleteFailed")
+    if playlist_ret.is_err:
+        return Result.err(playlist_ret.err_value)
+
+    music_ret = get_music_data(music_ulid, user_id)
+    if music_ret.is_err:
+        return Result.err(music_ret.err_value)
+
+    music = music_ret.ok_value
+    if music is None:
+        log.warning("not found", music_ulid=music_ulid)
+        return Result.err(NotFoundError("error.deleteFailed"))
+
+    playlist = playlist_ret.ok_value
+    if music.id not in playlist.music_ids:
+        return Result.ok(None)
+
+    repo = injector.get(PlaylistInterface)
+    save_ret = repo.bulk_save([replace(playlist, music_ids=[music_id for music_id in playlist.music_ids if music_id != music.id])])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
 def delete_playlist(user_id: int, ulid: str) -> Result[None, AccessError]:
     playlist_ret = get_own_playlist_data(user_id, ulid, "error.deleteFailed")
     if playlist_ret.is_err:

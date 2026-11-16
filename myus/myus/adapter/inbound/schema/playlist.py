@@ -25,6 +25,7 @@ class PlaylistOut(BaseModel):
     publish: bool
     count: int
     image: str
+    music_ulids: list[str]
     updated: datetime
 
 

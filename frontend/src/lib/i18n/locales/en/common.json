@@ -564,6 +564,7 @@
     "follow": "Follow"
   },
   "playlist": {
+    "select": "Playlist",
     "tabAll": "All",
     "tabPlaylist": "Playlists",
     "new": "New playlist",
@@ -576,7 +577,6 @@
     "deleteTitle": "Delete playlist",
     "deleteConfirm": "Delete \"{{title}}\"?",
     "add": "Add to playlist",
-    "added": "Added",
     "public": "Public",
     "private": "Private",
     "empty": "No playlists yet",
