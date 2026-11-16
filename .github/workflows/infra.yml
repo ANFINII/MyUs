@@ -1,0 +1,137 @@
+name: infra
+
+on:
+  pull_request:
+    paths:
+      - "infra/**"
+      - ".github/workflows/infra.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "infra/**"
+      - ".github/workflows/infra.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infra-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  TERRAFORM_VERSION: "1.17.1"
+  AWS_REGION: ap-northeast-1
+  AWS_PROFILE_NAME: myus-prod
+  STACKS_ROOT: infra/aws/prod
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+
+      - name: fmt
+        run: terraform fmt -check -recursive -diff infra
+
+      - name: validate
+        run: |
+          for stack in $(find "$STACKS_ROOT" -name main.tf -not -path '*/.terraform/*' -exec dirname {} \; | sort); do
+            echo "::group::$stack"
+            terraform -chdir="$stack" init -backend=false -input=false
+            terraform -chdir="$stack" validate
+            echo "::endgroup::"
+          done
+
+  plan:
+    if: github.event_name == 'pull_request' && vars.AWS_ACCOUNT_ID != ''
+    needs: check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github-actions-terraform-plan
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure AWS profile
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile "$AWS_PROFILE_NAME"
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile "$AWS_PROFILE_NAME"
+          aws configure set aws_session_token "$AWS_SESSION_TOKEN" --profile "$AWS_PROFILE_NAME"
+
+      - name: plan
+        env:
+          TF_VAR_emails_for_cost: ${{ secrets.TF_VAR_EMAILS_FOR_COST }}
+        run: |
+          for stack in $(find "$STACKS_ROOT" -name main.tf -not -path '*/.terraform/*' -exec dirname {} \; | sort); do
+            echo "::group::$stack"
+            terraform -chdir="$stack" init -input=false
+            terraform -chdir="$stack" plan -input=false -lock-timeout=5m
+            echo "::endgroup::"
+          done
+
+  apply:
+    if: github.event_name == 'push' && vars.AWS_ACCOUNT_ID != ''
+    needs: check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github-actions-terraform-apply
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure AWS profile
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile "$AWS_PROFILE_NAME"
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile "$AWS_PROFILE_NAME"
+          aws configure set aws_session_token "$AWS_SESSION_TOKEN" --profile "$AWS_PROFILE_NAME"
+
+      - name: apply
+        env:
+          TF_VAR_emails_for_cost: ${{ secrets.TF_VAR_EMAILS_FOR_COST }}
+        run: |
+          for stack in $(find "$STACKS_ROOT" -name main.tf -not -path '*/.terraform/*' -exec dirname {} \; | sort); do
+            echo "::group::$stack"
+            terraform -chdir="$stack" init -input=false
+            terraform -chdir="$stack" apply -input=false -lock-timeout=5m -auto-approve
+            echo "::endgroup::"
+          done
