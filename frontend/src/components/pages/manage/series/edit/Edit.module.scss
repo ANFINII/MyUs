@@ -1,16 +1,11 @@
-.edit {
+.posts {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 720px;
+  gap: 4px;
 
-  .media_type {
-    align-self: flex-start;
-    padding: 2px 8px;
-    font-size: 12px;
-    color: rgb(80, 80, 80);
-    border-radius: 10px;
-    background: rgb(240, 240, 240);
+  .label {
+    font-size: 14px;
+    color: rgb(50, 50, 50);
   }
 }
 

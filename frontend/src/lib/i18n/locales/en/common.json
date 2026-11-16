@@ -319,6 +319,7 @@
       "mediaType": "Type",
       "count": "Posts",
       "candidate": "Post to add",
+      "posts": "Posts",
       "private": "Private",
       "empty": "No posts yet. Add one above",
       "deleteTitle": "Delete series",
