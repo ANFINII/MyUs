@@ -18,7 +18,7 @@ import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 import IconCross from 'components/parts/Icon/Cross'
 import IconGrip from 'components/parts/Icon/Grip'
-import IconMusic from 'components/parts/Icon/Music'
+import IconPlaylist from 'components/parts/Icon/Playlist'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import Link from 'components/parts/Link'
@@ -122,7 +122,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   return (
     <Main title="Playlist" type="table" toast={toast} button={button}>
       <section className={style.header}>
-        <div className={style.thumbnail_box}>{image ? <ExImage src={image} className={style.thumbnail} /> : <IconMusic size="48" className={style.icon} />}</div>
+        <div className={style.thumbnail_box}>{image ? <ExImage src={image} className={style.thumbnail} /> : <IconPlaylist size="48" className={style.icon} />}</div>
         <div className={style.info}>
           {isEdit ? (
             <div className={style.form}>
