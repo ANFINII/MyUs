@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Playlist } from 'types/internal/playlist'
 import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
-import IconMusic from 'components/parts/Icon/Music'
+import IconPlaylist from 'components/parts/Icon/Playlist'
 import Link from 'components/parts/Link'
 import style from './Playlist.module.scss'
 
@@ -20,7 +20,7 @@ export default function PlaylistCard(props: Props): React.JSX.Element {
     <Card className={style.card}>
       <Link href={`/menu/playlist/${ulid}`} className={style.link}>
         <div className={style.thumbnail_box}>
-          {image ? <ExImage src={image} width="195" height="195" className={style.thumbnail} /> : <IconMusic size="48" className={style.icon} />}
+          {image ? <ExImage src={image} width="195" height="195" className={style.thumbnail} /> : <IconPlaylist size="48" className={style.icon} />}
           <span className={style.count}>{t('playlist.count', { count })}</span>
         </div>
         <div className={style.content}>
