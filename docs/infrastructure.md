@@ -198,7 +198,7 @@ infra/
 - 公開リポジトリなので、メールアドレスなど公開したくない値は params に書かず、スタックの `variable` にして `terraform.tfvars`（Git 管理外）か `TF_VAR_<名前>` で渡す
 - `.github/workflows/infra.yml` で、PR では全スタックの `fmt`・`validate`・`plan`、main にマージされたら全スタックの `apply` を流す。plan の結果はジョブのログで見る。スタックは `infra/aws/prod/stacks.txt` の順に plan・apply する（ほかのスタックの outputs を読むスタックは、読まれる側より後に書く）。スタックを足したら `stacks.txt` にも足す（足し忘れは `check` で止まる）
 - 公開リポジトリは Actions のログも公開されるので、公開したくない `variable` には `sensitive = true` を付けて plan に出さない
-- コンソールでの手作業による変更は禁止する。定期的に `plan` を実行してドリフトを検知する
+- コンソールでの手作業による変更は禁止する。`infra.yml` が毎週月曜 9:00（JST）に main で全スタックの `plan` を流し、コードと AWS に差分があればジョブを失敗させる（GitHub の失敗の通知で気づく）。plan のロール（`github-actions-terraform-plan`）は、そのために main からも使えるようにしている
 - Vercel のドメイン・環境変数も Terraform の Vercel プロバイダで同じリポジトリから管理する
 
 ### コード化しないもの（手作業）
