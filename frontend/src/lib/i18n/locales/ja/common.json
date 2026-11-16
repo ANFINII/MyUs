@@ -313,7 +313,7 @@
   "manage": {
     "title": "投稿管理",
     "series": {
-      "new": "新しいシリーズ",
+      "new": "シリーズ作成",
       "mediaType": "種類",
       "count": "投稿数",
       "candidate": "足す投稿",
@@ -574,7 +574,7 @@
   },
   "playlist": {
     "select": "プレイリスト",
-    "new": "新しいプレイリスト",
+    "new": "プレイリスト作成",
     "createOnly": "作成",
     "count": "{{count}}曲",
     "playAll": "すべて再生",
