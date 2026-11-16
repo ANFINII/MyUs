@@ -47,15 +47,16 @@ export default function Playlists(props: Props): React.JSX.Element {
     router.push(`/menu/playlist/${ret.value.ulid}`)
   }
 
+  const button = <Button name={t('playlist.new')} color="green" size="s" onClick={handleModal} />
+
   return (
-    <Main title="Playlist" toast={toast}>
+    <Main title="Playlist" type="table" toast={toast} button={button}>
       {user.isActive ? (
-        <>
-          <div className={style.toolbar}>
-            <Button name={t('playlist.new')} color="green" size="s" onClick={handleModal} />
-          </div>
-          {items.length > 0 ? <CardList items={items} Content={PlaylistCard} /> : <p className={style.empty}>{t('playlist.empty')}</p>}
-        </>
+        items.length > 0 ? (
+          <CardList items={items} Content={PlaylistCard} />
+        ) : (
+          <p className={style.empty}>{t('playlist.empty')}</p>
+        )
       ) : (
         <div className={style.login}>
           <p>{t('playlist.loginRequired')}</p>
