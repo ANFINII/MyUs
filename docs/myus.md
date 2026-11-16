@@ -388,64 +388,7 @@ flowchart TB
 
 ## 技術アーキテクチャ
 
-### バックエンド
-- **言語**: Python 3.15
-- **フレームワーク**: Django 6.1
-- **API**: django-ninja
-- **ASGI サーバ**: Daphne
-- **WebSocket**: Django Channels + channels-redis
-- **データベース**: MySQL
-- **認証**: JWT + カスタム認証バックエンド
-- **依存管理**: uv
-- **静的解析**: mypy + ruff
-
-### バックエンドのレイヤー構成（`myus/myus/`）
-詳しい決まりは [backend.md](backend.md) の「層の責務」。
-
-- **adapter/**
-  - `inbound/`: HTTP エンドポイント・WebSocket（入ってくる側）
-    - `routers.py`: ルータの集約・登録（`config/urls.py` から読む）
-    - `schema/`: API の入出力スキーマ（django-ninja の Pydantic のモデル）
-  - `outbound/`: 出ていく側
-    - `db/`: Repository の実装（Django ORM）
-    - `payment/`: 決済会社（Stripe）の `PaymentInterface` の実装
-- **usecase/**: ビジネスロジック。ドメインごとのディレクトリに `core.py`（adapter から呼ぶ関数）と `_convert.py`（補助の関数）を置く
-  - `dto/`: usecase の入出力の DTO（dataclass）
-- **domain/**
-  - `<ドメイン>/`: dataclass の Data（`data.py`）と Repository の Interface（`interface.py`）、ルール（`validation.py`）
-  - `<ドメイン>/<集約>/`: Event Sourcing の集約（状態 `state.py`・イベント `event.py`・判断 `decide.py`・適用 `apply.py`）。いまは `payment/subscription/`
-- **injectors/**: DI（Interface と実装の対応）
-- **utils/**: どの層からも使う部品（`common/`・`constants/`・`enum/`・`functions/`）
-- モデルは `myus/myus/db/models/`、管理コマンドは `myus/myus/db/management/commands/`
-
-### フロントエンド
-- **ビルド**: Vite
-- **ルーティング**: TanStack Router（データ取得は TanStack Query）
-- **言語**: TypeScript 6
-- **ライブラリ**: React 19
-- **HTTP**: axios + neverthrow
-- **エディタ**: TipTap
-- **動画**: video.js + HLS
-- **国際化**: i18next + react-i18next
-- **依存管理**: pnpm
-- **静的解析**: ESLint + TypeScript（`pnpm check`）
-- **テスト**: Vitest + Testing Library
-- **ホスティング**: Vercel
-
-### リアルタイム通信
-- **WebSocket**: Django Channels + Redis
-- **対象**: Chat メッセージ、スレッド機能
-
-### 外部連携
-- **決済**: Stripe（Checkout・Billing・webhook）
-- **メール**: 開発はコンソールに出すだけ。本番は SMTP で送る（`config/settings/prod.py` の `MAILERS`。Gmail・SES の SMTP など、接続先は環境変数）
-- **動画変換**: ffmpeg
-- **メディアの保存**: 開発はローカルディスク（`MEDIA_ROOT`）、本番は `django-storages` で S3 に置き、CloudFront から配信する（`config/settings/prod.py`）
-
-### パフォーマンス最適化
-- **インデックス**: 主要検索フィールドに設定
-- **Select/Prefetch Related**: N+1 問題対策
-- **bulk_get / bulk_save**: 一括取得・保存パターンを repository interface に統一
+技術スタック・構成・レイヤーは [architecture.md](architecture.md)、本番のインフラは [infrastructure.md](infrastructure.md)、コードの決まりは [backend.md](backend.md)・[frontend.md](frontend.md) にある。
 
 ## セキュリティ設計
 
@@ -462,16 +405,7 @@ flowchart TB
 - アップロード：画像は中身（マジックバイト）を確かめる。動画・音声は ffprobe で形式を調べ、許可した形式だけを変換する（ffmpeg・ffprobe はファイル以外のプロトコルを読まない）
 - SQL は Django ORM を通す
 
-### プライバシー
-- 個人情報の適切な分離
-- 通知設定による情報公開制御
-- フォロー関係による閲覧制限
-
 ## 拡張性
-
-### プラグイン構造
-- メディアタイプの追加が容易
-- 共通基底クラス（MediaModel）の活用
 
 ### 国際化対応
 - カテゴリー/ハッシュタグの多言語対応
@@ -481,7 +415,6 @@ flowchart TB
 ### スケーラビリティ
 - 決済のイベントの反映は worker（`myus_worker`）で非同期に行う
 - 動画の HLS 変換は worker（`myus_encoder`）で非同期に行う
-- インデックス最適化
 
 ## 今後の展開
 
@@ -489,10 +422,3 @@ flowchart TB
 - 決済：クリエイターが売る機能（Stripe Connect・Store・Product）、Stripe のテスト環境での確認（[roadmap.md](roadmap.md)）
 - Event Sourcing：外部操作の要求と結果・Projector・帳簿の集約（保留。[roadmap.md](roadmap.md)）
 - 投稿者ごとの Google Tag Manager（マイページの `tag_manager_id`）：ID は登録できるが、読み込みはしていない。GTM は任意のスクリプトを動かせるので、投稿者の GTM を MyUs のページで読み込むと、投稿者が閲覧者のページで好きなスクリプトを動かせてしまう（Cookie 以外の情報の抜き取り・画面の書き換えなど）。入れるなら、MyUs のドメインとは別の場所で動かす仕組みが要る
-
-### 改善ポイント
-- モバイルアプリ対応
-- AI/機械学習による推薦システム
-- コンテンツモデレーション機能
-- 分析ダッシュボード
-

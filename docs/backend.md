@@ -378,7 +378,6 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-08: `utils`はdomainに依存しないこと、domainに触れる補助の関数はusecaseの`_convert.py`に置くことを追記
 - 2026-11-08: usecaseをドメインごとのディレクトリにし、`core.py`と`_convert.py`に分けることを追記
 - 2026-11-08: `_data` の付く関数の決まり（usecase の `_convert.py` で injector を使う関数は `_data` で終え、取るなら `get`、書き込むなら `create`・`save`・`delete`）を追記
-- 2026-11-08: 層の表に `domain/aggregate`・`adapter/external` を足し、リンターチェックを `mypy api config`・`ruff` にした
 - 2026-11-11: Validation（ドメインのルール）を追記
 - 2026-11-12: パッケージ名を `api` から `myus` にした（Django の app の label・テーブル名は変えない）
 - 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
@@ -393,23 +392,16 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-13: 相対パスの並びを、FE に合わせて近いものから（`.` → `..` → `...`）にした
 - 2026-11-13: `utils/functions/index.py` を `utils/functions/common.py`（汎用の関数 `new_ulid`・`create_url`・`get_client_ip`）にし、使われていない `message` を消した
 - 2026-11-13: 共通で使うものを `common.py` にした（`domain/media/option.py` → `domain/media/common.py`、`adapter/outbound/db/base.py` → `adapter/outbound/db/common.py`、`adapter/outbound/db/media/query.py` → `adapter/outbound/db/media/common.py`）
-- 2026-11-13: 広告の検索の条件をメディアと分け、`domain/advertise/interface.py` に広告用の `FilterOption`・`ExcludeOption`・`PageOption` を置いた
-- 2026-11-13: `utils/plan.py` を `utils/constants/plan.py` に移し、`PlanDef` を `Plan` にした
 - 2026-11-13: ディレクトリ構成の見直し（#1289〜#1310）を終え、構成の全体と方針を `architecture.md` に、決めていないことを `roadmap.md` にまとめた
-- 2026-11-14: `ExcludeOption` をなくし、メディアの `FilterOption` に `exclude_id` を足した。`get_ids` は `(filter, sort, page, user_id)` になった
-- 2026-11-14: `get_ids` の `user_id` をメディアの `SortOption` に移した。`get_ids` は `(filter, sort, page)` になった
-- 2026-11-14: `utils/constants/plan.py` を `domain/payment/plan.py` に移し、`Plan` の価格を `prices: list[Money]`（円とドル）にした
+- 2026-11-14: 広告の検索の条件をメディアと分けて `domain/advertise/interface.py` に置き、メディアの `FilterOption` に `exclude_id`、`SortOption` に `user_id` を足した
+- 2026-11-14: 料金プランを `domain/payment/plan.py` の `Plan` にし、価格を `prices: list[Money]`（円とドル）にした
 - 2026-11-15: enum 変換の決まりを、対応がずれうる変換だけ `map.py` の match + `assert_never` にし、名前・値が同じ enum どうしはそのまま変換してよいことにした
-- 2026-11-15: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`を`domain/common.py`の1つにした（`limit=0`は上限なし）
-- 2026-11-16: `PageOption`を`domain/common.py`の1つから、メディアは`domain/media/common.py`、ほかは各ドメインの`interface.py`に置くように戻した
-- 2026-11-16: メディアだけの`PAGE_SIZE`を`utils/constants/page.py`から`domain/media/common.py`に移し、広告の一覧は`domain/advertise/interface.py`の`ADVERTISE_PAGE_SIZE`、API の`Limit`の上限は`adapter/inbound/schema/common.py`の`MAX_LIMIT`にした
-- 2026-11-16: メディアの`PAGE_SIZE`を、広告の`ADVERTISE_PAGE_SIZE`に合わせて`MEDIA_PAGE_SIZE`にした
+- 2026-11-16: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`はメディアは`domain/media/common.py`、ほかは各ドメインの`interface.py`に置いた（`limit=0`は上限なし）
+- 2026-11-16: メディアの一覧の件数を`domain/media/common.py`の`MEDIA_PAGE_SIZE`にし、広告の一覧は`domain/advertise/interface.py`の`ADVERTISE_PAGE_SIZE`、API の`Limit`の上限は`adapter/inbound/schema/common.py`の`MAX_LIMIT`にした
 - 2026-11-16: ガード節のログの文言から対象の名前を外し、`not found`・`owner mismatch`・`author mismatch`にそろえた
 - 2026-11-16: usecase・adapter に残っていた`"data not found"`・`"Not Found"`・`"Forbidden"`のエラーの`message`を、FE の i18n のキー（`error.mediaNotFound`・`error.commentUpdateFailed`など）にした
 - 2026-11-16: `not found`のログのレベルを、見に来たら無い（info）・操作の相手が無い（warning）・あるはずのものが無い（error）に分けた
-- 2026-11-16: 日本語で書いていたログの文言を英語にそろえ、対象の名前を付けないようにした
-- 2026-11-16: 決済・認証・アップロードなどのログの文言からも対象の名前（`Payment`・`Stripe`・`Signup` など）を外した
-- 2026-11-16: 日本語で残していたログ（トークンが無効な理由など）も英語にした
+- 2026-11-16: ログの文言をすべて英語にそろえ、対象の名前を付けないようにした
 - 2026-11-16: logger がクラス名付きの関数名を出すようにし、API の入口のログを`"request"`、成功したときの`SuccessOut`の`message`を`"OK"`にそろえた
 - 2026-11-16: 本番（`DEBUG=False`）のログを1行の JSON（構造化ログ）にした
 - 2026-11-16: Django 本体のログも、本番は`log`と同じ形の1行の JSON にした
