@@ -60,7 +60,7 @@ class AuthAPI:
 
         token = request.COOKIES.get("refresh_token")
         if token is None:
-            log.warning("No refresh token in cookies")
+            log.warning("Cookie にリフレッシュトークンがありません")
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Refresh token not found")
 
         user_id_ret = verify_token(token, "refresh")
@@ -118,11 +118,11 @@ class AuthAPI:
 
         token_email = signup_verify_token(input.token)
         if token_email is None:
-            log.warning("Signup token invalid")
+            log.warning("登録用のトークンが無効です")
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.linkExpired")
 
         if token_email != input.email:
-            log.warning("Signup email mismatch")
+            log.warning("登録用のトークンとメールアドレスが一致しません")
             return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailMismatch")
 
         dto = SignupDTO(**input.model_dump())
@@ -132,7 +132,7 @@ class AuthAPI:
 
         message = check_ret.ok_value
         if len(message) > 0:
-            log.warning("Signup validation failed", message=message)
+            log.warning("validation failed", message=message)
             return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         ret = signup_user(dto)

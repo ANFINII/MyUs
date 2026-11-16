@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         ret = replay_payment_events()
         if ret.is_err:
-            log.error("PaymentEvent replay command failed", error=ret.err_value.message)
+            log.error("command failed", error=ret.err_value.message)
             self.stderr.write(self.style.ERROR("作り直しに失敗しました。何も変わっていません"))
             return
 

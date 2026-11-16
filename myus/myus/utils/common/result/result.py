@@ -48,7 +48,7 @@ class Result[T, E: AnyError]:
                 try:
                     return cast(Result[R, F | FatalError], func(*args, **kwargs))
                 except Exception as err:
-                    log.error("Unhandled Exception Occurred!", exc=err)
+                    log.error("unhandled exception", exc=err)
                     return Result.err(FatalError.from_exception(err))
 
             return wrapper

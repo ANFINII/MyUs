@@ -22,7 +22,7 @@ class Command(BaseCommand):
 
         ret = export_ledger(start, end)
         if ret.is_err:
-            log.error("Ledger export command failed", error=ret.err_value.message)
+            log.error("command failed", error=ret.err_value.message)
             self.stderr.write(self.style.ERROR("帳簿の出力に失敗しました"))
             return
 

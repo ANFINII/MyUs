@@ -406,3 +406,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: usecase・adapter に残っていた`"data not found"`・`"Not Found"`・`"Forbidden"`のエラーの`message`を、FE の i18n のキー（`error.mediaNotFound`・`error.commentUpdateFailed`など）にした
 - 2026-11-16: `not found`のログのレベルを、見に来たら無い（info）・操作の相手が無い（warning）・あるはずのものが無い（error）に分けた
 - 2026-11-16: 日本語で書いていたログの文言を英語にそろえ、対象の名前を付けないようにした
+- 2026-11-16: 決済・認証・アップロードなどのログの文言からも対象の名前（`Payment`・`Stripe`・`Signup` など）を外した

@@ -18,7 +18,7 @@ class ChatConsumer(WebsocketConsumer):
 
         is_public = ret.ok_value
         if not is_public:
-            log.warning("WebSocket chat not found", ulid=ulid)
+            log.warning("not found", ulid=ulid)
             self.close()
             return
 

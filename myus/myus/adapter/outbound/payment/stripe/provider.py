@@ -24,14 +24,14 @@ class StripeProvider(PaymentInterface):
         try:
             session = stripe.checkout.Session.create(**params)
         except stripe.APIConnectionError as e:
-            log.error("Stripe network error", exc=e)
+            log.error("network error", exc=e)
             return Result.ok(CheckoutFailed(error=CheckoutError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
-            log.error("Stripe checkout error", exc=e)
+            log.error("api error", exc=e)
             return Result.ok(CheckoutFailed(error=CheckoutError.PROVIDER_REJECTED, message=str(e)))
 
         if session.url is None or session.id is None:
-            log.error("Stripe session missing url or id")
+            log.error("セッションに url か id がありません")
             return Result.ok(CheckoutFailed(error=CheckoutError.PROVIDER_REJECTED, message="missing url or id in session"))
 
         return Result.ok(CheckoutCreated(session=CheckoutSessionData(
@@ -45,10 +45,10 @@ class StripeProvider(PaymentInterface):
         try:
             event = stripe.Webhook.construct_event(payload, signature, settings.STRIPE_WEBHOOK_SECRET)
         except stripe.SignatureVerificationError as e:
-            log.warning("Stripe webhook signature invalid", exc=e)
+            log.warning("signature invalid", exc=e)
             return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.INVALID_SIGNATURE, message=str(e)))
         except ValueError as e:
-            log.warning("Stripe webhook payload malformed", exc=e)
+            log.warning("payload malformed", exc=e)
             return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.MALFORMED_PAYLOAD, message=str(e)))
 
         event_type = stripe_event_type(event.type)
@@ -69,13 +69,13 @@ class StripeProvider(PaymentInterface):
         try:
             subscription = stripe.Subscription.modify(external_id, cancel_at_period_end=True, idempotency_key=idempotency_key)
         except stripe.InvalidRequestError as e:
-            log.warning("Stripe subscription not found for cancel", external_id=external_id, exc=e)
+            log.warning("not found", external_id=external_id, exc=e)
             return Result.ok(CancelFailed(error=CancelError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
-            log.error("Stripe network error on cancel", exc=e)
+            log.error("network error", exc=e)
             return Result.ok(CancelFailed(error=CancelError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
-            log.error("Stripe cancel error", exc=e)
+            log.error("api error", exc=e)
             return Result.ok(CancelFailed(error=CancelError.PROVIDER_REJECTED, message=str(e)))
 
         return Result.ok(CancelSuccess(
@@ -89,13 +89,13 @@ class StripeProvider(PaymentInterface):
         try:
             subscription = stripe.Subscription.modify(external_id, cancel_at_period_end=False)
         except stripe.InvalidRequestError as e:
-            log.warning("Stripe subscription not found for revoke", external_id=external_id, exc=e)
+            log.warning("not found", external_id=external_id, exc=e)
             return Result.ok(RevokeFailed(error=RevokeError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
-            log.error("Stripe network error on revoke", exc=e)
+            log.error("network error", exc=e)
             return Result.ok(RevokeFailed(error=RevokeError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
-            log.error("Stripe revoke error", exc=e)
+            log.error("api error", exc=e)
             return Result.ok(RevokeFailed(error=RevokeError.PROVIDER_REJECTED, message=str(e)))
 
         return Result.ok(RevokeSuccess(subscription=convert_stripe_subscription(subscription)))
@@ -117,13 +117,13 @@ class StripeProvider(PaymentInterface):
                 proration_behavior="create_prorations",
             )
         except stripe.InvalidRequestError as e:
-            log.warning("Stripe subscription not found for plan change", external_id=external_id, exc=e)
+            log.warning("not found", external_id=external_id, exc=e)
             return Result.ok(PlanChangeFailed(error=PlanChangeError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
-            log.error("Stripe network error on plan change", exc=e)
+            log.error("network error", exc=e)
             return Result.ok(PlanChangeFailed(error=PlanChangeError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
-            log.error("Stripe plan change error", exc=e)
+            log.error("api error", exc=e)
             return Result.ok(PlanChangeFailed(error=PlanChangeError.PROVIDER_REJECTED, message=str(e)))
 
         return Result.ok(PlanChangeSuccess(subscription=convert_stripe_subscription(subscription)))
@@ -145,13 +145,13 @@ class StripeProvider(PaymentInterface):
                 flow_data={"type": "payment_method_update", "after_completion": {"type": "redirect", "redirect": {"return_url": return_url}}},
             )
         except stripe.InvalidRequestError as e:
-            log.warning("Stripe customer not found for payment method", customer_id=customer_id, exc=e)
+            log.warning("not found", customer_id=customer_id, exc=e)
             return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
-            log.error("Stripe network error on payment method", exc=e)
+            log.error("network error", exc=e)
             return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
-            log.error("Stripe payment method error", exc=e)
+            log.error("api error", exc=e)
             return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.PROVIDER_REJECTED, message=str(e)))
 
         return Result.ok(PaymentMethodSessionCreated(redirect_url=session.url))

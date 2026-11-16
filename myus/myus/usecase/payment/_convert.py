@@ -52,7 +52,7 @@ def save_payment_event_data(event: PaymentEventData) -> Result[int | None, Fatal
 
     ids = ids_ret.ok_value
     if len(ids) > 0:
-        log.info("PaymentEvent already recorded", event_id=event.event_id)
+        log.info("already recorded", event_id=event.event_id)
         return Result.ok(None)
 
     save_ret = repo.bulk_save([event])
@@ -63,7 +63,7 @@ def save_payment_event_data(event: PaymentEventData) -> Result[int | None, Fatal
 
         saved_ids = saved_ids_ret.ok_value
         if len(saved_ids) > 0:
-            log.info("PaymentEvent recorded by another request", event_id=event.event_id)
+            log.info("recorded by another request", event_id=event.event_id)
             return Result.ok(None)
 
         return Result.err(save_ret.err_value)
@@ -202,7 +202,7 @@ def save_provider_subscription_data(provider_subscription: ProviderSubscriptionD
 def save_subscription_data(state: SubscriptionState) -> Result[None, FatalError]:
     detail = state.detail
     if len(detail.user_ulid) == 0:
-        log.error("Subscription user_ulid missing", external_id=detail.external_id)
+        log.error("user_ulid missing", external_id=detail.external_id)
         return Result.ok(None)
 
     user_ret = get_user_data(ulid=detail.user_ulid)
@@ -211,7 +211,7 @@ def save_subscription_data(state: SubscriptionState) -> Result[None, FatalError]
 
     user = user_ret.ok_value
     if user is None:
-        log.error("Subscription user not found", external_id=detail.external_id, user_ulid=detail.user_ulid)
+        log.error("not found", external_id=detail.external_id, user_ulid=detail.user_ulid)
         return Result.ok(None)
 
     repo = injector.get(SubscriptionInterface)
@@ -247,7 +247,7 @@ def save_subscription_data(state: SubscriptionState) -> Result[None, FatalError]
     if user_plan_ret.is_err:
         return Result.err(user_plan_ret.err_value)
 
-    log.info("Subscription updated", external_id=detail.external_id, status=status.value)
+    log.info("updated", external_id=detail.external_id, status=status.value)
     return Result.ok(None)
 
 
@@ -300,7 +300,7 @@ def save_payment_data(event: PaymentEventData, paid: PaymentPaidContent) -> Resu
 
     user = user_ret.ok_value
     if user is None:
-        log.error("Payment user not found", external_id=event.external_id, user_ulid=paid.user_ulid)
+        log.error("not found", external_id=event.external_id, user_ulid=paid.user_ulid)
         return Result.err(FatalError("Payment user not found"))
 
     customer_ret = save_payment_customer_data(user.user.id, event.provider, paid.customer_id)
@@ -317,7 +317,7 @@ def save_payment_data(event: PaymentEventData, paid: PaymentPaidContent) -> Resu
 
         subscription_ids = subscription_ids_ret.ok_value
         if len(subscription_ids) == 0:
-            log.warning("Payment subscription not yet recorded", external_id=event.external_id, subscription=paid.subscription_external_id)
+            log.warning("subscription not yet recorded", external_id=event.external_id, subscription=paid.subscription_external_id)
             return Result.err(FatalError("Payment subscription not yet recorded"))
 
         subscription_id = subscription_ids[0]
@@ -354,7 +354,7 @@ def save_payment_data(event: PaymentEventData, paid: PaymentPaidContent) -> Resu
     if ledger_ret.is_err:
         return Result.err(ledger_ret.err_value)
 
-    log.info("Payment recorded", external_id=event.external_id, amount=paid.balance.amount)
+    log.info("recorded", external_id=event.external_id, amount=paid.balance.amount)
     return Result.ok(None)
 
 
@@ -366,7 +366,7 @@ def record_refund(event: PaymentEventData, refund: RefundContent) -> Result[None
 
     payment_transaction = transaction_ret.ok_value
     if payment_transaction is None:
-        log.warning("Refund transaction not yet recorded", external_id=event.external_id)
+        log.warning("transaction not yet recorded", external_id=event.external_id)
         return Result.err(FatalError("Refund transaction not yet recorded"))
 
     ledger_ret = save_ledger_entry_data(payment_transaction.id, event.id, LedgerEntryType.REFUND, refund.balances)
@@ -377,7 +377,7 @@ def record_refund(event: PaymentEventData, refund: RefundContent) -> Result[None
     if status_ret.is_err:
         return Result.err(status_ret.err_value)
 
-    log.info("Refund recorded", external_id=event.external_id)
+    log.info("recorded", external_id=event.external_id)
     return Result.ok(None)
 
 
@@ -395,7 +395,7 @@ def save_payout_data(event: PaymentEventData, payout: PayoutContent) -> Result[N
 
     payouts = payouts_ret.ok_value
     if len(payouts) > 0 and payouts[0].last_event_at > event.occurred_at:
-        log.info("Payout event is older than applied", external_id=event.external_id, event_id=event.event_id)
+        log.info("event is older than applied", external_id=event.external_id, event_id=event.event_id)
         return Result.ok(None)
 
     data = PayoutData(
@@ -430,7 +430,7 @@ def save_payout_data(event: PaymentEventData, payout: PayoutContent) -> Result[N
     if entries_save_ret.is_err:
         return Result.err(entries_save_ret.err_value)
 
-    log.info("Payout recorded", external_id=event.external_id, amount=payout.amount, entries=len(entries))
+    log.info("recorded", external_id=event.external_id, amount=payout.amount, entries=len(entries))
     return Result.ok(None)
 
 
@@ -461,22 +461,22 @@ def update_transaction_status(event: PaymentEventData, status: PaymentStatus) ->
 
     payment_transaction = transaction_ret.ok_value
     if payment_transaction is None:
-        log.warning("Transaction not found for status update", external_id=event.external_id, status=status.value)
+        log.warning("not found", external_id=event.external_id, status=status.value)
         return Result.ok(None)
 
     if payment_status_rank(status) < payment_status_rank(payment_transaction.status):
-        log.info("Transaction status not downgraded", external_id=event.external_id, current=payment_transaction.status.value, status=status.value)
+        log.info("status not downgraded", external_id=event.external_id, current=payment_transaction.status.value, status=status.value)
         return Result.ok(None)
 
     if payment_transaction.last_event_at > event.occurred_at:
-        log.info("Transaction event is older than applied", external_id=event.external_id, event_id=event.event_id)
+        log.info("event is older than applied", external_id=event.external_id, event_id=event.event_id)
         return Result.ok(None)
 
     save_ret = save_transaction_data(replace(payment_transaction, status=status, last_event_at=event.occurred_at))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    log.info("Transaction status updated", external_id=event.external_id, status=status.value)
+    log.info("status updated", external_id=event.external_id, status=status.value)
     return Result.ok(None)
 
 
@@ -503,9 +503,9 @@ def save_failed_payment_event_data(event: PaymentEventData, error: str) -> Resul
         return Result.err(save_ret.err_value)
 
     if attempts >= PAYMENT_EVENT_MAX_ATTEMPTS:
-        log.error("PaymentEvent gave up", event_id=event.event_id, event_type=event.event_type.value, attempts=attempts, error=error)
+        log.error("gave up", event_id=event.event_id, event_type=event.event_type.value, attempts=attempts, error=error)
     else:
-        log.warning("PaymentEvent process failed", event_id=event.event_id, event_type=event.event_type.value, attempts=attempts, error=error)
+        log.warning("process failed", event_id=event.event_id, event_type=event.event_type.value, attempts=attempts, error=error)
     return Result.ok(None)
 
 
@@ -609,10 +609,10 @@ def save_payment_projection_data() -> Result[int, CommandError]:
         for event in events:
             apply_ret = apply_payment_event(event)
             if apply_ret.is_err:
-                log.error("PaymentEvent replay failed", event_id=event.event_id, error=apply_ret.err_value.message)
+                log.error("replay failed", event_id=event.event_id, error=apply_ret.err_value.message)
                 return Result.err(apply_ret.err_value)
 
-    log.info("PaymentEvent replayed", count=len(ids))
+    log.info("replayed", count=len(ids))
     return Result.ok(len(ids))
 
 
