@@ -81,6 +81,31 @@
     }
   }
 
+  .skip {
+    top: 0;
+    width: 2.5em;
+    height: 100%;
+    line-height: 38px;
+    text-align: center;
+    font-size: 13px;
+    cursor: pointer;
+    z-index: 2;
+    user-select: none;
+
+    &:hover,
+    &:focus {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  .skip_back {
+    left: 2.5em;
+  }
+
+  .skip_forward {
+    left: 5em;
+  }
+
   .time {
     top: 0;
     width: 50px;
@@ -92,7 +117,7 @@
   }
 
   .time_current {
-    left: 2.5em;
+    left: 7.5em;
     border-left: 0px solid rgb(0, 135, 180);
     border-left-color: rgba(0, 0, 0, 0.25);
   }
@@ -105,7 +130,7 @@
 
   .bar {
     top: 50%;
-    left: 85px;
+    left: calc(85px + 5em);
     right: 83px;
     height: 9px;
     margin-top: -4.5px;
@@ -230,13 +255,54 @@
     }
   }
 
-  &.volume_top .volume:hover .volume_adjust {
-    top: auto;
-    bottom: 100%;
-  }
+  &.volume_inline {
+    .time_duration {
+      right: 7.5em;
+    }
 
-  &.volume_top .volume .volume_adjust > div {
-    margin: 10% auto 0;
+    .bar {
+      right: calc(83px + 5em);
+    }
+
+    .volume {
+      width: 7.5em;
+
+      &:hover,
+      &:focus {
+        background: none;
+      }
+
+      .volume_button {
+        width: 2.5em;
+      }
+    }
+
+    .volume .volume_adjust,
+    .volume:hover .volume_adjust {
+      top: 50%;
+      bottom: auto;
+      left: 2.5em;
+      right: 0.75em;
+      height: 9px;
+      margin-top: -4.5px;
+      background: none;
+      border-radius: 10px;
+      box-shadow: none;
+      opacity: 1;
+
+      > div {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+
+        div {
+          top: 0;
+          bottom: auto;
+          height: 100%;
+          background: linear-gradient(to right, rgb(50, 150, 255) 30%, rgb(255, 0, 130));
+        }
+      }
+    }
   }
 
   // 音量波アイコン（ミュートでない時のみ）
