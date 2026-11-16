@@ -19,13 +19,16 @@ interface Props {
 export default function MediaDetailRight(props: Props): React.JSX.Element {
   const { list, mediaPath, userUlid } = props
 
+  const items: MediaItem[] = list
+  const musics = items.filter(isMusicMedia)
+
   return (
     <div className={style.media_detail_right}>
       <Advertise userUlid={userUlid} className={style.advertise} />
       <VStack gap="4">
         {list.map((media) =>
           isMusicMedia(media) ? (
-            <MusicCard key={media.ulid} item={media} />
+            <MusicCard key={media.ulid} item={media} items={musics} />
           ) : (
             <MediaSideImage key={media.ulid} href={`/media/${mediaPath}/${media.ulid}`} src={media.image} media={media} />
           ),

@@ -2,6 +2,7 @@ import { usePageLoading } from 'components/hooks/usePageLoading'
 import Header from 'components/layout/Header'
 import SearchTagBar from 'components/layout/SearchTagBar'
 import SideBar from 'components/layout/SideBar'
+import MiniPlayer from 'components/widgets/MiniPlayer'
 import style from './Layout.module.scss'
 
 interface Props {
@@ -19,6 +20,7 @@ export default function Layout(props: Props): React.JSX.Element {
       <SideBar />
       <SearchTagBar />
       {children}
+      <MiniPlayer />
     </div>
   )
 }

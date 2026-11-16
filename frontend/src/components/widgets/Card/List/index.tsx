@@ -6,7 +6,7 @@ interface ObjectId {
 
 interface Props<T extends ObjectId> {
   items: T[]
-  Content: React.ComponentType<{ item: T }>
+  Content: React.ComponentType<{ item: T; items: T[] }>
 }
 
 export default function CardList<T extends ObjectId>(props: Props<T>): React.JSX.Element {
@@ -15,7 +15,7 @@ export default function CardList<T extends ObjectId>(props: Props<T>): React.JSX
   return (
     <article className={style.card_list}>
       {items.map((item) => (
-        <Content key={item.ulid} item={item} />
+        <Content key={item.ulid} item={item} items={items} />
       ))}
     </article>
   )

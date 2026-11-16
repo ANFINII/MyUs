@@ -1,4 +1,5 @@
 import { I18nProvider } from 'components/provider/I18nProvider'
+import { MusicPlayerProvider } from 'components/provider/MusicPlayerProvider'
 import { QueryProvider } from 'components/provider/QueryProvider'
 import { UserProvider } from 'components/provider/UserProvider'
 
@@ -12,7 +13,9 @@ export function AppProvider(props: Props): React.JSX.Element {
   return (
     <I18nProvider>
       <QueryProvider>
-        <UserProvider>{children}</UserProvider>
+        <UserProvider>
+          <MusicPlayerProvider>{children}</MusicPlayerProvider>
+        </UserProvider>
       </QueryProvider>
     </I18nProvider>
   )

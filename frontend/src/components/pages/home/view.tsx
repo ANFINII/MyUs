@@ -34,7 +34,7 @@ export default function Homes(props: Props): React.JSX.Element {
       <Divide />
       <CardIndexList title="Music">
         {musics?.map((media) => (
-          <MusicCard key={media.ulid} item={media} />
+          <MusicCard key={media.ulid} item={media} items={musics} />
         ))}
       </CardIndexList>
 
