@@ -44,7 +44,7 @@ flowchart LR
     Vercel[Vercel<br/>フロント SPA]
     CF_API[CloudFront<br/>api.myus]
     CF_MEDIA[CloudFront<br/>media.myus]
-    subgraph VPC[VPC（パブリックサブネットのみ・NAT なし）]
+    subgraph VPC[VPC（パブリック・datastore サブネット・NAT なし）]
         EC2[EC2 t4g.small<br/>docker compose<br/>daphne / worker / Redis]
         RDS[(RDS MySQL<br/>db.t4g.micro)]
     end
