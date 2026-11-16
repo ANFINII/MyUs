@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { Advertise } from 'types/internal/advertise'
@@ -8,7 +8,7 @@ import { Playlist } from 'types/internal/playlist'
 import { ChannelSeries } from 'types/internal/series'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
-import { FetchError } from 'utils/constants/enum'
+import { FetchError, MediaType } from 'utils/constants/enum'
 import { useRouter } from 'components/hooks/useRouter'
 import { useSearch } from 'components/hooks/useSearch'
 import { useToast } from 'components/hooks/useToast'
@@ -72,6 +72,9 @@ export default function Userpage(props: Props): React.JSX.Element {
   const formattedDate = new Date(dateJoined).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: 'numeric' })
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const selectedChannel = channels.find((c) => c.ulid === channelUlid)
+  const seriesGroups = Object.values(MediaType)
+    .map((mediaType) => ({ mediaType, items: series.filter((s) => s.mediaType === mediaType) }))
+    .filter((group) => group.items.length > 0)
 
   const tabItems: TabItem<TabKey>[] = [
     { key: TabKey.Info, label: t('media.userpage.info') },
@@ -212,7 +215,20 @@ export default function Userpage(props: Props): React.JSX.Element {
       )}
 
       {selectedTab === TabKey.Series &&
-        (series.length === 0 ? <p className={style.empty}>{t('media.userpage.seriesEmpty')}</p> : <CardList items={series} Content={SeriesCard} />)}
+        (seriesGroups.length === 0 ? (
+          <p className={style.empty}>{t('media.userpage.seriesEmpty')}</p>
+        ) : (
+          seriesGroups.map(({ mediaType, items }, index) => (
+            <Fragment key={mediaType}>
+              {index > 0 && <Divide />}
+              <CardIndexList title={mediaType}>
+                {items.map((item) => (
+                  <SeriesCard key={item.ulid} item={item} />
+                ))}
+              </CardIndexList>
+            </Fragment>
+          ))
+        ))}
 
       {selectedTab === TabKey.Playlist &&
         (playlists.length === 0 ? <p className={style.empty}>{t('media.userpage.playlistEmpty')}</p> : <CardList items={playlists} Content={PlaylistCard} />)}
