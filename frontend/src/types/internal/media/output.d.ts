@@ -56,6 +56,7 @@ export interface Video extends Media {
   image: string
   video: string
   convert: string
+  encodeFailed: boolean
 }
 
 export interface Music extends Media {

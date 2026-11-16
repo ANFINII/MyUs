@@ -49,6 +49,7 @@ export interface MediaUpdateIn {
 
 export interface VideoUpdateIn extends MediaUpdateIn {
   image?: File
+  video?: File
 }
 
 export interface MusicUpdateIn extends MediaUpdateIn {

@@ -81,9 +81,13 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortValue: (v) => v.title,
       className: style.title,
       cell: (v) => (
-        <a className={style.title_link} onClick={() => handleEdit(v)}>
-          {v.title}
-        </a>
+        <>
+          <a className={style.title_link} onClick={() => handleEdit(v)}>
+            {v.title}
+          </a>
+          {v.encodeFailed && <span className={style.encode_failed}>{t('manage.video.encodeFailed')}</span>}
+          {!v.encodeFailed && v.convert === '' && <span className={style.encode_status}>{t('manage.video.encoding')}</span>}
+        </>
       ),
     },
     {

@@ -1,6 +1,6 @@
 import time
 from django.core.management.base import BaseCommand
-from myus.usecase.encode_job.core import process_encode_jobs
+from myus.usecase.encode.core import encode_videos
 from myus.utils.common.logger import log
 
 
@@ -14,13 +14,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         while True:
-            ret = process_encode_jobs(options["limit"])
+            ret = encode_videos(options["limit"])
             if ret.is_err:
                 log.error("command failed", error=ret.err_value.message)
             else:
                 count = ret.ok_value
                 if count > 0:
-                    log.info("processed", count=count)
+                    log.info("encoded", count=count)
 
             if options["once"]:
                 return

@@ -158,7 +158,7 @@ PaymentPayout             銀行口座への入金
 | コマンド | 内容 |
 |---|---|
 | `uv run python manage.py process_payment_events` | 未反映のイベントを反映する worker |
-| `uv run python manage.py process_encode_jobs` | まだ変換していない動画を HLS に変換する worker。docker-compose の `myus_encoder` で動かす |
+| `uv run python manage.py encode_videos` | まだ変換していない動画（`convert` が空で `encode_failed` でないもの）を HLS に変換する worker。docker-compose の `myus_encoder` で動かす |
 | `uv run python manage.py export_ledger --from 2026-01-01 --to 2026-12-31` | 期間の明細を CSV で出力する |
 | `uv run python manage.py replay_payment_events --confirm` | イベントを流し直して投影を作り直す |
 

@@ -13,6 +13,7 @@ class VideoData:
     image: str
     video: str
     convert: str
+    encode_failed: bool
     read: int
     like: int
     publish: bool

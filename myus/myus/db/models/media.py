@@ -7,29 +7,29 @@ from .base import MediaModel
 from .channel import Channel
 from .hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
 from .master import Category
-from .payment import DATETIME_MIN
 from .user import User
 
 
 # Video
 class Video(models.Model, MediaModel):
     """Video"""
-    id         = models.BigAutoField(primary_key=True)
-    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
-    title      = models.CharField(max_length=100)
-    content    = models.TextField()
-    image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    video      = models.FileField(upload_to=video_upload, max_length=255, blank=True)
-    convert    = models.FileField(upload_to=video_upload, max_length=255, blank=True)
-    category   = models.ManyToManyField(Category, blank=True)
-    hashtag    = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
-    like       = models.ManyToManyField(User, related_name="video_like", blank=True)
-    read       = models.IntegerField(default=0)
-    publish    = models.BooleanField(default=True)
-    publish_at = models.DateTimeField(default=timezone.now)
-    created    = models.DateTimeField(auto_now_add=True)
-    updated    = models.DateTimeField(auto_now=True)
+    id            = models.BigAutoField(primary_key=True)
+    ulid          = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel       = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
+    title         = models.CharField(max_length=100)
+    content       = models.TextField()
+    image         = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    video         = models.FileField(upload_to=video_upload, max_length=255, blank=True)
+    convert       = models.FileField(upload_to=video_upload, max_length=255, blank=True)
+    encode_failed = models.BooleanField(default=False)
+    category      = models.ManyToManyField(Category, blank=True)
+    hashtag       = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
+    like          = models.ManyToManyField(User, related_name="video_like", blank=True)
+    read          = models.IntegerField(default=0)
+    publish       = models.BooleanField(default=True)
+    publish_at    = models.DateTimeField(default=timezone.now)
+    created       = models.DateTimeField(auto_now_add=True)
+    updated       = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "video"
@@ -39,23 +39,6 @@ class Video(models.Model, MediaModel):
             models.Index(fields=["publish", "-created"], name="video_publish_created_idx"),
         ]
 
-
-class EncodeJob(models.Model):
-    """EncodeJob"""
-    id           = models.BigAutoField(primary_key=True)
-    video        = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="encode_jobs")
-    publish      = models.BooleanField(default=False)
-    processed_at = models.DateTimeField(default=DATETIME_MIN)
-    attempts     = models.PositiveIntegerField(default=0)
-    last_error   = models.TextField(blank=True)
-    created      = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = "encode_job"
-        verbose_name_plural = "01 EncodeJob"
-        indexes = [
-            models.Index(fields=["processed_at", "id"], name="encode_job_processed_idx"),
-        ]
 
 
 # Music

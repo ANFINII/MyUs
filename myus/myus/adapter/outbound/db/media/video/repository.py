@@ -11,16 +11,24 @@ from ..common import filter_queryset, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
-VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "publish", "publish_at", "updated"]
+VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "encode_failed", "publish", "publish_at", "updated"]
 
 
 class VideoRepository(VideoInterface):
     def queryset(self) -> QuerySet[Video]:
         return Video.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
 
+    def filter_video_queryset(self, filter: FilterOption) -> QuerySet[Video]:
+        qs = Video.objects.all()
+        if filter.publish:
+            qs = qs.exclude(convert="")
+        if filter.is_encoding:
+            qs = qs.filter(convert="", encode_failed=False)
+        return qs
+
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
-        qs = get_ids_queryset(Video.objects.all(), filter, sort, page)
+        qs = get_ids_queryset(self.filter_video_queryset(filter), filter, sort, page)
         return Result.ok(list(qs.values_list("id", flat=True)))
 
     @Result.shield_exception()
@@ -53,7 +61,7 @@ class VideoRepository(VideoInterface):
 
     @Result.shield_exception()
     def count(self, filter: FilterOption) -> Result[int, FatalError]:
-        qs = filter_queryset(Video.objects.all(), filter)
+        qs = filter_queryset(self.filter_video_queryset(filter), filter)
         return Result.ok(qs.count())
 
     @Result.shield_exception()

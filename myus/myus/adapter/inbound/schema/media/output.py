@@ -51,6 +51,7 @@ class VideoOut(MediaOut):
     image: str
     video: str
     convert: str
+    encode_failed: bool
 
 
 class MusicOut(MediaOut):

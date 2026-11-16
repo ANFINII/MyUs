@@ -12,7 +12,7 @@
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
 | メディア | `MEDIA_ROOT`（ローカルディスク）に保存。動画・音楽は ffmpeg で HLS に変換（`myus/myus/utils/functions/convert/`） |
 | 決済 | Stripe（webhook あり） |
-| 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換は、API が変換ジョブ（`encode_job`）を積むだけにし、`myus_encoder`（`process_encode_jobs`）が取り出して変換する |
+| 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換は、API が動画を変換前（`convert` が空）のまま保存し、`myus_encoder`（`encode_videos`）が DB を定期的に読んで変換する。3回続けて失敗したら `encode_failed` にし、管理画面で動画を上げ直してもらう |
 | メール | 開発は `console.EmailBackend`（送信されない）。本番（`config/settings/prod.py`）は SMTP で送る。接続先は `EMAIL_HOST`・`EMAIL_PORT`・`EMAIL_HOST_USER`・`EMAIL_HOST_PASSWORD`、送信元は `EMAIL_FROM` |
 | CI | GitHub Actions（デプロイなし）。`backend.yml`：mypy・ruff・`manage.py check`・pytest、`frontend.yml`：`pnpm check`・`pnpm test`・ビルド、`github-actions.yml`：ワークフロー自体の検査（actionlint・zizmor） |
 
@@ -81,7 +81,7 @@ flowchart LR
 
 ### HLS 変換の分離
 
-- アップロードされたら、API はファイルを S3 に置いて **変換ジョブを DB（outbox）に積むだけ**にする
+- アップロードされたら、API はファイルを S3 に置いて **動画を変換前のまま保存するだけ**にする
 - `worker` コンテナがジョブを取り出して ffmpeg で変換し、結果を S3 に置く
 - 同じ EC2 内でも、コンテナ（プロセス）を分けて CPU 制限（`cpus:`）をかければ API への影響を抑えられる
 

@@ -80,8 +80,8 @@ class ManageVideoAPI:
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
-    def put(request: HttpRequest, ulid: str, input: VideoUpdateIn = Form(...), image: UploadedFile | None = File(None)):
-        log.info("request", ulid=ulid, input=input, image=image)
+    def put(request: HttpRequest, ulid: str, input: VideoUpdateIn = Form(...), image: UploadedFile | None = File(None), video: UploadedFile | None = File(None)):
+        log.info("request", ulid=ulid, input=input, image=image, video=video)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -92,7 +92,7 @@ class ManageVideoAPI:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         dto = VideoUpdateDTO(**input.model_dump())
-        update_ret = update_manage_video(user_id, ulid, dto, image)
+        update_ret = update_manage_video(user_id, ulid, dto, image, video)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:

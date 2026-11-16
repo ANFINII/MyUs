@@ -52,7 +52,7 @@ services:
       - ./myus/envs/django.env
     depends_on:
       - mysql
-    command: sh -c 'python manage.py process_encode_jobs --settings config.settings.local'
+    command: sh -c 'python manage.py encode_videos --settings config.settings.local'
     networks:
       - myus_network
 

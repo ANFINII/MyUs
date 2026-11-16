@@ -64,9 +64,10 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
         image=save_upload(image, ImageUpload.VIDEO, channel.ulid),
         video=video_path,
         convert="",
+        encode_failed=False,
         read=0,
         like=0,
-        publish=False,
+        publish=input.publish,
         publish_at=input.publish_at,
         created=datetime.min,
         updated=datetime.min,
@@ -82,7 +83,7 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
 
     category_data = category_data_ret.ok_value
 
-    create_ret = atomic_result(lambda: create_video_data(new_data, category_data, input.publish))
+    create_ret = atomic_result(lambda: create_video_data(new_data, category_data))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 

@@ -1,9 +1,6 @@
-from datetime import UTC, datetime
 from typing import assert_never
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface
-from myus.domain.encode_job.data import EncodeJobData
-from myus.domain.encode_job.interface import EncodeJobInterface
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
@@ -76,10 +73,9 @@ def get_media_user_data(is_like: bool, channel_id: int, user_id: int | None) -> 
 
 
 @Result.shield_exception()
-def create_video_data(data: VideoData, category_data: CategoryData, publish: bool) -> Result[int, FatalError]:
+def create_video_data(data: VideoData, category_data: CategoryData) -> Result[int, FatalError]:
     repo = injector.get(VideoInterface)
     category_repo = injector.get(CategoryInterface)
-    encode_repo = injector.get(EncodeJobInterface)
     ids_ret = repo.bulk_save([data])
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -89,11 +85,6 @@ def create_video_data(data: VideoData, category_data: CategoryData, publish: boo
     category_ret = category_repo.bulk_save(MediaType.VIDEO, new_ids[0], [category_data])
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
-
-    job = EncodeJobData(id=0, video_id=new_ids[0], publish=publish, processed_at=datetime.min.replace(tzinfo=UTC), attempts=0, last_error="", created=datetime.min)
-    encode_ret = encode_repo.bulk_save([job])
-    if encode_ret.is_err:
-        return Result.err(encode_ret.err_value)
 
     return Result.ok(new_ids[0])
 

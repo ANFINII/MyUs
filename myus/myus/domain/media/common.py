@@ -22,6 +22,7 @@ class FilterOption:
     channel_ulid: str = ""
     category_id: int = 0
     is_recommend: bool = False
+    is_encoding: bool = False
     search: str = ""
 
 

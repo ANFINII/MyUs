@@ -19,7 +19,7 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
-from myus.utils.enum.upload import ImageUpload
+from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
@@ -84,8 +84,8 @@ def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: UploadedFile | None = None) -> Result[None, WriteError]:
-    upload_ret = validate_uploads([(image, ImageUpload.VIDEO)])
+def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: UploadedFile | None = None, video: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.VIDEO), (video, MediaUpload.VIDEO)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
@@ -113,6 +113,11 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: U
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.VIDEO, obj.channel.ulid))
+    if video is not None:
+        if not obj.encode_failed:
+            log.warning("not encode failed", ulid=ulid)
+            return Result.err(ValidationError("error.saveFailed"))
+        update_data = replace(update_data, video=save_upload(video, MediaUpload.VIDEO, obj.channel.ulid), convert="", encode_failed=False)
 
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
