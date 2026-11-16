@@ -5,6 +5,7 @@ import IconAdvertise from 'components/parts/Icon/Advertise'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
+import IconList from 'components/parts/Icon/List'
 import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
@@ -17,6 +18,7 @@ const menus = [
   { label: 'Comic', icon: <IconComic size="2em" />, path: 'comic' },
   { label: 'Picture', icon: <IconPicture size="2em" />, path: 'picture' },
   { label: 'Chat', icon: <IconChat size="2em" />, path: 'chat' },
+  { label: 'Series', icon: <IconList size="2em" />, path: 'series' },
   { label: 'Advertise', icon: <IconAdvertise size="2em" />, path: 'advertise' },
 ]
 

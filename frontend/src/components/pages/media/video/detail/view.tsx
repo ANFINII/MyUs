@@ -26,7 +26,7 @@ interface Props {
 
 export default function VideoDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { detail, list } = data
+  const { detail, list, series } = data
   const { image, video, publish, ...other } = detail
 
   const { toast, handleToast } = useToast()
@@ -89,7 +89,7 @@ export default function VideoDetail(props: Props): React.JSX.Element {
           </div>
         </div>
         <Divide />
-        <MediaDetailCommon media={{ mediaPath: MediaPath.Video, ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Video, ...other }} list={list} series={series} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )

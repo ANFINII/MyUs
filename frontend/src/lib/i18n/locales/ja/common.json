@@ -312,6 +312,16 @@
   },
   "manage": {
     "title": "投稿管理",
+    "series": {
+      "new": "新しいシリーズ",
+      "mediaType": "種類",
+      "count": "投稿数",
+      "candidate": "足す投稿",
+      "private": "非公開",
+      "empty": "投稿はまだありません。上から足してください",
+      "deleteTitle": "シリーズの削除",
+      "deleteConfirm": "「{{title}}」を削除しますか？投稿は消えません"
+    },
     "header": {
       "selected": "{{count}}件選択",
       "bulkDelete": "一括削除"
@@ -843,6 +853,9 @@
     }
   },
   "media": {
+    "series": {
+      "label": "シリーズ"
+    },
     "blog": {
       "promotion": "この記事はプロモーションを含みます",
       "promotionBadge": "PR"

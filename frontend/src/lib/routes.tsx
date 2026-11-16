@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
-import { blogDetailLoader, blogListLoader, chatDetailLoader, chatListLoader, chatThreadLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, manageAdvertiseEditLoader, manageAdvertiseListLoader, manageBlogEditLoader, manageBlogListLoader, manageChatEditLoader, manageChatListLoader, manageComicEditLoader, manageComicListLoader, manageCreateLoader, manageLoader, manageMusicEditLoader, manageMusicListLoader, managePictureEditLoader, managePictureListLoader, manageVideoEditLoader, manageVideoListLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, playlistDetailLoader, playlistListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, subscribeChannelsLoader, userPageLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
+import { blogDetailLoader, blogListLoader, chatDetailLoader, chatListLoader, chatThreadLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, manageAdvertiseEditLoader, manageAdvertiseListLoader, manageBlogEditLoader, manageBlogListLoader, manageChatEditLoader, manageChatListLoader, manageComicEditLoader, manageComicListLoader, manageCreateLoader, manageLoader, manageMusicEditLoader, manageMusicListLoader, managePictureEditLoader, managePictureListLoader, manageSeriesEditLoader, manageSeriesListLoader, manageVideoEditLoader, manageVideoListLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, playlistDetailLoader, playlistListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, subscribeChannelsLoader, userPageLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
@@ -85,6 +85,8 @@ export const routeTree = rootRoute.addChildren([
   page('/manage/chat', () => import('components/pages/manage/chat'), manageChatListLoader),
   page('/manage/chat/create', () => import('components/pages/manage/chat/create'), manageCreateLoader),
   page('/manage/chat/$ulid', () => import('components/pages/manage/chat/edit'), manageChatEditLoader),
+  page('/manage/series', () => import('components/pages/manage/series'), manageSeriesListLoader),
+  page('/manage/series/$ulid', () => import('components/pages/manage/series/edit'), manageSeriesEditLoader),
   page('/manage/advertise', () => import('components/pages/manage/advertise'), manageAdvertiseListLoader),
   page('/manage/advertise/create', () => import('components/pages/manage/advertise/create')),
   page('/manage/advertise/$ulid', () => import('components/pages/manage/advertise/edit'), manageAdvertiseEditLoader),

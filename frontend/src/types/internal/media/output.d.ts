@@ -169,34 +169,46 @@ export interface ChatDetail extends MediaDetail {
   messages: ChatMessage[]
 }
 
+export interface MediaSeries<T> {
+  ulid: string
+  title: string
+  items: T[]
+}
+
 export interface VideoDetailOut {
   detail: VideoDetail
   list: Video[]
+  series: MediaSeries<Video>
 }
 
 export interface MusicDetailOut {
   detail: MusicDetail
   list: Music[]
+  series: MediaSeries<Music>
 }
 
 export interface BlogDetailOut {
   detail: BlogDetail
   list: Blog[]
+  series: MediaSeries<Blog>
 }
 
 export interface ComicDetailOut {
   detail: ComicDetail
   list: Comic[]
+  series: MediaSeries<Comic>
 }
 
 export interface PictureDetailOut {
   detail: PictureDetail
   list: Picture[]
+  series: MediaSeries<Picture>
 }
 
 export interface ChatDetailOut {
   detail: ChatDetail
   list: Chat[]
+  series: MediaSeries<Chat>
 }
 
 export interface MediaCreateOut {

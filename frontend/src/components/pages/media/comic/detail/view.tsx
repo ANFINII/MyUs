@@ -12,7 +12,7 @@ interface Props {
 
 export default function ComicDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { detail, list } = data
+  const { detail, list, series } = data
   const { image, pages, publish, ...other } = detail
 
   const { toast, handleToast } = useToast()
@@ -22,7 +22,7 @@ export default function ComicDetail(props: Props): React.JSX.Element {
       <MediaDetail publish={publish}>
         <ComicViewer pages={[image, ...pages]} />
         <Divide />
-        <MediaDetailCommon media={{ mediaPath: MediaPath.Comic, ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Comic, ...other }} list={list} series={series} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )

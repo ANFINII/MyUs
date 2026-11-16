@@ -10,10 +10,11 @@ interface Props {
   list: Chat[]
   onNav: () => void
   onResize: (e: MouseEvent) => void
+  children?: React.ReactNode
 }
 
 export default function SectionNav(props: Props): React.JSX.Element {
-  const { navRef, list, onNav, onResize } = props
+  const { navRef, list, onNav, onResize, children } = props
 
   const router = useRouter()
 
@@ -25,6 +26,7 @@ export default function SectionNav(props: Props): React.JSX.Element {
         <IconResize size="15" />
       </div>
       <div className={style.nav_area}>
+        {children}
         {list.map((item) => (
           <div key={item.ulid} className={style.nav_item} onClick={() => handleRouter(item.ulid)}>
             <Avatar src={item.channel.avatar} size="40" />

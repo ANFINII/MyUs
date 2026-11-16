@@ -14,7 +14,7 @@ interface Props {
 
 export default function PictureDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { detail, list } = data
+  const { detail, list, series } = data
   const { image, publish, ...other } = detail
 
   const { toast, handleToast } = useToast()
@@ -28,7 +28,7 @@ export default function PictureDetail(props: Props): React.JSX.Element {
           </div>
         </div>
         <Divide />
-        <MediaDetailCommon media={{ mediaPath: MediaPath.Picture, ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Picture, ...other }} list={list} series={series} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )
