@@ -17,7 +17,7 @@ class PlaylistAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: PlaylistListOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: PlaylistListOut, 500: ErrorOut})
     def list(request: HttpRequest):
         log.info("request")
 
@@ -27,7 +27,7 @@ class PlaylistAPI:
 
         user_id = user_id_ret.ok_value
         if user_id is None:
-            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+            return 200, PlaylistListOut(items=[])
 
         ret = get_my_playlists(user_id)
         if ret.is_err:
