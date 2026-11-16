@@ -1,8 +1,7 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MusicDetailOut } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
-import cx from 'utils/functions/cx'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -12,6 +11,7 @@ import SpeedControl from 'components/parts/SpeedControl'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import AudioPlayer from 'components/widgets/AudioPlayer'
+import Lyric from 'components/widgets/Lyric'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
 import PlaylistAdd from 'components/widgets/PlaylistAdd'
@@ -31,9 +31,18 @@ export default function MusicDetail(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [speed, setSpeed] = useState<number>(1)
   const [isLyricView, setIsLyricView] = useState<boolean>(false)
+  const [currentTime, setCurrentTime] = useState<number>(0)
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   const handleSpeed = (e: ChangeEvent<HTMLInputElement>) => setSpeed(Number(e.target.value))
   const handleLyricView = () => setIsLyricView(!isLyricView)
+
+  const handleSeek = (time: number) => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.currentTime = time
+    audio.play()?.catch(() => {})
+  }
 
   return (
     <Main metaTitle="Music" toast={toast}>
@@ -43,7 +52,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
             <ExImage src={image || other.channel.avatar} className={style.thumbnail} />
           </div>
           <VStack gap="6" className={style.controls}>
-            <AudioPlayer src={music} playbackRate={speed} isVolumeInline className={style.player} />
+            <AudioPlayer src={music} playbackRate={speed} isVolumeInline audioRef={audioRef} className={style.player} onTimeUpdate={setCurrentTime} />
             <HStack justify="between">
               <SpeedControl value={speed} onChange={handleSpeed} className={style.speed} />
               <div className={style.actions}>
@@ -60,7 +69,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
         {lyric && (
           <>
             <View isView={isLyricView} onView={handleLyricView} content={isLyricView ? t('view.collapse') : t('view.expand')} />
-            <div className={cx(style.lyric, isLyricView && style.active)}>{lyric}</div>
+            <Lyric lyric={lyric} currentTime={currentTime} isExpand={isLyricView} onSeek={handleSeek} />
           </>
         )}
         <Divide />

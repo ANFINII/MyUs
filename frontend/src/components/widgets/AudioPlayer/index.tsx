@@ -16,10 +16,11 @@ interface Props {
   audioRef?: React.RefObject<HTMLAudioElement | null>
   className?: string
   onEnded?: () => void
+  onTimeUpdate?: (time: number) => void
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, audioRef: sharedAudioRef, className, onEnded } = props
+  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, audioRef: sharedAudioRef, className, onEnded, onTimeUpdate } = props
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -99,7 +100,10 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   }
 
   const handleTimeUpdate = () => {
-    if (audioRef.current) setCurrentTime(audioRef.current.currentTime)
+    const audio = audioRef.current
+    if (!audio) return
+    setCurrentTime(audio.currentTime)
+    onTimeUpdate?.(audio.currentTime)
   }
 
   const handleLoadedMetadata = () => {

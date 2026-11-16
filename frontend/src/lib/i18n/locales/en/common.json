@@ -373,6 +373,7 @@
       "title": "Title",
       "content": "Description",
       "lyric": "Lyrics",
+      "lyricPlaceholder": "Add a time like [00:12.00] at the start of each line to sync the lyrics with playback",
       "download": "Allow downloads",
       "thumbnail": "Thumbnail",
       "image": "Image",
