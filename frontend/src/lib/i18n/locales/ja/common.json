@@ -329,6 +329,7 @@
       "image": "画像",
       "thumbnail": "サムネイル",
       "title": "タイトル",
+      "detail": "詳細",
       "content": "内容",
       "play": "再生",
       "view": "閲覧",

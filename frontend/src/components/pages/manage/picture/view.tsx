@@ -16,7 +16,9 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import { Column } from 'components/parts/DataTable'
 import ExImage from 'components/parts/ExImage'
+import IconLink from 'components/parts/Icon/Link'
 import Toggle from 'components/parts/Input/Toggle'
+import Link from 'components/parts/Link'
 import style from '../Media.module.scss'
 import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
@@ -84,6 +86,17 @@ export default function ManagePictures(props: Props): React.JSX.Element {
         <a className={style.title_link} onClick={() => handleEdit(p)}>
           {p.title}
         </a>
+      ),
+    },
+    {
+      key: 'detail',
+      header: t('manage.table.detail'),
+      align: 'center',
+      className: style.narrow,
+      cell: (p) => (
+        <Link href={`/media/picture/${p.ulid}`} className={style.detail_link}>
+          <IconLink size="16" />
+        </Link>
       ),
     },
     {

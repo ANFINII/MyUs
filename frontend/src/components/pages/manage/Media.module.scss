@@ -54,6 +54,15 @@
   width: 80px;
 }
 
+.detail_link {
+  display: inline-flex;
+  color: rgb(50, 110, 200);
+
+  &:hover {
+    color: rgb(0, 105, 255);
+  }
+}
+
 .normal {
   width: 140px;
 }

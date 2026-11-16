@@ -16,7 +16,9 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import { Column } from 'components/parts/DataTable'
 import ExImage from 'components/parts/ExImage'
+import IconLink from 'components/parts/Icon/Link'
 import Toggle from 'components/parts/Input/Toggle'
+import Link from 'components/parts/Link'
 import style from '../Media.module.scss'
 import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
@@ -88,6 +90,17 @@ export default function ManageVideos(props: Props): React.JSX.Element {
           {v.encodeStatus === EncodeStatus.Failed && <span className={style.encode_failed}>{t('manage.video.encodeFailed')}</span>}
           {v.encodeStatus === EncodeStatus.Encoding && <span className={style.encode_status}>{t('manage.video.encoding')}</span>}
         </>
+      ),
+    },
+    {
+      key: 'detail',
+      header: t('manage.table.detail'),
+      align: 'center',
+      className: style.narrow,
+      cell: (v) => (
+        <Link href={`/media/video/${v.ulid}`} className={style.detail_link}>
+          <IconLink size="16" />
+        </Link>
       ),
     },
     {
