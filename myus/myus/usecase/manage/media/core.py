@@ -177,7 +177,7 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
     objs = objs_ret.ok_value
 
-    data = [replace(o, music=create_url(o.music)) for o in objs]
+    data = [replace(o, image=create_url(o.image), music=create_url(o.music)) for o in objs]
     return Result.ok((data, total))
 
 
@@ -199,11 +199,15 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    return Result.ok(replace(obj, music=create_url(obj.music)))
+    return Result.ok(replace(obj, image=create_url(obj.image), music=create_url(obj.music)))
 
 
 @Result.shield_exception()
-def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO) -> Result[None, WriteError]:
+def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO, image: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.MUSIC)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
     repo = injector.get(MusicInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -226,6 +230,8 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO) -> Resul
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish, publish_at=input.publish_at)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.MUSIC, obj.channel.ulid))
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)

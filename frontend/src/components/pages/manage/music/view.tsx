@@ -15,6 +15,7 @@ import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import { Column } from 'components/parts/DataTable'
+import ExImage from 'components/parts/ExImage'
 import Toggle from 'components/parts/Input/Toggle'
 import style from '../Media.module.scss'
 import ManageHeader from '../_container/Header'
@@ -67,6 +68,12 @@ export default function ManageMusics(props: Props): React.JSX.Element {
   const channelUlid = String(router.query.channel ?? '') || channels[0]!.ulid
 
   const columns: Column<Music>[] = [
+    {
+      key: 'thumbnail',
+      header: t('manage.form.jacket'),
+      className: style.thumbnail,
+      cell: (m) => <ExImage src={m.image || m.channel.avatar} width="54" height="54" />,
+    },
     {
       key: 'title',
       header: t('manage.table.title'),

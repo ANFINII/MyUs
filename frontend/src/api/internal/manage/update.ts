@@ -11,7 +11,7 @@ export const putManageVideo = async (ulid: string, request: VideoUpdateIn): Prom
 }
 
 export const putManageMusic = async (ulid: string, request: MusicUpdateIn): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('json').put(apiManageMusic(ulid), camelSnake(request)))
+  return await apiOut(apiClient('form').put(apiManageMusic(ulid), camelSnake(request)))
 }
 
 export const putManageBlog = async (ulid: string, request: BlogUpdateIn): Promise<ApiOut<ErrorOut>> => {

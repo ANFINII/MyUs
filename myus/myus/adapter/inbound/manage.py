@@ -190,8 +190,8 @@ class ManageMusicAPI:
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
-    def put(request: HttpRequest, ulid: str, input: MusicUpdateIn):
-        log.info("request", ulid=ulid, input=input)
+    def put(request: HttpRequest, ulid: str, input: MusicUpdateIn = Form(...), image: UploadedFile | None = File(None)):
+        log.info("request", ulid=ulid, input=input, image=image)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -202,7 +202,7 @@ class ManageMusicAPI:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         dto = MusicUpdateDTO(**input.model_dump())
-        update_ret = update_manage_music(user_id, ulid, dto)
+        update_ret = update_manage_music(user_id, ulid, dto, image)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:

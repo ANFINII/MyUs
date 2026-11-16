@@ -6,6 +6,7 @@ import cx from 'utils/functions/cx'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
+import ExImage from 'components/parts/ExImage'
 import IconDownload from 'components/parts/Icon/Download'
 import SpeedControl from 'components/parts/SpeedControl'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -23,7 +24,7 @@ interface Props {
 export default function MusicDetail(props: Props): React.JSX.Element {
   const { data } = props
   const { detail, list } = data
-  const { music, lyric, download, publish, ...other } = detail
+  const { image, music, lyric, download, publish, ...other } = detail
 
   const { t } = useTranslation()
   const { toast, handleToast } = useToast()
@@ -37,6 +38,9 @@ export default function MusicDetail(props: Props): React.JSX.Element {
     <Main metaTitle="Music" toast={toast}>
       <MediaDetail publish={publish}>
         <VStack gap="8" className={style.media_detail_music}>
+          <div className={style.jacket}>
+            <ExImage src={image || other.channel.avatar} width="240" height="240" className={style.jacket_image} />
+          </div>
           <AudioPlayer src={music} playbackRate={speed} className={style.player} />
           <HStack justify="between">
             <SpeedControl value={speed} onChange={handleSpeed} />

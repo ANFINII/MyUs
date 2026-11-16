@@ -11,7 +11,7 @@ from ..common import filter_queryset, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
-MUSIC_FIELDS = ["channel_id", "title", "content", "lyric", "music", "download", "publish", "publish_at", "updated"]
+MUSIC_FIELDS = ["channel_id", "title", "content", "lyric", "image", "music", "duration", "download", "publish", "publish_at", "updated"]
 
 
 class MusicRepository(MusicInterface):
