@@ -51,6 +51,11 @@ class Environment:
     stripe_price_id_premium: str
     stripe_price_id_ultimate: str
 
+    # Media 本番だけ使う
+    aws_storage_bucket_name: str = ""
+    aws_s3_region_name: str = "ap-northeast-1"
+    media_domain: str = ""
+
 
 def load_env(env_path: Path) -> None:
     """envファイルから環境変数を読み込む"""

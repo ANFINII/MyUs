@@ -10,7 +10,7 @@
 | バックエンド | Django 6.1 + django-ninja。ASGI（daphne）で HTTP と WebSocket（Channels）を処理する。docker-compose では `runserver`（daphne が入っているので ASGI で動く）で `myus_backend:8000` を起動している |
 | DB | MySQL 8.4（docker-compose のコンテナ） |
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
-| メディア | `MEDIA_ROOT`（ローカルディスク）に保存。動画・音楽は ffmpeg で HLS に変換（`myus/myus/utils/functions/convert/`） |
+| メディア | 開発は `MEDIA_ROOT`（ローカルディスク）、本番（`config/settings/prod.py`）は `django-storages` で S3 に保存し、CloudFront の `MEDIA_DOMAIN` から配信する。接続先は `AWS_STORAGE_BUCKET_NAME`・`AWS_S3_REGION_NAME`・`MEDIA_DOMAIN`（S3 へは EC2 のロールで書くのでキーは要らない）。動画は ffmpeg で HLS に変換し、worker は元の動画を一時フォルダに取り出して変換した結果を保存先に上げる（`myus/myus/utils/functions/convert/`） |
 | 決済 | Stripe（webhook あり） |
 | 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換は、API が動画を変換前（`encode_status` が `Encoding`）のまま保存し、`myus_encoder`（`encode_videos`）が DB を定期的に読んで変換する。3回続けて失敗したら `encode_status` を `Failed` にし、管理画面で動画を上げ直してもらう |
 | メール | 開発は `console.EmailBackend`（送信されない）。本番（`config/settings/prod.py`）は SMTP で送る。接続先は `EMAIL_HOST`・`EMAIL_PORT`・`EMAIL_HOST_USER`・`EMAIL_HOST_PASSWORD`、送信元は `EMAIL_FROM` |
@@ -18,10 +18,8 @@
 
 ### 本番化する前に解決すべき課題
 
-1. **メディアがローカルディスクにある**: サーバーの入れ替えやスケールアウトでファイルが消える・共有できない
-2. **HLS 変換の worker がローカルディスクを読み書きする**: 変換は `myus_encoder` に分けたが、元の動画も変換した結果も `MEDIA_ROOT` にある。S3 に移すときに worker も合わせる
-3. **メールの送信元が決まっていない**: 本番は SMTP で送る設定になったが、送る SMTP サーバー（Gmail・SES の SMTP など）と送信元のアドレス・ドメインの認証（SPF・DKIM）を用意する必要がある
-4. **シークレットが `myus/envs/*.env` にある**: 本番では安全な保管場所が必要。`envs/sample.env` の `AWS_*` の項目は、まだどこからも使われていない（`django-storages`・`django-ses` は未導入）
+1. **メールの送信元が決まっていない**: 本番は SMTP で送る設定になったが、送る SMTP サーバー（Gmail・SES の SMTP など）と送信元のアドレス・ドメインの認証（SPF・DKIM）を用意する必要がある
+2. **シークレットが `myus/envs/*.env` にある**: 本番では安全な保管場所が必要
 
 ---
 

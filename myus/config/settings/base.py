@@ -178,6 +178,7 @@ FRONTEND_URL = env.frontend_url
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_BASE_URL = f"{DOMAIN_URL}{MEDIA_URL}"
 
 # File upload size limits
 FILE_UPLOAD_PERMISSIONS = 0o644

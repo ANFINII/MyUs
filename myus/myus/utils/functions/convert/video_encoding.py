@@ -1,11 +1,15 @@
 import datetime
 import json
 import os
+import shutil
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 from django.conf import settings
+from django.core.files import File
+from django.core.files.storage import default_storage
 from .video_converter import VideoConverter
 from ...common.logger import log
 
@@ -17,14 +21,25 @@ class VideoConvert:
 
 
 def convert_video(video_path: str) -> VideoConvert:
-    """保存済み動画をエンコードし、master.m3u8とconvert.mp4の相対パスを返す"""
-    convert_path = os.path.join(settings.MEDIA_ROOT, video_path)
-    output_dir = os.path.dirname(convert_path)
+    """保存済み動画を一時フォルダでエンコードして保存先に上げ、master.m3u8とconvert.mp4の相対パスを返す"""
     video_dir = os.path.dirname(video_path)
     video_name = os.path.splitext(os.path.basename(video_path))[0]
 
     try:
-        encode_video(convert_path=convert_path, output_dir=output_dir)
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            convert_path = os.path.join(tmp_dir, os.path.basename(video_path))
+            with default_storage.open(video_path, "rb") as src, open(convert_path, "wb") as dst:
+                shutil.copyfileobj(src, dst)
+
+            output_dir = os.path.join(tmp_dir, "output")
+            encode_video(convert_path=convert_path, output_dir=output_dir)
+            for name in os.listdir(output_dir):
+                save_path = os.path.join(video_dir, name)
+                if default_storage.exists(save_path):
+                    default_storage.delete(save_path)
+                with open(os.path.join(output_dir, name), "rb") as f:
+                    default_storage.save(save_path, File(f))
+
         return VideoConvert(
             video=os.path.join(video_dir, f"{video_name}_master.m3u8"),
             convert=os.path.join(video_dir, f"{video_name}_convert.mp4"),
