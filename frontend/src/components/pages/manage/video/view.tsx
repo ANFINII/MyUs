@@ -7,7 +7,7 @@ import { Channel } from 'types/internal/channel'
 import { Video, VideoList } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { deleteManageVideos } from 'api/internal/manage/delete'
-import { FetchError } from 'utils/constants/enum'
+import { EncodeStatus, FetchError } from 'utils/constants/enum'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
@@ -81,9 +81,13 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortValue: (v) => v.title,
       className: style.title,
       cell: (v) => (
-        <a className={style.title_link} onClick={() => handleEdit(v)}>
-          {v.title}
-        </a>
+        <>
+          <a className={style.title_link} onClick={() => handleEdit(v)}>
+            {v.title}
+          </a>
+          {v.encodeStatus === EncodeStatus.Failed && <span className={style.encode_failed}>{t('manage.video.encodeFailed')}</span>}
+          {v.encodeStatus === EncodeStatus.Encoding && <span className={style.encode_status}>{t('manage.video.encoding')}</span>}
+        </>
       ),
     },
     {

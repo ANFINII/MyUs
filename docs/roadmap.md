@@ -202,8 +202,7 @@ flowchart LR
 
 次の BE の作業は、順 1 より前に済ませる。
 
-- メディアを S3 に置く：`django-storages` で `STORAGES` を切り替え、配信の URL を `prod/products/myus/media` の CloudFront（outputs の `media.domain_name`）にする。S3 への書き込みの権限は、順 1 で EC2 のロールに付ける
-- HLS 変換を worker に分ける
+- メディアを S3 に置く：`django-storages` で `STORAGES` を切り替え、配信の URL を `prod/products/myus/media` の CloudFront（outputs の `media.domain_name`）にする。S3 への書き込みの権限は、順 1 で EC2 のロールに付ける。HLS 変換の worker（`myus_encoder`）も S3 から読んで S3 に書くようにする
 
 有料のメディアを CloudFront の署名付き Cookie で守るのは、有料のメディアを出すときに `prod/products/myus/media` に足す。
 

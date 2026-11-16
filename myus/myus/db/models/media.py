@@ -2,6 +2,8 @@ from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
 from django.utils import timezone
+from myus.utils.constants.choice import ENCODE_STATUS_CHOICES
+from myus.utils.enum.media import EncodeStatus
 from myus.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
 from .base import MediaModel
 from .channel import Channel
@@ -13,22 +15,23 @@ from .user import User
 # Video
 class Video(models.Model, MediaModel):
     """Video"""
-    id         = models.BigAutoField(primary_key=True)
-    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
-    title      = models.CharField(max_length=100)
-    content    = models.TextField()
-    image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    video      = models.FileField(upload_to=video_upload, max_length=255, blank=True)
-    convert    = models.FileField(upload_to=video_upload, max_length=255, blank=True)
-    category   = models.ManyToManyField(Category, blank=True)
-    hashtag    = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
-    like       = models.ManyToManyField(User, related_name="video_like", blank=True)
-    read       = models.IntegerField(default=0)
-    publish    = models.BooleanField(default=True)
-    publish_at = models.DateTimeField(default=timezone.now)
-    created    = models.DateTimeField(auto_now_add=True)
-    updated    = models.DateTimeField(auto_now=True)
+    id            = models.BigAutoField(primary_key=True)
+    ulid          = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel       = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
+    title         = models.CharField(max_length=100)
+    content       = models.TextField()
+    image         = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    video         = models.FileField(upload_to=video_upload, max_length=255, blank=True)
+    convert       = models.FileField(upload_to=video_upload, max_length=255, blank=True)
+    encode_status = models.CharField(max_length=10, choices=ENCODE_STATUS_CHOICES, default=EncodeStatus.ENCODING)
+    category      = models.ManyToManyField(Category, blank=True)
+    hashtag       = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
+    like          = models.ManyToManyField(User, related_name="video_like", blank=True)
+    read          = models.IntegerField(default=0)
+    publish       = models.BooleanField(default=True)
+    publish_at    = models.DateTimeField(default=timezone.now)
+    created       = models.DateTimeField(auto_now_add=True)
+    updated       = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "video"
@@ -37,6 +40,7 @@ class Video(models.Model, MediaModel):
             models.Index(fields=["channel", "publish"], name="video_channel_publish_idx"),
             models.Index(fields=["publish", "-created"], name="video_publish_created_idx"),
         ]
+
 
 
 # Music

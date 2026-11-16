@@ -342,6 +342,11 @@
       "created": "Posted",
       "createdAt": "Created"
     },
+    "video": {
+      "encoding": "Converting",
+      "encodeFailed": "Conversion failed",
+      "encodeFailedNotice": "Conversion failed. Please re-upload the video."
+    },
     "form": {
       "publish": "Publish",
       "publishAt": "Publish at",
