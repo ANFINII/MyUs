@@ -3,6 +3,7 @@ from myus.domain.media.video.interface import VideoInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
+from myus.utils.enum.media import EncodeStatus
 from myus.utils.functions.convert.video_encoding import VideoConvert, convert_video
 from myus.utils.functions.transaction import atomic_result
 from ._convert import save_encode_failed_data, save_encoded_video_data
@@ -14,7 +15,7 @@ ENCODE_RETRY_COUNT = 3
 @Result.shield_exception()
 def encode_videos(limit: int) -> Result[int, FatalError]:
     repo = injector.get(VideoInterface)
-    ids_ret = repo.get_ids(FilterOption(is_encoding=True), SortOption(is_asc=True), PageOption(limit=limit))
+    ids_ret = repo.get_ids(FilterOption(encode_status=EncodeStatus.ENCODING), SortOption(is_asc=True), PageOption(limit=limit))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 

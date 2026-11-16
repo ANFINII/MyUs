@@ -6,12 +6,13 @@ from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.media.video.validation import validate
 from myus.utils.common.result import FatalError, Result
+from myus.utils.enum.media import EncodeStatus
 from ._convert import convert_data, marshal_data
 from ..common import filter_queryset, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
-VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "encode_failed", "publish", "publish_at", "updated"]
+VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "encode_status", "publish", "publish_at", "updated"]
 
 
 class VideoRepository(VideoInterface):
@@ -21,9 +22,9 @@ class VideoRepository(VideoInterface):
     def filter_video_queryset(self, filter: FilterOption) -> QuerySet[Video]:
         qs = Video.objects.all()
         if filter.publish:
-            qs = qs.exclude(convert="")
-        if filter.is_encoding:
-            qs = qs.filter(convert="", encode_failed=False)
+            qs = qs.filter(encode_status=EncodeStatus.DONE)
+        if filter.encode_status is not None:
+            qs = qs.filter(encode_status=filter.encode_status)
         return qs
 
     @Result.shield_exception()

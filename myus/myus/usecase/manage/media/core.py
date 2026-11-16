@@ -18,6 +18,7 @@ from myus.domain.message.interface import FilterOption as MessageFilterOption, M
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
+from myus.utils.enum.media import EncodeStatus
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
@@ -114,10 +115,10 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: U
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.VIDEO, obj.channel.ulid))
     if video is not None:
-        if not obj.encode_failed:
+        if obj.encode_status != EncodeStatus.FAILED:
             log.warning("not encode failed", ulid=ulid)
             return Result.err(ValidationError("error.saveFailed"))
-        update_data = replace(update_data, video=save_upload(video, MediaUpload.VIDEO, obj.channel.ulid), convert="", encode_failed=False)
+        update_data = replace(update_data, video=save_upload(video, MediaUpload.VIDEO, obj.channel.ulid), convert="", encode_status=EncodeStatus.ENCODING)
 
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:

@@ -1,5 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel
+from myus.utils.enum.media import EncodeStatus
 from ..channel import ChannelOut
 from ..comment import CommentOut
 from ..message import MessageOut
@@ -51,7 +52,7 @@ class VideoOut(MediaOut):
     image: str
     video: str
     convert: str
-    encode_failed: bool
+    encode_status: EncodeStatus
 
 
 class MusicOut(MediaOut):

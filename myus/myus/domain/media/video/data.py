@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from myus.utils.enum.media import EncodeStatus
 from ...channel.data import ChannelData
 from ...hashtag.data import HashtagData
 
@@ -13,7 +14,7 @@ class VideoData:
     image: str
     video: str
     convert: str
-    encode_failed: bool
+    encode_status: EncodeStatus
     read: int
     like: int
     publish: bool

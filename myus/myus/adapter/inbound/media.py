@@ -773,7 +773,7 @@ def convert_videos(objs: list[VideoData]) -> list[VideoOut]:
             image=x.image,
             video=x.video,
             convert=x.convert,
-            encode_failed=x.encode_failed,
+            encode_status=x.encode_status,
             read=x.read,
             like=x.like,
             publish=x.publish,

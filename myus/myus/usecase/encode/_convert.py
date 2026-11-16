@@ -3,6 +3,7 @@ from myus.domain.media.video.interface import VideoInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
+from myus.utils.enum.media import EncodeStatus
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.functions.convert.video_encoding import VideoConvert
 from ..notification._convert import create_notification_data
@@ -21,7 +22,7 @@ def save_encoded_video_data(video_id: int, result: VideoConvert) -> Result[None,
         return Result.ok(None)
 
     video = videos[0]
-    save_ret = repo.bulk_save([replace(video, video=result.video, convert=result.convert)])
+    save_ret = repo.bulk_save([replace(video, video=result.video, convert=result.convert, encode_status=EncodeStatus.DONE)])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -45,7 +46,7 @@ def save_encode_failed_data(video_id: int) -> Result[None, FatalError]:
         log.info("not found", video_id=video_id)
         return Result.ok(None)
 
-    save_ret = repo.bulk_save([replace(videos[0], encode_failed=True)])
+    save_ret = repo.bulk_save([replace(videos[0], encode_status=EncodeStatus.FAILED)])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 

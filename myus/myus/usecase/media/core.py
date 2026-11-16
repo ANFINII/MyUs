@@ -19,7 +19,7 @@ from myus.domain.payment.plan import get_plan
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
-from myus.utils.enum.media import CommentType, MediaType
+from myus.utils.enum.media import CommentType, EncodeStatus, MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
@@ -64,7 +64,7 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
         image=save_upload(image, ImageUpload.VIDEO, channel.ulid),
         video=video_path,
         convert="",
-        encode_failed=False,
+        encode_status=EncodeStatus.ENCODING,
         read=0,
         like=0,
         publish=input.publish,

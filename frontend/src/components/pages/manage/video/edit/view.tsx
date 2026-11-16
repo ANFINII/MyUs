@@ -7,7 +7,7 @@ import { VideoUpdateIn } from 'types/internal/media/input'
 import { Video } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageVideo } from 'api/internal/manage/update'
-import { Fetch, FetchError } from 'utils/constants/enum'
+import { EncodeStatus, Fetch, FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -42,6 +42,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<VideoUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish, publishAt: datetimeISO(data.publishAt) })
 
+  const isEncodeFailed = data.encodeStatus === EncodeStatus.Failed
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
@@ -56,7 +57,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
 
   const handleForm = async () => {
     const { categoryUlid, title, content, video } = values
-    if (!validate(data.encodeFailed ? { categoryUlid, title, content, video } : { categoryUlid, title, content })) return
+    if (!validate(isEncodeFailed ? { categoryUlid, title, content, video } : { categoryUlid, title, content })) return
     handleLoading(true)
     const ret = await putManageVideo(data.ulid, values)
     handleLoading(false)
@@ -78,7 +79,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
     <Main title="Video" type="table" toast={toast} isFooter={false} button={button}>
       <form className={style.form} method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
-          {data.encodeFailed && <Alert type="error">{t('manage.video.encodeFailedNotice')}</Alert>}
+          {isEncodeFailed && <Alert type="error">{t('manage.video.encodeFailedNotice')}</Alert>}
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
@@ -86,7 +87,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
           <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
-          {data.encodeFailed && <InputFile label={t('manage.form.video')} accept="video/*" required error={error} onChange={handleMovie} />}
+          {isEncodeFailed && <InputFile label={t('manage.form.video')} accept="video/*" required error={error} onChange={handleMovie} />}
         </VStack>
       </form>
     </Main>

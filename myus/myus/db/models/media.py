@@ -2,6 +2,8 @@ from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
 from django.utils import timezone
+from myus.utils.constants.choice import ENCODE_STATUS_CHOICES
+from myus.utils.enum.media import EncodeStatus
 from myus.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
 from .base import MediaModel
 from .channel import Channel
@@ -21,7 +23,7 @@ class Video(models.Model, MediaModel):
     image         = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
     video         = models.FileField(upload_to=video_upload, max_length=255, blank=True)
     convert       = models.FileField(upload_to=video_upload, max_length=255, blank=True)
-    encode_failed = models.BooleanField(default=False)
+    encode_status = models.CharField(max_length=10, choices=ENCODE_STATUS_CHOICES, default=EncodeStatus.ENCODING)
     category      = models.ManyToManyField(Category, blank=True)
     hashtag       = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
     like          = models.ManyToManyField(User, related_name="video_like", blank=True)
