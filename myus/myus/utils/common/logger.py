@@ -247,12 +247,12 @@ class Log:
     def _format_json(cls, msg: str, level: str, func_name: str, file_name: str, line_no: int, exception: str, tb: str, **kwargs: Any) -> str:
         """1行の JSON にする。キーワード引数は data にまとめる"""
         payload: dict[str, Any] = {
-            "timestamp": datetime.now(UTC).isoformat(),
             "level": level.lower(),
-            "message": msg,
+            "timestamp": datetime.now(UTC).isoformat(),
             "file": file_name,
             "line": line_no,
             "func": func_name,
+            "message": msg,
         }
         if exception:
             payload["exception"] = exception

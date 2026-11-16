@@ -11,7 +11,7 @@
 - `print()`禁止、`myus.utils.common.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
-- 本番は1行の JSON（構造化ログ）、開発は色付きの文字列で出す。JSON の項目は`timestamp`・`level`・`message`・`file`・`line`・`func`、例外は`exception`・`traceback`で、キーワード引数は`data`にまとめる。決まった項目と名前がぶつからないので、キーワード引数の名前は自由につけてよい
+- 本番は1行の JSON（構造化ログ）、開発は色付きの文字列で出す。JSON の項目はレベル → 時刻 → 場所 → 文言の順の`level`・`timestamp`・`file`・`line`・`func`・`message`、例外は`exception`・`traceback`で、キーワード引数は`data`にまとめる。決まった項目と名前がぶつからないので、キーワード引数の名前は自由につけてよい
 - logger はファイル・行と、クラス名付きの関数名（`frame.f_code.co_qualname`。`VideoAPI.list`など）を出す。API の入口のログは`log.info("request", ...)`にし、文言に API の名前を書かない
 - ログの文言は英語で書き、対象の名前（`Notification`・`Video`・`Token`など）を付けない（`"create failed"`・`"send failed"`など）。どこのログかは logger が出すファイル・関数・行で、何の話かはキーワード引数（`object_type=`・`object_id=`など）で分かるようにする。日本語は使わない。対象を外すと何の話か分からなくなるもの（トークンが無効になった理由など）は、`"token expired"`のように対象を残してよい。画面には出ないので i18n にしない
 - ガード節のメッセージは、対象の名前（`Video`・`コメント`など）を付けずに決まった文言にそろえる。何の話かはキーワード引数（`ulid=`・`media_type=`など）で分かるようにする
