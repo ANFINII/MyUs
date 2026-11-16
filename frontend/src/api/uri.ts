@@ -51,19 +51,12 @@ export const apiChannel = (ulid: string) => base + `/channel/${ulid}`
 // Media
 export const apiHome = base + '/media/home'
 export const apiRecommend = base + '/media/recommend'
-export const apiMediaRead = base + '/media/read'
 
 export const apiVideos = base + '/media/video'
 export const apiVideo = (ulid: string) => base + `/media/video/${ulid}`
 
 export const apiMusics = base + '/media/music'
 export const apiMusic = (ulid: string) => base + `/media/music/${ulid}`
-export const apiChannelSeries = (channelUlid: string) => base + `/media/series/channel/${channelUlid}`
-export const apiPlaylists = base + '/media/playlist'
-export const apiPlaylist = (ulid: string) => base + `/media/playlist/${ulid}`
-export const apiPlaylistMusic = (ulid: string) => base + `/media/playlist/${ulid}/music`
-export const apiPlaylistMusicDelete = (ulid: string, musicUlid: string) => base + `/media/playlist/${ulid}/music/${musicUlid}`
-export const apiUserPlaylists = (userUlid: string) => base + `/media/playlist/user/${userUlid}`
 
 export const apiBlogs = base + '/media/blog'
 export const apiBlog = (ulid: string) => base + `/media/blog/${ulid}`
@@ -77,6 +70,7 @@ export const apiPicture = (ulid: string) => base + `/media/picture/${ulid}`
 export const apiChats = base + '/media/chat'
 export const apiChat = (ulid: string) => base + `/media/chat/${ulid}`
 
+export const apiMediaRead = base + '/media/read'
 export const apiMediaCategory = base + '/media/category'
 export const apiMediaHashtag = base + '/media/hashtag'
 
@@ -85,6 +79,14 @@ export const apiComment = (ulid: string) => base + `/media/comment/${ulid}`
 
 export const apiMessages = base + '/media/message'
 export const apiMessage = (ulid: string) => base + `/media/message/${ulid}`
+
+export const apiChannelSeries = (channelUlid: string) => base + `/media/series/channel/${channelUlid}`
+export const apiUserPlaylists = (userUlid: string) => base + `/media/playlist/user/${userUlid}`
+
+export const apiPlaylists = base + '/media/playlist'
+export const apiPlaylist = (ulid: string) => base + `/media/playlist/${ulid}`
+export const apiPlaylistMusic = (ulid: string) => base + `/media/playlist/${ulid}/music`
+export const apiPlaylistMusicDelete = (ulid: string, musicUlid: string) => base + `/media/playlist/${ulid}/music/${musicUlid}`
 
 // Manage
 export const apiManageVideos = base + '/manage/media/video'
