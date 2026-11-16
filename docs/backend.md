@@ -11,6 +11,7 @@
 - `print()`禁止、`myus.utils.common.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
+- logger はファイル・行と、クラス名付きの関数名（`frame.f_code.co_qualname`。`VideoAPI.list`など）を出す。API の入口のログは`log.info("request", ...)`にし、文言に API の名前を書かない
 - ログの文言は英語で書き、対象の名前（`Notification`・`Video`・`Token`など）を付けない（`"create failed"`・`"send failed"`など）。どこのログかは logger が出すファイル・関数・行で、何の話かはキーワード引数（`object_type=`・`object_id=`など）で分かるようにする。日本語は使わない。対象を外すと何の話か分からなくなるもの（トークンが無効になった理由など）は、`"token expired"`のように対象を残してよい。画面には出ないので i18n にしない
 - ガード節のメッセージは、対象の名前（`Video`・`コメント`など）を付けずに決まった文言にそろえる。何の話かはキーワード引数（`ulid=`・`media_type=`など）で分かるようにする
   - 見つからない: `"not found"`
@@ -150,7 +151,7 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
 | `HistoryCorruptedError` | 集約の履歴が壊れている（`seq` の抜け・未登録の種類・読めない中身）。再試行しても直らない | `INTERNAL` | 500 | `"Internal Server Error"`固定 |
 
 - エラーレスポンスは`ErrorOut`（`type`・`message`）で返す（`myus/adapter/inbound/schema/common.py`）。`type`は必須
-- 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う
+- 成功時に文言だけを返すときは`ErrorOut`ではなく`SuccessOut`（`message`）を使う。FE は`message`を画面に出さないので、`message`は`"OK"`にする（画面の文言は FE の i18n で出す）
 - `auth_check`（`myus/adapter/inbound/auth.py`。Cookieからトークンを取り出してusecaseの`verify_token`で確かめる）の結果が`None`（未ログイン）のときも`UNAUTHENTICATED`を返す
 - HTTPステータスは成功が200、エラーが400 / 500だけを使う（201・204・401・403・404は使わない）。FEはステータスではなく`type`で出し分ける
 - `response={...}`も`200`・`400: ErrorOut`・`500: ErrorOut`だけを書く（`response={...}`に無いステータスを返すとNinjaが実行時に例外にする）
@@ -408,3 +409,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: 日本語で書いていたログの文言を英語にそろえ、対象の名前を付けないようにした
 - 2026-11-16: 決済・認証・アップロードなどのログの文言からも対象の名前（`Payment`・`Stripe`・`Signup` など）を外した
 - 2026-11-16: 日本語で残していたログ（トークンが無効な理由など）も英語にした
+- 2026-11-16: logger がクラス名付きの関数名を出すようにし、API の入口のログを`"request"`、成功したときの`SuccessOut`の`message`を`"OK"`にそろえた

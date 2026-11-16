@@ -68,7 +68,7 @@ class PaymentAPI:
     @staticmethod
     @router.post("/checkout", response={200: PaymentCheckoutOut, 400: ErrorOut, 500: ErrorOut})
     def checkout(request: HttpRequest, input: PaymentCheckoutIn):
-        log.info("PaymentAPI checkout", plan=input.plan, locale=input.locale.value)
+        log.info("request", plan=input.plan, locale=input.locale.value)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -112,13 +112,13 @@ class PaymentAPI:
         verification = verify_ret.ok_value
         match verification:
             case WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=message):
-                log.info("PaymentAPI webhook unsupported event", message=message)
+                log.info("request", message=message)
                 return 200, PaymentWebhookOut(message="Unsupported event type")
             case WebhookVerifyFailed(error=error, message=message):
                 log.warning("verify failed", error=error.value, message=message)
                 return 400, ErrorOut(type=ErrorType.VALIDATION, message="Invalid webhook")
             case WebhookVerified(event=event):
-                log.info("PaymentAPI webhook verified", event_id=event.event_id, event_type=event.event_type.value)
+                log.info("request", event_id=event.event_id, event_type=event.event_type.value)
 
                 receive_ret = receive_payment_event(event)
                 if receive_ret.is_err:
@@ -195,7 +195,7 @@ class PaymentAPI:
     @staticmethod
     @router.post("/change", response={200: None, 400: ErrorOut, 500: ErrorOut})
     def change(request: HttpRequest, input: PaymentChangeIn):
-        log.info("PaymentAPI change", plan=input.plan)
+        log.info("request", plan=input.plan)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:

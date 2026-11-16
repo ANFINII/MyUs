@@ -20,7 +20,7 @@ class SettingProfileAPI:
     @staticmethod
     @router.get("", response={200: SettingProfileOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
-        log.info("SettingProfileAPI get")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -66,7 +66,7 @@ class SettingProfileAPI:
     @staticmethod
     @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
-        log.info("SettingProfileAPI put")
+        log.info("request")
 
         message = profile_check(input)
         if len(message) > 0:
@@ -94,7 +94,7 @@ class SettingProfileAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 200, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="OK")
 
 
 class SettingMyPageAPI:
@@ -105,7 +105,7 @@ class SettingMyPageAPI:
     @staticmethod
     @router.get("", response={200: SettingMyPageOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
-        log.info("SettingMyPageAPI get")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -146,7 +146,7 @@ class SettingMyPageAPI:
     @staticmethod
     @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner_file: UploadedFile = File(None)):
-        log.info("SettingMyPageAPI put")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -173,7 +173,7 @@ class SettingMyPageAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 200, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="OK")
 
 
 
@@ -186,7 +186,7 @@ class SettingNotificationAPI:
     @staticmethod
     @router.get("", response={200: SettingNotificationOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
-        log.info("SettingNotificationAPI get")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -224,7 +224,7 @@ class SettingNotificationAPI:
     @staticmethod
     @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: SettingNotificationIn):
-        log.info("SettingNotificationAPI put", input=input)
+        log.info("request", input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -246,7 +246,7 @@ class SettingNotificationAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 200, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="OK")
 
 
 def profile_check(data: SettingProfileIn) -> str:

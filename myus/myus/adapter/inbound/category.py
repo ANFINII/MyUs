@@ -15,7 +15,7 @@ class CategoryAPI:
     @staticmethod
     @router.get("", response={200: list[CategoryOut], 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
-        log.info("CategoryAPI get")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:

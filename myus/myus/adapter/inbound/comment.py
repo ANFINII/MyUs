@@ -19,7 +19,7 @@ class CommentAPI:
     @staticmethod
     @router.post("", response={200: CommentOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: CommentCreateIn):
-        log.info("CommentAPI post", input=input)
+        log.info("request", input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -63,7 +63,7 @@ class CommentAPI:
     @staticmethod
     @router.put("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
-        log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
+        log.info("request", comment_ulid=comment_ulid, input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -86,12 +86,12 @@ class CommentAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 200, SuccessOut(message="コメントを更新しました")
+        return 200, SuccessOut(message="OK")
 
     @staticmethod
     @router.delete("/{comment_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, comment_ulid: str):
-        log.info("CommentAPI delete", comment_ulid=comment_ulid)
+        log.info("request", comment_ulid=comment_ulid)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -114,4 +114,4 @@ class CommentAPI:
                 case _:
                     assert_never(delete_ret.err_value)
 
-        return 200, SuccessOut(message="コメントを削除しました")
+        return 200, SuccessOut(message="OK")

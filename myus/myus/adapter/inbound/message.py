@@ -19,7 +19,7 @@ class MessageAPI:
     @staticmethod
     @router.post("", response={200: MessageOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MessageCreateIn):
-        log.info("MessageAPI post", input=input)
+        log.info("request", input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -62,7 +62,7 @@ class MessageAPI:
     @staticmethod
     @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, message_ulid: str):
-        log.info("MessageAPI get", message_ulid=message_ulid)
+        log.info("request", message_ulid=message_ulid)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -98,7 +98,7 @@ class MessageAPI:
     @staticmethod
     @router.put("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, message_ulid: str, input: MessageUpdateIn):
-        log.info("MessageAPI put", message_ulid=message_ulid, input=input)
+        log.info("request", message_ulid=message_ulid, input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -124,12 +124,12 @@ class MessageAPI:
         chat_ulid = update_ret.ok_value
         broadcast_update_message(chat_ulid, message_ulid, input.text)
 
-        return 200, SuccessOut(message="メッセージを更新しました")
+        return 200, SuccessOut(message="OK")
 
     @staticmethod
     @router.delete("/{message_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, message_ulid: str):
-        log.info("MessageAPI delete", message_ulid=message_ulid)
+        log.info("request", message_ulid=message_ulid)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -155,4 +155,4 @@ class MessageAPI:
         chat_ulid = delete_ret.ok_value
         broadcast_delete_message(chat_ulid, message_ulid)
 
-        return 200, SuccessOut(message="メッセージを削除しました")
+        return 200, SuccessOut(message="OK")

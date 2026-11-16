@@ -43,7 +43,7 @@ class HomeAPI:
     @staticmethod
     @router.get("", response={200: HomeOut, 500: ErrorOut})
     def get(request: HttpRequest, search: str = ""):
-        log.info("HomeAPI get", search=search)
+        log.info("request", search=search)
 
         ret = get_home(8, search)
         if ret.is_err:
@@ -70,7 +70,7 @@ class RecommendAPI:
     @staticmethod
     @router.get("", response={200: HomeOut, 500: ErrorOut})
     def get(request: HttpRequest, search: str = ""):
-        log.info("RecommendAPI get", search=search)
+        log.info("request", search=search)
 
         ret = get_recommend(8, search)
         if ret.is_err:
@@ -102,7 +102,7 @@ class VideoAPI:
         image: UploadedFile = File(...),
         video: UploadedFile = File(...),
     ):
-        log.info("VideoAPI create", input=input, image=image, video=video)
+        log.info("request", input=input, image=image, video=video)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -135,7 +135,7 @@ class VideoAPI:
     @staticmethod
     @router.get("", response={200: VideoListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
-        log.info("VideoAPI list", search=search, limit=limit, offset=offset)
+        log.info("request", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
@@ -152,7 +152,7 @@ class VideoAPI:
     @staticmethod
     @router.get("/{ulid}", response={200: VideoDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
-        log.info("VideoAPI detail", ulid=ulid, search=search)
+        log.info("request", ulid=ulid, search=search)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -210,7 +210,7 @@ class MusicAPI:
     @staticmethod
     @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...)):
-        log.info("MusicAPI create", input=input, music=music)
+        log.info("request", input=input, music=music)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -243,7 +243,7 @@ class MusicAPI:
     @staticmethod
     @router.get("", response={200: MusicListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
-        log.info("MusicAPI list", search=search, limit=limit, offset=offset)
+        log.info("request", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
@@ -260,7 +260,7 @@ class MusicAPI:
     @staticmethod
     @router.get("/{ulid}", response={200: MusicDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
-        log.info("MusicAPI detail", ulid=ulid, search=search)
+        log.info("request", ulid=ulid, search=search)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -318,7 +318,7 @@ class BlogAPI:
     @staticmethod
     @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
-        log.info("BlogAPI create", input=input, image=image)
+        log.info("request", input=input, image=image)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -351,7 +351,7 @@ class BlogAPI:
     @staticmethod
     @router.get("", response={200: BlogListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
-        log.info("BlogAPI list", search=search, limit=limit, offset=offset)
+        log.info("request", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
@@ -368,7 +368,7 @@ class BlogAPI:
     @staticmethod
     @router.get("/{ulid}", response={200: BlogDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
-        log.info("BlogAPI detail", ulid=ulid, search=search)
+        log.info("request", ulid=ulid, search=search)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -426,7 +426,7 @@ class ComicAPI:
     @staticmethod
     @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), pages: list[UploadedFile] = File(...)):
-        log.info("ComicAPI create", input=input, image=image, pages=pages)
+        log.info("request", input=input, image=image, pages=pages)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -459,7 +459,7 @@ class ComicAPI:
     @staticmethod
     @router.get("", response={200: ComicListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
-        log.info("ComicAPI list", search=search, limit=limit, offset=offset)
+        log.info("request", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
@@ -476,7 +476,7 @@ class ComicAPI:
     @staticmethod
     @router.get("/{ulid}", response={200: ComicDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
-        log.info("ComicAPI detail", ulid=ulid, search=search)
+        log.info("request", ulid=ulid, search=search)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -533,7 +533,7 @@ class PictureAPI:
     @staticmethod
     @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: PictureIn = Form(...), image: UploadedFile = File(...)):
-        log.info("PictureAPI create", input=input, image=image)
+        log.info("request", input=input, image=image)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -566,7 +566,7 @@ class PictureAPI:
     @staticmethod
     @router.get("", response={200: PictureListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
-        log.info("PictureAPI list", search=search, limit=limit, offset=offset)
+        log.info("request", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
@@ -583,7 +583,7 @@ class PictureAPI:
     @staticmethod
     @router.get("/{ulid}", response={200: PictureDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
-        log.info("PictureAPI detail", ulid=ulid, search=search)
+        log.info("request", ulid=ulid, search=search)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -639,7 +639,7 @@ class ChatAPI:
     @staticmethod
     @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: ChatIn = Form(...)):
-        log.info("ChatAPI create", input=input)
+        log.info("request", input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -672,7 +672,7 @@ class ChatAPI:
     @staticmethod
     @router.get("", response={200: ChatListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
-        log.info("ChatAPI list", search=search, limit=limit, offset=offset)
+        log.info("request", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
@@ -689,7 +689,7 @@ class ChatAPI:
     @staticmethod
     @router.get("/{ulid}", response={200: ChatDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
-        log.info("ChatAPI detail", ulid=ulid, search=search)
+        log.info("request", ulid=ulid, search=search)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -747,7 +747,7 @@ class MediaReadAPI:
     @staticmethod
     @router.post("", response={200: MediaReadOut, 400: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MediaReadIn):
-        log.info("MediaReadAPI post", input=input)
+        log.info("request", input=input)
 
         ret = increment_media_read(input.media_type, input.ulid, get_client_ip(request))
         if ret.is_err:
