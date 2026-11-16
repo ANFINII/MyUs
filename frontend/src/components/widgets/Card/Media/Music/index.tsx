@@ -24,7 +24,7 @@ export default function MusicCard(props: Props): React.JSX.Element {
 
   return (
     <Card className={style.card}>
-      <div className={cx(style.thumbnail_wrap, isCurrent && style.current)} onClick={handlePlay}>
+      <div className={cx(style.thumbnail_box, isCurrent && style.current)} onClick={handlePlay}>
         <ExImage src={image || channel.avatar} width="195" height="195" className={style.thumbnail} />
         <span className={style.play} />
         {duration > 0 && <span className={style.duration}>{formatTime(duration)}</span>}

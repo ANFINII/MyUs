@@ -38,7 +38,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
     <Main metaTitle="Music" toast={toast}>
       <MediaDetail publish={publish}>
         <div className={style.media_detail_music}>
-          <div className={style.thumbnail_wrap}>
+          <div className={style.thumbnail_box}>
             <ExImage src={image || other.channel.avatar} className={style.thumbnail} />
           </div>
           <VStack gap="6" className={style.controls}>
