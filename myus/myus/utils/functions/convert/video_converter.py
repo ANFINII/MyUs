@@ -172,7 +172,7 @@ class VideoConverter:
         if available:
             log.info(f"検出されたアクセラレーター: {[a.name for a in available]}")
         else:
-            log.info("No hardware accelerator, using CPU")
+            log.info("ハードウェアアクセラレーターなし、CPU処理を使用")
 
         return available
 

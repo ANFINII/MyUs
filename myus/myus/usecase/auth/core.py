@@ -35,7 +35,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
         return Result.ok(None)
 
     if payload.get("type") != token_type:
-        log.warning("type invalid", token_type=token_type)
+        log.warning("トークンのタイプが不正です", token_type=token_type)
         return Result.ok(None)
 
     user_id = payload.get("user_id")
@@ -47,7 +47,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
         return Result.ok(None)
 
     if is_revoked(jti):
-        log.warning("revoked", user_id=user_id)
+        log.warning("ログアウト済みのトークンです", user_id=user_id)
         return Result.ok(None)
 
     ret = get_active_user_data(user_id)
@@ -56,11 +56,11 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
 
     user = ret.ok_value
     if user is None:
-        log.warning("user inactive", user_id=user_id)
+        log.warning("無効なユーザーのトークンです", user_id=user_id)
         return Result.ok(None)
 
     if not is_same_password(payload.get("pwd"), user.user.password):
-        log.warning("password changed", user_id=user_id)
+        log.warning("パスワードが変わったため無効なトークンです", user_id=user_id)
         return Result.ok(None)
 
     return Result.ok(user_id)

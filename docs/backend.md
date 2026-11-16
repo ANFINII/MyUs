@@ -11,7 +11,7 @@
 - `print()`禁止、`myus.utils.common.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
-- ログの文言は英語で書き、対象の名前（`Notification`・`Video`・`Token`など）を付けない（`"create failed"`・`"revoked"`など）。どこのログかは logger が出すファイル・関数・行で、何の話かはキーワード引数（`object_type=`・`object_id=`など）で分かるようにする。画面には出ないので i18n にしない
+- ログの文言は英語で書き、対象の名前（`Notification`・`Video`・`Token`など）を付けない（`"create failed"`・`"revoked"`など）。どこのログかは logger が出すファイル・関数・行で、何の話かはキーワード引数（`object_type=`・`object_id=`など）で分かるようにする。英語にすると意味が伝わりにくいもの（トークンが無効になった理由など）は、日本語で書いてよい。画面には出ないので i18n にしない
 - ガード節のメッセージは、対象の名前（`Video`・`コメント`など）を付けずに決まった文言にそろえる。何の話かはキーワード引数（`ulid=`・`media_type=`など）で分かるようにする
   - 見つからない: `"not found"`
   - 持ち主（`owner_id`）が違う: `"owner mismatch"`
