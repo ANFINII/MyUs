@@ -3,6 +3,7 @@ from django.utils import timezone
 from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
+from myus.domain.payment.plan import get_plan
 from myus.domain.playlist.data import PlaylistData
 from myus.domain.playlist.interface import FilterOption, PageOption, PlaylistInterface, SortOption
 from myus.injectors.container import injector
@@ -10,6 +11,7 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, ForbiddenError, NotFoundError, Result
 from myus.utils.functions.common import create_url
 from ..dto.playlist import PlaylistDTO
+from ..user.core import get_user_data
 
 
 def is_visible_music(music: MusicData, user_id: int | None) -> bool:
@@ -31,6 +33,21 @@ def get_playlist_data(ulid: str) -> Result[PlaylistData | None, FatalError]:
 
     playlists = playlists_ret.ok_value
     return Result.ok(playlists[0] if len(playlists) > 0 else None)
+
+
+@Result.shield_exception()
+def check_playlist_plan_data(user_id: int) -> Result[None, AccessError]:
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    plan = get_plan(user.user_plan.plan) if user is not None else None
+    if plan is None or not plan.is_playlist:
+        log.info("plan required", user_id=user_id)
+        return Result.err(ForbiddenError("error.playlistPlanRequired"))
+
+    return Result.ok(None)
 
 
 @Result.shield_exception()

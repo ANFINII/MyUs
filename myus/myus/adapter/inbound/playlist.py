@@ -53,6 +53,8 @@ class PlaylistAPI:
         if ret.is_err:
             message = ret.err_value.message
             match ret.err_value:
+                case ForbiddenError():
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
                 case NotFoundError():
                     return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():

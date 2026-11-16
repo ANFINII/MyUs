@@ -6,7 +6,7 @@ from myus.domain.playlist.interface import FilterOption, PlaylistInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, FindError, NotFoundError, Result
-from ._convert import get_music_data, get_music_ids_data, get_own_playlist_data, get_playlist_data, get_playlists_data, is_visible_music, music_urls
+from ._convert import check_playlist_plan_data, get_music_data, get_music_ids_data, get_own_playlist_data, get_playlist_data, get_playlists_data, is_visible_music, music_urls
 from ..dto.playlist import PlaylistCreateDTO, PlaylistDetailDTO, PlaylistDTO, PlaylistUpdateDTO
 from ..user._convert import get_author_data
 from ..user.core import get_user_data
@@ -73,7 +73,11 @@ def get_playlist(user_id: int | None, ulid: str) -> Result[PlaylistDetailDTO, Fi
 
 
 @Result.shield_exception()
-def create_playlist(user_id: int, input: PlaylistCreateDTO) -> Result[str, FindError]:
+def create_playlist(user_id: int, input: PlaylistCreateDTO) -> Result[str, AccessError]:
+    plan_ret = check_playlist_plan_data(user_id)
+    if plan_ret.is_err:
+        return Result.err(plan_ret.err_value)
+
     music_ids: list[int] = []
     if len(input.music_ulid) > 0:
         music_ret = get_music_data(input.music_ulid, user_id)
@@ -105,6 +109,10 @@ def create_playlist(user_id: int, input: PlaylistCreateDTO) -> Result[str, FindE
 
 @Result.shield_exception()
 def update_playlist(user_id: int, ulid: str, input: PlaylistUpdateDTO) -> Result[None, AccessError]:
+    plan_ret = check_playlist_plan_data(user_id)
+    if plan_ret.is_err:
+        return Result.err(plan_ret.err_value)
+
     playlist_ret = get_own_playlist_data(user_id, ulid, "error.saveFailed")
     if playlist_ret.is_err:
         return Result.err(playlist_ret.err_value)
@@ -125,6 +133,10 @@ def update_playlist(user_id: int, ulid: str, input: PlaylistUpdateDTO) -> Result
 
 @Result.shield_exception()
 def add_playlist_music(user_id: int, ulid: str, music_ulid: str) -> Result[None, AccessError]:
+    plan_ret = check_playlist_plan_data(user_id)
+    if plan_ret.is_err:
+        return Result.err(plan_ret.err_value)
+
     playlist_ret = get_own_playlist_data(user_id, ulid, "error.saveFailed")
     if playlist_ret.is_err:
         return Result.err(playlist_ret.err_value)
