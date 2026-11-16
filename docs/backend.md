@@ -398,3 +398,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: メディアだけの`PAGE_SIZE`を`utils/constants/page.py`から`domain/media/common.py`に移し、広告の一覧は`domain/advertise/interface.py`の`ADVERTISE_PAGE_SIZE`、API の`Limit`の上限は`adapter/inbound/schema/common.py`の`MAX_LIMIT`にした
 - 2026-11-16: メディアの`PAGE_SIZE`を、広告の`ADVERTISE_PAGE_SIZE`に合わせて`MEDIA_PAGE_SIZE`にした
 - 2026-11-16: ガード節のログの文言から対象の名前を外し、`not found`・`owner mismatch`・`author mismatch`にそろえた
+- 2026-11-16: usecase・adapter に残っていた`"data not found"`・`"Not Found"`・`"Forbidden"`のエラーの`message`を、FE の i18n のキー（`error.mediaNotFound`・`error.commentUpdateFailed`など）にした

@@ -36,7 +36,7 @@ class SettingProfileAPI:
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.userNotFound")
 
         user = user_data.user
         profile = user_data.profile
@@ -121,7 +121,7 @@ class SettingMyPageAPI:
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.userNotFound")
 
         mypage = user_data.mypage
         user_plan = user_data.user_plan
@@ -202,7 +202,7 @@ class SettingNotificationAPI:
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.userNotFound")
 
         notification = user_data.notification
 

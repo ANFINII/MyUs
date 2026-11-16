@@ -68,7 +68,7 @@ def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, FindError]:
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("not found", ulid=ulid, user_id=user_id)
-        return Result.err(NotFoundError("data not found"))
+        return Result.err(NotFoundError("error.mediaNotFound"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -185,7 +185,7 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("not found", ulid=ulid, user_id=user_id)
-        return Result.err(NotFoundError("data not found"))
+        return Result.err(NotFoundError("error.mediaNotFound"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -291,7 +291,7 @@ def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("not found", ulid=ulid, user_id=user_id)
-        return Result.err(NotFoundError("data not found"))
+        return Result.err(NotFoundError("error.mediaNotFound"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -407,7 +407,7 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("not found", ulid=ulid, user_id=user_id)
-        return Result.err(NotFoundError("data not found"))
+        return Result.err(NotFoundError("error.mediaNotFound"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -523,7 +523,7 @@ def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, FindError
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("not found", ulid=ulid, user_id=user_id)
-        return Result.err(NotFoundError("data not found"))
+        return Result.err(NotFoundError("error.mediaNotFound"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:
@@ -634,7 +634,7 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, FindError]:
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("not found", ulid=ulid, user_id=user_id)
-        return Result.err(NotFoundError("data not found"))
+        return Result.err(NotFoundError("error.mediaNotFound"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:

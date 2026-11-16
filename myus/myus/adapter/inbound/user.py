@@ -47,7 +47,7 @@ class UserAPI:
 
         user_data = user_data_ret.ok_value
         if user_data is None:
-            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="Not Found")
+            return 400, ErrorOut(type=ErrorType.NOT_FOUND, message="error.userNotFound")
 
         user = user_data.user
 
