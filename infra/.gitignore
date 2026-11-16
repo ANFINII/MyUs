@@ -11,5 +11,4 @@
 # log files
 *.log
 
-# ルートの .gitignore の database を、スタックのディレクトリには当てない
 !database/
