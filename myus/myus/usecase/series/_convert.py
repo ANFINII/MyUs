@@ -1,6 +1,7 @@
 from dataclasses import replace
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface
+from myus.domain.payment.plan import get_plan
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
@@ -16,6 +17,7 @@ from myus.utils.common.result import AccessError, FatalError, ForbiddenError, No
 from myus.utils.enum.media import MediaType
 from ..dto.series import MediaSeriesDTO, SeriesItemDTO
 from ..media._convert import get_media_repository
+from ..user.core import get_user_data
 
 
 type MediaDataType = VideoData | MusicData | BlogData | ComicData | PictureData | ChatData
@@ -35,6 +37,21 @@ def get_series_list_data(filter: FilterOption) -> Result[list[SeriesData], Fatal
 
     objs = objs_ret.ok_value
     return Result.ok(objs)
+
+
+@Result.shield_exception()
+def check_series_plan_data(user_id: int) -> Result[None, AccessError]:
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    plan = get_plan(user.user_plan.plan) if user is not None else None
+    if plan is None or not plan.is_series:
+        log.info("plan required", user_id=user_id)
+        return Result.err(ForbiddenError("error.seriesPlanRequired"))
+
+    return Result.ok(None)
 
 
 @Result.shield_exception()

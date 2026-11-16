@@ -6,7 +6,7 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FindError, ForbiddenError, NotFoundError, Result
 from myus.utils.functions.common import create_url
-from ._convert import get_own_series_data, get_published_media_data, get_series_items_data, get_series_list_data, media_image
+from ._convert import check_series_plan_data, get_own_series_data, get_published_media_data, get_series_items_data, get_series_list_data, media_image
 from ..channel.core import get_channel_data
 from ..dto.series import ChannelSeriesDTO, SeriesCreateDTO, SeriesDetailDTO, SeriesDTO, SeriesUpdateDTO
 from ..media._convert import get_media_repository
@@ -66,6 +66,10 @@ def get_manage_series_list(user_id: int, channel_ulid: str) -> Result[list[Serie
 
 @Result.shield_exception()
 def create_manage_series(user_id: int, input: SeriesCreateDTO) -> Result[str, AccessError]:
+    plan_ret = check_series_plan_data(user_id)
+    if plan_ret.is_err:
+        return Result.err(plan_ret.err_value)
+
     channel_ret = get_channel_data(input.channel_ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -128,6 +132,10 @@ def get_manage_series(user_id: int, ulid: str) -> Result[SeriesDetailDTO, Access
 
 @Result.shield_exception()
 def update_manage_series(user_id: int, ulid: str, input: SeriesUpdateDTO) -> Result[None, AccessError]:
+    plan_ret = check_series_plan_data(user_id)
+    if plan_ret.is_err:
+        return Result.err(plan_ret.err_value)
+
     own_ret = get_own_series_data(user_id, ulid, "error.saveFailed")
     if own_ret.is_err:
         return Result.err(own_ret.err_value)
