@@ -39,9 +39,9 @@ class PlaylistDetailOut(BaseModel):
     title: str
     publish: bool
     is_owner: bool
+    updated: datetime
     author: AuthorOut
     musics: list[MusicOut]
-    updated: datetime
 
 
 class PlaylistCreateOut(BaseModel):

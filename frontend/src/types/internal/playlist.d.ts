@@ -36,9 +36,9 @@ export interface PlaylistDetailOut {
   title: string
   publish: boolean
   isOwner: boolean
+  updated: string
   author: Author
   musics: Music[]
-  updated: string
 }
 
 export interface PlaylistCreateOut {

@@ -21,9 +21,9 @@ class PlaylistDetailDTO:
     title: str
     publish: bool
     is_owner: bool
+    updated: datetime
     author: AuthorDTO
     musics: list[MusicData]
-    updated: datetime
 
 
 @dataclass(frozen=True, slots=True)
