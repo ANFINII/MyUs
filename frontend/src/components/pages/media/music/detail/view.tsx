@@ -42,7 +42,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
             <ExImage src={image || other.channel.avatar} className={style.jacket_image} />
           </div>
           <VStack gap="6" className={style.controls}>
-            <AudioPlayer src={music} playbackRate={speed} className={style.player} />
+            <AudioPlayer src={music} playbackRate={speed} isVolumeInline className={style.player} />
             <HStack justify="between">
               <SpeedControl value={speed} onChange={handleSpeed} className={style.speed} />
               {download && (
