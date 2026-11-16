@@ -13,6 +13,7 @@ on:
       - ".github/workflows/infra.yml"
   schedule:
     - cron: "0 0 * * 1"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -116,7 +117,7 @@ jobs:
           fi
 
   apply:
-    if: github.event_name == 'push' && vars.AWS_ACCOUNT_ID != ''
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' && vars.AWS_ACCOUNT_ID != ''
     needs: check
     runs-on: ubuntu-24.04
     timeout-minutes: 30
