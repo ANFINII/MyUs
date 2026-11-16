@@ -20,9 +20,9 @@ export default function Lyric(props: Props): React.JSX.Element {
   useEffect(() => {
     const box = boxRef.current
     const line = box?.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`)
-    if (!box || !line || isExpand) return
+    if (!box || !line) return
     box.scrollTo({ top: line.offsetTop - box.clientHeight / 2 + line.clientHeight / 2, behavior: 'smooth' })
-  }, [activeIndex, isExpand])
+  }, [activeIndex])
 
   return (
     <div ref={boxRef} className={cx(style.lyric, isSynced && style.synced, isExpand && style.expand)}>
