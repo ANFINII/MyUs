@@ -24,6 +24,8 @@ class CommentRepository(CommentInterface):
             q_list.append(Q(type_no=filter.type_no))
         if filter.object_id:
             q_list.append(Q(object_id=filter.object_id))
+        if filter.object_ids:
+            q_list.append(Q(object_id__in=filter.object_ids))
         if filter.user_id:
             q_list.append(Q(author_id=filter.user_id))
         if filter.is_parent is not None:
