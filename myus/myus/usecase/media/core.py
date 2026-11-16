@@ -109,7 +109,7 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
 
         videos = videos_ret.ok_value
         if len(videos) == 0:
-            log.warning("not found", video_id=obj.id)
+            log.error("not found", video_id=obj.id)
             return
         video = videos[0]
         publish = input.publish if video.updated == obj.updated else video.publish

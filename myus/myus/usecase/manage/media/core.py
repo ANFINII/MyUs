@@ -96,7 +96,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: U
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("not found", ulid=ulid)
+        log.warning("not found", ulid=ulid)
         return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
@@ -141,7 +141,7 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
     delete_ids = ids_ret.ok_value
     if len(delete_ids) != len(set(ulids)):
-        log.error("not found or owner mismatch", ulids=ulids, user_id=user_id)
+        log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_video_data(delete_ids))
@@ -205,7 +205,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO) -> Resul
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("not found", ulid=ulid)
+        log.warning("not found", ulid=ulid)
         return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
@@ -247,7 +247,7 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
     delete_ids = ids_ret.ok_value
     if len(delete_ids) != len(set(ulids)):
-        log.error("not found or owner mismatch", ulids=ulids, user_id=user_id)
+        log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_music_data(delete_ids))
@@ -315,7 +315,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("not found", ulid=ulid)
+        log.warning("not found", ulid=ulid)
         return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
@@ -360,7 +360,7 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
 
     delete_ids = ids_ret.ok_value
     if len(delete_ids) != len(set(ulids)):
-        log.error("not found or owner mismatch", ulids=ulids, user_id=user_id)
+        log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_blog_data(delete_ids))
@@ -434,7 +434,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("not found", ulid=ulid)
+        log.warning("not found", ulid=ulid)
         return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
@@ -479,7 +479,7 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
     delete_ids = ids_ret.ok_value
     if len(delete_ids) != len(set(ulids)):
-        log.error("not found or owner mismatch", ulids=ulids, user_id=user_id)
+        log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_comic_data(delete_ids))
@@ -547,7 +547,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateDTO, imag
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("not found", ulid=ulid)
+        log.warning("not found", ulid=ulid)
         return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
@@ -592,7 +592,7 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindEr
 
     delete_ids = ids_ret.ok_value
     if len(delete_ids) != len(set(ulids)):
-        log.error("not found or owner mismatch", ulids=ulids, user_id=user_id)
+        log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_picture_data(delete_ids))
@@ -653,7 +653,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateDTO) -> Result[
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("not found", ulid=ulid)
+        log.warning("not found", ulid=ulid)
         return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
@@ -698,7 +698,7 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, FindError
 
     delete_ids = ids_ret.ok_value
     if len(delete_ids) != len(set(ulids)):
-        log.error("not found or owner mismatch", ulids=ulids, user_id=user_id)
+        log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
     message_repo = injector.get(MessageInterface)

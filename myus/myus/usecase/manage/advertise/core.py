@@ -146,7 +146,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseDTO, image:
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("not found", ulid=ulid, user_id=user_id)
+        log.warning("not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
@@ -193,7 +193,7 @@ def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, Find
 
     ids = ids_ret.ok_value
     if len(ids) != len(set(ulids)):
-        log.error("not found", ulids=ulids, user_id=user_id)
+        log.warning("not found", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = repo.bulk_delete(ids)

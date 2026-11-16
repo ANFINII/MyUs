@@ -36,7 +36,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
 
     media_ids = media_ids_ret.ok_value
     if len(media_ids) == 0:
-        log.error("not found", media_type=media_type.value, media_ulid=media_ulid)
+        log.warning("not found", media_type=media_type.value, media_ulid=media_ulid)
         return Result.err(NotFoundError("error.saveFailed"))
 
     medias_ret = media_repo.bulk_get(media_ids)
