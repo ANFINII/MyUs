@@ -209,7 +209,7 @@ infra/
 |---|---|
 | AWS アカウントの作成・ルートユーザーの MFA・請求設定 | 最初に一度だけ手作業で行う |
 | state 用の S3 バケット（`terraform-myus-prod`） | 手作業で作り、バージョニングを有効にする |
-| シークレットの値 | 入れ物（パラメータ名）だけを Terraform で作り、値は CLI で投入する。Git には入れない |
+| シークレットの値 | 入れ物（`prod/common/parameters` の `/myus/prod/<名前>`）だけを Terraform で `FIXME` の値で作り、本当の値は `aws ssm put-parameter --overwrite` で入れる。Git にも state にも残らない（`value_wo`）。DB のパスワードは RDS に Secrets Manager で作らせる |
 | SES の本番利用申請・サービスクォータの引き上げ | AWS に申請する |
 | ドメインの購入 | 手作業で行う（DNS レコードはコードで管理する） |
 | DB・S3 のデータ | バックアップで守る（RDS の自動バックアップ、S3 のバージョニング） |
