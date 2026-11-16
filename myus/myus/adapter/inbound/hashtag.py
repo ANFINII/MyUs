@@ -6,7 +6,7 @@ from myus.usecase.hashtag.core import get_master_hashtags, update_media_hashtags
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError
 from .auth import auth_check
-from .schema.common import ErrorOut, ErrorType, SuccessOut
+from .schema.common import ErrorOut, ErrorType
 from .schema.hashtag import HashtagOut, MediaHashtagsUpdateIn
 
 
@@ -36,7 +36,7 @@ class MediaHashtagAPI:
         return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in hashtags]
 
     @staticmethod
-    @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    @router.put("", response={200: list[HashtagOut], 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: MediaHashtagsUpdateIn):
         log.info("request", media_type=input.media_type.value, media_ulid=input.media_ulid)
 
@@ -62,4 +62,5 @@ class MediaHashtagAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 200, SuccessOut(message="OK")
+        saved = update_ret.ok_value
+        return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in saved]

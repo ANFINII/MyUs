@@ -103,7 +103,7 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
       onToast?.(t('hashtag.saveError'), true)
       return
     }
-    onSave(editTags)
+    onSave(ret.value)
     onToast?.(t('hashtag.saved'), false)
   }
 
