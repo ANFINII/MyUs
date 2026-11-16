@@ -129,8 +129,11 @@ NINJA_NUM_PROXIES = 0
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "json": {"()": "myus.utils.common.logger.JsonFormatter"},
+    },
     "handlers": {
-        "console": {"class": "logging.StreamHandler"},
+        "console": {"class": "logging.StreamHandler"} if DEBUG else {"class": "logging.StreamHandler", "formatter": "json"},
     },
     "loggers": {
         "django": {"handlers": ["console"], "level": "ERROR"},
