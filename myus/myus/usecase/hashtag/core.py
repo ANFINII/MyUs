@@ -27,7 +27,7 @@ def get_master_hashtags() -> Result[list[HashtagDTO], FatalError]:
 
 
 @Result.shield_exception()
-def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, AccessError]:
+def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[list[HashtagDTO], AccessError]:
     media_repo = get_media_repository(media_type)
     repo = injector.get(HashtagInterface)
     media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), SortOption(), PageOption())
@@ -94,4 +94,9 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    return Result.ok(None)
+    saved_ret = repo.bulk_get(save_ret.ok_value)
+    if saved_ret.is_err:
+        return Result.err(saved_ret.err_value)
+
+    saved = saved_ret.ok_value
+    return Result.ok([HashtagDTO(ulid=h.ulid, name=h.name) for h in saved])
