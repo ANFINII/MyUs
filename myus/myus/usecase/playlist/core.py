@@ -67,6 +67,7 @@ def get_playlist(user_id: int | None, ulid: str) -> Result[PlaylistDetailDTO, Fi
         publish=playlist.publish,
         is_owner=is_owner,
         author_ulid=author.user.ulid,
+        author_avatar=author.user.avatar,
         author_nickname=author.user.nickname,
         musics=music_urls(musics),
         updated=playlist.updated,

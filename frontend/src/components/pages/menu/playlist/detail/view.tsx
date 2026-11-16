@@ -13,6 +13,7 @@ import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
+import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 import IconCross from 'components/parts/Icon/Cross'
@@ -31,7 +32,7 @@ interface Props {
 
 export default function PlaylistDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { ulid, title, publish, isOwner, authorUlid, authorNickname, musics } = data
+  const { ulid, title, publish, isOwner, authorUlid, authorAvatar, authorNickname, musics } = data
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -129,16 +130,14 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
               <CheckBox label={t('playlist.publish')} id="playlist_publish_edit" checked={isEditPublish} onChange={handlePublish} />
             </div>
           ) : (
-            <>
-              <h2 className={style.title}>{title}</h2>
+            <div className={style.heading}>
               <div className={style.meta}>
-                <Link href={`/userpage/${authorUlid}`} className={style.author}>
-                  {authorNickname}
-                </Link>
+                <AvatarLink size="s" src={authorAvatar} ulid={authorUlid} title={authorNickname} />
                 <span>{t('playlist.count', { count: musics.length })}</span>
                 <span>{publish ? t('playlist.public') : t('playlist.private')}</span>
               </div>
-            </>
+              <h2 className={style.title}>{title}</h2>
+            </div>
           )}
           {!isEdit && (
             <div className={style.actions}>

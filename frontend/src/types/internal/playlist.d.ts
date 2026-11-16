@@ -36,6 +36,7 @@ export interface PlaylistDetailOut {
   publish: boolean
   isOwner: boolean
   authorUlid: string
+  authorAvatar: string
   authorNickname: string
   musics: Music[]
   updated: string

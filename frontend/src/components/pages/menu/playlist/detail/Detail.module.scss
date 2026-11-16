@@ -33,6 +33,12 @@
   min-width: 0;
   gap: 12px;
 
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   .title {
     margin: 0;
     font-size: 20px;
@@ -42,14 +48,10 @@
   .meta {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 12px;
-    margin-top: 6px;
     font-size: 13px;
     color: rgb(120, 120, 120);
-  }
-
-  .author {
-    color: rgb(40, 70, 150);
   }
 
   .form {
