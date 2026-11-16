@@ -216,7 +216,7 @@ class VideoConverter:
             )
             return 'h264_qsv' in result.stdout
         except (OSError, subprocess.SubprocessError) as e:
-            log.error("Intel GPU detection error", exc=e)
+            log.error("detection failed", exc=e)
             return False
 
     def _check_amd_gpu(self) -> bool:
@@ -236,7 +236,7 @@ class VideoConverter:
                 if 'AMD' in gpu.Name or 'Radeon' in gpu.Name:
                     return True
         except wmi.x_wmi as e:
-            log.error("AMD GPU detection error", exc=e)
+            log.error("detection failed", exc=e)
         return False
 
     def _calculate_optimal_workers(self) -> int:
@@ -513,7 +513,7 @@ class VideoConverter:
                 timeout=300  # 5分タイムアウト
             )
         except asyncio.TimeoutError:
-            log.warning("Convert timeout")
+            log.warning("timeout")
             results = []
 
         # 結果集計
@@ -566,7 +566,7 @@ class VideoConverter:
             )
             conversion_stats['mp4_path'] = mp4_path
         except (OSError, KeyError, ValueError) as e:
-            log.error("MP4 generate failed", exc=e)
+            log.error("generate failed", exc=e)
             conversion_stats['mp4_path'] = None
 
         return conversion_stats

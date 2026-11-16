@@ -14,7 +14,7 @@ class EncodeWorker:
         if cls._executor is None:
             workers = max(os.cpu_count() or 1, 2)
             cls._executor = ThreadPoolExecutor(max_workers=workers, thread_name_prefix="encode")
-            log.info("EncodeWorker started", workers=workers)
+            log.info("started", workers=workers)
         return cls._executor
 
     @classmethod
@@ -27,4 +27,4 @@ class EncodeWorker:
         try:
             task()
         except Exception as e:
-            log.error("Background task failed", exc=e)
+            log.error("task failed", exc=e)

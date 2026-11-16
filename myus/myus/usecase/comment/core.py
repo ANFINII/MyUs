@@ -85,7 +85,7 @@ def create_comment(user_id: int, input: CommentCreateDTO) -> Result[CommentDTO, 
     if parent is not None:
         notification_ret = create_notification_data(user_id, parent.author_id, NotificationTypeNo.REPLY, comment.id, NotificationObjectType.COMMENT)
         if notification_ret.is_err:
-            log.error("Notification create failed", error=notification_ret.err_value.message, comment_id=comment.id)
+            log.error("create failed", error=notification_ret.err_value.message, object_type=NotificationObjectType.COMMENT.value, object_id=comment.id)
 
     data = CommentDTO(
         ulid=comment.ulid,
