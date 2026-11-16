@@ -53,7 +53,7 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
         return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
-        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
@@ -109,7 +109,7 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
 
         videos = videos_ret.ok_value
         if len(videos) == 0:
-            log.warning("動画が見つかりません", video_id=obj.id)
+            log.warning("not found", video_id=obj.id)
             return
         video = videos[0]
         publish = input.publish if video.updated == obj.updated else video.publish
@@ -144,7 +144,7 @@ def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile) -> Re
         return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
-        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     new_data = MusicData(
@@ -207,7 +207,7 @@ def create_blog(user_id: int, input: BlogCreateDTO, image: UploadedFile) -> Resu
         return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
-        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     new_data = BlogData(
@@ -270,7 +270,7 @@ def create_comic(user_id: int, input: ComicCreateDTO, image: UploadedFile, pages
         return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
-        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     new_data = ComicData(
@@ -332,7 +332,7 @@ def create_picture(user_id: int, input: PictureCreateDTO, image: UploadedFile) -
         return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
-        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     new_data = PictureData(
@@ -389,7 +389,7 @@ def create_chat(user_id: int, input: ChatCreateDTO) -> Result[MediaCreateDTO, Wr
         return Result.err(NotFoundError("error.channelNotFound"))
 
     if channel.owner_id != user_id:
-        log.warning("チャンネルの持ち主ではありません", channel_ulid=channel.ulid, user_id=user_id)
+        log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     if timezone.localdate(input.publish_at) > input.period:
@@ -673,7 +673,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid)
+        log.info("not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids=ids)
@@ -733,7 +733,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid)
+        log.info("not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids=ids)
@@ -803,7 +803,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid)
+        log.info("not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids=ids)
@@ -863,7 +863,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid)
+        log.info("not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids=ids)
@@ -922,7 +922,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid)
+        log.info("not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids=ids)
@@ -980,7 +980,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid)
+        log.info("not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids=ids)
@@ -1050,7 +1050,7 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid)
+        log.info("not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids)

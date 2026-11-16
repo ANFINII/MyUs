@@ -11,6 +11,11 @@
 - `print()`禁止、`myus.utils.common.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
+- ガード節のメッセージは、対象の名前（`Video`・`コメント`など）を付けずに決まった文言にそろえる。何の話かはキーワード引数（`ulid=`・`media_type=`など）で分かるようにする
+  - 見つからない: `"not found"`
+  - 持ち主（`owner_id`）が違う: `"owner mismatch"`
+  - 書いた人（`author_id`）が違う: `"author mismatch"`
+  - まとめて取って、見つからないか持ち主が違う: `"not found or owner mismatch"`
 
 | レベル | 用途 |
 |--------|------|
@@ -391,3 +396,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-15: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`を`domain/common.py`の1つにした（`limit=0`は上限なし）
 - 2026-11-16: `PageOption`を`domain/common.py`の1つから、メディアは`domain/media/common.py`、ほかは各ドメインの`interface.py`に置くように戻した
 - 2026-11-16: メディアだけの`PAGE_SIZE`を`utils/constants/page.py`から`domain/media/common.py`に移し、広告の一覧は`domain/advertise/interface.py`の`ADVERTISE_PAGE_SIZE`、API の`Limit`の上限は`adapter/inbound/schema/common.py`の`MAX_LIMIT`にした
+- 2026-11-16: ガード節のログの文言から対象の名前を外し、`not found`・`owner mismatch`・`author mismatch`にそろえた

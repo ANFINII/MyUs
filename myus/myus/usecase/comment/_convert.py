@@ -20,7 +20,7 @@ def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.warning("コメントが見つかりませんでした")
+        log.warning("not found", comment_ulid=comment_ulid)
         return Result.ok(None)
 
     comments_ret = repo.bulk_get(ids)

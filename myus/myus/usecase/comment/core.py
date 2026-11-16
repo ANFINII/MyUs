@@ -27,7 +27,7 @@ def create_comment(user_id: int, input: CommentCreateDTO) -> Result[CommentDTO, 
 
     media_ids = media_ids_ret.ok_value
     if len(media_ids) == 0:
-        log.warning("メディアが見つかりませんでした")
+        log.warning("not found", media_type=input.type_name.value, media_ulid=input.object_ulid)
         return Result.err(NotFoundError("error.commentCreateFailed"))
 
     type_no = comment_type_no_map(input.type_name)
@@ -111,7 +111,7 @@ def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, A
         return Result.err(NotFoundError("Not Found"))
 
     if comment.author_id != user_id:
-        log.warning("コメントの編集権限がありません", comment_ulid=comment_ulid, user_id=user_id)
+        log.warning("author mismatch", comment_ulid=comment_ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     save_ret = save_comment_data(replace(comment, text=text))
@@ -132,7 +132,7 @@ def delete_comment(user_id: int, comment_ulid: str) -> Result[None, AccessError]
         return Result.err(NotFoundError("Not Found"))
 
     if comment.author_id != user_id:
-        log.warning("コメントの削除権限がありません", comment_ulid=comment_ulid, user_id=user_id)
+        log.warning("author mismatch", comment_ulid=comment_ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     delete_ret = atomic_result(lambda: delete_comment_data(comment))

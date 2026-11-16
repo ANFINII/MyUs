@@ -56,7 +56,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
     chat_ids = chat_ids_ret.ok_value
     if len(chat_ids) == 0:
-        log.warning("チャットが見つかりませんでした", chat_ulid=chat_ulid)
+        log.warning("not found", chat_ulid=chat_ulid)
         return Result.err(NotFoundError("error.messageCreateFailed"))
 
     repo = injector.get(MessageInterface)
@@ -69,7 +69,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
         parent_ids = parent_ids_ret.ok_value
         if len(parent_ids) == 0:
-            log.warning("親メッセージが見つかりませんでした", parent_ulid=parent_ulid)
+            log.warning("not found", parent_ulid=parent_ulid)
             return Result.err(NotFoundError("error.messageCreateFailed"))
         parent_id = parent_ids[0]
 
@@ -137,7 +137,7 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[str, Ac
         return Result.err(NotFoundError("Not Found"))
 
     if message.author_id != user_id:
-        log.warning("メッセージの編集権限がありません", message_ulid=message_ulid, user_id=user_id)
+        log.warning("author mismatch", message_ulid=message_ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     chat_repo = injector.get(ChatInterface)
@@ -147,7 +147,7 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[str, Ac
 
     chats = chats_ret.ok_value
     if len(chats) == 0:
-        log.warning("チャットが見つかりませんでした", chat_id=message.chat_id)
+        log.warning("not found", chat_id=message.chat_id)
         return Result.err(NotFoundError("Not Found"))
 
     save_ret = save_message_data(replace(message, text=text))
@@ -168,7 +168,7 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
         return Result.err(NotFoundError("Not Found"))
 
     if message.author_id != user_id:
-        log.warning("メッセージの削除権限がありません", message_ulid=message_ulid, user_id=user_id)
+        log.warning("author mismatch", message_ulid=message_ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
     chat_repo = injector.get(ChatInterface)
@@ -178,7 +178,7 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
 
     chats = chats_ret.ok_value
     if len(chats) == 0:
-        log.warning("チャットが見つかりませんでした", chat_id=message.chat_id)
+        log.warning("not found", chat_id=message.chat_id)
         return Result.err(NotFoundError("Not Found"))
 
     delete_ret = atomic_result(lambda: delete_message_data(message, user_id))
