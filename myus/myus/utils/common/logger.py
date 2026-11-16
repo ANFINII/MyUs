@@ -1,12 +1,15 @@
 import coloredlogs
 import inspect
+import json
 import re
 import traceback
+from datetime import UTC, datetime
 from enum import Enum
 from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING, FileHandler, Formatter, Logger, LogRecord, StreamHandler, getLogger
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from typing import Any, ClassVar, Literal, Self, assert_never
+from config.env import env
 
 
 type CallerInfo = tuple[str, str, int]
@@ -118,6 +121,9 @@ class Log:
         "CRITICAL": CRITICAL
     }
 
+    # 本番は1行の JSON、開発は色付きの文字列で出す
+    IS_JSON: ClassVar[bool] = not env.debug
+
     # シングルトンインスタンス
     _instance: ClassVar[Self | None] = None
     _logger: Logger | None = None
@@ -147,8 +153,15 @@ class Log:
             encoding="utf-8"
         )
         error_file_handler.setLevel(ERROR)
-        error_file_handler.setFormatter(PlainFormatter(self.LOG_FORMAT, self.DATE_FORMAT))
+        error_file_handler.setFormatter(Formatter("%(message)s") if self.IS_JSON else PlainFormatter(self.LOG_FORMAT, self.DATE_FORMAT))
         self._logger.addHandler(error_file_handler)
+
+        if self.IS_JSON:
+            stream_handler = StreamHandler()
+            stream_handler.setLevel(INFO)
+            stream_handler.setFormatter(Formatter("%(message)s"))
+            self._logger.addHandler(stream_handler)
+            return
 
         # coloredlogsを使用して色を設定
         coloredlogs.install(
@@ -231,27 +244,46 @@ class Log:
         return " - ".join(parts)
 
     @classmethod
+    def _format_json(cls, msg: str, level: str, func_name: str, file_name: str, line_no: int, exception: str, tb: str, **kwargs: Any) -> str:
+        """1行の JSON にする。キーワード引数は data にまとめる"""
+        payload: dict[str, Any] = {
+            "timestamp": datetime.now(UTC).isoformat(),
+            "level": level.lower(),
+            "file": file_name,
+            "line": line_no,
+            "func": func_name,
+            "message": msg,
+        }
+        if exception:
+            payload["exception"] = exception
+        if tb:
+            payload["traceback"] = tb
+        if kwargs:
+            payload["data"] = kwargs
+        return json.dumps(payload, ensure_ascii=False, default=str)
+
+    @classmethod
     def _log(cls, level: LevelName, msg: str, exc: Exception | None = None, is_traceback: bool = False, **kwargs: Any) -> None:
         """共通ログ処理（重複コード削減）"""
         if not cls._instance:
             cls()
 
         func_name, file_name, line_no = cls._get_caller_info()
-        format_msg = cls._format_message(msg, level, func_name, file_name, line_no, **kwargs)
+        exception = f"{type(exc).__name__}: {str(exc)}" if exc else ""
+        tb = ""
+        if is_traceback:
+            tb = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__)) if exc else traceback.format_exc()
+            if tb == "NoneType: None\n":
+                tb = ""
 
-        # エラー系の場合の追加処理
-        if exc or is_traceback:
-            if exc:
-                format_msg += f"\nException: {type(exc).__name__}: {str(exc)}"
-
-            if is_traceback:
-                if exc:
-                    tb = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
-                else:
-                    tb = traceback.format_exc()
-
-                if tb and tb != "NoneType: None\n":
-                    format_msg += f"\nTraceback:\n{tb}"
+        if cls.IS_JSON:
+            format_msg = cls._format_json(msg, level, func_name, file_name, line_no, exception, tb, **kwargs)
+        else:
+            format_msg = cls._format_message(msg, level, func_name, file_name, line_no, **kwargs)
+            if exception:
+                format_msg += f"\nException: {exception}"
+            if tb:
+                format_msg += f"\nTraceback:\n{tb}"
 
         if cls._instance is None:
             return
@@ -261,7 +293,7 @@ class Log:
             return
 
         level_upper = level.upper()
-        if level_upper in ColorFormat.LEVEL_COLORS:
+        if not cls.IS_JSON and level_upper in ColorFormat.LEVEL_COLORS:
             color_code = ColorFormat.LEVEL_COLORS[level_upper]
             format_msg = f"{color_code}{format_msg}{Color.RESET}"
 

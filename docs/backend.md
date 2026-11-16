@@ -11,6 +11,7 @@
 - `print()`禁止、`myus.utils.common.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
+- 本番は1行の JSON（構造化ログ）、開発は色付きの文字列で出す。JSON の項目は時刻 → レベル → 場所 → 文言の順の`timestamp`・`level`・`file`・`line`・`func`・`message`、例外は`exception`・`traceback`で、キーワード引数は`data`にまとめる。決まった項目と名前がぶつからないので、キーワード引数の名前は自由につけてよい
 - logger はファイル・行と、クラス名付きの関数名（`frame.f_code.co_qualname`。`VideoAPI.list`など）を出す。API の入口のログは`log.info("request", ...)`にし、文言に API の名前を書かない
 - ログの文言は英語で書き、対象の名前（`Notification`・`Video`・`Token`など）を付けない（`"create failed"`・`"send failed"`など）。どこのログかは logger が出すファイル・関数・行で、何の話かはキーワード引数（`object_type=`・`object_id=`など）で分かるようにする。日本語は使わない。対象を外すと何の話か分からなくなるもの（トークンが無効になった理由など）は、`"token expired"`のように対象を残してよい。画面には出ないので i18n にしない
 - ガード節のメッセージは、対象の名前（`Video`・`コメント`など）を付けずに決まった文言にそろえる。何の話かはキーワード引数（`ulid=`・`media_type=`など）で分かるようにする
@@ -410,3 +411,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: 決済・認証・アップロードなどのログの文言からも対象の名前（`Payment`・`Stripe`・`Signup` など）を外した
 - 2026-11-16: 日本語で残していたログ（トークンが無効な理由など）も英語にした
 - 2026-11-16: logger がクラス名付きの関数名を出すようにし、API の入口のログを`"request"`、成功したときの`SuccessOut`の`message`を`"OK"`にそろえた
+- 2026-11-16: 本番（`DEBUG=False`）のログを1行の JSON（構造化ログ）にした
