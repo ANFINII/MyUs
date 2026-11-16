@@ -198,7 +198,7 @@ class Log:
                 if not frame:
                     return "", "", 0
 
-            func_name = frame.f_code.co_qualname # クラス名付きの関数名の取得（VideoAPI.list など）
+            func_name = frame.f_code.co_qualname # クラス名付きの関数名の取得
             full_path = Path(frame.f_code.co_filename) # ファイル名を相対パスで取得
             try:
                 # 現在の作業ディレクトリからの相対パスを取得
