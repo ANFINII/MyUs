@@ -5,6 +5,7 @@ import { formatTime } from 'utils/functions/datetime'
 import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
 import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
+import PlaylistAdd from 'components/widgets/PlaylistAdd'
 import style from './Music.module.scss'
 import CardMediaContent from '../Content'
 
@@ -49,6 +50,7 @@ export default function MusicCard(props: Props): React.JSX.Element {
         <span className={style.play} />
         {duration > 0 && <span className={style.duration}>{formatTime(duration)}</span>}
       </div>
+      <PlaylistAdd musicUlid={ulid} className={style.playlist_add} />
       <CardMediaContent href={`/media/music/${ulid}`} media={item} />
     </Card>
   )

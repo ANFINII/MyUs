@@ -1,5 +1,10 @@
 .card {
+  position: relative;
   width: 312px;
+
+  &:hover .playlist_add {
+    opacity: 1;
+  }
 
   .thumbnail_box {
     position: relative;
@@ -49,6 +54,14 @@
       border-width: 9px 0 9px 15px;
       transform: translate(-50%, -50%);
     }
+  }
+
+  .playlist_add {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.1s;
   }
 
   .thumbnail {
