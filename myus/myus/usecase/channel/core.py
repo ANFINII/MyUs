@@ -21,7 +21,7 @@ def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("not found", ulid=ulid)
+        log.warning("not found", ulid=ulid)
         return Result.ok(None)
 
     channels_ret = repo.bulk_get(ids)
@@ -42,7 +42,7 @@ def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.warning("not found", owner_id=owner_id)
+        log.info("not found", owner_id=owner_id)
         return Result.ok([])
 
     channels_ret = repo.bulk_get(ids)

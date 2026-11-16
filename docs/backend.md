@@ -16,6 +16,10 @@
   - 持ち主（`owner_id`）が違う: `"owner mismatch"`
   - 書いた人（`author_id`）が違う: `"author mismatch"`
   - まとめて取って、見つからないか持ち主が違う: `"not found or owner mismatch"`
+- `not found`のレベルは、なぜ無いのかで分ける
+  - URL などで見に来たら無かった（詳細・閲覧数・ユーザーの一覧など、普通に起きる）: `log.info`
+  - 作成・更新・削除しようとした相手が無かった（画面からは起きにくい）: `log.warning`
+  - あるはずのものが無かった（ログイン中のユーザー、保存した直後のデータ、メッセージのチャットなど）: `log.error`
 
 | レベル | 用途 |
 |--------|------|
@@ -399,3 +403,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: メディアの`PAGE_SIZE`を、広告の`ADVERTISE_PAGE_SIZE`に合わせて`MEDIA_PAGE_SIZE`にした
 - 2026-11-16: ガード節のログの文言から対象の名前を外し、`not found`・`owner mismatch`・`author mismatch`にそろえた
 - 2026-11-16: usecase・adapter に残っていた`"data not found"`・`"Not Found"`・`"Forbidden"`のエラーの`message`を、FE の i18n のキー（`error.mediaNotFound`・`error.commentUpdateFailed`など）にした
+- 2026-11-16: `not found`のログのレベルを、見に来たら無い（info）・操作の相手が無い（warning）・あるはずのものが無い（error）に分けた

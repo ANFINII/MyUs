@@ -147,7 +147,7 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[str, Ac
 
     chats = chats_ret.ok_value
     if len(chats) == 0:
-        log.warning("not found", chat_id=message.chat_id)
+        log.error("not found", chat_id=message.chat_id)
         return Result.err(NotFoundError("error.messageUpdateFailed"))
 
     save_ret = save_message_data(replace(message, text=text))
@@ -178,7 +178,7 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
 
     chats = chats_ret.ok_value
     if len(chats) == 0:
-        log.warning("not found", chat_id=message.chat_id)
+        log.error("not found", chat_id=message.chat_id)
         return Result.err(NotFoundError("error.messageDeleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_message_data(message, user_id))
