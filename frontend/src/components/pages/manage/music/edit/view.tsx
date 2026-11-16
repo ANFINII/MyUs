@@ -84,7 +84,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
-          <Textarea label={t('manage.form.lyric')} name="lyric" value={values.lyric} onChange={handleText} />
+          <Textarea label={t('manage.form.lyric')} name="lyric" placeholder={t('manage.form.lyricPlaceholder')} value={values.lyric} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
           <CheckBox label={t('manage.form.download')} name="download" checked={values.download} onChange={handleCheck} />
         </VStack>

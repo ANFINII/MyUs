@@ -370,6 +370,7 @@
       "title": "タイトル",
       "content": "内容",
       "lyric": "歌詞",
+      "lyricPlaceholder": "[00:12.00] のように行の頭に時刻を付けると、再生に合わせて歌詞が流れます",
       "download": "ダウンロード許可",
       "thumbnail": "サムネイル",
       "image": "画像",
