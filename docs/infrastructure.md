@@ -197,6 +197,7 @@ infra/
 - provider のバージョンは固定する（`version = "6.x.y"`）
 - provider の `default_tags` に `Env`・`Product`・`ManagedBy = "terraform"` を付ける
 - AWS CLI のプロファイルは `myus-prod`（params の `profile`）
+- 公開リポジトリなので、メールアドレスなど公開したくない値は params に書かず、スタックの `variable` にして `terraform.tfvars`（Git 管理外）か `TF_VAR_<名前>` で渡す
 - PR を出したら GitHub Actions で `terraform plan` を実行し、結果を PR にコメントする。main にマージされたら `apply` する
 - コンソールでの手作業による変更は禁止する。定期的に `plan` を実行してドリフトを検知する
 - Vercel のドメイン・環境変数も Terraform の Vercel プロバイダで同じリポジトリから管理する
