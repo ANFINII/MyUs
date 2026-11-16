@@ -187,24 +187,23 @@ flowchart LR
 - 普段使う IAM ユーザー（または Identity Center）を作り、AWS CLI のプロファイル `myus-prod` を用意する
 - Terraform を入れる
 - state 用の S3 バケット `terraform-myus-prod` を作り、バージョニングを有効にする
-- ドメインを決めて買う（順 9 までに）
+- `prod/general/iam-role` と `prod/general/cost` を手元から `apply` する（CI のロールが無いと CI から apply できないため）
+- GitHub のリポジトリの Variables に `AWS_ACCOUNT_ID`、Secrets に `TF_VAR_EMAILS_FOR_COST`（`["xxx@example.com"]` の形）を入れる。`AWS_ACCOUNT_ID` が空のあいだ、CI は `fmt`・`validate` だけを流す
+- ドメインを決めて買う（順 6 までに）
 
 ### 順番
 
 | 順 | スタック | 内容 |
 |---|---|---|
-| 1 | `prod/general/cost` | Budgets と Cost Anomaly（rcmr の `modules/cost`）。リソースを作る前に入れる |
-| 2 | `prod/general/iam-role` | GitHub Actions の OIDC ロール（rcmr の `modules/github-actions`）。引き受けられるのは main だけにする |
-| 3 | `.github/workflows/infra.yml` | PR で `fmt`・`validate`・`plan`、main で `apply` |
-| 4 | `prod/common/network` | VPC・パブリックサブネット・セキュリティグループ（rcmr の `modules/vpc` は NAT・3 AZ 前提で重いので、小さく作る） |
-| 5 | `prod/products/myus/media` | メディアの S3 と CloudFront（rcmr の `modules/cloudfront-oac`）。BE は `django-storages` で `STORAGES` を切り替える |
-| 6 | `prod/common/parameters`・`prod/common/ecr` | SSM Parameter Store（入れ物だけ。値は CLI で入れる）と ECR |
-| 7 | `prod/products/myus/database` | RDS for MySQL（db.t4g.micro・シングル AZ） |
-| 8 | `prod/products/myus/compute` | EC2（docker compose）とデプロイ（GitHub Actions → ECR → SSM Run Command） |
-| 9 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。ドメインが要る |
-| 10 | `prod/products/myus/monitoring` | CloudWatch Alarms（CPU・ディスク・RDS の空き容量・5xx） |
+| 1 | `prod/common/network` | VPC・パブリックサブネット・セキュリティグループ（rcmr の `modules/vpc` は NAT・3 AZ 前提で重いので、小さく作る） |
+| 2 | `prod/products/myus/media` | メディアの S3 と CloudFront（rcmr の `modules/cloudfront-oac`）。BE は `django-storages` で `STORAGES` を切り替える |
+| 3 | `prod/common/parameters`・`prod/common/ecr` | SSM Parameter Store（入れ物だけ。値は CLI で入れる）と ECR |
+| 4 | `prod/products/myus/database` | RDS for MySQL（db.t4g.micro・シングル AZ） |
+| 5 | `prod/products/myus/compute` | EC2（docker compose）とデプロイ（GitHub Actions → ECR → SSM Run Command） |
+| 6 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。ドメインが要る |
+| 7 | `prod/products/myus/monitoring` | CloudWatch Alarms（CPU・ディスク・RDS の空き容量・5xx） |
 
-HLS 変換を worker に分けるのは BE の作業で、順 8 より前に済ませる。
+HLS 変換を worker に分けるのは BE の作業で、順 5 より前に済ませる。
 
 ### やらないこと
 
