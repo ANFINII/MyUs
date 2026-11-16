@@ -342,7 +342,7 @@
     "video": {
       "encoding": "変換中",
       "encodeFailed": "変換できませんでした",
-      "encodeFailedNotice": "動画を変換できませんでした。ファイルが壊れている可能性があります。動画をアップロードし直してください。"
+      "encodeFailedNotice": "変換できませんでした。動画を上げ直してください。"
     },
     "form": {
       "publish": "公開する",

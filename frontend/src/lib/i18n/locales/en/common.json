@@ -345,7 +345,7 @@
     "video": {
       "encoding": "Converting",
       "encodeFailed": "Conversion failed",
-      "encodeFailedNotice": "The video could not be converted. The file may be corrupted. Please upload the video again."
+      "encodeFailedNotice": "Conversion failed. Please re-upload the video."
     },
     "form": {
       "publish": "Publish",
