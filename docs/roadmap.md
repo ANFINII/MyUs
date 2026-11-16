@@ -188,7 +188,8 @@ flowchart LR
 - Terraform を入れる
 - state 用の S3 バケット `terraform-myus-prod` を作り、バージョニングを有効にする
 - `prod/general/iam-role` と `prod/general/cost` を手元から `apply` する（CI のロールが無いと CI から apply できないため）
-- GitHub のリポジトリの Variables に `AWS_ACCOUNT_ID`、Secrets に `TF_VAR_EMAILS_FOR_COST`（`["xxx@example.com"]` の形）を入れる。`AWS_ACCOUNT_ID` が空のあいだ、CI は `fmt`・`validate` だけを流す
+- GitHub のリポジトリの Variables に `AWS_ACCOUNT_ID`、Secrets に `TF_VAR_EMAILS_FOR_COST`・`TF_VAR_EMAILS_FOR_ALARM`（どちらも `["xxx@example.com"]` の形）を入れる。`AWS_ACCOUNT_ID` が空のあいだ、CI は `fmt`・`validate` だけを流す
+- `prod/products/myus/monitoring` を apply したら、SNS から届く確認のメールのリンクを開く（東京と us-east-1 の 2 通）。開くまでアラームは届かない
 - `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる。`FIXME` のままのパラメータがあると、デプロイは止まる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
 - ドメインを決めて買う（順 1 までに）
 
@@ -197,7 +198,6 @@ flowchart LR
 | 順 | スタック | 内容 |
 |---|---|---|
 | 1 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.<ドメイン>`）を付ける。ドメインが要る |
-| 2 | `prod/products/myus/monitoring` | CloudWatch Alarms（CPU・ディスク・RDS の空き容量・5xx） |
 
 次の BE の作業は、最初のデプロイより前に済ませる。
 

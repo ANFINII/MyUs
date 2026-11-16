@@ -2,9 +2,28 @@
 package_update: true
 packages:
   - docker
+  - amazon-cloudwatch-agent
+write_files:
+  - path: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+    content: |
+      {
+        "agent": { "omit_hostname": true },
+        "metrics": {
+          "append_dimensions": { "InstanceId": "$${aws:InstanceId}" },
+          "metrics_collected": {
+            "disk": {
+              "resources": ["/"],
+              "measurement": ["used_percent"],
+              "drop_device": true,
+              "metrics_collection_interval": 300
+            }
+          }
+        }
+      }
 runcmd:
   - mkdir -p /usr/local/lib/docker/cli-plugins
   - curl -fsSL -o /usr/local/lib/docker/cli-plugins/docker-compose "https://github.com/docker/compose/releases/download/${compose_version}/docker-compose-linux-aarch64"
   - chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
   - systemctl enable --now docker
   - mkdir -p /opt/myus
+  - /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
