@@ -89,7 +89,7 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
             {playlists.length > 0 ? (
               <div className={style.select}>
                 <SelectBox label={t('playlist.select')} value={selectedUlid} options={options} className={style.select_box} onChange={handleSelect} />
-                <Button name={isAdded ? t('playlist.added') : t('action.add')} color="blue" size="s" loading={isAdding} disabled={isAdded} onClick={handleAdd} />
+                <Button name={isAdded ? t('playlist.added') : t('action.add')} color="blue" size="s" loading={isAdding} disabled={isAdded} className={style.add} onClick={handleAdd} />
               </div>
             ) : (
               <p className={style.empty}>{t('playlist.empty')}</p>
