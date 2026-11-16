@@ -40,7 +40,7 @@ def send_to_group(group_name: str, command: str, message: dict[str, object]) -> 
             },
         )
     except Exception as e:
-        log.error("WebSocket broadcast failed", exc=e, group_name=group_name, command=command)
+        log.error("broadcast failed", exc=e, group_name=group_name, command=command)
 
 
 def build_message_payload(data: MessageDTO) -> MessagePayload:

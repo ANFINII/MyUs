@@ -42,7 +42,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
 
     plan = get_plan(plan_name)
     if plan is None:
-        log.warning("Payment unknown plan", plan=plan_name)
+        log.warning("unknown plan", plan=plan_name)
         return Result.err(NotFoundError("error.planNotFound"))
 
     subscription_repo = injector.get(SubscriptionInterface)
@@ -57,7 +57,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
 
     subscriptions = subscriptions_ret.ok_value
     if any(s.status in (SubscriptionStatus.ACTIVE, SubscriptionStatus.PAST_DUE) for s in subscriptions):
-        log.warning("Payment checkout already subscribed", user_id=user_id, plan=plan_name)
+        log.warning("already subscribed", user_id=user_id, plan=plan_name)
         return Result.err(ValidationError("error.alreadySubscribed"))
 
     currency = country_currency(user.profile.country)
@@ -162,7 +162,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
             case ValidationError() as error:
                 return Result.err(NotFoundError(error.message))
             case ConflictError() | HistoryCorruptedError() | FatalError() as error:
-                log.error("Payment cancel request not saved", user_id=user_id, external_id=subscription.external_id, error=str(error))
+                log.error("cancel request not saved", user_id=user_id, external_id=subscription.external_id, error=str(error))
                 return Result.err(FatalError("Payment cancel request not saved"))
             case _:
                 assert_never(request_ret.err_value)
@@ -176,12 +176,12 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
     cancellation = cancel_ret.ok_value
     if isinstance(cancellation, CancelFailed):
         if cancellation.error == CancelError.NETWORK_ERROR:
-            log.warning("Payment cancel result unknown", user_id=user_id, external_id=subscription.external_id, request_id=request_id)
+            log.warning("cancel result unknown", user_id=user_id, external_id=subscription.external_id, request_id=request_id)
             return Result.ok(cancellation)
 
         failure_ret = atomic_result(lambda: save_cancellation_failure_data(provider, subscription.external_id, cancellation.error))
         if failure_ret.is_err:
-            log.error("Payment cancel failure not saved", user_id=user_id, external_id=subscription.external_id, error=str(failure_ret.err_value))
+            log.error("cancel failure not saved", user_id=user_id, external_id=subscription.external_id, error=str(failure_ret.err_value))
             return Result.err(FatalError("Payment cancel failure not saved"))
 
         return Result.ok(cancellation)
@@ -194,10 +194,10 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
         provider_subscription = provider_subscription_ret.ok_value
         save_ret = atomic_result(lambda: save_provider_subscription_data(provider_subscription, datetime.now(timezone.utc)))
         if save_ret.is_err:
-            log.error("Payment cancel not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
+            log.error("cancel not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
             return Result.err(FatalError("Payment cancel not saved"))
 
-        log.info("Payment cancel succeeded", user_id=user_id, external_id=subscription.external_id)
+        log.info("cancel succeeded", user_id=user_id, external_id=subscription.external_id)
 
     return Result.ok(cancellation)
 
@@ -230,10 +230,10 @@ def revoke_cancellation(user_id: int) -> Result[RevokeResult, InputError]:
     if isinstance(revoke, RevokeSuccess):
         save_ret = atomic_result(lambda: save_provider_subscription_data(revoke.subscription, datetime.now(timezone.utc)))
         if save_ret.is_err:
-            log.error("Payment cancel revoke not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
+            log.error("cancel revoke not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
             return Result.err(FatalError("Payment cancel revoke not saved"))
 
-        log.info("Payment cancel revoked", user_id=user_id, external_id=subscription.external_id)
+        log.info("cancel revoked", user_id=user_id, external_id=subscription.external_id)
 
     return Result.ok(revoke)
 
@@ -242,7 +242,7 @@ def revoke_cancellation(user_id: int) -> Result[RevokeResult, InputError]:
 def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputError]:
     plan = get_plan(plan_name)
     if plan is None:
-        log.warning("Payment unknown plan", plan=plan_name)
+        log.warning("unknown plan", plan=plan_name)
         return Result.err(NotFoundError("error.planNotFound"))
 
     if plan.name == PlanName.FREE:
@@ -274,10 +274,10 @@ def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputE
     if isinstance(change, PlanChangeSuccess):
         save_ret = atomic_result(lambda: save_provider_subscription_data(change.subscription, datetime.now(timezone.utc)))
         if save_ret.is_err:
-            log.error("Payment plan change not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
+            log.error("plan change not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
             return Result.err(FatalError("Payment plan change not saved"))
 
-        log.info("Payment plan changed", user_id=user_id, external_id=subscription.external_id, plan=plan_name)
+        log.info("plan changed", user_id=user_id, external_id=subscription.external_id, plan=plan_name)
 
     return Result.ok(change)
 
@@ -363,7 +363,7 @@ def requeue_payment_events() -> Result[int, FatalError]:
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    log.info("PaymentEvent requeued", count=len(events))
+    log.info("requeued", count=len(events))
     return Result.ok(len(events))
 
 

@@ -9,7 +9,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         ret = requeue_payment_events()
         if ret.is_err:
-            log.error("PaymentEvent requeue command failed", error=ret.err_value.message)
+            log.error("command failed", error=ret.err_value.message)
             self.stderr.write(self.style.ERROR("戻せませんでした"))
             return
 

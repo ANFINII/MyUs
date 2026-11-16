@@ -16,11 +16,11 @@ class Command(BaseCommand):
         while True:
             ret = process_payment_events(options["limit"])
             if ret.is_err:
-                log.error("PaymentEvent process command failed", error=ret.err_value.message)
+                log.error("command failed", error=ret.err_value.message)
             else:
                 count = ret.ok_value
                 if count > 0:
-                    log.info("PaymentEvent processed", count=count)
+                    log.info("processed", count=count)
 
             if options["once"]:
                 return

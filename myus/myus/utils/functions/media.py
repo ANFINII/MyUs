@@ -42,19 +42,19 @@ def validate_uploads(files: list[tuple[UploadedFile | None, UploadType]]) -> Res
         extension = os.path.splitext(file.name or "")[1].lower()
         content_type = file.content_type or ""
         if extension not in rule.extensions or not content_type.startswith(rule.content_type_prefix):
-            log.warning("Upload rejected: unsupported type", upload_type=upload_type.value, extension=extension, content_type=content_type)
+            log.warning("unsupported type", upload_type=upload_type.value, extension=extension, content_type=content_type)
             return Result.err(ValidationError("error.fileTypeInvalid"))
 
         if file.size is None or file.size > rule.max_size:
-            log.warning("Upload rejected: too large", upload_type=upload_type.value, size=file.size)
+            log.warning("too large", upload_type=upload_type.value, size=file.size)
             return Result.err(ValidationError("error.fileTooLarge"))
 
         if isinstance(upload_type, ImageUpload) and not is_image(file):
-            log.warning("Upload rejected: not an image", upload_type=upload_type.value, extension=extension, content_type=content_type)
+            log.warning("not an image", upload_type=upload_type.value, extension=extension, content_type=content_type)
             return Result.err(ValidationError("error.fileTypeInvalid"))
 
         if isinstance(upload_type, MediaUpload) and not is_media(file, upload_type):
-            log.warning("Upload rejected: unsupported format", upload_type=upload_type.value, extension=extension, content_type=content_type)
+            log.warning("unsupported format", upload_type=upload_type.value, extension=extension, content_type=content_type)
             return Result.err(ValidationError("error.fileTypeInvalid"))
 
     return Result.ok(None)

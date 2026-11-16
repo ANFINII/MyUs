@@ -11,7 +11,7 @@
 - `print()`禁止、`myus.utils.common.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
-- ログの文言は英語で書き、対象の名前（`Notification`・`Video`・`Token`など）を付けない（`"create failed"`・`"revoked"`など）。どこのログかは logger が出すファイル・関数・行で、何の話かはキーワード引数（`object_type=`・`object_id=`など）で分かるようにする。英語にすると意味が伝わりにくいもの（トークンが無効になった理由など）は、日本語で書いてよい。画面には出ないので i18n にしない
+- ログの文言は英語で書き、対象の名前（`Notification`・`Video`・`Token`など）を付けない（`"create failed"`・`"send failed"`など）。どこのログかは logger が出すファイル・関数・行で、何の話かはキーワード引数（`object_type=`・`object_id=`など）で分かるようにする。日本語は使わない。対象を外すと何の話か分からなくなるもの（トークンが無効になった理由など）は、`"token expired"`のように対象を残してよい。画面には出ないので i18n にしない
 - ガード節のメッセージは、対象の名前（`Video`・`コメント`など）を付けずに決まった文言にそろえる。何の話かはキーワード引数（`ulid=`・`media_type=`など）で分かるようにする
   - 見つからない: `"not found"`
   - 持ち主（`owner_id`）が違う: `"owner mismatch"`
@@ -406,3 +406,5 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: usecase・adapter に残っていた`"data not found"`・`"Not Found"`・`"Forbidden"`のエラーの`message`を、FE の i18n のキー（`error.mediaNotFound`・`error.commentUpdateFailed`など）にした
 - 2026-11-16: `not found`のログのレベルを、見に来たら無い（info）・操作の相手が無い（warning）・あるはずのものが無い（error）に分けた
 - 2026-11-16: 日本語で書いていたログの文言を英語にそろえ、対象の名前を付けないようにした
+- 2026-11-16: 決済・認証・アップロードなどのログの文言からも対象の名前（`Payment`・`Stripe`・`Signup` など）を外した
+- 2026-11-16: 日本語で残していたログ（トークンが無効な理由など）も英語にした

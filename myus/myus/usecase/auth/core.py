@@ -35,7 +35,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
         return Result.ok(None)
 
     if payload.get("type") != token_type:
-        log.warning("トークンのタイプが不正です", token_type=token_type)
+        log.warning("invalid token type", token_type=token_type)
         return Result.ok(None)
 
     user_id = payload.get("user_id")
@@ -47,7 +47,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
         return Result.ok(None)
 
     if is_revoked(jti):
-        log.warning("ログアウト済みのトークンです", user_id=user_id)
+        log.warning("token revoked", user_id=user_id)
         return Result.ok(None)
 
     ret = get_active_user_data(user_id)
@@ -56,11 +56,11 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
 
     user = ret.ok_value
     if user is None:
-        log.warning("無効なユーザーのトークンです", user_id=user_id)
+        log.warning("token user inactive", user_id=user_id)
         return Result.ok(None)
 
     if not is_same_password(payload.get("pwd"), user.user.password):
-        log.warning("パスワードが変わったため無効なトークンです", user_id=user_id)
+        log.warning("token invalidated by password change", user_id=user_id)
         return Result.ok(None)
 
     return Result.ok(user_id)
@@ -83,7 +83,7 @@ def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalErro
 @Result.shield_exception()
 def login_user(username: str, password: str) -> Result[int | None, ValidateError]:
     if get_failure_count(username) >= LOGIN_FAILURE_LIMIT:
-        log.warning("Login blocked: too many attempts", username=username)
+        log.warning("blocked: too many attempts", username=username)
         return Result.err(ValidationError("error.tooManyAttempts"))
 
     repo = injector.get(UserInterface)
@@ -153,12 +153,12 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
     try:
         send_mail(subject, message, None, [email])
     except (SMTPException, OSError) as e:
-        log.error("Signup email send error", exc=e)
+        log.error("send failed", exc=e)
         return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
         url = f"{settings.FRONTEND_URL}/account/signup?token={token}"
-        log.info("Signup verify URL (dev)", url=url)
+        log.info("verify URL (dev)", url=url)
 
     return Result.ok("")
 
@@ -167,19 +167,19 @@ def signup_verify_token(token: str) -> str | None:
     try:
         payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
-        log.warning("Signup token expired")
+        log.warning("token expired")
         return None
     except jwt.exceptions.DecodeError:
-        log.warning("Signup token decode error")
+        log.warning("token decode error")
         return None
 
     if payload.get("type") != "signup":
-        log.warning("Invalid signup token type")
+        log.warning("invalid token type")
         return None
 
     email = payload.get("email")
     if not isinstance(email, str) or len(email) == 0:
-        log.warning("Invalid signup token email")
+        log.warning("invalid token email")
         return None
 
     return email
@@ -321,12 +321,12 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
     try:
         send_mail(subject, message, None, [email])
     except (SMTPException, OSError) as e:
-        log.error("Password reset email send error", exc=e)
+        log.error("send failed", exc=e)
         return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
         url = f"{settings.FRONTEND_URL}/account/reset/confirm?token={token}"
-        log.info("Password reset URL (dev)", url=url)
+        log.info("reset URL (dev)", url=url)
 
     return Result.ok("")
 
@@ -336,24 +336,24 @@ def password_reset_verify_token(token: str) -> Result[tuple[int, str] | None, Fa
     try:
         payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
-        log.warning("Password reset token expired")
+        log.warning("token expired")
         return Result.ok(None)
     except jwt.exceptions.DecodeError:
-        log.warning("Password reset token decode error")
+        log.warning("token decode error")
         return Result.ok(None)
 
     if payload.get("type") != "password_reset":
-        log.warning("Invalid password reset token type")
+        log.warning("invalid token type")
         return Result.ok(None)
 
     user_id = payload.get("user_id")
     if not isinstance(user_id, int):
-        log.warning("Invalid password reset token user_id")
+        log.warning("invalid token user_id")
         return Result.ok(None)
 
     email = payload.get("email")
     if not isinstance(email, str) or len(email) == 0:
-        log.warning("Invalid password reset token email")
+        log.warning("invalid token email")
         return Result.ok(None)
 
     ret = get_active_user_data(user_id)
@@ -362,11 +362,11 @@ def password_reset_verify_token(token: str) -> Result[tuple[int, str] | None, Fa
 
     user = ret.ok_value
     if user is None:
-        log.warning("Password reset token user not found", user_id=user_id)
+        log.warning("not found", user_id=user_id)
         return Result.ok(None)
 
     if not is_same_password(payload.get("pwd"), user.user.password):
-        log.warning("Password reset token already used", user_id=user_id)
+        log.warning("token already used", user_id=user_id)
         return Result.ok(None)
 
     return Result.ok((user_id, email))
@@ -436,7 +436,7 @@ def withdraw_user(user_id: int, password: str) -> Result[str, FatalError]:
     if cancel_ret.is_err:
         match cancel_ret.err_value:
             case NotFoundError():
-                log.info("Withdraw without active subscription", user_id=user_id)
+                log.info("no active subscription", user_id=user_id)
             case FatalError():
                 return Result.err(cancel_ret.err_value)
             case _:
@@ -445,9 +445,9 @@ def withdraw_user(user_id: int, password: str) -> Result[str, FatalError]:
         cancellation = cancel_ret.ok_value
         match cancellation:
             case CancelSuccess() | CancelFailed(error=CancelError.NOT_FOUND):
-                log.info("Withdraw subscription canceled", user_id=user_id)
+                log.info("subscription canceled", user_id=user_id)
             case CancelFailed(error=error, message=message):
-                log.error("Withdraw subscription cancel failed", user_id=user_id, error=error.value, message=message)
+                log.error("subscription cancel failed", user_id=user_id, error=error.value, message=message)
                 return Result.ok("error.cancelFailed")
             case _:
                 assert_never(cancellation)

@@ -86,7 +86,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseDTO, image: UploadedFi
 
     count = count_ret.ok_value
     if count >= ADVERTISE_PERSONAL_LIMIT:
-        log.error("Advertise limit exceeded", user_id=user_id, count=count)
+        log.error("limit exceeded", user_id=user_id, count=count)
         return Result.err(ValidationError("error.createFailed"))
 
     user_ret = get_user_data(user_id=user_id)
