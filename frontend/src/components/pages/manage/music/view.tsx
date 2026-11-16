@@ -70,7 +70,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
   const columns: Column<Music>[] = [
     {
       key: 'thumbnail',
-      header: t('manage.form.jacket'),
+      header: t('manage.form.thumbnail'),
       className: style.thumbnail,
       cell: (m) => <ExImage src={m.image || m.channel.avatar} width="54" height="54" />,
     },

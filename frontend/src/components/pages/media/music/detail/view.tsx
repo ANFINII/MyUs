@@ -38,8 +38,8 @@ export default function MusicDetail(props: Props): React.JSX.Element {
     <Main metaTitle="Music" toast={toast}>
       <MediaDetail publish={publish}>
         <div className={style.media_detail_music}>
-          <div className={style.jacket}>
-            <ExImage src={image || other.channel.avatar} className={style.jacket_image} />
+          <div className={style.thumbnail_wrap}>
+            <ExImage src={image || other.channel.avatar} className={style.thumbnail} />
           </div>
           <VStack gap="6" className={style.controls}>
             <AudioPlayer src={music} playbackRate={speed} isVolumeInline className={style.player} />

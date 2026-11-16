@@ -83,7 +83,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <Textarea label={t('manage.form.lyric')} name="lyric" onChange={handleText} />
-          <InputFile label={t('manage.form.jacket')} accept="image/*" onChange={handleImage} />
+          <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
           <VStack gap="2">
             <InputFile label={t('manage.form.music')} accept="audio/*" required error={error} onChange={handleFile} />
             <CheckBox label={t('manage.form.download')} name="download" defaultChecked onChange={handleCheck} />
