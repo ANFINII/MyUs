@@ -253,5 +253,5 @@ class PaymentAPI:
             case PaymentMethodSessionCreated(redirect_url=redirect_url):
                 return 200, PaymentMethodOut(url=redirect_url)
             case PaymentMethodSessionFailed(error=error, message=message):
-                log.error("支払い方法の変更画面の作成に失敗しました", error=error.value, message=message)
+                log.error("payment method session failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.paymentMethodFailed")

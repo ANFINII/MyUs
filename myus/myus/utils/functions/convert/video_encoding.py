@@ -81,7 +81,7 @@ def encode_video(convert_path: str, output_dir: str, save_log: bool = True) -> d
     )
 
     # 各解像度の処理時間
-    log.info("--- 解像度別処理時間 ---")
+    log.info("--- processing time by resolution ---")
     if 'resolutions' in conversion_stats:
         for res, info in conversion_stats['resolutions'].items():
             log.info(f"  {res}: {info.get('time', 0):.2f}秒 (エンコーダ: {info.get('encoder', 'unknown')})")

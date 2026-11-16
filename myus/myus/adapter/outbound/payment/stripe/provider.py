@@ -31,7 +31,7 @@ class StripeProvider(PaymentInterface):
             return Result.ok(CheckoutFailed(error=CheckoutError.PROVIDER_REJECTED, message=str(e)))
 
         if session.url is None or session.id is None:
-            log.error("セッションに url か id がありません")
+            log.error("session missing url or id")
             return Result.ok(CheckoutFailed(error=CheckoutError.PROVIDER_REJECTED, message="missing url or id in session"))
 
         return Result.ok(CheckoutCreated(session=CheckoutSessionData(

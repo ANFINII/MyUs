@@ -35,7 +35,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
         return Result.ok(None)
 
     if payload.get("type") != token_type:
-        log.warning("トークンのタイプが不正です", token_type=token_type)
+        log.warning("invalid token type", token_type=token_type)
         return Result.ok(None)
 
     user_id = payload.get("user_id")
@@ -47,7 +47,7 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
         return Result.ok(None)
 
     if is_revoked(jti):
-        log.warning("ログアウト済みのトークンです", user_id=user_id)
+        log.warning("token revoked", user_id=user_id)
         return Result.ok(None)
 
     ret = get_active_user_data(user_id)
@@ -56,11 +56,11 @@ def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
 
     user = ret.ok_value
     if user is None:
-        log.warning("無効なユーザーのトークンです", user_id=user_id)
+        log.warning("token user inactive", user_id=user_id)
         return Result.ok(None)
 
     if not is_same_password(payload.get("pwd"), user.user.password):
-        log.warning("パスワードが変わったため無効なトークンです", user_id=user_id)
+        log.warning("token invalidated by password change", user_id=user_id)
         return Result.ok(None)
 
     return Result.ok(user_id)
@@ -83,7 +83,7 @@ def create_auth_tokens(user_id: int) -> Result[tuple[str, str] | None, FatalErro
 @Result.shield_exception()
 def login_user(username: str, password: str) -> Result[int | None, ValidateError]:
     if get_failure_count(username) >= LOGIN_FAILURE_LIMIT:
-        log.warning("ログインの失敗が多いためブロックしました", username=username)
+        log.warning("blocked: too many attempts", username=username)
         return Result.err(ValidationError("error.tooManyAttempts"))
 
     repo = injector.get(UserInterface)
@@ -167,19 +167,19 @@ def signup_verify_token(token: str) -> str | None:
     try:
         payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
-        log.warning("期限切れのトークンです")
+        log.warning("token expired")
         return None
     except jwt.exceptions.DecodeError:
-        log.warning("トークンを読み取れません")
+        log.warning("token decode error")
         return None
 
     if payload.get("type") != "signup":
-        log.warning("トークンのタイプが不正です")
+        log.warning("invalid token type")
         return None
 
     email = payload.get("email")
     if not isinstance(email, str) or len(email) == 0:
-        log.warning("トークンのメールアドレスが不正です")
+        log.warning("invalid token email")
         return None
 
     return email
@@ -336,24 +336,24 @@ def password_reset_verify_token(token: str) -> Result[tuple[int, str] | None, Fa
     try:
         payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
-        log.warning("期限切れのトークンです")
+        log.warning("token expired")
         return Result.ok(None)
     except jwt.exceptions.DecodeError:
-        log.warning("トークンを読み取れません")
+        log.warning("token decode error")
         return Result.ok(None)
 
     if payload.get("type") != "password_reset":
-        log.warning("トークンのタイプが不正です")
+        log.warning("invalid token type")
         return Result.ok(None)
 
     user_id = payload.get("user_id")
     if not isinstance(user_id, int):
-        log.warning("トークンの user_id が不正です")
+        log.warning("invalid token user_id")
         return Result.ok(None)
 
     email = payload.get("email")
     if not isinstance(email, str) or len(email) == 0:
-        log.warning("トークンのメールアドレスが不正です")
+        log.warning("invalid token email")
         return Result.ok(None)
 
     ret = get_active_user_data(user_id)
@@ -366,7 +366,7 @@ def password_reset_verify_token(token: str) -> Result[tuple[int, str] | None, Fa
         return Result.ok(None)
 
     if not is_same_password(payload.get("pwd"), user.user.password):
-        log.warning("使用済みのトークンです", user_id=user_id)
+        log.warning("token already used", user_id=user_id)
         return Result.ok(None)
 
     return Result.ok((user_id, email))
