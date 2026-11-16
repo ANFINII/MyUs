@@ -21,6 +21,7 @@ import IconMusic from 'components/parts/Icon/Music'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import Link from 'components/parts/Link'
+import HStack from 'components/parts/Stack/Horizontal'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import style from './Detail.module.scss'
 
@@ -101,8 +102,24 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
     router.push('/menu/playlist')
   }
 
+  const button = isOwner && (
+    <HStack gap="4">
+      {isEdit ? (
+        <>
+          <Button name={t('action.save')} color="green" size="s" loading={loading} disabled={editTitle.trim() === ''} onClick={handleSave} />
+          <Button name={t('action.cancel')} color="blue" size="s" disabled={loading} onClick={handleEdit} />
+        </>
+      ) : (
+        <>
+          <Button name={t('action.edit')} color="blue" size="s" onClick={handleEdit} />
+          <Button name={t('action.delete')} color="red" size="s" onClick={handleModal} />
+        </>
+      )}
+    </HStack>
+  )
+
   return (
-    <Main title="Playlist" toast={toast}>
+    <Main title="Playlist" type="table" toast={toast} button={button}>
       <section className={style.header}>
         <div className={style.thumbnail_box}>{image ? <ExImage src={image} className={style.thumbnail} /> : <IconMusic size="48" className={style.icon} />}</div>
         <div className={style.info}>
@@ -123,20 +140,11 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
               </div>
             </>
           )}
-          <div className={style.actions}>
-            {isEdit ? (
-              <>
-                <Button name={t('action.save')} color="blue" size="s" loading={loading} disabled={editTitle.trim() === ''} onClick={handleSave} />
-                <Button name={t('action.cancel')} color="white" size="s" disabled={loading} onClick={handleEdit} />
-              </>
-            ) : (
-              <>
-                <Button name={t('playlist.playAll')} color="blue" size="s" disabled={musics.length === 0} onClick={() => handlePlay(0)} />
-                {isOwner && <Button name={t('action.edit')} color="white" size="s" onClick={handleEdit} />}
-                {isOwner && <Button name={t('action.delete')} color="red" size="s" onClick={handleModal} />}
-              </>
-            )}
-          </div>
+          {!isEdit && (
+            <div className={style.actions}>
+              <Button name={t('playlist.playAll')} color="blue" size="s" disabled={musics.length === 0} onClick={() => handlePlay(0)} />
+            </div>
+          )}
         </div>
       </section>
 
