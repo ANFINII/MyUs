@@ -21,7 +21,6 @@ import IconGrip from 'components/parts/Icon/Grip'
 import IconMusic from 'components/parts/Icon/Music'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
-import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import style from './Detail.module.scss'
@@ -52,6 +51,8 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
 
   const handleModal = () => setIsModal(!isModal)
   const handlePlay = (index: number) => play(musics, index)
+  const handleDetail = (musicUlid: string) => router.push(`/media/music/${musicUlid}`)
+  const handleStop = (e: React.MouseEvent) => e.stopPropagation()
   const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setEditTitle(e.target.value)
   const handlePublish = (e: ChangeEvent<HTMLInputElement>) => setIsEditPublish(e.target.checked)
   const handleRemove = (index: number) => setEditMusics(editMusics.filter((_, i) => i !== index))
@@ -182,9 +183,9 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
                 <div className={style.item_title}>{music.title}</div>
                 <div className={style.item_channel}>{music.channel.name}</div>
               </div>
-              <Link href={`/media/music/${music.ulid}`} className={style.detail}>
-                {t('playlist.detail')}
-              </Link>
+              <span className={style.detail} onClick={handleStop}>
+                <Button name={t('playlist.detail')} color="purple" size="s" onClick={() => handleDetail(music.ulid)} />
+              </span>
             </li>
           ))}
         </ul>
