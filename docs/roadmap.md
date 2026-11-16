@@ -190,20 +190,19 @@ flowchart LR
 - `prod/general/iam-role` と `prod/general/cost` を手元から `apply` する（CI のロールが無いと CI から apply できないため）
 - GitHub のリポジトリの Variables に `AWS_ACCOUNT_ID`、Secrets に `TF_VAR_EMAILS_FOR_COST`（`["xxx@example.com"]` の形）を入れる。`AWS_ACCOUNT_ID` が空のあいだ、CI は `fmt`・`validate` だけを流す
 - `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
-- ドメインを決めて買う（順 3 までに）
+- ドメインを決めて買う（順 2 までに）
 
 ### 順番
 
 | 順 | スタック | 内容 |
 |---|---|---|
-| 1 | `prod/products/myus/database` | RDS for MySQL（db.t4g.micro・シングル AZ） |
-| 2 | `prod/products/myus/compute` | EC2（docker compose）とデプロイ（GitHub Actions → ECR → SSM Run Command） |
-| 3 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.<ドメイン>`）を付ける。ドメインが要る |
-| 4 | `prod/products/myus/monitoring` | CloudWatch Alarms（CPU・ディスク・RDS の空き容量・5xx） |
+| 1 | `prod/products/myus/compute` | EC2（docker compose）とデプロイ（GitHub Actions → ECR → SSM Run Command） |
+| 2 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.<ドメイン>`）を付ける。ドメインが要る |
+| 3 | `prod/products/myus/monitoring` | CloudWatch Alarms（CPU・ディスク・RDS の空き容量・5xx） |
 
-次の BE の作業は、順 2 より前に済ませる。
+次の BE の作業は、順 1 より前に済ませる。
 
-- メディアを S3 に置く：`django-storages` で `STORAGES` を切り替え、配信の URL を `prod/products/myus/media` の CloudFront（outputs の `media.domain_name`）にする。S3 への書き込みの権限は、順 2 で EC2 のロールに付ける。HLS 変換の worker（`myus_encoder`）も S3 から読んで S3 に書くようにする
+- メディアを S3 に置く：`django-storages` で `STORAGES` を切り替え、配信の URL を `prod/products/myus/media` の CloudFront（outputs の `media.domain_name`）にする。S3 への書き込みの権限は、順 1 で EC2 のロールに付ける。HLS 変換の worker（`myus_encoder`）も S3 から読んで S3 に書くようにする
 
 有料のメディアを CloudFront の署名付き Cookie で守るのは、有料のメディアを出すときに `prod/products/myus/media` に足す。
 
