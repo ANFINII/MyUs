@@ -89,18 +89,6 @@ export default function ManageMusics(props: Props): React.JSX.Element {
       ),
     },
     {
-      key: 'detail',
-      header: t('manage.table.detail'),
-      align: 'center',
-      className: style.narrow,
-      cellClass: style.detail,
-      cell: (m) => (
-        <Link href={`/media/music/${m.ulid}`} className={style.detail_link}>
-          <IconLink size="16" />
-        </Link>
-      ),
-    },
-    {
       key: 'content',
       header: t('manage.table.content'),
       className: style.content,
@@ -152,6 +140,18 @@ export default function ManageMusics(props: Props): React.JSX.Element {
         <div className={style.publish_inner}>
           <Toggle isActive={m.publish} disable />
         </div>
+      ),
+    },
+    {
+      key: 'detail',
+      header: t('manage.table.detail'),
+      align: 'center',
+      className: style.narrow,
+      cellClass: style.detail,
+      cell: (m) => (
+        <Link href={`/media/music/${m.ulid}`} className={style.detail_link}>
+          <IconLink size="16" />
+        </Link>
       ),
     },
     {
