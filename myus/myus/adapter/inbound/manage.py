@@ -1,8 +1,8 @@
 from typing import assert_never
 from ninja import File, Form, Router, UploadedFile
 from django.http import HttpRequest
-from myus.domain.advertise.interface import ADVERTISE_PAGE_SIZE, PageOption as AdvertisePageOption
-from myus.domain.media.common import MEDIA_PAGE_SIZE, PageOption
+from myus.domain.advertise.interface import ADVERTISE_PAGE_SIZE, PageOption
+from myus.domain.media.common import MEDIA_PAGE_SIZE
 from myus.usecase.dto.advertise import AdvertiseDTO
 from myus.usecase.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.usecase.manage.advertise.core import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise
@@ -44,7 +44,7 @@ class ManageVideoAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        videos_ret = get_manage_videos(user_id, search, channel, PageOption(limit=limit, offset=offset))
+        videos_ret = get_manage_videos(user_id, search, channel, limit, offset)
         if videos_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -154,7 +154,7 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        musics_ret = get_manage_musics(user_id, search, channel, PageOption(limit=limit, offset=offset))
+        musics_ret = get_manage_musics(user_id, search, channel, limit, offset)
         if musics_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -264,7 +264,7 @@ class ManageBlogAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        blogs_ret = get_manage_blogs(user_id, search, channel, PageOption(limit=limit, offset=offset))
+        blogs_ret = get_manage_blogs(user_id, search, channel, limit, offset)
         if blogs_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -374,7 +374,7 @@ class ManageComicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        comics_ret = get_manage_comics(user_id, search, channel, PageOption(limit=limit, offset=offset))
+        comics_ret = get_manage_comics(user_id, search, channel, limit, offset)
         if comics_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -484,7 +484,7 @@ class ManagePictureAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        pictures_ret = get_manage_pictures(user_id, search, channel, PageOption(limit=limit, offset=offset))
+        pictures_ret = get_manage_pictures(user_id, search, channel, limit, offset)
         if pictures_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -594,7 +594,7 @@ class ManageChatAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        chats_ret = get_manage_chats(user_id, search, channel, PageOption(limit=limit, offset=offset))
+        chats_ret = get_manage_chats(user_id, search, channel, limit, offset)
         if chats_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -704,7 +704,7 @@ class ManageAdvertiseAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        advertises_ret = get_manage_advertises(user_id, search, AdvertisePageOption(limit=limit, offset=offset))
+        advertises_ret = get_manage_advertises(user_id, search, PageOption(limit=limit, offset=offset))
         if advertises_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
