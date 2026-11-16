@@ -235,7 +235,7 @@ if ret.is_err:
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
 - 雛形: `myus/domain/search_tag/interface.py` を参照
 - 必須メソッド: `get_ids(filter, sort, page)` / `bulk_get(ids)` の読み取り2点
-- `page`は各ドメインの`interface.py`の`PageOption`（メディアは`domain/media/common.py`。`limit`の初期値は0（上限なし）。件数の上限がドメインで決まっているものだけ、その値にする（`search_tag`は`SEARCH_TAG_MAX_COUNT`、メディアは`domain/media/common.py`の`PAGE_SIZE`）。`offset`は0）。初期値が0のドメインは`PageOption()`で全部取れる。`limit=0`は初期値が0でないメディアなどで全部取るときだけ書く（`limit`が0なら上限なし。切り出しは`adapter/outbound/db/common.py`の`page_queryset(qs, page)`。`page`は同じファイルの`PageOption`（`limit`と`offset`を持つ Protocol）で受け、どのドメインの`PageOption`も渡せる）
+- `page`は各ドメインの`interface.py`の`PageOption`（メディアは`domain/media/common.py`。`limit`の初期値は0（上限なし）。件数の上限がドメインで決まっているものだけ、その値にする（`search_tag`は`SEARCH_TAG_MAX_COUNT`、メディアは`domain/media/common.py`の`MEDIA_PAGE_SIZE`）。`offset`は0）。初期値が0のドメインは`PageOption()`で全部取れる。`limit=0`は初期値が0でないメディアなどで全部取るときだけ書く（`limit`が0なら上限なし。切り出しは`adapter/outbound/db/common.py`の`page_queryset(qs, page)`。`page`は同じファイルの`PageOption`（`limit`と`offset`を持つ Protocol）で受け、どのドメインの`PageOption`も渡せる）
 - 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
 - 必須型: `FilterOption` / `SortOption` / `PageOption` dataclass + `SortType` enum
 - メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
@@ -391,3 +391,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-15: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`を`domain/common.py`の1つにした（`limit=0`は上限なし）
 - 2026-11-16: `PageOption`を`domain/common.py`の1つから、メディアは`domain/media/common.py`、ほかは各ドメインの`interface.py`に置くように戻した
 - 2026-11-16: メディアだけの`PAGE_SIZE`を`utils/constants/page.py`から`domain/media/common.py`に移し、広告の一覧は`domain/advertise/interface.py`の`ADVERTISE_PAGE_SIZE`、API の`Limit`の上限は`adapter/inbound/schema/common.py`の`MAX_LIMIT`にした
+- 2026-11-16: メディアの`PAGE_SIZE`を、広告の`ADVERTISE_PAGE_SIZE`に合わせて`MEDIA_PAGE_SIZE`にした

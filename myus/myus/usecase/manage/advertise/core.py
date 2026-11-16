@@ -19,7 +19,7 @@ ADVERTISE_PERSONAL_LIMIT = 5
 
 
 @Result.shield_exception()
-def get_manage_advertises(user_id: int, search: str, limit: int = ADVERTISE_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[AdvertiseData], int], FatalError]:
+def get_manage_advertises(user_id: int, search: str, page: PageOption = PageOption(limit=ADVERTISE_PAGE_SIZE)) -> Result[tuple[list[AdvertiseData], int], FatalError]:
     repo = injector.get(AdvertiseInterface)
     filter = FilterOption(search=search, owner_id=user_id)
     total_ret = repo.count(filter)
@@ -27,7 +27,7 @@ def get_manage_advertises(user_id: int, search: str, limit: int = ADVERTISE_PAGE
         return Result.err(total_ret.err_value)
 
     total = total_ret.ok_value
-    ids_ret = repo.get_ids(filter, SortOption(), PageOption(limit=limit, offset=offset))
+    ids_ret = repo.get_ids(filter, SortOption(), page)
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
