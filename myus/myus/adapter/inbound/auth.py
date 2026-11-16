@@ -132,7 +132,7 @@ class AuthAPI:
 
         message = check_ret.ok_value
         if len(message) > 0:
-            log.warning("validation failed", message=message)
+            log.warning("validation failed", error_message=message)
             return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
 
         ret = signup_user(dto)
