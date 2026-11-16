@@ -1,0 +1,8 @@
+common/network
+common/parameters
+common/ecr
+general/cost
+general/iam-role
+products/myus/media
+products/myus/database
+products/myus/compute
