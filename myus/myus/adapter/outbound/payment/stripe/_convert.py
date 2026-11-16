@@ -41,6 +41,7 @@ def stripe_price_id(product_code: str) -> str:
         PlanName.BASIC: settings.STRIPE_PRICE_ID_BASIC,
         PlanName.STANDARD: settings.STRIPE_PRICE_ID_STANDARD,
         PlanName.PREMIUM: settings.STRIPE_PRICE_ID_PREMIUM,
+        PlanName.ULTIMATE: settings.STRIPE_PRICE_ID_ULTIMATE,
     }
     return mapping.get(product_code, "")
 

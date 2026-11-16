@@ -12,3 +12,4 @@ class PlanName(str, Enum):
     BASIC = "Basic"
     STANDARD = "Standard"
     PREMIUM = "Premium"
+    ULTIMATE = "Ultimate"

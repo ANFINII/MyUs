@@ -57,6 +57,16 @@ PLANS: list[Plan] = [
         is_hide_global_advertise=True,
         description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示3つ\n・全体広告非表示\n・楽曲ダウンロード",
     ),
+    Plan(
+        name=PlanName.ULTIMATE,
+        prices=[Money(amount=2000, currency=Currency.JPY), Money(amount=1299, currency=Currency.USD)],
+        max_advertise=4,
+        is_music_download=True,
+        is_playlist=True,
+        is_series=True,
+        is_hide_global_advertise=True,
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示4つ\n・全体広告非表示\n・楽曲ダウンロード",
+    ),
 ]
 
 

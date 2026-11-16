@@ -144,7 +144,7 @@ def test_older_subscription_event_is_not_applied(make_user: Callable[[str], User
 def test_incomplete_subscription_does_not_change_plan(make_user: Callable[[str], User]) -> None:
     user = make_user("alice")
 
-    send_subscription(WebhookEventType.SUBSCRIPTION_CREATED, user, "sub_1", SubscriptionStatus.INCOMPLETE, "evt_1", plan=PlanName.PREMIUM)
+    send_subscription(WebhookEventType.SUBSCRIPTION_CREATED, user, "sub_1", SubscriptionStatus.INCOMPLETE, "evt_1", plan=PlanName.ULTIMATE)
 
     assert user_plan(user).plan == PlanName.FREE
     assert Subscription.objects.get(external_id="sub_1").status == SubscriptionStatus.INCOMPLETE
