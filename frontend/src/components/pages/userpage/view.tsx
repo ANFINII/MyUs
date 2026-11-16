@@ -4,6 +4,7 @@ import { errorMessage } from 'lib/error'
 import { Advertise } from 'types/internal/advertise'
 import { Search } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
+import { Playlist } from 'types/internal/playlist'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
@@ -20,12 +21,14 @@ import VStack from 'components/parts/Stack/Vertical'
 import Tabs, { TabItem } from 'components/parts/Tabs'
 import AdvertiseCard from 'components/widgets/Card/Advertise'
 import CardIndexList from 'components/widgets/Card/IndexList'
+import CardList from 'components/widgets/Card/List'
 import BlogCard from 'components/widgets/Card/Media/Blog'
 import ChatCard from 'components/widgets/Card/Media/Chat'
 import ComicCard from 'components/widgets/Card/Media/Comic'
 import MusicCard from 'components/widgets/Card/Media/Music'
 import PictureCard from 'components/widgets/Card/Media/Picture'
 import VideoCard from 'components/widgets/Card/Media/Video'
+import PlaylistCard from 'components/widgets/Card/Playlist'
 import FollowButton from 'components/widgets/FollowButton'
 import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
 import style from './UserPage.module.scss'
@@ -33,6 +36,7 @@ import style from './UserPage.module.scss'
 const enum TabKey {
   Info = 'info',
   Posts = 'posts',
+  Playlist = 'playlist',
   Advertise = 'advertise',
 }
 
@@ -41,11 +45,12 @@ interface Props {
   ulid: string
   channelUlid: string
   media: UserPageMedia
+  playlists: Playlist[]
   advertises: Advertise[]
 }
 
 export default function Userpage(props: Props): React.JSX.Element {
-  const { userPage, ulid, channelUlid, media, advertises } = props
+  const { userPage, ulid, channelUlid, media, playlists, advertises } = props
   const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
   const router = useRouter()
@@ -67,12 +72,14 @@ export default function Userpage(props: Props): React.JSX.Element {
   const tabItems: TabItem<TabKey>[] = [
     { key: TabKey.Info, label: t('media.userpage.info') },
     { key: TabKey.Posts, label: t('media.userpage.posts') },
+    { key: TabKey.Playlist, label: t('media.userpage.playlist') },
     { key: TabKey.Advertise, label: t('media.userpage.advertise') },
   ]
 
   const tabSearch: Record<TabKey, Search | undefined> = {
     [TabKey.Info]: undefined,
     [TabKey.Posts]: search,
+    [TabKey.Playlist]: undefined,
     [TabKey.Advertise]: { ...search, count: advertises.length },
   }
 
@@ -197,6 +204,9 @@ export default function Userpage(props: Props): React.JSX.Element {
           </CardIndexList>
         </>
       )}
+
+      {selectedTab === TabKey.Playlist &&
+        (playlists.length === 0 ? <p className={style.empty}>{t('media.userpage.playlistEmpty')}</p> : <CardList items={playlists} Content={PlaylistCard} />)}
 
       {selectedTab === TabKey.Advertise &&
         (advertises.length === 0 ? (

@@ -17,7 +17,6 @@ import Modal from 'components/parts/Modal'
 import CardList from 'components/widgets/Card/List'
 import PlaylistCard from 'components/widgets/Card/Playlist'
 import style from './Playlist.module.scss'
-import MusicTabs from '../MusicTabs'
 
 interface Props {
   data: PlaylistList
@@ -45,12 +44,11 @@ export default function Playlists(props: Props): React.JSX.Element {
     const ret = await postPlaylist({ title, publish: isPublish, musicUlid: '' })
     handleLoading(false)
     if (ret.isErr()) return handleToast(errorMessage(ret.error, FetchError.Post), true)
-    router.push(`/media/music/playlist/${ret.value.ulid}`)
+    router.push(`/menu/playlist/${ret.value.ulid}`)
   }
 
   return (
-    <Main title="Music" toast={toast}>
-      <MusicTabs selected="playlist" />
+    <Main title="Playlist" toast={toast}>
       {user.isActive ? (
         <>
           <div className={style.toolbar}>

@@ -8,7 +8,7 @@ import Link from 'components/parts/Link'
 import AudioPlayer from 'components/widgets/AudioPlayer'
 import style from './MiniPlayer.module.scss'
 
-const PLAYER_DETAIL_PATH = /^\/media\/(video|music)\/(?!playlist$)[^/]+$/
+const PLAYER_DETAIL_PATH = /^\/media\/(video|music)\/[^/]+$/
 
 export default function MiniPlayer(): React.JSX.Element {
   const router = useRouter()

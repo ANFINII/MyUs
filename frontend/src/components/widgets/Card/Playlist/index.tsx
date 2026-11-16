@@ -18,7 +18,7 @@ export default function PlaylistCard(props: Props): React.JSX.Element {
 
   return (
     <Card className={style.card}>
-      <Link href={`/media/music/playlist/${ulid}`} className={style.link}>
+      <Link href={`/menu/playlist/${ulid}`} className={style.link}>
         <div className={style.thumbnail_box}>
           {image ? <ExImage src={image} width="195" height="195" className={style.thumbnail} /> : <IconMusic size="48" className={style.icon} />}
           <span className={style.count}>{t('playlist.count', { count })}</span>

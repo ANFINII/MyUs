@@ -40,6 +40,7 @@ import {
   subscribeChannelsQuery,
   userPageAdvertisesQuery,
   userPageMediaQuery,
+  userPagePlaylistsQuery,
   userPageQuery,
   userQuery,
   videoQuery,
@@ -119,8 +120,9 @@ export const userPageLoader = ({ queryClient, params, search }: PageLoad<{ ulid:
       return channelUlid ? queryClient.query(userPageMediaQuery(params.ulid, channelUlid, query)) : undefined
     })
     .catch(noop)
+  const playlists = queryClient.query(userPagePlaylistsQuery(params.ulid)).catch(noop)
   const advertises = queryClient.query(userPageAdvertisesQuery(params.ulid, query)).catch(noop)
-  return Promise.all([userPage, media, advertises])
+  return Promise.all([userPage, media, playlists, advertises])
 }
 
 export const subscribeChannelsLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(subscribeChannelsQuery())

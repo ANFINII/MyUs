@@ -24,7 +24,7 @@ import {
 import { getBlog, getChat, getComic, getMusic, getPicture, getVideo } from 'api/internal/media/detail'
 import { getBlogs, getChats, getComics, getHome, getMusics, getPictures, getRecommend, getVideos } from 'api/internal/media/list'
 import { getPaymentPlans, getPaymentSubscription } from 'api/internal/payment'
-import { getPlaylist, getPlaylists } from 'api/internal/playlist'
+import { getPlaylist, getPlaylists, getUserPlaylists } from 'api/internal/playlist'
 import { getSettingMypage, getSettingNotification, getSettingProfile } from 'api/internal/setting'
 import { getFollow, getFollower, getUser, getUserPage, getUserPageAdvertises, getUserPageMedia } from 'api/internal/user'
 
@@ -56,6 +56,7 @@ export const chatQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.me
 export const userPageQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.userPage(ulid), queryFn: () => toQuery(getUserPage(ulid)), refetchOnMount: false })
 export const userPageMediaQuery = (ulid: string, channelUlid: string, params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.userPageMedia(ulid, channelUlid, params), queryFn: () => toQuery(getUserPageMedia(ulid, channelUlid, params)), refetchOnMount: false })
+export const userPagePlaylistsQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.userPagePlaylists(ulid), queryFn: () => toQuery(getUserPlaylists(ulid)), refetchOnMount: false })
 export const userPageAdvertisesQuery = (ulid: string, params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.userPageAdvertise(ulid, params), queryFn: () => toQuery(getUserPageAdvertises(ulid, params)), refetchOnMount: false })
 

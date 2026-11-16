@@ -23,7 +23,6 @@ import CheckBox from 'components/parts/Input/CheckBox'
 import Link from 'components/parts/Link'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import style from './Detail.module.scss'
-import MusicTabs from '../../MusicTabs'
 
 interface Props {
   data: PlaylistDetailOut
@@ -99,13 +98,11 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
     handleLoading(false)
     if (ret.isErr()) return handleToast(errorMessage(ret.error, FetchError.Delete), true)
     await queryClient.invalidateQueries({ queryKey: queryKeys.mediaPlaylists })
-    router.push('/media/music/playlist')
+    router.push('/menu/playlist')
   }
 
   return (
-    <Main title="Music" toast={toast}>
-      <MusicTabs selected="playlist" />
-
+    <Main title="Playlist" toast={toast}>
       <section className={style.header}>
         <div className={style.thumbnail_box}>{image ? <ExImage src={image} className={style.thumbnail} /> : <IconMusic size="48" className={style.icon} />}</div>
         <div className={style.info}>

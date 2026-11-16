@@ -279,6 +279,7 @@
     "recommend": "急上昇",
     "follow": "フォロー",
     "channel": "チャンネル",
+    "playlist": "プレイリスト",
     "userpolicy": "利用規約"
   },
   "cloudMenu": {
@@ -559,8 +560,6 @@
     "follow": "フォローする"
   },
   "playlist": {
-    "tabAll": "すべて",
-    "tabPlaylist": "プレイリスト",
     "new": "新しいプレイリスト",
     "createOnly": "作成",
     "count": "{{count}}曲",
@@ -848,6 +847,8 @@
     "userpage": {
       "info": "情報",
       "posts": "投稿",
+      "playlist": "プレイリスト",
+      "playlistEmpty": "公開しているプレイリストはありません",
       "advertise": "広告",
       "advertiseEmpty": "広告はありません",
       "follower": "フォロワー数 {{count}}",

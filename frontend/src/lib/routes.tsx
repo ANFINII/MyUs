@@ -36,8 +36,6 @@ export const routeTree = rootRoute.addChildren([
   page('/media/video', () => import('components/pages/media/video'), videoListLoader),
   page('/media/video/$ulid', () => import('components/pages/media/video/detail'), videoDetailLoader),
   page('/media/music', () => import('components/pages/media/music'), musicListLoader),
-  page('/media/music/playlist', () => import('components/pages/media/music/playlist'), playlistListLoader),
-  page('/media/music/playlist/$ulid', () => import('components/pages/media/music/playlist/detail'), playlistDetailLoader),
   page('/media/music/$ulid', () => import('components/pages/media/music/detail'), musicDetailLoader),
   page('/media/blog', () => import('components/pages/media/blog'), blogListLoader),
   page('/media/blog/$ulid', () => import('components/pages/media/blog/detail'), blogDetailLoader),
@@ -50,6 +48,8 @@ export const routeTree = rootRoute.addChildren([
   page('/media/chat/$ulid/thread/$messageUlid', () => import('components/pages/media/chat/detail'), chatThreadLoader),
 
   page('/menu/channel', () => import('components/pages/menu/channel'), subscribeChannelsLoader),
+  page('/menu/playlist', () => import('components/pages/menu/playlist'), playlistListLoader),
+  page('/menu/playlist/$ulid', () => import('components/pages/menu/playlist/detail'), playlistDetailLoader),
   page('/menu/follow', () => import('components/pages/menu/follow'), followsLoader),
   page('/menu/follower', () => import('components/pages/menu/follower'), followersLoader),
   page('/menu/knowledge', () => import('components/pages/menu/knowledge')),
