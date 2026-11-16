@@ -319,7 +319,7 @@
   margin-left: -0.8em;
   margin-top: -0.8em !important;
   opacity: 0;
-  transition: opacity 0.2s, background-color 0.4s;
+  transition: opacity 0.2s, background-color 0.1s;
 }
 
 .video-js .vjs-big-play-button .vjs-icon-placeholder::before {
@@ -342,6 +342,10 @@
 
 .video-js:hover .vjs-big-play-button {
   opacity: 1;
+}
+
+.video-js .vjs-big-play-button:active {
+  background: rgba(0, 105, 255, 0.6);
 }
 
 .video-js .vjs-loading-spinner {
