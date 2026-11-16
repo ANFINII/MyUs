@@ -10,7 +10,6 @@
 }
 
 .music_thumbnail_wrap {
-  position: relative;
   display: flex;
   flex-shrink: 0;
   justify-content: center;
@@ -19,48 +18,10 @@
   background: rgb(30, 30, 30);
   border-radius: 6px;
   overflow: hidden;
-  cursor: pointer;
-
-  &:hover .play,
-  &.current .play {
-    opacity: 1;
-  }
-
-  &:hover .play {
-    background: rgba(0, 105, 255, 0.4);
-  }
-
-  &:active .play {
-    background: rgba(0, 105, 255, 0.6);
-  }
 }
 
 .music_thumbnail {
   width: 100px;
   height: 100px;
   object-fit: cover;
-}
-
-.play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 40px;
-  height: 40px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.2s, background-color 0.1s;
-
-  &::after {
-    position: absolute;
-    top: 50%;
-    left: 54%;
-    content: '';
-    border-color: transparent transparent transparent rgb(255, 255, 255);
-    border-style: solid;
-    border-width: 7px 0 7px 12px;
-    transform: translate(-50%, -50%);
-  }
 }
