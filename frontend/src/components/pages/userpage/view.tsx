@@ -1,13 +1,14 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { Advertise } from 'types/internal/advertise'
 import { Search } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { Playlist } from 'types/internal/playlist'
+import { ChannelSeries } from 'types/internal/series'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
-import { FetchError } from 'utils/constants/enum'
+import { FetchError, MediaType } from 'utils/constants/enum'
 import { useRouter } from 'components/hooks/useRouter'
 import { useSearch } from 'components/hooks/useSearch'
 import { useToast } from 'components/hooks/useToast'
@@ -29,6 +30,7 @@ import MusicCard from 'components/widgets/Card/Media/Music'
 import PictureCard from 'components/widgets/Card/Media/Picture'
 import VideoCard from 'components/widgets/Card/Media/Video'
 import PlaylistCard from 'components/widgets/Card/Playlist'
+import SeriesCard from 'components/widgets/Card/Series'
 import FollowButton from 'components/widgets/FollowButton'
 import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
 import style from './UserPage.module.scss'
@@ -36,6 +38,7 @@ import style from './UserPage.module.scss'
 const enum TabKey {
   Info = 'info',
   Posts = 'posts',
+  Series = 'series',
   Playlist = 'playlist',
   Advertise = 'advertise',
 }
@@ -45,12 +48,13 @@ interface Props {
   ulid: string
   channelUlid: string
   media: UserPageMedia
+  series: ChannelSeries[]
   playlists: Playlist[]
   advertises: Advertise[]
 }
 
 export default function Userpage(props: Props): React.JSX.Element {
-  const { userPage, ulid, channelUlid, media, playlists, advertises } = props
+  const { userPage, ulid, channelUlid, media, series, playlists, advertises } = props
   const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
   const router = useRouter()
@@ -68,10 +72,14 @@ export default function Userpage(props: Props): React.JSX.Element {
   const formattedDate = new Date(dateJoined).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: 'numeric' })
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const selectedChannel = channels.find((c) => c.ulid === channelUlid)
+  const seriesGroups = Object.values(MediaType)
+    .map((mediaType) => ({ mediaType, items: series.filter((s) => s.mediaType === mediaType) }))
+    .filter((group) => group.items.length > 0)
 
   const tabItems: TabItem<TabKey>[] = [
     { key: TabKey.Info, label: t('media.userpage.info') },
     { key: TabKey.Posts, label: t('media.userpage.posts') },
+    { key: TabKey.Series, label: t('media.userpage.series') },
     { key: TabKey.Playlist, label: t('media.userpage.playlist') },
     { key: TabKey.Advertise, label: t('media.userpage.advertise') },
   ]
@@ -79,6 +87,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   const tabSearch: Record<TabKey, Search | undefined> = {
     [TabKey.Info]: undefined,
     [TabKey.Posts]: search,
+    [TabKey.Series]: undefined,
     [TabKey.Playlist]: undefined,
     [TabKey.Advertise]: { ...search, count: advertises.length },
   }
@@ -204,6 +213,22 @@ export default function Userpage(props: Props): React.JSX.Element {
           </CardIndexList>
         </>
       )}
+
+      {selectedTab === TabKey.Series &&
+        (seriesGroups.length === 0 ? (
+          <p className={style.empty}>{t('media.userpage.seriesEmpty')}</p>
+        ) : (
+          seriesGroups.map(({ mediaType, items }, index) => (
+            <Fragment key={mediaType}>
+              {index > 0 && <Divide />}
+              <CardIndexList title={mediaType}>
+                {items.map((item) => (
+                  <SeriesCard key={item.ulid} item={item} />
+                ))}
+              </CardIndexList>
+            </Fragment>
+          ))
+        ))}
 
       {selectedTab === TabKey.Playlist &&
         (playlists.length === 0 ? <p className={style.empty}>{t('media.userpage.playlistEmpty')}</p> : <CardList items={playlists} Content={PlaylistCard} />)}

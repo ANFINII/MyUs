@@ -26,6 +26,7 @@ export const queryKeys = {
   mediaChat: (ulid: string) => ['media', 'chat', ulid] as const,
   userPage: (ulid: string) => ['userpage', ulid] as const,
   userPageMedia: (ulid: string, channelUlid: string, params: SearchParams) => ['userpage', ulid, 'media', channelUlid, params] as const,
+  userPageSeries: (ulid: string, channelUlid: string) => ['userpage', ulid, 'series', channelUlid] as const,
   userPagePlaylists: (ulid: string) => ['userpage', ulid, 'playlist'] as const,
   userPageAdvertise: (ulid: string, params: SearchParams) => ['userpage', ulid, 'advertise', params] as const,
   globalAdvertises: ['advertise', 'global'] as const,

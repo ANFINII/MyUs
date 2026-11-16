@@ -28,6 +28,16 @@ class SeriesDetailDTO:
 
 
 @dataclass(frozen=True, slots=True)
+class ChannelSeriesDTO:
+    ulid: str
+    title: str
+    media_type: MediaType
+    count: int
+    media_ulid: str
+    image: str
+
+
+@dataclass(frozen=True, slots=True)
 class SeriesCreateDTO:
     channel_ulid: str
     media_type: MediaType

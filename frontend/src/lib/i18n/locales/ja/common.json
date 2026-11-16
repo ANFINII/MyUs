@@ -856,7 +856,8 @@
   },
   "media": {
     "series": {
-      "label": "シリーズ"
+      "label": "シリーズ",
+      "count": "{{count}}件"
     },
     "blog": {
       "promotion": "この記事はプロモーションを含みます",
@@ -865,6 +866,8 @@
     "userpage": {
       "info": "情報",
       "posts": "投稿",
+      "series": "シリーズ",
+      "seriesEmpty": "シリーズはありません",
       "playlist": "プレイリスト",
       "playlistEmpty": "公開しているプレイリストはありません",
       "advertise": "広告",

@@ -1,6 +1,13 @@
 from dataclasses import replace
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface
+from myus.domain.media.blog.data import BlogData
+from myus.domain.media.chat.data import ChatData
+from myus.domain.media.comic.data import ComicData
+from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
+from myus.domain.media.music.data import MusicData
+from myus.domain.media.picture.data import PictureData
+from myus.domain.media.video.data import VideoData
 from myus.domain.series.data import SeriesData
 from myus.domain.series.interface import FilterOption, PageOption, SeriesInterface, SortOption
 from myus.injectors.container import injector
@@ -9,6 +16,9 @@ from myus.utils.common.result import AccessError, FatalError, ForbiddenError, No
 from myus.utils.enum.media import MediaType
 from ..dto.series import MediaSeriesDTO, SeriesItemDTO
 from ..media._convert import get_media_repository
+
+
+type MediaDataType = VideoData | MusicData | BlogData | ComicData | PictureData | ChatData
 
 
 @Result.shield_exception()
@@ -95,3 +105,27 @@ def delete_series_media_data(media_type: MediaType, media_ids: list[int]) -> Res
         return Result.err(save_ret.err_value)
 
     return Result.ok(None)
+
+
+def media_image(media: MediaDataType) -> str:
+    return media.image if not isinstance(media, ChatData) else ""
+
+
+@Result.shield_exception()
+def get_published_media_data(media_type: MediaType, media_ids: list[int]) -> Result[list[MediaDataType], FatalError]:
+    if len(media_ids) == 0:
+        return Result.ok([])
+
+    repo = get_media_repository(media_type)
+    ids_ret = repo.get_ids(MediaFilterOption(ids=media_ids, publish=True), MediaSortOption(), MediaPageOption(limit=0))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    id_set = set(ids)
+    objs_ret = repo.bulk_get([i for i in media_ids if i in id_set])
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs: list[MediaDataType] = list(objs_ret.ok_value)
+    return Result.ok(objs)
