@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
+import { useRouter } from 'components/hooks/useRouter'
 import ExImage from 'components/parts/ExImage'
 import IconChevront from 'components/parts/Icon/Chevront'
 import IconCross from 'components/parts/Icon/Cross'
@@ -6,10 +8,19 @@ import Link from 'components/parts/Link'
 import AudioPlayer from 'components/widgets/AudioPlayer'
 import style from './MiniPlayer.module.scss'
 
+const PLAYER_DETAIL_PATH = /^\/media\/(video|music)\/[^/]+$/
+
 export default function MiniPlayer(): React.JSX.Element {
+  const router = useRouter()
   const { current, audioRef, next, prev, close } = useMusicPlayer()
 
-  if (current === undefined) return <></>
+  const isPlayerDetail = PLAYER_DETAIL_PATH.test(router.pathname)
+
+  useEffect(() => {
+    if (isPlayerDetail) close()
+  }, [isPlayerDetail, close])
+
+  if (current === undefined || isPlayerDetail) return <></>
 
   return (
     <div className={style.mini_player}>

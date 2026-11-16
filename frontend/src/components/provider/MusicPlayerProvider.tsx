@@ -1,4 +1,4 @@
-import { useRef, useState, createContext } from 'react'
+import { useRef, useState, createContext, useCallback } from 'react'
 import { Music } from 'types/internal/media/output'
 
 export interface MusicPlayerContextType {
@@ -43,7 +43,7 @@ export function MusicPlayerProvider(props: Props): React.JSX.Element {
 
   const next = () => setIndex((i) => (i + 1 < queue.length ? i + 1 : i))
   const prev = () => setIndex((i) => (i > 0 ? i - 1 : i))
-  const close = () => setQueue([])
+  const close = useCallback(() => setQueue([]), [])
 
   const value = { current, audioRef, play, toggle, next, prev, close }
   return <MusicPlayerContext.Provider value={value}>{children}</MusicPlayerContext.Provider>
