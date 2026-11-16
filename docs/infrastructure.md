@@ -19,7 +19,7 @@
 ### 本番化する前に解決すべき課題
 
 1. **メールの送信元が決まっていない**: 本番は SMTP で送る設定になったが、送る SMTP サーバー（Gmail・SES の SMTP など）と送信元のアドレス・ドメインの認証（SPF・DKIM）を用意する必要がある
-2. **シークレットが `myus/envs/*.env` にある**: 入れ物は SSM Parameter Store（`prod/common/parameters`）に作った。起動時にそこから env を作る仕組みは、デプロイ（[roadmap.md](roadmap.md) の「インフラ」の順 1）で作る
+2. **シークレットの本当の値が SSM Parameter Store に入っていない**: 入れ物（`/myus/prod/<名前>`）は `FIXME` の値で作ってある。デプロイの `deploy.sh` は `FIXME` が残っていると止まるので、最初のデプロイの前に `aws ssm put-parameter --overwrite` で入れる
 
 ---
 
@@ -211,6 +211,112 @@ infra/
 | SES の本番利用申請・サービスクォータの引き上げ | AWS に申請する |
 | ドメインの購入 | 手作業で行う（DNS レコードはコードで管理する） |
 | DB・S3 のデータ | バックアップで守る（RDS の自動バックアップ、S3 のバージョニング） |
+
+---
+
+## 構成図
+
+Terraform で作るものを、スタックの依存・リクエストの流れ・デプロイの流れの 3 つに分けて描く。ドメイン関連（ACM・Route 53・SES）と監視はまだ無いので描いていない。
+
+### スタックの依存と apply の順
+
+矢印は `terraform_remote_state` で outputs を読む向き（読まれる側 → 読む側）。apply は `infra/aws/prod/stacks.txt` の番号の順に流れるので、読まれる側が先に作られる。
+
+```mermaid
+flowchart LR
+    subgraph common[common]
+        network[1. network<br/>VPC・サブネット・SG]
+        parameters[2. parameters<br/>SSM の入れ物]
+        ecr[3. ecr<br/>myus-backend]
+    end
+    subgraph general[general]
+        cost[4. cost<br/>Budgets・異常検知]
+        iam[5. iam-role<br/>GitHub Actions の OIDC ロール]
+    end
+    subgraph myus[products/myus]
+        media[6. media<br/>S3・CloudFront]
+        database[7. database<br/>RDS MySQL]
+        compute[8. compute<br/>EC2・CloudFront・IAM]
+    end
+
+    network --> database
+    network --> compute
+    parameters --> compute
+    database --> compute
+    media --> compute
+```
+
+`ecr`・`cost`・`iam-role` はほかのスタックの outputs を読まない。`iam-role` のデプロイ用のロールは、ECR のリポジトリと EC2 を名前（`myus-backend`・`myus-api-prod`）で指している。
+
+### リクエストの流れ
+
+```mermaid
+flowchart LR
+    User[ユーザー]
+    Vercel[Vercel<br/>フロント SPA]
+    Stripe[Stripe]
+
+    subgraph aws[AWS ap-northeast-1]
+        CF_API[CloudFront API<br/>キャッシュなし<br/>CloudFront-Forwarded-Proto を付ける]
+        CF_MEDIA[CloudFront メディア<br/>CachingOptimized]
+        S3[(S3<br/>myus-prod-media)]
+        SSM[SSM Parameter Store<br/>/myus/prod/]
+
+        subgraph vpc[VPC 10.0.0.0/16]
+            subgraph public[パブリックサブネット]
+                subgraph ec2[EC2 myus-api-prod・EIP・SG api]
+                    backend[backend<br/>daphne :80]
+                    worker[worker<br/>決済のイベント]
+                    encoder[encoder<br/>HLS 変換]
+                    redis[(redis)]
+                end
+            end
+            subgraph datastore[datastore サブネット・外への経路なし]
+                RDS[(RDS MySQL 8.4<br/>SG database)]
+            end
+        end
+    end
+
+    User --> Vercel
+    User -->|HTTPS / WSS| CF_API
+    Stripe -->|webhook| CF_API
+    CF_API -->|HTTP :80<br/>CloudFront のプレフィックスリストだけ許可| backend
+    User -->|HTTPS| CF_MEDIA -->|OAC| S3
+    backend --> redis
+    backend -->|:3306<br/>SG api からだけ許可| RDS
+    worker --> RDS
+    encoder --> RDS
+    backend -->|アップロード| S3
+    encoder -->|元の動画を取り出し・HLS を置く| S3
+    ec2 -.デプロイのときに読む.-> SSM
+```
+
+### デプロイの流れ
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as 開発者
+    participant GH as GitHub Actions
+    participant AWS as AWS（Terraform の対象）
+    participant ECR as ECR<br/>myus-backend
+    participant EC2 as EC2<br/>/opt/myus
+    participant SSM as SSM Parameter Store
+
+    Dev->>GH: PR を出す
+    GH->>AWS: infra.yml check・plan（github-actions-terraform-plan）
+    Dev->>GH: main にマージ
+    GH->>AWS: infra.yml apply（github-actions-terraform-apply）<br/>stacks.txt の順
+    Note over GH: BE が変わったら deploy.yml（github-actions-deploy）
+    GH->>GH: arm64 のイメージを作る
+    GH->>ECR: コミットの SHA のタグで push
+    GH->>EC2: SSM Run Command で compose.yml・deploy.sh を送って実行
+    EC2->>SSM: /myus/prod/ を読む
+    EC2->>EC2: django.env を作る（FIXME が残っていたら止まる）
+    EC2->>ECR: docker compose pull
+    EC2->>EC2: docker compose up -d
+    GH->>EC2: 終わるまで get-command-invocation で待つ
+```
 
 ---
 
