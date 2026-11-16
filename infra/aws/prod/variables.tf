@@ -10,5 +10,7 @@ locals {
     env       = local.env
     region    = local.region
     profile   = local.base_name
+
+    vpc_cidr16 = "10.0"
   }
 }
