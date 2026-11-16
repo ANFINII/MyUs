@@ -14,6 +14,7 @@ import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import IconInfo from 'components/parts/Icon/Info'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import DatePicker from 'components/parts/Input/DatePicker'
@@ -82,7 +83,11 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
-          <Textarea label={t('manage.form.lyric')} name="lyric" placeholder={t('manage.form.lyricPlaceholder')} onChange={handleText} />
+          <Textarea label={t('manage.form.lyric')} name="lyric" onChange={handleText} />
+          <div className={style.lyric_hint}>
+            <IconInfo size="14" className={style.lyric_hint_icon} />
+            <span>{t('manage.form.lyricHint')}</span>
+          </div>
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
           <VStack gap="2">
             <InputFile label={t('manage.form.music')} accept="audio/*" required error={error} onChange={handleFile} />

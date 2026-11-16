@@ -327,6 +327,14 @@
       "deleteTitle": "Delete series",
       "deleteConfirm": "Delete \"{{title}}\"? Posts will not be deleted"
     },
+    "lyric": {
+      "open": "Sync lyrics",
+      "hint": "Play the song, pick a line and press \"Record time\" to stamp it and move to the next line. Click a line to jump to its time",
+      "record": "Record time",
+      "clear": "Clear time",
+      "preview": "Preview",
+      "empty": "No lyrics yet. Add lyrics on the edit page first"
+    },
     "header": {
       "selected": "{{count}} selected",
       "bulkDelete": "Delete selected"
@@ -373,7 +381,7 @@
       "title": "Title",
       "content": "Description",
       "lyric": "Lyrics",
-      "lyricPlaceholder": "Add a time like [00:12.00] at the start of each line to sync the lyrics with playback",
+      "lyricHint": "Add a time like [00:12.00] at the start of each line to sync the lyrics with playback on the music page",
       "download": "Allow downloads",
       "thumbnail": "Thumbnail",
       "image": "Image",
