@@ -14,6 +14,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import AudioPlayer from 'components/widgets/AudioPlayer'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
+import PlaylistAdd from 'components/widgets/PlaylistAdd'
 import View from 'components/widgets/View'
 import style from './Detail.module.scss'
 
@@ -45,11 +46,14 @@ export default function MusicDetail(props: Props): React.JSX.Element {
             <AudioPlayer src={music} playbackRate={speed} isVolumeInline className={style.player} />
             <HStack justify="between">
               <SpeedControl value={speed} onChange={handleSpeed} className={style.speed} />
-              {download && (
-                <a href={music} download className={style.download}>
-                  <IconDownload size="1.5em" />
-                </a>
-              )}
+              <div className={style.actions}>
+                <PlaylistAdd musicUlid={other.ulid} />
+                {download && (
+                  <a href={music} download className={style.download}>
+                    <IconDownload size="1.5em" />
+                  </a>
+                )}
+              </div>
             </HStack>
           </VStack>
         </div>

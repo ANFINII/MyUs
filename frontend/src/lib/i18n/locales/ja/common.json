@@ -558,6 +558,18 @@
     "following": "フォロー済み",
     "follow": "フォローする"
   },
+  "playlist": {
+    "add": "プレイリストに追加",
+    "added": "追加済み",
+    "public": "公開",
+    "private": "非公開",
+    "empty": "プレイリストはまだありません",
+    "newTitle": "新しいプレイリスト",
+    "publish": "公開する",
+    "create": "作成して追加",
+    "loginRequired": "プレイリストを使うにはログインが必要です",
+    "login": "ログインする"
+  },
   "mediaDetail": {
     "unpublished": "非公開に設定されてます!"
   },

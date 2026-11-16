@@ -42,6 +42,12 @@
   }
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .download {
   color: rgb(200, 200, 200);
   text-decoration: none;

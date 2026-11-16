@@ -563,6 +563,18 @@
     "following": "Following",
     "follow": "Follow"
   },
+  "playlist": {
+    "add": "Add to playlist",
+    "added": "Added",
+    "public": "Public",
+    "private": "Private",
+    "empty": "No playlists yet",
+    "newTitle": "New playlist",
+    "publish": "Make public",
+    "create": "Create and add",
+    "loginRequired": "Log in to use playlists",
+    "login": "Log in"
+  },
   "mediaDetail": {
     "unpublished": "This content is private."
   },
