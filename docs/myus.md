@@ -63,7 +63,7 @@ Channel
 
 Video
   ├─ channel
-  ├─ 動画ファイル、変換ファイル、サムネイル
+  ├─ 動画ファイル、変換ファイル、サムネイル、変換の状態
   └─ カテゴリー、ハッシュタグ、いいね、閲覧数
 
 Music
@@ -180,7 +180,10 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 #### Video（動画）
 - 動画ファイル、変換済みファイル
 - サムネイル画像
+- 変換の状態（`encode_status`。`Encoding`・`Done`・`Failed`）
 - 検索対応
+
+動画は変換前（`Encoding`）のまま保存し、worker（`encode_videos`。docker-compose の `myus_encoder`）が古い順に ffmpeg で HLS に変換する。元の動画を一時フォルダに取り出して変換し、できた `.m3u8`・`.ts`・`.mp4` を保存先に上げて `Done` にする。続けて3回失敗したら壊れたファイルとみなして `Failed` にし、それ以上は試さない。公開の一覧・詳細には `Done` の動画だけを出す。`Failed` の動画は、管理画面の一覧に「変換できませんでした」と出し、編集で動画のファイルを上げ直すと `Encoding` に戻る。
 
 #### Music（音楽）
 - 音楽ファイル
@@ -437,6 +440,7 @@ flowchart TB
 - **決済**: Stripe（Checkout・Billing・webhook）
 - **メール**: 開発はコンソールに出すだけ。本番は SMTP で送る（`config/settings/prod.py` の `MAILERS`。Gmail・SES の SMTP など、接続先は環境変数）
 - **動画変換**: ffmpeg
+- **メディアの保存**: 開発はローカルディスク（`MEDIA_ROOT`）、本番は `django-storages` で S3 に置き、CloudFront から配信する（`config/settings/prod.py`）
 
 ### パフォーマンス最適化
 - **インデックス**: 主要検索フィールドに設定
@@ -476,12 +480,13 @@ flowchart TB
 
 ### スケーラビリティ
 - 決済のイベントの反映は worker（`myus_worker`）で非同期に行う
+- 動画の HLS 変換は worker（`myus_encoder`）で非同期に行う
 - インデックス最適化
 
 ## 今後の展開
 
 ### 残っているもの
-- 決済：クリエイターが売る機能（Stripe Connect・Store・Product）、多通貨、Stripe のテスト環境での確認（[roadmap.md](roadmap.md)）
+- 決済：クリエイターが売る機能（Stripe Connect・Store・Product）、Stripe のテスト環境での確認（[roadmap.md](roadmap.md)）
 - Event Sourcing：外部操作の要求と結果・Projector・帳簿の集約（保留。[roadmap.md](roadmap.md)）
 - 投稿者ごとの Google Tag Manager（マイページの `tag_manager_id`）：ID は登録できるが、読み込みはしていない。GTM は任意のスクリプトを動かせるので、投稿者の GTM を MyUs のページで読み込むと、投稿者が閲覧者のページで好きなスクリプトを動かせてしまう（Cookie 以外の情報の抜き取り・画面の書き換えなど）。入れるなら、MyUs のドメインとは別の場所で動かす仕組みが要る
 

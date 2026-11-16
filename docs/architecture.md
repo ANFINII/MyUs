@@ -14,6 +14,7 @@
 | 開発環境 | Docker Compose / uv / pnpm |
 | 静的解析・テスト | mypy / ruff / pytest / ESLint / Vitest |
 | CI・配信 | GitHub Actions / Vercel |
+| 本番のインフラ | AWS（EC2・RDS・S3・CloudFront・SSM）/ Terraform（[infrastructure.md](infrastructure.md)） |
 
 ## 全体構成
 
@@ -43,6 +44,7 @@ flowchart LR
 - フロントエンドは SPA として Vercel から配信し、バックエンドの REST API を呼ぶ
 - バックエンドは Daphne（ASGI）で HTTP と WebSocket の両方を受ける
 - WebSocket のメッセージは Redis の Channel Layer で配る
+- メディアは、開発はローカルディスク、本番は S3 に置いて CloudFront から配信する
 
 ## バックエンド
 
@@ -120,7 +122,8 @@ repository と usecase は例外を投げず、`Result[T, E]` を返す。
 ## リアルタイム通信・メディア配信
 
 - チャットのメッセージとスレッドは Django Channels の WebSocket で送受信する
-- 動画・音楽はアップロード時に ffmpeg で HLS に変換し、video.js で再生する
+- 動画は変換前のまま保存し、worker（`encode_videos`・docker-compose の `myus_encoder`）が ffmpeg で HLS に変換して、video.js で再生する。3回続けて失敗したら `encode_status` を `Failed` にし、管理画面で動画を上げ直してもらう
+- 音楽はアップロード時に ffmpeg で MP3 に変換する
 - ブログなどの本文は Tiptap で編集し、表示時に DOMPurify で無害化する
 
 ## 決済
@@ -158,7 +161,6 @@ PaymentPayout             銀行口座への入金
 | コマンド | 内容 |
 |---|---|
 | `uv run python manage.py process_payment_events` | 未反映のイベントを反映する worker |
-| `uv run python manage.py encode_videos` | まだ変換していない動画（`encode_status` が `Encoding` のもの）を HLS に変換する worker。docker-compose の `myus_encoder` で動かす |
 | `uv run python manage.py export_ledger --from 2026-01-01 --to 2026-12-31` | 期間の明細を CSV で出力する |
 | `uv run python manage.py replay_payment_events --confirm` | イベントを流し直して投影を作り直す |
 

@@ -202,7 +202,7 @@ flowchart LR
 
 次の BE の作業は、デプロイより前に済ませる。
 
-- 本番のマイグレーションの方法を決める（`myus/api/db/migrations/` は Git の管理外なので、デプロイで何を流すかが決まっていない）
+- 本番のマイグレーションの方法を決める（`myus/myus/db/migrations/` は Git の管理外なので、デプロイで何を流すかが決まっていない）
 
 有料のメディアを CloudFront の署名付き Cookie で守るのは、有料のメディアを出すときに `prod/products/myus/media` に足す。
 

@@ -1,6 +1,6 @@
 # MyUs インフラ構成案（AWS）
 
-2026-11-08 時点のコードベースをもとにした、本番インフラの推奨構成。
+2026-11-16 時点のコードベースをもとにした、本番インフラの推奨構成。
 
 ## 前提（現状の構成）
 
@@ -19,7 +19,7 @@
 ### 本番化する前に解決すべき課題
 
 1. **メールの送信元が決まっていない**: 本番は SMTP で送る設定になったが、送る SMTP サーバー（Gmail・SES の SMTP など）と送信元のアドレス・ドメインの認証（SPF・DKIM）を用意する必要がある
-2. **シークレットが `myus/envs/*.env` にある**: 本番では安全な保管場所が必要
+2. **シークレットが `myus/envs/*.env` にある**: 入れ物は SSM Parameter Store（`prod/common/parameters`）に作った。起動時にそこから env を作る仕組みは、デプロイ（[roadmap.md](roadmap.md) の「インフラ」の順 1）で作る
 
 ---
 
@@ -65,11 +65,11 @@ flowchart LR
 
 | 用途 | サービス | 内容 |
 |---|---|---|
-| API・WebSocket | **EC2 t4g.small**（ARM, 2vCPU / 2GB） | 今の docker-compose をほぼそのまま使う。`daphne`（HTTP+WS）、`worker`（HLS 変換・outbox 処理）、`redis` の 3 コンテナ |
+| API・WebSocket | **EC2 t4g.small**（ARM, 2vCPU / 2GB） | 今の docker-compose をほぼそのまま使う。`daphne`（HTTP+WS）、`worker`（決済のイベントの反映）、`encoder`（動画の HLS 変換）、`redis` の 4 コンテナ |
 | API の入口 | **CloudFront** + **ACM** | TLS 終端。WebSocket にも対応している。ALB（月 $20 以上）を使わずに HTTPS 化できる。オリジンへのアクセスは CloudFront のマネージドプレフィックスリストに限定する。CloudFront → EC2 は HTTP（80 番）になる（EC2 に証明書を置かないため）。暗号化が要るようになったら ALB か EC2 側の TLS を足す |
 | DB | **RDS for MySQL db.t4g.micro**（シングル AZ, gp3 20GB） | 自動バックアップ（7 日）とパッチ適用を任せる。パスワードは Terraform の ephemeral な `random_password` で作り、RDS（`password_wo`）と SSM の `/myus/prod/MYSQL_PASSWORD`（`value_wo`）に同じ値を入れる。state には残らない |
 | キャッシュ・Channel Layer | EC2 上の **Redis コンテナ** | フェーズ 1 では ElastiCache を使わずにコストを抑える |
-| メディア保存 | **S3** | `django-storages[s3]` を導入して `STORAGES` を切り替える。バケットは非公開にする |
+| メディア保存 | **S3** | `django-storages[s3]` の `S3Storage`（`config/settings/prod.py` の `STORAGES`）。バケットは非公開にし、EC2 のロールで書く |
 | メディア配信 | **CloudFront**（OAC） | HLS（`.m3u8` / `.ts`）・画像を配信する。有料コンテンツは **署名付き Cookie** で保護する |
 | メール | **SES** | 今の SMTP の設定のまま、接続先を SES の SMTP（`email-smtp.ap-northeast-1.amazonaws.com`）にする（`django-ses` は入れなくてよい）。本番利用申請（サンドボックス解除）が必要。SPF・DKIM・DMARC は Route 53 で設定する |
 | シークレット | **SSM Parameter Store**（SecureString） | Stripe キー・JWT シークレットなど。EC2 の IAM ロールで読み取り、起動時に環境変数へ展開する |
@@ -80,7 +80,7 @@ flowchart LR
 ### HLS 変換の分離
 
 - アップロードされたら、API はファイルを S3 に置いて **動画を変換前のまま保存するだけ**にする
-- `worker` コンテナがジョブを取り出して ffmpeg で変換し、結果を S3 に置く
+- `encoder` コンテナ（`encode_videos`）が変換前の動画を S3 から一時フォルダに取り出して ffmpeg で変換し、結果を S3 に置く
 - 同じ EC2 内でも、コンテナ（プロセス）を分けて CPU 制限（`cpus:`）をかければ API への影響を抑えられる
 
 ### コスト目安（東京リージョン・月額）
