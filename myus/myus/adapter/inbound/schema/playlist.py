@@ -1,6 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
 from .media.output import MusicOut
+from .user import AuthorOut
 
 
 class PlaylistIn(BaseModel):
@@ -38,9 +39,7 @@ class PlaylistDetailOut(BaseModel):
     title: str
     publish: bool
     is_owner: bool
-    author_ulid: str
-    author_avatar: str
-    author_nickname: str
+    author: AuthorOut
     musics: list[MusicOut]
     updated: datetime
 

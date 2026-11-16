@@ -1,4 +1,5 @@
 import { Music } from 'types/internal/media/output'
+import { Author } from 'types/internal/user'
 
 export interface PlaylistIn {
   title: string
@@ -35,9 +36,7 @@ export interface PlaylistDetailOut {
   title: string
   publish: boolean
   isOwner: boolean
-  authorUlid: string
-  authorAvatar: string
-  authorNickname: string
+  author: Author
   musics: Music[]
   updated: string
 }

@@ -32,7 +32,7 @@ interface Props {
 
 export default function PlaylistDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { ulid, title, publish, isOwner, authorUlid, authorAvatar, authorNickname, musics } = data
+  const { ulid, title, publish, isOwner, author, musics } = data
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -132,7 +132,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
           ) : (
             <div className={style.heading}>
               <div className={style.meta}>
-                <AvatarLink size="s" src={authorAvatar} ulid={authorUlid} title={authorNickname} />
+                <AvatarLink size="s" src={author.avatar} ulid={author.ulid} title={author.nickname} />
                 <span>{t('playlist.count', { count: musics.length })}</span>
                 <span>{publish ? t('playlist.public') : t('playlist.private')}</span>
               </div>

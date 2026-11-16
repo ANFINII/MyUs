@@ -5,9 +5,8 @@ from myus.usecase.dto.playlist import PlaylistCreateDTO, PlaylistDetailDTO, Play
 from myus.usecase.playlist.core import add_playlist_music, create_playlist, delete_playlist, get_my_playlists, get_playlist, get_user_playlists, remove_playlist_music, update_playlist
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError
-from myus.utils.functions.common import create_url
 from .auth import auth_check
-from .media import convert_musics
+from .media import convert_author, convert_musics
 from .schema.common import ErrorOut, ErrorType, SuccessOut
 from .schema.playlist import PlaylistCreateOut, PlaylistDetailOut, PlaylistIn, PlaylistListOut, PlaylistMusicIn, PlaylistOut, PlaylistUpdateIn
 
@@ -236,9 +235,7 @@ def convert_playlist_detail(obj: PlaylistDetailDTO) -> PlaylistDetailOut:
         title=obj.title,
         publish=obj.publish,
         is_owner=obj.is_owner,
-        author_ulid=obj.author_ulid,
-        author_avatar=create_url(obj.author_avatar),
-        author_nickname=obj.author_nickname,
+        author=convert_author(obj.author),
         musics=convert_musics(obj.musics),
         updated=obj.updated,
     )
