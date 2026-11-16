@@ -24,6 +24,7 @@ from myus.adapter.outbound.db.payment.subscription.repository import Subscriptio
 from myus.adapter.outbound.db.payment.transaction.repository import TransactionRepository
 from myus.adapter.outbound.db.playlist.repository import PlaylistRepository
 from myus.adapter.outbound.db.search_tag.repository import SearchTagRepository
+from myus.adapter.outbound.db.series.repository import SeriesRepository
 from myus.adapter.outbound.db.subscribe.repository import SubscribeRepository
 from myus.adapter.outbound.db.user.repository import UserRepository
 from myus.adapter.outbound.payment.stripe.provider import StripeProvider
@@ -54,6 +55,7 @@ from myus.domain.payment.subscription.interface import SubscriptionInterface
 from myus.domain.payment.transaction.interface import TransactionInterface
 from myus.domain.playlist.interface import PlaylistInterface
 from myus.domain.search_tag.interface import SearchTagInterface
+from myus.domain.series.interface import SeriesInterface
 from myus.domain.subscribe.interface import SubscribeInterface
 from myus.domain.user.interface import UserInterface
 from myus.utils.enum.payment import PaymentProvider
@@ -131,6 +133,12 @@ class PlaylistModule(Module):
     @provider
     def provide_playlist_repository(self) -> PlaylistInterface:
         return PlaylistRepository()
+
+
+class SeriesModule(Module):
+    @provider
+    def provide_series_repository(self) -> SeriesInterface:
+        return SeriesRepository()
 
 
 class SearchTagModule(Module):

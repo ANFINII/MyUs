@@ -1,6 +1,6 @@
 from ..enum.advertise import AdvertiseType
 from ..enum.i18n import Country, Currency
-from ..enum.media import EncodeStatus
+from ..enum.media import EncodeStatus, MediaType
 from ..enum.payment import PaymentProvider, SubscriptionStatus, PaymentStatus, LedgerEntryType, PayoutStatus, WebhookEventType
 from ..enum.user import GenderType, PlanName
 
@@ -12,6 +12,7 @@ PLAN_CHOICES = [(p, p) for p in PlanName]
 CURRENCY_CHOICES = [(c, c) for c in Currency]
 COUNTRY_CHOICES = [(c, c) for c in Country]
 ENCODE_STATUS_CHOICES = [(s, s) for s in EncodeStatus]
+MEDIA_TYPE_CHOICES = [(t, t) for t in MediaType]
 PROVIDER_CHOICES = [(p, p) for p in PaymentProvider]
 PAYMENT_STATUS_CHOICES = [(s, s) for s in PaymentStatus]
 LEDGER_ENTRY_TYPE_CHOICES = [(t, t) for t in LedgerEntryType]

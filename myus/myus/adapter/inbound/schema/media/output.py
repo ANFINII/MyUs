@@ -162,31 +162,73 @@ class ChatDetailOut(MediaDetailOut):
     messages: list[MessageOut]
 
 
+class VideoSeriesOut(BaseModel):
+    ulid: str
+    title: str
+    items: list[VideoOut]
+
+
 class VideoDetailsOut(BaseModel):
     detail: VideoDetailOut
     list: list[VideoOut]
+    series: VideoSeriesOut
+
+
+class MusicSeriesOut(BaseModel):
+    ulid: str
+    title: str
+    items: list[MusicOut]
 
 
 class MusicDetailsOut(BaseModel):
     detail: MusicDetailOut
     list: list[MusicOut]
+    series: MusicSeriesOut
+
+
+class BlogSeriesOut(BaseModel):
+    ulid: str
+    title: str
+    items: list[BlogOut]
 
 
 class BlogDetailsOut(BaseModel):
     detail: BlogDetailOut
     list: list[BlogOut]
+    series: BlogSeriesOut
+
+
+class ComicSeriesOut(BaseModel):
+    ulid: str
+    title: str
+    items: list[ComicOut]
 
 
 class ComicDetailsOut(BaseModel):
     detail: ComicDetailOut
     list: list[ComicOut]
+    series: ComicSeriesOut
+
+
+class PictureSeriesOut(BaseModel):
+    ulid: str
+    title: str
+    items: list[PictureOut]
 
 
 class PictureDetailsOut(BaseModel):
     detail: PictureDetailOut
     list: list[PictureOut]
+    series: PictureSeriesOut
+
+
+class ChatSeriesOut(BaseModel):
+    ulid: str
+    title: str
+    items: list[ChatOut]
 
 
 class ChatDetailsOut(BaseModel):
     detail: ChatDetailOut
     list: list[ChatOut]
+    series: ChatSeriesOut

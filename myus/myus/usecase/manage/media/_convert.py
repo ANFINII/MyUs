@@ -18,6 +18,7 @@ from myus.utils.enum.media import CommentTypeNo, MediaType
 from myus.utils.enum.notification import NotificationObjectType
 from ...comment._convert import delete_comments_data
 from ...notification._convert import delete_notification_data
+from ...series._convert import delete_series_media_data
 
 
 @Result.shield_exception()
@@ -125,6 +126,10 @@ def delete_video_data(ids: list[int]) -> Result[None, FatalError]:
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
 
+    series_ret = delete_series_media_data(MediaType.VIDEO, ids)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -142,6 +147,10 @@ def delete_music_data(ids: list[int]) -> Result[None, FatalError]:
     comment_ret = delete_comments_data(CommentTypeNo.MUSIC, ids)
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
+
+    series_ret = delete_series_media_data(MediaType.MUSIC, ids)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
 
     return Result.ok(None)
 
@@ -161,6 +170,10 @@ def delete_blog_data(ids: list[int]) -> Result[None, FatalError]:
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
 
+    series_ret = delete_series_media_data(MediaType.BLOG, ids)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -178,6 +191,10 @@ def delete_comic_data(ids: list[int]) -> Result[None, FatalError]:
     comment_ret = delete_comments_data(CommentTypeNo.COMIC, ids)
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
+
+    series_ret = delete_series_media_data(MediaType.COMIC, ids)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
 
     return Result.ok(None)
 
@@ -197,6 +214,10 @@ def delete_picture_data(ids: list[int]) -> Result[None, FatalError]:
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
 
+    series_ret = delete_series_media_data(MediaType.PICTURE, ids)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
     return Result.ok(None)
 
 
@@ -214,5 +235,9 @@ def delete_chat_data(ids: list[int], reply_ids: list[int]) -> Result[None, Fatal
     message_notification_ret = delete_notification_data(NotificationObjectType.MESSAGE, reply_ids)
     if message_notification_ret.is_err:
         return Result.err(message_notification_ret.err_value)
+
+    series_ret = delete_series_media_data(MediaType.CHAT, ids)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
 
     return Result.ok(None)

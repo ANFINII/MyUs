@@ -32,6 +32,8 @@ def filter_q_list(filter: FilterOption) -> list[Q]:
     q_list: list[Q] = []
     if filter.ulid:
         q_list.append(Q(ulid=filter.ulid))
+    if len(filter.ids) > 0:
+        q_list.append(Q(id__in=filter.ids))
     if len(filter.ulids) > 0:
         q_list.append(Q(ulid__in=filter.ulids))
     if filter.publish is not None:
