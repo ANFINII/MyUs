@@ -7,6 +7,7 @@ from .base import MediaModel
 from .channel import Channel
 from .hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
 from .master import Category
+from .payment import DATETIME_MIN
 from .user import User
 
 
@@ -36,6 +37,24 @@ class Video(models.Model, MediaModel):
         indexes = [
             models.Index(fields=["channel", "publish"], name="video_channel_publish_idx"),
             models.Index(fields=["publish", "-created"], name="video_publish_created_idx"),
+        ]
+
+
+class EncodeJob(models.Model):
+    """EncodeJob"""
+    id           = models.BigAutoField(primary_key=True)
+    video        = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="encode_jobs")
+    publish      = models.BooleanField(default=False)
+    processed_at = models.DateTimeField(default=DATETIME_MIN)
+    attempts     = models.PositiveIntegerField(default=0)
+    last_error   = models.TextField(blank=True)
+    created      = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "encode_job"
+        verbose_name_plural = "01 EncodeJob"
+        indexes = [
+            models.Index(fields=["processed_at", "id"], name="encode_job_processed_idx"),
         ]
 
 

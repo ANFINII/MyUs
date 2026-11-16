@@ -38,6 +38,24 @@ services:
     networks:
       - myus_network
 
+  myus_encoder:
+    container_name: myus_encoder
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UV_SYNC_ARGS: ""
+    volumes:
+      - ./myus:/code
+    env_file:
+      - ./myus/envs/django.env
+    depends_on:
+      - mysql
+    command: sh -c 'python manage.py process_encode_jobs --settings config.settings.local'
+    networks:
+      - myus_network
+
   mysql:
     container_name: myus_mysql
     image: mysql:8.4

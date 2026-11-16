@@ -4,6 +4,7 @@ from myus.adapter.outbound.db.advertise.repository import AdvertiseRepository
 from myus.adapter.outbound.db.category.repository import CategoryRepository
 from myus.adapter.outbound.db.channel.repository import ChannelRepository
 from myus.adapter.outbound.db.comment.repository import CommentRepository
+from myus.adapter.outbound.db.encode_job.repository import EncodeJobRepository
 from myus.adapter.outbound.db.es.repository import EventStoreRepository
 from myus.adapter.outbound.db.follow.repository import FollowRepository
 from myus.adapter.outbound.db.hashtag.repository import HashtagRepository
@@ -31,6 +32,7 @@ from myus.domain.advertise.interface import AdvertiseInterface
 from myus.domain.category.interface import CategoryInterface
 from myus.domain.channel.interface import ChannelInterface
 from myus.domain.comment.interface import CommentInterface
+from myus.domain.encode_job.interface import EncodeJobInterface
 from myus.domain.es.interface import EventStoreInterface
 from myus.domain.follow.interface import FollowInterface
 from myus.domain.hashtag.interface import HashtagInterface
@@ -93,6 +95,10 @@ class MediaModule(Module):
     @provider
     def provide_chat_repository(self) -> ChatInterface:
         return ChatRepository()
+
+    @provider
+    def provide_encode_job_repository(self) -> EncodeJobInterface:
+        return EncodeJobRepository()
 
 
 class CategoryModule(Module):
