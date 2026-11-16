@@ -33,6 +33,7 @@ from ..comment._convert import get_comments_data
 from ..dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from ..message._convert import get_messages_data
 from ..notification._convert import create_notification_data
+from ..series._convert import get_media_series_data
 from ..user.core import get_user_data
 
 
@@ -481,9 +482,12 @@ def get_recommend(limit: int, search: str) -> Result[HomeDTO, FatalError]:
 
 
 @Result.shield_exception()
-def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
+def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, media_ids: list[int] | None = None, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
     repo = injector.get(VideoInterface)
-    filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
+    if media_ids is not None and len(media_ids) == 0:
+        return Result.ok(([], 0))
+
+    filter = FilterOption(exclude_id=id, ids=media_ids or [], search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
@@ -495,6 +499,10 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
+    if media_ids is not None:
+        id_set = set(ids)
+        ids = [i for i in media_ids if i in id_set]
+
     objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
@@ -511,9 +519,12 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 
 @Result.shield_exception()
-def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
+def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, media_ids: list[int] | None = None, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
     repo = injector.get(MusicInterface)
-    filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
+    if media_ids is not None and len(media_ids) == 0:
+        return Result.ok(([], 0))
+
+    filter = FilterOption(exclude_id=id, ids=media_ids or [], search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
@@ -525,6 +536,10 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
+    if media_ids is not None:
+        id_set = set(ids)
+        ids = [i for i in media_ids if i in id_set]
+
     objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
@@ -535,9 +550,12 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 
 @Result.shield_exception()
-def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
+def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, media_ids: list[int] | None = None, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
     repo = injector.get(BlogInterface)
-    filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
+    if media_ids is not None and len(media_ids) == 0:
+        return Result.ok(([], 0))
+
+    filter = FilterOption(exclude_id=id, ids=media_ids or [], search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
@@ -549,6 +567,10 @@ def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
+    if media_ids is not None:
+        id_set = set(ids)
+        ids = [i for i in media_ids if i in id_set]
+
     objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
@@ -559,9 +581,12 @@ def get_blogs(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
 
 
 @Result.shield_exception()
-def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
+def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, media_ids: list[int] | None = None, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
     repo = injector.get(ComicInterface)
-    filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
+    if media_ids is not None and len(media_ids) == 0:
+        return Result.ok(([], 0))
+
+    filter = FilterOption(exclude_id=id, ids=media_ids or [], search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
@@ -573,6 +598,10 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
+    if media_ids is not None:
+        id_set = set(ids)
+        ids = [i for i in media_ids if i in id_set]
+
     objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
@@ -588,9 +617,12 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 
 @Result.shield_exception()
-def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
+def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, media_ids: list[int] | None = None, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
     repo = injector.get(PictureInterface)
-    filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
+    if media_ids is not None and len(media_ids) == 0:
+        return Result.ok(([], 0))
+
+    filter = FilterOption(exclude_id=id, ids=media_ids or [], search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
@@ -602,6 +634,10 @@ def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
+    if media_ids is not None:
+        id_set = set(ids)
+        ids = [i for i in media_ids if i in id_set]
+
     objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
@@ -612,9 +648,12 @@ def get_pictures(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 
 
 
 @Result.shield_exception()
-def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
+def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, media_ids: list[int] | None = None, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
     repo = injector.get(ChatInterface)
-    filter = FilterOption(exclude_id=id, search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
+    if media_ids is not None and len(media_ids) == 0:
+        return Result.ok(([], 0))
+
+    filter = FilterOption(exclude_id=id, ids=media_ids or [], search=search, publish=True, owner_id=owner_id, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE, user_id=user_id)
     count_ret = repo.count(filter)
     if count_ret.is_err:
@@ -626,6 +665,10 @@ def get_chats(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, 
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
+    if media_ids is not None:
+        id_set = set(ids)
+        ids = [i for i in media_ids if i in id_set]
+
     objs_ret = repo.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
@@ -672,6 +715,11 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
+    series_ret = get_media_series_data(MediaType.VIDEO, obj.id)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
+    series = series_ret.ok_value
     data =VideoDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -689,6 +737,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         updated=obj.updated,
         channel=obj.channel,
         mediaUser=media_user,
+        series=series,
     )
 
     return Result.ok(data)
@@ -742,6 +791,11 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         plan = get_plan(user.user_plan.plan) if user is not None else None
         is_music_download = plan is not None and plan.is_music_download
 
+    series_ret = get_media_series_data(MediaType.MUSIC, obj.id)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
+    series = series_ret.ok_value
     data =MusicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -760,6 +814,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         updated=obj.updated,
         channel=obj.channel,
         mediaUser=media_user,
+        series=series,
     )
 
     return Result.ok(data)
@@ -803,6 +858,11 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
+    series_ret = get_media_series_data(MediaType.BLOG, obj.id)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
+    series = series_ret.ok_value
     data =BlogDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -820,6 +880,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         updated=obj.updated,
         channel=obj.channel,
         mediaUser=media_user,
+        series=series,
     )
 
     return Result.ok(data)
@@ -863,6 +924,11 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
+    series_ret = get_media_series_data(MediaType.COMIC, obj.id)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
+    series = series_ret.ok_value
     data =ComicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -879,6 +945,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         updated=obj.updated,
         channel=obj.channel,
         mediaUser=media_user,
+        series=series,
     )
 
     return Result.ok(data)
@@ -922,6 +989,11 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
+    series_ret = get_media_series_data(MediaType.PICTURE, obj.id)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
+    series = series_ret.ok_value
     data =PictureDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -937,6 +1009,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         updated=obj.updated,
         channel=obj.channel,
         mediaUser=media_user,
+        series=series,
     )
 
     return Result.ok(data)
@@ -979,6 +1052,11 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
+    series_ret = get_media_series_data(MediaType.CHAT, obj.id)
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
+    series = series_ret.ok_value
     data =ChatDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -996,6 +1074,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         updated=obj.updated,
         channel=obj.channel,
         mediaUser=media_user,
+        series=series,
     )
 
     return Result.ok(data)

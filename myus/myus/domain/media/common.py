@@ -15,6 +15,7 @@ class SortType(Enum):
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     ulid: str = ""
+    ids: list[int] = field(default_factory=list)
     ulids: list[str] = field(default_factory=list)
     exclude_id: int = 0
     publish: bool | None = None

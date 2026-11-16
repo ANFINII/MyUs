@@ -10,6 +10,7 @@ from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
 from .comment import CommentDTO
 from .message import MessageDTO
+from .series import MediaSeriesDTO
 from .user import MediaUserDTO
 
 
@@ -42,6 +43,7 @@ class MediaDetailDTO:
     channel: ChannelData
     mediaUser: MediaUserDTO
     hashtags: list[HashtagData]
+    series: MediaSeriesDTO
 
 
 @dataclass(frozen=True, slots=True)

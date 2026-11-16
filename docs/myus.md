@@ -83,6 +83,9 @@ Comic
 Picture
 Chat
 
+Series (チャンネルの同じ種類の投稿をまとめる。メディアとは独立)
+  └─ SeriesMedia (media_type・object_id・並び順)
+
 【Interaction System】
 Comment
   ├─ 階層構造
@@ -228,6 +231,13 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - リアルタイム通信対応
 - スレッド数、参加者数カウント
 - スコア計算機能
+
+#### Series（シリーズ）
+- 投稿者が、同じチャンネル・同じ種類の投稿をまとめる。6種類すべてで使える
+- メディアの表には持たず、中間の表 `SeriesMedia`（`media_type`・`object_id`・`sequence`）でつなぐ。シリーズを消しても投稿には影響しない。投稿を消すと `SeriesMedia` からも外す
+- 1つの投稿が入るシリーズは1つだけ（`media_type`・`object_id` で一意）
+- 作る・名前を変える・消す・投稿を足す/外す/並べ替えるのは投稿管理のシリーズの画面（`/manage/series`）
+- 詳細の API の `series` に、同じシリーズの公開中の投稿を、決めた並び順で返す
 
 ### インタラクションシステム
 

@@ -10,6 +10,7 @@ from .media import HomeAPI, RecommendAPI, VideoAPI, MusicAPI, BlogAPI, ComicAPI,
 from .message import MessageAPI
 from .payment import PaymentAPI
 from .playlist import PlaylistAPI
+from .series import ManageSeriesAPI
 from .setting import SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
 from .user import UserAPI
 
@@ -30,6 +31,7 @@ api.add_router("/manage/media/blog", ManageBlogAPI().router, tags=["Manage Blog"
 api.add_router("/manage/media/comic", ManageComicAPI().router, tags=["Manage Comic"])
 api.add_router("/manage/media/picture", ManagePictureAPI().router, tags=["Manage Picture"])
 api.add_router("/manage/media/chat", ManageChatAPI().router, tags=["Manage Chat"])
+api.add_router("/manage/series", ManageSeriesAPI().router, tags=["Manage Series"])
 api.add_router("/manage/advertise", ManageAdvertiseAPI().router, tags=["Manage Advertise"])
 
 api.add_router("/channel", ChannelAPI().router, tags=["Channel"])

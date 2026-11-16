@@ -31,6 +31,7 @@ from .schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut,
 from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 from .schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
 from .schema.media.output import VideoDetailsOut, MusicDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
+from .schema.media.output import VideoSeriesOut, MusicSeriesOut, BlogSeriesOut, ComicSeriesOut, PictureSeriesOut, ChatSeriesOut
 from .schema.message import MessageOut
 from .schema.user import AuthorOut, MediaUserOut
 
@@ -177,6 +178,11 @@ class VideoAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, _ = list_ret.ok_value
+        series_ret = get_videos("", media_ids=obj.series.media_ids, limit=0)
+        if series_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        series_objs, _ = series_ret.ok_value
 
         data = VideoDetailsOut(
             detail=VideoDetailOut(
@@ -197,6 +203,7 @@ class VideoAPI:
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_videos(objs),
+            series=VideoSeriesOut(ulid=obj.series.ulid, title=obj.series.title, items=convert_videos(series_objs)),
         )
 
         return 200, data
@@ -285,6 +292,11 @@ class MusicAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, _ = list_ret.ok_value
+        series_ret = get_musics("", media_ids=obj.series.media_ids, limit=0)
+        if series_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        series_objs, _ = series_ret.ok_value
 
         data = MusicDetailsOut(
             detail=MusicDetailOut(
@@ -306,6 +318,7 @@ class MusicAPI:
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_musics(objs),
+            series=MusicSeriesOut(ulid=obj.series.ulid, title=obj.series.title, items=convert_musics(series_objs)),
         )
 
         return 200, data
@@ -394,6 +407,11 @@ class BlogAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, _ = list_ret.ok_value
+        series_ret = get_blogs("", media_ids=obj.series.media_ids, limit=0)
+        if series_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        series_objs, _ = series_ret.ok_value
 
         data = BlogDetailsOut(
             detail=BlogDetailOut(
@@ -414,6 +432,7 @@ class BlogAPI:
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_blogs(objs),
+            series=BlogSeriesOut(ulid=obj.series.ulid, title=obj.series.title, items=convert_blogs(series_objs)),
         )
 
         return 200, data
@@ -502,6 +521,11 @@ class ComicAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, _ = list_ret.ok_value
+        series_ret = get_comics("", media_ids=obj.series.media_ids, limit=0)
+        if series_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        series_objs, _ = series_ret.ok_value
 
         data = ComicDetailsOut(
             detail=ComicDetailOut(
@@ -521,6 +545,7 @@ class ComicAPI:
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_comics(objs),
+            series=ComicSeriesOut(ulid=obj.series.ulid, title=obj.series.title, items=convert_comics(series_objs)),
         )
 
         return 200, data
@@ -609,6 +634,11 @@ class PictureAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, _ = list_ret.ok_value
+        series_ret = get_pictures("", media_ids=obj.series.media_ids, limit=0)
+        if series_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        series_objs, _ = series_ret.ok_value
 
         data = PictureDetailsOut(
             detail=PictureDetailOut(
@@ -627,6 +657,7 @@ class PictureAPI:
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_pictures(objs),
+            series=PictureSeriesOut(ulid=obj.series.ulid, title=obj.series.title, items=convert_pictures(series_objs)),
         )
 
         return 200, data
@@ -715,6 +746,11 @@ class ChatAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, _ = list_ret.ok_value
+        series_ret = get_chats("", media_ids=obj.series.media_ids, limit=0)
+        if series_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        series_objs, _ = series_ret.ok_value
 
         data = ChatDetailsOut(
             detail=ChatDetailOut(
@@ -735,6 +771,7 @@ class ChatAPI:
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_chats(objs),
+            series=ChatSeriesOut(ulid=obj.series.ulid, title=obj.series.title, items=convert_chats(series_objs)),
         )
 
         return 200, data
