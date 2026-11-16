@@ -93,6 +93,7 @@ export default function ManageComics(props: Props): React.JSX.Element {
       header: t('manage.table.detail'),
       align: 'center',
       className: style.narrow,
+      cellClass: style.detail,
       cell: (c) => (
         <Link href={`/media/comic/${c.ulid}`} className={style.detail_link}>
           <IconLink size="16" />

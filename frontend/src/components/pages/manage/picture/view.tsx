@@ -93,6 +93,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
       header: t('manage.table.detail'),
       align: 'center',
       className: style.narrow,
+      cellClass: style.detail,
       cell: (p) => (
         <Link href={`/media/picture/${p.ulid}`} className={style.detail_link}>
           <IconLink size="16" />
