@@ -34,6 +34,16 @@ def locale_path(locale: Locale) -> str:
             assert_never(locale)
 
 
+def mail_locale(locale: Locale) -> Locale:
+    match locale:
+        case Locale.JA | Locale.ZH | Locale.KO:
+            return Locale.JA
+        case Locale.EN:
+            return Locale.EN
+        case _:
+            assert_never(locale)
+
+
 def country_currency(country: Country) -> Currency:
     match country:
         case Country.JP:

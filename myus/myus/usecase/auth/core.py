@@ -14,9 +14,11 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, NotFoundError, Result, ValidateError, ValidationError
 from myus.utils.constants.auth import LOGIN_FAILURE_LIMIT
+from myus.utils.enum.i18n import Locale
 from myus.utils.enum.payment import CancelError
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.auth import add_failure, clear_failures, get_failure_count
+from myus.utils.functions.map import locale_path, mail_locale
 from myus.utils.functions.token import access_token, is_revoked, password_reset_token, refresh_token, revoke, signup_token
 from myus.utils.functions.transaction import atomic_result
 from myus.utils.functions.validation import has_email, has_password, has_weak_password
@@ -130,7 +132,7 @@ def logout_user(access: str, refresh: str) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def signup_send_email(email: str) -> Result[str, FatalError]:
+def signup_send_email(email: str, locale: Locale) -> Result[str, FatalError]:
     if has_email(email):
         return Result.ok("error.emailInvalid")
 
@@ -144,10 +146,12 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.emailTaken")
 
     token = signup_token(email)
-    subject = render_to_string("registration/email/account/subject.txt").strip()
+    frontend_url = f"{settings.FRONTEND_URL}{locale_path(locale)}"
+    mail = mail_locale(locale).value
+    subject = render_to_string(f"registration/email/{mail}/account/subject.txt").strip()
     message = render_to_string(
-        "registration/email/account/message.txt",
-        {"frontend_url": settings.FRONTEND_URL, "token": token},
+        f"registration/email/{mail}/account/message.txt",
+        {"frontend_url": frontend_url, "token": token},
     )
 
     try:
@@ -157,7 +161,7 @@ def signup_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
-        url = f"{settings.FRONTEND_URL}/account/signup?token={token}"
+        url = f"{frontend_url}/account/signup?token={token}"
         log.info("verify URL (dev)", url=url)
 
     return Result.ok("")
@@ -289,7 +293,7 @@ def change_password(user_id: int, input: PasswordChangeDTO) -> Result[str, Fatal
 
 
 @Result.shield_exception()
-def password_reset_send_email(email: str) -> Result[str, FatalError]:
+def password_reset_send_email(email: str, locale: Locale) -> Result[str, FatalError]:
     if has_email(email):
         return Result.ok("error.emailInvalid")
 
@@ -312,10 +316,12 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("")
 
     token = password_reset_token(user_data.user.id, email, user_data.user.password)
-    subject = render_to_string("registration/email/reset/subject.txt").strip()
+    frontend_url = f"{settings.FRONTEND_URL}{locale_path(locale)}"
+    mail = mail_locale(locale).value
+    subject = render_to_string(f"registration/email/{mail}/reset/subject.txt").strip()
     message = render_to_string(
-        "registration/email/reset/message.txt",
-        {"frontend_url": settings.FRONTEND_URL, "token": token, "nickname": user_data.user.nickname},
+        f"registration/email/{mail}/reset/message.txt",
+        {"frontend_url": frontend_url, "token": token, "nickname": user_data.user.nickname},
     )
 
     try:
@@ -325,7 +331,7 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
         return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
-        url = f"{settings.FRONTEND_URL}/account/reset/confirm?token={token}"
+        url = f"{frontend_url}/account/reset/confirm?token={token}"
         log.info("reset URL (dev)", url=url)
 
     return Result.ok("")

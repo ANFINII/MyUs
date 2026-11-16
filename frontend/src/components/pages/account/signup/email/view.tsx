@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { postSignupEmail } from 'api/internal/auth'
-import { FetchError } from 'utils/constants/enum'
+import { FetchError, Locale } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -32,7 +32,8 @@ export default function SignupEmail(): React.JSX.Element {
     if (loading) return
     if (!validate({ email })) return
     handleLoading(true)
-    const ret = await postSignupEmail(email)
+    const locale = router.locale === 'en' ? Locale.En : Locale.Ja
+    const ret = await postSignupEmail(email, locale)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Error), true)

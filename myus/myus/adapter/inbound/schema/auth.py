@@ -1,6 +1,6 @@
 from typing import Annotated
 from pydantic import BaseModel, Field
-from myus.utils.enum.i18n import Country
+from myus.utils.enum.i18n import Country, Locale
 from myus.utils.enum.user import GenderType
 
 
@@ -11,6 +11,7 @@ class LoginIn(BaseModel):
 
 class SignupEmailIn(BaseModel):
     email: str
+    locale: Locale
 
 
 class SignupIn(BaseModel):
@@ -41,6 +42,7 @@ class PasswordChangeIn(BaseModel):
 
 class PasswordResetEmailIn(BaseModel):
     email: str
+    locale: Locale
 
 
 class PasswordResetIn(BaseModel):
