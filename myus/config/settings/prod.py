@@ -39,3 +39,19 @@ CACHES = {
         "LOCATION": f"redis://:{env.redis_password}@{env.redis_host}:{env.redis_port}/1",
     },
 }
+
+# Media
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": env.aws_storage_bucket_name,
+            "region_name": env.aws_s3_region_name,
+            "custom_domain": env.media_domain,
+            "querystring_auth": False,
+            "file_overwrite": False,
+        },
+    },
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+MEDIA_BASE_URL = f"https://{env.media_domain}/"
