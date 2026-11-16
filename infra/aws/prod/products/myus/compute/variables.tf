@@ -20,6 +20,17 @@ data "terraform_remote_state" "parameters" {
   }
 }
 
+data "terraform_remote_state" "database" {
+  backend = "s3"
+
+  config = {
+    bucket  = "terraform-myus-prod"
+    key     = "products/myus/database/terraform.tfstate"
+    region  = "ap-northeast-1"
+    profile = "myus-prod"
+  }
+}
+
 data "terraform_remote_state" "media" {
   backend = "s3"
 
@@ -41,6 +52,9 @@ locals {
 
   # parameters variables
   parameter_store_name_prefix = data.terraform_remote_state.parameters.outputs.parameter_store_name_prefix
+
+  # database variables
+  mysql = data.terraform_remote_state.database.outputs.mysql
 
   # media variables
   media = data.terraform_remote_state.media.outputs.media

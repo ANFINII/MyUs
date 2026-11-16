@@ -189,19 +189,19 @@ flowchart LR
 - state 用の S3 バケット `terraform-myus-prod` を作り、バージョニングを有効にする
 - `prod/general/iam-role` と `prod/general/cost` を手元から `apply` する（CI のロールが無いと CI から apply できないため）
 - GitHub のリポジトリの Variables に `AWS_ACCOUNT_ID`、Secrets に `TF_VAR_EMAILS_FOR_COST`（`["xxx@example.com"]` の形）を入れる。`AWS_ACCOUNT_ID` が空のあいだ、CI は `fmt`・`validate` だけを流す
-- `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
-- ドメインを決めて買う（順 2 までに）
+- `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる。`FIXME` のままのパラメータがあると、デプロイは止まる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
+- ドメインを決めて買う（順 1 までに）
 
 ### 順番
 
 | 順 | スタック | 内容 |
 |---|---|---|
-| 1 | デプロイ | 本番の `compose.yml`（daphne・worker・encoder・Redis）、起動時に SSM のパラメータから env を作る仕組み、GitHub Actions のデプロイ用ロール（ECR への push・SSM Run Command）とワークフロー（arm64 でビルド → ECR → EC2 で `docker compose pull && up -d`） |
-| 2 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.<ドメイン>`）を付ける。ドメインが要る |
-| 3 | `prod/products/myus/monitoring` | CloudWatch Alarms（CPU・ディスク・RDS の空き容量・5xx） |
+| 1 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.<ドメイン>`）を付ける。ドメインが要る |
+| 2 | `prod/products/myus/monitoring` | CloudWatch Alarms（CPU・ディスク・RDS の空き容量・5xx） |
 
-次の BE の作業は、デプロイより前に済ませる。
+次の BE の作業は、最初のデプロイより前に済ませる。
 
+- `config/settings/prod.py` の `SECURE_PROXY_SSL_HEADER` を `("HTTP_CLOUDFRONT_FORWARDED_PROTO", "https")` にする。CloudFront はオリジンに `X-Forwarded-Proto` を送れない（送れるのは `CloudFront-Forwarded-Proto`）ので、今のままだと `SECURE_SSL_REDIRECT` が HTTPS のリクエストも HTTP と見てリダイレクトし続ける
 - 本番のマイグレーションの方法を決める（`myus/myus/db/migrations/` は Git の管理外なので、デプロイで何を流すかが決まっていない）
 
 有料のメディアを CloudFront の署名付き Cookie で守るのは、有料のメディアを出すときに `prod/products/myus/media` に足す。

@@ -36,3 +36,5 @@ provider "aws" {
 module "params" {
   source = "../.."
 }
+
+data "aws_caller_identity" "current" {}

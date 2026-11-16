@@ -75,7 +75,7 @@ flowchart LR
 | シークレット | **SSM Parameter Store**（SecureString） | Stripe キー・JWT シークレットなど。EC2 の IAM ロールで読み取り、起動時に環境変数へ展開する |
 | DNS | **Route 53** | `myus.xxx`（Vercel）・`api.myus.xxx`・`media.myus.xxx` |
 | 監視 | **CloudWatch**（Agent・Logs・Alarms）+ **AWS Budgets** | CPU・ディスク・RDS の空き容量・5xx のアラーム。予算超過はメールで通知する |
-| デプロイ | **GitHub Actions** → **ECR** → EC2（SSM Run Command で `docker compose pull && up -d`） | 認証は OIDC で行う（アクセスキーを使わない） |
+| デプロイ | **GitHub Actions** → **ECR** → EC2（SSM Run Command で `docker compose pull && up -d`） | 認証は OIDC で行う（アクセスキーを使わない）。`.github/workflows/deploy.yml` が arm64 のイメージを作って ECR に push し、`compute/deploy/` の `compose.yml`・`deploy.sh` を EC2 に送って実行する。`deploy.sh` は SSM の `/myus/prod/` から `django.env` を作ってから起動する |
 
 ### HLS 変換の分離
 
@@ -207,7 +207,7 @@ infra/
 |---|---|
 | AWS アカウントの作成・ルートユーザーの MFA・請求設定 | 最初に一度だけ手作業で行う |
 | state 用の S3 バケット（`terraform-myus-prod`） | 手作業で作り、バージョニングを有効にする |
-| シークレットの値 | 入れ物（`prod/common/parameters` の `/myus/prod/<名前>`）だけを Terraform で `FIXME` の値で作り、本当の値は `aws ssm put-parameter --overwrite` で入れる。Git にも state にも残らない（`value_wo`）。DB のパスワードは `prod/products/myus/database` が作って `/myus/prod/MYSQL_PASSWORD` に入れる |
+| 環境変数の値 | 入れ物（`prod/common/parameters` の `/myus/prod/<名前>`）だけを Terraform で `FIXME` の値で作り、本当の値は `aws ssm put-parameter --overwrite` で入れる。Git にも state にも残らない（`value_wo`）。DB のパスワードは `prod/products/myus/database` が作って `/myus/prod/MYSQL_PASSWORD` に入れる。DB の接続先・メディアのバケットなど Terraform で決まる値は `prod/products/myus/compute` が `/myus/prod/` に入れる |
 | SES の本番利用申請・サービスクォータの引き上げ | AWS に申請する |
 | ドメインの購入 | 手作業で行う（DNS レコードはコードで管理する） |
 | DB・S3 のデータ | バックアップで守る（RDS の自動バックアップ、S3 のバージョニング） |
