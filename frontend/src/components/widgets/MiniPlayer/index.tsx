@@ -7,7 +7,7 @@ import AudioPlayer from 'components/widgets/AudioPlayer'
 import style from './MiniPlayer.module.scss'
 
 export default function MiniPlayer(): React.JSX.Element {
-  const { current, next, prev, close } = useMusicPlayer()
+  const { current, audioRef, next, prev, close } = useMusicPlayer()
 
   if (current === undefined) return <></>
 
@@ -23,7 +23,7 @@ export default function MiniPlayer(): React.JSX.Element {
       <button type="button" className={style.button} onClick={prev}>
         <IconChevront width="1.2em" height="1.2em" type="left" />
       </button>
-      <AudioPlayer key={current.ulid} src={current.music} autoPlay isVolumeInline onEnded={next} className={style.player} />
+      <AudioPlayer key={current.ulid} src={current.music} autoPlay isVolumeInline audioRef={audioRef} onEnded={next} className={style.player} />
       <button type="button" className={style.button} onClick={next}>
         <IconChevront width="1.2em" height="1.2em" type="right" />
       </button>
