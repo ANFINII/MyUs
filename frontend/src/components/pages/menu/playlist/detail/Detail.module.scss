@@ -144,8 +144,8 @@
   }
 
   .detail {
-    font-size: 12px;
-    color: rgb(40, 70, 150);
+    display: flex;
+    flex-shrink: 0;
   }
 
   .remove {
