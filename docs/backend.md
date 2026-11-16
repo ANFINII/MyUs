@@ -9,7 +9,7 @@
 ## ロギング
 
 - `print()`禁止、`myus.utils.common.logger`の`log`を使用
-- 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
+- 値はキーワード引数で構造化: `log.info("created", user_id=123)`
 - エラーログには`exc=e`を渡す
 - 本番は1行の JSON（構造化ログ）、開発は色付きの文字列で出す。JSON の項目は時刻 → レベル → 場所 → 文言の順の`timestamp`・`level`・`file`・`line`・`func`・`message`、例外は`exception`・`traceback`で、キーワード引数は`data`にまとめる。決まった項目と名前がぶつからないので、キーワード引数の名前は自由につけてよい
 - logger はファイル・行と、クラス名付きの関数名（`frame.f_code.co_qualname`。`VideoAPI.list`など）を出す。API の入口のログは`log.info("request", ...)`にし、文言に API の名前を書かない
@@ -290,7 +290,7 @@ return Result.ok(new_ids)
 
 | 層 | 責務 | 依存してよいもの |
 |------|------|------|
-| adapter/inbound | HTTP・WebSocket のリクエスト/レスポンス変換、認証チェック。schema（`adapter/inbound/schema/`）を持つ | usecase, DTO |
+| adapter/inbound | HTTP・WebSocket のリクエスト/レスポンス変換、認証チェック。schema（`adapter/inbound/schema/`）を持つ | usecase, DTO, domain の Data・`PageOption`・定数 |
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
 | domain/<ドメイン> | 抽象定義（ABC, dataclass）とルール（`validation.py`） | なし |
 | domain/<ドメイン>/<集約> | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数。いまは `domain/payment/subscription` | Data, utils |
@@ -381,6 +381,7 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-08: 層の表に `domain/aggregate`・`adapter/external` を足し、リンターチェックを `mypy api config`・`ruff` にした
 - 2026-11-11: Validation（ドメインのルール）を追記
 - 2026-11-12: パッケージ名を `api` から `myus` にした（Django の app の label・テーブル名は変えない）
+- 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
 - 2026-11-12: テストをパッケージの外（`tests/`）に出し、リンターチェックを `mypy myus config tests`・`ruff check myus config tests` にした
 - 2026-11-12: adapter を `inbound/`（HTTP・WebSocket）と `outbound/`（外部サービス。もとの `adapter/external`）に分けた
 - 2026-11-12: `domain/entity`（Repository の実装）を `adapter/outbound/db` に移した。決済会社の実装は `adapter/outbound/payment`
@@ -398,7 +399,6 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-14: `ExcludeOption` をなくし、メディアの `FilterOption` に `exclude_id` を足した。`get_ids` は `(filter, sort, page, user_id)` になった
 - 2026-11-14: `get_ids` の `user_id` をメディアの `SortOption` に移した。`get_ids` は `(filter, sort, page)` になった
 - 2026-11-14: `utils/constants/plan.py` を `domain/payment/plan.py` に移し、`Plan` の価格を `prices: list[Money]`（円とドル）にした
-- 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
 - 2026-11-15: enum 変換の決まりを、対応がずれうる変換だけ `map.py` の match + `assert_never` にし、名前・値が同じ enum どうしはそのまま変換してよいことにした
 - 2026-11-15: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`を`domain/common.py`の1つにした（`limit=0`は上限なし）
 - 2026-11-16: `PageOption`を`domain/common.py`の1つから、メディアは`domain/media/common.py`、ほかは各ドメインの`interface.py`に置くように戻した

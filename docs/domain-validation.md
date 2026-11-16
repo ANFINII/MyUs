@@ -79,6 +79,7 @@ if len(errors) > 0:
 ```
 
 - `bulk_save` に渡す list が、ルールの対象をすべて含んでいるときだけ使える。検索タグは `update_search_tags` が作者の検索タグをすべて `bulk_save` に渡している
+- 1 つのファイルに Data 1 つのルールもあるときは、list を受け取る方を `validate_xxx` にする。ハッシュタグは、名前の `validate(obj)` と、1 つのメディアに 20 個までの `validate_count(objs)` に分けている
 
 ## `__post_init__`・ファクトリで確かめない理由
 
@@ -120,10 +121,10 @@ NG ワードを含まない・同じものがまだない、のように DB を�
 
 usecase が DB から読んだ値（なければ `None`・一覧なら `list`）をそのまま `validation.py` の関数に渡し、domain が確かめる。
 
-ハッシュタグの名前（今は `usecase/hashtag/_convert.py` の `validate_name` が NG ワードを受け取って確かめている）
+ハッシュタグの名前
 
-- `get_ng_words_data`（DB を読む）は usecase の `_convert.py` に残す
-- `validate_name`（長さ・使える文字・NG ワード）と `HASHTAG_MAX_LENGTH`・`ALLOWED_PATTERN` は `domain/hashtag/validation.py` の `validate_name(name: str, ng_words: list[str]) -> Result[None, ValidationError]` に移す。引数の `ng_words` はそのままで、今の形がすでに「読んだ値を渡す」形になっている
+- 長さ・使える文字（`HASHTAG_MAX_LENGTH`・`ALLOWED_PATTERN`）は、もう `domain/hashtag/validation.py` の `validate` にあり、repository の `bulk_save` が呼んでいる
+- NG ワードは、今も `usecase/hashtag/_convert.py` の `has_ng_word` が `get_ng_words_data`（DB を読む）で読んだ NG ワードを受け取って確かめている。形 1 にするなら、`has_ng_word` を `domain/hashtag/validation.py` の `validate_ng_word(name: str, ng_words: list[str]) -> Result[None, ValidationError]` に移し、`get_ng_words_data` は usecase の `_convert.py` に残す
 - だめな名前はエラーにせず読み飛ばす今の動きは変えない。usecase は `is_err` なら `continue` する
 
 ### 形 2: Interface を渡す（探す条件そのものがルールのとき）
@@ -131,12 +132,12 @@ usecase が DB から読んだ値（なければ `None`・一覧なら `list`）
 「同じチャンネルに同じ名前のものがまだない」のように、**どう探すか（FilterOption の条件）** がルールの中身になるときは、形 1 だと条件が usecase に残る。このときは `validation.py` の関数が Interface（ABC）を受け取り、探す条件も domain に書く。
 
 ```python
-from myus.domain.xxx.interface import FilterOption, SortOption, XxxInterface
+from myus.domain.xxx.interface import FilterOption, PageOption, SortOption, XxxInterface
 from myus.utils.common.result import FatalError, Result, ValidationError
 
 
 def validate_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Result[None, ValidationError | FatalError]:
-    ids_ret = repo.get_ids(FilterOption(channel_id=channel_id, name=name), SortOption(), limit=1)
+    ids_ret = repo.get_ids(FilterOption(channel_id=channel_id, name=name), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
     if len(ids_ret.ok_value) > 0:
@@ -155,6 +156,7 @@ def validate_name_unused(repo: XxxInterface, channel_id: int, name: str) -> Resu
 - 制約に引っかかったとき（`IntegrityError`）に adapter で `ValidationError` に変えて返す形にはしない。Interface は `Result[T, FatalError]` を返す決まりなので、ルールとして利用者に返すエラーは domain の関数（形 1・形 2）で先に確かめる
 
 ## 更新履歴
+- 2026-11-16: ハッシュタグの名前の例を今のコードに合わせる（長さ・使える文字は domain の `validate`、NG ワードは usecase の `has_ng_word`）。形 2 の例の `get_ids` を `PageOption` を受け取る形にし、ハッシュタグの `validate_count` を足す
 - 2026-11-11: Data 1 つでは決まらないルール（数・重複）は `validate(objs)` で list を受け取る形を足す（検索タグ）
 - 2026-11-11: `__post_init__`・ファクトリで確かめない理由と、状態遷移のルール（aggregate の `decide.py`）との分け方を足す
 - 2026-11-11: 作りが決まったので、検討の文章（`_validate`・`_new` のパターン、recustomer との比べ、マンガで試した形など）を消し、決まった形だけにする
