@@ -90,7 +90,7 @@ class AuthAPI:
     def signup_email(request: HttpRequest, input: SignupEmailIn):
         log.info("request")
 
-        ret = signup_send_email(input.email)
+        ret = signup_send_email(input.email, input.locale)
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -235,7 +235,7 @@ class AuthAPI:
     def password_reset_email(request: HttpRequest, input: PasswordResetEmailIn):
         log.info("request")
 
-        ret = password_reset_send_email(input.email)
+        ret = password_reset_send_email(input.email, input.locale)
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 

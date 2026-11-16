@@ -13,6 +13,7 @@ import {
   apiSignupVerify,
   apiWithdrawal,
 } from 'api/uri'
+import { Locale } from 'utils/constants/enum'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const postLogin = async (request: LoginIn): Promise<ApiOut<void>> => {
@@ -27,8 +28,8 @@ export const postSignup = async (request: SignupIn): Promise<ApiOut<void>> => {
   return await apiOut(apiClient('json').post(apiSignup, camelSnake(request)))
 }
 
-export const postSignupEmail = async (email: string): Promise<ApiOut<void>> => {
-  return await apiOut(apiClient('json').post(apiSignupEmail, { email }))
+export const postSignupEmail = async (email: string, locale: Locale): Promise<ApiOut<void>> => {
+  return await apiOut(apiClient('json').post(apiSignupEmail, { email, locale }))
 }
 
 export const getSignupVerify = async (token: string): Promise<ApiOut<SignupVerifyOut>> => {
@@ -39,8 +40,8 @@ export const postPasswordReset = async (request: PasswordResetIn): Promise<ApiOu
   return await apiOut(apiClient('json').post(apiPasswordReset, camelSnake(request)))
 }
 
-export const postPasswordResetEmail = async (email: string): Promise<ApiOut<void>> => {
-  return await apiOut(apiClient('json').post(apiPasswordResetEmail, { email }))
+export const postPasswordResetEmail = async (email: string, locale: Locale): Promise<ApiOut<void>> => {
+  return await apiOut(apiClient('json').post(apiPasswordResetEmail, { email, locale }))
 }
 
 export const getPasswordResetVerify = async (token: string): Promise<ApiOut<PasswordResetVerifyOut>> => {
