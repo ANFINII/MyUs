@@ -560,6 +560,7 @@
     "follow": "フォローする"
   },
   "playlist": {
+    "select": "プレイリスト",
     "new": "新しいプレイリスト",
     "createOnly": "作成",
     "count": "{{count}}曲",
@@ -569,7 +570,6 @@
     "deleteTitle": "プレイリストの削除",
     "deleteConfirm": "「{{title}}」を削除しますか？",
     "add": "プレイリストに追加",
-    "added": "追加済み",
     "public": "公開",
     "private": "非公開",
     "empty": "プレイリストはまだありません",
