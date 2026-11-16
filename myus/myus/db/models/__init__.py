@@ -7,6 +7,7 @@ from .media import *
 from .message import *
 from .notification import *
 from .payment import *
+from .playlist import *
 from .subscribe import *
 from .user import *
 from .users import *
