@@ -225,7 +225,7 @@
 
       > div {
         position: relative;
-        width: 18px;
+        width: 9px;
         height: 80%;
         margin: 30% auto 0;
         background: rgb(50, 50, 50);
@@ -249,19 +249,19 @@
 
   &.volume_inline {
     .skip_back {
-      right: 10em;
+      right: 12.5em;
     }
 
     .skip_forward {
-      right: 7.5em;
+      right: 10em;
     }
 
     .bar {
-      right: calc(12.5em + 8px);
+      right: calc(15em + 8px);
     }
 
     .volume {
-      width: 7.5em;
+      width: 10em;
 
       &:hover,
       &:focus {
@@ -279,8 +279,8 @@
       bottom: auto;
       left: 2.5em;
       right: 0.75em;
-      height: 18px;
-      margin-top: -9px;
+      height: 9px;
+      margin-top: -4.5px;
       background: none;
       border-radius: 10px;
       box-shadow: none;
