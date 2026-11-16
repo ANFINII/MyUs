@@ -351,4 +351,16 @@ class Log:
                         handler.setLevel(new_level)
 
 
+class JsonFormatter(Formatter):
+    """Django など標準の logging のログを、log と同じ形の1行の JSON にする"""
+
+    def format(self, record: LogRecord) -> str:
+        exception = ""
+        tb = ""
+        if record.exc_info and record.exc_info[1]:
+            exception = f"{type(record.exc_info[1]).__name__}: {record.exc_info[1]}"
+            tb = "".join(traceback.format_exception(*record.exc_info))
+        return Log._format_json(record.getMessage(), record.levelname, record.funcName, record.pathname, record.lineno, exception, tb)
+
+
 log = Log
