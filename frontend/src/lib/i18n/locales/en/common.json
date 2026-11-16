@@ -332,6 +332,7 @@
       "image": "Image",
       "thumbnail": "Thumbnail",
       "title": "Title",
+      "detail": "Details",
       "content": "Description",
       "play": "Plays",
       "view": "Views",
