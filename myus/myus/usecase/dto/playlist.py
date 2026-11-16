@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from myus.domain.media.music.data import MusicData
+from .user import AuthorDTO
 
 
 @dataclass(frozen=True, slots=True)
@@ -20,10 +21,9 @@ class PlaylistDetailDTO:
     title: str
     publish: bool
     is_owner: bool
-    author_ulid: str
-    author_nickname: str
-    musics: list[MusicData]
     updated: datetime
+    author: AuthorDTO
+    musics: list[MusicData]
 
 
 @dataclass(frozen=True, slots=True)

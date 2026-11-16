@@ -5,7 +5,6 @@ import Main from 'components/layout/Main'
 import Pagination from 'components/parts/Pagination'
 import CardList from 'components/widgets/Card/List'
 import MusicCard from 'components/widgets/Card/Media/Music'
-import MusicTabs from './MusicTabs'
 
 interface Props {
   data: MusicList
@@ -21,7 +20,6 @@ export default function Musics(props: Props): React.JSX.Element {
 
   return (
     <Main title="Music" search={search}>
-      <MusicTabs selected="all" />
       <CardList items={items} Content={MusicCard} />
       <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>

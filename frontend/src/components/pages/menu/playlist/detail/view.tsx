@@ -13,6 +13,7 @@ import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
+import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 import IconCross from 'components/parts/Icon/Cross'
@@ -21,9 +22,9 @@ import IconMusic from 'components/parts/Icon/Music'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import Link from 'components/parts/Link'
+import HStack from 'components/parts/Stack/Horizontal'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import style from './Detail.module.scss'
-import MusicTabs from '../../MusicTabs'
 
 interface Props {
   data: PlaylistDetailOut
@@ -31,7 +32,7 @@ interface Props {
 
 export default function PlaylistDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { ulid, title, publish, isOwner, authorUlid, authorNickname, musics } = data
+  const { ulid, title, publish, isOwner, author, musics } = data
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -99,13 +100,27 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
     handleLoading(false)
     if (ret.isErr()) return handleToast(errorMessage(ret.error, FetchError.Delete), true)
     await queryClient.invalidateQueries({ queryKey: queryKeys.mediaPlaylists })
-    router.push('/media/music/playlist')
+    router.push('/menu/playlist')
   }
 
-  return (
-    <Main title="Music" toast={toast}>
-      <MusicTabs selected="playlist" />
+  const button = isOwner && (
+    <HStack gap="4">
+      {isEdit ? (
+        <>
+          <Button name={t('action.save')} color="green" size="s" loading={loading} disabled={editTitle.trim() === ''} onClick={handleSave} />
+          <Button name={t('action.cancel')} color="blue" size="s" disabled={loading} onClick={handleEdit} />
+        </>
+      ) : (
+        <>
+          <Button name={t('action.edit')} color="blue" size="s" onClick={handleEdit} />
+          <Button name={t('action.delete')} color="red" size="s" onClick={handleModal} />
+        </>
+      )}
+    </HStack>
+  )
 
+  return (
+    <Main title="Playlist" type="table" toast={toast} button={button}>
       <section className={style.header}>
         <div className={style.thumbnail_box}>{image ? <ExImage src={image} className={style.thumbnail} /> : <IconMusic size="48" className={style.icon} />}</div>
         <div className={style.info}>
@@ -115,31 +130,20 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
               <CheckBox label={t('playlist.publish')} id="playlist_publish_edit" checked={isEditPublish} onChange={handlePublish} />
             </div>
           ) : (
-            <>
-              <h2 className={style.title}>{title}</h2>
+            <div className={style.heading}>
               <div className={style.meta}>
-                <Link href={`/userpage/${authorUlid}`} className={style.author}>
-                  {authorNickname}
-                </Link>
+                <AvatarLink size="s" src={author.avatar} ulid={author.ulid} title={author.nickname} />
                 <span>{t('playlist.count', { count: musics.length })}</span>
                 <span>{publish ? t('playlist.public') : t('playlist.private')}</span>
               </div>
-            </>
+              <h2 className={style.title}>{title}</h2>
+            </div>
           )}
-          <div className={style.actions}>
-            {isEdit ? (
-              <>
-                <Button name={t('action.save')} color="blue" size="s" loading={loading} disabled={editTitle.trim() === ''} onClick={handleSave} />
-                <Button name={t('action.cancel')} color="white" size="s" disabled={loading} onClick={handleEdit} />
-              </>
-            ) : (
-              <>
-                <Button name={t('playlist.playAll')} color="blue" size="s" disabled={musics.length === 0} onClick={() => handlePlay(0)} />
-                {isOwner && <Button name={t('action.edit')} color="white" size="s" onClick={handleEdit} />}
-                {isOwner && <Button name={t('action.delete')} color="red" size="s" onClick={handleModal} />}
-              </>
-            )}
-          </div>
+          {!isEdit && (
+            <div className={style.actions}>
+              <Button name={t('playlist.playAll')} color="blue" size="s" disabled={musics.length === 0} onClick={() => handlePlay(0)} />
+            </div>
+          )}
         </div>
       </section>
 

@@ -281,6 +281,7 @@
     "recommend": "Trending",
     "follow": "Following",
     "channel": "Channels",
+    "playlist": "Playlists",
     "userpolicy": "Terms of Service"
   },
   "cloudMenu": {
@@ -565,8 +566,6 @@
   },
   "playlist": {
     "select": "Playlist",
-    "tabAll": "All",
-    "tabPlaylist": "Playlists",
     "new": "New playlist",
     "createOnly": "Create",
     "count_one": "{{count}} song",
@@ -856,6 +855,8 @@
     "userpage": {
       "info": "Info",
       "posts": "Posts",
+      "playlist": "Playlists",
+      "playlistEmpty": "No public playlists",
       "advertise": "Ads",
       "advertiseEmpty": "No ads",
       "follower_one": "{{count}} follower",

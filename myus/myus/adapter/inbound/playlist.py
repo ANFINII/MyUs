@@ -6,7 +6,7 @@ from myus.usecase.playlist.core import add_playlist_music, create_playlist, dele
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError
 from .auth import auth_check
-from .media import convert_musics
+from .media import convert_author, convert_musics
 from .schema.common import ErrorOut, ErrorType, SuccessOut
 from .schema.playlist import PlaylistCreateOut, PlaylistDetailOut, PlaylistIn, PlaylistListOut, PlaylistMusicIn, PlaylistOut, PlaylistUpdateIn
 
@@ -33,7 +33,8 @@ class PlaylistAPI:
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        return 200, PlaylistListOut(items=convert_playlists(ret.ok_value))
+        objs = ret.ok_value
+        return 200, PlaylistListOut(items=convert_playlists(objs))
 
     @staticmethod
     @router.post("", response={200: PlaylistCreateOut, 400: ErrorOut, 500: ErrorOut})
@@ -59,7 +60,8 @@ class PlaylistAPI:
                 case _:
                     assert_never(ret.err_value)
 
-        return 200, PlaylistCreateOut(ulid=ret.ok_value)
+        new_ulid = ret.ok_value
+        return 200, PlaylistCreateOut(ulid=new_ulid)
 
     @staticmethod
     @router.get("/user/{user_ulid}", response={200: PlaylistListOut, 400: ErrorOut, 500: ErrorOut})
@@ -77,7 +79,8 @@ class PlaylistAPI:
                 case _:
                     assert_never(ret.err_value)
 
-        return 200, PlaylistListOut(items=convert_playlists(ret.ok_value))
+        objs = ret.ok_value
+        return 200, PlaylistListOut(items=convert_playlists(objs))
 
     @staticmethod
     @router.get("/{ulid}", response={200: PlaylistDetailOut, 400: ErrorOut, 500: ErrorOut})
@@ -88,7 +91,8 @@ class PlaylistAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        ret = get_playlist(user_id_ret.ok_value, ulid)
+        user_id = user_id_ret.ok_value
+        ret = get_playlist(user_id, ulid)
         if ret.is_err:
             message = ret.err_value.message
             match ret.err_value:
@@ -99,7 +103,8 @@ class PlaylistAPI:
                 case _:
                     assert_never(ret.err_value)
 
-        return 200, convert_playlist_detail(ret.ok_value)
+        obj = ret.ok_value
+        return 200, convert_playlist_detail(obj)
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -235,9 +240,8 @@ def convert_playlist_detail(obj: PlaylistDetailDTO) -> PlaylistDetailOut:
         title=obj.title,
         publish=obj.publish,
         is_owner=obj.is_owner,
-        author_ulid=obj.author_ulid,
-        author_nickname=obj.author_nickname,
-        musics=convert_musics(obj.musics),
         updated=obj.updated,
+        author=convert_author(obj.author),
+        musics=convert_musics(obj.musics),
     )
     return data

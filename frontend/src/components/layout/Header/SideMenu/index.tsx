@@ -8,6 +8,7 @@ import IconGlobe from 'components/parts/Icon/Globe'
 import IconGrid from 'components/parts/Icon/Grid'
 import IconHouse from 'components/parts/Icon/House'
 import IconLightning from 'components/parts/Icon/Lightning'
+import IconList from 'components/parts/Icon/List'
 import IconPerson from 'components/parts/Icon/Person'
 import NavItem from 'components/parts/NavItem'
 import style from './SideMenu.module.scss'
@@ -40,6 +41,7 @@ export default function SideMenu(props: Props): React.JSX.Element {
           <NavItem label={t('sideMenu.recommend')} icon={<IconLightning size="1.5em" type="defalt" />} className={style.item} onClick={handleClick('/recommend')} />
           <NavItem label={t('sideMenu.follow')} icon={<IconPerson size="1.5em" type="check" />} className={style.item} onClick={handleClick('/menu/follow')} />
           <NavItem label={t('sideMenu.channel')} icon={<IconGrid size="1.5em" />} className={style.item} onClick={handleClick('/menu/channel')} />
+          <NavItem label={t('sideMenu.playlist')} icon={<IconList size="1.5em" />} className={style.item} onClick={handleClick('/menu/playlist')} />
         </ul>
 
         <ul className={style.footer}>

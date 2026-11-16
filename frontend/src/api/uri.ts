@@ -62,6 +62,7 @@ export const apiPlaylists = base + '/media/playlist'
 export const apiPlaylist = (ulid: string) => base + `/media/playlist/${ulid}`
 export const apiPlaylistMusic = (ulid: string) => base + `/media/playlist/${ulid}/music`
 export const apiPlaylistMusicDelete = (ulid: string, musicUlid: string) => base + `/media/playlist/${ulid}/music/${musicUlid}`
+export const apiUserPlaylists = (userUlid: string) => base + `/media/playlist/user/${userUlid}`
 
 export const apiBlogs = base + '/media/blog'
 export const apiBlog = (ulid: string) => base + `/media/blog/${ulid}`

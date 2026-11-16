@@ -2,11 +2,15 @@ import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { ErrorOut } from 'types/internal/other'
 import { PlaylistCreateOut, PlaylistDetailOut, PlaylistIn, PlaylistList, PlaylistMusicIn, PlaylistUpdateIn } from 'types/internal/playlist'
-import { apiPlaylist, apiPlaylistMusic, apiPlaylistMusicDelete, apiPlaylists } from 'api/uri'
+import { apiPlaylist, apiPlaylistMusic, apiPlaylistMusicDelete, apiPlaylists, apiUserPlaylists } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getPlaylists = async (): Promise<ApiOut<PlaylistList>> => {
   return await apiOut(apiClient('json').get(apiPlaylists))
+}
+
+export const getUserPlaylists = async (userUlid: string): Promise<ApiOut<PlaylistList>> => {
+  return await apiOut(apiClient('json').get(apiUserPlaylists(userUlid)))
 }
 
 export const getPlaylist = async (ulid: string): Promise<ApiOut<PlaylistDetailOut>> => {

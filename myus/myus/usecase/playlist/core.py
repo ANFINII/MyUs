@@ -8,6 +8,7 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, FindError, NotFoundError, Result
 from ._convert import get_music_data, get_music_ids_data, get_own_playlist_data, get_playlist_data, get_playlists_data, is_visible_music, music_urls
 from ..dto.playlist import PlaylistCreateDTO, PlaylistDetailDTO, PlaylistDTO, PlaylistUpdateDTO
+from ..user._convert import get_author_data
 from ..user.core import get_user_data
 
 
@@ -31,7 +32,8 @@ def get_user_playlists(user_ulid: str) -> Result[list[PlaylistDTO], FindError]:
     if playlists_ret.is_err:
         return Result.err(playlists_ret.err_value)
 
-    return Result.ok(playlists_ret.ok_value)
+    playlists = playlists_ret.ok_value
+    return Result.ok(playlists)
 
 
 @Result.shield_exception()
@@ -46,30 +48,27 @@ def get_playlist(user_id: int | None, ulid: str) -> Result[PlaylistDetailDTO, Fi
         log.info("not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("error.playlistNotFound"))
 
-    author_ret = get_user_data(user_id=playlist.author_id)
+    author_ret = get_author_data(playlist.author_id)
     if author_ret.is_err:
         return Result.err(author_ret.err_value)
 
     author = author_ret.ok_value
-    if author is None:
-        log.error("not found", user_id=playlist.author_id)
-        return Result.err(NotFoundError("error.playlistNotFound"))
 
     music_repo = injector.get(MusicInterface)
     musics_ret = music_repo.bulk_get(playlist.music_ids)
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    musics = [m for m in musics_ret.ok_value if is_visible_music(m, user_id)]
+    all_musics = musics_ret.ok_value
+    musics = [m for m in all_musics if is_visible_music(m, user_id)]
     return Result.ok(PlaylistDetailDTO(
         ulid=playlist.ulid,
         title=playlist.title,
         publish=playlist.publish,
         is_owner=is_owner,
-        author_ulid=author.user.ulid,
-        author_nickname=author.user.nickname,
-        musics=music_urls(musics),
         updated=playlist.updated,
+        author=author,
+        musics=music_urls(musics),
     ))
 
 
@@ -94,7 +93,8 @@ def create_playlist(user_id: int, input: PlaylistCreateDTO) -> Result[str, FindE
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    playlists_ret = repo.bulk_get(save_ret.ok_value)
+    new_ids = save_ret.ok_value
+    playlists_ret = repo.bulk_get(new_ids)
     if playlists_ret.is_err:
         return Result.err(playlists_ret.err_value)
 
@@ -114,8 +114,9 @@ def update_playlist(user_id: int, ulid: str, input: PlaylistUpdateDTO) -> Result
         return Result.err(music_ids_ret.err_value)
 
     playlist = playlist_ret.ok_value
+    music_ids = music_ids_ret.ok_value
     repo = injector.get(PlaylistInterface)
-    save_ret = repo.bulk_save([replace(playlist, title=input.title, publish=input.publish, music_ids=music_ids_ret.ok_value)])
+    save_ret = repo.bulk_save([replace(playlist, title=input.title, publish=input.publish, music_ids=music_ids)])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
