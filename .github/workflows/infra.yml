@@ -43,6 +43,9 @@ jobs:
       - name: fmt
         run: terraform fmt -check -recursive -diff infra
 
+      - name: stacks.txt
+        run: diff <(find "$STACKS_ROOT" -name main.tf -not -path '*/.terraform/*' -exec dirname {} \; | sed "s|^$STACKS_ROOT/||" | sort) <(sort "$STACKS_ROOT/stacks.txt")
+
       - name: validate
         run: |
           for stack in $(find "$STACKS_ROOT" -name main.tf -not -path '*/.terraform/*' -exec dirname {} \; | sort); do
@@ -87,7 +90,9 @@ jobs:
         env:
           TF_VAR_emails_for_cost: ${{ secrets.TF_VAR_EMAILS_FOR_COST }}
         run: |
-          for stack in $(find "$STACKS_ROOT" -name main.tf -not -path '*/.terraform/*' -exec dirname {} \; | sort); do
+          mapfile -t stacks < "$STACKS_ROOT/stacks.txt"
+          for name in "${stacks[@]}"; do
+            stack="$STACKS_ROOT/$name"
             echo "::group::$stack"
             terraform -chdir="$stack" init -input=false
             terraform -chdir="$stack" plan -input=false -lock-timeout=5m
@@ -129,7 +134,9 @@ jobs:
         env:
           TF_VAR_emails_for_cost: ${{ secrets.TF_VAR_EMAILS_FOR_COST }}
         run: |
-          for stack in $(find "$STACKS_ROOT" -name main.tf -not -path '*/.terraform/*' -exec dirname {} \; | sort); do
+          mapfile -t stacks < "$STACKS_ROOT/stacks.txt"
+          for name in "${stacks[@]}"; do
+            stack="$STACKS_ROOT/$name"
             echo "::group::$stack"
             terraform -chdir="$stack" init -input=false
             terraform -chdir="$stack" apply -input=false -lock-timeout=5m -auto-approve

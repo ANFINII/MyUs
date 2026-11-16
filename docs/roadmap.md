@@ -196,13 +196,14 @@ flowchart LR
 
 | 順 | スタック | 内容 |
 |---|---|---|
-| 1 | `prod/products/myus/compute` | EC2（docker compose）とデプロイ（GitHub Actions → ECR → SSM Run Command） |
+| 1 | デプロイ | 本番の `compose.yml`（daphne・worker・encoder・Redis）、起動時に SSM のパラメータから env を作る仕組み、GitHub Actions のデプロイ用ロール（ECR への push・SSM Run Command）とワークフロー（arm64 でビルド → ECR → EC2 で `docker compose pull && up -d`） |
 | 2 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.<ドメイン>`）を付ける。ドメインが要る |
 | 3 | `prod/products/myus/monitoring` | CloudWatch Alarms（CPU・ディスク・RDS の空き容量・5xx） |
 
-次の BE の作業は、順 1 より前に済ませる。
+次の BE の作業は、デプロイより前に済ませる。
 
-- メディアを S3 に置く：`django-storages` で `STORAGES` を切り替え、配信の URL を `prod/products/myus/media` の CloudFront（outputs の `media.domain_name`）にする。S3 への書き込みの権限は、順 1 で EC2 のロールに付ける。HLS 変換の worker（`myus_encoder`）も S3 から読んで S3 に書くようにする
+- メディアを S3 に置く：`django-storages` で `STORAGES` を切り替え、配信の URL を `prod/products/myus/media` の CloudFront（outputs の `media.domain_name`）にする。S3 への書き込みの権限は `prod/products/myus/compute` の EC2 のロールに付けてある。HLS 変換の worker（`myus_encoder`）も S3 から読んで S3 に書くようにする
+- 本番のマイグレーションの方法を決める（`myus/api/db/migrations/` は Git の管理外なので、デプロイで何を流すかが決まっていない）
 
 有料のメディアを CloudFront の署名付き Cookie で守るのは、有料のメディアを出すときに `prod/products/myus/media` に足す。
 
