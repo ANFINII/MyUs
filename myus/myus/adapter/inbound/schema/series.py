@@ -25,6 +25,19 @@ class SeriesListOut(BaseModel):
     items: list[SeriesOut]
 
 
+class ChannelSeriesOut(BaseModel):
+    ulid: str
+    title: str
+    media_type: MediaType
+    count: int
+    media_ulid: str
+    image: str
+
+
+class ChannelSeriesListOut(BaseModel):
+    items: list[ChannelSeriesOut]
+
+
 class SeriesItemOut(BaseModel):
     ulid: str
     title: str

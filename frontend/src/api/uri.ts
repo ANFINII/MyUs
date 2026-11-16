@@ -58,6 +58,7 @@ export const apiVideo = (ulid: string) => base + `/media/video/${ulid}`
 
 export const apiMusics = base + '/media/music'
 export const apiMusic = (ulid: string) => base + `/media/music/${ulid}`
+export const apiChannelSeries = (channelUlid: string) => base + `/media/series/channel/${channelUlid}`
 export const apiPlaylists = base + '/media/playlist'
 export const apiPlaylist = (ulid: string) => base + `/media/playlist/${ulid}`
 export const apiPlaylistMusic = (ulid: string) => base + `/media/playlist/${ulid}/music`

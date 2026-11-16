@@ -1,0 +1,59 @@
+.card {
+  width: 312px;
+
+  .link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .thumbnail_box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 195px;
+    border-radius: 6px 6px 0 0;
+    background: rgb(30, 30, 30);
+    overflow: hidden;
+  }
+
+  .thumbnail {
+    width: 195px;
+    height: 195px;
+    object-fit: cover;
+  }
+
+  .count {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    padding: 1px 4px;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+  }
+
+  .title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    height: 42px;
+    font-size: 14px;
+    color: rgb(3, 3, 3);
+    word-break: break-all;
+    overflow: hidden;
+  }
+
+  .media_type {
+    font-size: 13px;
+    color: rgb(40, 70, 150);
+  }
+}

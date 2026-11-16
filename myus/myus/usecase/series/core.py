@@ -5,10 +5,44 @@ from myus.domain.series.interface import FilterOption, SeriesInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FindError, ForbiddenError, NotFoundError, Result
-from ._convert import get_own_series_data, get_series_items_data, get_series_list_data
+from myus.utils.functions.common import create_url
+from ._convert import get_own_series_data, get_published_media_data, get_series_items_data, get_series_list_data, media_image
 from ..channel.core import get_channel_data
-from ..dto.series import SeriesCreateDTO, SeriesDetailDTO, SeriesDTO, SeriesUpdateDTO
+from ..dto.series import ChannelSeriesDTO, SeriesCreateDTO, SeriesDetailDTO, SeriesDTO, SeriesUpdateDTO
 from ..media._convert import get_media_repository
+
+
+@Result.shield_exception()
+def get_channel_series(channel_ulid: str) -> Result[list[ChannelSeriesDTO], FindError]:
+    channel_ret = get_channel_data(channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
+    if channel is None:
+        log.info("not found", channel_ulid=channel_ulid)
+        return Result.err(NotFoundError("error.channelNotFound"))
+
+    series_ret = get_series_list_data(FilterOption(channel_id=channel.id))
+    if series_ret.is_err:
+        return Result.err(series_ret.err_value)
+
+    series_list = series_ret.ok_value
+    data: list[ChannelSeriesDTO] = []
+    for series in series_list:
+        medias_ret = get_published_media_data(series.media_type, series.media_ids)
+        if medias_ret.is_err:
+            return Result.err(medias_ret.err_value)
+
+        medias = medias_ret.ok_value
+        if len(medias) == 0:
+            continue
+
+        first = medias[0]
+        image = media_image(first) or channel.avatar
+        data.append(ChannelSeriesDTO(ulid=series.ulid, title=series.title, media_type=series.media_type, count=len(medias), media_ulid=first.ulid, image=create_url(image)))
+
+    return Result.ok(data)
 
 
 @Result.shield_exception()

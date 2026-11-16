@@ -864,7 +864,9 @@
   },
   "media": {
     "series": {
-      "label": "Series"
+      "label": "Series",
+      "count_one": "{{count}} post",
+      "count_other": "{{count}} posts"
     },
     "blog": {
       "promotion": "This post contains promotions",
@@ -873,6 +875,8 @@
     "userpage": {
       "info": "Info",
       "posts": "Posts",
+      "series": "Series",
+      "seriesEmpty": "No series",
       "playlist": "Playlists",
       "playlistEmpty": "No public playlists",
       "advertise": "Ads",

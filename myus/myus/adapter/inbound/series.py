@@ -2,12 +2,37 @@ from typing import assert_never
 from ninja import Router
 from django.http import HttpRequest
 from myus.usecase.dto.series import SeriesCreateDTO, SeriesDetailDTO, SeriesItemDTO, SeriesUpdateDTO
-from myus.usecase.series.core import create_manage_series, delete_manage_series, get_manage_series, get_manage_series_list, update_manage_series
+from myus.usecase.series.core import create_manage_series, get_channel_series, delete_manage_series, get_manage_series, get_manage_series_list, update_manage_series
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError
 from .auth import auth_check
 from .schema.common import ErrorOut, ErrorType, SuccessOut
-from .schema.series import SeriesCreateOut, SeriesDetailOut, SeriesIn, SeriesItemOut, SeriesListOut, SeriesOut, SeriesUpdateIn
+from .schema.series import ChannelSeriesListOut, ChannelSeriesOut, SeriesCreateOut, SeriesDetailOut, SeriesIn, SeriesItemOut, SeriesListOut, SeriesOut, SeriesUpdateIn
+
+
+class SeriesAPI:
+    """SeriesAPI"""
+
+    router = Router()
+
+    @staticmethod
+    @router.get("/channel/{channel_ulid}", response={200: ChannelSeriesListOut, 400: ErrorOut, 500: ErrorOut})
+    def list_channel(request: HttpRequest, channel_ulid: str):
+        log.info("request", channel_ulid=channel_ulid)
+
+        ret = get_channel_series(channel_ulid)
+        if ret.is_err:
+            message = ret.err_value.message
+            match ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(ret.err_value)
+
+        objs = ret.ok_value
+        return 200, ChannelSeriesListOut(items=[ChannelSeriesOut(ulid=o.ulid, title=o.title, media_type=o.media_type, count=o.count, media_ulid=o.media_ulid, image=o.image) for o in objs])
 
 
 class ManageSeriesAPI:

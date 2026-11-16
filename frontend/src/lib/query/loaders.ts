@@ -43,6 +43,7 @@ import {
   userPageAdvertisesQuery,
   userPageMediaQuery,
   userPagePlaylistsQuery,
+  userPageSeriesQuery,
   userPageQuery,
   userQuery,
   videoQuery,
@@ -122,9 +123,15 @@ export const userPageLoader = ({ queryClient, params, search }: PageLoad<{ ulid:
       return channelUlid ? queryClient.query(userPageMediaQuery(params.ulid, channelUlid, query)) : undefined
     })
     .catch(noop)
+  const series = userPage
+    .then((data) => {
+      const channelUlid = selectChannelUlid(data.channels, search.channel)
+      return channelUlid ? queryClient.query(userPageSeriesQuery(params.ulid, channelUlid)) : undefined
+    })
+    .catch(noop)
   const playlists = queryClient.query(userPagePlaylistsQuery(params.ulid)).catch(noop)
   const advertises = queryClient.query(userPageAdvertisesQuery(params.ulid, query)).catch(noop)
-  return Promise.all([userPage, media, playlists, advertises])
+  return Promise.all([userPage, media, series, playlists, advertises])
 }
 
 export const subscribeChannelsLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(subscribeChannelsQuery())
