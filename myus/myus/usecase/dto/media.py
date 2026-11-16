@@ -55,7 +55,9 @@ class VideoDetailDTO(MediaDetailDTO):
 @dataclass(frozen=True, slots=True)
 class MusicDetailDTO(MediaDetailDTO):
     lyric: str
+    image: str
     music: str
+    duration: int
     download: bool
     comments: list[CommentDTO]
 

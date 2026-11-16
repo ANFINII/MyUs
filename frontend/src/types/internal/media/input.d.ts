@@ -17,6 +17,7 @@ export interface VideoIn extends MediaIn {
 export interface MusicIn extends MediaIn {
   lyric: string
   download: boolean
+  image?: File
   music?: File
 }
 
@@ -55,6 +56,7 @@ export interface VideoUpdateIn extends MediaUpdateIn {
 export interface MusicUpdateIn extends MediaUpdateIn {
   lyric: string
   download: boolean
+  image?: File
 }
 
 export interface BlogUpdateIn extends MediaUpdateIn {

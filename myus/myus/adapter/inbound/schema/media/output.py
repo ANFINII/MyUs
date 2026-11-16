@@ -57,7 +57,9 @@ class VideoOut(MediaOut):
 
 class MusicOut(MediaOut):
     lyric: str
+    image: str
     music: str
+    duration: int
     download: bool
 
 
@@ -130,7 +132,9 @@ class VideoDetailOut(MediaDetailOut):
 
 class MusicDetailOut(MediaDetailOut):
     lyric: str
+    image: str
     music: str
+    duration: int
     download: bool
     comments: list[CommentOut]
 

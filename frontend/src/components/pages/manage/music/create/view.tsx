@@ -49,6 +49,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, music: files })
+  const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
@@ -82,6 +83,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <Textarea label={t('manage.form.lyric')} name="lyric" onChange={handleText} />
+          <InputFile label={t('manage.form.jacket')} accept="image/*" onChange={handleImage} />
           <VStack gap="2">
             <InputFile label={t('manage.form.music')} accept="audio/*" required error={error} onChange={handleFile} />
             <CheckBox label={t('manage.form.download')} name="download" defaultChecked onChange={handleCheck} />

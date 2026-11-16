@@ -18,6 +18,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import DatePicker from 'components/parts/Input/DatePicker'
+import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
@@ -39,7 +40,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<MusicUpdateIn>({ ...data, publishAt: datetimeISO(data.publishAt) })
+  const [values, setValues] = useState<MusicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, lyric: data.lyric, download: data.download, publish: data.publish, publishAt: datetimeISO(data.publishAt) })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
@@ -49,6 +50,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
+  const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
@@ -83,6 +85,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
           <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <Textarea label={t('manage.form.lyric')} name="lyric" value={values.lyric} onChange={handleText} />
+          <InputFile label={t('manage.form.jacket')} accept="image/*" onChange={handleImage} />
           <CheckBox label={t('manage.form.download')} name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>

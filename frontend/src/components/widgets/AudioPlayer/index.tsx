@@ -1,16 +1,10 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import cx from 'utils/functions/cx'
+import { formatTime } from 'utils/functions/datetime'
 import { getVolume, saveVolume } from 'utils/functions/volume'
 import style from './AudioPlayer.module.scss'
 
 const PLAY_EVENT = 'audioplayer:play'
-
-const formatTime = (seconds: number): string => {
-  if (!isFinite(seconds)) return '00:00'
-  const mins = Math.floor(seconds / 60)
-  const secs = Math.floor(seconds % 60)
-  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-}
 
 interface Props {
   src: string

@@ -209,7 +209,7 @@ class MusicAPI:
 
     @staticmethod
     @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
-    def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...)):
+    def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...), image: UploadedFile | None = File(None)):
         log.info("request", input=input, music=music)
 
         user_id_ret = auth_check(request)
@@ -221,7 +221,7 @@ class MusicAPI:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         dto = MusicCreateDTO(**input.model_dump())
-        obj_ret = create_music(user_id=user_id, input=dto, music=music)
+        obj_ret = create_music(user_id=user_id, input=dto, music=music, image=image)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
@@ -292,7 +292,9 @@ class MusicAPI:
                 title=obj.title,
                 content=obj.content,
                 lyric=obj.lyric,
+                image=obj.image,
                 music=obj.music,
+                duration=obj.duration,
                 download=obj.download,
                 comments=convert_comments(obj.comments),
                 hashtags=convert_hashtags(obj.hashtags),
@@ -794,7 +796,9 @@ def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
             title=x.title,
             content=x.content,
             lyric=x.lyric,
+            image=x.image,
             music=x.music,
+            duration=x.duration,
             download=x.download,
             read=x.read,
             like=x.like,
