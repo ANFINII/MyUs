@@ -447,7 +447,7 @@ def withdraw_user(user_id: int, password: str) -> Result[str, FatalError]:
             case CancelSuccess() | CancelFailed(error=CancelError.NOT_FOUND):
                 log.info("subscription canceled", user_id=user_id)
             case CancelFailed(error=error, message=message):
-                log.error("subscription cancel failed", user_id=user_id, error=error.value, error_message=message)
+                log.error("subscription cancel failed", user_id=user_id, error=error.value, message=message)
                 return Result.ok("error.cancelFailed")
             case _:
                 assert_never(cancellation)
