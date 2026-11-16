@@ -1,27 +1,34 @@
 import { Music } from 'types/internal/media/output'
+import cx from 'utils/functions/cx'
 import { formatTime } from 'utils/functions/datetime'
+import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
 import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
-import Link from 'components/parts/Link'
-import AudioPlayer from 'components/widgets/AudioPlayer'
 import style from './Music.module.scss'
 import CardMediaContent from '../Content'
 
 interface Props {
   item: Music
+  items?: Music[]
 }
 
 export default function MusicCard(props: Props): React.JSX.Element {
-  const { item } = props
-  const { ulid, image, music, duration, channel } = item
+  const { item, items = [item] } = props
+  const { ulid, image, duration, channel } = item
+
+  const { current, play } = useMusicPlayer()
+
+  const isCurrent = current?.ulid === ulid
+
+  const handlePlay = () => play(items, Math.max(items.findIndex((m) => m.ulid === ulid), 0))
 
   return (
     <Card className={style.card}>
-      <Link href={`/media/music/${ulid}`} className={style.jacket}>
+      <div className={cx(style.jacket, isCurrent && style.current)} onClick={handlePlay}>
         <ExImage src={image || channel.avatar} width="195" height="195" className={style.jacket_image} />
+        <span className={style.play} />
         {duration > 0 && <span className={style.duration}>{formatTime(duration)}</span>}
-      </Link>
-      <AudioPlayer src={music} className={style.player} />
+      </div>
       <CardMediaContent href={`/media/music/${ulid}`} media={item} />
     </Card>
   )

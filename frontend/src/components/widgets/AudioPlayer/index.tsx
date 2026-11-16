@@ -9,11 +9,13 @@ const PLAY_EVENT = 'audioplayer:play'
 interface Props {
   src: string
   playbackRate?: number
+  autoPlay?: boolean
   className?: string
+  onEnded?: () => void
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, playbackRate = 1, className } = props
+  const { src, playbackRate = 1, autoPlay = false, className, onEnded } = props
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -106,6 +108,11 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
 
   const handlePause = () => setIsPlaying(false)
 
+  const handleEnded = () => {
+    setIsPlaying(false)
+    onEnded?.()
+  }
+
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
@@ -168,12 +175,13 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         ref={audioRef}
         src={src}
         preload="auto"
+        autoPlay={autoPlay}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onProgress={handleProgress}
         onPlay={handlePlay}
         onPause={handlePause}
-        onEnded={handlePause}
+        onEnded={handleEnded}
       />
     </div>
   )

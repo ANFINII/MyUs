@@ -164,7 +164,7 @@ export default function Userpage(props: Props): React.JSX.Element {
           <Divide />
           <CardIndexList title="Music">
             {media.musics.map((item) => (
-              <MusicCard key={item.ulid} item={item} />
+              <MusicCard key={item.ulid} item={item} items={media.musics} />
             ))}
           </CardIndexList>
 
