@@ -55,7 +55,7 @@ def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, FindE
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("not found", ulid=ulid, user_id=user_id)
-        return Result.err(NotFoundError("data not found"))
+        return Result.err(NotFoundError("error.advertiseNotFound"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:

@@ -134,11 +134,11 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[str, Ac
 
     message = message_ret.ok_value
     if message is None:
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.messageUpdateFailed"))
 
     if message.author_id != user_id:
         log.warning("author mismatch", message_ulid=message_ulid, user_id=user_id)
-        return Result.err(ForbiddenError("Forbidden"))
+        return Result.err(ForbiddenError("error.messageUpdateFailed"))
 
     chat_repo = injector.get(ChatInterface)
     chats_ret = chat_repo.bulk_get([message.chat_id])
@@ -148,7 +148,7 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[str, Ac
     chats = chats_ret.ok_value
     if len(chats) == 0:
         log.warning("not found", chat_id=message.chat_id)
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.messageUpdateFailed"))
 
     save_ret = save_message_data(replace(message, text=text))
     if save_ret.is_err:
@@ -165,11 +165,11 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
 
     message = message_ret.ok_value
     if message is None:
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.messageDeleteFailed"))
 
     if message.author_id != user_id:
         log.warning("author mismatch", message_ulid=message_ulid, user_id=user_id)
-        return Result.err(ForbiddenError("Forbidden"))
+        return Result.err(ForbiddenError("error.messageDeleteFailed"))
 
     chat_repo = injector.get(ChatInterface)
     chats_ret = chat_repo.bulk_get([message.chat_id])
@@ -179,7 +179,7 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, AccessError]:
     chats = chats_ret.ok_value
     if len(chats) == 0:
         log.warning("not found", chat_id=message.chat_id)
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.messageDeleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_message_data(message, user_id))
     if delete_ret.is_err:

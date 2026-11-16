@@ -98,7 +98,7 @@ def increment_advertise_read(ulid: str, ip_address: str) -> Result[int, FindErro
     ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("not found", ulid=ulid)
-        return Result.err(NotFoundError("data not found"))
+        return Result.err(NotFoundError("error.advertiseNotFound"))
 
     objs_ret = repo.bulk_get(ids)
     if objs_ret.is_err:

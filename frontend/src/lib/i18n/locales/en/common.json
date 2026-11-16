@@ -43,6 +43,8 @@
     "mediaNotFound": "Media not found",
     "commentNotFound": "Comment not found",
     "subscriptionNotFound": "No active subscription found",
+    "advertiseNotFound": "Advertisement not found",
+    "planNotFound": "Plan not found",
     "alreadySubscribed": "You already have a paid plan",
     "followSelf": "You cannot follow yourself",
     "commentCreateFailed": "Failed to post the comment",

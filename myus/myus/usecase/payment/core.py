@@ -38,12 +38,12 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
 
     user = user_ret.ok_value
     if user is None:
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.userNotFound"))
 
     plan = get_plan(plan_name)
     if plan is None:
         log.warning("Payment unknown plan", plan=plan_name)
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.planNotFound"))
 
     subscription_repo = injector.get(SubscriptionInterface)
     subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), SubscriptionPageOption())
@@ -132,7 +132,7 @@ def get_plan_prices(user_id: int) -> Result[list[PlanPriceDTO], FindError]:
 
         user = user_ret.ok_value
         if user is None:
-            return Result.err(NotFoundError("Not Found"))
+            return Result.err(NotFoundError("error.userNotFound"))
 
         currency = country_currency(user.profile.country)
 
@@ -243,7 +243,7 @@ def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputE
     plan = get_plan(plan_name)
     if plan is None:
         log.warning("Payment unknown plan", plan=plan_name)
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.planNotFound"))
 
     if plan.name == PlanName.FREE:
         return Result.err(ValidationError("error.planChangeToFree"))

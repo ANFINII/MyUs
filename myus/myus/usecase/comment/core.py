@@ -109,11 +109,11 @@ def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, A
 
     comment = comment_ret.ok_value
     if comment is None:
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.commentNotFound"))
 
     if comment.author_id != user_id:
         log.warning("author mismatch", comment_ulid=comment_ulid, user_id=user_id)
-        return Result.err(ForbiddenError("Forbidden"))
+        return Result.err(ForbiddenError("error.commentUpdateFailed"))
 
     save_ret = save_comment_data(replace(comment, text=text))
     if save_ret.is_err:
@@ -130,11 +130,11 @@ def delete_comment(user_id: int, comment_ulid: str) -> Result[None, AccessError]
 
     comment = comment_ret.ok_value
     if comment is None:
-        return Result.err(NotFoundError("Not Found"))
+        return Result.err(NotFoundError("error.commentNotFound"))
 
     if comment.author_id != user_id:
         log.warning("author mismatch", comment_ulid=comment_ulid, user_id=user_id)
-        return Result.err(ForbiddenError("Forbidden"))
+        return Result.err(ForbiddenError("error.commentDeleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_comment_data(comment))
     if delete_ret.is_err:
