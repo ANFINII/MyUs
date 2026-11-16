@@ -18,7 +18,7 @@ class MediaHashtagAPI:
     @staticmethod
     @router.get("", response={200: list[HashtagOut], 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
-        log.info("MediaHashtagAPI get")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -38,7 +38,7 @@ class MediaHashtagAPI:
     @staticmethod
     @router.put("", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: MediaHashtagsUpdateIn):
-        log.info("MediaHashtagAPI put", media_type=input.media_type.value, media_ulid=input.media_ulid)
+        log.info("request", media_type=input.media_type.value, media_ulid=input.media_ulid)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -62,4 +62,4 @@ class MediaHashtagAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 200, SuccessOut(message="保存しました!")
+        return 200, SuccessOut(message="OK")

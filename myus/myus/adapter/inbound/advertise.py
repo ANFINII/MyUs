@@ -19,7 +19,7 @@ class AdvertiseAPI:
     @staticmethod
     @router.get("/global", response={200: AdvertiseListOut, 500: ErrorOut})
     def list_global(request: HttpRequest):
-        log.info("AdvertiseAPI list_global")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -36,7 +36,7 @@ class AdvertiseAPI:
     @staticmethod
     @router.get("/user/{user_ulid}", response={200: AdvertiseListOut, 500: ErrorOut})
     def list_by_user(request: HttpRequest, user_ulid: str):
-        log.info("AdvertiseAPI list_by_user", user_ulid=user_ulid)
+        log.info("request", user_ulid=user_ulid)
 
         ret = get_user_advertises(user_ulid)
         if ret.is_err:
@@ -48,7 +48,7 @@ class AdvertiseAPI:
     @staticmethod
     @router.post("/{ulid}/read", response={200: AdvertiseReadOut, 400: ErrorOut, 500: ErrorOut})
     def post_read(request: HttpRequest, ulid: str):
-        log.info("AdvertiseAPI post_read", ulid=ulid)
+        log.info("request", ulid=ulid)
 
         ret = increment_advertise_read(ulid, get_client_ip(request))
         if ret.is_err:

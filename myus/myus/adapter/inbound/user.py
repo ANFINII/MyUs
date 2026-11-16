@@ -31,7 +31,7 @@ class UserAPI:
     @staticmethod
     @router.get("/me", response={200: UserOut, 400: ErrorOut, 500: ErrorOut})
     def get_user_me(request: HttpRequest):
-        log.info("UserAPI get_user_me")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -64,7 +64,7 @@ class UserAPI:
     @staticmethod
     @router.get("/search_tag", response={200: list[SearchTagOut], 400: ErrorOut, 500: ErrorOut})
     def get_search_tag(request: HttpRequest):
-        log.info("UserAPI search_tag")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -85,7 +85,7 @@ class UserAPI:
     @staticmethod
     @router.put("/search_tag", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def put_search_tag(request: HttpRequest, input: list[SearchTagIn]):
-        log.info("UserAPI put_search_tag")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -107,12 +107,12 @@ class UserAPI:
                 case _:
                     assert_never(update_ret.err_value)
 
-        return 200, SuccessOut(message="更新しました")
+        return 200, SuccessOut(message="OK")
 
     @staticmethod
     @router.get("/follower", response={200: list[FollowUserOut], 400: ErrorOut, 500: ErrorOut})
     def get_followers(request: HttpRequest, search: str = ""):
-        log.info("UserAPI get_followers", search=search)
+        log.info("request", search=search)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -144,7 +144,7 @@ class UserAPI:
     @staticmethod
     @router.get("/follow", response={200: list[FollowUserOut], 400: ErrorOut, 500: ErrorOut})
     def get_follows(request: HttpRequest, search: str = ""):
-        log.info("UserAPI get_follows", search=search)
+        log.info("request", search=search)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -176,7 +176,7 @@ class UserAPI:
     @staticmethod
     @router.post("/follow/user", response={200: FollowOut, 400: ErrorOut, 500: ErrorOut})
     def follow_user(request: HttpRequest, input: FollowIn):
-        log.info("UserAPI follow_user", input=input)
+        log.info("request", input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -214,7 +214,7 @@ class UserAPI:
     @staticmethod
     @router.post("/like/media", response={200: LikeOut, 400: ErrorOut, 500: ErrorOut})
     def post_like_media(request: HttpRequest, input: LikeMediaIn):
-        log.info("UserAPI like_media", input=input)
+        log.info("request", input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -242,7 +242,7 @@ class UserAPI:
     @staticmethod
     @router.post("/like/comment", response={200: LikeOut, 400: ErrorOut, 500: ErrorOut})
     def post_like_comment(request: HttpRequest, input: LikeCommentIn):
-        log.info("UserAPI like_comment", input=input)
+        log.info("request", input=input)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -270,7 +270,7 @@ class UserAPI:
     @staticmethod
     @router.get("/notification", response={200: NotificationOut, 400: ErrorOut, 500: ErrorOut})
     def get_notifications(request: HttpRequest):
-        log.info("UserAPI get_notifications")
+        log.info("request")
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -324,7 +324,7 @@ class UserAPI:
     @staticmethod
     @router.post("/notification/confirmed", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def post_notification_confirmed(request: HttpRequest, input: NotificationIn):
-        log.info("UserAPI post_notification_confirmed", ulid=input.ulid)
+        log.info("request", ulid=input.ulid)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -343,7 +343,7 @@ class UserAPI:
     @staticmethod
     @router.post("/notification/deleted", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
     def post_notification_deleted(request: HttpRequest, input: NotificationIn):
-        log.info("UserAPI post_notification_deleted", ulid=input.ulid)
+        log.info("request", ulid=input.ulid)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -362,7 +362,7 @@ class UserAPI:
     @staticmethod
     @router.get("/userpage/{ulid}", response={200: UserPageOut, 400: ErrorOut, 500: ErrorOut})
     def get_userpage(request: HttpRequest, ulid: str):
-        log.info("UserAPI get_userpage", ulid=ulid)
+        log.info("request", ulid=ulid)
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
@@ -419,7 +419,7 @@ class UserAPI:
     @staticmethod
     @router.get("/userpage/{ulid}/media", response={200: UserPageMediaOut, 400: ErrorOut, 500: ErrorOut})
     def get_userpage_media(request: HttpRequest, ulid: str, channel_ulid: str = "", search: str = ""):
-        log.info("UserAPI get_userpage_media", ulid=ulid, channel_ulid=channel_ulid, search=search)
+        log.info("request", ulid=ulid, channel_ulid=channel_ulid, search=search)
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
@@ -459,7 +459,7 @@ class UserAPI:
     @staticmethod
     @router.get("/userpage/{ulid}/advertise", response={200: AdvertiseListOut, 400: ErrorOut, 500: ErrorOut})
     def get_userpage_advertise(request: HttpRequest, ulid: str, search: str = ""):
-        log.info("UserAPI get_userpage_advertise", ulid=ulid, search=search)
+        log.info("request", ulid=ulid, search=search)
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
