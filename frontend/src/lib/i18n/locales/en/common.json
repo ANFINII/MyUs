@@ -577,7 +577,6 @@
     "deleteTitle": "Delete playlist",
     "deleteConfirm": "Delete \"{{title}}\"?",
     "add": "Add to playlist",
-    "added": "Added",
     "public": "Public",
     "private": "Private",
     "empty": "No playlists yet",

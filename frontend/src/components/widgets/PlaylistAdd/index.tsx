@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { isTranslationKey } from 'lib/i18n'
 import { Playlist } from 'types/internal/playlist'
-import { getPlaylists, postPlaylist, postPlaylistMusic } from 'api/internal/playlist'
+import { deletePlaylistMusic, getPlaylists, postPlaylist, postPlaylistMusic } from 'api/internal/playlist'
 import { FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import { useLoading } from 'components/hooks/useLoading'
@@ -31,7 +31,7 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
   const [isModal, setIsModal] = useState<boolean>(false)
   const [playlists, setPlaylists] = useState<Playlist[]>([])
   const [selectedUlid, setSelectedUlid] = useState<string>('')
-  const [isAdding, setIsAdding] = useState<boolean>(false)
+  const [isSaving, setIsSaving] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('')
   const [isPublish, setIsPublish] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -58,11 +58,19 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
   }
 
   const handleAdd = async () => {
-    setIsAdding(true)
+    setIsSaving(true)
     const ret = await postPlaylistMusic(selectedUlid, { musicUlid })
-    setIsAdding(false)
+    setIsSaving(false)
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Post))
     setPlaylists((prev) => prev.map((p) => (p.ulid === selectedUlid ? { ...p, count: p.count + 1, musicUlids: [...p.musicUlids, musicUlid] } : p)))
+  }
+
+  const handleRemove = async () => {
+    setIsSaving(true)
+    const ret = await deletePlaylistMusic(selectedUlid, musicUlid)
+    setIsSaving(false)
+    if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Delete))
+    setPlaylists((prev) => prev.map((p) => (p.ulid === selectedUlid ? { ...p, count: p.count - 1, musicUlids: p.musicUlids.filter((u) => u !== musicUlid) } : p)))
   }
 
   const handleCreate = async () => {
@@ -89,7 +97,11 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
             {playlists.length > 0 ? (
               <div className={style.select}>
                 <SelectBox label={t('playlist.select')} value={selectedUlid} options={options} className={style.select_box} onChange={handleSelect} />
-                <Button name={isAdded ? t('playlist.added') : t('action.add')} color="blue" size="s" loading={isAdding} disabled={isAdded} className={style.add} onClick={handleAdd} />
+                {isAdded ? (
+                  <Button name={t('action.delete')} color="red" size="s" loading={isSaving} className={style.add} onClick={handleRemove} />
+                ) : (
+                  <Button name={t('action.add')} color="blue" size="s" loading={isSaving} className={style.add} onClick={handleAdd} />
+                )}
               </div>
             ) : (
               <p className={style.empty}>{t('playlist.empty')}</p>

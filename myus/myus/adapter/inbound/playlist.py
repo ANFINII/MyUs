@@ -2,7 +2,7 @@ from typing import assert_never
 from ninja import Router
 from django.http import HttpRequest
 from myus.usecase.dto.playlist import PlaylistCreateDTO, PlaylistDetailDTO, PlaylistDTO, PlaylistUpdateDTO
-from myus.usecase.playlist.core import add_playlist_music, create_playlist, delete_playlist, get_my_playlists, get_playlist, get_user_playlists, update_playlist
+from myus.usecase.playlist.core import add_playlist_music, create_playlist, delete_playlist, get_my_playlists, get_playlist, get_user_playlists, remove_playlist_music, update_playlist
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError
 from .auth import auth_check
@@ -171,6 +171,34 @@ class PlaylistAPI:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         ret = add_playlist_music(user_id, ulid, input.music_ulid)
+        if ret.is_err:
+            message = ret.err_value.message
+            match ret.err_value:
+                case ForbiddenError():
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(ret.err_value)
+
+        return 200, SuccessOut(message="OK")
+
+    @staticmethod
+    @router.delete("/{ulid}/music/{music_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    def remove_music(request: HttpRequest, ulid: str, music_ulid: str):
+        log.info("request", ulid=ulid, music_ulid=music_ulid)
+
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        ret = remove_playlist_music(user_id, ulid, music_ulid)
         if ret.is_err:
             message = ret.err_value.message
             match ret.err_value:
