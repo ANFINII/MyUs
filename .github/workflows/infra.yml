@@ -11,6 +11,8 @@ on:
     paths:
       - "infra/**"
       - ".github/workflows/infra.yml"
+  schedule:
+    - cron: "0 0 * * 1"
 
 permissions:
   contents: read
@@ -56,7 +58,7 @@ jobs:
           done
 
   plan:
-    if: github.event_name == 'pull_request' && vars.AWS_ACCOUNT_ID != ''
+    if: (github.event_name == 'pull_request' || github.event_name == 'schedule') && vars.AWS_ACCOUNT_ID != ''
     needs: check
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -88,17 +90,30 @@ jobs:
 
       - name: plan
         env:
+          EVENT_NAME: ${{ github.event_name }}
           TF_VAR_emails_for_cost: ${{ secrets.TF_VAR_EMAILS_FOR_COST }}
           TF_VAR_emails_for_alarm: ${{ secrets.TF_VAR_EMAILS_FOR_ALARM }}
         run: |
           mapfile -t stacks < "$STACKS_ROOT/stacks.txt"
+          drifted=()
           for name in "${stacks[@]}"; do
             stack="$STACKS_ROOT/$name"
             echo "::group::$stack"
             terraform -chdir="$stack" init -input=false
-            terraform -chdir="$stack" plan -input=false -lock-timeout=5m
+            code=0
+            terraform -chdir="$stack" plan -input=false -lock-timeout=5m -detailed-exitcode || code=$?
             echo "::endgroup::"
+            if [ "$code" -eq 1 ]; then
+              exit 1
+            fi
+            if [ "$code" -eq 2 ]; then
+              drifted+=("$name")
+            fi
           done
+          if [ "$EVENT_NAME" = schedule ] && [ "${#drifted[@]}" -gt 0 ]; then
+            echo "::error::コードと AWS に差分があります: ${drifted[*]}"
+            exit 1
+          fi
 
   apply:
     if: github.event_name == 'push' && vars.AWS_ACCOUNT_ID != ''

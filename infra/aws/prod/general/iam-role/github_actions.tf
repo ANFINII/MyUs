@@ -3,7 +3,10 @@ module "github_actions" {
 
   roles = {
     github-actions-terraform-plan = {
-      subjects            = ["repo:${local.github_repository}:pull_request"]
+      subjects = [
+        "repo:${local.github_repository}:pull_request",
+        "repo:${local.github_repository}:ref:refs/heads/main",
+      ]
       managed_policy_arns = ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
       iam_policies = {
         terraform-state-lock = data.aws_iam_policy_document.terraform_state_lock.json
