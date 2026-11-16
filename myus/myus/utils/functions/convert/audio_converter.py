@@ -35,9 +35,9 @@ def convert_mp3(input_path: str, output_path: str, bitrate: str = "192k") -> Non
 
     try:
         subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=MP3_TIMEOUT)
-        log.info("MP3変換完了", input_path=input_path, output_path=output_path)
+        log.info("convert completed", input_path=input_path, output_path=output_path)
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
-        log.error("MP3変換エラー", exc=e, input_path=input_path)
+        log.error("convert failed", exc=e, input_path=input_path)
         raise
 
 

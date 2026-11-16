@@ -11,6 +11,7 @@
 - `print()`禁止、`myus.utils.common.logger`の`log`を使用
 - 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
 - エラーログには`exc=e`を渡す
+- ログの文言は英語で書き、対象の名前（`Notification`・`Video`・`Token`など）を付けない（`"create failed"`・`"revoked"`など）。どこのログかは logger が出すファイル・関数・行で、何の話かはキーワード引数（`object_type=`・`object_id=`など）で分かるようにする。英語にすると意味が伝わりにくいもの（トークンが無効になった理由など）は、日本語で書いてよい。画面には出ないので i18n にしない
 - ガード節のメッセージは、対象の名前（`Video`・`コメント`など）を付けずに決まった文言にそろえる。何の話かはキーワード引数（`ulid=`・`media_type=`など）で分かるようにする
   - 見つからない: `"not found"`
   - 持ち主（`owner_id`）が違う: `"owner mismatch"`
@@ -404,3 +405,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: ガード節のログの文言から対象の名前を外し、`not found`・`owner mismatch`・`author mismatch`にそろえた
 - 2026-11-16: usecase・adapter に残っていた`"data not found"`・`"Not Found"`・`"Forbidden"`のエラーの`message`を、FE の i18n のキー（`error.mediaNotFound`・`error.commentUpdateFailed`など）にした
 - 2026-11-16: `not found`のログのレベルを、見に来たら無い（info）・操作の相手が無い（warning）・あるはずのものが無い（error）に分けた
+- 2026-11-16: 日本語で書いていたログの文言を英語にそろえ、対象の名前を付けないようにした
