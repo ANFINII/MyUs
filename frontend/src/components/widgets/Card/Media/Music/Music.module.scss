@@ -12,7 +12,9 @@
     cursor: pointer;
 
     &:hover .play,
-    &.current .play {
+    &.current .play,
+    &:hover .duration,
+    &.current .duration {
       opacity: 1;
     }
 
@@ -57,6 +59,8 @@
 
   .duration {
     position: absolute;
+    opacity: 0;
+    transition: opacity 0.2s;
     right: 6px;
     bottom: 6px;
     padding: 1px 4px;

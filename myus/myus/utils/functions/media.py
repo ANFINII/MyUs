@@ -116,39 +116,6 @@ def probe_formats(path: str) -> set[str]:
     return set(format_name.split(","))
 
 
-def media_duration(file: UploadedFile) -> int:
-    if isinstance(file, TemporaryUploadedFile):
-        duration = probe_duration(file.temporary_file_path())
-    else:
-        with tempfile.NamedTemporaryFile() as tmp:
-            for chunk in file.chunks():
-                tmp.write(chunk)
-            tmp.flush()
-            duration = probe_duration(tmp.name)
-    file.seek(0)
-    return duration
-
-
-def probe_duration(path: str) -> int:
-    ffprobe_path = shutil.which("ffprobe") or "ffprobe"
-    cmd = [ffprobe_path, "-v", "error", "-protocol_whitelist", "file", "-show_entries", "format=duration", "-of", "json", path]
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=PROBE_TIMEOUT)
-    except (OSError, subprocess.TimeoutExpired) as e:
-        log.error("ffprobe failed", exc=e, path=path)
-        return 0
-
-    if result.returncode != 0:
-        log.warning("ffprobe rejected", path=path, stderr=result.stderr)
-        return 0
-
-    try:
-        return round(float(json.loads(result.stdout)["format"]["duration"]))
-    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as e:
-        log.warning("ffprobe output invalid", exc=e, path=path)
-        return 0
-
-
 def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
     filename = file.name or "upload"
     extension = file_extension(filename)
