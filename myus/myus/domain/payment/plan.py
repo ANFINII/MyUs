@@ -32,7 +32,7 @@ PLANS: list[Plan] = [
         is_music_download=False,
         is_playlist=True,
         is_series=True,
-        description="・個別広告表示1つ\n・全体広告OFF\n・プレイリスト作成\n・シリーズ作成",
+        description="・個別広告表示1つ\n・全体広告OFF\n・シリーズ作成\n・プレイリスト作成",
     ),
     Plan(
         name=PlanName.STANDARD,
@@ -41,7 +41,7 @@ PLANS: list[Plan] = [
         is_music_download=False,
         is_playlist=True,
         is_series=True,
-        description="・個別広告表示2つ\n・全体広告OFF\n・プレイリスト作成\n・シリーズ作成",
+        description="・個別広告表示2つ\n・全体広告OFF\n・シリーズ作成\n・プレイリスト作成",
     ),
     Plan(
         name=PlanName.PREMIUM,
@@ -50,7 +50,7 @@ PLANS: list[Plan] = [
         is_music_download=True,
         is_playlist=True,
         is_series=True,
-        description="・個別広告表示3つ\n・全体広告OFF\n・楽曲ダウンロード\n・プレイリスト作成\n・シリーズ作成",
+        description="・個別広告表示3つ\n・全体広告OFF\n・楽曲ダウンロード\n・シリーズ作成\n・プレイリスト作成",
     ),
     Plan(
         name=PlanName.ULTIMATE,
@@ -59,7 +59,7 @@ PLANS: list[Plan] = [
         is_music_download=True,
         is_playlist=True,
         is_series=True,
-        description="・個別広告表示4つ\n・全体広告OFF\n・楽曲ダウンロード\n・プレイリスト作成\n・シリーズ作成",
+        description="・個別広告表示4つ\n・全体広告OFF\n・楽曲ダウンロード\n・シリーズ作成\n・プレイリスト作成",
     ),
 ]
 
