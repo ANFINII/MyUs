@@ -7,7 +7,7 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.common import PAGE_SIZE, FilterOption, PageOption, SortOption
+from myus.domain.media.common import MEDIA_PAGE_SIZE, FilterOption, PageOption, SortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.picture.data import PictureData
@@ -30,7 +30,7 @@ from ...notification._convert import create_publish_notification_data
 
 
 @Result.shield_exception()
-def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
+def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
     repo = injector.get(VideoInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
     count_ret = repo.count(filter)
@@ -105,8 +105,9 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: U
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
@@ -151,7 +152,7 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
 
 @Result.shield_exception()
-def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
+def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
     repo = injector.get(MusicInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
     count_ret = repo.count(filter)
@@ -213,8 +214,9 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO) -> Resul
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish, publish_at=input.publish_at)
@@ -256,7 +258,7 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
 
 @Result.shield_exception()
-def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
+def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
     repo = injector.get(BlogInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
     count_ret = repo.count(filter)
@@ -322,8 +324,9 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
@@ -368,7 +371,7 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
 
 
 @Result.shield_exception()
-def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
+def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
     repo = injector.get(ComicInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
     count_ret = repo.count(filter)
@@ -440,8 +443,9 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
@@ -486,7 +490,7 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
 
 @Result.shield_exception()
-def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
+def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
     repo = injector.get(PictureInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
     count_ret = repo.count(filter)
@@ -552,8 +556,9 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateDTO, imag
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
@@ -598,7 +603,7 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, FindEr
 
 
 @Result.shield_exception()
-def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
+def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
     repo = injector.get(ChatInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
     count_ret = repo.count(filter)
@@ -657,8 +662,9 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateDTO) -> Result[
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     if timezone.localdate(input.publish_at) > input.period:
