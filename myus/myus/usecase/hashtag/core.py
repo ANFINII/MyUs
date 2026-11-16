@@ -36,7 +36,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
 
     media_ids = media_ids_ret.ok_value
     if len(media_ids) == 0:
-        log.error("Media not found", media_type=media_type.value, media_ulid=media_ulid)
+        log.error("not found", media_type=media_type.value, media_ulid=media_ulid)
         return Result.err(NotFoundError("error.saveFailed"))
 
     medias_ret = media_repo.bulk_get(media_ids)
@@ -46,7 +46,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
     medias = medias_ret.ok_value
     media = medias[0]
     if media.channel.owner_id != user_id:
-        log.error("Media owner mismatch", media_type=media_type.value, media_ulid=media_ulid, user_id=user_id)
+        log.error("owner mismatch", media_type=media_type.value, media_ulid=media_ulid, user_id=user_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     ulids = [h.ulid for h in hashtags if h.ulid]

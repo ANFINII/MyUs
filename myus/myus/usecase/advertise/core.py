@@ -26,7 +26,7 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
 
     user = user_ret.ok_value
     if user is None:
-        log.info("User not found", user_ulid=user_ulid)
+        log.info("not found", user_ulid=user_ulid)
         return Result.ok([])
 
     plan = get_plan(user.user_plan.plan)
@@ -97,7 +97,7 @@ def increment_advertise_read(ulid: str, ip_address: str) -> Result[int, FindErro
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid)
+        log.info("not found", ulid=ulid)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids)

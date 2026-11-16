@@ -54,7 +54,7 @@ def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, FindE
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("data not found", ulid=ulid, user_id=user_id)
+        log.info("not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("data not found"))
 
     objs_ret = repo.bulk_get(ids)
@@ -95,7 +95,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseDTO, image: UploadedFi
 
     user = user_ret.ok_value
     if user is None:
-        log.error("User not found", user_id=user_id)
+        log.error("not found", user_id=user_id)
         return Result.err(NotFoundError("error.createFailed"))
 
     new_data = AdvertiseData(
@@ -146,7 +146,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseDTO, image:
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("Advertise not found", ulid=ulid, user_id=user_id)
+        log.error("not found", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("error.saveFailed"))
 
     objs_ret = repo.bulk_get(ids)
@@ -162,7 +162,7 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseDTO, image:
 
     user = user_ret.ok_value
     if user is None:
-        log.error("User not found", user_id=user_id)
+        log.error("not found", user_id=user_id)
         return Result.err(NotFoundError("error.saveFailed"))
 
     update_data = replace(obj,
@@ -193,7 +193,7 @@ def delete_manage_advertise(user_id: int, ulids: list[str]) -> Result[None, Find
 
     ids = ids_ret.ok_value
     if len(ids) != len(set(ulids)):
-        log.error("Advertise not found", ulids=ulids, user_id=user_id)
+        log.error("not found", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = repo.bulk_delete(ids)

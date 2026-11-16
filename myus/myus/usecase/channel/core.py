@@ -21,7 +21,7 @@ def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.error("Channel not found", ulid=ulid)
+        log.error("not found", ulid=ulid)
         return Result.ok(None)
 
     channels_ret = repo.bulk_get(ids)
@@ -42,7 +42,7 @@ def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.warning("Channel not found", owner_id=owner_id)
+        log.warning("not found", owner_id=owner_id)
         return Result.ok([])
 
     channels_ret = repo.bulk_get(ids)
@@ -97,7 +97,7 @@ def update_user_channel(user_id: int, ulid: str, input: ChannelDTO, avatar_file:
         return Result.err(NotFoundError("error.saveFailed"))
 
     if channel.owner_id != user_id:
-        log.error("Channel owner mismatch", ulid=ulid, user_id=user_id, owner_id=channel.owner_id)
+        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=channel.owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     avatar = save_upload(avatar_file, ImageUpload.CHANNEL, channel.ulid) if avatar_file else channel.avatar

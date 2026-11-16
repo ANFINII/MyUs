@@ -18,7 +18,7 @@ def get_message_data(message_ulid: str) -> Result[MessageData | None, FatalError
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.warning("メッセージが見つかりませんでした", message_ulid=message_ulid)
+        log.warning("not found", message_ulid=message_ulid)
         return Result.ok(None)
 
     messages_ret = repo.bulk_get(ids)

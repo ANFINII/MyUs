@@ -267,7 +267,7 @@ def change_password(user_id: int, input: PasswordChangeDTO) -> Result[str, Fatal
 
     users = users_ret.ok_value
     if len(users) == 0:
-        log.error("User not found", user_id=user_id)
+        log.error("not found", user_id=user_id)
         return Result.ok("error.userNotFound")
 
     user_data = users[0]
@@ -398,7 +398,7 @@ def reset_password(input: PasswordResetDTO) -> Result[str, FatalError]:
 
     users = users_ret.ok_value
     if len(users) == 0:
-        log.error("User not found", user_id=user_id)
+        log.error("not found", user_id=user_id)
         return Result.ok("error.userNotFound")
 
     user_data = users[0]
@@ -425,7 +425,7 @@ def withdraw_user(user_id: int, password: str) -> Result[str, FatalError]:
 
     users = users_ret.ok_value
     if len(users) == 0:
-        log.error("User not found", user_id=user_id)
+        log.error("not found", user_id=user_id)
         return Result.ok("error.userNotFound")
 
     user_data = users[0]
