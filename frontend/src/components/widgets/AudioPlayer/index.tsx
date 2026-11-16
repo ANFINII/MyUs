@@ -6,16 +6,19 @@ import style from './AudioPlayer.module.scss'
 
 const PLAY_EVENT = 'audioplayer:play'
 
+type VolumePosition = 'top' | 'bottom'
+
 interface Props {
   src: string
   playbackRate?: number
   autoPlay?: boolean
+  volumePosition?: VolumePosition
   className?: string
   onEnded?: () => void
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, playbackRate = 1, autoPlay = false, className, onEnded } = props
+  const { src, playbackRate = 1, autoPlay = false, volumePosition = 'bottom', className, onEnded } = props
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -151,7 +154,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const playedPercent = duration ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, className)}>
+    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, volumePosition === 'top' && style.volume_top, className)}>
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>

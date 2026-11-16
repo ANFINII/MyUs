@@ -230,6 +230,15 @@
     }
   }
 
+  &.volume_top .volume:hover .volume_adjust {
+    top: auto;
+    bottom: 100%;
+  }
+
+  &.volume_top .volume .volume_adjust > div {
+    margin: 10% auto 0;
+  }
+
   // 音量波アイコン（ミュートでない時のみ）
   &:not(.muted) .volume_button .icon::after {
     position: absolute;
