@@ -1,5 +1,6 @@
 output "mysql" {
   value = {
+    identifier              = aws_db_instance.main.identifier
     host                    = aws_db_instance.main.address
     port                    = aws_db_instance.main.port
     database                = aws_db_instance.main.db_name

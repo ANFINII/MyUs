@@ -6,3 +6,4 @@ general/iam-role
 products/myus/media
 products/myus/database
 products/myus/compute
+products/myus/monitoring

@@ -89,6 +89,7 @@ jobs:
       - name: plan
         env:
           TF_VAR_emails_for_cost: ${{ secrets.TF_VAR_EMAILS_FOR_COST }}
+          TF_VAR_emails_for_alarm: ${{ secrets.TF_VAR_EMAILS_FOR_ALARM }}
         run: |
           mapfile -t stacks < "$STACKS_ROOT/stacks.txt"
           for name in "${stacks[@]}"; do
@@ -133,6 +134,7 @@ jobs:
       - name: apply
         env:
           TF_VAR_emails_for_cost: ${{ secrets.TF_VAR_EMAILS_FOR_COST }}
+          TF_VAR_emails_for_alarm: ${{ secrets.TF_VAR_EMAILS_FOR_ALARM }}
         run: |
           mapfile -t stacks < "$STACKS_ROOT/stacks.txt"
           for name in "${stacks[@]}"; do
