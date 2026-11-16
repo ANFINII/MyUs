@@ -46,6 +46,7 @@
     "advertiseNotFound": "Advertisement not found",
     "playlistNotFound": "Playlist not found",
     "playlistPlanRequired": "Playlists are available on paid plans",
+    "seriesPlanRequired": "Series are available on paid plans",
     "planNotFound": "Plan not found",
     "alreadySubscribed": "You already have a paid plan",
     "followSelf": "You cannot follow yourself",
@@ -544,6 +545,7 @@
         "hideGlobalAds": "No site-wide ads",
         "musicDownload": "Music downloads",
         "playlist": "Create playlists",
+        "series": "Create series",
         "basic": "Basic features",
         "withAds": "Includes ads"
       }
