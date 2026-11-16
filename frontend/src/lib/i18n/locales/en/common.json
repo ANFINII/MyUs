@@ -564,6 +564,7 @@
     "follow": "Follow"
   },
   "playlist": {
+    "select": "Playlist",
     "tabAll": "All",
     "tabPlaylist": "Playlists",
     "new": "New playlist",

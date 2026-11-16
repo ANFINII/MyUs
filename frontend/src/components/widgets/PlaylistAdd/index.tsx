@@ -12,6 +12,7 @@ import Button from 'components/parts/Button'
 import IconPlus from 'components/parts/Icon/Plus'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
+import SelectBox from 'components/parts/Input/SelectBox'
 import Link from 'components/parts/Link'
 import Modal from 'components/parts/Modal'
 import style from './PlaylistAdd.module.scss'
@@ -29,33 +30,39 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [playlists, setPlaylists] = useState<Playlist[]>([])
-  const [addedUlids, setAddedUlids] = useState<string[]>([])
-  const [addingUlid, setAddingUlid] = useState<string>('')
+  const [selectedUlid, setSelectedUlid] = useState<string>('')
+  const [isAdding, setIsAdding] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('')
   const [isPublish, setIsPublish] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
 
+  const selected = playlists.find((p) => p.ulid === selectedUlid)
+  const isAdded = selected?.musicUlids.includes(musicUlid) ?? false
+  const options = playlists.map((p) => ({ label: p.title, value: p.ulid }))
+
   const handleError = (content: string) => setError(isTranslationKey(i18n, content) ? t(content) : content)
   const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)
   const handlePublish = (e: ChangeEvent<HTMLInputElement>) => setIsPublish(e.target.checked)
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setSelectedUlid(e.target.value)
 
   const handleModal = async () => {
     if (isModal) return setIsModal(false)
     setError('')
-    setAddedUlids([])
     setIsModal(true)
     if (!user.isActive) return
     const ret = await getPlaylists()
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Get))
-    setPlaylists(ret.value.items)
+    const items = ret.value.items
+    setPlaylists(items)
+    setSelectedUlid((items.find((p) => !p.musicUlids.includes(musicUlid)) ?? items[0])?.ulid ?? '')
   }
 
-  const handleAdd = async (ulid: string) => {
-    setAddingUlid(ulid)
-    const ret = await postPlaylistMusic(ulid, { musicUlid })
-    setAddingUlid('')
+  const handleAdd = async () => {
+    setIsAdding(true)
+    const ret = await postPlaylistMusic(selectedUlid, { musicUlid })
+    setIsAdding(false)
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Post))
-    setAddedUlids((prev) => [...prev, ulid])
+    setPlaylists((prev) => prev.map((p) => (p.ulid === selectedUlid ? { ...p, count: p.count + 1, musicUlids: [...p.musicUlids, musicUlid] } : p)))
   }
 
   const handleCreate = async () => {
@@ -63,9 +70,9 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
     const ret = await postPlaylist({ title, publish: isPublish, musicUlid })
     handleLoading(false)
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Post))
-    const playlist: Playlist = { ulid: ret.value.ulid, title, publish: isPublish, count: 1, image: '', updated: '' }
+    const playlist: Playlist = { ulid: ret.value.ulid, title, publish: isPublish, count: 1, image: '', musicUlids: [musicUlid], updated: '' }
     setPlaylists((prev) => [playlist, ...prev])
-    setAddedUlids((prev) => [...prev, playlist.ulid])
+    setSelectedUlid(playlist.ulid)
     setTitle('')
     setIsPublish(false)
   }
@@ -80,22 +87,10 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
         {user.isActive ? (
           <div className={style.content}>
             {playlists.length > 0 ? (
-              <ul className={style.list}>
-                {playlists.map((playlist) => (
-                  <li key={playlist.ulid} className={style.item}>
-                    <span className={style.title}>{playlist.title}</span>
-                    <span className={style.publish}>{playlist.publish ? t('playlist.public') : t('playlist.private')}</span>
-                    <Button
-                      name={addedUlids.includes(playlist.ulid) ? t('playlist.added') : t('action.add')}
-                      color="blue"
-                      size="s"
-                      loading={addingUlid === playlist.ulid}
-                      disabled={addedUlids.includes(playlist.ulid)}
-                      onClick={() => handleAdd(playlist.ulid)}
-                    />
-                  </li>
-                ))}
-              </ul>
+              <div className={style.select}>
+                <SelectBox label={t('playlist.select')} value={selectedUlid} options={options} className={style.select_box} onChange={handleSelect} />
+                <Button name={isAdded ? t('playlist.added') : t('action.add')} color="blue" size="s" loading={isAdding} disabled={isAdded} onClick={handleAdd} />
+              </div>
             ) : (
               <p className={style.empty}>{t('playlist.empty')}</p>
             )}

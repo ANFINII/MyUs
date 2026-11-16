@@ -74,7 +74,7 @@ def get_playlists_data(filter: FilterOption, user_id: int | None) -> Result[list
         image = ""
         if len(musics) > 0:
             image = musics[0].image or musics[0].channel.avatar
-        data.append(PlaylistDTO(ulid=p.ulid, title=p.title, publish=p.publish, count=len(musics), image=create_url(image), updated=p.updated))
+        data.append(PlaylistDTO(ulid=p.ulid, title=p.title, publish=p.publish, count=len(musics), image=create_url(image), music_ulids=[m.ulid for m in musics], updated=p.updated))
 
     return Result.ok(data)
 

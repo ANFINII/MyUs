@@ -194,6 +194,7 @@ def convert_playlists(objs: list[PlaylistDTO]) -> list[PlaylistOut]:
             publish=x.publish,
             count=x.count,
             image=x.image,
+            music_ulids=x.music_ulids,
             updated=x.updated,
         ) for x in objs
     ]

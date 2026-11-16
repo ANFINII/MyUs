@@ -22,6 +22,7 @@ export interface Playlist {
   publish: boolean
   count: number
   image: string
+  musicUlids: string[]
   updated: string
 }
 
