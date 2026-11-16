@@ -105,8 +105,9 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateDTO, image: U
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
@@ -213,8 +214,9 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO) -> Resul
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish, publish_at=input.publish_at)
@@ -322,8 +324,9 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
@@ -440,8 +443,9 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
@@ -552,8 +556,9 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateDTO, imag
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
@@ -657,8 +662,9 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateDTO) -> Result[
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if obj.channel.owner_id != user_id:
-        log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
     if timezone.localdate(input.publish_at) > input.period:
