@@ -33,7 +33,8 @@ class PlaylistAPI:
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        return 200, PlaylistListOut(items=convert_playlists(ret.ok_value))
+        objs = ret.ok_value
+        return 200, PlaylistListOut(items=convert_playlists(objs))
 
     @staticmethod
     @router.post("", response={200: PlaylistCreateOut, 400: ErrorOut, 500: ErrorOut})
@@ -59,7 +60,8 @@ class PlaylistAPI:
                 case _:
                     assert_never(ret.err_value)
 
-        return 200, PlaylistCreateOut(ulid=ret.ok_value)
+        new_ulid = ret.ok_value
+        return 200, PlaylistCreateOut(ulid=new_ulid)
 
     @staticmethod
     @router.get("/user/{user_ulid}", response={200: PlaylistListOut, 400: ErrorOut, 500: ErrorOut})
@@ -77,7 +79,8 @@ class PlaylistAPI:
                 case _:
                     assert_never(ret.err_value)
 
-        return 200, PlaylistListOut(items=convert_playlists(ret.ok_value))
+        objs = ret.ok_value
+        return 200, PlaylistListOut(items=convert_playlists(objs))
 
     @staticmethod
     @router.get("/{ulid}", response={200: PlaylistDetailOut, 400: ErrorOut, 500: ErrorOut})
@@ -88,7 +91,8 @@ class PlaylistAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        ret = get_playlist(user_id_ret.ok_value, ulid)
+        user_id = user_id_ret.ok_value
+        ret = get_playlist(user_id, ulid)
         if ret.is_err:
             message = ret.err_value.message
             match ret.err_value:
@@ -99,7 +103,8 @@ class PlaylistAPI:
                 case _:
                     assert_never(ret.err_value)
 
-        return 200, convert_playlist_detail(ret.ok_value)
+        obj = ret.ok_value
+        return 200, convert_playlist_detail(obj)
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})

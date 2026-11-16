@@ -24,7 +24,8 @@ def get_playlist_data(ulid: str) -> Result[PlaylistData | None, FatalError]:
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    playlists_ret = repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    playlists_ret = repo.bulk_get(ids)
     if playlists_ret.is_err:
         return Result.err(playlists_ret.err_value)
 
@@ -57,7 +58,8 @@ def get_playlists_data(filter: FilterOption, user_id: int | None) -> Result[list
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    playlists_ret = repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    playlists_ret = repo.bulk_get(ids)
     if playlists_ret.is_err:
         return Result.err(playlists_ret.err_value)
 
@@ -67,7 +69,8 @@ def get_playlists_data(filter: FilterOption, user_id: int | None) -> Result[list
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    music_map = {m.id: m for m in musics_ret.ok_value if is_visible_music(m, user_id)}
+    all_musics = musics_ret.ok_value
+    music_map = {m.id: m for m in all_musics if is_visible_music(m, user_id)}
     data: list[PlaylistDTO] = []
     for p in playlists:
         musics = [music_map[music_id] for music_id in p.music_ids if music_id in music_map]
@@ -86,11 +89,13 @@ def get_music_data(music_ulid: str, user_id: int) -> Result[MusicData | None, Fa
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    musics_ret = repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    musics_ret = repo.bulk_get(ids)
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    musics = [m for m in musics_ret.ok_value if is_visible_music(m, user_id)]
+    all_musics = musics_ret.ok_value
+    musics = [m for m in all_musics if is_visible_music(m, user_id)]
     return Result.ok(musics[0] if len(musics) > 0 else None)
 
 
@@ -104,11 +109,13 @@ def get_music_ids_data(music_ulids: list[str], user_id: int) -> Result[list[int]
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    musics_ret = repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    musics_ret = repo.bulk_get(ids)
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    ulid_map = {m.ulid: m.id for m in musics_ret.ok_value if is_visible_music(m, user_id)}
+    all_musics = musics_ret.ok_value
+    ulid_map = {m.ulid: m.id for m in all_musics if is_visible_music(m, user_id)}
     return Result.ok(list(dict.fromkeys(ulid_map[u] for u in music_ulids if u in ulid_map)))
 
 

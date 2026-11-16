@@ -32,7 +32,8 @@ def get_user_playlists(user_ulid: str) -> Result[list[PlaylistDTO], FindError]:
     if playlists_ret.is_err:
         return Result.err(playlists_ret.err_value)
 
-    return Result.ok(playlists_ret.ok_value)
+    playlists = playlists_ret.ok_value
+    return Result.ok(playlists)
 
 
 @Result.shield_exception()
@@ -51,18 +52,21 @@ def get_playlist(user_id: int | None, ulid: str) -> Result[PlaylistDetailDTO, Fi
     if author_ret.is_err:
         return Result.err(author_ret.err_value)
 
+    author = author_ret.ok_value
+
     music_repo = injector.get(MusicInterface)
     musics_ret = music_repo.bulk_get(playlist.music_ids)
     if musics_ret.is_err:
         return Result.err(musics_ret.err_value)
 
-    musics = [m for m in musics_ret.ok_value if is_visible_music(m, user_id)]
+    all_musics = musics_ret.ok_value
+    musics = [m for m in all_musics if is_visible_music(m, user_id)]
     return Result.ok(PlaylistDetailDTO(
         ulid=playlist.ulid,
         title=playlist.title,
         publish=playlist.publish,
         is_owner=is_owner,
-        author=author_ret.ok_value,
+        author=author,
         musics=music_urls(musics),
         updated=playlist.updated,
     ))
@@ -89,7 +93,8 @@ def create_playlist(user_id: int, input: PlaylistCreateDTO) -> Result[str, FindE
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    playlists_ret = repo.bulk_get(save_ret.ok_value)
+    new_ids = save_ret.ok_value
+    playlists_ret = repo.bulk_get(new_ids)
     if playlists_ret.is_err:
         return Result.err(playlists_ret.err_value)
 
@@ -109,8 +114,9 @@ def update_playlist(user_id: int, ulid: str, input: PlaylistUpdateDTO) -> Result
         return Result.err(music_ids_ret.err_value)
 
     playlist = playlist_ret.ok_value
+    music_ids = music_ids_ret.ok_value
     repo = injector.get(PlaylistInterface)
-    save_ret = repo.bulk_save([replace(playlist, title=input.title, publish=input.publish, music_ids=music_ids_ret.ok_value)])
+    save_ret = repo.bulk_save([replace(playlist, title=input.title, publish=input.publish, music_ids=music_ids)])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
