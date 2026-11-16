@@ -8,9 +8,9 @@
   border-radius: 8px;
 
   .jacket {
-    flex: 1;
-    min-width: 0;
-    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    width: 160px;
+    height: 160px;
   }
 
   .jacket_image {
@@ -21,7 +21,7 @@
   }
 
   .controls {
-    flex: 1.618;
+    flex: 1;
     min-width: 0;
   }
 
@@ -35,10 +35,6 @@
 
   @media (max-width: 768px) {
     flex-direction: column;
-
-    .jacket {
-      width: 61.8%;
-    }
 
     .controls {
       width: 100%;
