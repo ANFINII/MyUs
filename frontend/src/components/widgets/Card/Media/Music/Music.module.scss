@@ -22,7 +22,6 @@
 
     &:active .play {
       background: rgba(0, 105, 255, 0.6);
-      transform: translate(-50%, -50%) scale(0.9);
     }
   }
 
@@ -36,7 +35,7 @@
     border-radius: 50%;
     opacity: 0;
     transform: translate(-50%, -50%);
-    transition: opacity 0.2s, background-color 0.4s, transform 0.1s;
+    transition: opacity 0.2s, background-color 0.1s;
 
     &::after {
       position: absolute;
