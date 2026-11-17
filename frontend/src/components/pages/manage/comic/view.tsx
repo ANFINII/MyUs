@@ -16,7 +16,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import { Column } from 'components/parts/DataTable'
 import ExImage from 'components/parts/ExImage'
-import IconLink from 'components/parts/Icon/Link'
+import IconArrow from 'components/parts/Icon/Arrow'
 import Toggle from 'components/parts/Input/Toggle'
 import Link from 'components/parts/Link'
 import style from '../Media.module.scss'
@@ -122,7 +122,7 @@ export default function ManageComics(props: Props): React.JSX.Element {
       cellClass: style.detail,
       cell: (c) => (
         <Link href={`/media/comic/${c.ulid}`} className={style.detail_link}>
-          <IconLink size="16" />
+          <IconArrow size="16" type="external" />
         </Link>
       ),
     },
