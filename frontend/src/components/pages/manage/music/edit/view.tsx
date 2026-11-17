@@ -26,6 +26,7 @@ import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../../Form.module.scss'
+import LyricEditor from '../LyricEditor'
 
 interface Props {
   channels: Channel[]
@@ -50,12 +51,18 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
     publish: data.publish,
     publishAt: datetimeISO(data.publishAt),
   })
+  const [isModal, setIsModal] = useState<boolean>(false)
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/music')
-  const handleLyric = () => router.push(`/manage/music/${data.ulid}/lyric`)
+  const handleModal = () => setIsModal(!isModal)
+
+  const handleLyric = (lyric: string) => {
+    setValues({ ...values, lyric })
+    setIsModal(false)
+  }
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -98,12 +105,14 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
           <div className={style.lyric_hint}>
             <IconInfo size="14" className={style.lyric_hint_icon} />
             <span>{t('manage.form.lyricHint')}</span>
-            <Button color="purple" size="s" name={t('manage.lyric.open')} className={style.lyric_hint_button} onClick={handleLyric} />
+            <Button color="purple" size="s" name={t('manage.lyric.open')} className={style.lyric_hint_button} onClick={handleModal} />
           </div>
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
           <CheckBox label={t('manage.form.download')} name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>
+
+      {isModal && <LyricEditor src={data.music} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
     </Main>
   )
 }

@@ -1,20 +1,7 @@
 .editor {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 1200px;
-  margin: 0 auto;
-
-  .head {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .title {
-    margin: 0;
-    font-size: 18px;
-  }
+  gap: 12px;
 
   .hint {
     font-size: 13px;
@@ -45,7 +32,7 @@
 }
 
 .list {
-  max-height: 640px;
+  max-height: 360px;
   margin: 0;
   padding: 0;
   list-style: none;

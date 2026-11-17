@@ -24,6 +24,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../../Form.module.scss'
+import LyricEditor from '../LyricEditor'
 
 interface Props {
   channels: Channel[]
@@ -44,12 +45,23 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<MusicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', lyric: '', download: true })
+  const [musicUrl, setMusicUrl] = useState<string>('')
 
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, music: files })
+
+  const handleModal = () => {
+    if (musicUrl) URL.revokeObjectURL(musicUrl)
+    setMusicUrl(!musicUrl && values.music ? URL.createObjectURL(values.music) : '')
+  }
+
+  const handleLyric = (lyric: string) => {
+    setValues({ ...values, lyric })
+    handleModal()
+  }
   const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
@@ -83,10 +95,11 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
-          <Textarea label={t('manage.form.lyric')} name="lyric" className={style.lyric} onChange={handleText} />
+          <Textarea label={t('manage.form.lyric')} name="lyric" className={style.lyric} value={values.lyric} onChange={handleText} />
           <div className={style.lyric_hint}>
             <IconInfo size="14" className={style.lyric_hint_icon} />
             <span>{t('manage.form.lyricHint')}</span>
+            <Button color="purple" size="s" name={t('manage.lyric.open')} disabled={!values.music} className={style.lyric_hint_button} onClick={handleModal} />
           </div>
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
           <VStack gap="2">
@@ -95,6 +108,8 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           </VStack>
         </VStack>
       </form>
+
+      {musicUrl && <LyricEditor src={musicUrl} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
     </Main>
   )
 }

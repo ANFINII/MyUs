@@ -329,7 +329,8 @@
     },
     "lyric": {
       "open": "Sync lyrics",
-      "hint": "Play the song, pick a line and press \"Record time\" to stamp it and move to the next line. Click a line to jump to its time",
+      "hint": "Play the song, pick a line and press \"Record time\" to stamp it and move on. \"Apply\" puts the lyrics back into the form; save to keep them",
+      "apply": "Apply",
       "record": "Record time",
       "clear": "Clear time",
       "placeholder": "Type lyrics",
