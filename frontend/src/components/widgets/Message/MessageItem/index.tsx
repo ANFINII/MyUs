@@ -7,7 +7,6 @@ import { sanitizeHtml } from 'utils/functions/sanitize'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useRouter } from 'components/hooks/useRouter'
 import ActionButton from 'components/parts/Action/Button'
-import { ActionItem } from 'components/parts/Action/List'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconEdit from 'components/parts/Icon/Edit'
 import IconLink from 'components/parts/Icon/Link'
@@ -66,7 +65,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
     navigator.clipboard.writeText(router.buildUrl(threadPath))
   }
 
-  const actionItems: ActionItem[] = [
+  const actionItems = [
     { icon: <IconLink size="16" />, label: t('action.copy'), onClick: handleCopyLink },
     ...(isOwner && !isDisabled
       ? [

@@ -1,6 +1,5 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Option } from 'types/internal/other'
 import Select from 'components/parts/Select'
 import style from './ImageInput.module.scss'
 
@@ -27,7 +26,7 @@ export default function ImageInput(props: Props): React.JSX.Element {
   const [width, setWidth] = useState<string>(values?.width ? String(Math.round(values.width)) : '')
   const [rounded, setRounded] = useState<string>(values?.rounded ?? '')
 
-  const roundedOptions: Option[] = [
+  const roundedOptions = [
     { label: t('textEditor.roundedNone'), value: '' },
     { label: t('textEditor.roundedSmall'), value: 's' },
     { label: t('textEditor.roundedMedium'), value: 'm' },

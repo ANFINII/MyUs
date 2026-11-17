@@ -79,7 +79,7 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
     const ret = await postPlaylist({ title, publish: isPublish, musicUlid })
     handleLoading(false)
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Post))
-    const playlist: Playlist = { ulid: ret.value.ulid, title, publish: isPublish, count: 1, image: '', musicUlids: [musicUlid], updated: '' }
+    const playlist = { ulid: ret.value.ulid, title, publish: isPublish, count: 1, image: '', musicUlids: [musicUlid], updated: '' }
     setPlaylists((prev) => [playlist, ...prev])
     setSelectedUlid(playlist.ulid)
     setTitle('')

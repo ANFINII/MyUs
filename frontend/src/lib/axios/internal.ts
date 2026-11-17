@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
+import axios from 'axios'
 import { API_URL } from 'lib/config'
 import { axiosInterceptor } from '.'
 
@@ -8,7 +8,7 @@ const JSON_TIMEOUT_MS = 10000 // 10秒
 const FILE_UPLOAD_TIMEOUT_MS = 60000 // 1分
 
 const axiosInstance = (baseURL: string, contentType: ContentType) => {
-  const client: AxiosInstance = axios.create({
+  const client = axios.create({
     baseURL,
     withCredentials: true,
     headers: {

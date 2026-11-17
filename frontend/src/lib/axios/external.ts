@@ -1,8 +1,8 @@
-import axios, { AxiosInstance } from 'axios'
+import axios from 'axios'
 import { axiosInterceptor } from '.'
 
 const axiosInstance = (baseURL: string, contentType: string) => {
-  const client: AxiosInstance = axios.create({
+  const client = axios.create({
     baseURL,
     headers: { 'Content-Type': contentType },
     timeout: 5000,

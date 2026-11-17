@@ -37,7 +37,7 @@ export default function ManageSeriesList(props: Props): React.JSX.Element {
   const [mediaType, setMediaType] = useState<MediaType>(MediaType.Video)
   const [title, setTitle] = useState<string>('')
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
   const handleModal = () => setIsModal(!isModal)
   const handleEdit = (ulid: string) => router.push(`/manage/series/${ulid}`)

@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Editor, useEditorState } from '@tiptap/react'
-import { Option } from 'types/internal/other'
 import cx from 'utils/functions/cx'
 import Select from 'components/parts/Select'
 import IconBlockquote from './Icon/Blockquote'
@@ -86,7 +85,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
 
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const headingOptions: Option[] = [
+  const headingOptions = [
     { label: 'Normal', value: '0' },
     { label: 'Heading 1', value: '1' },
     { label: 'Heading 2', value: '2' },
@@ -95,7 +94,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
     { label: 'Heading 5', value: '5' },
   ]
 
-  const alignOptions: Option[] = [
+  const alignOptions = [
     { label: 'Left', value: 'left' },
     { label: 'Center', value: 'center' },
     { label: 'Right', value: 'right' },

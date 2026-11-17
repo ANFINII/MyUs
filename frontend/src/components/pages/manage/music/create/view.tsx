@@ -4,7 +4,6 @@ import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { MusicIn } from 'types/internal/media/input'
-import { Option } from 'types/internal/other'
 import { postMusicCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
@@ -46,8 +45,8 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const [musicUrl, setMusicUrl] = useState<string>('')
   const [values, setValues] = useState<MusicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', lyric: '', download: true })
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleModal = () => setIsModal(!isModal)
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })

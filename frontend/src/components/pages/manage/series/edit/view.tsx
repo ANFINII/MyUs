@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
-import { Option } from 'types/internal/other'
 import { SeriesDetail, SeriesItem } from 'types/internal/series'
 import { deleteManageSeries, putManageSeries } from 'api/internal/manage/series'
 import { Fetch, FetchError } from 'utils/constants/enum'
@@ -45,10 +44,10 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
   const [selectedUlid, setSelectedUlid] = useState<string>('')
   const { dragIndex, dragOverIndex, dragItem } = useDragSort(items, setItems)
 
-  const mediaTypeOptions: Option[] = [{ label: data.mediaType, value: data.mediaType }]
+  const mediaTypeOptions = [{ label: data.mediaType, value: data.mediaType }]
   const filtered = candidates.filter((c) => c.title.toLowerCase().includes(search.trim().toLowerCase()))
   const selected = filtered.find((c) => c.ulid === selectedUlid) ?? filtered[0]
-  const candidateOptions: Option[] = filtered.map((c) => ({ label: c.title, value: c.ulid }))
+  const candidateOptions = filtered.map((c) => ({ label: c.title, value: c.ulid }))
 
   const handleModal = () => setIsModal(!isModal)
   const handleBack = () => router.push({ pathname: '/manage/series', query: { channel: data.channelUlid } })

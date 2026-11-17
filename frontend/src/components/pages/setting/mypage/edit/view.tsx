@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChannelIn, Channel } from 'types/internal/channel'
-import { Option } from 'types/internal/other'
 import { MypageIn, MypageOut } from 'types/internal/user'
 import { putChannel } from 'api/internal/channel'
 import { putSettingMypage } from 'api/internal/setting'
@@ -51,7 +50,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const channel = channelValues[channelUlid]!
   const bannerUrl = bannerPreview ?? mypage.banner
   const avatarUrl = avatarPreviews[channelUlid] ?? channel.avatar
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
   const handleBack = () => router.push('/setting/mypage')
   const handleToggle = () => setMypageValues({ ...mypageValues, isAdvertise: !mypageValues.isAdvertise })
