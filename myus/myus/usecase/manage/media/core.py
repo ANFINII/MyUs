@@ -22,6 +22,7 @@ from myus.utils.enum.media import EncodeStatus
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
+from myus.utils.functions.convert.audio_converter import measure_music_gain
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
 from ._convert import save_video_data, save_music_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_music_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
@@ -203,8 +204,8 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
 
 
 @Result.shield_exception()
-def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO, image: UploadedFile | None = None) -> Result[None, WriteError]:
-    upload_ret = validate_uploads([(image, ImageUpload.MUSIC)])
+def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO, image: UploadedFile | None = None, music: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.MUSIC), (music, MediaUpload.MUSIC)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
@@ -232,6 +233,9 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO, image: U
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.MUSIC, obj.channel.ulid))
+    if music is not None:
+        music_path = save_upload(music, MediaUpload.MUSIC, obj.channel.ulid)
+        update_data = replace(update_data, music=music_path, gain=measure_music_gain(music_path))
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
