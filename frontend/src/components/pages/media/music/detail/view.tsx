@@ -1,6 +1,7 @@
 import { ChangeEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MusicDetailOut } from 'types/internal/media/output'
+import { RepeatMode } from 'types/internal/other'
 import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -31,11 +32,13 @@ export default function MusicDetail(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [speed, setSpeed] = useState<number>(1)
   const [isLyricView, setIsLyricView] = useState<boolean>(false)
+  const [repeat, setRepeat] = useState<RepeatMode>('off')
   const [currentTime, setCurrentTime] = useState<number>(0)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const handleSpeed = (e: ChangeEvent<HTMLInputElement>) => setSpeed(Number(e.target.value))
   const handleLyricView = () => setIsLyricView(!isLyricView)
+  const handleRepeat = () => setRepeat(repeat === 'off' ? 'one' : 'off')
 
   const handleSeek = (time: number) => {
     const audio = audioRef.current
@@ -52,7 +55,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
             <ExImage src={image || other.channel.avatar} className={style.thumbnail} />
           </div>
           <VStack gap="6" className={style.controls}>
-            <AudioPlayer src={music} playbackRate={speed} isVolumeInline isRepeat audioRef={audioRef} onTimeUpdate={setCurrentTime} />
+            <AudioPlayer src={music} playbackRate={speed} isVolumeInline repeat={repeat} audioRef={audioRef} onTimeUpdate={setCurrentTime} onRepeat={handleRepeat} />
             <HStack justify="between">
               <SpeedControl value={speed} onChange={handleSpeed} className={style.speed} />
               <div className={style.actions}>

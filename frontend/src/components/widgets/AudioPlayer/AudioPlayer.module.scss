@@ -108,7 +108,7 @@
   }
 
   .repeat {
-    right: 7.5em;
+    right: 2.5em;
     opacity: 0.45;
 
     &.active {
@@ -116,8 +116,18 @@
     }
   }
 
-  &.repeatable .bar {
-    right: calc(10em + 8px);
+  &.repeatable {
+    .skip_back {
+      right: 7.5em;
+    }
+
+    .skip_forward {
+      right: 5em;
+    }
+
+    .bar {
+      right: calc(10em + 8px);
+    }
   }
 
   .bar {
@@ -275,11 +285,21 @@
     }
 
     .repeat {
-      right: 15em;
+      right: 10em;
     }
 
-    &.repeatable .bar {
-      right: calc(17.5em + 8px);
+    &.repeatable {
+      .skip_back {
+        right: 15em;
+      }
+
+      .skip_forward {
+        right: 12.5em;
+      }
+
+      .bar {
+        right: calc(17.5em + 8px);
+      }
     }
 
     .volume {

@@ -6,7 +6,6 @@ import { useRouter } from 'components/hooks/useRouter'
 import ExImage from 'components/parts/ExImage'
 import IconChevront from 'components/parts/Icon/Chevront'
 import IconCross from 'components/parts/Icon/Cross'
-import IconRepeat from 'components/parts/Icon/Repeat'
 import IconShuffle from 'components/parts/Icon/Shuffle'
 import Link from 'components/parts/Link'
 import AudioPlayer from 'components/widgets/AudioPlayer'
@@ -17,7 +16,7 @@ const PLAYER_DETAIL_PATH = /^\/media\/(video|music)\/[^/]+$/
 export default function MiniPlayer(): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
-  const { current, audioRef, isShuffle, repeat, next, prev, ended, toggleShuffle, toggleRepeat, close } = useMusicPlayer()
+  const { current, audioRef, isShuffle, repeat, next, prev, toggleShuffle, toggleRepeat, close } = useMusicPlayer()
 
   const isPlayerDetail = PLAYER_DETAIL_PATH.test(router.pathname)
 
@@ -42,12 +41,9 @@ export default function MiniPlayer(): React.JSX.Element {
       <button type="button" className={style.button} onClick={prev}>
         <IconChevront width="1.2em" height="1.2em" type="left" />
       </button>
-      <AudioPlayer key={current.ulid} src={current.music} autoPlay isVolumeInline audioRef={audioRef} onEnded={ended} className={style.player} />
+      <AudioPlayer key={current.ulid} src={current.music} autoPlay isVolumeInline audioRef={audioRef} repeat={repeat} onEnded={next} onRepeat={toggleRepeat} className={style.player} />
       <button type="button" className={style.button} onClick={next}>
         <IconChevront width="1.2em" height="1.2em" type="right" />
-      </button>
-      <button type="button" title={t(`player.repeat.${repeat}`)} className={cx(style.button, repeat !== 'off' && style.active)} onClick={toggleRepeat}>
-        <IconRepeat size="1.1em" type={repeat === 'one' ? 'one' : 'all'} />
       </button>
       <IconCross size="1.2em" className={style.close} onClick={close} />
     </div>

@@ -1,8 +1,7 @@
 import { useRef, useState, createContext, useCallback } from 'react'
 import { Music } from 'types/internal/media/output'
+import { RepeatMode } from 'types/internal/other'
 import { shuffleItems } from 'utils/functions/common'
-
-export type RepeatMode = 'off' | 'all' | 'one'
 
 export interface MusicPlayerContextType {
   current: Music | undefined
@@ -14,7 +13,6 @@ export interface MusicPlayerContextType {
   toggle: () => void
   next: () => void
   prev: () => void
-  ended: () => void
   toggleShuffle: () => void
   toggleRepeat: () => void
   close: () => void
@@ -87,11 +85,6 @@ export function MusicPlayerProvider(props: Props): React.JSX.Element {
 
   const prev = () => setIndex((i) => (i > 0 ? i - 1 : i))
 
-  const ended = () => {
-    if (repeat === 'one') return replay()
-    next()
-  }
-
   const toggleShuffle = () => {
     setIsShuffle(!isShuffle)
     if (!current) return
@@ -108,6 +101,6 @@ export function MusicPlayerProvider(props: Props): React.JSX.Element {
 
   const close = useCallback(() => setQueue([]), [])
 
-  const value = { current, audioRef, isShuffle, repeat, play, playShuffle, toggle, next, prev, ended, toggleShuffle, toggleRepeat, close }
+  const value = { current, audioRef, isShuffle, repeat, play, playShuffle, toggle, next, prev, toggleShuffle, toggleRepeat, close }
   return <MusicPlayerContext.Provider value={value}>{children}</MusicPlayerContext.Provider>
 }
