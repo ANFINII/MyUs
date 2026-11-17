@@ -1,7 +1,6 @@
 from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
-from django.conf import settings
 from myus.domain.payment.customer.interface import PaymentCustomerInterface
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import PaymentEventData
@@ -19,7 +18,8 @@ from myus.utils.common.result import CommandError, ConflictError, FatalError, Fi
 from myus.utils.enum.i18n import Locale
 from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
-from myus.utils.functions.map import country_currency, locale_path
+from myus.utils.functions.common import create_frontend_url
+from myus.utils.functions.map import country_currency
 from myus.utils.functions.transaction import atomic_result
 from ._convert import get_payment_repository, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from ..dto.ledger import LedgerRowDTO
@@ -61,7 +61,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         return Result.err(ValidationError("error.alreadySubscribed"))
 
     currency = country_currency(user.profile.country)
-    frontend_url = f"{settings.FRONTEND_URL}{locale_path(locale)}"
+    frontend_url = create_frontend_url(locale)
     data = CheckoutData(
         product_code=plan.name,
         description=plan.description,
@@ -298,7 +298,7 @@ def create_payment_method_session(user_id: int, locale: Locale) -> Result[Paymen
         return Result.err(customers_ret.err_value)
 
     customer = customers_ret.ok_value[0]
-    return_url = f"{settings.FRONTEND_URL}{locale_path(locale)}/setting/payment"
+    return_url = f"{create_frontend_url(locale)}/setting/payment"
     repo = get_payment_repository(customer.provider)
     session_ret = repo.create_payment_method_session(customer.external_id, return_url, locale)
     if session_ret.is_err:

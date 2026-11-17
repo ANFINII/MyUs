@@ -1,11 +1,11 @@
 import hmac
-from django_ulid.models import ulid
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface
 from myus.domain.user.data import UserAllData
 from myus.domain.user.interface import UserInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
+from myus.utils.functions.common import new_ulid
 from myus.utils.functions.token import password_fingerprint
 
 
@@ -34,7 +34,7 @@ def create_user_data(data: UserAllData, channel_name: str) -> Result[None, Fatal
     user_ids = user_ret.ok_value
     channel_ret = channel_repo.bulk_save([ChannelData(
         id=0,
-        ulid=str(ulid.new()),
+        ulid=new_ulid(),
         owner_id=user_ids[0],
         owner_ulid="",
         avatar="",
