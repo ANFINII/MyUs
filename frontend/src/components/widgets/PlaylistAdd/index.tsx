@@ -29,12 +29,12 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
   const { user } = useUser()
   const { loading, handleLoading } = useLoading()
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [playlists, setPlaylists] = useState<Playlist[]>([])
-  const [selectedUlid, setSelectedUlid] = useState<string>('')
   const [isSaving, setIsSaving] = useState<boolean>(false)
-  const [title, setTitle] = useState<string>('')
   const [isPublish, setIsPublish] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>('')
   const [error, setError] = useState<string>('')
+  const [selectedUlid, setSelectedUlid] = useState<string>('')
+  const [playlists, setPlaylists] = useState<Playlist[]>([])
 
   const selected = playlists.find((p) => p.ulid === selectedUlid)
   const isAdded = selected?.musicUlids.includes(musicUlid) ?? false
