@@ -8,6 +8,7 @@ import { Option } from 'types/internal/other'
 import { postMusicCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
+import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -44,6 +45,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
+  const [isModal, setIsModal] = useState<boolean>(false)
   const [musicUrl, setMusicUrl] = useState<string>('')
   const [values, setValues] = useState<MusicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', lyric: '', download: true })
 
@@ -51,16 +53,17 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
-  const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, music: files })
+  const handleModal = () => setIsModal(!isModal)
 
-  const handleModal = () => {
-    if (musicUrl) URL.revokeObjectURL(musicUrl)
-    setMusicUrl(!musicUrl && values.music ? URL.createObjectURL(values.music) : '')
+  const handleFile = (files: File | File[]) => {
+    if (Array.isArray(files)) return
+    setValues({ ...values, music: files })
+    setMusicUrl(previewUrl(files, musicUrl))
   }
 
   const handleLyric = (lyric: string) => {
     setValues({ ...values, lyric })
-    handleModal()
+    setIsModal(false)
   }
   const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
@@ -109,7 +112,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
         </VStack>
       </form>
 
-      {musicUrl && <LyricEditor src={musicUrl} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
+      {isModal && <LyricEditor src={musicUrl} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
     </Main>
   )
 }
