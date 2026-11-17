@@ -113,7 +113,7 @@ export const apiManageAdvertises = base + '/manage/advertise'
 export const apiManageAdvertise = (ulid: string) => base + `/manage/advertise/${ulid}`
 
 export const apiAdvertiseGlobal = base + '/advertise/global'
-export const apiAdvertiseUser = (userUlid: string) => base + `/advertise/user/${userUlid}`
+export const apiAdvertiseUser = (ulid: string) => base + `/advertise/user/${ulid}`
 export const apiAdvertiseRead = (ulid: string) => base + `/advertise/${ulid}/read`
 
 // 外部API
