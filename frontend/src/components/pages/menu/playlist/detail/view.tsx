@@ -36,7 +36,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { current, play } = useMusicPlayer()
+  const { current, play, playShuffle } = useMusicPlayer()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -51,6 +51,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
 
   const handleModal = () => setIsModal(!isModal)
   const handlePlay = (index: number) => play(musics, index)
+  const handlePlayShuffle = () => playShuffle(musics)
   const handleDetail = (musicUlid: string) => router.push(`/media/music/${musicUlid}`)
   const handleStop = (e: React.MouseEvent) => e.stopPropagation()
   const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setEditTitle(e.target.value)
@@ -143,6 +144,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
           {!isEdit && (
             <div className={style.actions}>
               <Button name={t('playlist.playAll')} color="blue" size="s" disabled={musics.length === 0} onClick={() => handlePlay(0)} />
+              <Button name={t('playlist.playShuffle')} color="purple" size="s" disabled={musics.length === 0} onClick={handlePlayShuffle} />
             </div>
           )}
         </div>

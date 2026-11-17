@@ -51,6 +51,10 @@
     background: none;
     border: none;
     cursor: pointer;
+
+    &.active {
+      color: rgb(80, 200, 120);
+    }
   }
 
   .close {

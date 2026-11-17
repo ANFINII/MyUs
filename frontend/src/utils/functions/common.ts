@@ -23,3 +23,14 @@ export const capitalize = (str: string): string => {
 export const assertUnexpected = (value: unknown): never => {
   throw new Error(`Unexpected value: ${value}`)
 }
+
+export const shuffleItems = <T>(items: T[]): T[] => {
+  const ret = [...items]
+  for (let i = ret.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const tmp = ret[i] as T
+    ret[i] = ret[j] as T
+    ret[j] = tmp
+  }
+  return ret
+}

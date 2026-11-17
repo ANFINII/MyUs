@@ -593,6 +593,7 @@
     "createOnly": "作成",
     "count": "{{count}}曲",
     "playAll": "すべて再生",
+    "playShuffle": "シャッフル再生",
     "detail": "詳細",
     "emptyMusic": "曲はまだありません",
     "deleteTitle": "プレイリストの削除",
@@ -606,6 +607,14 @@
     "create": "作成して追加",
     "loginRequired": "プレイリストを使うにはログインが必要です",
     "login": "ログインする"
+  },
+  "player": {
+    "shuffle": "シャッフル",
+    "repeat": {
+      "off": "リピートなし",
+      "all": "すべてリピート",
+      "one": "1曲リピート"
+    }
   },
   "mediaDetail": {
     "unpublished": "非公開に設定されてます!"

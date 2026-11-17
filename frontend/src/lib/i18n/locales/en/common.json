@@ -599,6 +599,7 @@
     "count_one": "{{count}} song",
     "count_other": "{{count}} songs",
     "playAll": "Play all",
+    "playShuffle": "Shuffle",
     "detail": "Details",
     "emptyMusic": "No songs yet",
     "deleteTitle": "Delete playlist",
@@ -612,6 +613,14 @@
     "create": "Create and add",
     "loginRequired": "Log in to use playlists",
     "login": "Log in"
+  },
+  "player": {
+    "shuffle": "Shuffle",
+    "repeat": {
+      "off": "Repeat off",
+      "all": "Repeat all",
+      "one": "Repeat one"
+    }
   },
   "mediaDetail": {
     "unpublished": "This content is private."
