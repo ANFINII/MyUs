@@ -17,6 +17,7 @@ import { Column } from 'components/parts/DataTable'
 import ExImage from 'components/parts/ExImage'
 import Toggle from 'components/parts/Input/Toggle'
 import style from '../Media.module.scss'
+import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
 
 interface Props {
@@ -128,25 +129,14 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
     },
   ]
 
+  const button = (
+    <ManageHeader count={selectedKeys.size} onModal={handleModal}>
+      <Button color="green" size="s" name={t('manage.button.new')} disabled={isLimitReached} onClick={handleCreate} />
+    </ManageHeader>
+  )
+
   return (
-    <Main
-      title="Advertise"
-      type="table"
-      toast={toast}
-      isFooter={false}
-      button={
-        <div className={style.header_actions}>
-          {selectedKeys.size > 0 && (
-            <>
-              <span className={style.selected_count}>{t('manage.header.selected', { count: selectedKeys.size })}</span>
-              <Button color="red" size="s" name={t('manage.header.bulkDelete')} onClick={handleModal} />
-            </>
-          )}
-          <Button color="blue" size="s" name={t('manage.title')} onClick={() => router.push('/manage')} />
-          <Button color="green" size="s" name={t('manage.button.new')} disabled={isLimitReached} onClick={handleCreate} />
-        </div>
-      }
-    >
+    <Main title="Advertise" type="table" toast={toast} isFooter={false} button={button}>
       <ManageTable
         table={{ datas: items, columns, rowKey: (a) => a.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}

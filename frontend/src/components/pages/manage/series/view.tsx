@@ -15,8 +15,8 @@ import DataTable, { Column } from 'components/parts/DataTable'
 import Input from 'components/parts/Input'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Modal from 'components/parts/Modal'
-import HStack from 'components/parts/Stack/Horizontal'
 import style from './Series.module.scss'
+import ManageHeader from '../_container/Header'
 
 const mediaTypeOptions: Option[] = Object.values(MediaType).map((type) => ({ label: type, value: type }))
 
@@ -86,21 +86,18 @@ export default function ManageSeriesList(props: Props): React.JSX.Element {
   ]
 
   const button = (
-    <HStack gap="4">
-      <Button color="blue" size="s" name={t('manage.title')} onClick={() => router.push('/manage')} />
-      <Button color="green" size="s" name={t('manage.series.new')} onClick={handleModal} />
-      <SelectBox value={channel} options={channelOptions} className={style.select_box} onChange={handleChannel} />
-    </HStack>
+    <ManageHeader ulid={channel} options={channelOptions} onChange={handleChannel}>
+      <Button color="green" size="s" name={t('manage.button.new')} onClick={handleModal} />
+    </ManageHeader>
   )
 
   return (
     <Main title="Series" type="table" toast={toast} isFooter={false} button={button}>
       <DataTable datas={data.items} columns={columns} rowKey={(s) => s.ulid} />
-
       <Modal
         open={isModal}
         onClose={handleModal}
-        title={t('manage.series.new')}
+        title={t('manage.button.new')}
         size="s"
         actions={[
           { name: t('action.cancel'), color: 'white', disabled: loading, onClick: handleModal },

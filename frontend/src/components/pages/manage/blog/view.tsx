@@ -150,14 +150,10 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
     },
   ]
 
+  const button = <ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />
+
   return (
-    <Main
-      title="Blog"
-      type="table"
-      toast={toast}
-      isFooter={false}
-      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />}
-    >
+    <Main title="Blog" type="table" toast={toast} isFooter={false} button={button}>
       <ManageTable
         table={{ datas: items, columns, rowKey: (b) => b.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
