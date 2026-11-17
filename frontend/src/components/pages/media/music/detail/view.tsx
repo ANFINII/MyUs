@@ -26,7 +26,7 @@ interface Props {
 export default function MusicDetail(props: Props): React.JSX.Element {
   const { data } = props
   const { detail, list, series } = data
-  const { image, music, lyric, download, publish, ...other } = detail
+  const { image, music, gain, lyric, download, publish, ...other } = detail
 
   const { t } = useTranslation()
   const { toast, handleToast } = useToast()
@@ -55,7 +55,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
             <ExImage src={image || other.channel.avatar} className={style.thumbnail} />
           </div>
           <VStack gap="6" className={style.controls}>
-            <AudioPlayer src={music} playbackRate={speed} isVolumeInline repeat={repeat} audioRef={audioRef} onTimeUpdate={setCurrentTime} onRepeat={handleRepeat} />
+            <AudioPlayer src={music} gain={gain} playbackRate={speed} isVolumeInline repeat={repeat} audioRef={audioRef} onTimeUpdate={setCurrentTime} onRepeat={handleRepeat} />
             <HStack justify="between">
               <SpeedControl value={speed} onChange={handleSpeed} className={style.speed} />
               <div className={style.actions}>

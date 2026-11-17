@@ -63,6 +63,7 @@ export interface Video extends Media {
 export interface Music extends Media {
   image: string
   music: string
+  gain: number
   lyric: string
   download: boolean
 }
@@ -138,6 +139,7 @@ export interface VideoDetail extends MediaDetail {
 export interface MusicDetail extends MediaDetail {
   image: string
   music: string
+  gain: number
   lyric: string
   download: boolean
   comments: Comment[]

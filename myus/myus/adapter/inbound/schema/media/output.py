@@ -59,6 +59,7 @@ class MusicOut(MediaOut):
     lyric: str
     image: str
     music: str
+    gain: float
     download: bool
 
 
@@ -133,6 +134,7 @@ class MusicDetailOut(MediaDetailOut):
     lyric: str
     image: str
     music: str
+    gain: float
     download: bool
     comments: list[CommentOut]
 
