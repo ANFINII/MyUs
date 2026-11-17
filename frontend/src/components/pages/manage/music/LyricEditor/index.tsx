@@ -97,7 +97,6 @@ export default function LyricEditor(props: Props): React.JSX.Element {
         <AudioPlayer src={src} isVolumeInline audioRef={audioRef} className={style.player} onTimeUpdate={setCurrentTime} />
       <div className={style.body}>
         <div className={style.rows}>
-          <Button color="purple" name={t('manage.lyric.record')} className={style.record} onClick={handleRecord} />
           <ol className={style.list}>
             {rows.map((row, index) => (
               <li key={index} className={cx(style.row, index === selected && style.selected)} onClick={() => handleSelect(index)}>
@@ -134,6 +133,7 @@ export default function LyricEditor(props: Props): React.JSX.Element {
               </li>
             ))}
           </ol>
+          <Button color="purple" name={t('manage.lyric.record')} className={style.record} onClick={handleRecord} />
         </div>
         <div className={style.preview}>
           <Lyric lyric={lyric} currentTime={currentTime} isExpand={false} onSeek={handleSeek} />
