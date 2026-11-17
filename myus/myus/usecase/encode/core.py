@@ -1,12 +1,9 @@
-from dataclasses import replace
 from myus.domain.media.common import FilterOption, PageOption, SortOption
-from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.video.interface import VideoInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import EncodeStatus
-from myus.utils.functions.convert.audio_converter import measure_music_gain
 from myus.utils.functions.convert.video_encoding import VideoConvert, convert_video
 from myus.utils.functions.transaction import atomic_result
 from ._convert import save_encode_failed_data, save_encoded_video_data
@@ -48,24 +45,3 @@ def encode_videos(limit: int) -> Result[int, FatalError]:
         encoded_count += 1
 
     return Result.ok(encoded_count)
-
-
-@Result.shield_exception()
-def measure_music_gains() -> Result[int, FatalError]:
-    repo = injector.get(MusicInterface)
-    ids_ret = repo.get_ids(FilterOption(), SortOption(is_asc=True), PageOption(limit=0))
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
-
-    ids = ids_ret.ok_value
-    musics_ret = repo.bulk_get(ids)
-    if musics_ret.is_err:
-        return Result.err(musics_ret.err_value)
-
-    musics = musics_ret.ok_value
-    new_musics = [replace(m, gain=measure_music_gain(m.music)) for m in musics]
-    save_ret = repo.bulk_save(new_musics)
-    if save_ret.is_err:
-        return Result.err(save_ret.err_value)
-
-    return Result.ok(len(new_musics))
