@@ -32,12 +32,12 @@ export default function Playlists(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [title, setTitle] = useState<string>('')
   const [isPublish, setIsPublish] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>('')
 
   const handleModal = () => setIsModal(!isModal)
-  const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)
   const handlePublish = (e: ChangeEvent<HTMLInputElement>) => setIsPublish(e.target.checked)
+  const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)
 
   const handleCreate = async () => {
     handleLoading(true)

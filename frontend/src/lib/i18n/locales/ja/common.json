@@ -272,7 +272,7 @@
     "back": "戻る",
     "login": "ログイン",
     "unauthorized": "ログインしてください",
-    "loginRequired": "{{title}}を利用するにはログインが必要です!",
+    "loginRequired": "{{title}}を利用するにはログインが必要です！",
     "loginTitle": {
       "channel": "チャンネル",
       "playlist": "プレイリスト",
@@ -643,7 +643,7 @@
   "comment": {
     "total": "コメント総数",
     "placeholder": "コメント入力",
-    "loginRequired": "コメントするにはログインが必要です!",
+    "loginRequired": "コメントするにはログインが必要です！",
     "submit": "コメント",
     "thread": "スレッド {{count}} 件"
   },
