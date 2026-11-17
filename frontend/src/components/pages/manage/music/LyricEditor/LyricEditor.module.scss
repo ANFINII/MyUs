@@ -60,13 +60,27 @@
 
   .time {
     flex-shrink: 0;
-    width: 76px;
+    width: 84px;
+    padding: 4px 6px;
     font-family: monospace;
     font-size: 13px;
     color: rgb(40, 100, 200);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
 
-    &.unset {
+    &::placeholder {
       color: rgb(180, 180, 180);
+    }
+
+    &:hover {
+      border-color: rgb(220, 220, 220);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: rgb(40, 130, 250);
+      background: rgb(255, 255, 255);
     }
   }
 

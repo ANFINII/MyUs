@@ -1,7 +1,7 @@
 import { KeyboardEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
-import { buildLyric, formatLyricTime, LyricLine, toLyricRows } from 'utils/functions/lyric'
+import { buildLyric, formatLyricTime, LyricLine, parseLyricTime, toLyricRows } from 'utils/functions/lyric'
 import Button from 'components/parts/Button'
 import IconClock from 'components/parts/Icon/Clock'
 import IconCross from 'components/parts/Icon/Cross'
@@ -55,6 +55,24 @@ export default function LyricEditor(props: Props): React.JSX.Element {
   }
 
   const handleClear = (index: number) => updateTime(index, -1)
+
+  const handleTime = (index: number, input: HTMLInputElement) => {
+    const row = rows[index]
+    if (!row) return
+    if (input.value.trim() === '') return handleClear(index)
+    const time = parseLyricTime(input.value)
+    if (time === undefined) {
+      input.value = row.time >= 0 ? formatLyricTime(row.time) : ''
+      return
+    }
+    updateTime(index, time)
+  }
+
+  const handleTimeKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter' || e.nativeEvent.isComposing) return
+    e.preventDefault()
+    e.currentTarget.blur()
+  }
   const handleText = (index: number, text: string) => setRows(rows.map((row, i) => (i === index ? { ...row, text } : row)))
 
   const handleAddRow = (index: number) => {
@@ -100,7 +118,16 @@ export default function LyricEditor(props: Props): React.JSX.Element {
           <ol className={style.list}>
             {rows.map((row, index) => (
               <li key={index} className={cx(style.row, index === selected && style.selected)} onClick={() => handleSelect(index)}>
-                <span className={cx(style.time, row.time < 0 && style.unset)}>{row.time >= 0 ? formatLyricTime(row.time) : '--:--.--'}</span>
+                <input
+                  key={row.time}
+                  defaultValue={row.time >= 0 ? formatLyricTime(row.time) : ''}
+                  placeholder="--:--.--"
+                  title={t('manage.lyric.time')}
+                  className={style.time}
+                  onFocus={() => setSelected(index)}
+                  onBlur={(e) => handleTime(index, e.currentTarget)}
+                  onKeyDown={handleTimeKeyDown}
+                />
                 <input
                   value={row.text}
                   placeholder={t('manage.lyric.placeholder')}

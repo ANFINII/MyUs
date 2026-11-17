@@ -1,4 +1,5 @@
 const TIME_TAG = /\[(\d{1,2}):(\d{2})(?:[.:](\d{1,3}))?\]/g
+const TIME_INPUT = /^\[?(\d{1,2}):([0-5]\d)(?:[.:](\d{1,3}))?\]?$/
 
 export interface LyricLine {
   time: number
@@ -40,7 +41,12 @@ export const toLyricRows = (lyric: string): LyricLine[] =>
 export const formatLyricTime = (time: number): string => {
   const minutes = Math.floor(time / 60)
   const seconds = time - minutes * 60
-  return `[${String(minutes).padStart(2, '0')}:${seconds.toFixed(2).padStart(5, '0')}]`
+  return `${String(minutes).padStart(2, '0')}:${seconds.toFixed(2).padStart(5, '0')}`
 }
 
-export const buildLyric = (rows: LyricLine[]): string => rows.map((row) => (row.time >= 0 ? `${formatLyricTime(row.time)}${row.text}` : row.text)).join('\n')
+export const parseLyricTime = (value: string): number | undefined => {
+  const m = value.trim().match(TIME_INPUT)
+  return m ? toSeconds(m[1] ?? '0', m[2] ?? '0', m[3]) : undefined
+}
+
+export const buildLyric = (rows: LyricLine[]): string => rows.map((row) => (row.time >= 0 ? `[${formatLyricTime(row.time)}]${row.text}` : row.text)).join('\n')
