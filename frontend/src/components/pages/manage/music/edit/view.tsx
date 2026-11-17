@@ -60,25 +60,24 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
 
   const handleBack = () => router.push('/manage/music')
   const handleModal = () => setIsModal(!isModal)
-
-  const handleLyric = (lyric: string) => {
-    setValues({ ...values, lyric })
-    setIsModal(false)
-  }
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
   const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+  const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
-  const handleMusic = (files: File | File[]) => {
+  const handleFile = (files: File | File[]) => {
     if (Array.isArray(files)) return
     setValues({ ...values, music: files })
     setMusicUrl(previewUrl(files, musicUrl))
   }
 
-  const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
+  const handleLyric = (lyric: string) => {
+    setValues({ ...values, lyric })
+    setIsModal(false)
+  }
 
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
@@ -117,11 +116,10 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
             <Button color="purple" size="s" name={t('manage.lyric.open')} className={style.lyric_hint_button} onClick={handleModal} />
           </div>
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
-          <InputFile label={t('manage.form.music')} accept="audio/*" onChange={handleMusic} />
+          <InputFile label={t('manage.form.music')} accept="audio/*" onChange={handleFile} />
           <CheckBox label={t('manage.form.download')} name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>
-
       {isModal && <LyricEditor src={musicUrl || data.music} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
     </Main>
   )

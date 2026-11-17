@@ -35,13 +35,10 @@ interface Props {
 export default function MusicCreate(props: Props): React.JSX.Element {
   const { channels, categories } = props
 
+  const channelUlid = channels.find((c) => c.isDefault)!.ulid
+
   const router = useRouter()
   const { t } = useTranslation()
-
-  const channelUlid = channels.find((c) => c.isDefault)!.ulid
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
-
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -49,11 +46,17 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const [musicUrl, setMusicUrl] = useState<string>('')
   const [values, setValues] = useState<MusicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', lyric: '', download: true })
 
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
+
+  const handleModal = () => setIsModal(!isModal)
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
-  const handleModal = () => setIsModal(!isModal)
+  const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+  const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
   const handleFile = (files: File | File[]) => {
     if (Array.isArray(files)) return
@@ -65,9 +68,6 @@ export default function MusicCreate(props: Props): React.JSX.Element {
     setValues({ ...values, lyric })
     setIsModal(false)
   }
-  const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
-  const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
   const handleForm = async () => {
     const { channelUlid, categoryUlid, title, content, music } = values
@@ -111,7 +111,6 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           </VStack>
         </VStack>
       </form>
-
       {isModal && <LyricEditor src={musicUrl} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
     </Main>
   )
