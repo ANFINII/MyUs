@@ -136,5 +136,24 @@ def get_music_ids_data(music_ulids: list[str], user_id: int) -> Result[list[int]
     return Result.ok(list(dict.fromkeys(ulid_map[u] for u in music_ulids if u in ulid_map)))
 
 
+@Result.shield_exception()
+def get_hidden_music_ids_data(music_ids: list[int], user_id: int) -> Result[set[int], FatalError]:
+    repo = injector.get(MusicInterface)
+    musics_ret = repo.bulk_get(music_ids)
+    if musics_ret.is_err:
+        return Result.err(musics_ret.err_value)
+
+    musics = musics_ret.ok_value
+    return Result.ok({m.id for m in musics if not is_visible_music(m, user_id)})
+
+
+def keep_hidden_music_ids(old_ids: list[int], new_ids: list[int], hidden_ids: set[int]) -> list[int]:
+    ret = list(new_ids)
+    for i, music_id in enumerate(old_ids):
+        if music_id in hidden_ids:
+            ret.insert(min(i, len(ret)), music_id)
+    return ret
+
+
 def music_urls(musics: list[MusicData]) -> list[MusicData]:
     return [replace(m, image=create_url(m.image), music=create_url(m.music)) for m in musics]

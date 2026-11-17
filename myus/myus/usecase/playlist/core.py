@@ -6,7 +6,7 @@ from myus.domain.playlist.interface import FilterOption, PlaylistInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, FindError, NotFoundError, Result
-from ._convert import check_playlist_plan_data, get_music_data, get_music_ids_data, get_own_playlist_data, get_playlist_data, get_playlists_data, is_visible_music, music_urls
+from ._convert import check_playlist_plan_data, get_hidden_music_ids_data, get_music_data, get_music_ids_data, get_own_playlist_data, get_playlist_data, get_playlists_data, is_visible_music, keep_hidden_music_ids, music_urls
 from ..dto.playlist import PlaylistCreateDTO, PlaylistDetailDTO, PlaylistDTO, PlaylistUpdateDTO
 from ..user._convert import get_author_data
 from ..user.core import get_user_data
@@ -122,9 +122,15 @@ def update_playlist(user_id: int, ulid: str, input: PlaylistUpdateDTO) -> Result
         return Result.err(music_ids_ret.err_value)
 
     playlist = playlist_ret.ok_value
+    hidden_ids_ret = get_hidden_music_ids_data(playlist.music_ids, user_id)
+    if hidden_ids_ret.is_err:
+        return Result.err(hidden_ids_ret.err_value)
+
     music_ids = music_ids_ret.ok_value
+    hidden_ids = hidden_ids_ret.ok_value
+    new_music_ids = keep_hidden_music_ids(playlist.music_ids, music_ids, hidden_ids)
     repo = injector.get(PlaylistInterface)
-    save_ret = repo.bulk_save([replace(playlist, title=input.title, publish=input.publish, music_ids=music_ids)])
+    save_ret = repo.bulk_save([replace(playlist, title=input.title, publish=input.publish, music_ids=new_music_ids)])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
