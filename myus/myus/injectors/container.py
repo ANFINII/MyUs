@@ -1,4 +1,4 @@
-from injector import Injector, Module
+from injector import Injector
 from .module import (
     UserModule,
     ChannelModule,
@@ -21,7 +21,7 @@ from .module import (
 )
 
 
-modules: list[Module] = [
+modules = [
     UserModule(),
     ChannelModule(),
     MediaModule(),

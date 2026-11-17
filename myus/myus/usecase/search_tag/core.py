@@ -31,7 +31,7 @@ def update_search_tags(author_id: int, tags: list[SearchTagDTO]) -> Result[None,
 
     objs = objs_ret.ok_value
     existing_ids = [obj.id for obj in objs]
-    name_map: dict[str, int] = {obj.name: obj.id for obj in objs}
+    name_map = {obj.name: obj.id for obj in objs}
 
     save_objs: list[SearchTagData] = []
     keep_ids: set[int] = set()

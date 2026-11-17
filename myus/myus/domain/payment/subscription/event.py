@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
 from myus.utils.enum.payment import CancelError, PaymentProvider, SubscriptionStatus
 from .state import SubscriptionDetail
 from ..data import Money
@@ -65,7 +64,7 @@ class SubscriptionEnded:
 type SubscriptionEvent = SubscriptionOpened | SubscriptionActivated | SubscriptionRenewed | SubscriptionPlanChanged | SubscriptionPaymentPastDue | SubscriptionCancellationScheduled | SubscriptionCancellationRevoked | SubscriptionCancellationRequested | SubscriptionCancellationFailed | SubscriptionEnded
 
 
-SUBSCRIPTION_EVENT_CLASSES: dict[str, type[Any]] = {
+SUBSCRIPTION_EVENT_CLASSES = {
     "Subscription.Opened.V1": SubscriptionOpened,
     "Subscription.Activated.V1": SubscriptionActivated,
     "Subscription.Renewed.V1": SubscriptionRenewed,

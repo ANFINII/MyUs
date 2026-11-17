@@ -17,7 +17,7 @@ class DeleteMessagePayload:
 def broadcast_create_message(chat_ulid: str, data: MessageDTO, parent_ulid: str) -> None:
     is_reply = len(parent_ulid) > 0
     command = "create_reply_message" if is_reply else "create_message"
-    payload: dict[str, object] = asdict(build_message_payload(data))
+    payload = asdict(build_message_payload(data))
     if is_reply:
         payload["parent_ulid"] = parent_ulid
     send_to_group(f"chat_detail_{chat_ulid}", command, payload)

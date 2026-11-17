@@ -16,7 +16,7 @@ class Plan:
     description: str
 
 
-PLANS: list[Plan] = [
+PLANS = [
     Plan(
         name=PlanName.FREE,
         prices=[Money(amount=0, currency=Currency.JPY), Money(amount=0, currency=Currency.USD)],
@@ -70,7 +70,7 @@ PLANS: list[Plan] = [
 ]
 
 
-PLAN_MAP: dict[str, Plan] = {p.name: p for p in PLANS}
+PLAN_MAP = {p.name: p for p in PLANS}
 
 
 def get_plan(name: str) -> Plan | None:
