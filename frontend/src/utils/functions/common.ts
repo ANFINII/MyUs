@@ -40,3 +40,5 @@ export const mediaCount = (media: MediaHome): number => {
   const { videos, musics, blogs, comics, pictures, chats } = media
   return videos.length + musics.length + blogs.length + comics.length + pictures.length + chats.length
 }
+
+export const pathMediaName = (pathname: string): string => capitalize(pathname.split('/')[2] ?? '')

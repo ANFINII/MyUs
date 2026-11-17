@@ -6,7 +6,8 @@ import { queryKeys } from 'lib/query/keys'
 import { PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod } from 'api/internal/payment'
-import { FetchError, Locale } from 'utils/constants/enum'
+import { FetchError } from 'utils/constants/enum'
+import { localeEnum } from 'utils/functions/convertEnum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
@@ -48,7 +49,7 @@ export default function Payment(props: Props): React.JSX.Element {
 
   const handlePurchase = async (plan: string) => {
     setSelectedPlan(plan)
-    const locale = router.locale === 'en' ? Locale.En : Locale.Ja
+    const locale = localeEnum(router.locale)
     const ret = await postPaymentCheckout({ plan, locale })
     if (ret.isErr()) {
       setSelectedPlan('')
@@ -60,7 +61,7 @@ export default function Payment(props: Props): React.JSX.Element {
 
   const handleMethod = async () => {
     setIsMethodLoading(true)
-    const locale = router.locale === 'en' ? Locale.En : Locale.Ja
+    const locale = localeEnum(router.locale)
     const ret = await postPaymentMethod({ locale })
     if (ret.isErr()) {
       setIsMethodLoading(false)

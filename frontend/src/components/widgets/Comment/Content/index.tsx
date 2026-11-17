@@ -5,7 +5,7 @@ import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { postComment, putComment, deleteComment } from 'api/internal/comment'
 import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
-import { capitalize } from 'utils/functions/common'
+import { pathMediaName } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
 import { useLoading } from 'components/hooks/useLoading'
@@ -77,7 +77,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const handleMediaReply = async () => {
     handleLoading(true)
     const text = replyText
-    const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
+    const typeName = commentTypeNameEnum(pathMediaName(router.pathname))
     const objectUlid = String(router.query.ulid ?? '')
     const parentUlid = ulid
     const request: CommnetIn = { text, typeName, objectUlid, parentUlid }

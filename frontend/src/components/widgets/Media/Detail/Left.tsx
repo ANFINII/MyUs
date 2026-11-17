@@ -9,7 +9,7 @@ import { postComment } from 'api/internal/comment'
 import { postLikeMedia } from 'api/internal/user'
 import { FetchError, MediaPath } from 'utils/constants/enum'
 import { mediaTypeMap } from 'utils/constants/map'
-import { capitalize } from 'utils/functions/common'
+import { pathMediaName } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
 import { useDatetime } from 'components/hooks/useDatetime'
@@ -92,7 +92,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
   const handleLike = async () => {
     const ulid = String(router.query.ulid ?? '')
-    const pathname = capitalize(String(router.pathname.split('/')[2]))
+    const pathname = pathMediaName(router.pathname)
     const mediaType = mediaTypeMap[pathname]
     if (!mediaType) return
     const request: LikeMediaIn = { ulid, mediaType }
@@ -114,7 +114,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
   const handleMediaComment = async () => {
     handleLoading(true)
-    const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
+    const typeName = commentTypeNameEnum(pathMediaName(router.pathname))
     const objectUlid = String(router.query.ulid ?? '')
     const request: CommnetIn = { text, typeName, objectUlid }
     const ret = await postComment(request)

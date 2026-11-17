@@ -1,4 +1,4 @@
-import { CommentType } from 'utils/constants/enum'
+import { CommentType, Locale } from 'utils/constants/enum'
 import { assertUnexpected } from './common'
 
 export const commentTypeNameEnum = (typeName: string) => {
@@ -17,3 +17,5 @@ export const commentTypeNameEnum = (typeName: string) => {
       return assertUnexpected(typeName)
   }
 }
+
+export const localeEnum = (locale?: string): Locale => (locale === Locale.En ? Locale.En : Locale.Ja)
