@@ -592,6 +592,11 @@
     "following": "Following",
     "follow": "Follow"
   },
+  "share": {
+    "button": "Share",
+    "copied": "Link copied",
+    "failed": "Could not copy the link"
+  },
   "playlist": {
     "select": "Playlist",
     "new": "Create playlist",
@@ -600,9 +605,6 @@
     "count_other": "{{count}} songs",
     "playAll": "Play all",
     "playShuffle": "Shuffle",
-    "share": "Share",
-    "shareCopied": "Link copied",
-    "shareFailed": "Could not copy the link",
     "detail": "Details",
     "emptyMusic": "No songs yet",
     "deleteTitle": "Delete playlist",

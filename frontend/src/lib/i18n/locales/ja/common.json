@@ -587,6 +587,11 @@
     "following": "フォロー済み",
     "follow": "フォローする"
   },
+  "share": {
+    "button": "共有",
+    "copied": "リンクをコピーしました",
+    "failed": "リンクをコピーできませんでした"
+  },
   "playlist": {
     "select": "プレイリスト",
     "new": "プレイリスト作成",
@@ -594,9 +599,6 @@
     "count": "{{count}}曲",
     "playAll": "すべて再生",
     "playShuffle": "シャッフル再生",
-    "share": "共有",
-    "shareCopied": "リンクをコピーしました",
-    "shareFailed": "リンクをコピーできませんでした",
     "detail": "詳細",
     "emptyMusic": "曲はまだありません",
     "deleteTitle": "プレイリストの削除",

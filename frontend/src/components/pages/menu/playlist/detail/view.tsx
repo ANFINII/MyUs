@@ -19,11 +19,11 @@ import ExImage from 'components/parts/ExImage'
 import IconCross from 'components/parts/Icon/Cross'
 import IconGrip from 'components/parts/Icon/Grip'
 import IconPlaylist from 'components/parts/Icon/Playlist'
-import IconShare from 'components/parts/Icon/Share'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import DeleteModal from 'components/widgets/Modal/Delete'
+import ShareButton from 'components/widgets/ShareButton'
 import style from './Detail.module.scss'
 
 interface Props {
@@ -58,15 +58,6 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setEditTitle(e.target.value)
   const handlePublish = (e: ChangeEvent<HTMLInputElement>) => setIsEditPublish(e.target.checked)
   const handleRemove = (index: number) => setEditMusics(editMusics.filter((_, i) => i !== index))
-
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(router.buildUrl(`/menu/playlist/${ulid}`))
-      handleToast('playlist.shareCopied', false)
-    } catch {
-      handleToast('playlist.shareFailed', true)
-    }
-  }
 
   const handleEdit = () => {
     setEditTitle(title)
@@ -155,7 +146,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
             <div className={style.actions}>
               <Button name={t('playlist.playAll')} color="blue" size="s" disabled={musics.length === 0} onClick={() => handlePlay(0)} />
               <Button name={t('playlist.playShuffle')} color="purple" size="s" disabled={musics.length === 0} onClick={handlePlayShuffle} />
-              {publish && <Button name={t('playlist.share')} size="s" icon={<IconShare size="1em" />} onClick={handleShare} />}
+              {publish && <ShareButton path={`/menu/playlist/${ulid}`} handleToast={handleToast} />}
             </div>
           )}
         </div>
