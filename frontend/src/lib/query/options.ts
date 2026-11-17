@@ -51,12 +51,13 @@ export const chatsQuery = (params: SearchParams) => queryOptions({ queryKey: que
 
 export const videoQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaVideo(ulid), queryFn: () => toQuery(getVideo(ulid)), refetchOnMount: false })
 export const musicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaMusic(ulid), queryFn: () => toQuery(getMusic(ulid)), refetchOnMount: false })
-export const playlistsQuery = () => queryOptions({ queryKey: queryKeys.mediaPlaylists, queryFn: () => toQuery(getPlaylists()), refetchOnMount: false })
-export const playlistQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaPlaylist(ulid), queryFn: () => toQuery(getPlaylist(ulid)), refetchOnMount: false })
 export const blogQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaBlog(ulid), queryFn: () => toQuery(getBlog(ulid)), refetchOnMount: false })
 export const comicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaComic(ulid), queryFn: () => toQuery(getComic(ulid)), refetchOnMount: false })
 export const pictureQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaPicture(ulid), queryFn: () => toQuery(getPicture(ulid)), refetchOnMount: false })
 export const chatQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaChat(ulid), queryFn: () => toQuery(getChat(ulid)), refetchOnMount: false })
+
+export const playlistsQuery = () => queryOptions({ queryKey: queryKeys.mediaPlaylists, queryFn: () => toQuery(getPlaylists()), refetchOnMount: false })
+export const playlistQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.mediaPlaylist(ulid), queryFn: () => toQuery(getPlaylist(ulid)), refetchOnMount: false })
 
 export const userPageQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.userPage(ulid), queryFn: () => toQuery(getUserPage(ulid)), refetchOnMount: false })
 export const userPageMediaQuery = (ulid: string, channelUlid: string, params: SearchParams) =>
