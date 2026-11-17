@@ -114,6 +114,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
       handleToast(FetchError.Delete, true)
       return
     }
+    handleLoading(false)
     setFormState((prev) => ({ ...prev, comments: prev.comments.filter((c) => c.ulid !== comment.ulid) }))
     handleModal()
   }
