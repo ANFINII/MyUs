@@ -28,7 +28,6 @@ export default function SettingNotification(props: Props): React.JSX.Element {
 
   const handleSubmit = async () => {
     handleLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 200))
     const ret = await putSettingNotification(values)
     if (ret.isErr()) {
       handleLoading(false)

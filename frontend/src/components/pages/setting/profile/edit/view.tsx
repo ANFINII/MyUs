@@ -77,7 +77,6 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
     const { email, username, nickname, lastName, firstName, phone, postalCode } = values
     if (!validate({ email, username, nickname, lastName, firstName, phone, postalCode })) return
     handleLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatarFile }
     const ret = await putSettingProfile(request)
     handleLoading(false)
