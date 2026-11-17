@@ -59,6 +59,7 @@ class MusicDetailDTO(MediaDetailDTO):
     lyric: str
     image: str
     music: str
+    gain: float
     download: bool
     comments: list[CommentDTO]
 

@@ -23,6 +23,7 @@ from myus.utils.enum.media import CommentType, EncodeStatus, MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
+from myus.utils.functions.convert.audio_converter import measure_music_gain
 from myus.utils.functions.map import comment_type_no_map
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
@@ -117,6 +118,7 @@ def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile, image
         log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("error.createFailed"))
 
+    music_path = save_upload(music, MediaUpload.MUSIC, channel.ulid)
     new_data = MusicData(
         id=0,
         ulid="",
@@ -124,7 +126,8 @@ def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile, image
         content=input.content,
         lyric=input.lyric,
         image=save_upload(image, ImageUpload.MUSIC, channel.ulid) if image is not None else "",
-        music=save_upload(music, MediaUpload.MUSIC, channel.ulid),
+        music=music_path,
+        gain=measure_music_gain(music_path),
         read=0,
         like=0,
         download=input.download,
@@ -804,6 +807,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         lyric=obj.lyric,
         image=create_url(obj.image),
         music=create_url(obj.music),
+        gain=obj.gain,
         download=obj.download and is_music_download,
         comments=comments,
         hashtags=obj.hashtags,

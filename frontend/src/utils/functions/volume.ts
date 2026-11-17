@@ -19,3 +19,5 @@ export const saveVolume = (volume: number): void => {
     return
   }
 }
+
+export const gainVolume = (volume: number, gain: number): number => volume * Math.pow(10, gain / 20)

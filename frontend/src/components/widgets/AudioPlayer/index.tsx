@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { RepeatMode } from 'types/internal/other'
 import cx from 'utils/functions/cx'
 import { formatTime } from 'utils/functions/datetime'
-import { getVolume, saveVolume } from 'utils/functions/volume'
+import { gainVolume, getVolume, saveVolume } from 'utils/functions/volume'
 import IconRepeat from 'components/parts/Icon/Repeat'
 import IconSkip from 'components/parts/Icon/Skip'
 import style from './AudioPlayer.module.scss'
@@ -13,6 +13,7 @@ const SKIP_SECONDS = 10
 
 interface Props {
   src: string
+  gain?: number
   playbackRate?: number
   autoPlay?: boolean
   isVolumeInline?: boolean
@@ -25,7 +26,7 @@ interface Props {
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, repeat = 'off', audioRef: sharedAudioRef, className, onEnded, onRepeat, onTimeUpdate } = props
+  const { src, gain = 0, playbackRate = 1, autoPlay = false, isVolumeInline = false, repeat = 'off', audioRef: sharedAudioRef, className, onEnded, onRepeat, onTimeUpdate } = props
 
   const { t } = useTranslation()
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -58,7 +59,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
       const rect = track.getBoundingClientRect()
       const ratio = isVolumeInline ? (clientX - rect.left) / rect.width : 1 - (clientY - rect.top) / rect.height
       const newVolume = Math.max(0, Math.min(1, ratio))
-      audio.volume = newVolume
+      audio.volume = gainVolume(newVolume, gain)
       setVolume(newVolume)
       saveVolume(newVolume)
       if (newVolume > 0 && audio.muted) {
@@ -66,7 +67,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         setIsMuted(false)
       }
     },
-    [isVolumeInline],
+    [isVolumeInline, gain],
   )
 
   const handlePlayPause = () => {
@@ -115,7 +116,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const handleLoadedMetadata = () => {
     const audio = audioRef.current
     if (!audio) return
-    audio.volume = volume
+    audio.volume = gainVolume(volume, gain)
     setDuration(audio.duration)
   }
 
