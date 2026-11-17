@@ -95,7 +95,7 @@ export default function CommentThread(props: Props): React.JSX.Element {
     <HStack gap="4" align="start" className={style.reply}>
       <AvatarLink size="s" src={author.avatar} ulid={author.ulid} title={author.nickname} />
       <VStack gap="4" className="w_full">
-        {!isEdit ? <CommentInfo comment={reply} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
+        {!isEdit ? <CommentInfo comment={reply} /> : <CommentUpdate value={commentText} loading={loading} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
         <div className="fs_12">
           <CountLike isLike={isLike} disable={!isActive} count={likeCount} onClick={handleLike} />
         </div>

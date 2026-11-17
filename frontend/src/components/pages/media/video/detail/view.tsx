@@ -1,5 +1,4 @@
-import { lazy, Suspense, useRef } from 'react'
-import Player from 'video.js/dist/types/player'
+import { lazy, Suspense } from 'react'
 import { VideoDetailOut } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
@@ -10,15 +9,6 @@ import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
 
 const VideoJS = lazy(() => import('components/widgets/Video/videojs'))
-
-interface QualityLevels {
-  length: number
-  on: (event: string, callback: () => void) => void
-}
-
-type PlayerWithQuality = Player & {
-  qualityLevels?: () => QualityLevels
-}
 
 interface Props {
   data: VideoDetailOut
@@ -31,26 +21,6 @@ export default function VideoDetail(props: Props): React.JSX.Element {
 
   const { toast, handleToast } = useToast()
 
-  const playerRef = useRef<Player | null>(null)
-
-  const handlePlayerReady = (player: Player) => {
-    playerRef.current = player
-
-    // 解像度選択メニューを追加（複数の解像度がある場合）
-    const playerWithQuality = player as PlayerWithQuality
-    if (playerWithQuality.qualityLevels && typeof playerWithQuality.qualityLevels === 'function') {
-      const qualityLevels = playerWithQuality.qualityLevels()
-
-      // 解像度が複数ある場合のみメニューを表示
-      if (qualityLevels && qualityLevels.length > 1) {
-        // qualityLevelsプラグインが利用可能な場合の処理
-        qualityLevels.on('addqualitylevel', () => {
-          // 解像度が追加された時の処理
-        })
-      }
-    }
-  }
-
   return (
     <Main metaTitle="Video" toast={toast}>
       <MediaDetail publish={publish}>
@@ -58,7 +28,6 @@ export default function VideoDetail(props: Props): React.JSX.Element {
           <div className="media_detail_contents">
             <Suspense fallback={<ExImage src={image} />}>
               <VideoJS
-                onReady={handlePlayerReady}
                 options={{
                   src: video,
                   poster: image,
