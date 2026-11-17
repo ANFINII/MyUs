@@ -16,8 +16,8 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
+import AvatarInput from 'components/widgets/AvatarInput'
 import style from '../../../Setting.module.scss'
-import AvatarInput from '../../../_container/AvatarInput'
 
 const initChannel: ChannelIn = {
   name: '',

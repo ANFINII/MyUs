@@ -24,8 +24,8 @@ import Toggle from 'components/parts/Input/Toggle'
 import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
+import AvatarInput from 'components/widgets/AvatarInput'
 import style from '../../Setting.module.scss'
-import AvatarInput from '../../_container/AvatarInput'
 
 interface Props {
   channels: Channel[]

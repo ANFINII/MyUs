@@ -1,0 +1,29 @@
+.input {
+  width: 56px;
+  color: rgb(200, 200, 200);
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(100, 220, 150);
+  }
+
+  input {
+    display: none;
+  }
+}
+
+.image {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 15px;
+
+  img {
+    border: 4px solid rgb(200, 200, 200);
+    border-radius: 5px;
+
+    &:hover {
+      border-color: rgb(100, 220, 150);
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
 import InputImage from 'components/parts/Input/Image'
-import style from '../../Setting.module.scss'
+import style from './AvatarInput.module.scss'
 
 interface Props {
   src: string
@@ -14,16 +14,14 @@ export default function AvatarInput(props: Props): React.JSX.Element {
   return (
     <InputImage
       id="avatar"
-      className={style.account_image_edit}
+      className={style.input}
       icon={
         src ? (
-          <div className={style.account_image}>
+          <div className={style.image}>
             <ExImage src={src} size="56" />
           </div>
         ) : (
-          <div className={style.account_image_edit}>
-            <IconPerson size="56" type="square" />
-          </div>
+          <IconPerson size="56" type="square" />
         )
       }
       onChange={onChange}

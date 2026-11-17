@@ -24,7 +24,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
-import AvatarInput from '../../_container/AvatarInput'
+import AvatarInput from 'components/widgets/AvatarInput'
 
 interface Props {
   profile: ProfileOut
