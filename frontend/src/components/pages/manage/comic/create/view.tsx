@@ -51,8 +51,8 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
-  const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, pages: files })
+  const handleFile = (file: File) => setValues({ ...values, image: file })
+  const handleMultiFile = (files: File[]) => setValues({ ...values, pages: files })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
@@ -99,7 +99,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
           <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
-          <InputFile label={t('manage.form.pages')} accept="image/*" required error={error} multiple onChange={handleMultiFile} />
+          <InputFile label={t('manage.form.pages')} accept="image/*" required error={error} onMultiChange={handleMultiFile} />
         </VStack>
       </form>
       <ComicModal open={isModal} onClose={handleModal} pages={previewPages} />

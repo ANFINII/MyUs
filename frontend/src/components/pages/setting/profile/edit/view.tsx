@@ -53,10 +53,9 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const avatarUrl = avatarPreview ?? profile.avatar
   const handleBack = () => router.push('/setting/profile')
 
-  const handleAvatar = (files: File | File[]) => {
-    if (Array.isArray(files)) return
-    setAvatarFile(files)
-    setAvatarPreview(previewUrl(files, avatarPreview))
+  const handleAvatar = (file: File) => {
+    setAvatarFile(file)
+    setAvatarPreview(previewUrl(file, avatarPreview))
   }
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })

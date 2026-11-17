@@ -41,10 +41,9 @@ export default function ChannelCreate(): React.JSX.Element {
 
   const handleBack = () => router.push('/setting/mypage')
 
-  const handleAvatar = (files: File | File[]) => {
-    if (Array.isArray(files)) return
-    setAvatarFile(files)
-    setAvatarPreview(previewUrl(files, avatarPreview))
+  const handleAvatar = (file: File) => {
+    setAvatarFile(file)
+    setAvatarPreview(previewUrl(file, avatarPreview))
   }
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })

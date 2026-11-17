@@ -54,14 +54,13 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
-  const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+  const handleImage = (file: File) => setValues({ ...values, image: file })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
-  const handleFile = (files: File | File[]) => {
-    if (Array.isArray(files)) return
-    setValues({ ...values, music: files })
-    setMusicUrl(previewUrl(files, musicUrl))
+  const handleFile = (file: File) => {
+    setValues({ ...values, music: file })
+    setMusicUrl(previewUrl(file, musicUrl))
   }
 
   const handleLyric = (lyric: string) => {

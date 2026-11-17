@@ -51,8 +51,8 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
-  const handleMovie = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
+  const handleFile = (file: File) => setValues({ ...values, image: file })
+  const handleMovie = (file: File) => setValues({ ...values, video: file })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
