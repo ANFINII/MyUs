@@ -108,8 +108,10 @@ export default function PaymentChange(props: Props): React.JSX.Element {
           { name: t('setting.payment.cancel'), color: 'red', onClick: handleCancelSubmit, loading: isCancelLoading },
         ]}
       >
-        <p>{t('setting.payment.cancelConfirm')}</p>
-        <p>{t('setting.payment.cancelNotice')}</p>
+        <div className="fs_14">
+          <p>{t('setting.payment.cancelConfirm')}</p>
+          <p>{t('setting.payment.cancelNotice')}</p>
+        </div>
       </Modal>
     </Main>
   )

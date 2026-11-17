@@ -32,8 +32,8 @@ export default function Payment(props: Props): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
-  const [selectedPlan, setSelectedPlan] = useState<string>('')
   const [isMethodLoading, setIsMethodLoading] = useState<boolean>(false)
+  const [selectedPlan, setSelectedPlan] = useState<string>('')
 
   const currentPlan = mypage.plan
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
@@ -90,7 +90,15 @@ export default function Payment(props: Props): React.JSX.Element {
 
         <div className={style.plans}>
           {purchasable.map((plan) => (
-            <PlanCard key={plan.name} plan={plan} price={priceMap.get(plan.name)} active={currentPlan === plan.name} disabled={isPaid} loading={selectedPlan === plan.name} onPurchase={handlePurchase} />
+            <PlanCard
+              key={plan.name}
+              plan={plan}
+              price={priceMap.get(plan.name)}
+              active={currentPlan === plan.name}
+              disabled={isPaid}
+              loading={selectedPlan === plan.name}
+              onPurchase={handlePurchase}
+            />
           ))}
         </div>
 
