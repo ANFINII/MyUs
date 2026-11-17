@@ -29,7 +29,7 @@ PLANS: list[Plan] = [
     ),
     Plan(
         name=PlanName.BASIC,
-        prices=[Money(amount=550, currency=Currency.JPY), Money(amount=399, currency=Currency.USD)],
+        prices=[Money(amount=550, currency=Currency.JPY), Money(amount=400, currency=Currency.USD)],
         max_advertise=1,
         is_music_download=False,
         is_playlist=True,
@@ -39,7 +39,7 @@ PLANS: list[Plan] = [
     ),
     Plan(
         name=PlanName.STANDARD,
-        prices=[Money(amount=1100, currency=Currency.JPY), Money(amount=799, currency=Currency.USD)],
+        prices=[Money(amount=1100, currency=Currency.JPY), Money(amount=800, currency=Currency.USD)],
         max_advertise=2,
         is_music_download=False,
         is_playlist=True,
@@ -49,7 +49,7 @@ PLANS: list[Plan] = [
     ),
     Plan(
         name=PlanName.PREMIUM,
-        prices=[Money(amount=1650, currency=Currency.JPY), Money(amount=1199, currency=Currency.USD)],
+        prices=[Money(amount=1650, currency=Currency.JPY), Money(amount=1200, currency=Currency.USD)],
         max_advertise=3,
         is_music_download=True,
         is_playlist=True,
@@ -59,7 +59,7 @@ PLANS: list[Plan] = [
     ),
     Plan(
         name=PlanName.ULTIMATE,
-        prices=[Money(amount=3300, currency=Currency.JPY), Money(amount=2399, currency=Currency.USD)],
+        prices=[Money(amount=3300, currency=Currency.JPY), Money(amount=2400, currency=Currency.USD)],
         max_advertise=4,
         is_music_download=True,
         is_playlist=True,
