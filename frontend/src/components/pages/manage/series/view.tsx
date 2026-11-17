@@ -15,8 +15,8 @@ import DataTable, { Column } from 'components/parts/DataTable'
 import Input from 'components/parts/Input'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Modal from 'components/parts/Modal'
-import HStack from 'components/parts/Stack/Horizontal'
 import style from './Series.module.scss'
+import ManageHeader from '../_container/Header'
 
 const mediaTypeOptions: Option[] = Object.values(MediaType).map((type) => ({ label: type, value: type }))
 
@@ -86,11 +86,9 @@ export default function ManageSeriesList(props: Props): React.JSX.Element {
   ]
 
   const button = (
-    <HStack gap="4">
-      <Button color="blue" size="s" name={t('manage.title')} onClick={() => router.push('/manage')} />
+    <ManageHeader ulid={channel} options={channelOptions} onChange={handleChannel}>
       <Button color="green" size="s" name={t('manage.series.new')} onClick={handleModal} />
-      <SelectBox value={channel} options={channelOptions} className={style.select_box} onChange={handleChannel} />
-    </HStack>
+    </ManageHeader>
   )
 
   return (

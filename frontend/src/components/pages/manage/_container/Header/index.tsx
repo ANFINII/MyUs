@@ -7,29 +7,31 @@ import SelectBox from 'components/parts/Input/SelectBox'
 import style from './Header.module.scss'
 
 interface Props {
-  count: number
-  ulid: string
-  options: Option[]
-  onModal: () => void
-  onChange: (e: ChangeEvent<HTMLSelectElement>) => void
+  count?: number
+  ulid?: string
+  options?: Option[]
+  children?: React.ReactNode
+  onModal?: () => void
+  onChange?: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
 export default function ManageHeader(props: Props): React.JSX.Element {
-  const { count, ulid, options, onModal, onChange } = props
+  const { count = 0, ulid = '', options, children, onModal, onChange } = props
 
   const router = useRouter()
   const { t } = useTranslation()
 
   return (
     <div className={style.header}>
-      {count > 0 && (
+      {count > 0 && onModal && (
         <>
           <span className={style.count}>{t('manage.header.selected', { count })}</span>
           <Button color="red" size="s" name={t('manage.header.bulkDelete')} onClick={onModal} />
         </>
       )}
       <Button color="blue" size="s" name={t('manage.title')} onClick={() => router.push('/manage')} />
-      <SelectBox value={ulid} options={options} className={style.select_box} onChange={onChange} />
+      {children}
+      {options && onChange && <SelectBox value={ulid} options={options} className={style.select_box} onChange={onChange} />}
     </div>
   )
 }
