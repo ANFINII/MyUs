@@ -9,6 +9,7 @@ import { ChannelSeries } from 'types/internal/series'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
+import { mediaCount } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import { useSearch } from 'components/hooks/useSearch'
 import { useToast } from 'components/hooks/useToast'
@@ -23,12 +24,7 @@ import Tabs, { TabItem } from 'components/parts/Tabs'
 import AdvertiseCard from 'components/widgets/Card/Advertise'
 import CardIndexList from 'components/widgets/Card/IndexList'
 import CardList from 'components/widgets/Card/List'
-import BlogCard from 'components/widgets/Card/Media/Blog'
-import ChatCard from 'components/widgets/Card/Media/Chat'
-import ComicCard from 'components/widgets/Card/Media/Comic'
-import MusicCard from 'components/widgets/Card/Media/Music'
-import PictureCard from 'components/widgets/Card/Media/Picture'
-import VideoCard from 'components/widgets/Card/Media/Video'
+import MediaIndexList from 'components/widgets/Card/MediaIndexList'
 import PlaylistCard from 'components/widgets/Card/Playlist'
 import SeriesCard from 'components/widgets/Card/Series'
 import FollowButton from 'components/widgets/FollowButton'
@@ -62,8 +58,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const { user } = useUser()
   const { toast, handleToast } = useToast()
-  const mediaCount = media.videos.length + media.musics.length + media.blogs.length + media.comics.length + media.pictures.length + media.chats.length
-  const search = useSearch(mediaCount)
+  const search = useSearch(mediaCount(media))
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
   const [selectedTab, setSelectedTab] = useState<TabKey>(search.name ? TabKey.Posts : TabKey.Info)
@@ -170,50 +165,7 @@ export default function Userpage(props: Props): React.JSX.Element {
         </div>
       )}
 
-      {selectedTab === TabKey.Posts && (
-        <>
-          <CardIndexList title="Video">
-            {media.videos.map((item) => (
-              <VideoCard key={item.ulid} item={item} />
-            ))}
-          </CardIndexList>
-
-          <Divide />
-          <CardIndexList title="Music">
-            {media.musics.map((item) => (
-              <MusicCard key={item.ulid} item={item} items={media.musics} />
-            ))}
-          </CardIndexList>
-
-          <Divide />
-          <CardIndexList title="Blog">
-            {media.blogs.map((item) => (
-              <BlogCard key={item.ulid} item={item} />
-            ))}
-          </CardIndexList>
-
-          <Divide />
-          <CardIndexList title="Comic">
-            {media.comics.map((item) => (
-              <ComicCard key={item.ulid} item={item} />
-            ))}
-          </CardIndexList>
-
-          <Divide />
-          <CardIndexList title="Picture">
-            {media.pictures.map((item) => (
-              <PictureCard key={item.ulid} item={item} />
-            ))}
-          </CardIndexList>
-
-          <Divide />
-          <CardIndexList title="Chat">
-            {media.chats.map((item) => (
-              <ChatCard key={item.ulid} item={item} />
-            ))}
-          </CardIndexList>
-        </>
-      )}
+      {selectedTab === TabKey.Posts && <MediaIndexList media={media} />}
 
       {selectedTab === TabKey.Series &&
         (seriesGroups.length === 0 ? (
