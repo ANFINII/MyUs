@@ -107,6 +107,29 @@
     right: 2.5em;
   }
 
+  .repeat {
+    right: 2.5em;
+    opacity: 0.45;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  &.repeatable {
+    .skip_back {
+      right: 7.5em;
+    }
+
+    .skip_forward {
+      right: 5em;
+    }
+
+    .bar {
+      right: calc(10em + 8px);
+    }
+  }
+
   .bar {
     top: 50%;
     left: calc(2.5em + 8px);
@@ -259,6 +282,24 @@
 
     .bar {
       right: calc(15em + 8px);
+    }
+
+    .repeat {
+      right: 10em;
+    }
+
+    &.repeatable {
+      .skip_back {
+        right: 15em;
+      }
+
+      .skip_forward {
+        right: 12.5em;
+      }
+
+      .bar {
+        right: calc(17.5em + 8px);
+      }
     }
 
     .volume {
