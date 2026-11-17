@@ -618,8 +618,7 @@
     "thumbnail": "Thumbnail",
     "thumbnailAuto": "First song image",
     "create": "Create and add",
-    "loginRequired": "Log in to use playlists",
-    "login": "Log in"
+    "loginRequired": "Log in to use playlists"
   },
   "player": {
     "shuffle": "Shuffle",

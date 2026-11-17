@@ -12,10 +12,10 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
-import Link from 'components/parts/Link'
 import Modal from 'components/parts/Modal'
 import CardList from 'components/widgets/Card/List'
 import PlaylistCard from 'components/widgets/Card/Playlist'
+import LoginRequired from 'components/widgets/Status/LoginRequired'
 import style from './Playlist.module.scss'
 
 interface Props {
@@ -58,12 +58,7 @@ export default function Playlists(props: Props): React.JSX.Element {
           <p className={style.empty}>{t('playlist.empty')}</p>
         )
       ) : (
-        <div className={style.login}>
-          <p>{t('playlist.loginRequired')}</p>
-          <Link href="/account/login" className={style.login_link}>
-            {t('playlist.login')}
-          </Link>
-        </div>
+        <LoginRequired content={t('playlist.loginRequired')} />
       )}
 
       <Modal

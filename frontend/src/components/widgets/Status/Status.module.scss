@@ -15,3 +15,12 @@
   align-items: center;
   min-height: 240px;
 }
+
+.login_required {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+  font-size: 14px;
+}
