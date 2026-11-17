@@ -297,7 +297,8 @@ def create_payment_method_session(user_id: int, locale: Locale) -> Result[Paymen
     if customers_ret.is_err:
         return Result.err(customers_ret.err_value)
 
-    customer = customers_ret.ok_value[0]
+    customers = customers_ret.ok_value
+    customer = customers[0]
     return_url = f"{create_frontend_url(locale)}/setting/payment"
     repo = get_payment_repository(customer.provider)
     session_ret = repo.create_payment_method_session(customer.external_id, return_url, locale)

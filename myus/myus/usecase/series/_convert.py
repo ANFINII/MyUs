@@ -144,5 +144,6 @@ def get_published_media_data(media_type: MediaType, media_ids: list[int]) -> Res
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    objs: list[MediaDataType] = list(objs_ret.ok_value)
+    all_objs = objs_ret.ok_value
+    objs: list[MediaDataType] = list(all_objs)
     return Result.ok(objs)
