@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import { buildLyric, formatLyricTime, LyricLine, parseLyricTime, toLyricRows } from 'utils/functions/lyric'
 import Button from 'components/parts/Button'
-import IconClock from 'components/parts/Icon/Clock'
 import IconCross from 'components/parts/Icon/Cross'
 import IconPlus from 'components/parts/Icon/Plus'
 import Modal from 'components/parts/Modal'
@@ -144,9 +143,6 @@ export default function LyricEditor(props: Props): React.JSX.Element {
                       </button>
                       <button type="button" className={style.nudge} onClick={() => handleNudge(index, NUDGE_SECONDS)}>
                         +0.1
-                      </button>
-                      <button type="button" title={t('manage.lyric.clear')} className={style.nudge} onClick={() => handleClear(index)}>
-                        <IconClock size="12" />
                       </button>
                     </>
                   )}
