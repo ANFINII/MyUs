@@ -16,7 +16,6 @@ import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
-import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
 import CountRead from 'components/parts/Count/Read'
 import Divide from 'components/parts/Divide'
@@ -26,6 +25,7 @@ import CommentContent from 'components/widgets/Comment/Content'
 import CommentInput from 'components/widgets/Comment/Input'
 import Hashtags from 'components/widgets/Media/Hashtags'
 import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
+import ProfileInfo from 'components/widgets/ProfileInfo'
 import SubscribeButton from 'components/widgets/SubscribeButton'
 import View from 'components/widgets/View'
 import style from './Common.module.scss'
@@ -147,16 +147,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
       <div>
         <HStack gap="4" justify="between">
-          <HStack gap="4">
-            <AvatarLink size="l" src={channel.avatar} ulid={channel.ownerUlid} title={channel.name} />
-            <VStack gap="2">
-              <p className="fs_14">{channel.name}</p>
-              <p className="fs_14 text_sub">
-                {t('count.subscribers')}
-                <span className="ml_8">{subscribeCount}</span>
-              </p>
-            </VStack>
-          </HStack>
+          <ProfileInfo avatar={channel.avatar} ulid={channel.ownerUlid} name={channel.name} countLabel={t('count.subscribers')} count={subscribeCount} />
           <div className={style.content_detail_p2}>
             <SubscribeButton isSubscribe={isSubscribe} disabled={isFollowDisable} onSubscribe={handleSubscribe} onModal={handleModal} />
           </div>
