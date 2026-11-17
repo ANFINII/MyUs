@@ -1,12 +1,8 @@
-import jwt
 from dataclasses import replace
 from datetime import UTC, date, datetime
-from smtplib import SMTPException
 from typing import assert_never
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
 from myus.domain.payment.provider.data import CancelFailed, CancelSuccess
 from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from myus.domain.user.interface import FilterOption, PageOption, SortOption, UserInterface
@@ -18,8 +14,10 @@ from myus.utils.enum.i18n import Locale
 from myus.utils.enum.payment import CancelError
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.auth import add_failure, clear_failures, get_failure_count
-from myus.utils.functions.map import locale_path, mail_locale
-from myus.utils.functions.token import access_token, is_revoked, password_reset_token, refresh_token, revoke, signup_token
+from myus.utils.functions.common import create_frontend_url
+from myus.utils.functions.mail import send_template_mail
+from myus.utils.functions.map import mail_locale
+from myus.utils.functions.token import access_token, decode_token, is_revoked, password_reset_token, refresh_token, revoke, signup_token
 from myus.utils.functions.transaction import atomic_result
 from myus.utils.functions.validation import has_email, has_password, has_weak_password
 from ._convert import get_active_user_data, is_same_password, create_user_data
@@ -29,11 +27,8 @@ from ..payment.core import cancel_subscription
 
 @Result.shield_exception()
 def verify_token(token: str, token_type: str) -> Result[int | None, FatalError]:
-    try:
-        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
-    except jwt.ExpiredSignatureError:
-        return Result.ok(None)
-    except jwt.exceptions.DecodeError:
+    payload = decode_token(token)
+    if payload is None:
         return Result.ok(None)
 
     if payload.get("type") != token_type:
@@ -114,11 +109,8 @@ def login_user(username: str, password: str) -> Result[int | None, ValidateError
 @Result.shield_exception()
 def logout_user(access: str, refresh: str) -> Result[None, FatalError]:
     for token in [access, refresh]:
-        try:
-            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
-        except jwt.ExpiredSignatureError:
-            continue
-        except jwt.exceptions.DecodeError:
+        payload = decode_token(token)
+        if payload is None:
             continue
 
         jti = payload.get("jti")
@@ -146,18 +138,9 @@ def signup_send_email(email: str, locale: Locale) -> Result[str, FatalError]:
         return Result.ok("error.emailTaken")
 
     token = signup_token(email)
-    frontend_url = f"{settings.FRONTEND_URL}{locale_path(locale)}"
+    frontend_url = create_frontend_url(locale)
     mail = mail_locale(locale).value
-    subject = render_to_string(f"registration/email/{mail}/account/subject.txt").strip()
-    message = render_to_string(
-        f"registration/email/{mail}/account/message.txt",
-        {"frontend_url": frontend_url, "token": token},
-    )
-
-    try:
-        send_mail(subject, message, None, [email])
-    except (SMTPException, OSError) as e:
-        log.error("send failed", exc=e)
+    if not send_template_mail(f"registration/email/{mail}/account", {"frontend_url": frontend_url, "token": token}, email):
         return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
@@ -168,13 +151,9 @@ def signup_send_email(email: str, locale: Locale) -> Result[str, FatalError]:
 
 
 def signup_verify_token(token: str) -> str | None:
-    try:
-        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
-    except jwt.ExpiredSignatureError:
-        log.warning("token expired")
-        return None
-    except jwt.exceptions.DecodeError:
-        log.warning("token decode error")
+    payload = decode_token(token)
+    if payload is None:
+        log.warning("invalid token")
         return None
 
     if payload.get("type") != "signup":
@@ -316,18 +295,9 @@ def password_reset_send_email(email: str, locale: Locale) -> Result[str, FatalEr
         return Result.ok("")
 
     token = password_reset_token(user_data.user.id, email, user_data.user.password)
-    frontend_url = f"{settings.FRONTEND_URL}{locale_path(locale)}"
+    frontend_url = create_frontend_url(locale)
     mail = mail_locale(locale).value
-    subject = render_to_string(f"registration/email/{mail}/reset/subject.txt").strip()
-    message = render_to_string(
-        f"registration/email/{mail}/reset/message.txt",
-        {"frontend_url": frontend_url, "token": token, "nickname": user_data.user.nickname},
-    )
-
-    try:
-        send_mail(subject, message, None, [email])
-    except (SMTPException, OSError) as e:
-        log.error("send failed", exc=e)
+    if not send_template_mail(f"registration/email/{mail}/reset", {"frontend_url": frontend_url, "token": token, "nickname": user_data.user.nickname}, email):
         return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
@@ -339,13 +309,9 @@ def password_reset_send_email(email: str, locale: Locale) -> Result[str, FatalEr
 
 @Result.shield_exception()
 def password_reset_verify_token(token: str) -> Result[tuple[int, str] | None, FatalError]:
-    try:
-        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
-    except jwt.ExpiredSignatureError:
-        log.warning("token expired")
-        return Result.ok(None)
-    except jwt.exceptions.DecodeError:
-        log.warning("token decode error")
+    payload = decode_token(token)
+    if payload is None:
+        log.warning("invalid token")
         return Result.ok(None)
 
     if payload.get("type") != "password_reset":

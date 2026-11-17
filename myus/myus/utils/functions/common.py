@@ -1,6 +1,8 @@
 from django_ulid.models import ulid
 from django.conf import settings
 from django.http import HttpRequest
+from .map import locale_path
+from ..enum.i18n import Locale
 
 
 def new_ulid() -> str:
@@ -9,6 +11,10 @@ def new_ulid() -> str:
 
 def create_url(path: str) -> str:
     return f"{settings.MEDIA_BASE_URL}{path}" if path else ""
+
+
+def create_frontend_url(locale: Locale) -> str:
+    return f"{settings.FRONTEND_URL}{locale_path(locale)}"
 
 
 def get_client_ip(request: HttpRequest) -> str:

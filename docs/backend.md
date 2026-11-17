@@ -301,6 +301,7 @@ return Result.ok(new_ids)
 - adapter → usecase → interface の方向にのみ依存する
 - usecase層からadapter層の型（`HttpRequest`、schemaの`XxxIn`等）をインポートしない。入力はadapterでDTOに組み替えて受け取る（「型定義」を参照）
 - usecase層からDjangoのモデル（`User.objects`等）や`authenticate`を直接使わない。リポジトリ（Interface）のメソッドを通す
+- JWT・メール・フロントの URL のように Django の設定やライブラリを使う処理は、`utils/functions` の関数にして usecase から呼ぶ（`decode_token`・`send_template_mail`・`create_frontend_url`）
 - domain層（`domain/<ドメイン>/`）は他の層に依存しない（純粋なPython）
 - usecaseはドメインごとのディレクトリ（`usecase/<ドメイン>/`）にし、次の2つに分ける
   - `core.py`：adapter・コマンドから呼ぶ関数
@@ -398,6 +399,7 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-15: enum 変換の決まりを、対応がずれうる変換だけ `map.py` の match + `assert_never` にし、名前・値が同じ enum どうしはそのまま変換してよいことにした
 - 2026-11-16: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`はメディアは`domain/media/common.py`、ほかは各ドメインの`interface.py`に置いた（`limit=0`は上限なし）
 - 2026-11-16: メディアの一覧の件数を`domain/media/common.py`の`MEDIA_PAGE_SIZE`にし、広告の一覧は`domain/advertise/interface.py`の`ADVERTISE_PAGE_SIZE`、API の`Limit`の上限は`adapter/inbound/schema/common.py`の`MAX_LIMIT`にした
+- 2026-11-17: usecase で直接書いていた JWT の decode・メールの送信・フロントの URL を `utils/functions` の `decode_token`（`token.py`）・`send_template_mail`（`mail.py`）・`create_frontend_url`（`common.py`）にした
 - 2026-11-16: ガード節のログの文言から対象の名前を外し、`not found`・`owner mismatch`・`author mismatch`にそろえた
 - 2026-11-16: usecase・adapter に残っていた`"data not found"`・`"Not Found"`・`"Forbidden"`のエラーの`message`を、FE の i18n のキー（`error.mediaNotFound`・`error.commentUpdateFailed`など）にした
 - 2026-11-16: `not found`のログのレベルを、見に来たら無い（info）・操作の相手が無い（warning）・あるはずのものが無い（error）に分けた

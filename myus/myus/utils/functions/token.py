@@ -57,6 +57,13 @@ def password_reset_token(user_id: int, email: str, password_hash: str) -> str:
     return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
 
+def decode_token(token: str) -> dict[str, object] | None:
+    try:
+        return jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return None
+
+
 def revoked_token_key(jti: str) -> str:
     return f"revoked_token:{jti}"
 
