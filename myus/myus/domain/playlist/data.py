@@ -9,7 +9,7 @@ class PlaylistData:
     author_id: int
     title: str
     description: str
-    thumbnail_music_id: int
+    image: str
     publish: bool
     music_ids: list[int]
     created: datetime

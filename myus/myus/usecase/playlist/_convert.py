@@ -19,18 +19,14 @@ def is_visible_music(music: MusicData, user_id: int | None) -> bool:
     return is_public or music.channel.owner_id == user_id
 
 
-def get_thumbnail_music(musics: list[MusicData], thumbnail_music_id: int) -> MusicData | None:
-    thumbnails = [m for m in musics if m.id == thumbnail_music_id]
-    if len(thumbnails) > 0:
-        return thumbnails[0]
-    return musics[0] if len(musics) > 0 else None
+def music_image(music: MusicData) -> str:
+    return music.image or music.channel.avatar
 
 
-def playlist_image(musics: list[MusicData], thumbnail_music_id: int) -> str:
-    music = get_thumbnail_music(musics, thumbnail_music_id)
-    if music is None:
-        return ""
-    return create_url(music.image or music.channel.avatar)
+def playlist_image(musics: list[MusicData], image: str) -> str:
+    if image:
+        return create_url(image)
+    return create_url(music_image(musics[0])) if len(musics) > 0 else ""
 
 
 @Result.shield_exception()
@@ -105,7 +101,7 @@ def get_playlists_data(filter: FilterOption, user_id: int | None) -> Result[list
     data: list[PlaylistDTO] = []
     for p in playlists:
         musics = [music_map[music_id] for music_id in p.music_ids if music_id in music_map]
-        image = playlist_image(musics, p.thumbnail_music_id)
+        image = playlist_image(musics, p.image)
         data.append(PlaylistDTO(ulid=p.ulid, title=p.title, publish=p.publish, count=len(musics), image=image, music_ulids=[m.ulid for m in musics], updated=p.updated))
 
     return Result.ok(data)

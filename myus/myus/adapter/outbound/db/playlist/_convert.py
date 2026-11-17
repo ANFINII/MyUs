@@ -10,7 +10,7 @@ def convert_data(obj: Playlist) -> PlaylistData:
         author_id=obj.author_id,
         title=obj.title,
         description=obj.description,
-        thumbnail_music_id=obj.thumbnail_music_id or 0,
+        image=str(obj.image),
         publish=obj.publish,
         music_ids=[pm.music_id for pm in obj.playlist_musics.all()],
         created=obj.created,
@@ -25,6 +25,6 @@ def marshal_data(data: PlaylistData) -> Playlist:
         author_id=data.author_id,
         title=data.title,
         description=data.description,
-        thumbnail_music_id=data.thumbnail_music_id if data.thumbnail_music_id != 0 else None,
+        image=data.image,
         publish=data.publish,
     )

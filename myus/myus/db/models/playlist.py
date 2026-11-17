@@ -6,15 +6,15 @@ from .user import User
 
 class Playlist(models.Model):
     """Playlist"""
-    id              = models.BigAutoField(primary_key=True)
-    ulid            = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    author          = models.ForeignKey(User, on_delete=models.CASCADE, related_name="playlists")
-    title           = models.CharField(max_length=100)
-    description     = models.TextField(blank=True, default="")
-    thumbnail_music = models.ForeignKey(Music, on_delete=models.SET_NULL, related_name="+", null=True, blank=True)
-    publish         = models.BooleanField(default=False)
-    created         = models.DateTimeField(auto_now_add=True)
-    updated         = models.DateTimeField(auto_now=True)
+    id          = models.BigAutoField(primary_key=True)
+    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE, related_name="playlists")
+    title       = models.CharField(max_length=100)
+    description = models.TextField(blank=True, default="")
+    image       = models.ImageField(max_length=255, blank=True)
+    publish     = models.BooleanField(default=False)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
