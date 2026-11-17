@@ -164,14 +164,10 @@ export default function ManageMusics(props: Props): React.JSX.Element {
     },
   ]
 
+  const button = <ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />
+
   return (
-    <Main
-      title="Music"
-      type="table"
-      toast={toast}
-      isFooter={false}
-      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />}
-    >
+    <Main title="Music" type="table" toast={toast} isFooter={false} button={button}>
       <ManageTable
         table={{ datas: items, columns, rowKey: (m) => m.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}

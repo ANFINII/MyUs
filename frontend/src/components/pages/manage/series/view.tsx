@@ -87,7 +87,7 @@ export default function ManageSeriesList(props: Props): React.JSX.Element {
 
   const button = (
     <ManageHeader ulid={channel} options={channelOptions} onChange={handleChannel}>
-      <Button color="green" size="s" name={t('manage.series.new')} onClick={handleModal} />
+      <Button color="green" size="s" name={t('manage.button.new')} onClick={handleModal} />
     </ManageHeader>
   )
 

@@ -150,14 +150,10 @@ export default function ManageComics(props: Props): React.JSX.Element {
     },
   ]
 
+  const button = <ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />
+
   return (
-    <Main
-      title="Comic"
-      type="table"
-      toast={toast}
-      isFooter={false}
-      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />}
-    >
+    <Main title="Comic" type="table" toast={toast} isFooter={false} button={button}>
       <ManageTable
         table={{ datas: items, columns, rowKey: (c) => c.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}

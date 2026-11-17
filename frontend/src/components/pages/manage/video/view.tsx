@@ -154,14 +154,10 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     },
   ]
 
+  const button = <ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />
+
   return (
-    <Main
-      title="Video"
-      type="table"
-      toast={toast}
-      isFooter={false}
-      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />}
-    >
+    <Main title="Video" type="table" toast={toast} isFooter={false} button={button}>
       <ManageTable
         table={{ datas: items, columns, rowKey: (v) => v.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}

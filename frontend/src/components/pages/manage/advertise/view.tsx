@@ -129,18 +129,14 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
     },
   ]
 
+  const button = (
+    <ManageHeader count={selectedKeys.size} onModal={handleModal}>
+      <Button color="green" size="s" name={t('manage.button.new')} disabled={isLimitReached} onClick={handleCreate} />
+    </ManageHeader>
+  )
+
   return (
-    <Main
-      title="Advertise"
-      type="table"
-      toast={toast}
-      isFooter={false}
-      button={
-        <ManageHeader count={selectedKeys.size} onModal={handleModal}>
-          <Button color="green" size="s" name={t('manage.button.new')} disabled={isLimitReached} onClick={handleCreate} />
-        </ManageHeader>
-      }
-    >
+    <Main title="Advertise" type="table" toast={toast} isFooter={false} button={button}>
       <ManageTable
         table={{ datas: items, columns, rowKey: (a) => a.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
