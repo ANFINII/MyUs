@@ -35,13 +35,14 @@ interface Props {
 
 export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { channels, categories, data } = props
+  const { categoryUlid, title, content, publish, publishAt } = data
 
   const router = useRouter()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish, publishAt: datetimeISO(data.publishAt) })
+  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid, title, content, publish, publishAt: datetimeISO(publishAt) })
   const [isModal, setIsModal] = useState<boolean>(false)
   const [previewPages, setPreviewPages] = useState<string[]>([])
 

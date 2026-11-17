@@ -37,6 +37,7 @@ interface Props {
 
 export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { channels, categories, data } = props
+  const { categoryUlid, title, content, lyric, download, publish, publishAt } = data
 
   const router = useRouter()
   const { t } = useTranslation()
@@ -45,15 +46,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [musicUrl, setMusicUrl] = useState<string>('')
-  const [values, setValues] = useState<MusicUpdateIn>({
-    categoryUlid: data.categoryUlid,
-    title: data.title,
-    content: data.content,
-    lyric: data.lyric,
-    download: data.download,
-    publish: data.publish,
-    publishAt: datetimeISO(data.publishAt),
-  })
+  const [values, setValues] = useState<MusicUpdateIn>({ categoryUlid, title, content, lyric, download, publish, publishAt: datetimeISO(publishAt) })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]

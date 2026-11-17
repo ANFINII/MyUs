@@ -25,13 +25,14 @@ interface Props {
 
 export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   const { data } = props
+  const { title, url, content, publish, period } = data
 
   const router = useRouter()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<AdvertiseUpdateIn>({ title: data.title, url: data.url, content: data.content, publish: data.publish, period: data.period ?? '' })
+  const [values, setValues] = useState<AdvertiseUpdateIn>({ title, url, content, publish, period: period ?? '' })
 
   const handleBack = () => router.push('/manage/advertise')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
