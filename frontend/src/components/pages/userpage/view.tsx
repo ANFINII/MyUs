@@ -33,6 +33,7 @@ import PlaylistCard from 'components/widgets/Card/Playlist'
 import SeriesCard from 'components/widgets/Card/Series'
 import FollowButton from 'components/widgets/FollowButton'
 import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
+import Empty from 'components/widgets/Status/Empty'
 import style from './UserPage.module.scss'
 
 const enum TabKey {
@@ -216,7 +217,7 @@ export default function Userpage(props: Props): React.JSX.Element {
 
       {selectedTab === TabKey.Series &&
         (seriesGroups.length === 0 ? (
-          <p className={style.empty}>{t('media.userpage.seriesEmpty')}</p>
+          <Empty content={t('media.userpage.seriesEmpty')} />
         ) : (
           seriesGroups.map(({ mediaType, items }, index) => (
             <Fragment key={mediaType}>
@@ -231,11 +232,11 @@ export default function Userpage(props: Props): React.JSX.Element {
         ))}
 
       {selectedTab === TabKey.Playlist &&
-        (playlists.length === 0 ? <p className={style.empty}>{t('media.userpage.playlistEmpty')}</p> : <CardList items={playlists} Content={PlaylistCard} />)}
+        (playlists.length === 0 ? <Empty content={t('media.userpage.playlistEmpty')} /> : <CardList items={playlists} Content={PlaylistCard} />)}
 
       {selectedTab === TabKey.Advertise &&
         (advertises.length === 0 ? (
-          <p className={style.empty}>{t('media.userpage.advertiseEmpty')}</p>
+          <Empty content={t('media.userpage.advertiseEmpty')} />
         ) : (
           <VStack gap="4">
             {advertises.map((item) => (

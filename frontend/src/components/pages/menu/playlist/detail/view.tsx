@@ -30,6 +30,7 @@ import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import ShareButton from 'components/widgets/ShareButton'
+import Empty from 'components/widgets/Status/Empty'
 import style from './Detail.module.scss'
 
 interface Props {
@@ -187,7 +188,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
           ))}
         </ul>
       ) : (
-        <p className={style.empty}>{t('playlist.emptyMusic')}</p>
+        <Empty content={t('playlist.emptyMusic')} />
       )}
 
       <DeleteModal
