@@ -274,6 +274,22 @@
     "back": "Back",
     "login": "Log in",
     "unauthorized": "Please log in",
+    "loginRequired": "Log in to use {{title}}",
+    "loginTitle": {
+      "channel": "channels",
+      "playlist": "playlists",
+      "follow": "following",
+      "follower": "followers",
+      "series": "series",
+      "advertise": "ads",
+      "manage": "content management",
+      "profile": "your account",
+      "mypage": "My page",
+      "notification": "notification settings",
+      "password": "password change",
+      "payment": "plans",
+      "withdrawal": "account deletion"
+    },
     "notFound": "Page not found",
     "serverError": "This page isn't working",
     "unexpected": "An unexpected error occurred"
@@ -617,8 +633,7 @@
     "description": "Description",
     "thumbnail": "Thumbnail",
     "thumbnailAuto": "First song image",
-    "create": "Create and add",
-    "loginRequired": "Log in to use playlists"
+    "create": "Create and add"
   },
   "player": {
     "shuffle": "Shuffle",

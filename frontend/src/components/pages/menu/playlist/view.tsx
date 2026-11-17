@@ -58,7 +58,7 @@ export default function Playlists(props: Props): React.JSX.Element {
           <p className={style.empty}>{t('playlist.empty')}</p>
         )
       ) : (
-        <LoginRequired content={t('playlist.loginRequired')} />
+        <LoginRequired content={t('status.loginRequired', { title: t('status.loginTitle.playlist') })} />
       )}
 
       <Modal

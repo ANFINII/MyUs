@@ -272,6 +272,22 @@
     "back": "戻る",
     "login": "ログイン",
     "unauthorized": "ログインしてください",
+    "loginRequired": "{{title}}を使うにはログインが必要です",
+    "loginTitle": {
+      "channel": "チャンネル",
+      "playlist": "プレイリスト",
+      "follow": "フォロー",
+      "follower": "フォロワー",
+      "series": "シリーズ",
+      "advertise": "広告",
+      "manage": "投稿管理",
+      "profile": "アカウント",
+      "mypage": "マイページ",
+      "notification": "通知設定",
+      "password": "パスワードの変更",
+      "payment": "料金プラン",
+      "withdrawal": "退会処理"
+    },
     "notFound": "ページが見つかりませんでした",
     "serverError": "このページは動作しませんでした",
     "unexpected": "予期せぬエラーが発生しました"
@@ -611,8 +627,7 @@
     "description": "説明",
     "thumbnail": "サムネイル",
     "thumbnailAuto": "1曲目の画像",
-    "create": "作成して追加",
-    "loginRequired": "プレイリストを使うにはログインが必要です"
+    "create": "作成して追加"
   },
   "player": {
     "shuffle": "シャッフル",
