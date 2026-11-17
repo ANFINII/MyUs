@@ -15,6 +15,7 @@ import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
+import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
@@ -103,9 +104,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   return (
     <Main title={t('setting.profile.title')} type="table" toast={toast} button={button}>
       {message && (
-        <ul className={style.messages_profile}>
-          <li>{message}</li>
-        </ul>
+        <Alert type="error">{message}</Alert>
       )}
 
       <Table>
