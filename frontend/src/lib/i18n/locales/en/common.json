@@ -592,6 +592,11 @@
     "following": "Following",
     "follow": "Follow"
   },
+  "share": {
+    "button": "Share",
+    "copied": "Link copied",
+    "failed": "Could not copy the link"
+  },
   "playlist": {
     "select": "Playlist",
     "new": "Create playlist",

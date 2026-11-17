@@ -23,6 +23,7 @@ import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import DeleteModal from 'components/widgets/Modal/Delete'
+import ShareButton from 'components/widgets/ShareButton'
 import style from './Detail.module.scss'
 
 interface Props {
@@ -145,6 +146,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
             <div className={style.actions}>
               <Button name={t('playlist.playAll')} color="blue" size="s" disabled={musics.length === 0} onClick={() => handlePlay(0)} />
               <Button name={t('playlist.playShuffle')} color="purple" size="s" disabled={musics.length === 0} onClick={handlePlayShuffle} />
+              {publish && <ShareButton path={`/menu/playlist/${ulid}`} handleToast={handleToast} />}
             </div>
           )}
         </div>
@@ -195,7 +197,14 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
         <p className={style.empty}>{t('playlist.emptyMusic')}</p>
       )}
 
-      <DeleteModal open={isModal} title={t('playlist.deleteTitle')} content={t('playlist.deleteConfirm', { title })} loading={loading} onClose={handleModal} onAction={handleDelete} />
+      <DeleteModal
+        open={isModal}
+        title={t('playlist.deleteTitle')}
+        content={t('playlist.deleteConfirm', { title })}
+        loading={loading}
+        onClose={handleModal}
+        onAction={handleDelete}
+      />
     </Main>
   )
 }
