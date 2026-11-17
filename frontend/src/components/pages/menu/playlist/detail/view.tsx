@@ -198,7 +198,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
         <ul className={style.list}>
           {musics.map((music, index) => (
             <li key={music.ulid} className={cx(style.item, current?.ulid === music.ulid && style.current)} onClick={() => handlePlay(index)}>
-              <span className={style.index}>{index + 1}</span>
+              <span className={style.index}>{String(index + 1).padStart(3, '0')}</span>
               <ExImage src={music.image || music.channel.avatar} className={style.item_thumbnail} />
               <div className={style.item_text}>
                 <div className={style.item_title}>{music.title}</div>

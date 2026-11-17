@@ -18,8 +18,8 @@ const menus = [
   { label: 'Comic', icon: <IconComic size="2em" />, path: 'comic' },
   { label: 'Picture', icon: <IconPicture size="2em" />, path: 'picture' },
   { label: 'Chat', icon: <IconChat size="2em" />, path: 'chat' },
-  { label: 'Series', icon: <IconList size="2em" />, path: 'series' },
   { label: 'Advertise', icon: <IconAdvertise size="2em" />, path: 'advertise' },
+  { label: 'Series', icon: <IconList size="2em" />, path: 'series' },
 ]
 
 export default function Manage(): React.JSX.Element {
