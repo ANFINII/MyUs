@@ -9,6 +9,7 @@ import { Option } from 'types/internal/other'
 import { putManageMusic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
+import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -58,24 +59,25 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/music')
-  const handleModal = () => {
-    if (musicUrl) URL.revokeObjectURL(musicUrl)
-    setMusicUrl(!isModal && values.music ? URL.createObjectURL(values.music) : '')
-    setIsModal(!isModal)
-  }
-
-  const handleLyric = (lyric: string) => {
-    setValues({ ...values, lyric })
-    handleModal()
-  }
+  const handleModal = () => setIsModal(!isModal)
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
   const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
-  const handleMusic = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, music: files })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
+
+  const handleFile = (files: File | File[]) => {
+    if (Array.isArray(files)) return
+    setValues({ ...values, music: files })
+    setMusicUrl(previewUrl(files, musicUrl))
+  }
+
+  const handleLyric = (lyric: string) => {
+    setValues({ ...values, lyric })
+    setIsModal(false)
+  }
 
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
@@ -114,11 +116,10 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
             <Button color="purple" size="s" name={t('manage.lyric.open')} className={style.lyric_hint_button} onClick={handleModal} />
           </div>
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
-          <InputFile label={t('manage.form.music')} accept="audio/*" onChange={handleMusic} />
+          <InputFile label={t('manage.form.music')} accept="audio/*" onChange={handleFile} />
           <CheckBox label={t('manage.form.download')} name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>
-
       {isModal && <LyricEditor src={musicUrl || data.music} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
     </Main>
   )
