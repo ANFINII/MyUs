@@ -1,4 +1,5 @@
 import { noop, QueryClient } from '@tanstack/react-query'
+import { redirect } from '@tanstack/react-router'
 import {
   blogQuery,
   blogsQuery,
@@ -29,6 +30,7 @@ import {
   manageVideosQuery,
   musicQuery,
   musicsQuery,
+  passwordResetVerifyQuery,
   paymentPlansQuery,
   paymentSubscriptionQuery,
   pictureQuery,
@@ -39,6 +41,7 @@ import {
   settingMypageQuery,
   settingNotificationQuery,
   settingProfileQuery,
+  signupVerifyQuery,
   subscribeChannelsQuery,
   userPageAdvertisesQuery,
   userPageMediaQuery,
@@ -63,6 +66,15 @@ export interface PageLoad<TParams> {
 const listParams = (query: Record<string, string>) => {
   const { search, limit, offset } = pageParams(query)
   return { search, limit, offset }
+}
+
+const verifyLoader = async <T>(token: string | undefined, load: (token: string) => Promise<T>): Promise<T> => {
+  if (!token) throw redirect({ href: '/account/login' })
+  try {
+    return await load(token)
+  } catch {
+    throw redirect({ href: '/account/login' })
+  }
 }
 
 const manageListParams = async (queryClient: QueryClient, search: Record<string, string>) => {
@@ -167,3 +179,6 @@ export const manageComicEditLoader = ({ queryClient, params }: PageLoad<{ ulid: 
 export const managePictureEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => Promise.all([queryClient.query(managePictureQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 export const manageChatEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => Promise.all([queryClient.query(manageChatQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 export const manageAdvertiseEditLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => queryClient.query(manageAdvertiseQuery(params.ulid))
+
+export const signupVerifyLoader = ({ queryClient, search }: PageLoad<object>) => verifyLoader(search.token, (token) => queryClient.query(signupVerifyQuery(token)))
+export const passwordResetVerifyLoader = ({ queryClient, search }: PageLoad<object>) => verifyLoader(search.token, (token) => queryClient.query(passwordResetVerifyQuery(token)))

@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
-import { blogDetailLoader, blogListLoader, chatDetailLoader, chatListLoader, chatThreadLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, manageAdvertiseEditLoader, manageAdvertiseListLoader, manageBlogEditLoader, manageBlogListLoader, manageChatEditLoader, manageChatListLoader, manageComicEditLoader, manageComicListLoader, manageCreateLoader, manageLoader, manageMusicEditLoader, manageMusicListLoader, managePictureEditLoader, managePictureListLoader, manageSeriesEditLoader, manageSeriesListLoader, manageVideoEditLoader, manageVideoListLoader, musicDetailLoader, musicListLoader, PageLoad, pictureDetailLoader, pictureListLoader, playlistDetailLoader, playlistListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, subscribeChannelsLoader, userPageLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
+import { blogDetailLoader, blogListLoader, chatDetailLoader, chatListLoader, chatThreadLoader, comicDetailLoader, comicListLoader, followersLoader, followsLoader, homeLoader, manageAdvertiseEditLoader, manageAdvertiseListLoader, manageBlogEditLoader, manageBlogListLoader, manageChatEditLoader, manageChatListLoader, manageComicEditLoader, manageComicListLoader, manageCreateLoader, manageLoader, manageMusicEditLoader, manageMusicListLoader, managePictureEditLoader, managePictureListLoader, manageSeriesEditLoader, manageSeriesListLoader, manageVideoEditLoader, manageVideoListLoader, musicDetailLoader, musicListLoader, PageLoad, passwordResetVerifyLoader, pictureDetailLoader, pictureListLoader, playlistDetailLoader, playlistListLoader, recommendLoader, settingMypageLoader, settingNotificationLoader, settingPasswordLoader, settingPaymentLoader, settingProfileLoader, signupVerifyLoader, subscribeChannelsLoader, userPageLoader, videoDetailLoader, videoListLoader } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
@@ -58,10 +58,10 @@ export const routeTree = rootRoute.addChildren([
   page('/menu/commerce', () => import('components/pages/menu/commerce')),
 
   page('/account/login', () => import('components/pages/account/login')),
-  page('/account/signup', () => import('components/pages/account/signup')),
+  page('/account/signup', () => import('components/pages/account/signup'), signupVerifyLoader),
   page('/account/signup/email', () => import('components/pages/account/signup/email')),
   page('/account/reset', () => import('components/pages/account/reset')),
-  page('/account/reset/confirm', () => import('components/pages/account/reset/confirm')),
+  page('/account/reset/confirm', () => import('components/pages/account/reset/confirm'), passwordResetVerifyLoader),
   page('/account/reset/done', () => import('components/pages/account/reset/done')),
   page('/account/withdrawal', () => import('components/pages/account/withdrawal')),
   page('/account/withdrawal/confirm', () => import('components/pages/account/withdrawal/confirm')),

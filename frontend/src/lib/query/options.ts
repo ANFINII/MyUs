@@ -3,6 +3,7 @@ import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { AdvertiseSearchParams } from 'types/internal/advertise'
 import { SearchParams } from 'types/internal/media/output'
+import { getPasswordResetVerify, getSignupVerify } from 'api/internal/auth'
 import { getCategories } from 'api/internal/category'
 import { getChannels, getSubscribeChannels } from 'api/internal/channel'
 import {
@@ -34,6 +35,8 @@ export const userQuery = () => queryOptions({ queryKey: queryKeys.user, queryFn:
 export const channelsQuery = () => queryOptions({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()), refetchOnMount: false })
 export const subscribeChannelsQuery = () => queryOptions({ queryKey: queryKeys.subscribeChannels, queryFn: () => toQuery(getSubscribeChannels()), refetchOnMount: false })
 export const categoriesQuery = () => queryOptions({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()), refetchOnMount: false })
+export const signupVerifyQuery = (token: string) => queryOptions({ queryKey: queryKeys.signupVerify(token), queryFn: () => toQuery(getSignupVerify(token)) })
+export const passwordResetVerifyQuery = (token: string) => queryOptions({ queryKey: queryKeys.passwordResetVerify(token), queryFn: () => toQuery(getPasswordResetVerify(token)) })
 
 export const homeQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), refetchOnMount: false })
 export const recommendQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.recommend(params), queryFn: () => toQuery(getRecommend(params)), refetchOnMount: false })

@@ -7,6 +7,8 @@ export const queryKeys = {
   notification: ['notification'] as const,
   channels: ['channels'] as const,
   categories: ['categories'] as const,
+  signupVerify: (token: string) => ['auth', 'signup', token] as const,
+  passwordResetVerify: (token: string) => ['auth', 'reset', token] as const,
 
   home: (params: SearchParams) => ['home', params] as const,
   recommend: (params: SearchParams) => ['recommend', params] as const,

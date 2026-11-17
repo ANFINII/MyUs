@@ -1,8 +1,8 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { PasswordResetIn } from 'types/internal/auth'
-import { getPasswordResetVerify, postPasswordReset } from 'api/internal/auth'
+import { postPasswordReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -16,37 +16,23 @@ import Password from 'components/parts/Input/Password'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../../Account.module.scss'
 
-export default function ResetConfirm(): React.JSX.Element {
+interface Props {
+  token: string
+  email: string
+}
+
+export default function ResetConfirm(props: Props): React.JSX.Element {
+  const { token, email } = props
+
   const router = useRouter()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [email, setEmail] = useState<string>('')
-  const [isVerified, setIsVerified] = useState<boolean>(false)
-  const [values, setValues] = useState<PasswordResetIn>({ token: '', password1: '', password2: '' })
+  const [values, setValues] = useState<PasswordResetIn>({ token, password1: '', password2: '' })
 
   const handleBack = () => router.push('/account/login')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-
-  useEffect(() => {
-    const token = String(router.query.token ?? '')
-    if (!token) {
-      router.push('/account/login')
-      return
-    }
-    const verify = async () => {
-      const ret = await getPasswordResetVerify(token)
-      if (ret.isErr()) {
-        router.push('/account/login')
-        return
-      }
-      setValues((prev) => ({ ...prev, token }))
-      setEmail(ret.value.email)
-      setIsVerified(true)
-    }
-    verify()
-  }, [router])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -73,20 +59,16 @@ export default function ResetConfirm(): React.JSX.Element {
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.reset.confirmTitle')}</h1>
-          {isVerified && (
-            <>
-              <VStack gap="8">
-                <Input type="email" name="email" value={email} disabled maxLength={255} />
-                <Password value={values.password1} name="password1" placeholder={t('account.form.passwordNew')} error={error} onChange={handleInput} />
-                <Password value={values.password2} name="password2" placeholder={t('account.form.passwordConfirm')} error={error} onChange={handleInput} />
-              </VStack>
+          <VStack gap="8">
+            <Input type="email" name="email" value={email} disabled maxLength={255} />
+            <Password value={values.password1} name="password1" placeholder={t('account.form.passwordNew')} error={error} onChange={handleInput} />
+            <Password value={values.password2} name="password2" placeholder={t('account.form.passwordConfirm')} error={error} onChange={handleInput} />
+          </VStack>
 
-              <VStack gap="12" className="mv_40">
-                <Button color="green" size="l" name={t('account.reset.submit')} type="submit" loading={loading} />
-                <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
-              </VStack>
-            </>
-          )}
+          <VStack gap="12" className="mv_40">
+            <Button color="green" size="l" name={t('account.reset.submit')} type="submit" loading={loading} />
+            <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
+          </VStack>
         </form>
       </article>
       <Footer />
