@@ -599,6 +599,7 @@
     "count_one": "{{count}} song",
     "count_other": "{{count}} songs",
     "playAll": "Play all",
+    "playShuffle": "Shuffle",
     "share": "Share",
     "shareCopied": "Link copied",
     "shareFailed": "Could not copy the link",

@@ -593,6 +593,7 @@
     "createOnly": "作成",
     "count": "{{count}}曲",
     "playAll": "すべて再生",
+    "playShuffle": "シャッフル再生",
     "share": "共有",
     "shareCopied": "リンクをコピーしました",
     "shareFailed": "リンクをコピーできませんでした",
