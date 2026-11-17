@@ -8,6 +8,7 @@ import { SeriesDetail, SeriesItem } from 'types/internal/series'
 import { deleteManageSeries, putManageSeries } from 'api/internal/manage/series'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
+import { useDragSort } from 'components/hooks/useDragSort'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
@@ -41,8 +42,7 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
   const [candidates, setCandidates] = useState<SeriesItem[]>(data.candidates)
   const [search, setSearch] = useState<string>('')
   const [selectedUlid, setSelectedUlid] = useState<string>('')
-  const [dragIndex, setDragIndex] = useState<number | null>(null)
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+  const { dragIndex, dragOverIndex, dragItem } = useDragSort(items, setItems)
 
   const mediaTypeOptions: Option[] = [{ label: data.mediaType, value: data.mediaType }]
   const filtered = candidates.filter((c) => c.title.toLowerCase().includes(search.trim().toLowerCase()))
@@ -67,27 +67,6 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
     if (!item) return
     setItems(items.filter((_, i) => i !== index))
     setCandidates([...candidates, item])
-  }
-
-  const handleDragStart = (index: number) => setDragIndex(index)
-
-  const handleDrag = (e: React.DragEvent, index: number | null = null) => {
-    e.preventDefault()
-    setDragOverIndex(index)
-  }
-
-  const handleDrop = (index: number) => {
-    if (dragIndex === null || dragIndex === index) return
-    const newItems = [...items]
-    const removed = newItems.splice(dragIndex, 1)
-    if (removed[0] === undefined) return
-    newItems.splice(index, 0, removed[0])
-    setItems(newItems)
-  }
-
-  const handleDragEnd = () => {
-    setDragIndex(null)
-    setDragOverIndex(null)
   }
 
   const handleSave = async () => {
@@ -134,13 +113,8 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
                 {items.map((item, index) => (
                   <li
                     key={item.ulid}
-                    draggable
                     className={cx(style.item, dragIndex === index && style.dragging, dragOverIndex === index && style.drag_over)}
-                    onDragStart={() => handleDragStart(index)}
-                    onDragOver={(e) => handleDrag(e, index)}
-                    onDragLeave={(e) => handleDrag(e)}
-                    onDrop={() => handleDrop(index)}
-                    onDragEnd={handleDragEnd}
+                    {...dragItem(index)}
                   >
                     <IconGrip size="14" className={style.grip} />
                     <span className={style.index}>{index + 1}</span>

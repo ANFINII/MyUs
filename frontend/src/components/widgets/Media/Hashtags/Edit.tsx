@@ -5,6 +5,7 @@ import { Hashtag } from 'types/internal/media/output'
 import { putMediaHashtags } from 'api/internal/hashtag'
 import { MediaPath, MediaType } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
+import { useDragSort } from 'components/hooks/useDragSort'
 import Button from 'components/parts/Button'
 import IconCross from 'components/parts/Icon/Cross'
 import IconGrip from 'components/parts/Icon/Grip'
@@ -48,8 +49,7 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [editTags, setEditTags] = useState<Hashtag[]>([...hashtags])
   const [inputTag, setInputTag] = useState<string>('')
-  const [dragIndex, setDragIndex] = useState<number | null>(null)
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+  const { dragIndex, dragOverIndex, dragItem } = useDragSort(editTags, setEditTags)
 
   const isLimit = editTags.length >= HASHTAG_MAX_COUNT
   const normalizedInput = normalizeName(inputTag)
@@ -68,27 +68,6 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
   const handleAddNew = () => {
     setEditTags([...editTags, { ulid: '', name: normalizedInput }])
     setInputTag('')
-  }
-
-  const handleDragStart = (index: number) => setDragIndex(index)
-
-  const handleDrag = (e: React.DragEvent, index: number | null = null) => {
-    e.preventDefault()
-    setDragOverIndex(index)
-  }
-
-  const handleDrop = (index: number) => {
-    if (dragIndex === null || dragIndex === index) return
-    const newTags = [...editTags]
-    const removed = newTags.splice(dragIndex, 1)
-    if (removed[0] === undefined) return
-    newTags.splice(index, 0, removed[0])
-    setEditTags(newTags)
-  }
-
-  const handleDragEnd = () => {
-    setDragIndex(null)
-    setDragOverIndex(null)
   }
 
   const handleSave = async () => {
@@ -142,12 +121,7 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
           <span
             key={tag.name}
             className={cx(style.edit_chip, dragIndex === index && style.dragging, dragOverIndex === index && style.drag_over)}
-            draggable
-            onDragStart={() => handleDragStart(index)}
-            onDragOver={(e) => handleDrag(e, index)}
-            onDragLeave={(e) => handleDrag(e)}
-            onDrop={() => handleDrop(index)}
-            onDragEnd={handleDragEnd}
+            {...dragItem(index)}
           >
             <span className={style.drag_handle}>
               <IconGrip size="12" />

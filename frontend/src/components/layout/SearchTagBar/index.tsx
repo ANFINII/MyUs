@@ -5,6 +5,7 @@ import { SearchTagOut } from 'types/internal/user'
 import { getSearchTag, putSearchTag } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
+import { useDragSort } from 'components/hooks/useDragSort'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import ButtonSquare from 'components/parts/Button/Square'
@@ -27,8 +28,7 @@ export default function SearchTagBar(): React.JSX.Element {
   const [inputTag, setInputTag] = useState<string>('')
   const [searchTags, setSearchTags] = useState<SearchTagOut[]>([])
   const [editTags, setEditTags] = useState<SearchTagOut[]>([])
-  const [dragIndex, setDragIndex] = useState<number | null>(null)
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+  const { dragIndex, dragOverIndex, dragItem } = useDragSort(editTags, setEditTags)
 
   useEffect(() => {
     const fetchSearchTag = async () => {
@@ -80,26 +80,6 @@ export default function SearchTagBar(): React.JSX.Element {
 
   const handleDelete = (index: number) => setEditTags(editTags.filter((_, i) => i !== index))
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setInputTag(e.target.value)
-  const handleDragStart = (index: number) => setDragIndex(index)
-
-  const handleDrop = (index: number) => {
-    if (dragIndex === null || dragIndex === index) return
-    const newTags = [...editTags]
-    const removed = newTags.splice(dragIndex, 1)
-    if (removed[0] === undefined) return
-    newTags.splice(index, 0, removed[0])
-    setEditTags(newTags)
-  }
-
-  const handleDrag = (e: React.DragEvent, index: number | null = null) => {
-    e.preventDefault()
-    setDragOverIndex(index)
-  }
-
-  const handleDragEnd = () => {
-    setDragIndex(null)
-    setDragOverIndex(null)
-  }
 
   const handleScroll = (direction: number) => {
     if (scrollRef.current) {
@@ -131,12 +111,7 @@ export default function SearchTagBar(): React.JSX.Element {
                       <div
                         key={tag.name}
                         className={cx(styles.tag_item, dragIndex === index && styles.dragging, dragOverIndex === index && styles.drag_over)}
-                        draggable
-                        onDragStart={() => handleDragStart(index)}
-                        onDragOver={(e) => handleDrag(e, index)}
-                        onDragLeave={(e) => handleDrag(e)}
-                        onDrop={() => handleDrop(index)}
-                        onDragEnd={handleDragEnd}
+                        {...dragItem(index)}
                       >
                         <span className={styles.drag_handle}>
                           <IconGrip size="12" />
