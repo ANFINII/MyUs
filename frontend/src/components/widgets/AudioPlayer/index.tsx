@@ -1,7 +1,9 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import { formatTime } from 'utils/functions/datetime'
 import { getVolume, saveVolume } from 'utils/functions/volume'
+import IconRepeat from 'components/parts/Icon/Repeat'
 import IconSkip from 'components/parts/Icon/Skip'
 import style from './AudioPlayer.module.scss'
 
@@ -13,7 +15,7 @@ interface Props {
   playbackRate?: number
   autoPlay?: boolean
   isVolumeInline?: boolean
-  isLoop?: boolean
+  isRepeat?: boolean
   audioRef?: React.RefObject<HTMLAudioElement | null>
   className?: string
   onEnded?: () => void
@@ -21,8 +23,9 @@ interface Props {
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, isLoop = false, audioRef: sharedAudioRef, className, onEnded, onTimeUpdate } = props
+  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, isRepeat = false, audioRef: sharedAudioRef, className, onEnded, onTimeUpdate } = props
 
+  const { t } = useTranslation()
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
   const volumeTrackRef = useRef<HTMLDivElement>(null)
@@ -35,6 +38,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const [duration, setDuration] = useState<number>(0)
   const [loaded, setLoaded] = useState<number>(0)
   const [volume, setVolume] = useState<number>(getVolume())
+  const [isLoop, setIsLoop] = useState<boolean>(false)
 
   const seekToPosition = useCallback((clientX: number) => {
     const audio = audioRef.current
@@ -126,6 +130,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   }
 
   const handlePause = () => setIsPlaying(false)
+  const handleLoop = () => setIsLoop(!isLoop)
 
   const handleAudioRef = (audio: HTMLAudioElement | null) => {
     audioRef.current = audio
@@ -175,7 +180,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const playedPercent = duration ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, isVolumeInline && style.volume_inline, className)}>
+    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, isVolumeInline && style.volume_inline, isRepeat && style.repeatable, className)}>
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>
@@ -187,6 +192,11 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
           <span>{formatTime(duration)}</span>
         </span>
       </div>
+      {isRepeat && (
+        <div title={t(isLoop ? 'player.repeat.one' : 'player.repeat.off')} className={cx(style.skip, style.repeat, isLoop && style.active)} onClick={handleLoop}>
+          <IconRepeat size="1.2em" type="one" />
+        </div>
+      )}
       <div className={cx(style.skip, style.skip_back)} onClick={handleSkip(-SKIP_SECONDS)}>
         <IconSkip size="1.2em" type="back" />
       </div>

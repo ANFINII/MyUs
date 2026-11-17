@@ -107,6 +107,19 @@
     right: 2.5em;
   }
 
+  .repeat {
+    right: 7.5em;
+    opacity: 0.45;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  &.repeatable .bar {
+    right: calc(10em + 8px);
+  }
+
   .bar {
     top: 50%;
     left: calc(2.5em + 8px);
@@ -259,6 +272,14 @@
 
     .bar {
       right: calc(15em + 8px);
+    }
+
+    .repeat {
+      right: 15em;
+    }
+
+    &.repeatable .bar {
+      right: calc(17.5em + 8px);
     }
 
     .volume {
