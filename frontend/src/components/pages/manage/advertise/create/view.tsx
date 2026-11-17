@@ -32,8 +32,8 @@ export default function AdvertiseCreate(): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handlePeriod = (period: string) => setValues({ ...values, period })
-  const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
-  const handleVideo = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
+  const handleImage = (file: File) => setValues({ ...values, image: file })
+  const handleVideo = (file: File) => setValues({ ...values, video: file })
 
   const handleForm = async () => {
     const { title, url, content, image, period } = values

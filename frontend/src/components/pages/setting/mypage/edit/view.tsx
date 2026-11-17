@@ -58,16 +58,14 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const handleMypageInput = (e: ChangeEvent<HTMLInputElement>) => setMypageValues({ ...mypageValues, [e.target.name]: e.target.value })
   const handleMypageText = (e: ChangeEvent<HTMLTextAreaElement>) => setMypageValues({ ...mypageValues, [e.target.name]: e.target.value })
 
-  const handleBanner = (files: File | File[]) => {
-    if (Array.isArray(files)) return
-    setBannerFile(files)
-    setBannerPreview(previewUrl(files, bannerPreview))
+  const handleBanner = (file: File) => {
+    setBannerFile(file)
+    setBannerPreview(previewUrl(file, bannerPreview))
   }
 
-  const handleAvatar = (files: File | File[]) => {
-    if (Array.isArray(files)) return
-    setAvatarFiles({ ...avatarFiles, [channelUlid]: files })
-    setAvatarPreviews({ ...avatarPreviews, [channelUlid]: previewUrl(files, avatarPreviews[channelUlid]) })
+  const handleAvatar = (file: File) => {
+    setAvatarFiles({ ...avatarFiles, [channelUlid]: file })
+    setAvatarPreviews({ ...avatarPreviews, [channelUlid]: previewUrl(file, avatarPreviews[channelUlid]) })
   }
 
   const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)

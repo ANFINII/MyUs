@@ -4,7 +4,7 @@ interface Props {
   id: string
   className?: string
   icon?: React.ReactNode
-  onChange?: (files: File | File[]) => void
+  onChange?: (file: File) => void
 }
 
 export default function InputImage(props: Props): React.JSX.Element {
