@@ -1,8 +1,8 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { SignupIn } from 'types/internal/auth'
-import { getSignupVerify, postSignup } from 'api/internal/auth'
+import { postSignup } from 'api/internal/auth'
 import { Country, FetchError, GenderType } from 'utils/constants/enum'
 import { nowDate, selectDate } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
@@ -36,38 +36,26 @@ const initSignup: SignupIn = {
   country: Country.Jp,
 }
 
-export default function Signup(): React.JSX.Element {
+interface Props {
+  token: string
+  email: string
+}
+
+export default function Signup(props: Props): React.JSX.Element {
+  const { token, email } = props
+
   const router = useRouter()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<SignupIn>({ ...initSignup, country: router.locale === 'en' ? Country.Us : Country.Jp })
-  const [isVerified, setIsVerified] = useState<boolean>(false)
+  const [values, setValues] = useState<SignupIn>({ ...initSignup, token, email, country: router.locale === 'en' ? Country.Us : Country.Jp })
 
   const { years, months, days } = selectDate()
   const countryOptions = Object.entries(t('country', { returnObjects: true })).map(([value, label]) => ({ label, value }))
   const handleBack = () => router.push('/account/login')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-
-  useEffect(() => {
-    const token = String(router.query.token ?? '')
-    if (!token) {
-      router.push('/account/login')
-      return
-    }
-    const verify = async () => {
-      const ret = await getSignupVerify(token)
-      if (ret.isErr()) {
-        router.push('/account/login')
-        return
-      }
-      setValues((prev) => ({ ...prev, token, email: ret.value.email }))
-      setIsVerified(true)
-    }
-    verify()
-  }, [router])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -89,53 +77,49 @@ export default function Signup(): React.JSX.Element {
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('account.signup.title')}</h1>
-          {isVerified && (
-            <>
-              <VStack gap="8">
-                <VStack gap="4">
-                  <p>{t('account.signup.name')}</p>
-                  <div className="name_group">
-                    <Input name="lastName" placeholder={t('account.signup.lastName')} maxLength={30} required error={error} onChange={handleInput} />
-                    <Input name="firstName" placeholder={t('account.signup.firstName')} maxLength={30} required error={error} onChange={handleInput} />
-                  </div>
-                </VStack>
+          <VStack gap="8">
+            <VStack gap="4">
+              <p>{t('account.signup.name')}</p>
+              <div className="name_group">
+                <Input name="lastName" placeholder={t('account.signup.lastName')} maxLength={30} required error={error} onChange={handleInput} />
+                <Input name="firstName" placeholder={t('account.signup.firstName')} maxLength={30} required error={error} onChange={handleInput} />
+              </div>
+            </VStack>
 
-                <Input name="username" placeholder={t('account.signup.username')} maxLength={20} required error={error} onChange={handleInput} />
-                <Input name="nickname" placeholder={t('account.signup.nickname')} maxLength={80} required error={error} onChange={handleInput} />
-                <Input type="email" name="email" value={values.email} disabled maxLength={255} />
-                <Password name="password1" placeholder={t('account.form.passwordNew')} error={error} onChange={handleInput} />
-                <Password name="password2" placeholder={t('account.form.passwordConfirm')} error={error} onChange={handleInput} />
+            <Input name="username" placeholder={t('account.signup.username')} maxLength={20} required error={error} onChange={handleInput} />
+            <Input name="nickname" placeholder={t('account.signup.nickname')} maxLength={80} required error={error} onChange={handleInput} />
+            <Input type="email" name="email" value={values.email} disabled maxLength={255} />
+            <Password name="password1" placeholder={t('account.form.passwordNew')} error={error} onChange={handleInput} />
+            <Password name="password2" placeholder={t('account.form.passwordConfirm')} error={error} onChange={handleInput} />
 
-                <VStack gap="4">
-                  <p>{t('account.signup.birthday')}</p>
-                  <HStack gap="2" full>
-                    <SelectBox name="year" value={String(values.year)} options={years} onChange={handleSelect} />
-                    <SelectBox name="month" value={String(values.month)} options={months} onChange={handleSelect} />
-                    <SelectBox name="day" value={String(values.day)} options={days} onChange={handleSelect} />
-                  </HStack>
-                </VStack>
+            <VStack gap="4">
+              <p>{t('account.signup.birthday')}</p>
+              <HStack gap="2" full>
+                <SelectBox name="year" value={String(values.year)} options={years} onChange={handleSelect} />
+                <SelectBox name="month" value={String(values.month)} options={months} onChange={handleSelect} />
+                <SelectBox name="day" value={String(values.day)} options={days} onChange={handleSelect} />
+              </HStack>
+            </VStack>
 
-                <VStack gap="4">
-                  <p>{t('account.signup.gender')}</p>
-                  <HStack gap="5">
-                    {Object.entries(GenderType).map(([key, value]) => (
-                      <Radio key={key} name="gender" label={t(`gender.${value}`)} value={value} checked={value === values.gender} onChange={handleInput} />
-                    ))}
-                  </HStack>
-                </VStack>
+            <VStack gap="4">
+              <p>{t('account.signup.gender')}</p>
+              <HStack gap="5">
+                {Object.entries(GenderType).map(([key, value]) => (
+                  <Radio key={key} name="gender" label={t(`gender.${value}`)} value={value} checked={value === values.gender} onChange={handleInput} />
+                ))}
+              </HStack>
+            </VStack>
 
-                <VStack gap="4">
-                  <p>{t('account.signup.country')}</p>
-                  <SelectBox name="country" value={values.country} options={countryOptions} onChange={handleSelect} />
-                </VStack>
-              </VStack>
+            <VStack gap="4">
+              <p>{t('account.signup.country')}</p>
+              <SelectBox name="country" value={values.country} options={countryOptions} onChange={handleSelect} />
+            </VStack>
+          </VStack>
 
-              <VStack gap="12" className="mv_40">
-                <Button color="green" size="l" name={t('account.signup.submit')} type="submit" loading={loading} />
-                <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
-              </VStack>
-            </>
-          )}
+          <VStack gap="12" className="mv_40">
+            <Button color="green" size="l" name={t('account.signup.submit')} type="submit" loading={loading} />
+            <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
+          </VStack>
         </form>
       </article>
       <Footer />
