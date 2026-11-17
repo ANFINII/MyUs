@@ -1,6 +1,16 @@
 /* リストデザイン詳細用 */
 .video_auto .video-js {
   border-radius: 6px 6px 0 0;
+
+  &.vjs-fluid:not(.vjs-audio-only-mode) {
+    height: 195px;
+    padding-top: 0;
+  }
+
+  .vjs-tech,
+  .vjs-poster img {
+    object-fit: cover;
+  }
 }
 
 /* コンテンツ詳細 */
