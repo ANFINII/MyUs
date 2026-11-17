@@ -19,12 +19,14 @@ def encode_videos(limit: int) -> Result[int, FatalError]:
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    videos_ret = repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    videos_ret = repo.bulk_get(ids)
     if videos_ret.is_err:
         return Result.err(videos_ret.err_value)
 
+    videos = videos_ret.ok_value
     encoded_count = 0
-    for video in videos_ret.ok_value:
+    for video in videos:
         result = VideoConvert(video="", convert="")
         for attempt in range(1, ENCODE_RETRY_COUNT + 1):
             result = convert_video(video.video)

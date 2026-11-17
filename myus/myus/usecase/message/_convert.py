@@ -51,7 +51,8 @@ def delete_message_data(data: MessageData, user_id: int) -> Result[None, FatalEr
         if reply_ids_ret.is_err:
             return Result.err(reply_ids_ret.err_value)
 
-        notification_ret = delete_notification_data(NotificationObjectType.MESSAGE, reply_ids_ret.ok_value, NotificationTypeNo.REPLY)
+        reply_ids = reply_ids_ret.ok_value
+        notification_ret = delete_notification_data(NotificationObjectType.MESSAGE, reply_ids, NotificationTypeNo.REPLY)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 

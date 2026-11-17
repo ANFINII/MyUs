@@ -94,7 +94,8 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    saved_ret = repo.bulk_get(save_ret.ok_value)
+    new_ids = save_ret.ok_value
+    saved_ret = repo.bulk_get(new_ids)
     if saved_ret.is_err:
         return Result.err(saved_ret.err_value)
 

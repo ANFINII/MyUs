@@ -348,7 +348,8 @@ def save_payment_data(event: PaymentEventData, paid: PaymentPaidContent) -> Resu
         if save_ret.is_err:
             return Result.err(save_ret.err_value)
 
-        payment_transaction = replace(transaction, id=save_ret.ok_value)
+        transaction_id = save_ret.ok_value
+        payment_transaction = replace(transaction, id=transaction_id)
 
     ledger_ret = save_ledger_entry_data(payment_transaction.id, event.id, LedgerEntryType.SALE, [paid.balance])
     if ledger_ret.is_err:

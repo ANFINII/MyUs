@@ -54,11 +54,13 @@ def delete_comment_data(data: CommentData) -> Result[None, FatalError]:
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
-        replies_ret = repo.bulk_get(ids_ret.ok_value)
+        ids = ids_ret.ok_value
+        replies_ret = repo.bulk_get(ids)
         if replies_ret.is_err:
             return Result.err(replies_ret.err_value)
 
-        reply_ids = [r.id for r in replies_ret.ok_value if r.parent_id == data.id]
+        replies = replies_ret.ok_value
+        reply_ids = [r.id for r in replies if r.parent_id == data.id]
 
     notification_ret = delete_notification_data(NotificationObjectType.COMMENT, [data.id, *reply_ids])
     if notification_ret.is_err:
