@@ -7,12 +7,10 @@ import { FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
-import Link from 'components/parts/Link'
 import Modal from 'components/parts/Modal'
 import CardList from 'components/widgets/Card/List'
 import PlaylistCard from 'components/widgets/Card/Playlist'
@@ -28,16 +26,15 @@ export default function Playlists(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { t } = useTranslation()
-  const { user } = useUser()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [title, setTitle] = useState<string>('')
   const [isPublish, setIsPublish] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>('')
 
   const handleModal = () => setIsModal(!isModal)
-  const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)
   const handlePublish = (e: ChangeEvent<HTMLInputElement>) => setIsPublish(e.target.checked)
+  const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)
 
   const handleCreate = async () => {
     handleLoading(true)
@@ -51,20 +48,7 @@ export default function Playlists(props: Props): React.JSX.Element {
 
   return (
     <Main title="Playlist" type="table" toast={toast} button={button}>
-      {user.isActive ? (
-        items.length > 0 ? (
-          <CardList items={items} Content={PlaylistCard} />
-        ) : (
-          <p className={style.empty}>{t('playlist.empty')}</p>
-        )
-      ) : (
-        <div className={style.login}>
-          <p>{t('playlist.loginRequired')}</p>
-          <Link href="/account/login" className={style.login_link}>
-            {t('playlist.login')}
-          </Link>
-        </div>
-      )}
+      {items.length > 0 ? <CardList items={items} Content={PlaylistCard} /> : <p className={style.empty}>{t('playlist.empty')}</p>}
 
       <Modal
         open={isModal}

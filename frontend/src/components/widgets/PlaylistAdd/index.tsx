@@ -13,8 +13,8 @@ import IconPlus from 'components/parts/Icon/Plus'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import SelectBox from 'components/parts/Input/SelectBox'
-import Link from 'components/parts/Link'
 import Modal from 'components/parts/Modal'
+import LoginRequired from 'components/widgets/Status/LoginRequired'
 import style from './PlaylistAdd.module.scss'
 
 interface Props {
@@ -116,12 +116,7 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
             {error && <p className={style.error}>{error}</p>}
           </div>
         ) : (
-          <div className={style.content}>
-            <p>{t('playlist.loginRequired')}</p>
-            <Link href="/account/login" className={style.login}>
-              {t('playlist.login')}
-            </Link>
-          </div>
+          <LoginRequired content={t('status.loginRequired', { title: t('status.loginTitle.playlist') })} className={style.login_required} />
         )}
       </Modal>
     </>
