@@ -2,12 +2,12 @@ import { useTranslation } from 'react-i18next'
 import { ChatDetail } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
-import AvatarLink from 'components/parts/Avatar/Link'
 import Divide from 'components/parts/Divide'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import Advertise from 'components/widgets/Advertise'
 import Hashtags from 'components/widgets/Media/Hashtags'
+import ProfileInfo from 'components/widgets/ProfileInfo'
 import SubscribeButton from 'components/widgets/SubscribeButton'
 import View from 'components/widgets/View'
 import style from './SectionContent.module.scss'
@@ -38,16 +38,7 @@ export default function SectionContent(props: Props): React.JSX.Element {
         </>
       )}
       <HStack gap="4">
-        <AvatarLink size="l" src={channel.avatar} ulid={channel.ownerUlid} title={channel.name} />
-        <VStack gap="2">
-          <p className="fs_14">{channel.name}</p>
-          <HStack gap="4">
-            <p className="fs_14 text_sub">
-              {t('count.subscribers')}
-              <span className="ml_8">{subscribeCount}</span>
-            </p>
-          </HStack>
-        </VStack>
+        <ProfileInfo avatar={channel.avatar} ulid={channel.ownerUlid} name={channel.name} countLabel={t('count.subscribers')} count={subscribeCount} />
         <div className={style.subscribe}>
           <SubscribeButton isSubscribe={mediaUser.isSubscribe} disabled={isFollowDisable} onModal={onModal} onSubscribe={onSubscribe} />
         </div>
