@@ -116,7 +116,7 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
             {error && <p className={style.error}>{error}</p>}
           </div>
         ) : (
-          <LoginRequired content={t('status.loginRequired', { title: t('status.loginTitle.playlist') })} className={style.login_required} />
+          <LoginRequired className={style.login_required} />
         )}
       </Modal>
     </>

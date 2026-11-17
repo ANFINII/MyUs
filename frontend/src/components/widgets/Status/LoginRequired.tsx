@@ -5,12 +5,11 @@ import Button from 'components/parts/Button'
 import style from './Status.module.scss'
 
 interface Props {
-  content: string
   className?: string
 }
 
 export default function LoginRequired(props: Props): React.JSX.Element {
-  const { content, className } = props
+  const { className } = props
 
   const router = useRouter()
   const { t } = useTranslation()
@@ -19,7 +18,7 @@ export default function LoginRequired(props: Props): React.JSX.Element {
 
   return (
     <div className={cx(style.login_required, className)}>
-      <p>{content}</p>
+      <p>{t('status.loginRequired')}</p>
       <Button name={t('status.login')} color="blue" onClick={handleLogin} />
     </div>
   )
