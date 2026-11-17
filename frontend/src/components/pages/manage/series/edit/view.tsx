@@ -20,6 +20,7 @@ import SelectBox from 'components/parts/Input/SelectBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import DeleteModal from 'components/widgets/Modal/Delete'
+import Empty from 'components/widgets/Status/Empty'
 import style from './Edit.module.scss'
 import formStyle from '../../Form.module.scss'
 
@@ -153,7 +154,7 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
                 ))}
               </ol>
             ) : (
-              <p className={style.empty}>{t('manage.series.empty')}</p>
+              <Empty content={t('manage.series.empty')} className={style.empty} />
             )}
           </div>
         </VStack>

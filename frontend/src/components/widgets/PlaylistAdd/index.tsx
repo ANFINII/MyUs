@@ -14,6 +14,7 @@ import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Modal from 'components/parts/Modal'
+import Empty from 'components/widgets/Status/Empty'
 import LoginRequired from 'components/widgets/Status/LoginRequired'
 import style from './PlaylistAdd.module.scss'
 
@@ -104,7 +105,7 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
                 )}
               </div>
             ) : (
-              <p className={style.empty}>{t('playlist.empty')}</p>
+              <Empty content={t('playlist.empty')} className={style.empty} />
             )}
             <div className={style.create}>
               <Input label={t('playlist.newTitle')} value={title} maxLength={100} onChange={handleTitle} />

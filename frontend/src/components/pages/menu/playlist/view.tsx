@@ -14,6 +14,7 @@ import CheckBox from 'components/parts/Input/CheckBox'
 import Modal from 'components/parts/Modal'
 import CardList from 'components/widgets/Card/List'
 import PlaylistCard from 'components/widgets/Card/Playlist'
+import Empty from 'components/widgets/Status/Empty'
 import style from './Playlist.module.scss'
 
 interface Props {
@@ -48,7 +49,7 @@ export default function Playlists(props: Props): React.JSX.Element {
 
   return (
     <Main title="Playlist" type="table" toast={toast} button={button}>
-      {items.length > 0 ? <CardList items={items} Content={PlaylistCard} /> : <p className={style.empty}>{t('playlist.empty')}</p>}
+      {items.length > 0 ? <CardList items={items} Content={PlaylistCard} /> : <Empty content={t('playlist.empty')} />}
 
       <Modal
         open={isModal}
