@@ -40,7 +40,7 @@ export function useRouter(): OutProps {
     Object.entries(params ?? {}).forEach(([key, value]) => {
       if (typeof value === 'string') pathParams[key] = value
     })
-    const query: ParsedUrlQuery = { ...(location.search as ParsedUrlQuery), ...pathParams }
+    const query = { ...(location.search as ParsedUrlQuery), ...pathParams }
 
     const toHref = (url: Url): string => {
       if (typeof url !== 'string') return `${url.pathname}${toSearch(url.query ?? {})}`

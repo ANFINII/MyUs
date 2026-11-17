@@ -4,7 +4,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Music } from 'types/internal/media/output'
-import { Option } from 'types/internal/other'
 import { PlaylistDetailOut } from 'types/internal/playlist'
 import { deletePlaylist, putPlaylist } from 'api/internal/playlist'
 import { Fetch, FetchError } from 'utils/constants/enum'
@@ -59,7 +58,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const editThumbnailMusic = editMusics.find((m) => m.ulid === editThumbnail) ?? editMusics[0]
   const editImage = editThumbnailMusic ? editThumbnailMusic.image || editThumbnailMusic.channel.avatar : ''
   const headerImage = isEdit ? editImage : image
-  const thumbnailOptions: Option[] = [{ label: t('playlist.thumbnailAuto'), value: '' }, ...editMusics.map((m) => ({ label: m.title, value: m.ulid }))]
+  const thumbnailOptions = [{ label: t('playlist.thumbnailAuto'), value: '' }, ...editMusics.map((m) => ({ label: m.title, value: m.ulid }))]
 
   const handleModal = () => setIsModal(!isModal)
   const handlePlay = (index: number) => play(musics, index)

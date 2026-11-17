@@ -1,5 +1,5 @@
 import cx from 'utils/functions/cx'
-import Spinner, { SpinnerColor } from 'components/parts/Spinner'
+import Spinner from 'components/parts/Spinner'
 import style from './Button.module.scss'
 
 type ButtonColor = 'white' | 'black' | 'blue' | 'purple' | 'red' | 'green' | 'mono'
@@ -20,7 +20,7 @@ interface Props {
 export default function Button(props: Props): React.JSX.Element {
   const { name, color = 'white', size = 'm', type = 'button', value, className, disabled = false, loading = false, onClick, icon } = props
 
-  const spinnerColor: SpinnerColor = color === 'white' ? 'gray' : 'white'
+  const spinnerColor = color === 'white' ? 'gray' : 'white'
 
   return (
     <button name={name} type={type} value={value} disabled={disabled || loading} onClick={onClick} className={cx(style.button, style[color], style[size], className)}>

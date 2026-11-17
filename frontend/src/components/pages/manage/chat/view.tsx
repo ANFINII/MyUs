@@ -5,7 +5,6 @@ import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Chat, ChatList } from 'types/internal/media/output'
-import { Option } from 'types/internal/other'
 import { deleteManageChats } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { useDatetime } from 'components/hooks/useDatetime'
@@ -65,7 +64,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
     await queryClient.invalidateQueries({ queryKey: queryKeys.manageChatAll })
   }
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const channelUlid = String(router.query.channel ?? '') || channels[0]!.ulid
 
   const columns: Column<Chat>[] = [

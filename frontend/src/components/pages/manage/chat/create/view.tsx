@@ -4,7 +4,6 @@ import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { ChatIn } from 'types/internal/media/input'
-import { Option } from 'types/internal/other'
 import { postChatCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
@@ -39,8 +38,8 @@ export default function ChatCreate(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<ChatIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', period: '' })
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })

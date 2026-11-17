@@ -49,7 +49,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const { data, threadUlid } = props
   const { detail, list, series } = data
 
-  const initFormState: ChatDetailState = {
+  const initFormState = {
     messages: detail.messages,
     replies: {},
     message: '',
@@ -101,7 +101,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     const fetchReplies = async () => {
       const ret = await getReplies(target.ulid)
       if (ret.isErr()) return
-      const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: target.ulid }))
+      const replyData = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: target.ulid }))
       setFormState((prev) => ({
         ...prev,
         selectedUlid: target.ulid,
@@ -184,7 +184,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     if (message !== null && message.ulid !== selectedUlid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
-        const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: message.ulid }))
+        const replyData = ret.value.map((r) => ({ ...r, replyCount: 0, parentUlid: message.ulid }))
         setFormState((prev) => ({
           ...prev,
           selectedUlid: message.ulid,

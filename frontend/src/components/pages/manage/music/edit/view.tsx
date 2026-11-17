@@ -5,7 +5,6 @@ import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { MusicUpdateIn } from 'types/internal/media/input'
 import { Music } from 'types/internal/media/output'
-import { Option } from 'types/internal/other'
 import { putManageMusic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
@@ -48,8 +47,8 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const [musicUrl, setMusicUrl] = useState<string>('')
   const [values, setValues] = useState<MusicUpdateIn>({ categoryUlid, title, content, lyric, download, publish, publishAt: datetimeISO(publishAt) })
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/music')
   const handleModal = () => setIsModal(!isModal)

@@ -5,7 +5,6 @@ import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { PictureUpdateIn } from 'types/internal/media/input'
 import { Picture } from 'types/internal/media/output'
-import { Option } from 'types/internal/other'
 import { putManagePicture } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
@@ -42,8 +41,8 @@ export default function ManagePictureEdit(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<PictureUpdateIn>({ categoryUlid, title, content, publish, publishAt: datetimeISO(publishAt) })
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/picture')
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })

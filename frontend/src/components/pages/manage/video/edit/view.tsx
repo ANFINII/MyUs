@@ -5,7 +5,6 @@ import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { VideoUpdateIn } from 'types/internal/media/input'
 import { Video } from 'types/internal/media/output'
-import { Option } from 'types/internal/other'
 import { putManageVideo } from 'api/internal/manage/update'
 import { EncodeStatus, Fetch, FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
@@ -44,8 +43,8 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   const [values, setValues] = useState<VideoUpdateIn>({ categoryUlid, title, content, publish, publishAt: datetimeISO(publishAt) })
 
   const isEncodeFailed = data.encodeStatus === EncodeStatus.Failed
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/video')
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })

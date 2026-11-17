@@ -5,7 +5,6 @@ import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { BlogUpdateIn } from 'types/internal/media/input'
 import { Blog } from 'types/internal/media/output'
-import { Option } from 'types/internal/other'
 import { putManageBlog } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
@@ -45,8 +44,8 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const [isModal, setIsModal] = useState<boolean>(false)
   const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid, title, content, richtext, publish, isPromotion, publishAt: datetimeISO(publishAt) })
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/blog')
   const handleModal = () => setIsModal(!isModal)

@@ -61,7 +61,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const { media, handleToast } = props
   const { title, content, read, created, channel, mediaUser } = media
 
-  const initFormState: MediaDetailState = {
+  const initFormState = {
     isLike: mediaUser.isLike,
     isSubscribe: mediaUser.isSubscribe,
     likeCount: media.like,

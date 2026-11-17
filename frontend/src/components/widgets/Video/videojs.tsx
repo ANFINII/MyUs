@@ -51,7 +51,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
         }
       }
 
-      const labels: MenuLabels = {
+      const labels = {
         speedMenu: t(SPEED_MENU),
         qualityMenu: t(QUALITY_MENU),
         standardSpeed: t(STANDARD_SPEED),

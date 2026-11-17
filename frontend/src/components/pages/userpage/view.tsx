@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { Advertise } from 'types/internal/advertise'
 import { Search } from 'types/internal/media/output'
-import { Option } from 'types/internal/other'
 import { Playlist } from 'types/internal/playlist'
 import { ChannelSeries } from 'types/internal/series'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
@@ -20,7 +19,7 @@ import ExImage from 'components/parts/ExImage'
 import SelectBox from 'components/parts/Input/SelectBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import Tabs, { TabItem } from 'components/parts/Tabs'
+import Tabs from 'components/parts/Tabs'
 import AdvertiseCard from 'components/widgets/Card/Advertise'
 import CardIndexList from 'components/widgets/Card/IndexList'
 import CardList from 'components/widgets/Card/List'
@@ -66,13 +65,13 @@ export default function Userpage(props: Props): React.JSX.Element {
 
   const isSelf = user.isActive && user.nickname === nickname
   const formattedDate = new Date(dateJoined).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: 'numeric' })
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const selectedChannel = channels.find((c) => c.ulid === channelUlid)
   const seriesGroups = Object.values(MediaType)
     .map((mediaType) => ({ mediaType, items: series.filter((s) => s.mediaType === mediaType) }))
     .filter((group) => group.items.length > 0)
 
-  const tabItems: TabItem<TabKey>[] = [
+  const tabItems = [
     { key: TabKey.Info, label: t('media.userpage.info') },
     { key: TabKey.Posts, label: t('media.userpage.posts') },
     { key: TabKey.Series, label: t('media.userpage.series') },

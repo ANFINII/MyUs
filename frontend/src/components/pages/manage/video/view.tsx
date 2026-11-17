@@ -5,7 +5,6 @@ import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Video, VideoList } from 'types/internal/media/output'
-import { Option } from 'types/internal/other'
 import { deleteManageVideos } from 'api/internal/manage/delete'
 import { EncodeStatus, FetchError } from 'utils/constants/enum'
 import { useDatetime } from 'components/hooks/useDatetime'
@@ -66,7 +65,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     await queryClient.invalidateQueries({ queryKey: queryKeys.manageVideoAll })
   }
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const channelUlid = String(router.query.channel ?? '') || channels[0]!.ulid
 
   const columns: Column<Video>[] = [

@@ -1,7 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Channel } from 'types/internal/channel'
-import { Option } from 'types/internal/other'
 import { MypageOut } from 'types/internal/user'
 import { useRouter } from 'components/hooks/useRouter'
 import Main from 'components/layout/Main'
@@ -34,7 +33,7 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
   const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
 
   const channel = channels.find((c) => c.ulid === channelUlid)
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
   const button = (
     <HStack gap="4">
