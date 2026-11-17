@@ -19,7 +19,7 @@ export interface ChatReply extends ChatMessage {
 export interface MessageCreateIn {
   chatUlid: string
   text: string
-  parentUlid?: string
+  parentUlid: string
 }
 
 export interface MessageUpdateIn {

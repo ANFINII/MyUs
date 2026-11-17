@@ -116,7 +116,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     handleLoading(true)
     const typeName = commentTypeNameEnum(pathMediaName(router.pathname))
     const objectUlid = String(router.query.ulid ?? '')
-    const request: CommnetIn = { text, typeName, objectUlid }
+    const request: CommnetIn = { text, typeName, objectUlid, parentUlid: '' }
     const ret = await postComment(request)
     if (ret.isErr()) {
       handleLoading(false)

@@ -6,7 +6,7 @@ from .user import AuthorOut
 class MessageCreateIn(BaseModel):
     chat_ulid: str
     text: str
-    parent_ulid: str = ""
+    parent_ulid: str
 
 
 class MessageUpdateIn(BaseModel):

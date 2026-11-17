@@ -8,7 +8,7 @@ class CommentCreateIn(BaseModel):
     text: str
     type_name: CommentType
     object_ulid: str
-    parent_ulid: str | None = None
+    parent_ulid: str
 
 
 class CommentUpdateIn(BaseModel):

@@ -26,7 +26,7 @@ export interface CommnetIn {
   text: string
   typeName: CommentType
   objectUlid: string
-  parentUlid?: string
+  parentUlid: string
 }
 
 export interface CommentUpdateIn {

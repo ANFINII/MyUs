@@ -32,4 +32,4 @@ class CommentCreateDTO:
     text: str
     type_name: CommentType
     object_ulid: str
-    parent_ulid: str | None
+    parent_ulid: str
