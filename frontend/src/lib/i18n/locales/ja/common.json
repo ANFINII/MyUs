@@ -599,7 +599,6 @@
     "count": "{{count}}曲",
     "playAll": "すべて再生",
     "playShuffle": "シャッフル再生",
-    "detail": "詳細",
     "emptyMusic": "曲はまだありません",
     "deleteTitle": "プレイリストの削除",
     "deleteConfirm": "「{{title}}」を削除しますか？",
