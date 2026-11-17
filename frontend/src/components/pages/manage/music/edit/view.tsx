@@ -42,6 +42,8 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
+  const [isModal, setIsModal] = useState<boolean>(false)
+  const [musicUrl, setMusicUrl] = useState<string>('')
   const [values, setValues] = useState<MusicUpdateIn>({
     categoryUlid: data.categoryUlid,
     title: data.title,
@@ -51,8 +53,6 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
     publish: data.publish,
     publishAt: datetimeISO(data.publishAt),
   })
-  const [isModal, setIsModal] = useState<boolean>(false)
-  const [musicUrl, setMusicUrl] = useState<string>('')
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
