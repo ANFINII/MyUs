@@ -94,7 +94,6 @@ export default function ManageSeriesList(props: Props): React.JSX.Element {
   return (
     <Main title="Series" type="table" toast={toast} isFooter={false} button={button}>
       <DataTable datas={data.items} columns={columns} rowKey={(s) => s.ulid} />
-
       <Modal
         open={isModal}
         onClose={handleModal}

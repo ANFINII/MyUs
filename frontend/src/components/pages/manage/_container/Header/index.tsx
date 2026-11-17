@@ -10,13 +10,13 @@ interface Props {
   count?: number
   ulid?: string
   options?: Option[]
-  children?: React.ReactNode
   onModal?: () => void
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void
+  children?: React.ReactNode
 }
 
 export default function ManageHeader(props: Props): React.JSX.Element {
-  const { count = 0, ulid = '', options, children, onModal, onChange } = props
+  const { count = 0, ulid = '', options, onModal, onChange, children } = props
 
   const router = useRouter()
   const { t } = useTranslation()
