@@ -519,7 +519,7 @@
       "cancel": "Cancel subscription",
       "cancelTitle": "Cancel subscription",
       "cancelConfirm": "Are you sure you want to cancel?",
-      "cancelNotice": "You can keep using your current plan until the next renewal date.",
+      "cancelNotice": "You can keep using your current plan until the next renewal date, after which you will be on the Free plan.",
       "renewalNotice": "Paid plans renew automatically every month. You can cancel at any time and keep using your plan until the next renewal date.",
       "currencyByCountry": "Prices are shown in the currency for your country/region.",
       "currencyBySubscription": "Prices are shown in your subscription currency.",

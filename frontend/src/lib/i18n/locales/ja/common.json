@@ -515,7 +515,7 @@
       "cancel": "解約する",
       "cancelTitle": "解約の確認",
       "cancelConfirm": "本当に解約しますか？",
-      "cancelNotice": "解約後は次回更新日まで現在のプランをご利用いただけます。",
+      "cancelNotice": "次回更新日まで現在のプランをご利用いただけ、その後Freeプランになります。",
       "renewalNotice": "有料プランは毎月自動で更新されます。いつでも解約でき、解約後も次回更新日まではご利用いただけます。",
       "currencyByCountry": "国/地域に合わせた通貨で表示しています。",
       "currencyBySubscription": "契約中の通貨で表示しています。",
