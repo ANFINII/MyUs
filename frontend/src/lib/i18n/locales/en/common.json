@@ -274,7 +274,7 @@
     "back": "Back",
     "login": "Log in",
     "unauthorized": "Please log in",
-    "loginRequired": "Log in to use {{title}}",
+    "loginRequired": "Log in to use {{title}}!",
     "loginTitle": {
       "channel": "channels",
       "playlist": "playlists",

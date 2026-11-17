@@ -272,7 +272,7 @@
     "back": "戻る",
     "login": "ログイン",
     "unauthorized": "ログインしてください",
-    "loginRequired": "{{title}}を使うにはログインが必要です",
+    "loginRequired": "{{title}}を利用するにはログインが必要です!",
     "loginTitle": {
       "channel": "チャンネル",
       "playlist": "プレイリスト",
