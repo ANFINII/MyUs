@@ -10,7 +10,7 @@ from ._convert import convert_data, marshal_data
 from ..common import get_save_new_ids, page_queryset, sort_ids
 
 
-PLAYLIST_FIELDS = ["author_id", "title", "publish", "updated"]
+PLAYLIST_FIELDS = ["author_id", "title", "description", "image", "publish", "updated"]
 
 
 class PlaylistRepository(PlaylistInterface):

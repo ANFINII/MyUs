@@ -6,7 +6,7 @@ from myus.domain.playlist.interface import FilterOption, PlaylistInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, FatalError, FindError, NotFoundError, Result
-from ._convert import check_playlist_plan_data, get_hidden_music_ids_data, get_music_data, get_music_ids_data, get_own_playlist_data, get_playlist_data, get_playlists_data, is_visible_music, keep_hidden_music_ids, music_urls
+from ._convert import check_playlist_plan_data, get_hidden_music_ids_data, get_music_data, get_music_ids_data, get_own_playlist_data, get_playlist_data, get_playlists_data, is_visible_music, keep_hidden_music_ids, music_image, music_urls, playlist_image
 from ..dto.playlist import PlaylistCreateDTO, PlaylistDetailDTO, PlaylistDTO, PlaylistUpdateDTO
 from ..user._convert import get_author_data
 from ..user.core import get_user_data
@@ -61,9 +61,13 @@ def get_playlist(user_id: int | None, ulid: str) -> Result[PlaylistDetailDTO, Fi
 
     all_musics = musics_ret.ok_value
     musics = [m for m in all_musics if is_visible_music(m, user_id)]
+    thumbnail_music_ulids = [m.ulid for m in musics if playlist.image and music_image(m) == playlist.image]
     return Result.ok(PlaylistDetailDTO(
         ulid=playlist.ulid,
         title=playlist.title,
+        description=playlist.description,
+        image=playlist_image(musics, playlist.image),
+        thumbnail_music_ulid=thumbnail_music_ulids[0] if len(thumbnail_music_ulids) > 0 else "",
         publish=playlist.publish,
         is_owner=is_owner,
         updated=playlist.updated,
@@ -92,7 +96,7 @@ def create_playlist(user_id: int, input: PlaylistCreateDTO) -> Result[str, Acces
         music_ids = [music.id]
 
     repo = injector.get(PlaylistInterface)
-    new_data = PlaylistData(id=0, ulid="", author_id=user_id, title=input.title, publish=input.publish, music_ids=music_ids, created=datetime.min, updated=datetime.min)
+    new_data = PlaylistData(id=0, ulid="", author_id=user_id, title=input.title, description="", image="", publish=input.publish, music_ids=music_ids, created=datetime.min, updated=datetime.min)
     save_ret = repo.bulk_save([new_data])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
@@ -126,11 +130,18 @@ def update_playlist(user_id: int, ulid: str, input: PlaylistUpdateDTO) -> Result
     if hidden_ids_ret.is_err:
         return Result.err(hidden_ids_ret.err_value)
 
+    thumbnail_ret = get_music_data(input.thumbnail_music_ulid, user_id) if input.thumbnail_music_ulid else Result.ok(None)
+    if thumbnail_ret.is_err:
+        return Result.err(thumbnail_ret.err_value)
+
     music_ids = music_ids_ret.ok_value
     hidden_ids = hidden_ids_ret.ok_value
+    thumbnail = thumbnail_ret.ok_value
     new_music_ids = keep_hidden_music_ids(playlist.music_ids, music_ids, hidden_ids)
+    image = music_image(thumbnail) if thumbnail is not None and thumbnail.id in music_ids else ""
     repo = injector.get(PlaylistInterface)
-    save_ret = repo.bulk_save([replace(playlist, title=input.title, publish=input.publish, music_ids=new_music_ids)])
+    new_playlist = replace(playlist, title=input.title, description=input.description, image=image, publish=input.publish, music_ids=new_music_ids)
+    save_ret = repo.bulk_save([new_playlist])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 

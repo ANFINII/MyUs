@@ -8,6 +8,8 @@ class PlaylistData:
     ulid: str
     author_id: int
     title: str
+    description: str
+    image: str
     publish: bool
     music_ids: list[int]
     created: datetime

@@ -609,6 +609,9 @@
     "empty": "プレイリストはまだありません",
     "newTitle": "新しいプレイリスト",
     "publish": "公開する",
+    "description": "説明",
+    "thumbnail": "サムネイル",
+    "thumbnailAuto": "1曲目の画像",
     "create": "作成して追加",
     "loginRequired": "プレイリストを使うにはログインが必要です",
     "login": "ログインする"

@@ -8,9 +8,9 @@ from .user import AuthorDTO
 class PlaylistDTO:
     ulid: str
     title: str
+    image: str
     publish: bool
     count: int
-    image: str
     music_ulids: list[str]
     updated: datetime
 
@@ -19,6 +19,9 @@ class PlaylistDTO:
 class PlaylistDetailDTO:
     ulid: str
     title: str
+    description: str
+    image: str
+    thumbnail_music_ulid: str
     publish: bool
     is_owner: bool
     updated: datetime
@@ -36,5 +39,7 @@ class PlaylistCreateDTO:
 @dataclass(frozen=True, slots=True)
 class PlaylistUpdateDTO:
     title: str
+    description: str
+    thumbnail_music_ulid: str
     publish: bool
     music_ulids: list[str]

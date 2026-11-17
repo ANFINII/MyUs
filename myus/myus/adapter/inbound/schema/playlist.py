@@ -12,6 +12,8 @@ class PlaylistIn(BaseModel):
 
 class PlaylistUpdateIn(BaseModel):
     title: str
+    description: str
+    thumbnail_music_ulid: str
     publish: bool
     music_ulids: list[str]
 
@@ -23,9 +25,9 @@ class PlaylistMusicIn(BaseModel):
 class PlaylistOut(BaseModel):
     ulid: str
     title: str
+    image: str
     publish: bool
     count: int
-    image: str
     music_ulids: list[str]
     updated: datetime
 
@@ -37,6 +39,9 @@ class PlaylistListOut(BaseModel):
 class PlaylistDetailOut(BaseModel):
     ulid: str
     title: str
+    description: str
+    image: str
+    thumbnail_music_ulid: str
     publish: bool
     is_owner: bool
     updated: datetime

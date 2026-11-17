@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Music } from 'types/internal/media/output'
+import { Option } from 'types/internal/other'
 import { PlaylistDetailOut } from 'types/internal/playlist'
 import { deletePlaylist, putPlaylist } from 'api/internal/playlist'
 import { Fetch, FetchError } from 'utils/constants/enum'
@@ -21,6 +22,8 @@ import IconGrip from 'components/parts/Icon/Grip'
 import IconPlaylist from 'components/parts/Icon/Playlist'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
+import SelectBox from 'components/parts/Input/SelectBox'
+import Textarea from 'components/parts/Input/Textarea'
 import HStack from 'components/parts/Stack/Horizontal'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import ShareButton from 'components/widgets/ShareButton'
@@ -32,7 +35,7 @@ interface Props {
 
 export default function PlaylistDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { ulid, title, publish, isOwner, author, musics } = data
+  const { ulid, title, description, image, thumbnailMusicUlid, publish, isOwner, author, musics } = data
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -43,12 +46,17 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [editTitle, setEditTitle] = useState<string>(title)
+  const [editDescription, setEditDescription] = useState<string>(description)
+  const [editThumbnail, setEditThumbnail] = useState<string>(thumbnailMusicUlid)
   const [isEditPublish, setIsEditPublish] = useState<boolean>(publish)
   const [editMusics, setEditMusics] = useState<Music[]>(musics)
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
-  const image = musics[0] ? musics[0].image || musics[0].channel.avatar : ''
+  const editThumbnailMusic = editMusics.find((m) => m.ulid === editThumbnail) ?? editMusics[0]
+  const editImage = editThumbnailMusic ? editThumbnailMusic.image || editThumbnailMusic.channel.avatar : ''
+  const headerImage = isEdit ? editImage : image
+  const thumbnailOptions: Option[] = [{ label: t('playlist.thumbnailAuto'), value: '' }, ...editMusics.map((m) => ({ label: m.title, value: m.ulid }))]
 
   const handleModal = () => setIsModal(!isModal)
   const handlePlay = (index: number) => play(musics, index)
@@ -56,11 +64,15 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const handleDetail = (musicUlid: string) => router.push(`/media/music/${musicUlid}`)
   const handleStop = (e: React.MouseEvent) => e.stopPropagation()
   const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setEditTitle(e.target.value)
+  const handleDescription = (e: ChangeEvent<HTMLTextAreaElement>) => setEditDescription(e.target.value)
+  const handleThumbnail = (e: ChangeEvent<HTMLSelectElement>) => setEditThumbnail(e.target.value)
   const handlePublish = (e: ChangeEvent<HTMLInputElement>) => setIsEditPublish(e.target.checked)
   const handleRemove = (index: number) => setEditMusics(editMusics.filter((_, i) => i !== index))
 
   const handleEdit = () => {
     setEditTitle(title)
+    setEditDescription(description)
+    setEditThumbnail(thumbnailMusicUlid)
     setIsEditPublish(publish)
     setEditMusics(musics)
     setIsEdit(!isEdit)
@@ -89,7 +101,8 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
 
   const handleSave = async () => {
     handleLoading(true)
-    const ret = await putPlaylist(ulid, { title: editTitle, publish: isEditPublish, musicUlids: editMusics.map((m) => m.ulid) })
+    const thumbnail = editMusics.some((m) => m.ulid === editThumbnail) ? editThumbnail : ''
+    const ret = await putPlaylist(ulid, { title: editTitle, description: editDescription, thumbnailMusicUlid: thumbnail, publish: isEditPublish, musicUlids: editMusics.map((m) => m.ulid) })
     handleLoading(false)
     if (ret.isErr()) return handleToast(errorMessage(ret.error, FetchError.Put), true)
     await queryClient.invalidateQueries({ queryKey: queryKeys.mediaPlaylists })
@@ -125,11 +138,13 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   return (
     <Main title="Playlist" type="table" toast={toast} button={button}>
       <section className={style.header}>
-        <div className={style.thumbnail_box}>{image ? <ExImage src={image} className={style.thumbnail} /> : <IconPlaylist size="48" className={style.icon} />}</div>
+        <div className={style.thumbnail_box}>{headerImage ? <ExImage src={headerImage} className={style.thumbnail} /> : <IconPlaylist size="48" className={style.icon} />}</div>
         <div className={style.info}>
           {isEdit ? (
             <div className={style.form}>
               <Input label={t('playlist.newTitle')} value={editTitle} maxLength={100} onChange={handleTitle} />
+              <Textarea label={t('playlist.description')} value={editDescription} onChange={handleDescription} />
+              <SelectBox label={t('playlist.thumbnail')} value={editThumbnail} options={thumbnailOptions} onChange={handleThumbnail} />
               <CheckBox label={t('playlist.publish')} id="playlist_publish_edit" checked={isEditPublish} onChange={handlePublish} />
             </div>
           ) : (
@@ -140,6 +155,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
                 <span>{publish ? t('playlist.public') : t('playlist.private')}</span>
               </div>
               <h2 className={style.title}>{title}</h2>
+              {description && <p className={style.description}>{description}</p>}
             </div>
           )}
           {!isEdit && (
