@@ -27,7 +27,7 @@ def get_author_map_data(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalErr
         return Result.err(ret.err_value)
 
     authors = ret.ok_value
-    author_map: dict[int, AuthorDTO] = {id: AuthorDTO(avatar="", ulid="", nickname="", follower_count=0) for id in ids}
+    author_map = {id: AuthorDTO(avatar="", ulid="", nickname="", follower_count=0) for id in ids}
     for author in authors:
         author_map[author.user.id] = AuthorDTO(
             avatar=create_url(author.user.avatar),

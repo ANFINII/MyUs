@@ -246,7 +246,7 @@ class Log:
     @classmethod
     def _format_json(cls, msg: str, level: str, func_name: str, file_name: str, line_no: int, exception: str, tb: str, **kwargs: Any) -> str:
         """1行の JSON にする。キーワード引数は data にまとめる"""
-        payload: dict[str, Any] = {
+        payload = {
             "timestamp": datetime.now(UTC).isoformat(),
             "level": level.lower(),
             "file": file_name,
