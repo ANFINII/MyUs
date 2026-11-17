@@ -8,9 +8,9 @@ from .user import AuthorDTO
 class PlaylistDTO:
     ulid: str
     title: str
+    image: str
     publish: bool
     count: int
-    image: str
     music_ulids: list[str]
     updated: datetime
 

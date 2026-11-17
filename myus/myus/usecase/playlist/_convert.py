@@ -102,7 +102,7 @@ def get_playlists_data(filter: FilterOption, user_id: int | None) -> Result[list
     for p in playlists:
         musics = [music_map[music_id] for music_id in p.music_ids if music_id in music_map]
         image = playlist_image(musics, p.image)
-        data.append(PlaylistDTO(ulid=p.ulid, title=p.title, publish=p.publish, count=len(musics), image=image, music_ulids=[m.ulid for m in musics], updated=p.updated))
+        data.append(PlaylistDTO(ulid=p.ulid, title=p.title, image=image, publish=p.publish, count=len(musics), music_ulids=[m.ulid for m in musics], updated=p.updated))
 
     return Result.ok(data)
 

@@ -22,9 +22,9 @@ export interface PlaylistMusicIn {
 export interface Playlist {
   ulid: string
   title: string
+  image: string
   publish: boolean
   count: number
-  image: string
   musicUlids: string[]
   updated: string
 }
