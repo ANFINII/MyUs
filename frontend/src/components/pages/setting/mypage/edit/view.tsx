@@ -80,7 +80,6 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
 
   const handleSubmit = async () => {
     handleLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 200))
     const request: MypageIn = { ...mypageValues, bannerFile }
     const ret = await putSettingMypage(request)
     if (ret.isErr()) {
