@@ -25,10 +25,11 @@ export default function Unauthorized(): React.JSX.Element {
   const { t } = useTranslation()
 
   const loginTitle = loginTitles.find((l) => router.pathname === l.path || router.pathname.startsWith(`${l.path}/`))
-  const content = loginTitle ? t('status.loginRequired', { title: t(`status.loginTitle.${loginTitle.title}`) }) : t('status.unauthorized')
+  const title = loginTitle ? t(`status.loginTitle.${loginTitle.title}`) : t('status.login')
+  const content = loginTitle ? t('status.loginRequired', { title }) : t('status.unauthorized')
 
   return (
-    <Main title="Unauthorized">
+    <Main title={title}>
       <LoginRequired content={content} />
       <Footer />
     </Main>
