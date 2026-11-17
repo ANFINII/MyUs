@@ -9,8 +9,8 @@
 
   .thumbnail_box {
     flex-shrink: 0;
-    width: 160px;
-    height: 160px;
+    width: calc(2.5em + 46px);
+    height: calc(2.5em + 46px);
   }
 
   .thumbnail {
@@ -31,6 +31,11 @@
 
   @media (max-width: 768px) {
     flex-direction: column;
+
+    .thumbnail_box {
+      width: 160px;
+      height: 160px;
+    }
 
     .controls {
       width: 100%;
