@@ -35,13 +35,14 @@ interface Props {
 
 export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const { channels, categories, data } = props
+  const { categoryUlid, title, content, richtext, publish, publishAt, isPromotion } = data
 
   const router = useRouter()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, richtext: data.richtext, publish: data.publish, publishAt: datetimeISO(data.publishAt), isPromotion: data.isPromotion })
+  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid, title, content, richtext, publish, isPromotion, publishAt: datetimeISO(publishAt) })
   const [isModal, setIsModal] = useState<boolean>(false)
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
