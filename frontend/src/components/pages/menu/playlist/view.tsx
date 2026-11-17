@@ -7,7 +7,6 @@ import { FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -15,7 +14,6 @@ import CheckBox from 'components/parts/Input/CheckBox'
 import Modal from 'components/parts/Modal'
 import CardList from 'components/widgets/Card/List'
 import PlaylistCard from 'components/widgets/Card/Playlist'
-import LoginRequired from 'components/widgets/Status/LoginRequired'
 import style from './Playlist.module.scss'
 
 interface Props {
@@ -28,7 +26,6 @@ export default function Playlists(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { t } = useTranslation()
-  const { user } = useUser()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -51,15 +48,7 @@ export default function Playlists(props: Props): React.JSX.Element {
 
   return (
     <Main title="Playlist" type="table" toast={toast} button={button}>
-      {user.isActive ? (
-        items.length > 0 ? (
-          <CardList items={items} Content={PlaylistCard} />
-        ) : (
-          <p className={style.empty}>{t('playlist.empty')}</p>
-        )
-      ) : (
-        <LoginRequired content={t('status.loginRequired', { title: t('status.loginTitle.playlist') })} />
-      )}
+      {items.length > 0 ? <CardList items={items} Content={PlaylistCard} /> : <p className={style.empty}>{t('playlist.empty')}</p>}
 
       <Modal
         open={isModal}
