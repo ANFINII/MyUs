@@ -16,6 +16,7 @@ import { useThreadResize } from 'components/hooks/useThreadResize'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
+import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailSeries from 'components/widgets/Media/Series'
 import SectionContent from 'components/widgets/Message/SectionContent'
 import SectionHeader from 'components/widgets/Message/SectionHeader'
@@ -253,66 +254,58 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     handleToast(isSubscribe ? t('subscribe.unsubscribedToast') : t('subscribe.subscribedToast'), false)
   }
 
-  if (!detail.publish) {
-    return (
-      <Main metaTitle="Chat" toast={toast}>
-        <article>
-          <h2 className={style.unpublished}>{t('mediaDetail.unpublished')}</h2>
-        </article>
-      </Main>
-    )
-  }
-
   return (
     <Main metaTitle="Chat" toast={toast}>
-      <div className={style.chat_section}>
-        <div className={style.body_row}>
-          <SectionNav navRef={navRef} list={list} onNav={handleNav} onResize={handleResize}>
-            <MediaDetailSeries series={series} ulid={detail.ulid} mediaPath={MediaPath.Chat} className={style.series} />
-          </SectionNav>
-          <div className={style.main_column}>
-            <SectionHeader detail={headerDetail} user={user} onContent={handleContent} onLike={handleLike} />
-            <div className={style.main_body}>
-              <SectionContent
-                detail={headerDetail}
-                subscribeCount={subscribeCount}
-                isContent={isContent}
-                isContentExpand={isContentExpand}
-                isFollowDisable={isFollowDisable}
-                onModal={handleModal}
-                onSubscribe={handleSubscribe}
-                onContentExpand={handleContentExpand}
-              />
-              <SectionMain
-                messageAreaRef={messageAreaRef}
-                messages={messages}
-                message={message}
-                user={user}
-                isDisabled={isDisabled}
-                onThread={handleThread}
-                onChange={handleMessage}
-                onSubmit={handleMessageSubmit}
-                onEdit={handleEditMessage}
-                onDelete={handleDeleteMessage}
-              />
+      <MediaDetail publish={detail.publish}>
+        <div className={style.chat_section}>
+          <div className={style.body_row}>
+            <SectionNav navRef={navRef} list={list} onNav={handleNav} onResize={handleResize}>
+              <MediaDetailSeries series={series} ulid={detail.ulid} mediaPath={MediaPath.Chat} className={style.series} />
+            </SectionNav>
+            <div className={style.main_column}>
+              <SectionHeader detail={headerDetail} user={user} onContent={handleContent} onLike={handleLike} />
+              <div className={style.main_body}>
+                <SectionContent
+                  detail={headerDetail}
+                  subscribeCount={subscribeCount}
+                  isContent={isContent}
+                  isContentExpand={isContentExpand}
+                  isFollowDisable={isFollowDisable}
+                  onModal={handleModal}
+                  onSubscribe={handleSubscribe}
+                  onContentExpand={handleContentExpand}
+                />
+                <SectionMain
+                  messageAreaRef={messageAreaRef}
+                  messages={messages}
+                  message={message}
+                  user={user}
+                  isDisabled={isDisabled}
+                  onThread={handleThread}
+                  onChange={handleMessage}
+                  onSubmit={handleMessageSubmit}
+                  onEdit={handleEditMessage}
+                  onDelete={handleDeleteMessage}
+                />
+              </div>
             </div>
+            <SectionThread
+              threadRef={threadRef}
+              selectedMessage={selectedMessage}
+              replies={selectedMessage ? (replies[selectedMessage.ulid] ?? []) : []}
+              reply={reply}
+              user={user}
+              isDisabled={isDisabled}
+              onClose={() => handleThread()}
+              onResize={handleThreadResize}
+              onChange={handleReply}
+              onSubmit={handleReplySubmit}
+              onEdit={handleEditMessage}
+              onDelete={handleDeleteMessage}
+            />
           </div>
-          <SectionThread
-            threadRef={threadRef}
-            selectedMessage={selectedMessage}
-            replies={selectedMessage ? (replies[selectedMessage.ulid] ?? []) : []}
-            reply={reply}
-            user={user}
-            isDisabled={isDisabled}
-            onClose={() => handleThread()}
-            onResize={handleThreadResize}
-            onChange={handleReply}
-            onSubmit={handleReplySubmit}
-            onEdit={handleEditMessage}
-            onDelete={handleDeleteMessage}
-          />
         </div>
-      </div>
+      </MediaDetail>
       <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleSubscribe} channel={detail.channel} followerCount={subscribeCount} />
     </Main>
   )
