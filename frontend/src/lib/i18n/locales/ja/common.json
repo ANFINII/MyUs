@@ -271,23 +271,7 @@
   "status": {
     "back": "戻る",
     "login": "ログイン",
-    "unauthorized": "ログインしてください",
-    "loginRequired": "{{title}}を利用するにはログインが必要です！",
-    "loginTitle": {
-      "channel": "チャンネル",
-      "playlist": "プレイリスト",
-      "follow": "フォロー",
-      "follower": "フォロワー",
-      "series": "シリーズ",
-      "advertise": "広告",
-      "manage": "投稿管理",
-      "profile": "アカウント",
-      "mypage": "マイページ",
-      "notification": "通知設定",
-      "password": "パスワードの変更",
-      "payment": "料金プラン",
-      "withdrawal": "退会処理"
-    },
+    "loginRequired": "この機能を利用するにはログインが必要です！",
     "notFound": "ページが見つかりませんでした",
     "serverError": "このページは動作しませんでした",
     "unexpected": "予期せぬエラーが発生しました"
