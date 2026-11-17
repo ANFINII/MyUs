@@ -136,7 +136,7 @@ export default function LyricEditor(props: Props): React.JSX.Element {
           <Button color="purple" name={t('manage.lyric.record')} className={style.record} onClick={handleRecord} />
         </div>
         <div className={style.preview}>
-          <Lyric lyric={lyric} currentTime={currentTime} isExpand={false} onSeek={handleSeek} />
+          <Lyric lyric={lyric} currentTime={currentTime} isExpand={false} className={style.preview_lyric} onSeek={handleSeek} />
         </div>
       </div>
       </div>

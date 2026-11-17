@@ -32,7 +32,7 @@
 }
 
 .list {
-  max-height: 360px;
+  height: 360px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -129,6 +129,10 @@
       color: rgb(220, 50, 50);
     }
   }
+}
+
+.preview_lyric.preview_lyric {
+  height: 360px;
 }
 
 @media screen and (max-width: 668px) {
