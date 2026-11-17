@@ -133,11 +133,11 @@ export const routeTree = rootRoute.addChildren([
   page('/manage/chat', () => import('components/pages/manage/chat'), manageChatsLoader),
   page('/manage/chat/create', () => import('components/pages/manage/chat/create'), manageCreateLoader),
   page('/manage/chat/$ulid', () => import('components/pages/manage/chat/edit'), manageChatLoader),
-  page('/manage/series', () => import('components/pages/manage/series'), manageSeriesListLoader),
-  page('/manage/series/$ulid', () => import('components/pages/manage/series/edit'), manageSeriesLoader),
   page('/manage/advertise', () => import('components/pages/manage/advertise'), manageAdvertisesLoader),
   page('/manage/advertise/create', () => import('components/pages/manage/advertise/create')),
   page('/manage/advertise/$ulid', () => import('components/pages/manage/advertise/edit'), manageAdvertiseLoader),
+  page('/manage/series', () => import('components/pages/manage/series'), manageSeriesListLoader),
+  page('/manage/series/$ulid', () => import('components/pages/manage/series/edit'), manageSeriesLoader),
 
   page('/setting/profile', () => import('components/pages/setting/profile'), settingProfileLoader),
   page('/setting/profile/edit', () => import('components/pages/setting/profile/edit'), settingProfileLoader),

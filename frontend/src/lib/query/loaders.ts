@@ -160,20 +160,19 @@ export const settingPaymentLoader = ({ queryClient }: PageLoad<object>) =>
   Promise.all([queryClient.query(settingMypageQuery()), queryClient.query(paymentSubscriptionQuery()), queryClient.query(paymentPlansQuery())])
 
 export const manageLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery())
+export const manageCreateLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
+
 export const manageVideosLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageVideosQuery(await manageListParams(queryClient, search)))
 export const manageMusicsLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageMusicsQuery(await manageListParams(queryClient, search)))
 export const manageBlogsLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageBlogsQuery(await manageListParams(queryClient, search)))
 export const manageComicsLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageComicsQuery(await manageListParams(queryClient, search)))
 export const managePicturesLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(managePicturesQuery(await manageListParams(queryClient, search)))
 export const manageChatsLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageChatsQuery(await manageListParams(queryClient, search)))
+export const manageAdvertisesLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageAdvertisesQuery(listParams(search)))
 export const manageSeriesListLoader = async ({ queryClient, search }: PageLoad<object>) => {
   const channels = await queryClient.query(channelsQuery())
   return queryClient.query(manageSeriesListQuery(search.channel || channels[0]?.ulid || ''))
 }
-
-export const manageSeriesLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => queryClient.query(manageSeriesQuery(params.ulid))
-export const manageAdvertisesLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageAdvertisesQuery(listParams(search)))
-export const manageCreateLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 
 export const manageVideoLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
   Promise.all([queryClient.query(manageVideoQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
@@ -188,3 +187,4 @@ export const managePictureLoader = ({ queryClient, params }: PageLoad<{ ulid: st
 export const manageChatLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
   Promise.all([queryClient.query(manageChatQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 export const manageAdvertiseLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => queryClient.query(manageAdvertiseQuery(params.ulid))
+export const manageSeriesLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => queryClient.query(manageSeriesQuery(params.ulid))
