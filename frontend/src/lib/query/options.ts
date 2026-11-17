@@ -32,11 +32,11 @@ import { getSettingMypage, getSettingNotification, getSettingProfile } from 'api
 import { getFollow, getFollower, getUser, getUserPage, getUserPageAdvertises, getUserPageMedia } from 'api/internal/user'
 
 export const userQuery = () => queryOptions({ queryKey: queryKeys.user, queryFn: () => toQuery(getUser()), refetchOnMount: false })
+export const signupQuery = (token: string) => queryOptions({ queryKey: queryKeys.signupVerify(token), queryFn: () => toQuery(getSignupVerify(token)) })
+export const passwordResetQuery = (token: string) => queryOptions({ queryKey: queryKeys.passwordResetVerify(token), queryFn: () => toQuery(getPasswordResetVerify(token)) })
 export const channelsQuery = () => queryOptions({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()), refetchOnMount: false })
 export const subscribeChannelsQuery = () => queryOptions({ queryKey: queryKeys.subscribeChannels, queryFn: () => toQuery(getSubscribeChannels()), refetchOnMount: false })
 export const categoriesQuery = () => queryOptions({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()), refetchOnMount: false })
-export const signupVerifyQuery = (token: string) => queryOptions({ queryKey: queryKeys.signupVerify(token), queryFn: () => toQuery(getSignupVerify(token)) })
-export const passwordResetVerifyQuery = (token: string) => queryOptions({ queryKey: queryKeys.passwordResetVerify(token), queryFn: () => toQuery(getPasswordResetVerify(token)) })
 
 export const homeQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), refetchOnMount: false })
 export const recommendQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.recommend(params), queryFn: () => toQuery(getRecommend(params)), refetchOnMount: false })
@@ -63,7 +63,8 @@ export const userPageMediaQuery = (ulid: string, channelUlid: string, params: Se
   queryOptions({ queryKey: queryKeys.userPageMedia(ulid, channelUlid, params), queryFn: () => toQuery(getUserPageMedia(ulid, channelUlid, params)), refetchOnMount: false })
 export const userPageSeriesQuery = (ulid: string, channelUlid: string) =>
   queryOptions({ queryKey: queryKeys.userPageSeries(ulid, channelUlid), queryFn: () => toQuery(getChannelSeries(channelUlid)), refetchOnMount: false })
-export const userPagePlaylistsQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.userPagePlaylists(ulid), queryFn: () => toQuery(getUserPlaylists(ulid)), refetchOnMount: false })
+export const userPagePlaylistsQuery = (ulid: string) =>
+  queryOptions({ queryKey: queryKeys.userPagePlaylists(ulid), queryFn: () => toQuery(getUserPlaylists(ulid)), refetchOnMount: false })
 export const userPageAdvertisesQuery = (ulid: string, params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.userPageAdvertise(ulid, params), queryFn: () => toQuery(getUserPageAdvertises(ulid, params)), refetchOnMount: false })
 
@@ -94,8 +95,7 @@ export const manageVideoQuery = (ulid: string) => queryOptions({ queryKey: query
 export const manageMusicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageMusic(ulid), queryFn: () => toQuery(getManageMusic(ulid)), refetchOnMount: false })
 export const manageBlogQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageBlog(ulid), queryFn: () => toQuery(getManageBlog(ulid)), refetchOnMount: false })
 export const manageComicQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageComic(ulid), queryFn: () => toQuery(getManageComic(ulid)), refetchOnMount: false })
-export const managePictureQuery = (ulid: string) =>
-  queryOptions({ queryKey: queryKeys.managePicture(ulid), queryFn: () => toQuery(getManagePicture(ulid)), refetchOnMount: false })
+export const managePictureQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.managePicture(ulid), queryFn: () => toQuery(getManagePicture(ulid)), refetchOnMount: false })
 export const manageChatQuery = (ulid: string) => queryOptions({ queryKey: queryKeys.manageChat(ulid), queryFn: () => toQuery(getManageChat(ulid)), refetchOnMount: false })
 export const manageSeriesListQuery = (channelUlid: string) =>
   queryOptions({ queryKey: queryKeys.manageSeriesList(channelUlid), queryFn: () => toQuery(getManageSeriesList(channelUlid)), refetchOnMount: false })
