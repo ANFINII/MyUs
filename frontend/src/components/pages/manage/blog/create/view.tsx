@@ -34,18 +34,18 @@ interface Props {
 export default function BlogCreate(props: Props): React.JSX.Element {
   const { channels, categories } = props
 
+  const channelUlid = channels.find((c) => c.isDefault)!.ulid
+
   const router = useRouter()
   const { t } = useTranslation()
-
-  const channelUlid = channels.find((c) => c.isDefault)!.ulid
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
-
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', richtext: '', isPromotion: false })
+
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleModal = () => setIsModal(!isModal)
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
