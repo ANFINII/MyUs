@@ -57,6 +57,7 @@ export interface MusicUpdateIn extends MediaUpdateIn {
   lyric: string
   download: boolean
   image?: File
+  music?: File
 }
 
 export interface BlogUpdateIn extends MediaUpdateIn {
