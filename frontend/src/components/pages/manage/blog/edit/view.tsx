@@ -42,8 +42,8 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid, title, content, richtext, publish, isPromotion, publishAt: datetimeISO(publishAt) })
   const [isModal, setIsModal] = useState<boolean>(false)
+  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid, title, content, richtext, publish, isPromotion, publishAt: datetimeISO(publishAt) })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]

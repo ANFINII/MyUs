@@ -34,19 +34,19 @@ interface Props {
 export default function ComicCreate(props: Props): React.JSX.Element {
   const { channels, categories } = props
 
+  const channelUlid = channels.find((c) => c.isDefault)!.ulid
+
   const router = useRouter()
   const { t } = useTranslation()
-
-  const channelUlid = channels.find((c) => c.isDefault)!.ulid
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
-
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<ComicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '' })
   const [isModal, setIsModal] = useState<boolean>(false)
   const [previewPages, setPreviewPages] = useState<string[]>([])
+  const [values, setValues] = useState<ComicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '' })
+
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
