@@ -4,9 +4,7 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import LoginRequired from 'components/widgets/Status/LoginRequired'
 
-type LoginTitle = 'channel' | 'playlist' | 'follow' | 'follower' | 'series' | 'advertise' | 'manage' | 'profile' | 'mypage' | 'notification' | 'password' | 'payment' | 'withdrawal'
-
-const loginTitles: { path: string; title: LoginTitle }[] = [
+const loginTitles = [
   { path: '/menu/channel', title: 'channel' },
   { path: '/menu/playlist', title: 'playlist' },
   { path: '/menu/follow', title: 'follow' },
@@ -20,7 +18,7 @@ const loginTitles: { path: string; title: LoginTitle }[] = [
   { path: '/setting/password', title: 'password' },
   { path: '/setting/payment', title: 'payment' },
   { path: '/account/withdrawal', title: 'withdrawal' },
-]
+] as const
 
 export default function Unauthorized(): React.JSX.Element {
   const router = useRouter()
