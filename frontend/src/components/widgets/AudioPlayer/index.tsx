@@ -13,6 +13,7 @@ interface Props {
   playbackRate?: number
   autoPlay?: boolean
   isVolumeInline?: boolean
+  isLoop?: boolean
   audioRef?: React.RefObject<HTMLAudioElement | null>
   className?: string
   onEnded?: () => void
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, audioRef: sharedAudioRef, className, onEnded, onTimeUpdate } = props
+  const { src, playbackRate = 1, autoPlay = false, isVolumeInline = false, isLoop = false, audioRef: sharedAudioRef, className, onEnded, onTimeUpdate } = props
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -207,6 +208,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         src={src}
         preload="auto"
         autoPlay={autoPlay}
+        loop={isLoop}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onProgress={handleProgress}

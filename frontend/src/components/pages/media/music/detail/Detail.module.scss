@@ -9,8 +9,8 @@
 
   .thumbnail_box {
     flex-shrink: 0;
-    width: 160px;
-    height: 160px;
+    width: calc(2.5em + 46px);
+    height: calc(2.5em + 46px);
   }
 
   .thumbnail {
@@ -32,6 +32,11 @@
   @media (max-width: 768px) {
     flex-direction: column;
 
+    .thumbnail_box {
+      width: 160px;
+      height: 160px;
+    }
+
     .controls {
       width: 100%;
     }
@@ -42,6 +47,23 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.repeat {
+  display: flex;
+  padding: 0;
+  color: rgb(200, 200, 200);
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(0, 100, 255);
+  }
+
+  &.active {
+    color: rgb(80, 200, 120);
+  }
 }
 
 .download {

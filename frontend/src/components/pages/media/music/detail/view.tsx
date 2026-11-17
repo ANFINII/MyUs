@@ -2,11 +2,13 @@ import { ChangeEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MusicDetailOut } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
+import cx from 'utils/functions/cx'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import ExImage from 'components/parts/ExImage'
 import IconDownload from 'components/parts/Icon/Download'
+import IconRepeat from 'components/parts/Icon/Repeat'
 import SpeedControl from 'components/parts/SpeedControl'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
@@ -31,11 +33,13 @@ export default function MusicDetail(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [speed, setSpeed] = useState<number>(1)
   const [isLyricView, setIsLyricView] = useState<boolean>(false)
+  const [isRepeat, setIsRepeat] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const handleSpeed = (e: ChangeEvent<HTMLInputElement>) => setSpeed(Number(e.target.value))
   const handleLyricView = () => setIsLyricView(!isLyricView)
+  const handleRepeat = () => setIsRepeat(!isRepeat)
 
   const handleSeek = (time: number) => {
     const audio = audioRef.current
@@ -52,10 +56,13 @@ export default function MusicDetail(props: Props): React.JSX.Element {
             <ExImage src={image || other.channel.avatar} className={style.thumbnail} />
           </div>
           <VStack gap="6" className={style.controls}>
-            <AudioPlayer src={music} playbackRate={speed} isVolumeInline audioRef={audioRef} onTimeUpdate={setCurrentTime} />
+            <AudioPlayer src={music} playbackRate={speed} isVolumeInline isLoop={isRepeat} audioRef={audioRef} onTimeUpdate={setCurrentTime} />
             <HStack justify="between">
               <SpeedControl value={speed} onChange={handleSpeed} className={style.speed} />
               <div className={style.actions}>
+                <button type="button" title={t(isRepeat ? 'player.repeat.one' : 'player.repeat.off')} className={cx(style.repeat, isRepeat && style.active)} onClick={handleRepeat}>
+                  <IconRepeat size="1.5em" type="one" />
+                </button>
                 <PlaylistAdd musicUlid={other.ulid} />
                 {download && (
                   <a href={music} download className={style.download}>
