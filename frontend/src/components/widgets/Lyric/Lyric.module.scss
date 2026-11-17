@@ -1,7 +1,7 @@
 .lyric {
   position: relative;
   height: 320px;
-  padding: 24px 28px;
+  padding: 20px;
   border-radius: 10px;
   background: rgb(18, 18, 18);
   transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
@@ -16,10 +16,6 @@
     height: 640px;
   }
 
-  .track {
-    position: relative;
-  }
-
   .line {
     margin: 0;
     padding: 4px 0;
@@ -30,13 +26,6 @@
   }
 
   &.synced {
-    overflow: hidden;
-
-    .track {
-      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: transform;
-    }
-
     .line {
       font-size: 15px;
       font-weight: 600;

@@ -15,6 +15,7 @@ import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import IconInfo from 'components/parts/Icon/Info'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import DatePicker from 'components/parts/Input/DatePicker'
@@ -25,6 +26,7 @@ import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../../Form.module.scss'
+import LyricEditor from '../LyricEditor'
 
 interface Props {
   channels: Channel[]
@@ -40,12 +42,27 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<MusicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, lyric: data.lyric, download: data.download, publish: data.publish, publishAt: datetimeISO(data.publishAt) })
+  const [values, setValues] = useState<MusicUpdateIn>({
+    categoryUlid: data.categoryUlid,
+    title: data.title,
+    content: data.content,
+    lyric: data.lyric,
+    download: data.download,
+    publish: data.publish,
+    publishAt: datetimeISO(data.publishAt),
+  })
+  const [isModal, setIsModal] = useState<boolean>(false)
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/music')
+  const handleModal = () => setIsModal(!isModal)
+
+  const handleLyric = (lyric: string) => {
+    setValues({ ...values, lyric })
+    setIsModal(false)
+  }
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -84,11 +101,18 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
-          <Textarea label={t('manage.form.lyric')} name="lyric" placeholder={t('manage.form.lyricPlaceholder')} value={values.lyric} onChange={handleText} />
+          <Textarea label={t('manage.form.lyric')} name="lyric" className={style.lyric} value={values.lyric} onChange={handleText} />
+          <div className={style.lyric_hint}>
+            <IconInfo size="14" className={style.lyric_hint_icon} />
+            <span>{t('manage.form.lyricHint')}</span>
+            <Button color="purple" size="s" name={t('manage.lyric.open')} className={style.lyric_hint_button} onClick={handleModal} />
+          </div>
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
           <CheckBox label={t('manage.form.download')} name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>
+
+      {isModal && <LyricEditor src={data.music} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
     </Main>
   )
 }

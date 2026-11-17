@@ -2,3 +2,26 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.lyric.lyric textarea {
+  max-height: 368px;
+  overflow-y: auto;
+}
+
+.lyric_hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: -4px;
+  font-size: 12px;
+  color: rgb(120, 120, 120);
+
+  .lyric_hint_icon {
+    flex-shrink: 0;
+    color: rgb(40, 130, 255);
+  }
+
+  .lyric_hint_button {
+    margin-left: auto;
+  }
+}

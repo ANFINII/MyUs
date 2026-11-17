@@ -1,0 +1,156 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .hint {
+    font-size: 13px;
+    color: rgb(120, 120, 120);
+  }
+
+  .player {
+    width: 100%;
+  }
+}
+
+.body {
+  display: flex;
+  gap: 24px;
+
+  .rows,
+  .preview {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .record {
+    align-self: flex-end;
+  }
+}
+
+.list {
+  height: 360px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 6px;
+  overflow-y: auto;
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 12px;
+    border-bottom: 1px solid rgb(240, 240, 240);
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(248, 248, 248);
+    }
+
+    &.selected {
+      background: rgb(235, 243, 255);
+      box-shadow: inset 3px 0 0 rgb(40, 130, 255);
+    }
+  }
+
+  .time {
+    flex-shrink: 0;
+    width: 62px;
+    padding: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    color: rgb(40, 100, 200);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+
+    &::placeholder {
+      color: rgb(180, 180, 180);
+    }
+
+    &:hover {
+      border-color: rgb(220, 220, 220);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: rgb(40, 130, 250);
+      background: rgb(255, 255, 255);
+    }
+  }
+
+  .text {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 6px;
+    font-size: 14px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+
+    &:hover {
+      border-color: rgb(220, 220, 220);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: rgb(40, 130, 250);
+      background: rgb(255, 255, 255);
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .nudge {
+    display: flex;
+    align-items: center;
+    padding: 2px 6px;
+    font-size: 12px;
+    color: rgb(100, 100, 100);
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: 4px;
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(40, 100, 200);
+    }
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    color: rgb(150, 150, 150);
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(40, 100, 200);
+    }
+
+    &.delete:hover {
+      color: rgb(220, 50, 50);
+    }
+  }
+}
+
+.preview_lyric.preview_lyric {
+  height: 360px;
+}
+
+@media screen and (max-width: 668px) {
+  .body {
+    flex-direction: column;
+  }
+}
