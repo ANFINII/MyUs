@@ -314,7 +314,6 @@
   "manage": {
     "title": "投稿管理",
     "series": {
-      "new": "シリーズ作成",
       "mediaType": "種類",
       "count": "投稿数",
       "candidate": "投稿を選択",

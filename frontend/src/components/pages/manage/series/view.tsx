@@ -97,7 +97,7 @@ export default function ManageSeriesList(props: Props): React.JSX.Element {
       <Modal
         open={isModal}
         onClose={handleModal}
-        title={t('manage.series.new')}
+        title={t('manage.button.new')}
         size="s"
         actions={[
           { name: t('action.cancel'), color: 'white', disabled: loading, onClick: handleModal },

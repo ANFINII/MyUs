@@ -316,7 +316,6 @@
   "manage": {
     "title": "Manage posts",
     "series": {
-      "new": "Create series",
       "mediaType": "Type",
       "count": "Posts",
       "candidate": "Select post",
