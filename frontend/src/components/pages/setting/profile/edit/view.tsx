@@ -17,17 +17,14 @@ import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
-import ExImage from 'components/parts/ExImage'
-import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
-import InputImage from 'components/parts/Input/Image'
 import Radio from 'components/parts/Input/Radio'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
-import style from '../../Setting.module.scss'
+import AvatarInput from 'components/widgets/AvatarInput'
 
 interface Props {
   profile: ProfileOut
@@ -108,22 +105,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
       <Table>
         <TableRow label={t('setting.profile.avatar')}>
-          <InputImage
-            id="avatar"
-            className={style.account_image_edit}
-            icon={
-              avatarUrl ? (
-                <div className={style.account_image}>
-                  <ExImage src={avatarUrl} size="56" />
-                </div>
-              ) : (
-                <div className={style.account_image_edit}>
-                  <IconPerson size="56" type="square" />
-                </div>
-              )
-            }
-            onChange={handleAvatar}
-          />
+          <AvatarInput src={avatarUrl} onChange={handleAvatar} />
         </TableRow>
         <TableRow label={t('setting.profile.email')}>
           <Input name="email" value={values.email} maxLength={120} required error={error} onChange={handleInput} />

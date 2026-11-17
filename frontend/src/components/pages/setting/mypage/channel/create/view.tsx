@@ -13,12 +13,10 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
-import ExImage from 'components/parts/ExImage'
-import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
-import InputImage from 'components/parts/Input/Image'
 import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
+import AvatarInput from 'components/widgets/AvatarInput'
 import style from '../../../Setting.module.scss'
 
 const initChannel: ChannelIn = {
@@ -77,22 +75,7 @@ export default function ChannelCreate(): React.JSX.Element {
           <VStack gap="8">
             <VStack gap="4" align="center">
               <p>{t('setting.channelCreate.avatar')}</p>
-              <InputImage
-                id="avatar"
-                className={style.account_image_edit}
-                icon={
-                  avatarUrl ? (
-                    <div className={style.account_image}>
-                      <ExImage src={avatarUrl} size="56" />
-                    </div>
-                  ) : (
-                    <div className={style.account_image_edit}>
-                      <IconPerson size="56" type="square" />
-                    </div>
-                  )
-                }
-                onChange={handleAvatar}
-              />
+              <AvatarInput src={avatarUrl} onChange={handleAvatar} />
             </VStack>
 
             <Input name="name" placeholder={t('setting.channelCreate.name')} maxLength={50} required error={error} onChange={handleInput} />
