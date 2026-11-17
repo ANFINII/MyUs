@@ -1,4 +1,5 @@
 import { ParsedUrlQuery } from 'querystring'
+import { MediaHome } from 'types/internal/media/output'
 
 export const PAGE_SIZE = 50
 
@@ -33,4 +34,9 @@ export const shuffleItems = <T>(items: T[]): T[] => {
     ret[j] = tmp
   }
   return ret
+}
+
+export const mediaCount = (media: MediaHome): number => {
+  const { videos, musics, blogs, comics, pictures, chats } = media
+  return videos.length + musics.length + blogs.length + comics.length + pictures.length + chats.length
 }
