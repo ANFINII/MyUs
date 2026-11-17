@@ -240,6 +240,9 @@ def convert_playlist_detail(obj: PlaylistDetailDTO) -> PlaylistDetailOut:
     data = PlaylistDetailOut(
         ulid=obj.ulid,
         title=obj.title,
+        description=obj.description,
+        image=obj.image,
+        thumbnail_music_ulid=obj.thumbnail_music_ulid,
         publish=obj.publish,
         is_owner=obj.is_owner,
         updated=obj.updated,

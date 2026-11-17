@@ -45,6 +45,14 @@
     word-break: break-all;
   }
 
+  .description {
+    margin: 0;
+    font-size: 13px;
+    color: rgb(80, 80, 80);
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
   .meta {
     display: flex;
     flex-wrap: wrap;

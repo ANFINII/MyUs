@@ -9,6 +9,8 @@ export interface PlaylistIn {
 
 export interface PlaylistUpdateIn {
   title: string
+  description: string
+  thumbnailMusicUlid: string
   publish: boolean
   musicUlids: string[]
 }
@@ -34,6 +36,9 @@ export interface PlaylistList {
 export interface PlaylistDetailOut {
   ulid: string
   title: string
+  description: string
+  image: string
+  thumbnailMusicUlid: string
   publish: boolean
   isOwner: boolean
   updated: string
