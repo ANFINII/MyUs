@@ -1,9 +1,5 @@
 import { Picture } from 'types/internal/media/output'
-import Card from 'components/parts/Card'
-import ExImage from 'components/parts/ExImage'
-import Link from 'components/parts/Link'
-import style from './Picture.module.scss'
-import CardMediaContent from '../Content'
+import ImageCard from '../Image'
 
 interface Props {
   item: Picture
@@ -13,12 +9,5 @@ export default function PictureCard(props: Props): React.JSX.Element {
   const { item } = props
   const { ulid, image } = item
 
-  return (
-    <Card className={style.card}>
-      <Link href={`/media/picture/${ulid}`}>
-        <ExImage src={image} width="312" height="195" className={style.thumbnail} />
-      </Link>
-      <CardMediaContent href={`/media/picture/${ulid}`} media={item} />
-    </Card>
-  )
+  return <ImageCard href={`/media/picture/${ulid}`} image={image} media={item} />
 }

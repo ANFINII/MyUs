@@ -1,11 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Follow } from 'types/internal/user'
-import Card from 'components/parts/Card'
-import ExImage from 'components/parts/ExImage'
-import Link from 'components/parts/Link'
-import HStack from 'components/parts/Stack/Horizontal'
-import VStack from 'components/parts/Stack/Vertical'
-import style from './Follow.module.scss'
+import ProfileCard from 'components/widgets/Card/Profile'
 
 interface Props {
   item: Follow
@@ -17,21 +12,7 @@ export default function FollowCard(props: Props): React.JSX.Element {
 
   const { t } = useTranslation()
 
-  return (
-    <Card className={style.card}>
-      <Link href={`/userpage/${ulid}`} className={style.box}>
-        <HStack gap="5">
-          <ExImage src={avatar} title={nickname} className={style.image} />
-          <VStack gap="1" className="fs_12">
-            <span title={nickname}>{nickname}</span>
-            <span>{t('count.followers', { count: followerCount })}</span>
-            <span>{t('count.following', { count: followingCount })}</span>
-          </VStack>
-        </HStack>
-        <div title={introduction} className={style.introduction}>
-          {introduction}
-        </div>
-      </Link>
-    </Card>
-  )
+  const counts = [t('count.followers', { count: followerCount }), t('count.following', { count: followingCount })]
+
+  return <ProfileCard href={`/userpage/${ulid}`} avatar={avatar} name={nickname} counts={counts} description={introduction} />
 }
