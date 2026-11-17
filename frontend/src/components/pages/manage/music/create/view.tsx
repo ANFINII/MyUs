@@ -83,7 +83,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
-          <Textarea label={t('manage.form.lyric')} name="lyric" onChange={handleText} />
+          <Textarea label={t('manage.form.lyric')} name="lyric" className={style.lyric_textarea} onChange={handleText} />
           <div className={style.lyric_hint}>
             <IconInfo size="14" className={style.lyric_hint_icon} />
             <span>{t('manage.form.lyricHint')}</span>
