@@ -605,7 +605,6 @@
     "count_other": "{{count}} songs",
     "playAll": "Play all",
     "playShuffle": "Shuffle",
-    "detail": "Details",
     "emptyMusic": "No songs yet",
     "deleteTitle": "Delete playlist",
     "deleteConfirm": "Delete \"{{title}}\"?",

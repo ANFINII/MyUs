@@ -17,6 +17,7 @@ import Main from 'components/layout/Main'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
+import IconArrow from 'components/parts/Icon/Arrow'
 import IconCross from 'components/parts/Icon/Cross'
 import IconGrip from 'components/parts/Icon/Grip'
 import IconPlaylist from 'components/parts/Icon/Playlist'
@@ -24,6 +25,7 @@ import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
+import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import ShareButton from 'components/widgets/ShareButton'
@@ -61,7 +63,6 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const handleModal = () => setIsModal(!isModal)
   const handlePlay = (index: number) => play(musics, index)
   const handlePlayShuffle = () => playShuffle(musics)
-  const handleDetail = (musicUlid: string) => router.push(`/media/music/${musicUlid}`)
   const handleStop = (e: React.MouseEvent) => e.stopPropagation()
   const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setEditTitle(e.target.value)
   const handleDescription = (e: ChangeEvent<HTMLTextAreaElement>) => setEditDescription(e.target.value)
@@ -204,7 +205,9 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
                 <div className={style.item_channel}>{music.channel.name}</div>
               </div>
               <span className={style.detail} onClick={handleStop}>
-                <Button name={t('playlist.detail')} color="purple" size="s" onClick={() => handleDetail(music.ulid)} />
+                <Link href={`/media/music/${music.ulid}`} className={style.detail_link}>
+                  <IconArrow size="16" type="external" />
+                </Link>
               </span>
             </li>
           ))}
