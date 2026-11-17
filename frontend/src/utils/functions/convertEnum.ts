@@ -18,4 +18,4 @@ export const commentTypeNameEnum = (typeName: string) => {
   }
 }
 
-export const localeEnum = (locale?: string): Locale => (locale === Locale.En ? Locale.En : Locale.Ja)
+export const toLocale = (locale?: string): Locale => (locale === Locale.En ? Locale.En : Locale.Ja)

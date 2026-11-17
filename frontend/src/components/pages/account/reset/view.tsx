@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { postPasswordResetEmail } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
-import { localeEnum } from 'utils/functions/convertEnum'
+import { toLocale } from 'utils/functions/convertEnum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -32,7 +32,7 @@ export default function Reset(): React.JSX.Element {
     if (loading) return
     if (!validate({ email })) return
     handleLoading(true)
-    const locale = localeEnum(router.locale)
+    const locale = toLocale(router.locale)
     const ret = await postPasswordResetEmail(email, locale)
     handleLoading(false)
     if (ret.isErr()) {
