@@ -53,7 +53,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const [editThumbnail, setEditThumbnail] = useState<string>(thumbnailMusicUlid)
   const [isEditPublish, setIsEditPublish] = useState<boolean>(publish)
   const [editMusics, setEditMusics] = useState<Music[]>(musics)
-  const { dragIndex, dragOverIndex, dragProps } = useDragSort(editMusics, setEditMusics)
+  const { dragIndex, dragOverIndex, dragItem } = useDragSort(editMusics, setEditMusics)
 
   const editThumbnailMusic = editMusics.find((m) => m.ulid === editThumbnail) ?? editMusics[0]
   const editImage = editThumbnailMusic ? editThumbnailMusic.image || editThumbnailMusic.channel.avatar : ''
@@ -154,7 +154,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
             <li
               key={music.ulid}
               className={cx(style.item, style.editable, dragIndex === index && style.dragging, dragOverIndex === index && style.drag_over)}
-              {...dragProps(index)}
+              {...dragItem(index)}
             >
               <IconGrip size="14" className={style.grip} />
               <ExImage src={music.image || music.channel.avatar} className={style.item_thumbnail} />

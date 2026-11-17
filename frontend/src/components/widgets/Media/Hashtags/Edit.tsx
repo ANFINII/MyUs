@@ -49,7 +49,7 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [editTags, setEditTags] = useState<Hashtag[]>([...hashtags])
   const [inputTag, setInputTag] = useState<string>('')
-  const { dragIndex, dragOverIndex, dragProps } = useDragSort(editTags, setEditTags)
+  const { dragIndex, dragOverIndex, dragItem } = useDragSort(editTags, setEditTags)
 
   const isLimit = editTags.length >= HASHTAG_MAX_COUNT
   const normalizedInput = normalizeName(inputTag)
@@ -121,7 +121,7 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
           <span
             key={tag.name}
             className={cx(style.edit_chip, dragIndex === index && style.dragging, dragOverIndex === index && style.drag_over)}
-            {...dragProps(index)}
+            {...dragItem(index)}
           >
             <span className={style.drag_handle}>
               <IconGrip size="12" />

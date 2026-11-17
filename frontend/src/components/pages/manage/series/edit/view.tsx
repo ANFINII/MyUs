@@ -42,7 +42,7 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
   const [candidates, setCandidates] = useState<SeriesItem[]>(data.candidates)
   const [search, setSearch] = useState<string>('')
   const [selectedUlid, setSelectedUlid] = useState<string>('')
-  const { dragIndex, dragOverIndex, dragProps } = useDragSort(items, setItems)
+  const { dragIndex, dragOverIndex, dragItem } = useDragSort(items, setItems)
 
   const mediaTypeOptions: Option[] = [{ label: data.mediaType, value: data.mediaType }]
   const filtered = candidates.filter((c) => c.title.toLowerCase().includes(search.trim().toLowerCase()))
@@ -114,7 +114,7 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
                   <li
                     key={item.ulid}
                     className={cx(style.item, dragIndex === index && style.dragging, dragOverIndex === index && style.drag_over)}
-                    {...dragProps(index)}
+                    {...dragItem(index)}
                   >
                     <IconGrip size="14" className={style.grip} />
                     <span className={style.index}>{index + 1}</span>

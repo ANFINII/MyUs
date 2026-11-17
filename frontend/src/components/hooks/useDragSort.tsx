@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-interface DragProps {
+interface DragItem {
   draggable: boolean
   onDragStart: () => void
   onDragOver: (e: React.DragEvent) => void
@@ -12,7 +12,7 @@ interface DragProps {
 interface OutProps {
   dragIndex: number | null
   dragOverIndex: number | null
-  dragProps: (index: number) => DragProps
+  dragItem: (index: number) => DragItem
 }
 
 export function useDragSort<T>(items: T[], onSort: (items: T[]) => void): OutProps {
@@ -38,7 +38,7 @@ export function useDragSort<T>(items: T[], onSort: (items: T[]) => void): OutPro
     setDragOverIndex(null)
   }
 
-  const dragProps = (index: number): DragProps => ({
+  const dragItem = (index: number): DragItem => ({
     draggable: true,
     onDragStart: () => setDragIndex(index),
     onDragOver: (e) => handleDrag(e, index),
@@ -47,5 +47,5 @@ export function useDragSort<T>(items: T[], onSort: (items: T[]) => void): OutPro
     onDragEnd: handleDragEnd,
   })
 
-  return { dragIndex, dragOverIndex, dragProps }
+  return { dragIndex, dragOverIndex, dragItem }
 }

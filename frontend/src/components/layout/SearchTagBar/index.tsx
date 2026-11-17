@@ -28,7 +28,7 @@ export default function SearchTagBar(): React.JSX.Element {
   const [inputTag, setInputTag] = useState<string>('')
   const [searchTags, setSearchTags] = useState<SearchTagOut[]>([])
   const [editTags, setEditTags] = useState<SearchTagOut[]>([])
-  const { dragIndex, dragOverIndex, dragProps } = useDragSort(editTags, setEditTags)
+  const { dragIndex, dragOverIndex, dragItem } = useDragSort(editTags, setEditTags)
 
   useEffect(() => {
     const fetchSearchTag = async () => {
@@ -111,7 +111,7 @@ export default function SearchTagBar(): React.JSX.Element {
                       <div
                         key={tag.name}
                         className={cx(styles.tag_item, dragIndex === index && styles.dragging, dragOverIndex === index && styles.drag_over)}
-                        {...dragProps(index)}
+                        {...dragItem(index)}
                       >
                         <span className={styles.drag_handle}>
                           <IconGrip size="12" />
