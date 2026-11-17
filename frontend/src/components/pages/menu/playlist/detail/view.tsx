@@ -9,6 +9,7 @@ import { PlaylistDetailOut } from 'types/internal/playlist'
 import { deletePlaylist, putPlaylist } from 'api/internal/playlist'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
+import { useDragSort } from 'components/hooks/useDragSort'
 import { useLoading } from 'components/hooks/useLoading'
 import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
 import { useRouter } from 'components/hooks/useRouter'
@@ -52,8 +53,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const [editThumbnail, setEditThumbnail] = useState<string>(thumbnailMusicUlid)
   const [isEditPublish, setIsEditPublish] = useState<boolean>(publish)
   const [editMusics, setEditMusics] = useState<Music[]>(musics)
-  const [dragIndex, setDragIndex] = useState<number | null>(null)
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+  const { dragIndex, dragOverIndex, dragProps } = useDragSort(editMusics, setEditMusics)
 
   const editThumbnailMusic = editMusics.find((m) => m.ulid === editThumbnail) ?? editMusics[0]
   const editImage = editThumbnailMusic ? editThumbnailMusic.image || editThumbnailMusic.channel.avatar : ''
@@ -77,27 +77,6 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
     setIsEditPublish(publish)
     setEditMusics(musics)
     setIsEdit(!isEdit)
-  }
-
-  const handleDragStart = (index: number) => setDragIndex(index)
-
-  const handleDrag = (e: React.DragEvent, index: number | null = null) => {
-    e.preventDefault()
-    setDragOverIndex(index)
-  }
-
-  const handleDrop = (index: number) => {
-    if (dragIndex === null || dragIndex === index) return
-    const newMusics = [...editMusics]
-    const removed = newMusics.splice(dragIndex, 1)
-    if (removed[0] === undefined) return
-    newMusics.splice(index, 0, removed[0])
-    setEditMusics(newMusics)
-  }
-
-  const handleDragEnd = () => {
-    setDragIndex(null)
-    setDragOverIndex(null)
   }
 
   const handleSave = async () => {
@@ -174,13 +153,8 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
           {editMusics.map((music, index) => (
             <li
               key={music.ulid}
-              draggable
               className={cx(style.item, style.editable, dragIndex === index && style.dragging, dragOverIndex === index && style.drag_over)}
-              onDragStart={() => handleDragStart(index)}
-              onDragOver={(e) => handleDrag(e, index)}
-              onDragLeave={(e) => handleDrag(e)}
-              onDrop={() => handleDrop(index)}
-              onDragEnd={handleDragEnd}
+              {...dragProps(index)}
             >
               <IconGrip size="14" className={style.grip} />
               <ExImage src={music.image || music.channel.avatar} className={style.item_thumbnail} />
