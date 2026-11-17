@@ -5,7 +5,7 @@ import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
-import { postPaymentCancel, postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod } from 'api/internal/payment'
+import { postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod } from 'api/internal/payment'
 import { FetchError, Locale } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
@@ -13,7 +13,6 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Link from 'components/parts/Link'
-import Modal from 'components/parts/Modal'
 import CurrentBanner from './CurrentBanner'
 import style from './Payment.module.scss'
 import PlanCard from './PlanCard'
@@ -33,9 +32,8 @@ export default function Payment(props: Props): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
-  const [isModal, setIsModal] = useState<boolean>(false)
-  const [selectedPlan, setSelectedPlan] = useState<string>('')
   const [isMethodLoading, setIsMethodLoading] = useState<boolean>(false)
+  const [selectedPlan, setSelectedPlan] = useState<string>('')
 
   const currentPlan = mypage.plan
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
@@ -72,23 +70,6 @@ export default function Payment(props: Props): React.JSX.Element {
     router.push(ret.value.url)
   }
 
-  const handleModal = () => setIsModal(!isModal)
-
-  const handleCancelSubmit = async () => {
-    handleLoading(true)
-    const ret = await postPaymentCancel()
-    handleLoading(false)
-    if (ret.isErr()) {
-      handleToast(errorMessage(ret.error, FetchError.Post), true)
-      return
-    }
-    setIsModal(false)
-    const periodEnd = new Date(ret.value.periodEnd).toLocaleDateString(i18n.language)
-    handleToast(t('setting.payment.cancelReserved', { periodEnd }), false)
-    await queryClient.invalidateQueries({ queryKey: queryKeys.settingMypage })
-    await queryClient.invalidateQueries({ queryKey: queryKeys.paymentSubscription })
-  }
-
   const handleRevoke = async () => {
     handleLoading(true)
     const ret = await postPaymentCancelRevoke()
@@ -109,7 +90,15 @@ export default function Payment(props: Props): React.JSX.Element {
 
         <div className={style.plans}>
           {purchasable.map((plan) => (
-            <PlanCard key={plan.name} plan={plan} price={priceMap.get(plan.name)} active={currentPlan === plan.name} disabled={isPaid} loading={selectedPlan === plan.name} onPurchase={handlePurchase} />
+            <PlanCard
+              key={plan.name}
+              plan={plan}
+              price={priceMap.get(plan.name)}
+              active={currentPlan === plan.name}
+              disabled={isPaid}
+              loading={selectedPlan === plan.name}
+              onPurchase={handlePurchase}
+            />
           ))}
         </div>
 
@@ -137,7 +126,6 @@ export default function Payment(props: Props): React.JSX.Element {
           <div className={style.actions}>
             <Button color="green" name={t('setting.payment.change')} onClick={handleChange} />
             <Button color="blue" name={t('setting.payment.method')} loading={isMethodLoading} onClick={handleMethod} />
-            <Button color="red" name={t('setting.payment.cancel')} onClick={handleModal} />
           </div>
         )}
 
@@ -156,19 +144,6 @@ export default function Payment(props: Props): React.JSX.Element {
           </nav>
         </footer>
       </div>
-
-      <Modal
-        open={isModal}
-        onClose={handleModal}
-        title={t('setting.payment.cancelTitle')}
-        actions={[
-          { name: t('setting.button.cancel'), color: 'white', onClick: handleModal, disabled: loading },
-          { name: t('setting.payment.cancel'), color: 'red', onClick: handleCancelSubmit, loading },
-        ]}
-      >
-        <p>{t('setting.payment.cancelConfirm')}</p>
-        <p>{t('setting.payment.cancelNotice')}</p>
-      </Modal>
     </Main>
   )
 }

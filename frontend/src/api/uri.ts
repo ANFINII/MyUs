@@ -26,6 +26,7 @@ export const apiNotificationConfirmed = base + '/user/notification/confirmed'
 export const apiNotificationDeleted = base + '/user/notification/deleted'
 export const apiUserPage = (ulid: string) => base + `/user/userpage/${ulid}`
 export const apiUserPageMedia = (ulid: string, channelUlid: string) => base + `/user/userpage/${ulid}/media?channel_ulid=${channelUlid}`
+export const apiUserPlaylists = (ulid: string) => base + `/media/playlist/user/${ulid}`
 export const apiUserPageAdvertise = (ulid: string) => base + `/user/userpage/${ulid}/advertise`
 
 // Setting
@@ -47,6 +48,7 @@ export const apiChannelCreate = base + '/channel'
 export const apiChannelUser = base + '/channel/user'
 export const apiChannelSubscribe = base + '/channel/subscribe'
 export const apiChannel = (ulid: string) => base + `/channel/${ulid}`
+export const apiChannelSeries = (ulid: string) => base + `/media/series/channel/${ulid}`
 
 // Media
 export const apiHome = base + '/media/home'
@@ -80,9 +82,6 @@ export const apiComment = (ulid: string) => base + `/media/comment/${ulid}`
 export const apiMessages = base + '/media/message'
 export const apiMessage = (ulid: string) => base + `/media/message/${ulid}`
 
-export const apiChannelSeries = (channelUlid: string) => base + `/media/series/channel/${channelUlid}`
-export const apiUserPlaylists = (userUlid: string) => base + `/media/playlist/user/${userUlid}`
-
 export const apiPlaylists = base + '/media/playlist'
 export const apiPlaylist = (ulid: string) => base + `/media/playlist/${ulid}`
 export const apiPlaylistMusic = (ulid: string) => base + `/media/playlist/${ulid}/music`
@@ -114,7 +113,7 @@ export const apiManageAdvertises = base + '/manage/advertise'
 export const apiManageAdvertise = (ulid: string) => base + `/manage/advertise/${ulid}`
 
 export const apiAdvertiseGlobal = base + '/advertise/global'
-export const apiAdvertiseUser = (userUlid: string) => base + `/advertise/user/${userUlid}`
+export const apiAdvertiseUser = (ulid: string) => base + `/advertise/user/${ulid}`
 export const apiAdvertiseRead = (ulid: string) => base + `/advertise/${ulid}/read`
 
 // 外部API

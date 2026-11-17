@@ -12,6 +12,7 @@ class Plan:
     is_music_download: bool
     is_playlist: bool
     is_series: bool
+    is_hide_global_advertise: bool
     description: str
 
 
@@ -23,43 +24,48 @@ PLANS: list[Plan] = [
         is_music_download=False,
         is_playlist=False,
         is_series=False,
+        is_hide_global_advertise=False,
         description="・有料プランを解約します\n・アップロード機能\n・コメント機能\n・フォロー機能など",
     ),
     Plan(
         name=PlanName.BASIC,
-        prices=[Money(amount=550, currency=Currency.JPY), Money(amount=399, currency=Currency.USD)],
+        prices=[Money(amount=550, currency=Currency.JPY), Money(amount=400, currency=Currency.USD)],
         max_advertise=1,
         is_music_download=False,
         is_playlist=True,
         is_series=True,
-        description="・個別広告表示1つ\n・全体広告OFF\n・シリーズ作成\n・プレイリスト作成",
+        is_hide_global_advertise=False,
+        description="・シリーズ作成\n・プレイリスト作成 2つ\n・個別広告表示 1つ",
     ),
     Plan(
         name=PlanName.STANDARD,
-        prices=[Money(amount=880, currency=Currency.JPY), Money(amount=599, currency=Currency.USD)],
+        prices=[Money(amount=1100, currency=Currency.JPY), Money(amount=800, currency=Currency.USD)],
         max_advertise=2,
         is_music_download=False,
         is_playlist=True,
         is_series=True,
-        description="・個別広告表示2つ\n・全体広告OFF\n・シリーズ作成\n・プレイリスト作成",
+        is_hide_global_advertise=True,
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 2つ\n・全体広告非表示",
     ),
     Plan(
         name=PlanName.PREMIUM,
-        prices=[Money(amount=1200, currency=Currency.JPY), Money(amount=799, currency=Currency.USD)],
+        prices=[Money(amount=1650, currency=Currency.JPY), Money(amount=1200, currency=Currency.USD)],
         max_advertise=3,
         is_music_download=True,
         is_playlist=True,
         is_series=True,
-        description="・個別広告表示3つ\n・全体広告OFF\n・楽曲ダウンロード\n・シリーズ作成\n・プレイリスト作成",
+        is_hide_global_advertise=True,
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 3つ\n・全体広告非表示\n・楽曲ダウンロード",
     ),
     Plan(
         name=PlanName.ULTIMATE,
-        prices=[Money(amount=2000, currency=Currency.JPY), Money(amount=1299, currency=Currency.USD)],
+        prices=[Money(amount=3300, currency=Currency.JPY), Money(amount=2400, currency=Currency.USD)],
         max_advertise=4,
         is_music_download=True,
         is_playlist=True,
         is_series=True,
-        description="・個別広告表示4つ\n・全体広告OFF\n・楽曲ダウンロード\n・シリーズ作成\n・プレイリスト作成",
+        is_hide_global_advertise=True,
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 4つ\n・全体広告非表示\n・楽曲ダウンロード",
     ),
 ]
 
