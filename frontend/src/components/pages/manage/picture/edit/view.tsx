@@ -33,13 +33,14 @@ interface Props {
 
 export default function ManagePictureEdit(props: Props): React.JSX.Element {
   const { channels, categories, data } = props
+  const { categoryUlid, title, content, publish, publishAt } = data
 
   const router = useRouter()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<PictureUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish, publishAt: datetimeISO(data.publishAt) })
+  const [values, setValues] = useState<PictureUpdateIn>({ categoryUlid, title, content, publish, publishAt: datetimeISO(publishAt) })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]

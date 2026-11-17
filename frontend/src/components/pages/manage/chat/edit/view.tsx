@@ -33,6 +33,7 @@ interface Props {
 
 export default function ManageChatEdit(props: Props): React.JSX.Element {
   const { channels, categories, data } = props
+  const { categoryUlid, title, content, publish, publishAt, period } = data
 
   const router = useRouter()
   const { t } = useTranslation()
@@ -40,7 +41,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { formatDate } = useDatetime()
-  const [values, setValues] = useState<ChatUpdateIn>({ ...data, publishAt: datetimeISO(data.publishAt), period: formatDate(data.period) })
+  const [values, setValues] = useState<ChatUpdateIn>({ categoryUlid, title, content, publish, publishAt: datetimeISO(publishAt), period: formatDate(period) })
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
