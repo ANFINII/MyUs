@@ -12,6 +12,7 @@ import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
+import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
@@ -122,9 +123,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   return (
     <Main title={t('setting.mypage.title')} type="table" toast={toast} button={button}>
       {message && (
-        <ul className={style.messages_profile}>
-          <li>{message}</li>
-        </ul>
+        <Alert type="error">{message}</Alert>
       )}
 
       <Table>

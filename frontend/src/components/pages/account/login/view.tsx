@@ -12,6 +12,7 @@ import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
+import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Password from 'components/parts/Input/Password'
@@ -59,9 +60,7 @@ export default function Login(): React.JSX.Element {
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('welcome')}</h1>
           {message && (
-            <ul className="messages_login">
-              <li>{message}</li>
-            </ul>
+            <Alert type="error">{message}</Alert>
           )}
 
           <VStack gap="8">

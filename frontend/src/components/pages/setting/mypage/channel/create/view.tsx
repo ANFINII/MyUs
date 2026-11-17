@@ -11,6 +11,7 @@ import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
+import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
@@ -71,9 +72,7 @@ export default function ChannelCreate(): React.JSX.Element {
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('setting.channelCreate.title')}</h1>
           {message && (
-            <ul className="messages_signup">
-              <li>{message}</li>
-            </ul>
+            <Alert type="error">{message}</Alert>
           )}
 
           <VStack gap="8">
