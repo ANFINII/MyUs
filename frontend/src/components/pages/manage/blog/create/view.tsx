@@ -110,7 +110,8 @@ export default function BlogCreate(props: Props): React.JSX.Element {
             paidText={values.paidText}
             price={values.price}
             currency={seller.currency}
-            isEnabled={seller.isAvailable && seller.isEnabled}
+            isAvailable={seller.isAvailable}
+            isEnabled={seller.isEnabled}
             onPaidText={handlePaidText}
             onPrice={handlePrice}
           />

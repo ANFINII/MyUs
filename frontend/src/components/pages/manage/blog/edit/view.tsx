@@ -112,7 +112,8 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
             paidText={values.paidText}
             price={values.price}
             currency={price > 0 ? currency : seller.currency}
-            isEnabled={(seller.isAvailable && seller.isEnabled) || paidText !== ''}
+            isAvailable={seller.isAvailable || paidText !== ''}
+            isEnabled={seller.isEnabled || paidText !== ''}
             onPaidText={handlePaidText}
             onPrice={handlePrice}
           />
