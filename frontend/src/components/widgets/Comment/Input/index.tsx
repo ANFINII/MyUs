@@ -33,7 +33,7 @@ export default function CommentInput(props: Props): React.JSX.Element {
           {t('comment.total')}
           <span className="ml_4">{count}</span>
         </p>
-        <HStack gap="4">
+        <HStack gap="4" align="start">
           <AvatarLink src={user.avatar} ulid={user.ulid} title={user.nickname} />
           {user.isActive ? (
             <TextareaLine name="text" placeholder={t('comment.placeholder')} value={value} onChange={onChange} onSubmit={handleSubmit} />
