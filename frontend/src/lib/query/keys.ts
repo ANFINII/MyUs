@@ -39,6 +39,7 @@ export const queryKeys = {
   settingNotification: ['setting', 'notification'] as const,
   paymentSubscription: ['payment', 'subscription'] as const,
   paymentPlans: ['payment', 'plans'] as const,
+  paymentSeller: ['payment', 'seller'] as const,
 
   subscribeChannels: ['subscribe', 'channels'] as const,
   follows: (params: SearchParams) => ['follow', params] as const,

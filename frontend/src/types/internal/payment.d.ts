@@ -37,6 +37,19 @@ export interface PaymentMethodOut {
   url: string
 }
 
+export interface PaymentSellerOut {
+  isRegistered: boolean
+  isEnabled: boolean
+}
+
+export interface PaymentSellerOnboardIn {
+  locale: Locale
+}
+
+export interface PaymentSellerOnboardOut {
+  url: string
+}
+
 export interface PaymentCancelOut {
   canceledAt: string
   periodEnd: string

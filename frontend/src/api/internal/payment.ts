@@ -1,7 +1,7 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
-import { PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
-import { apiPaymentCancel, apiPaymentCancelRevoke, apiPaymentChange, apiPaymentCheckout, apiPaymentMethod, apiPaymentPlans, apiPaymentSubscription } from 'api/uri'
+import { PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSellerOnboardIn, PaymentSellerOnboardOut, PaymentSellerOut, PaymentSubscriptionOut } from 'types/internal/payment'
+import { apiPaymentCancel, apiPaymentCancelRevoke, apiPaymentChange, apiPaymentCheckout, apiPaymentMethod, apiPaymentPlans, apiPaymentSeller, apiPaymentSellerOnboard, apiPaymentSubscription } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getPaymentSubscription = async (): Promise<ApiOut<PaymentSubscriptionOut>> => {
@@ -30,4 +30,12 @@ export const postPaymentChange = async (request: PaymentChangeIn): Promise<ApiOu
 
 export const postPaymentMethod = async (request: PaymentMethodIn): Promise<ApiOut<PaymentMethodOut>> => {
   return await apiOut(apiClient('json').post(apiPaymentMethod, camelSnake(request)))
+}
+
+export const getPaymentSeller = async (): Promise<ApiOut<PaymentSellerOut>> => {
+  return await apiOut(apiClient('json').get(apiPaymentSeller))
+}
+
+export const postPaymentSellerOnboard = async (request: PaymentSellerOnboardIn): Promise<ApiOut<PaymentSellerOnboardOut>> => {
+  return await apiOut(apiClient('json').post(apiPaymentSellerOnboard, camelSnake(request)))
 }

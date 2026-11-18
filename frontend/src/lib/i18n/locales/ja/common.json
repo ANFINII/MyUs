@@ -47,6 +47,7 @@
     "playlistNotFound": "プレイリストが見つかりません",
     "playlistPlanRequired": "プレイリストは有料プランで作成できます",
     "seriesPlanRequired": "シリーズは有料プランで作成できます",
+    "paidContentPlanRequired": "有料記事は有料プランで販売できます",
     "planNotFound": "プランが見つかりません",
     "alreadySubscribed": "すでに有料プランを契約しています",
     "followSelf": "自分自身はフォローできません",
@@ -68,6 +69,7 @@
     "cancellationRevokeFailed": "解約の取り消しに失敗しました。時間をおいて再度お試しください",
     "paymentMethodFailed": "支払い方法の変更画面を開けませんでした。時間をおいて再度お試しください",
     "planChangeFailed": "プランの変更に失敗しました。時間をおいて再度お試しください",
+    "sellerOnboardFailed": "口座の登録を始められませんでした。時間をおいて再度お試しください",
     "planChangeSame": "今のプランと同じです",
     "planChangeToFree": "無料プランにするときは解約してください",
     "publishAtAfterPeriod": "公開日時は期間の終わりより前にしてください"
@@ -545,12 +547,21 @@
       "checkoutCancelTitle": "決済キャンセル",
       "checkoutCancelHeading": "決済をキャンセルしました",
       "checkoutCancelMessage": "料金は請求されていません。",
+      "seller": {
+        "title": "有料記事の販売",
+        "description": "有料記事を販売するには、売上を受け取る口座の登録が必要です。売上の15%をシステム利用料としていただきます。",
+        "pending": "口座の登録が終わっていません。続きから登録してください。",
+        "enabled": "口座の登録が完了しています。有料記事を販売できます。",
+        "register": "口座を登録",
+        "continue": "登録を続ける"
+      },
       "features": {
         "individualAds": "個別広告表示 {{count}}つ",
         "hideGlobalAds": "全体広告 非表示",
         "musicDownload": "楽曲ダウンロード",
         "playlist": "プレイリスト作成",
         "series": "シリーズ作成",
+        "paidContent": "有料記事の販売",
         "basic": "基本機能",
         "withAds": "広告あり"
       }

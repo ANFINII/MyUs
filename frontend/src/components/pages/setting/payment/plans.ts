@@ -3,15 +3,15 @@ import { Plan } from './PlanCard'
 export const plans: Plan[] = [
   {
     name: 'Basic',
-    features: [{ key: 'series' }, { key: 'playlist' }, { key: 'individualAds', count: 1 }],
+    features: [{ key: 'series' }, { key: 'paidContent' }, { key: 'playlist' }, { key: 'individualAds', count: 1 }],
   },
   {
     name: 'Standard',
-    features: [{ key: 'series' }, { key: 'playlist' }, { key: 'individualAds', count: 2 }, { key: 'hideGlobalAds' }],
+    features: [{ key: 'series' }, { key: 'paidContent' }, { key: 'playlist' }, { key: 'individualAds', count: 2 }, { key: 'hideGlobalAds' }],
   },
   {
     name: 'Premium',
-    features: [{ key: 'series' }, { key: 'playlist' }, { key: 'individualAds', count: 3 }, { key: 'hideGlobalAds' }, { key: 'musicDownload' }],
+    features: [{ key: 'series' }, { key: 'paidContent' }, { key: 'playlist' }, { key: 'individualAds', count: 3 }, { key: 'hideGlobalAds' }, { key: 'musicDownload' }],
   },
   {
     name: 'Free',

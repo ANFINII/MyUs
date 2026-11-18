@@ -11,7 +11,7 @@ export interface Plan {
 }
 
 export interface PlanFeature {
-  key: 'individualAds' | 'hideGlobalAds' | 'musicDownload' | 'playlist' | 'series' | 'basic' | 'withAds'
+  key: 'individualAds' | 'hideGlobalAds' | 'musicDownload' | 'playlist' | 'series' | 'paidContent' | 'basic' | 'withAds'
   count?: number
 }
 

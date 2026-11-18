@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
-import { PaymentPlanOut, PaymentSubscriptionOut } from 'types/internal/payment'
+import { PaymentPlanOut, PaymentSellerOut, PaymentSubscriptionOut } from 'types/internal/payment'
 import { MypageOut } from 'types/internal/user'
-import { postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod } from 'api/internal/payment'
+import { postPaymentCancelRevoke, postPaymentCheckout, postPaymentMethod, postPaymentSellerOnboard } from 'api/internal/payment'
 import { FetchError } from 'utils/constants/enum'
 import { toLocale } from 'utils/functions/convertEnum'
 import { useLoading } from 'components/hooks/useLoading'
@@ -23,10 +23,11 @@ interface Props {
   mypage: MypageOut
   subscription: PaymentSubscriptionOut
   planPrices: PaymentPlanOut[]
+  seller: PaymentSellerOut
 }
 
 export default function Payment(props: Props): React.JSX.Element {
-  const { mypage, subscription, planPrices } = props
+  const { mypage, subscription, planPrices, seller } = props
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -34,6 +35,7 @@ export default function Payment(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isMethodLoading, setIsMethodLoading] = useState<boolean>(false)
+  const [isSellerLoading, setIsSellerLoading] = useState<boolean>(false)
   const [selectedPlan, setSelectedPlan] = useState<string>('')
 
   const currentPlan = mypage.plan
@@ -44,6 +46,8 @@ export default function Payment(props: Props): React.JSX.Element {
   const isPastDue = isPaid && subscription.isPastDue
   const cancelNotice = isCanceled ? t('setting.payment.cancelScheduled', { periodEnd: new Date(subscription.periodEnd).toLocaleDateString(i18n.language) }) : ''
   const notice = isPastDue ? t('setting.payment.pastDue') : cancelNotice
+  const sellerPending = seller.isRegistered ? t('setting.payment.seller.pending') : t('setting.payment.seller.description')
+  const sellerNotice = seller.isEnabled ? t('setting.payment.seller.enabled') : sellerPending
 
   const handleChange = () => router.push('/setting/payment/change')
 
@@ -65,6 +69,18 @@ export default function Payment(props: Props): React.JSX.Element {
     const ret = await postPaymentMethod({ locale })
     if (ret.isErr()) {
       setIsMethodLoading(false)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
+      return
+    }
+    router.push(ret.value.url)
+  }
+
+  const handleSellerOnboard = async () => {
+    setIsSellerLoading(true)
+    const locale = toLocale(router.locale)
+    const ret = await postPaymentSellerOnboard({ locale })
+    if (ret.isErr()) {
+      setIsSellerLoading(false)
       handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
@@ -128,6 +144,21 @@ export default function Payment(props: Props): React.JSX.Element {
             <Button color="green" name={t('setting.payment.change')} onClick={handleChange} />
             <Button color="blue" name={t('setting.payment.method')} loading={isMethodLoading} onClick={handleMethod} />
           </div>
+        )}
+
+        {(isPaid || seller.isRegistered) && (
+          <section className={style.seller}>
+            <h2 className={style.seller_title}>{t('setting.payment.seller.title')}</h2>
+            <p className={style.seller_notice}>{sellerNotice}</p>
+            {!seller.isEnabled && (
+              <Button
+                color="blue"
+                name={seller.isRegistered ? t('setting.payment.seller.continue') : t('setting.payment.seller.register')}
+                loading={isSellerLoading}
+                onClick={handleSellerOnboard}
+              />
+            )}
+          </section>
         )}
 
         <footer className={style.footer}>
