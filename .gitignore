@@ -159,7 +159,6 @@ envs
 myus/fixtures
 myus/logs
 myus/media
-myus/myus/db/migrations
 myus/myus/ai
 
 # 一時的に無視
