@@ -1,60 +1,42 @@
+x-app: &app
+  restart: always
+  build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+      UV_SYNC_ARGS: ""
+  volumes:
+    - ./myus:/code
+  env_file:
+    - ./myus/envs/django.env
+  environment:
+    MYSQL_HOST: mysql
+    MYSQL_PORT: "3306"
+    REDIS_HOST: myus_redis
+    REDIS_PORT: "6379"
+  depends_on:
+    - mysql
+    - myus_redis
+  networks:
+    - myus_network
+
 services:
   myus_backend:
+    <<: *app
     container_name: myus_backend
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        UV_SYNC_ARGS: ""
-    volumes:
-      - ./myus:/code
-    env_file:
-      - ./myus/envs/django.env
-    depends_on:
-      - mysql
-      - myus_redis
     ports:
-      - "8056:8000"
+      - "127.0.0.1:8000:8000"
     command: sh -c 'python manage.py runserver 0.0.0.0:8000 --settings config.settings.local'
-    networks:
-      - myus_network
 
   myus_worker:
+    <<: *app
     container_name: myus_worker
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        UV_SYNC_ARGS: ""
-    volumes:
-      - ./myus:/code
-    env_file:
-      - ./myus/envs/django.env
-    depends_on:
-      - mysql
     command: sh -c 'python manage.py process_payment_events --settings config.settings.local'
-    networks:
-      - myus_network
 
   myus_encoder:
+    <<: *app
     container_name: myus_encoder
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        UV_SYNC_ARGS: ""
-    volumes:
-      - ./myus:/code
-    env_file:
-      - ./myus/envs/django.env
-    depends_on:
-      - mysql
     command: sh -c 'python manage.py encode_videos --settings config.settings.local'
-    networks:
-      - myus_network
 
   mysql:
     container_name: myus_mysql
@@ -73,6 +55,7 @@ services:
   myus_redis:
     container_name: myus_redis
     image: redis:7-alpine
+    restart: always
     env_file:
       - ./myus/envs/redis.env
     ports:
