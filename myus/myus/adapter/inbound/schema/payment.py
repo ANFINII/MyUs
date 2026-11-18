@@ -33,6 +33,7 @@ class PaymentSellerOnboardOut(BaseModel):
 
 
 class PaymentSellerOut(BaseModel):
+    is_available: bool
     is_registered: bool
     is_enabled: bool
 

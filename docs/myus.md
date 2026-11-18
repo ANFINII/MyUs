@@ -381,8 +381,8 @@ flowchart TB
 #### PaymentSeller
 - 記事を売る人と、決済会社ごとの受け取り口座（Stripe Connect の Express のアカウント `acct_...`）の対応。ユーザーと決済会社の組で1つ
 - `is_enabled` は、決済会社がその口座での決済を認めているか（Stripe の `charges_enabled`）
-- 登録（`POST /payment/seller/onboard`・`onboard_seller`）は、有料プラン（`Plan.is_paid_content`）の人だけ。口座が無ければ作り、決済会社の登録の画面の URL を返す。登録が終わるか、URL の期限が切れると決済の画面に戻る
-- 状態（`GET /payment/seller`・`get_seller`）は、そのたびに決済会社から取り直し、変わっていれば `is_enabled` を保存する。Connect の webhook は使わない
+- 登録（`POST /payment/seller/onboard`・`onboard_seller`）は、Standard 以上のプラン（`Plan.is_paid_content`）の人だけ。口座が無ければ作り、決済会社の登録の画面の URL を返す。登録が終わるか、URL の期限が切れると決済の画面に戻る
+- 状態（`GET /payment/seller`・`get_seller`）は、そのたびに決済会社から取り直し、変わっていれば `is_enabled` を保存する。Connect の webhook は使わない。今のプランで売れるか（`is_available`）も返す
 
 #### Subscription
 - 継続課金の状態（顧客・決済会社のサブスクリプション ID・商品・契約時の価格・状態・期間）

@@ -36,9 +36,9 @@ PLANS = [
         is_music_download=False,
         is_playlist=True,
         is_series=True,
-        is_paid_content=True,
+        is_paid_content=False,
         is_hide_global_advertise=False,
-        description="・シリーズ作成\n・有料記事の販売\n・プレイリスト作成 2つ\n・個別広告表示 1つ",
+        description="・シリーズ作成\n・プレイリスト作成 2つ\n・個別広告表示 1つ",
     ),
     Plan(
         name=PlanName.STANDARD,

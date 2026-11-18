@@ -10,7 +10,6 @@ from myus.domain.payment.ledger.data import LedgerEntryData
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.data import PayoutData
 from myus.domain.payment.payout.interface import FilterOption as PayoutFilterOption, PageOption as PayoutPageOption, SortOption as PayoutSortOption, PayoutInterface
-from myus.domain.payment.plan import get_plan
 from myus.domain.payment.provider.interface import PaymentInterface
 from myus.domain.payment.seller.data import PaymentSellerData
 from myus.domain.payment.seller.interface import FilterOption as PaymentSellerFilterOption, PageOption as PaymentSellerPageOption, SortOption as PaymentSellerSortOption, PaymentSellerInterface
@@ -25,7 +24,7 @@ from myus.domain.payment.transaction.interface import FilterOption as Transactio
 from myus.domain.user.data import UserAllData
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
-from myus.utils.common.result import AccessError, CommandError, FatalError, ForbiddenError, HistoryError, Result
+from myus.utils.common.result import CommandError, FatalError, HistoryError, Result
 from myus.utils.enum.payment import CancelError, LedgerEntryType, PaymentProvider, PaymentStatus, SubscriptionStatus
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.map import payment_status_rank
@@ -120,21 +119,6 @@ def get_active_subscription_data(user_id: int) -> Result[SubscriptionData | None
         return Result.ok(None)
 
     return Result.ok(active_subscriptions[0])
-
-
-@Result.shield_exception()
-def check_paid_content_plan_data(user_id: int) -> Result[None, AccessError]:
-    user_ret = get_user_data(user_id=user_id)
-    if user_ret.is_err:
-        return Result.err(user_ret.err_value)
-
-    user = user_ret.ok_value
-    plan = get_plan(user.user_plan.plan) if user is not None else None
-    if plan is None or not plan.is_paid_content:
-        log.info("plan required", user_id=user_id)
-        return Result.err(ForbiddenError("error.paidContentPlanRequired"))
-
-    return Result.ok(None)
 
 
 @Result.shield_exception()

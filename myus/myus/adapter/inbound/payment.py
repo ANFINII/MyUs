@@ -272,7 +272,7 @@ class PaymentAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         seller = seller_ret.ok_value
-        return 200, PaymentSellerOut(is_registered=seller.is_registered, is_enabled=seller.is_enabled)
+        return 200, PaymentSellerOut(is_available=seller.is_available, is_registered=seller.is_registered, is_enabled=seller.is_enabled)
 
     @staticmethod
     @router.post("/seller/onboard", response={200: PaymentSellerOnboardOut, 400: ErrorOut, 500: ErrorOut})

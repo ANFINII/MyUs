@@ -16,7 +16,7 @@
 
 ### ブログの有料部分（記事ごとに売る）
 
-note のように、ブログの有料部分を記事ごとに売る。売上は投稿者に送り、MyUs は利用料として 15% を取る（Stripe の destination charge と `application_fee_amount`）。決済手数料は MyUs が負担する。有料部分を付けられるのは有料プラン（`Plan.is_paid_content`）の人だけ。帳簿の集約（Phase 7）を待たず、今の取引・明細と同じ投影の形で作る（2026-11-18 決定）。
+note のように、ブログの有料部分を記事ごとに売る。売上は投稿者に送り、MyUs は利用料として 15% を取る（Stripe の destination charge と `application_fee_amount`）。決済手数料は MyUs が負担する。有料部分を付けられるのは Standard 以上のプラン（`Plan.is_paid_content`）の人だけ。帳簿の集約（Phase 7）を待たず、今の取引・明細と同じ投影の形で作る（2026-11-18 決定）。
 
 | 順 | 内容 |
 |---|---|

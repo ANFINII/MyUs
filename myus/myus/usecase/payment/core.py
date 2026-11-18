@@ -15,14 +15,14 @@ from myus.domain.payment.subscription.interface import FilterOption as Subscript
 from myus.domain.payment.transaction.interface import TransactionInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
-from myus.utils.common.result import AccessError, CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
+from myus.utils.common.result import AccessError, CommandError, ConflictError, FatalError, FindError, ForbiddenError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
 from myus.utils.enum.i18n import Locale
 from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.common import create_frontend_url
 from myus.utils.functions.map import country_currency
 from myus.utils.functions.transaction import atomic_result
-from ._convert import check_paid_content_plan_data, get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
+from ._convert import get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from ..dto.ledger import LedgerRowDTO
 from ..dto.plan import PlanPriceDTO
 from ..dto.seller import SellerDTO
@@ -313,13 +313,21 @@ def create_payment_method_session(user_id: int, locale: Locale) -> Result[Paymen
 
 @Result.shield_exception()
 def get_seller(user_id: int) -> Result[SellerDTO, FatalError]:
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    plan = get_plan(user.user_plan.plan) if user is not None else None
+    is_available = plan is not None and plan.is_paid_content
+
     seller_ret = get_payment_seller_data(user_id)
     if seller_ret.is_err:
         return Result.err(seller_ret.err_value)
 
     seller = seller_ret.ok_value
     if seller is None:
-        return Result.ok(SellerDTO(is_registered=False, is_enabled=False))
+        return Result.ok(SellerDTO(is_available=is_available, is_registered=False, is_enabled=False))
 
     repo = get_payment_repository(seller.provider)
     status_ret = repo.get_seller(seller.external_id)
@@ -333,20 +341,16 @@ def get_seller(user_id: int) -> Result[SellerDTO, FatalError]:
                 save_ret = save_payment_seller_data(replace(seller, is_enabled=is_enabled))
                 if save_ret.is_err:
                     return Result.err(save_ret.err_value)
-            return Result.ok(SellerDTO(is_registered=True, is_enabled=is_enabled))
+            return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=is_enabled))
         case SellerStatusFailedData(error=error, message=message):
             log.warning("seller status failed", user_id=user_id, error=error.value, message=message)
-            return Result.ok(SellerDTO(is_registered=True, is_enabled=seller.is_enabled))
+            return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=seller.is_enabled))
         case _:
             assert_never(status)
 
 
 @Result.shield_exception()
 def onboard_seller(user_id: int, locale: Locale) -> Result[SellerOnboardResult, AccessError]:
-    plan_ret = check_paid_content_plan_data(user_id)
-    if plan_ret.is_err:
-        return Result.err(plan_ret.err_value)
-
     user_ret = get_user_data(user_id=user_id)
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
@@ -354,6 +358,11 @@ def onboard_seller(user_id: int, locale: Locale) -> Result[SellerOnboardResult, 
     user = user_ret.ok_value
     if user is None:
         return Result.err(NotFoundError("error.userNotFound"))
+
+    plan = get_plan(user.user_plan.plan)
+    if plan is None or not plan.is_paid_content:
+        log.info("plan required", user_id=user_id)
+        return Result.err(ForbiddenError("error.paidContentPlanRequired"))
 
     seller_ret = get_payment_seller_data(user_id)
     if seller_ret.is_err:
