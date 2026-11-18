@@ -2,14 +2,14 @@ from datetime import datetime, timezone
 from typing import assert_never
 from ninja import Router
 from django.http import HttpRequest
-from myus.domain.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, WebhookVerified, WebhookVerifyFailed
-from myus.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, get_plan_prices, get_subscription, receive_payment_event, revoke_cancellation, verify_webhook
+from myus.domain.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, SellerOnboardCreated, SellerOnboardFailed, WebhookVerified, WebhookVerifyFailed
+from myus.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, get_plan_prices, get_seller, get_subscription, onboard_seller, receive_payment_event, revoke_cancellation, verify_webhook
 from myus.utils.common.logger import log
-from myus.utils.common.result import FatalError, NotFoundError, ValidationError
+from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from myus.utils.enum.payment import PaymentProvider, SubscriptionStatus, WebhookVerifyError
 from .auth import auth_check
 from .schema.common import ErrorOut, ErrorType
-from .schema.payment import MoneyOut, PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSubscriptionOut, PaymentWebhookOut
+from .schema.payment import MoneyOut, PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSellerOnboardIn, PaymentSellerOnboardOut, PaymentSellerOut, PaymentSubscriptionOut, PaymentWebhookOut
 
 
 class PaymentAPI:
@@ -255,3 +255,53 @@ class PaymentAPI:
             case PaymentMethodSessionFailed(error=error, message=message):
                 log.error("payment method session failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.paymentMethodFailed")
+
+    @staticmethod
+    @router.get("/seller", response={200: PaymentSellerOut, 400: ErrorOut, 500: ErrorOut})
+    def seller(request: HttpRequest):
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        seller_ret = get_seller(user_id)
+        if seller_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        seller = seller_ret.ok_value
+        return 200, PaymentSellerOut(is_registered=seller.is_registered, is_enabled=seller.is_enabled)
+
+    @staticmethod
+    @router.post("/seller/onboard", response={200: PaymentSellerOnboardOut, 400: ErrorOut, 500: ErrorOut})
+    def seller_onboard(request: HttpRequest, input: PaymentSellerOnboardIn):
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        onboard_ret = onboard_seller(user_id, input.locale)
+        if onboard_ret.is_err:
+            message = onboard_ret.err_value.message
+            match onboard_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case ForbiddenError():
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(onboard_ret.err_value)
+
+        onboard = onboard_ret.ok_value
+        match onboard:
+            case SellerOnboardCreated(redirect_url=redirect_url):
+                return 200, PaymentSellerOnboardOut(url=redirect_url)
+            case SellerOnboardFailed(error=error, message=message):
+                log.error("seller onboard failed", error=error.value, message=message)
+                return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.sellerOnboardFailed")

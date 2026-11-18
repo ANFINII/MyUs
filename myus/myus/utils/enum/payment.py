@@ -42,6 +42,18 @@ class PaymentMethodSessionError(str, Enum):
     NETWORK_ERROR = "NetworkError"
 
 
+class SellerOnboardError(str, Enum):
+    NOT_FOUND = "NotFound"
+    PROVIDER_REJECTED = "ProviderRejected"
+    NETWORK_ERROR = "NetworkError"
+
+
+class SellerStatusError(str, Enum):
+    NOT_FOUND = "NotFound"
+    PROVIDER_REJECTED = "ProviderRejected"
+    NETWORK_ERROR = "NetworkError"
+
+
 class SubscriptionStatus(str, Enum):
     ACTIVE = "Active"
     PAST_DUE = "PastDue"
