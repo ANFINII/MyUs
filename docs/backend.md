@@ -286,6 +286,11 @@ new_ids = get_save_new_ids(models, FOLLOW_FIELDS)
 return Result.ok(new_ids)
 ```
 
+### モデルの列を足すとき
+- マイグレーションは git の管理外なので、PR には `sqlmigrate` で出した SQL を書く
+- 初期値は、要るときだけ付ける。保存するときに必ず渡す列（ブログの `currency` など）には付けない。既存の行を埋める値は、SQL で `ADD COLUMN ... DEFAULT 'JPY'` のあとに `DROP DEFAULT` する
+- `default=Currency.JPY` のように enum を初期値にすると、`sqlmigrate` の SQL では `'Currency.JPY'` と enum の名前になり、既存の行が読めなくなる。PR の SQL では値（`'JPY'`）に直す
+
 ## 層の責務
 
 | 層 | 責務 | 依存してよいもの |
@@ -412,3 +417,4 @@ uv run ruff check myus config tests --extend-ignore I
 - 2026-11-16: 本番のメディアを`django-storages`で S3 に置き、URL は`settings.MEDIA_BASE_URL`（本番は CloudFront）で作るようにした。動画の変換は一時フォルダで行い、結果を保存先に上げる
 - 2026-11-16: Music にジャケット画像（`image`）と再生時間（`duration`。アップロード時に ffprobe で取る）を足した
 - 2026-11-16: Music の再生時間（`duration`）を DB に持つのをやめ、一覧のカードでカーソルを乗せたとき・再生したときにブラウザで読むようにした
+- 2026-11-18: モデルの列を足すときの決まり（初期値は要るときだけ、enum の初期値は SQL で値に直す）を追記

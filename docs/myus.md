@@ -9,7 +9,7 @@ MyUsは「My Idea Know Us」を由来とする、YouTube型UIを採用した総�
 ### コンテンツ投稿機能
 - **Video**: 動画アップロード
 - **Music**: 音楽アップロード
-- **Blog**: リッチテキストエディタ対応ブログ
+- **Blog**: リッチテキストエディタ対応ブログ。有料部分を付けて記事ごとに売れる（Standard 以上）
 - **Comic**: 漫画投稿
 - **Picture**: 画像投稿
 - **Chat**: リアルタイムチャット
@@ -20,6 +20,10 @@ MyUsは「My Idea Know Us」を由来とする、YouTube型UIを採用した総�
 - マイページ機能
 - 通知設定
 - 料金プラン管理
+- プレイリスト（音楽を集めて並べる）
+- シリーズ（チャンネルの同じ種類の投稿をまとめる）
+- 個別広告の掲載（数はプランで決まる）
+- 有料記事の販売（売上を受け取る口座の登録。Stripe Connect）
 
 ### インタラクション機能
 - いいね機能
@@ -352,8 +356,8 @@ flowchart TB
 #### 通貨
 - 円とドルに対応する。ユーザーの国/地域（`Profile.country`）で決め、日本は円、それ以外はドル（`utils/functions/map.py` の `country_currency`）
 - 契約中は契約の通貨を使う。国/地域を変えても、契約中のプランの請求の通貨は変わらない。契約が無ければ国/地域で決める
-- 価格は `domain/payment/plan.py` の `Plan.prices`（通貨ごとの `Money`。金額は最小単位で、$3.99 は 399）。FE は `GET /payment/plans` から受け取り、価格を直書きしない
-- ドルの価格は、円の価格を為替で換算して端数を .99 にそろえた決まった値（1ドル＝150円前後で 550円 → $3.99）。為替が大きく動いたら見直す。Stripe の Price の金額を変えても、契約中の人の金額は変わらず、新しく契約する人から変わる。Stripe の Adaptive Pricing（請求のたびに為替で換算）は、価格が毎月変わり、画面に正確な金額を出せないので使わない
+- 価格は `domain/payment/plan.py` の `Plan.prices`（通貨ごとの `Money`。金額は最小単位で、$4.00 は 400）。FE は `GET /payment/plans` から受け取り、価格を直書きしない
+- ドルの価格は、円の価格を為替で換算してきりのよい額にそろえた決まった値（550円 → $4.00・1,100円 → $8.00・1,650円 → $12.00・3,300円 → $24.00）。為替が大きく動いたら見直す。Stripe の Price の金額を変えても、契約中の人の金額は変わらず、新しく契約する人から変わる。Stripe の Adaptive Pricing（請求のたびに為替で換算）は、価格が毎月変わり、画面に正確な金額を出せないので使わない
 - Stripe は Price ID（`STRIPE_PRICE_ID_*`）をそのまま使い、Price の `currency_options` に通貨ごとの金額を持たせる。checkout で `currency` を渡す。プラン変更は契約の通貨を引き継ぐ
 - 国/地域の候補は YouTube Premium の対象国・地域に中国を足した121（`Country`）
 
@@ -474,6 +478,7 @@ flowchart TB
 ## 今後の展開
 
 ### 残っているもの
-- 決済：クリエイターが売る機能（Stripe Connect・Store・Product）、Stripe のテスト環境での確認（[roadmap.md](roadmap.md)）
+- 決済：Stripe のダッシュボードの設定と、テスト環境での確認（[roadmap.md](roadmap.md)）
+- 本番のマイグレーションの方法（マイグレーションが Git の管理外なので、デプロイで何を流すかが決まっていない。[roadmap.md](roadmap.md)）
 - Event Sourcing：外部操作の要求と結果・Projector・帳簿の集約（保留。[roadmap.md](roadmap.md)）
 - 投稿者ごとの Google Tag Manager（マイページの `tag_manager_id`）：ID は登録できるが、読み込みはしていない。GTM は任意のスクリプトを動かせるので、投稿者の GTM を MyUs のページで読み込むと、投稿者が閲覧者のページで好きなスクリプトを動かせてしまう（Cookie 以外の情報の抜き取り・画面の書き換えなど）。入れるなら、MyUs のドメインとは別の場所で動かす仕組みが要る
