@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import assert_never
 from ninja import Router
 from django.http import HttpRequest
-from myus.domain.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, SellerOnboardCreatedData, SellerOnboardFailedData, WebhookVerified, WebhookVerifyFailed
+from myus.domain.payment.provider.data import CancelFailedData, CancelSuccessData, CheckoutCreatedData, CheckoutFailedData, PaymentMethodSessionCreatedData, PaymentMethodSessionFailedData, PlanChangeFailedData, PlanChangeSuccessData, RevokeFailedData, RevokeSuccessData, SellerOnboardCreatedData, SellerOnboardFailedData, WebhookVerifiedData, WebhookVerifyFailedData
 from myus.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, get_plan_prices, get_seller, get_subscription, onboard_seller, receive_payment_event, revoke_cancellation, verify_webhook
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
@@ -93,9 +93,9 @@ class PaymentAPI:
 
         checkout = checkout_ret.ok_value
         match checkout:
-            case CheckoutCreated(session=session):
+            case CheckoutCreatedData(session=session):
                 return 200, PaymentCheckoutOut(url=session.redirect_url)
-            case CheckoutFailed(error=error, message=message):
+            case CheckoutFailedData(error=error, message=message):
                 log.error("checkout failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.checkoutFailed")
 
@@ -111,13 +111,13 @@ class PaymentAPI:
 
         verification = verify_ret.ok_value
         match verification:
-            case WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=message):
+            case WebhookVerifyFailedData(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=message):
                 log.info("unsupported event", message=message)
                 return 200, PaymentWebhookOut(message="Unsupported event type")
-            case WebhookVerifyFailed(error=error, message=message):
+            case WebhookVerifyFailedData(error=error, message=message):
                 log.warning("verify failed", error=error.value, message=message)
                 return 400, ErrorOut(type=ErrorType.VALIDATION, message="Invalid webhook")
-            case WebhookVerified(event=event):
+            case WebhookVerifiedData(event=event):
                 log.info("verified", event_id=event.event_id, event_type=event.event_type.value)
 
                 receive_ret = receive_payment_event(event)
@@ -154,9 +154,9 @@ class PaymentAPI:
 
         cancellation = cancel_ret.ok_value
         match cancellation:
-            case CancelSuccess(canceled_at=canceled_at, period_end=period_end):
+            case CancelSuccessData(canceled_at=canceled_at, period_end=period_end):
                 return 200, PaymentCancelOut(canceled_at=canceled_at, period_end=period_end)
-            case CancelFailed(error=error, message=message):
+            case CancelFailedData(error=error, message=message):
                 log.error("cancel failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.cancelFailed")
 
@@ -186,9 +186,9 @@ class PaymentAPI:
 
         revoke = revoke_ret.ok_value
         match revoke:
-            case RevokeSuccess():
+            case RevokeSuccessData():
                 return 200, None
-            case RevokeFailed(error=error, message=message):
+            case RevokeFailedData(error=error, message=message):
                 log.error("cancel revoke failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.cancellationRevokeFailed")
 
@@ -220,9 +220,9 @@ class PaymentAPI:
 
         change = change_ret.ok_value
         match change:
-            case PlanChangeSuccess():
+            case PlanChangeSuccessData():
                 return 200, None
-            case PlanChangeFailed(error=error, message=message):
+            case PlanChangeFailedData(error=error, message=message):
                 log.error("plan change failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.planChangeFailed")
 
@@ -250,9 +250,9 @@ class PaymentAPI:
 
         session = session_ret.ok_value
         match session:
-            case PaymentMethodSessionCreated(redirect_url=redirect_url):
+            case PaymentMethodSessionCreatedData(redirect_url=redirect_url):
                 return 200, PaymentMethodOut(url=redirect_url)
-            case PaymentMethodSessionFailed(error=error, message=message):
+            case PaymentMethodSessionFailedData(error=error, message=message):
                 log.error("payment method session failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.paymentMethodFailed")
 

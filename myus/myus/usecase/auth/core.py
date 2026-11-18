@@ -3,7 +3,7 @@ from datetime import UTC, date, datetime
 from typing import assert_never
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
-from myus.domain.payment.provider.data import CancelFailed, CancelSuccess
+from myus.domain.payment.provider.data import CancelFailedData, CancelSuccessData
 from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from myus.domain.user.interface import FilterOption, PageOption, SortOption, UserInterface
 from myus.injectors.container import injector
@@ -416,9 +416,9 @@ def withdraw_user(user_id: int, password: str) -> Result[str, FatalError]:
     else:
         cancellation = cancel_ret.ok_value
         match cancellation:
-            case CancelSuccess() | CancelFailed(error=CancelError.NOT_FOUND):
+            case CancelSuccessData() | CancelFailedData(error=CancelError.NOT_FOUND):
                 log.info("subscription canceled", user_id=user_id)
-            case CancelFailed(error=error, message=message):
+            case CancelFailedData(error=error, message=message):
                 log.error("subscription cancel failed", user_id=user_id, error=error.value, message=message)
                 return Result.ok("error.cancelFailed")
             case _:

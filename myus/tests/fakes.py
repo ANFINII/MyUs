@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import ProviderSubscriptionData
-from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, SellerOnboardData, SellerOnboardResult, SellerStatusResult, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelResult, CancelSuccessData, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, SellerOnboardData, SellerOnboardResult, SellerStatusResult, WebhookVerifyResult
 from myus.domain.payment.provider.interface import PaymentInterface
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Currency, Locale
@@ -14,7 +14,7 @@ class FakePayment(PaymentInterface):
         self.subscriptions: dict[str, ProviderSubscriptionData] = {}
         self.canceled_ids: list[str] = []
         self.idempotency_keys: list[str] = []
-        self.cancel_result: CancelResult = CancelSuccess(
+        self.cancel_result: CancelResult = CancelSuccessData(
             canceled_at=datetime(2026, 10, 15, tzinfo=timezone.utc),
             period_end=datetime(2026, 11, 1, tzinfo=timezone.utc),
         )
@@ -28,7 +28,7 @@ class FakePayment(PaymentInterface):
     def cancel_subscription(self, external_id: str, idempotency_key: str) -> Result[CancelResult, FatalError]:
         self.canceled_ids.append(external_id)
         self.idempotency_keys.append(idempotency_key)
-        if isinstance(self.cancel_result, CancelSuccess) and external_id in self.subscriptions:
+        if isinstance(self.cancel_result, CancelSuccessData) and external_id in self.subscriptions:
             self.subscriptions[external_id] = replace(self.subscriptions[external_id], canceled_at=self.cancel_result.canceled_at, current_period_end=self.cancel_result.period_end)
         return Result.ok(self.cancel_result)
 
