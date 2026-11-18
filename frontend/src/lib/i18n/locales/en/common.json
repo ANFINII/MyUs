@@ -47,6 +47,7 @@
     "playlistNotFound": "Playlist not found",
     "playlistPlanRequired": "Playlists are available on paid plans",
     "seriesPlanRequired": "Series are available on paid plans",
+    "paidContentPlanRequired": "Paid articles are available on the Standard plan or higher",
     "planNotFound": "Plan not found",
     "alreadySubscribed": "You already have a paid plan",
     "followSelf": "You cannot follow yourself",
@@ -68,6 +69,7 @@
     "cancellationRevokeFailed": "Failed to undo the cancellation. Please try again later",
     "paymentMethodFailed": "Could not open the payment method page. Please try again later",
     "planChangeFailed": "Failed to change the plan. Please try again later",
+    "sellerOnboardFailed": "Could not start the account registration. Please try again later",
     "planChangeSame": "This is your current plan",
     "planChangeToFree": "To switch to the free plan, please cancel your subscription",
     "publishAtAfterPeriod": "Set the publish date on or before the end of the period"
@@ -549,10 +551,19 @@
       "checkoutCancelTitle": "Payment canceled",
       "checkoutCancelHeading": "Payment was canceled",
       "checkoutCancelMessage": "You have not been charged.",
+      "seller": {
+        "title": "Sell paid articles",
+        "description": "To sell paid articles, register an account to receive your earnings. A 15% system fee is deducted from sales.",
+        "pending": "Your account registration is not finished. Please continue.",
+        "enabled": "Your account is registered. You can sell paid articles.",
+        "register": "Register account",
+        "continue": "Continue registration"
+      },
       "features": {
         "individualAds_one": "{{count}} custom ad slot",
         "individualAds_other": "{{count}} custom ad slots",
         "hideGlobalAds": "No site-wide ads",
+        "paidContent": "Sell paid articles",
         "musicDownload": "Music downloads",
         "playlist": "Create playlists",
         "series": "Create series",

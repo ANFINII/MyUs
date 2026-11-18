@@ -25,7 +25,7 @@ import {
 import { getManageSeries, getManageSeriesList } from 'api/internal/manage/series'
 import { getBlog, getChat, getComic, getMusic, getPicture, getVideo } from 'api/internal/media/detail'
 import { getBlogs, getChats, getComics, getHome, getMusics, getPictures, getRecommend, getVideos } from 'api/internal/media/list'
-import { getPaymentPlans, getPaymentSubscription } from 'api/internal/payment'
+import { getPaymentPlans, getPaymentSeller, getPaymentSubscription } from 'api/internal/payment'
 import { getPlaylist, getPlaylists, getUserPlaylists } from 'api/internal/playlist'
 import { getChannelSeries } from 'api/internal/series'
 import { getSettingMypage, getSettingNotification, getSettingProfile } from 'api/internal/setting'
@@ -76,6 +76,7 @@ export const settingMypageQuery = () => queryOptions({ queryKey: queryKeys.setti
 export const settingNotificationQuery = () => queryOptions({ queryKey: queryKeys.settingNotification, queryFn: () => toQuery(getSettingNotification()), refetchOnMount: false })
 export const paymentSubscriptionQuery = () => queryOptions({ queryKey: queryKeys.paymentSubscription, queryFn: () => toQuery(getPaymentSubscription()), refetchOnMount: false })
 export const paymentPlansQuery = () => queryOptions({ queryKey: queryKeys.paymentPlans, queryFn: () => toQuery(getPaymentPlans()), refetchOnMount: false })
+export const paymentSellerQuery = () => queryOptions({ queryKey: queryKeys.paymentSeller, queryFn: () => toQuery(getPaymentSeller()), refetchOnMount: false })
 
 export const manageVideosQuery = (params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.manageVideos(params), queryFn: () => toQuery(getManageVideos(params)), refetchOnMount: false })

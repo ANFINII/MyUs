@@ -32,6 +32,7 @@ import {
   musicsQuery,
   passwordResetQuery,
   paymentPlansQuery,
+  paymentSellerQuery,
   paymentSubscriptionQuery,
   pictureQuery,
   picturesQuery,
@@ -157,7 +158,12 @@ export const settingMypageLoader = ({ queryClient }: PageLoad<object>) => Promis
 export const settingNotificationLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(settingNotificationQuery())
 export const settingPasswordLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery())
 export const settingPaymentLoader = ({ queryClient }: PageLoad<object>) =>
-  Promise.all([queryClient.query(settingMypageQuery()), queryClient.query(paymentSubscriptionQuery()), queryClient.query(paymentPlansQuery())])
+  Promise.all([
+    queryClient.query(settingMypageQuery()),
+    queryClient.query(paymentSubscriptionQuery()),
+    queryClient.query(paymentPlansQuery()),
+    queryClient.query(paymentSellerQuery()),
+  ])
 
 export const manageLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery())
 export const manageCreateLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
