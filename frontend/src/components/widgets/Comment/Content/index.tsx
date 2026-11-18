@@ -131,7 +131,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
 
   return (
     <div>
-      <HStack>
+      <HStack align="start">
         <HStack gap="4" align="start" className="w_full">
           <AvatarLink src={author.avatar} ulid={author.ulid} title={author.nickname} />
           <VStack gap="4" className="w_full">
