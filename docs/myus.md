@@ -106,6 +106,7 @@ PaymentCustomer
   ├─ Subscription
   └─ PaymentTransaction
        └─ PaymentLedgerEntry
+PaymentSeller (記事を売る人の受け取り口座)
 PaymentPayout
 EsEvent / EsOutbox (集約のイベント)
 
@@ -375,7 +376,13 @@ flowchart TB
 1つの請求に支払いが複数ある（失敗した支払いを取り消して、別の方法で払い直した等）ときは、`invoice.paid` では支払い済み（`paid`）の、`invoice.payment_failed` では支払い中（`open`）の支払いを取引とする。
 
 #### PaymentCustomer
-- ユーザーと、決済会社ごとの顧客 ID（Stripe の `cus_...` など）の対応。決済会社（`provider`）はここだけが持つ
+- ユーザーと、決済会社ごとの顧客 ID（Stripe の `cus_...` など）の対応。取引・サブスクリプションは決済会社（`provider`）を持たず、顧客からたどる
+
+#### PaymentSeller
+- 記事を売る人と、決済会社ごとの受け取り口座（Stripe Connect の Express のアカウント `acct_...`）の対応。ユーザーと決済会社の組で1つ
+- `is_enabled` は、決済会社がその口座での決済を認めているか（Stripe の `charges_enabled`）
+- 登録（`POST /payment/seller/onboard`・`onboard_seller`）は、Standard 以上のプラン（`Plan.is_paid_content`）の人だけ。口座が無ければ作り、決済会社の登録の画面の URL を返す。登録が終わるか、URL の期限が切れると決済の画面に戻る
+- 状態（`GET /payment/seller`・`get_seller`）は、そのたびに決済会社から取り直し、変わっていれば `is_enabled` を保存する。Connect の webhook は使わない。今のプランで売れるか（`is_available`）も返す
 
 #### Subscription
 - 継続課金の状態（顧客・決済会社のサブスクリプション ID・商品・契約時の価格・状態・期間）
@@ -414,8 +421,7 @@ flowchart TB
 - `uv run python manage.py export_event_schema`：`PaymentEvent` の `content` と集約のイベントの JSON スキーマを `tests/schema_compatibility/payment_event/`・`es_event/` に書き出す。過去のイベントを読めなくなる変更（項目の削除・型の変更・必須の項目の追加・enum の値の削除）は書き出さず、テストでも落ちる
 
 #### クリエイターへの支払い（Connect を作るときに足す）
-決済の時点でクリエイターに送金する形（Stripe の destination charge）では、MyUs が決済の主体になり、全額がいったん MyUs に入る。Connect を作るときに次を足す。
-- `PaymentSeller`：クリエイターと、決済会社の受け取り口座（Stripe の `acct_...`）の対応。`Subscription.seller_id` はこれへの参照にする
+決済の時点でクリエイターに送金する形（Stripe の destination charge）では、MyUs が決済の主体になり、全額がいったん MyUs に入る。受け取り口座は `PaymentSeller` にある。売る機能を作るときに次を足す。
 - 明細の種類 `Transfer`（クリエイターへの送金。−）と `TransferReversal`（返金に伴う送金の取り消し。＋）。明細に `seller` を足す
 - MyUs の取り分は `Sale + Refund + Transfer + TransferReversal`。総額のまま残すので、売上を総額・純額のどちらで計上しても集計できる
 

@@ -3,12 +3,12 @@ from datetime import datetime, timezone
 from typing import Any, assert_never
 from django.conf import settings
 from myus.domain.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent
-from myus.domain.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PaymentMethodSessionResult, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PaymentMethodSessionResult, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardFailedData, SellerOnboardResult, SellerStatusFailedData, SellerStatusResult, SellerStatusSuccessData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from myus.domain.payment.provider.interface import PaymentInterface
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Locale
-from myus.utils.enum.payment import CancelError, CheckoutError, PaymentMethodSessionError, PaymentProvider, PlanChangeError, RevokeError, WebhookEventType, WebhookVerifyError
+from myus.utils.enum.payment import CancelError, CheckoutError, PaymentMethodSessionError, PaymentProvider, PlanChangeError, RevokeError, SellerOnboardError, SellerStatusError, WebhookEventType, WebhookVerifyError
 from ._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_locale, stripe_period_end, stripe_price_id
 from ._type import stripe_event_type
 
@@ -155,6 +155,50 @@ class StripeProvider(PaymentInterface):
             return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.PROVIDER_REJECTED, message=str(e)))
 
         return Result.ok(PaymentMethodSessionCreated(redirect_url=session.url))
+
+    @Result.shield_exception()
+    def onboard_seller(self, input: SellerOnboardData) -> Result[SellerOnboardResult, FatalError]:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        external_id = input.external_id
+        try:
+            if len(external_id) == 0:
+                account = stripe.Account.create(
+                    type="express",
+                    country=input.country.value,
+                    email=input.email,
+                    metadata={"user_ulid": input.user_ulid},
+                    idempotency_key=f"seller:{input.user_ulid}",
+                )
+                external_id = account.id
+            link = stripe.AccountLink.create(account=external_id, type="account_onboarding", return_url=input.return_url, refresh_url=input.refresh_url)
+        except stripe.InvalidRequestError as e:
+            log.warning("not found", external_id=external_id, exc=e)
+            return Result.ok(SellerOnboardFailedData(error=SellerOnboardError.NOT_FOUND, message=str(e)))
+        except stripe.APIConnectionError as e:
+            log.error("network error", exc=e)
+            return Result.ok(SellerOnboardFailedData(error=SellerOnboardError.NETWORK_ERROR, message=str(e)))
+        except stripe.StripeError as e:
+            log.error("api error", exc=e)
+            return Result.ok(SellerOnboardFailedData(error=SellerOnboardError.PROVIDER_REJECTED, message=str(e)))
+
+        return Result.ok(SellerOnboardCreatedData(external_id=external_id, redirect_url=link.url))
+
+    @Result.shield_exception()
+    def get_seller(self, external_id: str) -> Result[SellerStatusResult, FatalError]:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
+            account = stripe.Account.retrieve(external_id)
+        except stripe.InvalidRequestError as e:
+            log.warning("not found", external_id=external_id, exc=e)
+            return Result.ok(SellerStatusFailedData(error=SellerStatusError.NOT_FOUND, message=str(e)))
+        except stripe.APIConnectionError as e:
+            log.error("network error", exc=e)
+            return Result.ok(SellerStatusFailedData(error=SellerStatusError.NETWORK_ERROR, message=str(e)))
+        except stripe.StripeError as e:
+            log.error("api error", exc=e)
+            return Result.ok(SellerStatusFailedData(error=SellerStatusError.PROVIDER_REJECTED, message=str(e)))
+
+        return Result.ok(SellerStatusSuccessData(is_enabled=account.charges_enabled is True))
 
 
 def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> tuple[str, PaymentEventContent] | None:

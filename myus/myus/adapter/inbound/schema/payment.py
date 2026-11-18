@@ -16,12 +16,26 @@ class PaymentMethodIn(BaseModel):
     locale: Locale
 
 
+class PaymentSellerOnboardIn(BaseModel):
+    locale: Locale
+
+
 class PaymentCheckoutOut(BaseModel):
     url: str
 
 
 class PaymentMethodOut(BaseModel):
     url: str
+
+
+class PaymentSellerOnboardOut(BaseModel):
+    url: str
+
+
+class PaymentSellerOut(BaseModel):
+    is_available: bool
+    is_registered: bool
+    is_enabled: bool
 
 
 class PaymentWebhookOut(BaseModel):

@@ -11,6 +11,8 @@ from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilt
 from myus.domain.payment.payout.data import PayoutData
 from myus.domain.payment.payout.interface import FilterOption as PayoutFilterOption, PageOption as PayoutPageOption, SortOption as PayoutSortOption, PayoutInterface
 from myus.domain.payment.provider.interface import PaymentInterface
+from myus.domain.payment.seller.data import PaymentSellerData
+from myus.domain.payment.seller.interface import FilterOption as PaymentSellerFilterOption, PageOption as PaymentSellerPageOption, SortOption as PaymentSellerSortOption, PaymentSellerInterface
 from myus.domain.payment.subscription.apply import replay
 from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.decide import accept_provider_state, request_cancellation, fail_cancellation
@@ -117,6 +119,35 @@ def get_active_subscription_data(user_id: int) -> Result[SubscriptionData | None
         return Result.ok(None)
 
     return Result.ok(active_subscriptions[0])
+
+
+@Result.shield_exception()
+def get_payment_seller_data(user_id: int) -> Result[PaymentSellerData | None, FatalError]:
+    repo = injector.get(PaymentSellerInterface)
+    ids_ret = repo.get_ids(PaymentSellerFilterOption(user_id=user_id), PaymentSellerSortOption(), PaymentSellerPageOption(limit=1))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    sellers_ret = repo.bulk_get(ids)
+    if sellers_ret.is_err:
+        return Result.err(sellers_ret.err_value)
+
+    sellers = sellers_ret.ok_value
+    if len(sellers) == 0:
+        return Result.ok(None)
+
+    return Result.ok(sellers[0])
+
+
+@Result.shield_exception()
+def save_payment_seller_data(data: PaymentSellerData) -> Result[None, FatalError]:
+    repo = injector.get(PaymentSellerInterface)
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)
 
 
 @Result.shield_exception()

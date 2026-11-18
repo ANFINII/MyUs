@@ -8,22 +8,24 @@ from myus.domain.payment.event.interface import FilterOption as PaymentEventFilt
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
 from myus.domain.payment.plan import PLANS, get_plan, plan_price
-from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardResult, SellerStatusFailedData, SellerStatusSuccessData, WebhookVerifyResult
+from myus.domain.payment.seller.data import PaymentSellerData
 from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, PageOption as SubscriptionPageOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from myus.domain.payment.transaction.interface import TransactionInterface
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
-from myus.utils.common.result import CommandError, ConflictError, FatalError, FindError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
+from myus.utils.common.result import AccessError, CommandError, ConflictError, FatalError, FindError, ForbiddenError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
 from myus.utils.enum.i18n import Locale
 from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.common import create_frontend_url
 from myus.utils.functions.map import country_currency
 from myus.utils.functions.transaction import atomic_result
-from ._convert import get_payment_repository, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
+from ._convert import get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
 from ..dto.ledger import LedgerRowDTO
 from ..dto.plan import PlanPriceDTO
+from ..dto.seller import SellerDTO
 from ..user.core import get_user_data
 
 
@@ -307,6 +309,89 @@ def create_payment_method_session(user_id: int, locale: Locale) -> Result[Paymen
 
     session = session_ret.ok_value
     return Result.ok(session)
+
+
+@Result.shield_exception()
+def get_seller(user_id: int) -> Result[SellerDTO, FatalError]:
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    plan = get_plan(user.user_plan.plan) if user is not None else None
+    is_available = plan is not None and plan.is_paid_content
+
+    seller_ret = get_payment_seller_data(user_id)
+    if seller_ret.is_err:
+        return Result.err(seller_ret.err_value)
+
+    seller = seller_ret.ok_value
+    if seller is None:
+        return Result.ok(SellerDTO(is_available=is_available, is_registered=False, is_enabled=False))
+
+    repo = get_payment_repository(seller.provider)
+    status_ret = repo.get_seller(seller.external_id)
+    if status_ret.is_err:
+        return Result.err(status_ret.err_value)
+
+    status = status_ret.ok_value
+    match status:
+        case SellerStatusSuccessData(is_enabled=is_enabled):
+            if is_enabled != seller.is_enabled:
+                save_ret = save_payment_seller_data(replace(seller, is_enabled=is_enabled))
+                if save_ret.is_err:
+                    return Result.err(save_ret.err_value)
+            return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=is_enabled))
+        case SellerStatusFailedData(error=error, message=message):
+            log.warning("seller status failed", user_id=user_id, error=error.value, message=message)
+            return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=seller.is_enabled))
+        case _:
+            assert_never(status)
+
+
+@Result.shield_exception()
+def onboard_seller(user_id: int, locale: Locale) -> Result[SellerOnboardResult, AccessError]:
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    if user is None:
+        return Result.err(NotFoundError("error.userNotFound"))
+
+    plan = get_plan(user.user_plan.plan)
+    if plan is None or not plan.is_paid_content:
+        log.info("plan required", user_id=user_id)
+        return Result.err(ForbiddenError("error.paidContentPlanRequired"))
+
+    seller_ret = get_payment_seller_data(user_id)
+    if seller_ret.is_err:
+        return Result.err(seller_ret.err_value)
+
+    seller = seller_ret.ok_value
+    provider = seller.provider if seller is not None else CHECKOUT_PROVIDER
+    return_url = f"{create_frontend_url(locale)}/setting/payment"
+    data = SellerOnboardData(
+        external_id=seller.external_id if seller is not None else "",
+        user_ulid=user.user.ulid,
+        email=user.user.email,
+        country=user.profile.country,
+        return_url=return_url,
+        refresh_url=return_url,
+    )
+
+    repo = get_payment_repository(provider)
+    onboard_ret = repo.onboard_seller(data)
+    if onboard_ret.is_err:
+        return Result.err(onboard_ret.err_value)
+
+    onboard = onboard_ret.ok_value
+    if isinstance(onboard, SellerOnboardCreatedData) and seller is None:
+        save_ret = save_payment_seller_data(PaymentSellerData(id=0, user_id=user_id, provider=provider, external_id=onboard.external_id, is_enabled=False))
+        if save_ret.is_err:
+            return Result.err(save_ret.err_value)
+
+    return Result.ok(onboard)
 
 
 @Result.shield_exception()

@@ -10,20 +10,21 @@
 
 - **`None` を使わない**：`| None` の代わりに、判別共用体・初期値（`""`・`0`・`datetime.min`）・`Failed` の型で表す
 - **金額は `Money` で包む**：`amount: int` を単独で関数の引数にしない
-- **`provider` は `PaymentEvent`・`PaymentCustomer`・`PaymentPayout` だけが持つ**：サブスクリプション・取引は顧客からたどる
+- **`provider` は `PaymentEvent`・`PaymentCustomer`・`PaymentSeller`・`PaymentPayout` だけが持つ**：サブスクリプション・取引は顧客からたどる
 - **決済会社の ID（`external_id`）は文字列として持つだけ**：ドメインの側で中身を解釈しない
 - **売り手は User**：別の `Merchant` テーブルは作らない。受け取り口座は `PaymentSeller`（User と口座 ID の対応）に持つ。MyUs のプランの課金は `seller_id=""` で表す
 
-### ⏸ クリエイターが売る機能（Stripe Connect・Store・Product）
+### ブログの有料部分（記事ごとに売る）
 
-当面は作らない（2026-10-26 決定）。作るときは 下の「Event Sourcing + CQRS」の Phase 7（帳簿の集約）の後にし、`PaymentSeller`・`Store`・`Product` は最初から集約として作る。
+note のように、ブログの有料部分を記事ごとに売る。売上は投稿者に送り、MyUs は利用料として 15% を取る（Stripe の destination charge と `application_fee_amount`）。決済手数料は MyUs が負担する。有料部分を付けられるのは Standard 以上のプラン（`Plan.is_paid_content`）の人だけ。帳簿の集約（Phase 7）を待たず、今の取引・明細と同じ投影の形で作る（2026-11-18 決定）。
 
 | 順 | 内容 |
 |---|---|
-| 1 | `PaymentSeller` を足し、`Subscription.seller_id` をその参照にする。明細の種類に `Transfer`（クリエイターへの送金。−）・`TransferReversal`（返金に伴う送金の取り消し。＋）を足す（詳しくは myus.md の「クリエイターへの支払い」） |
-| 2 | Stripe Connect の登録：`PaymentInterface.onboard_seller` と `POST /payment/onboard`、FE の登録ボタン |
-| 3 | `Store`・`Product`・`Price` のテーブル |
-| 4 | 商品を Stripe に同期し（`sync_product`）、`CheckoutData.marketplace.seller_id` に受け取り口座を入れて決済する |
+| 1 | 売り手の登録の画面（`/setting/payment`） |
+| 2 | `Blog` に有料部分・値段を足し、詳細では投稿者と買った人にだけ返す。購入（`BlogPurchase`）・`POST /payment/checkout/blog`・`checkout.session.completed` の受け取り・明細の `Transfer`・`TransferReversal`・返金で読めなくする |
+| 3 | 作成・編集の有料部分の欄と、詳細の購入の表示 |
+
+値段は投稿者の国/地域の通貨で、100〜50,000円か $1〜$500。返金は画面に作らず、運営が Stripe のダッシュボードで行う。
 
 ### 確認が残っているもの
 
@@ -123,7 +124,7 @@ flowchart LR
 - `Ledger` 集約は決済会社 × 会計年度（`Ledger(provider, fiscal_year)`）。年度を閉じたら新しい記帳を拒否する
 - 事実索引 `es_ledger_entry_index`：`(ledger_id, idempotency_key)` 一意。同じ明細を2回記帳しようとすると、2回目は重複のエラーになる
 - 帳簿の明細の query model を Projector で作り、`export_ledger` をそこから読む
-- クリエイターへの支払い（上の「決済」の「クリエイターが売る機能」）はこの後に進める。`PaymentSeller`・`Store`・`Product` は最初から集約として作り、送金（`Transfer`・`TransferReversal`）は Ledger 集約のイベントとして足す
+- 上の「ブログの有料部分」で投影として作った売り手・購入・送金（`Transfer`・`TransferReversal`）の明細も、このときに Ledger 集約のイベントに移す
 
 ### ⏸ Phase 8: 旧構成の撤去
 

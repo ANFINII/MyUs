@@ -58,6 +58,27 @@ class PaymentCustomer(models.Model):
         ]
 
 
+class PaymentSeller(models.Model):
+    """PaymentSeller"""
+    id          = models.BigAutoField(primary_key=True)
+    user        = models.ForeignKey(User, on_delete=models.PROTECT, related_name="payment_sellers")
+    provider    = models.CharField(max_length=20, choices=PROVIDER_CHOICES)
+    external_id = models.CharField(max_length=255)
+    is_enabled  = models.BooleanField(default=False)
+    created     = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_id}:{self.provider}:{self.external_id}"
+
+    class Meta:
+        db_table = "payment_seller"
+        verbose_name_plural = "001 PaymentSeller"
+        constraints = [
+            models.UniqueConstraint(fields=["provider", "external_id"], name="payment_seller_provider_external_uniq"),
+            models.UniqueConstraint(fields=["user", "provider"], name="payment_seller_user_provider_uniq"),
+        ]
+
+
 class Subscription(models.Model):
     """Subscription"""
     id                 = models.BigAutoField(primary_key=True)

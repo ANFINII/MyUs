@@ -13,6 +13,7 @@ class Plan:
     is_playlist: bool
     is_series: bool
     is_hide_global_advertise: bool
+    is_paid_content: bool
     description: str
 
 
@@ -25,6 +26,7 @@ PLANS = [
         is_playlist=False,
         is_series=False,
         is_hide_global_advertise=False,
+        is_paid_content=False,
         description="・有料プランを解約します\n・アップロード機能\n・コメント機能\n・フォロー機能など",
     ),
     Plan(
@@ -35,6 +37,7 @@ PLANS = [
         is_playlist=True,
         is_series=True,
         is_hide_global_advertise=False,
+        is_paid_content=False,
         description="・シリーズ作成\n・プレイリスト作成 2つ\n・個別広告表示 1つ",
     ),
     Plan(
@@ -45,7 +48,8 @@ PLANS = [
         is_playlist=True,
         is_series=True,
         is_hide_global_advertise=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 2つ\n・全体広告非表示",
+        is_paid_content=True,
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 2つ\n・全体広告非表示\n・有料記事の販売",
     ),
     Plan(
         name=PlanName.PREMIUM,
@@ -55,7 +59,8 @@ PLANS = [
         is_playlist=True,
         is_series=True,
         is_hide_global_advertise=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 3つ\n・全体広告非表示\n・楽曲ダウンロード",
+        is_paid_content=True,
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 3つ\n・全体広告非表示\n・有料記事の販売\n・楽曲ダウンロード",
     ),
     Plan(
         name=PlanName.ULTIMATE,
@@ -65,7 +70,8 @@ PLANS = [
         is_playlist=True,
         is_series=True,
         is_hide_global_advertise=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 4つ\n・全体広告非表示\n・楽曲ダウンロード",
+        is_paid_content=True,
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 4つ\n・全体広告非表示\n・有料記事の販売\n・楽曲ダウンロード",
     ),
 ]
 

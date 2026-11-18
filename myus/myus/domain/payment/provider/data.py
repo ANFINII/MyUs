@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
-from myus.utils.enum.i18n import Locale
-from myus.utils.enum.payment import CancelError, CheckoutError, PaymentMethodSessionError, PaymentProvider, PaymentType, PlanChangeError, RevokeError, WebhookVerifyError
+from myus.utils.enum.i18n import Country, Locale
+from myus.utils.enum.payment import CancelError, CheckoutError, PaymentMethodSessionError, PaymentProvider, PaymentType, PlanChangeError, RevokeError, SellerOnboardError, SellerStatusError, WebhookVerifyError
 from ..data import Money
 from ..event.data import PaymentEventData, ProviderSubscriptionData
 
@@ -126,3 +126,42 @@ class PaymentMethodSessionFailed:
 
 
 type PaymentMethodSessionResult = PaymentMethodSessionCreated | PaymentMethodSessionFailed
+
+
+@dataclass(frozen=True, slots=True)
+class SellerOnboardData:
+    external_id: str
+    user_ulid: str
+    email: str
+    country: Country
+    return_url: str
+    refresh_url: str
+
+
+@dataclass(frozen=True, slots=True)
+class SellerOnboardCreatedData:
+    external_id: str
+    redirect_url: str
+
+
+@dataclass(frozen=True, slots=True)
+class SellerOnboardFailedData:
+    error: SellerOnboardError
+    message: str
+
+
+type SellerOnboardResult = SellerOnboardCreatedData | SellerOnboardFailedData
+
+
+@dataclass(frozen=True, slots=True)
+class SellerStatusSuccessData:
+    is_enabled: bool
+
+
+@dataclass(frozen=True, slots=True)
+class SellerStatusFailedData:
+    error: SellerStatusError
+    message: str
+
+
+type SellerStatusResult = SellerStatusSuccessData | SellerStatusFailedData

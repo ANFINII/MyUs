@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Locale
-from .data import CancelResult, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, WebhookVerifyResult
+from .data import CancelResult, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, SellerOnboardData, SellerOnboardResult, SellerStatusResult, WebhookVerifyResult
 from ..event.data import ProviderSubscriptionData
 
 
@@ -32,4 +32,12 @@ class PaymentInterface(ABC):
 
     @abstractmethod
     def create_payment_method_session(self, customer_id: str, return_url: str, locale: Locale) -> Result[PaymentMethodSessionResult, FatalError]:
+        ...
+
+    @abstractmethod
+    def onboard_seller(self, input: SellerOnboardData) -> Result[SellerOnboardResult, FatalError]:
+        ...
+
+    @abstractmethod
+    def get_seller(self, external_id: str) -> Result[SellerStatusResult, FatalError]:
         ...
