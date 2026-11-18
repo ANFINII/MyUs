@@ -74,7 +74,7 @@ flowchart LR
 | `domain/media/common.py` | メディアの検索の条件（`FilterOption`・`SortOption`・`PageOption`） |
 | `injectors/` | interface と実装の対応付け（`module.py`） |
 | `utils/` | どの層からも使う部品。`common/`（`Result`・logger）・`constants/`・`enum/`・`functions/`（汎用の関数は `functions/common.py`） |
-| `db/` | Django のモデル（`models/`）・マイグレーション（`migrations/`）・管理コマンド（`management/commands/`）・管理画面（`admin.py`） |
+| `db/` | Django のモデル（`models/`）・マイグレーション（git の管理外）・管理コマンド（`management/commands/`）・管理画面（`admin.py`） |
 | `backends.py` | 管理画面のログインの backend |
 
 ### 構成の方針

@@ -173,6 +173,10 @@ flowchart LR
 |---|---|---|
 | 1 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.<ドメイン>`）を付ける。ドメインが要る |
 
+次の BE の作業は、最初のデプロイより前に済ませる。
+
+- 本番のマイグレーションの方法を決める（`myus/myus/db/migrations/` は Git の管理外なので、デプロイで何を流すかが決まっていない）
+
 有料のメディアを CloudFront の署名付き Cookie で守るのは、有料のメディアを出すときに `prod/products/myus/media` に足す。
 
 ### やらないこと

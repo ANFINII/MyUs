@@ -293,11 +293,10 @@ new_ids = get_save_new_ids(models, FOLLOW_FIELDS)
 return Result.ok(new_ids)
 ```
 
-### モデルを変えるとき
-- `uv run python manage.py makemigrations` でマイグレーションのファイルを作り、PR に含める。`ulid` の初期値の `ulid.new` は毎回「Alter field ulid」と差分に出るが、変更ではないので、作られたファイルから `ulid` の操作を消す
-- 本番には、デプロイの `deploy.sh` が新しいコンテナを起動する前に `migrate` を流す
-- 初期値は、要るときだけ付ける。保存するときに必ず渡す列（ブログの `currency` など）には付けない。既存の行を埋める値は、`makemigrations` が聞いてくる一度だけの初期値で入れる
-- 既存の表に列を足すときに `default=Currency.JPY` のように enum を初期値にすると、既存の行に `'Currency.JPY'` と enum の名前が入り、読めなくなる。初期値には値（`Currency.JPY.value`）を使う
+### モデルの列を足すとき
+- マイグレーションは git の管理外なので、PR には `sqlmigrate` で出した SQL を書く
+- 初期値は、要るときだけ付ける。保存するときに必ず渡す列（ブログの `currency` など）には付けない。既存の行を埋める値は、SQL で `ADD COLUMN ... DEFAULT 'JPY'` のあとに `DROP DEFAULT` する
+- `default=Currency.JPY` のように enum を初期値にすると、`sqlmigrate` の SQL では `'Currency.JPY'` と enum の名前になり、既存の行が読めなくなる。PR の SQL では値（`'JPY'`）に直す
 
 ## 層の責務
 
@@ -357,7 +356,7 @@ return Result.ok(new_ids)
 - 今は決済など絶対に失敗できない箇所だけテストを書く（webhook・Stripeの署名の検証・退会時のサブスク解約・決済のイベントの反映）
 - `@pytest.mark.django_db`でDB接続
 - 実行: `uv run pytest`（`tests/`。CIでも実行する）
-- テスト用DBはマイグレーションから作る。DBを作る権限のあるユーザーで実行する
+- テスト用DBは`--nomigrations`でモデルから直接作る（マイグレーションはgit管理外のため）。DBを作る権限のあるユーザーで実行する
 - 共通のfixtureは`tests/conftest.py`
   - `make_user`: User・Profile・MyPage・UserNotification・UserPlanをまとめて作る
   - `fake_payment`: `PaymentInterface`を`tests/fakes.py`の`FakePayment`に差し替える（Stripeを呼ばない。テストごとに元に戻る）
