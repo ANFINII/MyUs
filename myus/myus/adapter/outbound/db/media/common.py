@@ -31,8 +31,8 @@ def filter_search(model: type[Model], search: str) -> Q:
 
 
 def filter_category(model: type[Model], category_id: int) -> Q:
-    category_ids = model._default_manager.filter(category__id=category_id).values("id")
-    return Q(id__in=category_ids)
+    categorized_ids = model._default_manager.filter(category__id=category_id).values("id")
+    return Q(id__in=categorized_ids)
 
 
 def filter_q_list(model: type[Model], filter: FilterOption) -> list[Q]:
