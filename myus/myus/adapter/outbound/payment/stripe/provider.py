@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from typing import Any, assert_never
 from django.conf import settings
 from myus.domain.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent
-from myus.domain.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PaymentMethodSessionResult, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, SellerOnboardCreated, SellerOnboardData, SellerOnboardFailed, SellerOnboardResult, SellerStatusFailed, SellerStatusResult, SellerStatusSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PaymentMethodSessionResult, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, SellerOnboardCreated, SellerOnboard, SellerOnboardFailed, SellerOnboardResult, SellerStatusFailed, SellerStatusResult, SellerStatusSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from myus.domain.payment.provider.interface import PaymentInterface
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
@@ -157,7 +157,7 @@ class StripeProvider(PaymentInterface):
         return Result.ok(PaymentMethodSessionCreated(redirect_url=session.url))
 
     @Result.shield_exception()
-    def onboard_seller(self, input: SellerOnboardData) -> Result[SellerOnboardResult, FatalError]:
+    def onboard_seller(self, input: SellerOnboard) -> Result[SellerOnboardResult, FatalError]:
         stripe.api_key = settings.STRIPE_SECRET_KEY
         external_id = input.external_id
         try:
