@@ -1,6 +1,6 @@
+from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
-from myus.utils.functions.common import new_ulid
 from .media import Chat
 from .user import User
 
@@ -13,7 +13,7 @@ class MessageManager(models.Manager):
 class Message(models.Model):
     """Message"""
     id      = models.BigAutoField(primary_key=True)
-    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
+    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     chat    = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="message")
     parent  = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", null=True)

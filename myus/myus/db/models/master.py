@@ -1,11 +1,11 @@
+from django_ulid.models import ulid
 from django.db import models
-from myus.utils.functions.common import new_ulid
 
 
 class Category(models.Model):
     """Category"""
     id      = models.BigAutoField(primary_key=True)
-    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
+    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     jp_name = models.CharField(max_length=120)
     en_name = models.CharField(max_length=120)
 

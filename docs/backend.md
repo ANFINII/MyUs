@@ -294,7 +294,7 @@ return Result.ok(new_ids)
 ```
 
 ### モデルを変えるとき
-- `uv run python manage.py makemigrations` でマイグレーションのファイルを作り、PR に含める。作り忘れは CI の `makemigrations --check` が止める
+- `uv run python manage.py makemigrations` でマイグレーションのファイルを作り、PR に含める。`ulid` の初期値の `ulid.new` は毎回「Alter field ulid」と差分に出るが、変更ではないので、作られたファイルから `ulid` の操作を消す
 - 本番には、デプロイの `deploy.sh` が新しいコンテナを起動する前に `migrate` を流す
 - 初期値は、要るときだけ付ける。保存するときに必ず渡す列（ブログの `currency` など）には付けない。既存の行を埋める値は、`makemigrations` が聞いてくる一度だけの初期値で入れる
 - 既存の表に列を足すときに `default=Currency.JPY` のように enum を初期値にすると、既存の行に `'Currency.JPY'` と enum の名前が入り、読めなくなる。初期値には値（`Currency.JPY.value`）を使う

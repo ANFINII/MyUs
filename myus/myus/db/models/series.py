@@ -1,13 +1,13 @@
+from django_ulid.models import ulid
 from django.db import models
 from myus.utils.constants.choice import MEDIA_TYPE_CHOICES
-from myus.utils.functions.common import new_ulid
 from .channel import Channel
 
 
 class Series(models.Model):
     """Series"""
     id         = models.BigAutoField(primary_key=True)
-    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="series")
     media_type = models.CharField(max_length=7, choices=MEDIA_TYPE_CHOICES)
     title      = models.CharField(max_length=100)

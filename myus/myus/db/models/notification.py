@@ -1,14 +1,14 @@
+from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
 from myus.utils.constants.notification import notification_type_model
-from myus.utils.functions.common import new_ulid
 from .user import User
 
 
 class Notification(models.Model):
     """Notification"""
     id          = models.BigAutoField(primary_key=True)
-    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
+    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     user_from   = models.ForeignKey(User, related_name="user_from", on_delete=models.CASCADE)
     user_to     = models.ForeignKey(User, related_name="user_to", on_delete=models.CASCADE, null=True)
     type_no     = models.IntegerField()

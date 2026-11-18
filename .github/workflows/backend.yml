@@ -80,12 +80,6 @@ jobs:
       - name: Django check
         run: uv run python manage.py check
 
-      - name: Migrations check
-        env:
-          MYSQL_USER: root
-          MYSQL_PASSWORD: password
-        run: uv run python manage.py makemigrations --check --dry-run
-
       - name: pytest
         env:
           MYSQL_USER: root

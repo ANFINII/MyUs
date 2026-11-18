@@ -1,13 +1,13 @@
+from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
-from myus.utils.functions.common import new_ulid
 from .user import User
 
 
 class Comment(models.Model):
     """Comment"""
     id        = models.BigAutoField(primary_key=True)
-    ulid      = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
+    ulid      = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author    = models.ForeignKey(User, on_delete=models.CASCADE)
     parent    = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", null=True)
     type_no   = models.IntegerField()
