@@ -15,9 +15,10 @@ pnpm dev                   # http://127.0.0.1:3000
 | コマンド | 内容 |
 |------|------|
 | `pnpm dev` | 開発サーバーを起動 |
-| `pnpm build` | lint の後に本番用にビルド（`dist/`） |
+| `pnpm build` | `pnpm check` の後に本番用にビルドする。出力は `dist/` |
 | `pnpm start` | ビルド結果をプレビュー |
-| `pnpm test` | テスト（Vitest） |
+| `pnpm check` | ESLint と型チェック |
+| `pnpm test` | Vitest のテスト |
 | `pnpm lint` | ESLint |
 
 ## 環境変数

@@ -122,7 +122,7 @@ repository と usecase は例外を投げず、`Result[T, E]` を返す。
 ## リアルタイム通信・メディア配信
 
 - チャットのメッセージとスレッドは Django Channels の WebSocket で送受信する
-- 動画は変換前のまま保存し、worker（`encode_videos`・docker-compose の `myus_encoder`）が ffmpeg で HLS に変換して、video.js で再生する。3回続けて失敗したら `encode_status` を `Failed` にし、管理画面で動画を上げ直してもらう
+- 動画は変換前のまま保存し、worker（`encode_videos`・docker-compose の `myus_encoder`）が ffmpeg で HLS に変換して、video.js で再生する
 - 音楽はアップロード時に ffmpeg で MP3 に変換する
 - ブログなどの本文は Tiptap で編集し、表示時に DOMPurify で無害化する
 
@@ -137,32 +137,8 @@ flowchart LR
     PE --> Worker[worker<br/>process_payment_events]
     Worker -->|サブスクリプション| Agg[Subscription 集約] --> ES[(es_event)]
     Agg --> Sub[(Subscription<br/>UserPlan)]
-    Worker -->|支払い・返金・入金| Pay[(PaymentTransaction<br/>PaymentLedgerEntry<br/>PaymentPayout)]
+    Worker -->|支払い・返金・入金・記事の購入| Pay[(PaymentTransaction<br/>PaymentLedgerEntry<br/>PaymentPayout<br/>BlogPurchase)]
 ```
-
-```
-PaymentEvent              決済会社から届いたイベント（追記のみ）
-es_event                  集約の履歴（追記のみ）
-PaymentCustomer           ユーザーと決済会社の顧客 ID
- ├─ Subscription          継続課金の状態（集約の状態から作る）
- └─ PaymentTransaction    1回の請求・支払い（金額は明細の合計）
-     └─ PaymentLedgerEntry  帳簿の明細（売上・返金・決済手数料。追記のみ）
-PaymentPayout             銀行口座への入金
-```
-
-- webhook は検証と記録だけにし、反映は worker（docker-compose の `myus_worker`）が古い順に行う
-- `PaymentEvent` は `provider` と `event_id` で一意にし、同じイベントは1回だけ処理する
-- サブスクリプションの届く順番は集約が判断する。取引・入金は、最後に反映したイベントの日時より古いイベントを反映しない
-- 申し込み後の操作（プランの変更・解約・解約の取り消し）も、Stripe の結果を集約に通して記録する
-- お金が動かないイベント（0円の請求など）は記録しない
-- 帳簿の明細は削除できない（`on_delete=PROTECT`）
-- Stripe への依存は `PaymentInterface` の実装に閉じ込める
-
-| コマンド | 内容 |
-|---|---|
-| `uv run python manage.py process_payment_events` | 未反映のイベントを反映する worker |
-| `uv run python manage.py export_ledger --from 2026-01-01 --to 2026-12-31` | 期間の明細を CSV で出力する |
-| `uv run python manage.py replay_payment_events --confirm` | イベントを流し直して投影を作り直す |
 
 詳細は [myus.md](myus.md) の「決済システム」と [roadmap.md](roadmap.md) を参照。
 
@@ -191,17 +167,4 @@ cd frontend
 pnpm install
 cp .env.sample .env.local
 pnpm dev  # http://127.0.0.1:3000
-```
-
-### チェック
-
-```bash
-# myus/
-uv run mypy myus config tests
-uv run ruff check myus config tests --extend-ignore I
-uv run pytest
-
-# frontend/
-pnpm check
-pnpm test
 ```

@@ -1,6 +1,6 @@
-# MyUs インフラ構成案（AWS）
+# MyUs インフラ構成（AWS）
 
-2026-11-16 時点のコードベースをもとにした、本番インフラの推奨構成。
+本番インフラの構成。Terraform は `infra/aws/` にあり、残りの作業は [roadmap.md](roadmap.md) の「インフラ」にある。
 
 ## 前提（現状の構成）
 
@@ -12,14 +12,9 @@
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
 | メディア | 開発は `MEDIA_ROOT`（ローカルディスク）、本番（`config/settings/prod.py`）は `django-storages` で S3 に保存し、CloudFront の `MEDIA_DOMAIN` から配信する。接続先は `AWS_STORAGE_BUCKET_NAME`・`AWS_S3_REGION_NAME`・`MEDIA_DOMAIN`（S3 へは EC2 のロールで書くのでキーは要らない）。動画は ffmpeg で HLS に変換し、worker は元の動画を一時フォルダに取り出して変換した結果を保存先に上げる（`myus/myus/utils/functions/convert/`） |
 | 決済 | Stripe（webhook あり） |
-| 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換は、API が動画を変換前（`encode_status` が `Encoding`）のまま保存し、`myus_encoder`（`encode_videos`）が DB を定期的に読んで変換する。3回続けて失敗したら `encode_status` を `Failed` にし、管理画面で動画を上げ直してもらう |
+| 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換は、API が動画を変換前（`encode_status` が `Encoding`）のまま保存し、`myus_encoder`（`encode_videos`）が DB を定期的に読んで変換する |
 | メール | 開発は `console.EmailBackend`（送信されない）。本番（`config/settings/prod.py`）は SMTP で送る。接続先は `EMAIL_HOST`・`EMAIL_PORT`・`EMAIL_HOST_USER`・`EMAIL_HOST_PASSWORD`、送信元は `EMAIL_FROM` |
-| CI | GitHub Actions（デプロイなし）。`backend.yml`：mypy・ruff・`manage.py check`・pytest、`frontend.yml`：`pnpm check`・`pnpm test`・ビルド、`github-actions.yml`：ワークフロー自体の検査（actionlint・zizmor） |
-
-### 本番化する前に解決すべき課題
-
-1. **メールの送信元が決まっていない**: 本番は SMTP で送る設定になったが、送る SMTP サーバー（Gmail・SES の SMTP など）と送信元のアドレス・ドメインの認証（SPF・DKIM）を用意する必要がある
-2. **シークレットの本当の値が SSM Parameter Store に入っていない**: 入れ物（`/myus/prod/<名前>`）は `FIXME` の値で作ってある。デプロイの `deploy.sh` は `FIXME` が残っていると止まるので、最初のデプロイの前に `aws ssm put-parameter --overwrite` で入れる
+| CI | GitHub Actions。`backend.yml`：mypy・ruff・`manage.py check`・pytest、`frontend.yml`：`pnpm check`・`pnpm test`・ビルド、`github-actions.yml`：ワークフロー自体の検査（actionlint・zizmor）、`deploy.yml`：本番へのデプロイ、`infra.yml`：Terraform の plan・apply |
 
 ---
 
@@ -149,8 +144,8 @@ flowchart LR
 | 入口 | CloudFront → EC2 | CloudFront + **WAF** → **ALB**（パスで `api` / `ws` に振り分け） |
 | DB | RDS シングル AZ | RDS **Multi-AZ**（さらに伸びたら Aurora MySQL Serverless v2） |
 | Redis | EC2 上のコンテナ | **ElastiCache for Valkey** |
-| 非同期処理 | DB の outbox をワーカーがポーリング | outbox → **SQS**（DLQ 付き）→ `worker` |
-| 動画変換 | ffmpeg（`worker` コンテナ） | **MediaConvert**（S3 へのアップロードをトリガーに実行、ABR 対応） |
+| 非同期処理 | worker が DB を定期的に読む（決済のイベントは `myus_worker`、動画の変換は `myus_encoder`） | **SQS**（DLQ 付き）→ `worker` |
+| 動画変換 | ffmpeg（`encoder` コンテナ） | **MediaConvert**（S3 へのアップロードをトリガーに実行、ABR 対応） |
 | 予約公開（`publish_at`） | 定期処理は持たない。一覧・詳細・通知を取るときに `publish_at` が今より前のものだけに絞る | **EventBridge Scheduler**（公開の瞬間に通知を送るなど、その時点で処理が要るようになったら） |
 | 不適切コンテンツ対策 | なし | **Rekognition** のモデレーション（任意） |
 
@@ -199,7 +194,6 @@ infra/
 - `.github/workflows/infra.yml` で、PR では全スタックの `fmt`・`validate`・`plan`、main にマージされたら全スタックの `apply` を流す。`infra/` を変えていなくても、Actions の画面から main で手動実行すれば `apply` を流せる（最初の構築など）。plan の結果はジョブのログで見る。スタックは `infra/aws/prod/stacks.txt` の順に plan・apply する（ほかのスタックの outputs を読むスタックは、読まれる側より後に書く）。スタックを足したら `stacks.txt` にも足す（足し忘れは `check` で止まる）
 - 公開リポジトリは Actions のログも公開されるので、公開したくない `variable` には `sensitive = true` を付けて plan に出さない
 - コンソールでの手作業による変更は禁止する。`infra.yml` が毎週月曜 9:00（JST）に main で全スタックの `plan` を流し、コードと AWS に差分があればジョブを失敗させる（GitHub の失敗の通知で気づく）。plan のロール（`github-actions-terraform-plan`）は、そのために main からも使えるようにしている
-- Vercel のドメイン・環境変数も Terraform の Vercel プロバイダで同じリポジトリから管理する
 
 ### コード化しないもの（手作業）
 
@@ -210,6 +204,7 @@ infra/
 | 環境変数の値 | 入れ物（`prod/common/parameters` の `/myus/prod/<名前>`）だけを Terraform で `FIXME` の値で作り、本当の値は `aws ssm put-parameter --overwrite` で入れる。Git にも state にも残らない（`value_wo`）。DB のパスワードは `prod/products/myus/database` が作って `/myus/prod/MYSQL_PASSWORD` に入れる。DB の接続先・メディアのバケットなど Terraform で決まる値は `prod/products/myus/compute` が `/myus/prod/` に入れる |
 | SES の本番利用申請・サービスクォータの引き上げ | AWS に申請する |
 | ドメインの購入 | 手作業で行う（DNS レコードはコードで管理する） |
+| Vercel のプロジェクト・環境変数 | Vercel の画面で設定する |
 | DB・S3 のデータ | バックアップで守る（RDS の自動バックアップ、S3 のバージョニング） |
 
 ---

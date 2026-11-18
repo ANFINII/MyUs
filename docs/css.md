@@ -21,9 +21,22 @@
 - 必要な値（色・サイズ等）は `rgb(...)` / `px` 直書き
 - 例外: SCSS ビルトイン（`@use 'sass:math'` 等）は OK
 
-`widgets/` / `pages/` ではグローバル CSS / 共有 mixin の利用を許容（ページ単位の構成のため）。
+`widgets/` / `pages/` ではグローバル CSS / 共有 mixin の利用を許容する。ページ単位の構成のため。
 
-詳細とコード例は [docs/frontend.md の「依存方向」](frontend.md#依存方向) を参照。
+```scss
+/* ❌ NG: parts の scss がグローバルに依存 */
+@use 'styles/global/mixin/tiptap';
+.box {
+  @include tiptap.tiptap;
+}
+
+/* ✅ OK: parts の scss は単体で完結 */
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+```
 
 ## 命名規則
 
