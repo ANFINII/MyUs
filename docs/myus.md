@@ -134,7 +134,6 @@ Advertise
 - 認証情報
 - アバター画像
 - アクティブ状態、スタッフ権限
-- 関連モデルへの自動生成トリガー
 
 #### Profile
 - 個人情報
@@ -291,7 +290,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - 価格（通貨ごとの `Money`。円とドル）、広告表示上限など。Stripe の価格 ID は環境変数（`STRIPE_PRICE_ID_*`）
 
 #### Category / HashTag
-- 日本語/英語名称管理
+- カテゴリーは日本語と英語の名前を持つ。ハッシュタグは入力された名前だけ
 - メディアコンテンツとの多対多関連
 
 #### NgWord
@@ -314,6 +313,14 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 ### 決済システム
 
 決済会社から届いたイベントを `PaymentEvent` に追記し、これを正とする（イベントソーシング）。ほかのテーブルはイベントから作る投影で、イベントを流し直せば作り直せる。確定申告・帳簿のために、期間ごとの売上・返金・決済手数料・消費税の集計と、銀行への入金の照合ができるようにする。
+
+#### 方針
+
+- **`None` を使わない**：`| None` の代わりに、判別共用体・初期値（`""`・`0`・`datetime.min`）・`Failed` の型で表す
+- **金額は `Money` で包む**：`amount: int` を単独で関数の引数にしない
+- **`provider` は `PaymentEvent`・`PaymentCustomer`・`PaymentSeller`・`PaymentPayout` だけが持つ**：サブスクリプション・取引は顧客からたどる
+- **決済会社の ID（`external_id`）は文字列として持つだけ**：ドメインの側で中身を解釈しない
+- **売り手は User**：別の `Merchant` テーブルは作らない。受け取り口座は `PaymentSeller`（User と口座 ID の対応）に持つ。MyUs のプランの課金は `seller_id=""` で表す
 
 #### 全体像
 
@@ -445,6 +452,17 @@ flowchart TB
 - 返金は画面に作らず、運営が Stripe のダッシュボードで行う。そのとき「送金を取り消す」と「利用料を返す」を選ぶ。送金の取り消しは `TransferReversal`（＋）で記録し、その取引の購入を消すので、買った人は有料部分を読めなくなる
 - MyUs の取り分は `Sale + Refund + Fee + Transfer + TransferReversal`。総額のまま残すので、売上を総額・純額のどちらで計上しても集計できる
 
+#### 別の決済会社を足すとき
+
+1. `myus/utils/enum/payment.py` の `PaymentProvider` に値を足す（DB の `provider` の選択肢も変わるので、マイグレーションを作る）
+2. `myus/adapter/outbound/payment/<provider>/` に `PaymentInterface` の実装（`provider.py`・`_convert.py`）を置く
+3. `injectors/module.py` の `provide_payment_providers` の辞書に1行足す
+4. `adapter/inbound/payment.py` に、その決済会社の webhook の入口（例：`/payment/webhook/gmo`）を足し、署名を取り出して `verify_webhook(PaymentProvider.XXX, payload, signature)` を呼ぶ
+5. キーなどを `config/env.py` と `envs/sample.env` に足す
+6. 新しく始める決済をその会社にするなら、`usecase/payment/core.py` の `CHECKOUT_PROVIDER` を変える（ユーザーや契約ごとに選ぶなら、そこを選ぶ処理に置き換える）
+
+どの決済会社を使うかは、決済の画面の作成は `CHECKOUT_PROVIDER`、解約は顧客（`PaymentCustomer`）の `provider`、webhook は受けたイベントの `provider` で決まる。
+
 ## 技術アーキテクチャ
 
 技術スタック・構成・レイヤーは [architecture.md](architecture.md)、本番のインフラは [infrastructure.md](infrastructure.md)、コードの決まりは [backend.md](backend.md)・[frontend.md](frontend.md) にある。
@@ -462,23 +480,14 @@ flowchart TB
 ### データ保護
 - CSRF：`/api/` への書き込みは `Origin` ヘッダーを確かめる（`OriginCheckMiddleware`）
 - アップロード：画像は中身（マジックバイト）を確かめる。動画・音声は ffprobe で形式を調べ、許可した形式だけを変換する（ffmpeg・ffprobe はファイル以外のプロトコルを読まない）
-- SQL は Django ORM を通す
 
 ## 拡張性
 
 ### 国際化対応
-- カテゴリー/ハッシュタグの多言語対応
-- 日本語/英語の併記
+- 画面の文言は日本語と英語
+- カテゴリーの名前は日本語と英語
 - 料金の通貨（円・ドル。国/地域で決める）
 
 ### スケーラビリティ
 - 決済のイベントの反映は worker（`myus_worker`）で非同期に行う
 - 動画の HLS 変換は worker（`myus_encoder`）で非同期に行う
-
-## 今後の展開
-
-### 残っているもの
-- 決済：Stripe のダッシュボードの設定と、テスト環境での確認（[roadmap.md](roadmap.md)）
-- 本番のマイグレーションの方法（マイグレーションが Git の管理外なので、デプロイで何を流すかが決まっていない。[roadmap.md](roadmap.md)）
-- Event Sourcing：外部操作の要求と結果・Projector・帳簿の集約（保留。[roadmap.md](roadmap.md)）
-- 投稿者ごとの Google Tag Manager（マイページの `tag_manager_id`）：ID は登録できるが、読み込みはしていない。GTM は任意のスクリプトを動かせるので、投稿者の GTM を MyUs のページで読み込むと、投稿者が閲覧者のページで好きなスクリプトを動かせてしまう（Cookie 以外の情報の抜き取り・画面の書き換えなど）。入れるなら、MyUs のドメインとは別の場所で動かす仕組みが要る

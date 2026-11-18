@@ -247,7 +247,11 @@ if ret.is_err:
 - **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
 - 雛形: `myus/domain/search_tag/interface.py` を参照
 - 必須メソッド: `get_ids(filter, sort, page)` / `bulk_get(ids)` の読み取り2点
-- `page`は各ドメインの`interface.py`の`PageOption`（メディアは`domain/media/common.py`。`limit`の初期値は0（上限なし）。件数の上限がドメインで決まっているものだけ、その値にする（`search_tag`は`SEARCH_TAG_MAX_COUNT`、メディアは`domain/media/common.py`の`MEDIA_PAGE_SIZE`）。`offset`は0）。初期値が0のドメインは`PageOption()`で全部取れる。`limit=0`は初期値が0でないメディアなどで全部取るときだけ書く（`limit`が0なら上限なし。切り出しは`adapter/outbound/db/common.py`の`page_queryset(qs, page)`。`page`は同じファイルの`PageOption`（`limit`と`offset`を持つ Protocol）で受け、どのドメインの`PageOption`も渡せる）
+- `page`は各ドメインの`interface.py`の`PageOption`。メディアは`domain/media/common.py`にある
+  - `limit`の初期値は0で、上限なし。件数の上限がドメインで決まっているものだけ、その値にする。`search_tag`は`SEARCH_TAG_MAX_COUNT`、メディアは`MEDIA_PAGE_SIZE`
+  - `offset`の初期値は0
+  - 初期値が0のドメインは`PageOption()`で全部取れる。`limit=0`は、初期値が0でないメディアなどで全部取るときだけ書く
+  - 切り出しは`adapter/outbound/db/common.py`の`page_queryset(qs, page)`。`page`は同じファイルの`PageOption`という Protocol で受けるので、どのドメインの`PageOption`も渡せる
 - 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
 - 必須型: `FilterOption` / `SortOption` / `PageOption` dataclass + `SortType` enum
 - メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
@@ -258,7 +262,10 @@ if ret.is_err:
   - `bulk_save`で表せない更新：加算・切り替え・既読など（`save_read`・`save_count`・`save_follow_count`・`media_like`・`comment_like`、通知の`delete_by_user`・`confirm`）
   - 一覧に付ける判定：`is_liked`・`get_liked_ids`
   - 認証：`UserInterface.authenticate`
-  - メディアの`SortOption`・`FilterOption`：スコア順で登録しているチャンネルの投稿を上げるときは、メディアの`SortOption`の`user_id`を使う。広告はメディアの種類ではないので、検索の条件（`FilterOption`・`SortOption`・`SortType`）は`domain/advertise/interface.py`に広告用を置く（広告にはスコアがないので`SortType`は`ID`・`CREATED`だけ。`FilterOption`に広告の種類の`advertise_type`を持つ）。詳細ページで今のメディアを一覧から外すときは、メディアの`FilterOption`の`exclude_id`を使う（通知の`exclude_user_id`と同じ形。条件のためだけの`ExcludeOption`は作らない）
+  - メディアの`SortOption`・`FilterOption`
+    - スコア順で登録しているチャンネルの投稿を上げるときは、`SortOption`の`user_id`を使う
+    - 詳細ページで今のメディアを一覧から外すときは、`FilterOption`の`exclude_id`を使う。通知の`exclude_user_id`と同じ形にし、条件のためだけの`ExcludeOption`は作らない
+  - 広告の検索の条件：広告はメディアの種類ではないので、`FilterOption`・`SortOption`・`SortType`は`domain/advertise/interface.py`に広告用を置く。広告にはスコアがないので`SortType`は`ID`・`CREATED`だけで、`FilterOption`に広告の種類の`advertise_type`を持つ
   - カテゴリ・ハッシュタグの`bulk_save(media_type, media_id, objs)`：メディアへの紐づけの保存
   - 外部サービスの窓口（`PaymentInterface`）：DBのリポジトリではないため`get_ids`・`bulk_get`を持たない
 
@@ -369,52 +376,3 @@ uv run ruff check myus config tests --extend-ignore I
 
 - ruff の `I`（import の並べ替え）は、上の「インポート」の決まりと合わないため除く
 - lint の抑制コメント（`# noqa`）は書かない。外すときは例外を絞るか、`pyproject.toml` の `per-file-ignores` に書く
-
-## 更新履歴
-- 2025-09-29: 初版作成
-- 2026-01-21: コーディング規約整理、型定義ルール変更
-- 2026-02-04: Repository層ルール追加
-- 2026-02-22: 全体整備、domain interface初期値禁止ルール追加
-- 2026-04-16: docs/に一元化、構成整理
-- 2026-10-20: エラーハンドリング（Result型・エラー型とHTTPステータスの対応・adapterのmatch + assert_never）を追加
-- 2026-10-21: HTTPステータスを成功は200、エラーは400 / 500にまとめた
-- 2026-10-21: 画面に出るエラーの文言をFEのi18nのキーで返すようにした
-- 2026-10-21: CSRF対策として`OriginCheckMiddleware`を追加
-- 2026-10-22: Interfaceで雛形と違う形を認める場合を追記
-- 2026-11-08: `utils`はdomainに依存しないこと、domainに触れる補助の関数はusecaseの`_convert.py`に置くことを追記
-- 2026-11-08: usecaseをドメインごとのディレクトリにし、`core.py`と`_convert.py`に分けることを追記
-- 2026-11-08: `_data` の付く関数の決まり（usecase の `_convert.py` で injector を使う関数は `_data` で終え、取るなら `get`、書き込むなら `create`・`save`・`delete`）を追記
-- 2026-11-11: Validation（ドメインのルール）を追記
-- 2026-11-12: パッケージ名を `api` から `myus` にした（Django の app の label・テーブル名は変えない）
-- 2026-11-12: 中身のわからない `index.py` の名前を変えた（`injectors/module.py`・`domain/media/option.py`・`adapter/outbound/db/base.py`・`adapter/outbound/db/media/query.py`）
-- 2026-11-12: テストをパッケージの外（`tests/`）に出し、リンターチェックを `mypy myus config tests`・`ruff check myus config tests` にした
-- 2026-11-12: adapter を `inbound/`（HTTP・WebSocket）と `outbound/`（外部サービス。もとの `adapter/external`）に分けた
-- 2026-11-12: `domain/entity`（Repository の実装）を `adapter/outbound/db` に移した。決済会社の実装は `adapter/outbound/payment`
-- 2026-11-12: `domain/interface` をなくし、Data・Interface・ルールを `domain/<ドメイン>/` に置いた
-- 2026-11-12: `domain/aggregate` をなくし、集約を `domain/<ドメイン>/<集約>/`（サブスクリプションは `domain/payment/subscription`）に置いた
-- 2026-11-12: usecase の入力を DTO にし、schema を `types/schema` から `adapter/inbound/schema` に移した
-- 2026-11-12: DTO を `types/dto` から `usecase/dto` に移し、`types` をなくした
-- 2026-11-12: import の並び（section の中はパスの名前順、最後に相対パス）と、同じ層の中は相対パスにする決まりを足した
-- 2026-11-13: 相対パスの並びを、FE に合わせて近いものから（`.` → `..` → `...`）にした
-- 2026-11-13: `utils/functions/index.py` を `utils/functions/common.py`（汎用の関数 `new_ulid`・`create_url`・`get_client_ip`）にし、使われていない `message` を消した
-- 2026-11-13: 共通で使うものを `common.py` にした（`domain/media/option.py` → `domain/media/common.py`、`adapter/outbound/db/base.py` → `adapter/outbound/db/common.py`、`adapter/outbound/db/media/query.py` → `adapter/outbound/db/media/common.py`）
-- 2026-11-13: ディレクトリ構成の見直し（#1289〜#1310）を終え、構成の全体と方針を `architecture.md` に、決めていないことを `roadmap.md` にまとめた
-- 2026-11-14: 広告の検索の条件をメディアと分けて `domain/advertise/interface.py` に置き、メディアの `FilterOption` に `exclude_id`、`SortOption` に `user_id` を足した
-- 2026-11-14: 料金プランを `domain/payment/plan.py` の `Plan` にし、価格を `prices: list[Money]`（円とドル）にした
-- 2026-11-15: enum 変換の決まりを、対応がずれうる変換だけ `map.py` の match + `assert_never` にし、名前・値が同じ enum どうしはそのまま変換してよいことにした
-- 2026-11-16: すべての`get_ids`を`(filter, sort, page)`にし、`PageOption`はメディアは`domain/media/common.py`、ほかは各ドメインの`interface.py`に置いた（`limit=0`は上限なし）
-- 2026-11-16: メディアの一覧の件数を`domain/media/common.py`の`MEDIA_PAGE_SIZE`にし、広告の一覧は`domain/advertise/interface.py`の`ADVERTISE_PAGE_SIZE`、API の`Limit`の上限は`adapter/inbound/schema/common.py`の`MAX_LIMIT`にした
-- 2026-11-17: usecase で直接書いていた JWT の decode・メールの送信・フロントの URL を `utils/functions` の `decode_token`（`token.py`）・`send_template_mail`（`mail.py`）・`create_frontend_url`（`common.py`）にした
-- 2026-11-16: ガード節のログの文言から対象の名前を外し、`not found`・`owner mismatch`・`author mismatch`にそろえた
-- 2026-11-16: usecase・adapter に残っていた`"data not found"`・`"Not Found"`・`"Forbidden"`のエラーの`message`を、FE の i18n のキー（`error.mediaNotFound`・`error.commentUpdateFailed`など）にした
-- 2026-11-16: `not found`のログのレベルを、見に来たら無い（info）・操作の相手が無い（warning）・あるはずのものが無い（error）に分けた
-- 2026-11-16: ログの文言をすべて英語にそろえ、対象の名前を付けないようにした
-- 2026-11-16: logger がクラス名付きの関数名を出すようにし、API の入口のログを`"request"`、成功したときの`SuccessOut`の`message`を`"OK"`にそろえた
-- 2026-11-16: 本番（`DEBUG=False`）のログを1行の JSON（構造化ログ）にした
-- 2026-11-16: Django 本体のログも、本番は`log`と同じ形の1行の JSON にした
-- 2026-11-16: 登録・パスワード再設定のメールに、送ったときの言語（`locale`）でリンクと本文を出すようにした。テンプレートは`templates/registration/email/{ja,en}/`
-- 2026-11-16: 動画の HLS 変換を API のスレッドから worker（`encode_videos`・`myus_encoder`）に分けた。3回続けて失敗したら`Video.encode_status`を`Failed`にし、管理画面で動画を上げ直してもらう
-- 2026-11-16: 本番のメディアを`django-storages`で S3 に置き、URL は`settings.MEDIA_BASE_URL`（本番は CloudFront）で作るようにした。動画の変換は一時フォルダで行い、結果を保存先に上げる
-- 2026-11-16: Music にジャケット画像（`image`）と再生時間（`duration`。アップロード時に ffprobe で取る）を足した
-- 2026-11-16: Music の再生時間（`duration`）を DB に持つのをやめ、一覧のカードでカーソルを乗せたとき・再生したときにブラウザで読むようにした
-- 2026-11-18: モデルの列を足すときの決まり（初期値は要るときだけ、enum の初期値は SQL で値に直す）を追記

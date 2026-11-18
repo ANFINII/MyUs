@@ -14,7 +14,7 @@
 - コンポーネント名はPascalCase、関数はcamelCase
 - カスタムフックは`use`プレフィックス
 - Propsは分割代入せず`props`で受け取り、内部で展開する
-- `interface Props`は`export default function`の直前に定義する（コンポーネントのシグネチャと型定義が視覚的に隣接するように）
+- `interface Props`は`export default function`の直前に定義する
 
 ```typescript
 interface Props {
@@ -96,7 +96,7 @@ const [user, setUser] = useState<User | null>(null)
 
 - URLとページの対応は`src/lib/routes.tsx`の1ファイルにまとめる（TanStack Routerのコードベースのルーティング）。ページを追加するときは、該当する領域に`page()`を1行追加する
 - ルートは`components/pages/`のページのフォルダ（`index.tsx`）を`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
-- ルーターの機能は `useRouter`（`components/hooks/useRouter`）を通して使う。使い方は Next.js の `useRouter` と同じにしている。コンポーネントから `@tanstack/react-router` や `window.location` / `window.history` を直接使わない（ルーターのライブラリを置き換えるときに、`useRouter` とルーターの設定だけを直せばよいようにするため）。例外はルーターの設定（`lib/`）・レイアウト（`layout/PageLayout` の `Outlet`）・hooks（`usePageLoading` の `useRouterState`）
+- ルーターの機能は `useRouter`（`components/hooks/useRouter`）を通して使う。コンポーネントから `@tanstack/react-router` や `window.location` / `window.history` を直接使わない。ルーターのライブラリを置き換えるときに、`useRouter` とルーターの設定だけを直せばよいようにするため。例外はルーターの設定（`lib/`）・レイアウト（`layout/PageLayout` の `Outlet`）・hooks（`usePageLoading` の `useRouterState`）
 
 | やりたいこと | 書き方 |
 | --- | --- |
@@ -108,8 +108,8 @@ const [user, setUser] = useState<User | null>(null)
 | URL のパラメータ・クエリ文字列（`$ulid`、`?search=`） | `router.query.ulid`、`router.query.search`。文字列にするときは `String(router.query.ulid ?? '')` と書く（`?.toString()` は使わない。`String(router.query.ulid)` だけだと、無いときに `'undefined'` になる） |
 | 今のパス（言語の接頭辞は含まない） / 表示中の言語 | `router.pathname` / `router.locale` |
 | 戻る・再読み込み | `router.back()`・`router.reload()` |
-| 戻れる履歴があるか（Next.js にはない） | `router.canBack()` |
-| 表示中の言語を付けた絶対 URL（Next.js にはない） | `router.buildUrl('/media/chat/...')` |
+| 戻れる履歴があるか | `router.canBack()` |
+| 表示中の言語を付けた絶対 URL | `router.buildUrl('/media/chat/...')` |
 
 - 英語版（`/en/...`）は、ルーターの `rewrite`（`src/lib/router.ts`）で URL の先頭の言語を取り除いてからルートに当てる。画面遷移では言語を付けずにパスを書けば、表示中の言語が自動で付く
 - 動的なパスパラメータは`$ulid`のように`$`で始める
@@ -124,7 +124,7 @@ page('/manage/video/$ulid', () => import('components/pages/manage/video/edit'), 
 - ページの`index.tsx`は、`useSuspenseQuery(xxxQuery(...))`で取ったデータを`view.tsx`にpropsで渡すだけにする。データが取れるまで描画を待つので、`data`が`undefined`になる場合を書かなくてよい
 - 取得中の表示はrouterの`defaultPendingComponent`（`Status/Loading`の`PageLoading`）、エラーの表示は`defaultErrorComponent`（`Status/RouteError`）に任せる。ページごとに取得中・エラーを判定しない
 - ページ遷移の前にデータを取るルートは、`lib/query/options.ts`の`queryOptions`（`refetchOnMount: false`を含める）を、`lib/query/loaders.ts`の`xxxLoader`（`queryClient.query(xxxQuery(...))`）とページの`useSuspenseQuery(xxxQuery(...))`で共有し、`lib/routes.tsx`では`page('/path', () => import(...), xxxLoader)`の1行で登録する
-  - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ（何秒かかっても画面全体のスピナーは出さない。最初にサイトを開いたときだけ、1秒を超えると`PageLoading`を出す。`PageLoading`は、まだ1ページも表示していないときだけスピナーを出す）
+  - 取得が終わるまで前のページを表示したまま、ヘッダーのバーで待つ。何秒かかっても画面全体のスピナーは出さない。最初にサイトを開いたときだけ、1秒を超えると`PageLoading`を出す
   - ローダーは取得の失敗を握りつぶさない（`.catch(noop)`を付けない）。失敗するとルートのエラー表示になる。握りつぶすと、ページの`useSuspenseQuery`が同じリクエストをもう一度送るため（`prefetchQuery`・`fetchQuery`・`ensureQueryData`は非推奨のため使わない）
   - 表示を待たないデータ（ユーザーページの投稿・広告など、後から出すもの）だけは、ページで`useQuery`を使い、ローダーでは`.catch(noop)`で握りつぶす
   - 閲覧数の加算など、遷移のたびに1回だけ行う処理は`queryFn`ではなく`xxxLoader`の中で呼ぶ（`queryFn`は再試行で複数回呼ばれる）
@@ -170,7 +170,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 - `staleTime: 0`のため、ページを開くたびに最新を取得する。更新処理のたびに`invalidateQueries`を呼ぶ必要はない
 - ログイン・ログアウト・退会時のキャッシュ削除は`UserProvider`とログイン画面で行っているため、個別のページでは不要
-- 全ページがクライアント側取得（CSR）。投稿ごとのOGPは、Vercel のエッジ関数で差し込む予定
+- 全ページがクライアント側で取得する
 
 ## 多言語対応（i18n）
 
@@ -275,29 +275,6 @@ return <div className={style.box}>...</div>
 
 判定は「循環依存を作らないか」「最下層 UI の独立性を本質的に壊さないか」を基準にする。
 
-### parts の CSS も独立性を持つ
-
-- `parts/` の `.module.scss` はグローバル CSS や共有 mixin / 変数に依存しない（その scss 単体で完結する）
-- `styles/` 配下の `@use` / `@import` を行わない、`:global(...)` も使わない、`className="text_sub"` 等のグローバルユーティリティクラスを使用しない
-- 必要な値（色・サイズ等）はその場で `rgb(...)` や `px` を直接記述する
-- 例外: SCSS の標準モジュール（`@use 'sass:math'` 等）はビルトインなので使用可
-- `widgets/` / `pages/` ではグローバル CSS / 共有 mixin の利用を許容（ページ単位の構成のため）
-
-```scss
-/* ❌ NG: parts の scss がグローバルに依存 */
-@use 'styles/global/mixin/tiptap';
-.box {
-  @include tiptap.tiptap;
-}
-
-/* ✅ OK: parts の scss は単体で完結 */
-.box {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-```
-
 ## スタイル
 
 [SCSSコーディングルール](css.md) を参照。
@@ -309,5 +286,4 @@ return <div className={style.box}>...</div>
 ### 確認事項
 1. TypeScriptエラーが0件
 2. ESLintエラーが0件
-3. コメントは日本語で記述
 

@@ -4,15 +4,7 @@
 
 ## 決済
 
-決済の今の仕組み（Stripe・webhook・帳簿・Subscription 集約）は [myus.md](myus.md) の「決済システム」にある。ここには、まだ作っていないものだけを残す。
-
-### 方針（決めたこと）
-
-- **`None` を使わない**：`| None` の代わりに、判別共用体・初期値（`""`・`0`・`datetime.min`）・`Failed` の型で表す
-- **金額は `Money` で包む**：`amount: int` を単独で関数の引数にしない
-- **`provider` は `PaymentEvent`・`PaymentCustomer`・`PaymentSeller`・`PaymentPayout` だけが持つ**：サブスクリプション・取引は顧客からたどる
-- **決済会社の ID（`external_id`）は文字列として持つだけ**：ドメインの側で中身を解釈しない
-- **売り手は User**：別の `Merchant` テーブルは作らない。受け取り口座は `PaymentSeller`（User と口座 ID の対応）に持つ。MyUs のプランの課金は `seller_id=""` で表す
+決済の今の仕組み・方針・別の決済会社を足す手順は [myus.md](myus.md) の「決済システム」にある。
 
 ### 確認が残っているもの
 
@@ -21,17 +13,6 @@
 - Stripe のダッシュボードで Billing Portal の設定を保存し（保存するまでは portal を開けない）、支払い方法の変更から決済の画面に戻ってくるかを確かめる
 - 本物の Stripe（テスト環境）で `invoice.paid`・`charge.refunded`・`payout.paid` を通し、取引・明細・入金が正しく作られるかを確かめる
 - Stripe CLI で `customer.subscription.*` を送り、`es_event` と `Subscription`・`UserPlan` が正しく作られるかを確かめる
-
-### 別の決済会社を足すときの手順
-
-1. `myus/utils/enum/payment.py` の `PaymentProvider` に値を足す（DB の `provider` の選択肢も変わるので、マイグレーションを作る）
-2. `myus/adapter/outbound/payment/<provider>/` に `PaymentInterface` の実装（`provider.py`・`_convert.py`）を置く
-3. `injectors/module.py` の `provide_payment_providers` の辞書に1行足す
-4. `adapter/inbound/payment.py` に、その決済会社の webhook の入口（例：`/payment/webhook/gmo`）を足し、署名を取り出して `verify_webhook(PaymentProvider.XXX, payload, signature)` を呼ぶ
-5. キーなどを `config/env.py` と `envs/sample.env` に足す
-6. 新しく始める決済をその会社にするなら、`usecase/payment/core.py` の `CHECKOUT_PROVIDER` を変える（ユーザーや契約ごとに選ぶなら、そこを選ぶ処理に置き換える）
-
-どの決済会社を使うかは、決済の画面の作成は `CHECKOUT_PROVIDER`、解約は顧客（`PaymentCustomer`）の `provider`、webhook は受けたイベントの `provider` で決まる。
 
 ---
 
@@ -140,8 +121,6 @@ flowchart LR
 
 ## バックエンドの構成
 
-ディレクトリ構成の見直し（#1289〜#1310）の結果は [architecture.md](architecture.md) の「バックエンド」と [backend.md](backend.md) に書いた。
-
 ### 決めていないこと
 
 - `es` を `event_store` にするか（`domain/es`・`adapter/outbound/db/es`・`usecase/es`・`utils/functions/es.py`。`es_event` テーブルの名前は変えない）
@@ -150,6 +129,10 @@ flowchart LR
 ### やらないこと
 
 - `db/models/` の `users.py`・`common.py`・`master.py` をモデルごとのファイルに分ける
+
+## ⏸ 投稿者ごとの Google Tag Manager
+
+マイページの `tag_manager_id` は登録できるが、読み込みはしていない。GTM は任意のスクリプトを動かせるので、投稿者の GTM を MyUs のページで読み込むと、投稿者が閲覧者のページで好きなスクリプトを動かせてしまう（Cookie 以外の情報の抜き取り・画面の書き換えなど）。入れるなら、MyUs のドメインとは別の場所で動かす仕組みが要る
 
 ## メディアの一覧の速さ
 
