@@ -192,7 +192,6 @@ flowchart LR
 
 次の BE の作業は、最初のデプロイより前に済ませる。
 
-- `config/settings/prod.py` の `SECURE_PROXY_SSL_HEADER` を `("HTTP_CLOUDFRONT_FORWARDED_PROTO", "https")` にする。CloudFront はオリジンに `X-Forwarded-Proto` を送れない（送れるのは `CloudFront-Forwarded-Proto`）ので、今のままだと `SECURE_SSL_REDIRECT` が HTTPS のリクエストも HTTP と見てリダイレクトし続ける
 - 本番のマイグレーションの方法を決める（`myus/myus/db/migrations/` は Git の管理外なので、デプロイで何を流すかが決まっていない）
 
 有料のメディアを CloudFront の署名付き Cookie で守るのは、有料のメディアを出すときに `prod/products/myus/media` に足す。
