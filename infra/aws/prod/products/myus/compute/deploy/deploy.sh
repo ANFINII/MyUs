@@ -26,6 +26,5 @@ aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS 
 
 export IMAGE
 docker compose pull
-docker compose run --rm backend python manage.py migrate --noinput
 docker compose up -d --remove-orphans
 docker image prune -f
