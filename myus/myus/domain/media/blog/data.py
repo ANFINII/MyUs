@@ -12,7 +12,7 @@ class BlogData:
     title: str
     content: str
     richtext: str
-    paid_richtext: str
+    paid_text: str
     price: Money
     image: str
     read: int

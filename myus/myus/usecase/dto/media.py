@@ -68,7 +68,7 @@ class MusicDetailDTO(MediaDetailDTO):
 @dataclass(frozen=True, slots=True)
 class BlogDetailDTO(MediaDetailDTO):
     richtext: str
-    paid_richtext: str
+    paid_text: str
     price: Money
     is_purchased: bool
     is_promotion: bool
@@ -128,8 +128,8 @@ class BlogCreateDTO:
     title: str
     content: str
     richtext: str
-    paid_richtext: str
-    price_amount: int
+    paid_text: str
+    price: int
     is_promotion: bool
 
 
@@ -190,8 +190,8 @@ class BlogUpdateDTO:
     title: str
     content: str
     richtext: str
-    paid_richtext: str
-    price_amount: int
+    paid_text: str
+    price: int
     is_promotion: bool
     publish: bool
     publish_at: datetime

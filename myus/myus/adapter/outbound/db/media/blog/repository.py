@@ -11,7 +11,7 @@ from ..common import filter_queryset, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
-BLOG_FIELDS = ["channel_id", "title", "content", "richtext", "paid_richtext", "price_amount", "price_currency", "image", "publish", "publish_at", "is_promotion", "updated"]
+BLOG_FIELDS = ["channel_id", "title", "content", "richtext", "paid_text", "price", "currency", "image", "publish", "publish_at", "is_promotion", "updated"]
 
 
 class BlogRepository(BlogInterface):

@@ -421,7 +421,7 @@ class BlogAPI:
                 title=obj.title,
                 content=obj.content,
                 richtext=obj.richtext,
-                paid_richtext=obj.paid_richtext,
+                paid_text=obj.paid_text,
                 price=MoneyOut(amount=obj.price.amount, currency=obj.price.currency),
                 is_purchased=obj.is_purchased,
                 is_promotion=obj.is_promotion,

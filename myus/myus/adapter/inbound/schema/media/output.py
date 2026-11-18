@@ -72,7 +72,7 @@ class BlogOut(MediaOut):
 
 
 class ManageBlogOut(BlogOut):
-    paid_richtext: str
+    paid_text: str
 
 
 class ComicOut(MediaOut):
@@ -147,7 +147,7 @@ class MusicDetailOut(MediaDetailOut):
 
 class BlogDetailOut(MediaDetailOut):
     richtext: str
-    paid_richtext: str
+    paid_text: str
     price: MoneyOut
     is_purchased: bool
     is_promotion: bool

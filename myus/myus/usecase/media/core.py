@@ -188,13 +188,13 @@ def create_blog(user_id: int, input: BlogCreateDTO, image: UploadedFile) -> Resu
         return Result.err(ForbiddenError("error.createFailed"))
 
     price = Money(amount=0, currency=Currency.JPY)
-    if input.price_amount > 0 or len(input.paid_richtext) > 0:
+    if input.price > 0 or len(input.paid_text) > 0:
         currency_ret = get_seller_currency_data(user_id)
         if currency_ret.is_err:
             return Result.err(currency_ret.err_value)
 
         currency = currency_ret.ok_value
-        price = Money(amount=input.price_amount, currency=currency)
+        price = Money(amount=input.price, currency=currency)
 
     new_data = BlogData(
         id=0,
@@ -202,7 +202,7 @@ def create_blog(user_id: int, input: BlogCreateDTO, image: UploadedFile) -> Resu
         title=input.title,
         content=input.content,
         richtext=input.richtext,
-        paid_richtext=input.paid_richtext,
+        paid_text=input.paid_text,
         price=price,
         is_promotion=input.is_promotion,
         image=save_upload(image, ImageUpload.BLOG, channel.ulid),
@@ -897,7 +897,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         title=obj.title,
         content=obj.content,
         richtext=obj.richtext,
-        paid_richtext=obj.paid_richtext if is_owner or is_purchased else "",
+        paid_text=obj.paid_text if is_owner or is_purchased else "",
         price=obj.price,
         is_purchased=is_purchased,
         is_promotion=obj.is_promotion,

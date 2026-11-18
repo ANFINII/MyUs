@@ -348,18 +348,18 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
         return Result.err(ForbiddenError("error.saveFailed"))
 
     price = obj.price
-    is_paid_changed = input.paid_richtext != obj.paid_richtext or input.price_amount != obj.price.amount
-    if is_paid_changed and (input.price_amount > 0 or len(input.paid_richtext) > 0):
+    is_paid_changed = input.paid_text != obj.paid_text or input.price != obj.price.amount
+    if is_paid_changed and (input.price > 0 or len(input.paid_text) > 0):
         currency_ret = get_seller_currency_data(user_id)
         if currency_ret.is_err:
             return Result.err(currency_ret.err_value)
 
         currency = currency_ret.ok_value
-        price = Money(amount=input.price_amount, currency=currency)
+        price = Money(amount=input.price, currency=currency)
     elif is_paid_changed:
         price = Money(amount=0, currency=obj.price.currency)
 
-    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, paid_richtext=input.paid_richtext, price=price, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
+    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, paid_text=input.paid_text, price=price, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
 

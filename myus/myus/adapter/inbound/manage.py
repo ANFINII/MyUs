@@ -297,7 +297,7 @@ class ManageBlogAPI:
 
         blog = blog_ret.ok_value
         blog_out = convert_blogs([blog])[0]
-        return 200, ManageBlogOut(**blog_out.model_dump(), paid_richtext=blog.paid_richtext)
+        return 200, ManageBlogOut(**blog_out.model_dump(), paid_text=blog.paid_text)
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
