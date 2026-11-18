@@ -12,13 +12,14 @@ interface Props {
   paidText: string
   price: number
   currency: Currency
+  isAvailable: boolean
   isEnabled: boolean
   onPaidText: (paidText: string) => void
   onPrice: (price: number) => void
 }
 
 export default function PaidTextInput(props: Props): React.JSX.Element {
-  const { paidText, price, currency, isEnabled, onPaidText, onPrice } = props
+  const { paidText, price, currency, isAvailable, isEnabled, onPaidText, onPrice } = props
 
   const { t } = useTranslation()
   const [text, setText] = useState<string>(priceText(price, currency))
@@ -30,11 +31,11 @@ export default function PaidTextInput(props: Props): React.JSX.Element {
 
   const handlePaidText = (html: string) => onPaidText(html.trim() === '<p></p>' ? '' : html.trim())
 
-  if (!isEnabled) {
+  if (!isAvailable || !isEnabled) {
     return (
       <div className={style.hint}>
         <IconInfo size="14" className={style.hint_icon} />
-        <span>{t('manage.form.paidHint')}</span>
+        <span>{isAvailable ? t('manage.form.paidSellerHint') : t('manage.form.paidPlanHint')}</span>
         <Link href="/setting/payment" className={style.hint_link}>
           {t('manage.form.paidSetting')}
         </Link>
