@@ -1,0 +1,27 @@
+.paywall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 16px;
+  margin-top: 16px;
+  border: 1px solid rgb(230, 230, 230);
+  border-radius: 8px;
+  background: rgb(250, 250, 250);
+
+  .paywall_title {
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .paywall_price {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .paywall_notice {
+    font-size: 12px;
+    text-align: center;
+    color: rgb(120, 120, 120);
+  }
+}

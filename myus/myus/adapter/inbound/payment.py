@@ -303,10 +303,17 @@ class PaymentAPI:
 
         seller_ret = get_seller(user_id)
         if seller_ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+            message = seller_ret.err_value.message
+            match seller_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(seller_ret.err_value)
 
         seller = seller_ret.ok_value
-        return 200, PaymentSellerOut(is_available=seller.is_available, is_registered=seller.is_registered, is_enabled=seller.is_enabled)
+        return 200, PaymentSellerOut(is_available=seller.is_available, is_registered=seller.is_registered, is_enabled=seller.is_enabled, currency=seller.currency)
 
     @staticmethod
     @router.post("/seller/onboard", response={200: PaymentSellerOnboardOut, 400: ErrorOut, 500: ErrorOut})

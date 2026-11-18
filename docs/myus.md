@@ -233,7 +233,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - サムネイル画像
 - 有料部分（`paid_text`）と値段（`price`・`currency`）。値段が 0 なら無料
   - 付けられるのは Standard 以上のプラン（`Plan.is_paid_content`）で、売り手の口座の登録が済んでいる人だけ。有料部分か値段を変えるときだけ確かめるので、プランを下げても、付けてある有料部分はそのまま売れ、ほかの項目の編集もできる
-  - 値段は 100〜50,000 で、通貨は付けたときの投稿者の国/地域から決める（円か米ドル。ドルはセント）。有料部分があるなら値段が要り、値段があるなら有料部分が要る
+  - 値段は 300〜50,000 で、通貨は付けたときの投稿者の国/地域から決める（円か米ドル。ドルはセント）。有料部分があるなら値段が要り、値段があるなら有料部分が要る
   - 詳細（`GET /media/blog/{ulid}`）は、投稿者本人と買った人にだけ `paid_text` を返す。ほかの人には空にして、値段と `is_purchased` を返す。一覧には有料部分を入れない
   - 買う（`POST /payment/checkout/blog`・`create_blog_checkout`）：公開中で値段があり、自分の記事でなく、まだ買っておらず、投稿者の口座が使えるときだけ決済の画面を作る。Stripe の destination charge で、売上は投稿者の口座に送り、MyUs は利用料として値段の 15%（`PLATFORM_FEE_RATE`）を取る。決済が終わると記事の詳細に戻る
 
@@ -393,7 +393,7 @@ flowchart TB
 - 記事を売る人と、決済会社ごとの受け取り口座（Stripe Connect の Express のアカウント `acct_...`）の対応。ユーザーと決済会社の組で1つ
 - `is_enabled` は、決済会社がその口座での決済を認めているか（Stripe の `charges_enabled`）
 - 登録（`POST /payment/seller/onboard`・`onboard_seller`）は、Standard 以上のプラン（`Plan.is_paid_content`）の人だけ。口座が無ければ作り、決済会社の登録の画面の URL を返す。登録が終わるか、URL の期限が切れると決済の画面に戻る
-- 状態（`GET /payment/seller`・`get_seller`）は、そのたびに決済会社から取り直し、変わっていれば `is_enabled` を保存する。Connect の webhook は使わない。今のプランで売れるか（`is_available`）も返す
+- 状態（`GET /payment/seller`・`get_seller`）は、まだ使えない口座のときだけ決済会社から取り直し、使えるようになっていれば `is_enabled` を保存する。Connect の webhook は使わない。今のプランで売れるか（`is_available`）と、値段に使う通貨（`currency`。国/地域から決める）も返す
 
 #### Subscription
 - 継続課金の状態（顧客・決済会社のサブスクリプション ID・商品・契約時の価格・状態・期間）

@@ -48,6 +48,12 @@
     "playlistPlanRequired": "Playlists are available on paid plans",
     "seriesPlanRequired": "Series are available on paid plans",
     "paidContentPlanRequired": "Paid articles are available on the Standard plan or higher",
+    "priceRange": "Enter a price between 300 and 50,000 (3.00 to 500.00 for USD)",
+    "paidTextRequired": "Enter the paid section when you set a price",
+    "sellerNotEnabled": "The account to receive earnings is not registered",
+    "notPaidContent": "This article is free",
+    "purchaseOwnContent": "You cannot buy your own article",
+    "alreadyPurchased": "You have already bought this article",
     "planNotFound": "Plan not found",
     "alreadySubscribed": "You already have a paid plan",
     "followSelf": "You cannot follow yourself",
@@ -392,6 +398,10 @@
       "video": "Video",
       "music": "Audio",
       "richtext": "Body",
+      "price": "Price ({{currency}})",
+      "paidText": "Paid section",
+      "paidHint": "To add a paid section, you need the Standard plan or higher and a registered account to receive earnings.",
+      "paidSetting": "Go to plans",
       "promotion": "Contains promotion",
       "url": "Link URL",
       "period": "Period",
@@ -907,7 +917,11 @@
     },
     "blog": {
       "promotion": "This post contains promotions",
-      "promotionBadge": "PR"
+      "promotionBadge": "PR",
+      "paidLine": "The rest of this article is paid",
+      "paywallTitle": "Read the rest of this article",
+      "purchase": "Buy",
+      "paywallNotice": "It may take a moment before you can read it after purchase."
     },
     "userpage": {
       "info": "Info",

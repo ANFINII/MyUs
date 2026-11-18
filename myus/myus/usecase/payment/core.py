@@ -387,14 +387,18 @@ def create_payment_method_session(user_id: int, locale: Locale) -> Result[Paymen
 
 
 @Result.shield_exception()
-def get_seller(user_id: int) -> Result[SellerDTO, FatalError]:
+def get_seller(user_id: int) -> Result[SellerDTO, FindError]:
     user_ret = get_user_data(user_id=user_id)
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
 
     user = user_ret.ok_value
-    plan = get_plan(user.user_plan.plan) if user is not None else None
+    if user is None:
+        return Result.err(NotFoundError("error.userNotFound"))
+
+    plan = get_plan(user.user_plan.plan)
     is_available = plan is not None and plan.is_paid_content
+    currency = country_currency(user.profile.country)
 
     seller_ret = get_payment_seller_data(user_id)
     if seller_ret.is_err:
@@ -402,7 +406,10 @@ def get_seller(user_id: int) -> Result[SellerDTO, FatalError]:
 
     seller = seller_ret.ok_value
     if seller is None:
-        return Result.ok(SellerDTO(is_available=is_available, is_registered=False, is_enabled=False))
+        return Result.ok(SellerDTO(is_available=is_available, is_registered=False, is_enabled=False, currency=currency))
+
+    if seller.is_enabled:
+        return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=True, currency=currency))
 
     repo = get_payment_repository(seller.provider)
     status_ret = repo.get_seller(seller.external_id)
@@ -416,10 +423,10 @@ def get_seller(user_id: int) -> Result[SellerDTO, FatalError]:
                 save_ret = save_payment_seller_data(replace(seller, is_enabled=is_enabled))
                 if save_ret.is_err:
                     return Result.err(save_ret.err_value)
-            return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=is_enabled))
+            return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=is_enabled, currency=currency))
         case SellerStatusFailedData(error=error, message=message):
             log.warning("seller status failed", user_id=user_id, error=error.value, message=message)
-            return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=seller.is_enabled))
+            return Result.ok(SellerDTO(is_available=is_available, is_registered=True, is_enabled=seller.is_enabled, currency=currency))
         case _:
             assert_never(status)
 

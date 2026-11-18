@@ -5,11 +5,12 @@ import style from './BlogArticle.module.scss'
 
 interface Props {
   richtext: string
+  paidText: string
   isPromotion: boolean
 }
 
 export default function BlogArticle(props: Props): React.JSX.Element {
-  const { richtext, isPromotion } = props
+  const { richtext, paidText, isPromotion } = props
 
   const { t } = useTranslation()
 
@@ -17,6 +18,12 @@ export default function BlogArticle(props: Props): React.JSX.Element {
     <div className={style.article}>
       {isPromotion && <Alert type="info">{t('media.blog.promotion')}</Alert>}
       <FormatHtml content={richtext} isSponsored={isPromotion} />
+      {paidText !== '' && (
+        <>
+          <p className={style.paid_line}>{t('media.blog.paidLine')}</p>
+          <FormatHtml content={paidText} isSponsored={isPromotion} />
+        </>
+      )}
     </div>
   )
 }

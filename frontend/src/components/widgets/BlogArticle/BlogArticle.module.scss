@@ -21,4 +21,20 @@
       border-radius: 16px;
     }
   }
+
+  .paid_line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    font-size: 13px;
+    color: rgb(120, 120, 120);
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      border-top: 1px dashed rgb(200, 200, 200);
+    }
+  }
 }

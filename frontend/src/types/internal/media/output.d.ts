@@ -1,6 +1,7 @@
 import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
 import { ChatMessage } from 'types/internal/message'
+import { Money } from 'types/internal/payment'
 import { EncodeStatus } from 'utils/constants/enum'
 
 export interface Search {
@@ -70,8 +71,13 @@ export interface Music extends Media {
 
 export interface Blog extends Media {
   richtext: string
+  price: Money
   isPromotion: boolean
   image: string
+}
+
+export interface ManageBlog extends Blog {
+  paidText: string
 }
 
 export interface Comic extends Media {
@@ -147,6 +153,9 @@ export interface MusicDetail extends MediaDetail {
 
 export interface BlogDetail extends MediaDetail {
   richtext: string
+  paidText: string
+  price: Money
+  isPurchased: boolean
   isPromotion: boolean
   image: string
   comments: Comment[]

@@ -14,17 +14,6 @@
 - **決済会社の ID（`external_id`）は文字列として持つだけ**：ドメインの側で中身を解釈しない
 - **売り手は User**：別の `Merchant` テーブルは作らない。受け取り口座は `PaymentSeller`（User と口座 ID の対応）に持つ。MyUs のプランの課金は `seller_id=""` で表す
 
-### ブログの有料部分（記事ごとに売る）
-
-note のように、ブログの有料部分を記事ごとに売る。売上は投稿者に送り、MyUs は利用料として 15% を取る（Stripe の destination charge と `application_fee_amount`）。決済手数料は MyUs が負担する。有料部分を付けられるのは Standard 以上のプラン（`Plan.is_paid_content`）の人だけ。帳簿の集約（Phase 7）を待たず、今の取引・明細と同じ投影の形で作る（2026-11-18 決定）。
-
-| 順 | 内容 |
-|---|---|
-| 1 | 売り手の登録の画面（`/setting/payment`） |
-| 2 | 作成・編集の有料部分の欄と、詳細の購入の表示 |
-
-値段は投稿者の国/地域の通貨で、100〜50,000円か $1〜$500。返金は画面に作らず、運営が Stripe のダッシュボードで行う。
-
 ### 確認が残っているもの
 
 - Stripe のダッシュボードで Connect を有効にし、webhook のエンドポイントに `checkout.session.completed` を足す。テスト環境で、口座の登録 → 記事を有料にする → 別のユーザーで買う → 有料部分が読める → ダッシュボードで「送金を取り消す」付きで返金 → 読めなくなり `TransferReversal` が付く、を確かめる
@@ -124,7 +113,7 @@ flowchart LR
 - `Ledger` 集約は決済会社 × 会計年度（`Ledger(provider, fiscal_year)`）。年度を閉じたら新しい記帳を拒否する
 - 事実索引 `es_ledger_entry_index`：`(ledger_id, idempotency_key)` 一意。同じ明細を2回記帳しようとすると、2回目は重複のエラーになる
 - 帳簿の明細の query model を Projector で作り、`export_ledger` をそこから読む
-- 上の「ブログの有料部分」で投影として作った売り手・購入・送金（`Transfer`・`TransferReversal`）の明細も、このときに Ledger 集約のイベントに移す
+- ブログの有料部分で投影として作った売り手・購入・送金（`Transfer`・`TransferReversal`）の明細も、このときに Ledger 集約のイベントに移す
 
 ### ⏸ Phase 8: 旧構成の撤去
 

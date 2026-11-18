@@ -6,17 +6,18 @@ interface Props {
   open: boolean
   onClose: () => void
   richtext: string
+  paidText: string
   isPromotion: boolean
 }
 
 export default function BlogModal(props: Props): React.JSX.Element {
-  const { open, onClose, richtext, isPromotion } = props
+  const { open, onClose, richtext, paidText, isPromotion } = props
 
   const { t } = useTranslation()
 
   return (
     <Modal open={open} onClose={onClose} title={t('manage.button.preview')} size="l">
-      <BlogArticle richtext={richtext} isPromotion={isPromotion} />
+      <BlogArticle richtext={richtext} paidText={paidText} isPromotion={isPromotion} />
     </Modal>
   )
 }

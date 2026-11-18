@@ -1,0 +1,17 @@
+.hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgb(120, 120, 120);
+
+  .hint_icon {
+    flex-shrink: 0;
+    color: rgb(40, 130, 255);
+  }
+
+  .hint_link {
+    color: rgb(30, 90, 180);
+  }
+}
