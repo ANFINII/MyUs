@@ -8,10 +8,11 @@
     border: none;
     outline: none;
     background: none;
-    color: rgb(80, 80, 80);
+    color: rgb(130, 130, 130);
     cursor: pointer;
 
     &:hover {
+      color: rgb(60, 60, 60);
       background: rgb(240, 240, 240);
     }
 
