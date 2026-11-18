@@ -1,7 +1,7 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
-import { PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSellerOnboardIn, PaymentSellerOnboardOut, PaymentSellerOut, PaymentSubscriptionOut } from 'types/internal/payment'
-import { apiPaymentCancel, apiPaymentCancelRevoke, apiPaymentChange, apiPaymentCheckout, apiPaymentMethod, apiPaymentPlans, apiPaymentSeller, apiPaymentSellerOnboard, apiPaymentSubscription } from 'api/uri'
+import { PaymentBlogCheckoutIn, PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSellerOnboardIn, PaymentSellerOnboardOut, PaymentSellerOut, PaymentSubscriptionOut } from 'types/internal/payment'
+import { apiPaymentCancel, apiPaymentCancelRevoke, apiPaymentChange, apiPaymentCheckout, apiPaymentCheckoutBlog, apiPaymentMethod, apiPaymentPlans, apiPaymentSeller, apiPaymentSellerOnboard, apiPaymentSubscription } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getPaymentSubscription = async (): Promise<ApiOut<PaymentSubscriptionOut>> => {
@@ -14,6 +14,10 @@ export const getPaymentPlans = async (): Promise<ApiOut<PaymentPlanOut[]>> => {
 
 export const postPaymentCheckout = async (request: PaymentCheckoutIn): Promise<ApiOut<PaymentCheckoutOut>> => {
   return await apiOut(apiClient('json').post(apiPaymentCheckout, camelSnake(request)))
+}
+
+export const postPaymentBlogCheckout = async (request: PaymentBlogCheckoutIn): Promise<ApiOut<PaymentCheckoutOut>> => {
+  return await apiOut(apiClient('json').post(apiPaymentCheckoutBlog, camelSnake(request)))
 }
 
 export const postPaymentCancel = async (): Promise<ApiOut<PaymentCancelOut>> => {

@@ -23,6 +23,8 @@ export interface MusicIn extends MediaIn {
 
 export interface BlogIn extends MediaIn {
   richtext: string
+  paidText: string
+  price: number
   isPromotion: boolean
   image?: File
 }
@@ -62,6 +64,8 @@ export interface MusicUpdateIn extends MediaUpdateIn {
 
 export interface BlogUpdateIn extends MediaUpdateIn {
   richtext: string
+  paidText: string
+  price: number
   isPromotion: boolean
   image?: File
 }

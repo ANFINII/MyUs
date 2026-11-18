@@ -25,6 +25,11 @@ export interface PaymentCheckoutOut {
   url: string
 }
 
+export interface PaymentBlogCheckoutIn {
+  blogUlid: string
+  locale: Locale
+}
+
 export interface PaymentChangeIn {
   plan: string
 }
@@ -41,6 +46,7 @@ export interface PaymentSellerOut {
   isAvailable: boolean
   isRegistered: boolean
   isEnabled: boolean
+  currency: Currency
 }
 
 export interface PaymentSellerOnboardIn {

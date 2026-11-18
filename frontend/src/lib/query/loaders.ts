@@ -167,6 +167,8 @@ export const settingPaymentLoader = ({ queryClient }: PageLoad<object>) =>
 
 export const manageLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery())
 export const manageCreateLoader = ({ queryClient }: PageLoad<object>) => Promise.all([queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
+export const manageBlogCreateLoader = ({ queryClient }: PageLoad<object>) =>
+  Promise.all([queryClient.query(channelsQuery()), queryClient.query(categoriesQuery()), queryClient.query(paymentSellerQuery())])
 
 export const manageVideosLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageVideosQuery(await manageListParams(queryClient, search)))
 export const manageMusicsLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageMusicsQuery(await manageListParams(queryClient, search)))
@@ -185,7 +187,7 @@ export const manageVideoLoader = ({ queryClient, params }: PageLoad<{ ulid: stri
 export const manageMusicLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
   Promise.all([queryClient.query(manageMusicQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 export const manageBlogLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
-  Promise.all([queryClient.query(manageBlogQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
+  Promise.all([queryClient.query(manageBlogQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery()), queryClient.query(paymentSellerQuery())])
 export const manageComicLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
   Promise.all([queryClient.query(manageComicQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 export const managePictureLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>

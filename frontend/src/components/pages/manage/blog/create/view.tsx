@@ -4,9 +4,11 @@ import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { BlogIn } from 'types/internal/media/input'
+import { PaymentSellerOut } from 'types/internal/payment'
 import { postBlogCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
+import { paidTextError } from 'utils/functions/price'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -22,16 +24,20 @@ import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import BlogModal from 'components/widgets/Modal/Blog'
+import PaidTextInput from 'components/widgets/PaidTextInput'
 import TextEditor from 'components/widgets/TextEditor'
 import style from '../../Form.module.scss'
+
+const initBlog = { categoryUlid: '', publish: true, title: '', content: '', richtext: '', paidText: '', price: 0, isPromotion: false }
 
 interface Props {
   channels: Channel[]
   categories: Category[]
+  seller: PaymentSellerOut
 }
 
 export default function BlogCreate(props: Props): React.JSX.Element {
-  const { channels, categories } = props
+  const { channels, categories, seller } = props
 
   const channelUlid = channels.find((c) => c.isDefault)!.ulid
 
@@ -41,7 +47,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', richtext: '', isPromotion: false })
+  const [values, setValues] = useState<BlogIn>({ ...initBlog, channelUlid, publishAt: datetimeISO() })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
@@ -54,6 +60,8 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
+  const handlePaidText = (paidText: string) => setValues({ ...values, paidText })
+  const handlePrice = (price: number) => setValues({ ...values, price })
 
   const handleRichtext = (html: string) => {
     const richtext = html.trim() === '<p></p>' ? '' : html.trim()
@@ -63,6 +71,11 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const handleForm = async () => {
     const { channelUlid, categoryUlid, title, content, richtext, image } = values
     if (!validate({ channelUlid, categoryUlid, title, content, richtext, image })) return
+    const paidError = paidTextError(values.paidText, values.price)
+    if (paidError !== '') {
+      handleToast(paidError, true)
+      return
+    }
     handleLoading(true)
     const ret = await postBlogCreate(values)
     handleLoading(false)
@@ -93,9 +106,17 @@ export default function BlogCreate(props: Props): React.JSX.Element {
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
           <TextEditor label={t('manage.form.richtext')} value={values.richtext} required error={error} onChange={handleRichtext} />
+          <PaidTextInput
+            paidText={values.paidText}
+            price={values.price}
+            currency={seller.currency}
+            isEnabled={seller.isAvailable && seller.isEnabled}
+            onPaidText={handlePaidText}
+            onPrice={handlePrice}
+          />
         </VStack>
       </form>
-      <BlogModal open={isModal} onClose={handleModal} richtext={values.richtext} isPromotion={values.isPromotion} />
+      <BlogModal open={isModal} onClose={handleModal} richtext={values.richtext} paidText={values.paidText} isPromotion={values.isPromotion} />
     </Main>
   )
 }
