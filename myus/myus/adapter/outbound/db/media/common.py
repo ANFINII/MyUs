@@ -20,15 +20,22 @@ class DaysSince(Func):
     template = "(TIMESTAMPDIFF(DAY, %(expressions)s) + 1)"
 
 
-def filter_recommend() -> Q:
-    return Q(created__gte=timezone.now() - timedelta(days=RECOMMEND_DAYS), like__isnull=False)
+def filter_recommend(model: type[Model]) -> Q:
+    liked_ids = model._default_manager.filter(like__isnull=False).values("id")
+    return Q(created__gte=timezone.now() - timedelta(days=RECOMMEND_DAYS), id__in=liked_ids)
 
 
-def filter_search(search: str) -> Q:
-    return Q(title__icontains=search) | Q(hashtag__name=search)
+def filter_search(model: type[Model], search: str) -> Q:
+    tagged_ids = model._default_manager.filter(hashtag__name=search).values("id")
+    return Q(title__icontains=search) | Q(id__in=tagged_ids)
 
 
-def filter_q_list(filter: FilterOption) -> list[Q]:
+def filter_category(model: type[Model], category_id: int) -> Q:
+    category_ids = model._default_manager.filter(category__id=category_id).values("id")
+    return Q(id__in=category_ids)
+
+
+def filter_q_list(model: type[Model], filter: FilterOption) -> list[Q]:
     q_list: list[Q] = []
     if filter.ulid:
         q_list.append(Q(ulid=filter.ulid))
@@ -47,25 +54,18 @@ def filter_q_list(filter: FilterOption) -> list[Q]:
     if filter.channel_ulid:
         q_list.append(Q(channel__ulid=filter.channel_ulid))
     if filter.category_id:
-        q_list.append(Q(category__id=filter.category_id))
+        q_list.append(filter_category(model, filter.category_id))
     if filter.is_recommend:
-        q_list.append(filter_recommend())
+        q_list.append(filter_recommend(model))
     if filter.search:
-        q_list.append(filter_search(filter.search))
+        q_list.append(filter_search(model, filter.search))
     if filter.exclude_id:
         q_list.append(~Q(id=filter.exclude_id))
     return q_list
 
 
-def distinct_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
-    if filter.search or filter.is_recommend or filter.category_id:
-        return qs.distinct()
-    return qs
-
-
 def filter_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
-    qs = qs.filter(*filter_q_list(filter))
-    return distinct_queryset(qs, filter)
+    return qs.filter(*filter_q_list(qs.model, filter))
 
 
 def score_expression(sort: SortOption, is_recommend: bool) -> CombinedExpression:
