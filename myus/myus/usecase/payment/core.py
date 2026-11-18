@@ -8,7 +8,7 @@ from myus.domain.payment.event.interface import FilterOption as PaymentEventFilt
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
 from myus.domain.payment.plan import PLANS, get_plan, plan_price
-from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, SellerOnboardCreated, SellerOnboardData, SellerOnboardResult, SellerStatusFailed, SellerStatusSuccess, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardResult, SellerStatusFailedData, SellerStatusSuccessData, WebhookVerifyResult
 from myus.domain.payment.seller.data import PaymentSellerData
 from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, PageOption as SubscriptionPageOption, SortOption as SubscriptionSortOption, SubscriptionInterface
@@ -328,13 +328,13 @@ def get_seller(user_id: int) -> Result[SellerDTO, FatalError]:
 
     status = status_ret.ok_value
     match status:
-        case SellerStatusSuccess(is_enabled=is_enabled):
+        case SellerStatusSuccessData(is_enabled=is_enabled):
             if is_enabled != seller.is_enabled:
                 save_ret = save_payment_seller_data(replace(seller, is_enabled=is_enabled))
                 if save_ret.is_err:
                     return Result.err(save_ret.err_value)
             return Result.ok(SellerDTO(is_registered=True, is_enabled=is_enabled))
-        case SellerStatusFailed(error=error, message=message):
+        case SellerStatusFailedData(error=error, message=message):
             log.warning("seller status failed", user_id=user_id, error=error.value, message=message)
             return Result.ok(SellerDTO(is_registered=True, is_enabled=seller.is_enabled))
         case _:
@@ -377,7 +377,7 @@ def onboard_seller(user_id: int, locale: Locale) -> Result[SellerOnboardResult, 
         return Result.err(onboard_ret.err_value)
 
     onboard = onboard_ret.ok_value
-    if isinstance(onboard, SellerOnboardCreated) and seller is None:
+    if isinstance(onboard, SellerOnboardCreatedData) and seller is None:
         save_ret = save_payment_seller_data(PaymentSellerData(id=0, user_id=user_id, provider=provider, external_id=onboard.external_id, is_enabled=False))
         if save_ret.is_err:
             return Result.err(save_ret.err_value)

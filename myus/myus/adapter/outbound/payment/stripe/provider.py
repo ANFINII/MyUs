@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from typing import Any, assert_never
 from django.conf import settings
 from myus.domain.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent
-from myus.domain.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PaymentMethodSessionResult, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, SellerOnboardCreated, SellerOnboardData, SellerOnboardFailed, SellerOnboardResult, SellerStatusFailed, SellerStatusResult, SellerStatusSuccess, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PaymentMethodSessionResult, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardFailedData, SellerOnboardResult, SellerStatusFailedData, SellerStatusResult, SellerStatusSuccessData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from myus.domain.payment.provider.interface import PaymentInterface
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
@@ -173,15 +173,15 @@ class StripeProvider(PaymentInterface):
             link = stripe.AccountLink.create(account=external_id, type="account_onboarding", return_url=input.return_url, refresh_url=input.refresh_url)
         except stripe.InvalidRequestError as e:
             log.warning("not found", external_id=external_id, exc=e)
-            return Result.ok(SellerOnboardFailed(error=SellerOnboardError.NOT_FOUND, message=str(e)))
+            return Result.ok(SellerOnboardFailedData(error=SellerOnboardError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
             log.error("network error", exc=e)
-            return Result.ok(SellerOnboardFailed(error=SellerOnboardError.NETWORK_ERROR, message=str(e)))
+            return Result.ok(SellerOnboardFailedData(error=SellerOnboardError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
             log.error("api error", exc=e)
-            return Result.ok(SellerOnboardFailed(error=SellerOnboardError.PROVIDER_REJECTED, message=str(e)))
+            return Result.ok(SellerOnboardFailedData(error=SellerOnboardError.PROVIDER_REJECTED, message=str(e)))
 
-        return Result.ok(SellerOnboardCreated(external_id=external_id, redirect_url=link.url))
+        return Result.ok(SellerOnboardCreatedData(external_id=external_id, redirect_url=link.url))
 
     @Result.shield_exception()
     def get_seller(self, external_id: str) -> Result[SellerStatusResult, FatalError]:
@@ -190,15 +190,15 @@ class StripeProvider(PaymentInterface):
             account = stripe.Account.retrieve(external_id)
         except stripe.InvalidRequestError as e:
             log.warning("not found", external_id=external_id, exc=e)
-            return Result.ok(SellerStatusFailed(error=SellerStatusError.NOT_FOUND, message=str(e)))
+            return Result.ok(SellerStatusFailedData(error=SellerStatusError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
             log.error("network error", exc=e)
-            return Result.ok(SellerStatusFailed(error=SellerStatusError.NETWORK_ERROR, message=str(e)))
+            return Result.ok(SellerStatusFailedData(error=SellerStatusError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
             log.error("api error", exc=e)
-            return Result.ok(SellerStatusFailed(error=SellerStatusError.PROVIDER_REJECTED, message=str(e)))
+            return Result.ok(SellerStatusFailedData(error=SellerStatusError.PROVIDER_REJECTED, message=str(e)))
 
-        return Result.ok(SellerStatusSuccess(is_enabled=account.charges_enabled is True))
+        return Result.ok(SellerStatusSuccessData(is_enabled=account.charges_enabled is True))
 
 
 def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> tuple[str, PaymentEventContent] | None:

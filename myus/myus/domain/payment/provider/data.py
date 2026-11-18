@@ -139,29 +139,29 @@ class SellerOnboardData:
 
 
 @dataclass(frozen=True, slots=True)
-class SellerOnboardCreated:
+class SellerOnboardCreatedData:
     external_id: str
     redirect_url: str
 
 
 @dataclass(frozen=True, slots=True)
-class SellerOnboardFailed:
+class SellerOnboardFailedData:
     error: SellerOnboardError
     message: str
 
 
-type SellerOnboardResult = SellerOnboardCreated | SellerOnboardFailed
+type SellerOnboardResult = SellerOnboardCreatedData | SellerOnboardFailedData
 
 
 @dataclass(frozen=True, slots=True)
-class SellerStatusSuccess:
+class SellerStatusSuccessData:
     is_enabled: bool
 
 
 @dataclass(frozen=True, slots=True)
-class SellerStatusFailed:
+class SellerStatusFailedData:
     error: SellerStatusError
     message: str
 
 
-type SellerStatusResult = SellerStatusSuccess | SellerStatusFailed
+type SellerStatusResult = SellerStatusSuccessData | SellerStatusFailedData

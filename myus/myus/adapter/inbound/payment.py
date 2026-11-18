@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import assert_never
 from ninja import Router
 from django.http import HttpRequest
-from myus.domain.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, SellerOnboardCreated, SellerOnboardFailed, WebhookVerified, WebhookVerifyFailed
+from myus.domain.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PlanChangeFailed, PlanChangeSuccess, RevokeFailed, RevokeSuccess, SellerOnboardCreatedData, SellerOnboardFailedData, WebhookVerified, WebhookVerifyFailed
 from myus.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, get_plan_prices, get_seller, get_subscription, onboard_seller, receive_payment_event, revoke_cancellation, verify_webhook
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
@@ -300,8 +300,8 @@ class PaymentAPI:
 
         onboard = onboard_ret.ok_value
         match onboard:
-            case SellerOnboardCreated(redirect_url=redirect_url):
+            case SellerOnboardCreatedData(redirect_url=redirect_url):
                 return 200, PaymentSellerOnboardOut(url=redirect_url)
-            case SellerOnboardFailed(error=error, message=message):
+            case SellerOnboardFailedData(error=error, message=message):
                 log.error("seller onboard failed", error=error.value, message=message)
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.sellerOnboardFailed")
