@@ -217,7 +217,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     e.preventDefault()
     if (loading || message.replace(/<[^>]*>/g, '').trim().length === 0) return
     handleLoading(true)
-    const request: MessageCreateIn = { chatUlid: detail.ulid, text: message }
+    const request: MessageCreateIn = { chatUlid: detail.ulid, text: message, parentUlid: '' }
     const ret = await postMessage(request)
     handleLoading(false)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
