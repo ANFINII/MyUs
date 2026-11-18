@@ -197,6 +197,7 @@ const { t } = useTranslation()
 - BE がエラーの文言を増やしたときは、同じキーを `error` の下に ja / en とも追加する
 - 日付の表示は `useDatetime` の `formatDatetime` / `formatDate` / `formatTimeAgo` を使う（表示中の言語で整形する）
 - 金額の表示は `utils/functions/price.ts` の `formatPrice(amount, currency, i18n.language)` を使う（`Currency` の通貨と表示中の言語で整形する。`¥` などの通貨記号を直書きしない）
+- 金額は最小単位の整数（円は1円、ドルはセント）で持ち、`float` にしない。入力の欄は通貨の単位で入れてもらい（ドルは `5.00`）、`priceAmount(text, currency)` で最小単位にする。欄に出すときは `priceText(amount, currency)`。小数の桁数は `priceDigits(currency)`
 - 性別は ``t(`gender.${gender}`)``、都道府県の選択肢は `prefectures` の `key` から ``t(`prefecture.${key}`)`` で作る（保存する値は日本語のまま）
 - ユーザーが入力した内容や API から返る値（投稿タイトル、カテゴリ名など）は翻訳しない
 

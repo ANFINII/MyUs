@@ -17,7 +17,7 @@
 ### 確認が残っているもの
 
 - Stripe のダッシュボードで Connect を有効にし、webhook のエンドポイントに `checkout.session.completed` を足す。テスト環境で、口座の登録 → 記事を有料にする → 別のユーザーで買う → 有料部分が読める → ダッシュボードで「送金を取り消す」付きで返金 → 読めなくなり `TransferReversal` が付く、を確かめる
-- Stripe のダッシュボードで4つの Price（`STRIPE_PRICE_ID_*`）に USD の金額（399・599・799・1299）を足し、テスト環境で国/地域が日本以外のユーザーがドルで checkout・プラン変更できるかを確かめる
+- Stripe のダッシュボードで4つの Price（`STRIPE_PRICE_ID_*`）に USD の金額（400・800・1200・2400。`domain/payment/plan.py` の `Plan.prices` と同じ）を足し、テスト環境で国/地域が日本以外のユーザーがドルで checkout・プラン変更できるかを確かめる
 - Stripe のダッシュボードで Billing Portal の設定を保存し（保存するまでは portal を開けない）、支払い方法の変更から決済の画面に戻ってくるかを確かめる
 - 本物の Stripe（テスト環境）で `invoice.paid`・`charge.refunded`・`payout.paid` を通し、取引・明細・入金が正しく作られるかを確かめる
 - Stripe CLI で `customer.subscription.*` を送り、`es_event` と `Subscription`・`UserPlan` が正しく作られるかを確かめる
