@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.db import models
 from django.utils import timezone
 from myus.utils.constants.choice import CURRENCY_CHOICES, ENCODE_STATUS_CHOICES
-from myus.utils.enum.i18n import Currency
 from myus.utils.enum.media import EncodeStatus
 from myus.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
 from .base import MediaModel
@@ -86,7 +85,7 @@ class Blog(models.Model, MediaModel):
     richtext     = models.TextField()
     paid_text    = models.TextField(blank=True)
     price        = models.IntegerField(default=0)
-    currency     = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default=Currency.JPY.value)
+    currency     = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
     image        = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
     category     = models.ManyToManyField(Category, blank=True)
     hashtag      = models.ManyToManyField(HashTag, through=BlogHashtag, blank=True)
