@@ -8,7 +8,7 @@ from myus.domain.payment.event.interface import FilterOption as PaymentEventFilt
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
 from myus.domain.payment.plan import PLANS, get_plan, plan_price
-from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, SellerOnboardCreated, SellerOnboard, SellerOnboardResult, SellerStatusFailed, SellerStatusSuccess, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, SellerOnboardCreated, SellerOnboardData, SellerOnboardResult, SellerStatusFailed, SellerStatusSuccess, WebhookVerifyResult
 from myus.domain.payment.seller.data import PaymentSellerData
 from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, PageOption as SubscriptionPageOption, SortOption as SubscriptionSortOption, SubscriptionInterface
@@ -362,7 +362,7 @@ def onboard_seller(user_id: int, locale: Locale) -> Result[SellerOnboardResult, 
     seller = seller_ret.ok_value
     provider = seller.provider if seller is not None else CHECKOUT_PROVIDER
     return_url = f"{create_frontend_url(locale)}/setting/payment"
-    seller_onboard = SellerOnboard(
+    data = SellerOnboardData(
         external_id=seller.external_id if seller is not None else "",
         user_ulid=user.user.ulid,
         email=user.user.email,
@@ -372,7 +372,7 @@ def onboard_seller(user_id: int, locale: Locale) -> Result[SellerOnboardResult, 
     )
 
     repo = get_payment_repository(provider)
-    onboard_ret = repo.onboard_seller(seller_onboard)
+    onboard_ret = repo.onboard_seller(data)
     if onboard_ret.is_err:
         return Result.err(onboard_ret.err_value)
 

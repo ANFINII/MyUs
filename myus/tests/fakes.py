@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import ProviderSubscriptionData
-from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, SellerOnboard, SellerOnboardResult, SellerStatusResult, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, SellerOnboardData, SellerOnboardResult, SellerStatusResult, WebhookVerifyResult
 from myus.domain.payment.provider.interface import PaymentInterface
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Currency, Locale
@@ -44,7 +44,7 @@ class FakePayment(PaymentInterface):
     def create_payment_method_session(self, customer_id: str, return_url: str, locale: Locale) -> Result[PaymentMethodSessionResult, FatalError]:
         raise NotImplementedError
 
-    def onboard_seller(self, input: SellerOnboard) -> Result[SellerOnboardResult, FatalError]:
+    def onboard_seller(self, input: SellerOnboardData) -> Result[SellerOnboardResult, FatalError]:
         raise NotImplementedError
 
     def get_seller(self, external_id: str) -> Result[SellerStatusResult, FatalError]:

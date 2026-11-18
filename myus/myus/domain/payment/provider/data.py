@@ -129,7 +129,7 @@ type PaymentMethodSessionResult = PaymentMethodSessionCreated | PaymentMethodSes
 
 
 @dataclass(frozen=True, slots=True)
-class SellerOnboard:
+class SellerOnboardData:
     external_id: str
     user_ulid: str
     email: str

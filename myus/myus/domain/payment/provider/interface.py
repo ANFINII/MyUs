@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Locale
-from .data import CancelResult, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, SellerOnboard, SellerOnboardResult, SellerStatusResult, WebhookVerifyResult
+from .data import CancelResult, CheckoutData, CheckoutResult, PaymentMethodSessionResult, PlanChangeResult, RevokeResult, SellerOnboardData, SellerOnboardResult, SellerStatusResult, WebhookVerifyResult
 from ..event.data import ProviderSubscriptionData
 
 
@@ -35,7 +35,7 @@ class PaymentInterface(ABC):
         ...
 
     @abstractmethod
-    def onboard_seller(self, input: SellerOnboard) -> Result[SellerOnboardResult, FatalError]:
+    def onboard_seller(self, input: SellerOnboardData) -> Result[SellerOnboardResult, FatalError]:
         ...
 
     @abstractmethod
