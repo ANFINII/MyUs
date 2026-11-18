@@ -1,9 +1,9 @@
-from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
 from django.utils import timezone
 from myus.utils.constants.choice import CURRENCY_CHOICES, ENCODE_STATUS_CHOICES
 from myus.utils.enum.media import EncodeStatus
+from myus.utils.functions.common import new_ulid
 from myus.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
 from .base import MediaModel
 from .channel import Channel
@@ -16,7 +16,7 @@ from .user import User
 class Video(models.Model, MediaModel):
     """Video"""
     id            = models.BigAutoField(primary_key=True)
-    ulid          = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid          = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     channel       = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
     title         = models.CharField(max_length=100)
     content       = models.TextField()
@@ -47,7 +47,7 @@ class Video(models.Model, MediaModel):
 class Music(models.Model, MediaModel):
     """Music"""
     id         = models.BigAutoField(primary_key=True)
-    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
     title      = models.CharField(max_length=100)
     content    = models.TextField()
@@ -78,7 +78,7 @@ class Music(models.Model, MediaModel):
 class Blog(models.Model, MediaModel):
     """Blog"""
     id           = models.BigAutoField(primary_key=True)
-    ulid         = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid         = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     channel      = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="blogs")
     title        = models.CharField(max_length=100)
     content      = models.TextField()
@@ -110,7 +110,7 @@ class Blog(models.Model, MediaModel):
 class Comic(models.Model, MediaModel):
     """Comic"""
     id         = models.BigAutoField(primary_key=True)
-    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
     title      = models.CharField(max_length=100)
     content    = models.TextField()
@@ -152,7 +152,7 @@ class ComicPage(models.Model):
 class Picture(models.Model, MediaModel):
     """Picture"""
     id         = models.BigAutoField(primary_key=True)
-    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
     title      = models.CharField(max_length=100)
     content    = models.TextField()
@@ -179,7 +179,7 @@ class Picture(models.Model, MediaModel):
 class Chat(models.Model):
     """Chat"""
     id         = models.BigAutoField(primary_key=True)
-    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid       = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="chats")
     title      = models.CharField(max_length=100)
     content    = models.TextField()

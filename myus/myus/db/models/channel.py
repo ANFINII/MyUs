@@ -1,5 +1,5 @@
-from django_ulid.models import ulid
 from django.db import models
+from myus.utils.functions.common import new_ulid
 from myus.utils.functions.file import avatar_upload
 from .user import User
 
@@ -8,7 +8,7 @@ class Channel(models.Model):
     """Channel"""
     img         = "../static/img/user_icon.png"
     id          = models.BigAutoField(primary_key=True)
-    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     owner       = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
     avatar      = models.ImageField(upload_to=avatar_upload, max_length=255, default=img, blank=True)
     name        = models.CharField(max_length=100)

@@ -1,5 +1,5 @@
-from django_ulid.models import ulid
 from django.db import models
+from myus.utils.functions.common import new_ulid
 from .media import Music
 from .user import User
 
@@ -7,7 +7,7 @@ from .user import User
 class Playlist(models.Model):
     """Playlist"""
     id          = models.BigAutoField(primary_key=True)
-    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     author      = models.ForeignKey(User, on_delete=models.CASCADE, related_name="playlists")
     title       = models.CharField(max_length=100)
     description = models.TextField(blank=True, default="")

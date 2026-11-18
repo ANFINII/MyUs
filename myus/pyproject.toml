@@ -92,7 +92,6 @@ ignore_missing_imports = true     # Windows でだけ使う任意のライブラ
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.local"
-addopts = "--nomigrations"                # マイグレーションは git 管理外のため、テスト用 DB はモデルから直接作る
 testpaths = ["tests"]
 
 [tool.django-stubs]

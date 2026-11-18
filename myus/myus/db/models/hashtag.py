@@ -1,11 +1,11 @@
-from django_ulid.models import ulid
 from django.db import models
+from myus.utils.functions.common import new_ulid
 
 
 class HashTag(models.Model):
     """HashTag"""
     id   = models.BigAutoField(primary_key=True)
-    ulid = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     name = models.CharField(max_length=30, unique=True)
 
     def __str__(self):

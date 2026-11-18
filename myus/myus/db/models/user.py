@@ -1,4 +1,3 @@
-from django_ulid.models import ulid
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
@@ -6,6 +5,7 @@ from django.utils import timezone
 from myus.utils.constants.choice import COUNTRY_CHOICES, GENDER_CHOICES, PLAN_CHOICES
 from myus.utils.enum.i18n import Country
 from myus.utils.enum.user import PlanName
+from myus.utils.functions.common import new_ulid
 from myus.utils.functions.file import avatar_upload
 
 
@@ -33,7 +33,7 @@ class User(AbstractBaseUser):
     """User"""
     img         = "../static/img/user_icon.png"
     id          = models.BigAutoField(primary_key=True)
-    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     avatar      = models.ImageField(upload_to=avatar_upload, max_length=255, default=img, blank=True)
     password    = models.CharField(max_length=255)
     email       = models.EmailField(max_length=255, unique=True)

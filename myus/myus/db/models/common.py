@@ -1,7 +1,7 @@
-from django_ulid.models import ulid
 from django.db import models
 from myus.utils.constants.choice import ADVERTISE_TYPE_CHOICES
 from myus.utils.enum.advertise import AdvertiseType
+from myus.utils.functions.common import new_ulid
 from myus.utils.functions.file import advertise_image_upload, advertise_video_upload
 from .user import User
 
@@ -27,7 +27,7 @@ class AccessLog(models.Model):
 class Advertise(models.Model):
     """Advertise"""
     id      = models.BigAutoField(primary_key=True)
-    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=new_ulid)
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
     url     = models.URLField(max_length=500)
