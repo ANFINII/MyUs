@@ -57,15 +57,11 @@ def filter_q_list(filter: FilterOption) -> list[Q]:
     return q_list
 
 
-def distinct_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
-    if filter.search or filter.is_recommend or filter.category_id:
-        return qs.distinct()
-    return qs
-
-
 def filter_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
-    qs = qs.filter(*filter_q_list(filter))
-    return distinct_queryset(qs, filter)
+    filtered_qs = qs.filter(*filter_q_list(filter))
+    if filter.search or filter.is_recommend or filter.category_id:
+        return qs.filter(id__in=filtered_qs.values("id"))
+    return filtered_qs
 
 
 def score_expression(sort: SortOption, is_recommend: bool) -> CombinedExpression:

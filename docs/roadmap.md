@@ -136,11 +136,10 @@ flowchart LR
 
 ## メディアの一覧の速さ
 
-今は困っていない。一覧が遅いと感じたら、`EXPLAIN` でどこが重いかを確かめてから、次のどちらかを入れる。一覧を取る処理は `adapter/outbound/db/media/common.py`（`filter_queryset`・`sort_queryset`・`get_ids_queryset`）にまとまっている。
+今は困っていない。一覧が遅いと感じたら、`EXPLAIN` でどこが重いかを確かめてから、次を入れる。一覧を取る処理は `adapter/outbound/db/media/common.py`（`filter_queryset`・`sort_queryset`・`get_ids_queryset`）にまとまっている。
 
 ### 遅くなったら検討すること
 
-- **多対多の絞り込みを `Exists` にして `DISTINCT` をなくす**：検索（`hashtag__name`）・カテゴリ（`category__id`）・おすすめ（`like__isnull=False`）は多対多の表を join するので、同じ行が何度も出て `distinct_queryset` で `DISTINCT` を掛けている。`Exists(...)` のサブクエリにすれば行が重ならず、`distinct_queryset` を消せる。検索は「タイトル または ハッシュタグ」の OR、おすすめは絞り込みの join を score の `Count("like")` が使い回しているので、書き換えたら実データで結果が変わらないかを確かめる
 - **like 数を列に持つ**：score で並べるたびに、絞り込みに当たる全行の `Count("like")` を数えている。メディアのテーブルに `like_count` を持たせ、いいねのたびに増減すれば集計が要らなくなる。代わりに、いいねの処理で列の更新が要る
 
 ## インフラ
