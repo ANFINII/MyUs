@@ -7,7 +7,7 @@ import time
 from typing import Any
 from myus.adapter.outbound.payment.stripe.provider import StripeProvider
 from myus.domain.payment.event.data import ProviderSubscriptionData
-from myus.domain.payment.provider.data import WebhookVerified, WebhookVerifyFailed
+from myus.domain.payment.provider.data import WebhookVerifiedData, WebhookVerifyFailedData
 from myus.utils.enum.payment import SubscriptionStatus, WebhookEventType, WebhookVerifyError
 
 
@@ -49,7 +49,7 @@ def assert_no_payment(payload: bytes) -> None:
 
     assert ret.is_ok, ret
     verification = ret.ok_value
-    assert isinstance(verification, WebhookVerifyFailed)
+    assert isinstance(verification, WebhookVerifyFailedData)
     assert verification.error == WebhookVerifyError.UNSUPPORTED_EVENT
 
 
@@ -65,7 +65,7 @@ def test_valid_signature_is_verified() -> None:
 
     assert ret.is_ok, ret
     verification = ret.ok_value
-    assert isinstance(verification, WebhookVerified)
+    assert isinstance(verification, WebhookVerifiedData)
     assert verification.event.event_id == "evt_1"
     assert verification.event.event_type == WebhookEventType.SUBSCRIPTION_CREATED
     assert verification.event.external_id == "sub_1"
@@ -84,7 +84,7 @@ def test_wrong_secret_is_rejected() -> None:
 
     assert ret.is_ok, ret
     verification = ret.ok_value
-    assert isinstance(verification, WebhookVerifyFailed)
+    assert isinstance(verification, WebhookVerifyFailedData)
     assert verification.error == WebhookVerifyError.INVALID_SIGNATURE
 
 
@@ -95,7 +95,7 @@ def test_unsupported_event_is_reported() -> None:
 
     assert ret.is_ok, ret
     verification = ret.ok_value
-    assert isinstance(verification, WebhookVerifyFailed)
+    assert isinstance(verification, WebhookVerifyFailedData)
     assert verification.error == WebhookVerifyError.UNSUPPORTED_EVENT
 
 
@@ -106,7 +106,7 @@ def test_malformed_payload_is_reported() -> None:
 
     assert ret.is_ok, ret
     verification = ret.ok_value
-    assert isinstance(verification, WebhookVerifyFailed)
+    assert isinstance(verification, WebhookVerifyFailedData)
     assert verification.error == WebhookVerifyError.MALFORMED_PAYLOAD
 
 
@@ -132,7 +132,7 @@ def test_invoice_failed_uses_open_payment(monkeypatch: pytest.MonkeyPatch) -> No
 
     assert ret.is_ok, ret
     verification = ret.ok_value
-    assert isinstance(verification, WebhookVerified)
+    assert isinstance(verification, WebhookVerifiedData)
     assert verification.event.external_id == "pi_open"
 
 

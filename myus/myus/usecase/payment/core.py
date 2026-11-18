@@ -8,7 +8,7 @@ from myus.domain.payment.event.interface import FilterOption as PaymentEventFilt
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
 from myus.domain.payment.plan import PLANS, get_plan, plan_price
-from myus.domain.payment.provider.data import CancelResult, CancelSuccess, CancelFailed, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccess, RedirectUrls, RevokeResult, RevokeSuccess, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardResult, SellerStatusFailedData, SellerStatusSuccessData, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelResult, CancelSuccessData, CancelFailedData, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccessData, RedirectUrlsData, RevokeResult, RevokeSuccessData, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardResult, SellerStatusFailedData, SellerStatusSuccessData, WebhookVerifyResult
 from myus.domain.payment.seller.data import PaymentSellerData
 from myus.domain.payment.subscription.data import SubscriptionData
 from myus.domain.payment.subscription.interface import FilterOption as SubscriptionFilterOption, PageOption as SubscriptionPageOption, SortOption as SubscriptionSortOption, SubscriptionInterface
@@ -70,7 +70,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         price=plan_price(plan, currency),
         payment_type=PaymentType.SUBSCRIPTION,
         customer=CustomerData(user_ulid=user.user.ulid, email=user.user.email),
-        redirect=RedirectUrls(
+        redirect=RedirectUrlsData(
             success_url=f"{frontend_url}/setting/payment/success",
             cancel_url=f"{frontend_url}/setting/payment/cancel",
         ),
@@ -176,7 +176,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
         return Result.err(cancel_ret.err_value)
 
     cancellation = cancel_ret.ok_value
-    if isinstance(cancellation, CancelFailed):
+    if isinstance(cancellation, CancelFailedData):
         if cancellation.error == CancelError.NETWORK_ERROR:
             log.warning("cancel result unknown", user_id=user_id, external_id=subscription.external_id, request_id=request_id)
             return Result.ok(cancellation)
@@ -188,7 +188,7 @@ def cancel_subscription(user_id: int) -> Result[CancelResult, FindError]:
 
         return Result.ok(cancellation)
 
-    if isinstance(cancellation, CancelSuccess):
+    if isinstance(cancellation, CancelSuccessData):
         provider_subscription_ret = payment_repo.get_subscription(subscription.external_id)
         if provider_subscription_ret.is_err:
             return Result.err(provider_subscription_ret.err_value)
@@ -229,7 +229,7 @@ def revoke_cancellation(user_id: int) -> Result[RevokeResult, InputError]:
         return Result.err(revoke_ret.err_value)
 
     revoke = revoke_ret.ok_value
-    if isinstance(revoke, RevokeSuccess):
+    if isinstance(revoke, RevokeSuccessData):
         save_ret = atomic_result(lambda: save_provider_subscription_data(revoke.subscription, datetime.now(timezone.utc)))
         if save_ret.is_err:
             log.error("cancel revoke not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))
@@ -273,7 +273,7 @@ def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputE
         return Result.err(change_ret.err_value)
 
     change = change_ret.ok_value
-    if isinstance(change, PlanChangeSuccess):
+    if isinstance(change, PlanChangeSuccessData):
         save_ret = atomic_result(lambda: save_provider_subscription_data(change.subscription, datetime.now(timezone.utc)))
         if save_ret.is_err:
             log.error("plan change not saved", user_id=user_id, external_id=subscription.external_id, error=str(save_ret.err_value))

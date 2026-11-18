@@ -19,7 +19,7 @@ class CustomerData:
 
 
 @dataclass(frozen=True, slots=True)
-class RedirectUrls:
+class RedirectUrlsData:
     success_url: str
     cancel_url: str
 
@@ -31,7 +31,7 @@ class CheckoutData:
     price: Money
     payment_type: PaymentType
     customer: CustomerData
-    redirect: RedirectUrls
+    redirect: RedirectUrlsData
     marketplace: MarketplaceData
     locale: Locale
 
@@ -44,88 +44,88 @@ class CheckoutSessionData:
 
 
 @dataclass(frozen=True, slots=True)
-class CheckoutCreated:
+class CheckoutCreatedData:
     session: CheckoutSessionData
 
 
 @dataclass(frozen=True, slots=True)
-class CheckoutFailed:
+class CheckoutFailedData:
     error: CheckoutError
     message: str
 
 
-type CheckoutResult = CheckoutCreated | CheckoutFailed
+type CheckoutResult = CheckoutCreatedData | CheckoutFailedData
 
 
 @dataclass(frozen=True, slots=True)
-class WebhookVerified:
+class WebhookVerifiedData:
     event: PaymentEventData
 
 
 @dataclass(frozen=True, slots=True)
-class WebhookVerifyFailed:
+class WebhookVerifyFailedData:
     error: WebhookVerifyError
     message: str
 
 
-type WebhookVerifyResult = WebhookVerified | WebhookVerifyFailed
+type WebhookVerifyResult = WebhookVerifiedData | WebhookVerifyFailedData
 
 
 @dataclass(frozen=True, slots=True)
-class CancelSuccess:
+class CancelSuccessData:
     canceled_at: datetime
     period_end: datetime
 
 
 @dataclass(frozen=True, slots=True)
-class CancelFailed:
+class CancelFailedData:
     error: CancelError
     message: str
 
 
-type CancelResult = CancelSuccess | CancelFailed
+type CancelResult = CancelSuccessData | CancelFailedData
 
 
 @dataclass(frozen=True, slots=True)
-class RevokeSuccess:
+class RevokeSuccessData:
     subscription: ProviderSubscriptionData
 
 
 @dataclass(frozen=True, slots=True)
-class RevokeFailed:
+class RevokeFailedData:
     error: RevokeError
     message: str
 
 
-type RevokeResult = RevokeSuccess | RevokeFailed
+type RevokeResult = RevokeSuccessData | RevokeFailedData
 
 
 @dataclass(frozen=True, slots=True)
-class PlanChangeSuccess:
+class PlanChangeSuccessData:
     subscription: ProviderSubscriptionData
 
 
 @dataclass(frozen=True, slots=True)
-class PlanChangeFailed:
+class PlanChangeFailedData:
     error: PlanChangeError
     message: str
 
 
-type PlanChangeResult = PlanChangeSuccess | PlanChangeFailed
+type PlanChangeResult = PlanChangeSuccessData | PlanChangeFailedData
 
 
 @dataclass(frozen=True, slots=True)
-class PaymentMethodSessionCreated:
+class PaymentMethodSessionCreatedData:
     redirect_url: str
 
 
 @dataclass(frozen=True, slots=True)
-class PaymentMethodSessionFailed:
+class PaymentMethodSessionFailedData:
     error: PaymentMethodSessionError
     message: str
 
 
-type PaymentMethodSessionResult = PaymentMethodSessionCreated | PaymentMethodSessionFailed
+type PaymentMethodSessionResult = PaymentMethodSessionCreatedData | PaymentMethodSessionFailedData
 
 
 @dataclass(frozen=True, slots=True)

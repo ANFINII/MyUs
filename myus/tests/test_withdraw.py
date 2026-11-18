@@ -4,7 +4,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from myus.db.models.payment import Subscription
 from myus.db.models.user import User
-from myus.domain.payment.provider.data import CancelFailed
+from myus.domain.payment.provider.data import CancelFailedData
 from myus.usecase.auth.core import withdraw_user
 from myus.usecase.payment._convert import save_provider_subscription_data
 from myus.usecase.payment.core import cancel_subscription
@@ -59,7 +59,7 @@ def test_active_subscription_is_canceled_before_withdraw(make_user: Callable[[st
 def test_cancel_failure_keeps_user_active(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
     add_subscription(fake_payment, user, "sub_1", SubscriptionStatus.ACTIVE, 9)
-    fake_payment.cancel_result = CancelFailed(error=CancelError.NETWORK_ERROR, message="timeout")
+    fake_payment.cancel_result = CancelFailedData(error=CancelError.NETWORK_ERROR, message="timeout")
 
     assert withdraw(user) == "error.cancelFailed"
 
@@ -70,7 +70,7 @@ def test_cancel_failure_keeps_user_active(make_user: Callable[[str], User], fake
 def test_subscription_missing_on_stripe_still_withdraws(make_user: Callable[[str], User], fake_payment: FakePayment) -> None:
     user = make_user("alice")
     add_subscription(fake_payment, user, "sub_1", SubscriptionStatus.ACTIVE, 9)
-    fake_payment.cancel_result = CancelFailed(error=CancelError.NOT_FOUND, message="no such subscription")
+    fake_payment.cancel_result = CancelFailedData(error=CancelError.NOT_FOUND, message="no such subscription")
 
     assert withdraw(user) == ""
 

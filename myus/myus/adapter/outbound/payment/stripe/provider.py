@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from typing import Any, assert_never
 from django.conf import settings
 from myus.domain.payment.event.data import PaymentEventContent, PaymentFailedContent, ProviderSubscriptionData, RefundContent
-from myus.domain.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreated, PaymentMethodSessionFailed, PaymentMethodSessionResult, PlanChangeFailed, PlanChangeResult, PlanChangeSuccess, RevokeFailed, RevokeResult, RevokeSuccess, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardFailedData, SellerOnboardResult, SellerStatusFailedData, SellerStatusResult, SellerStatusSuccessData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from myus.domain.payment.provider.data import CancelFailedData, CancelResult, CancelSuccessData, CheckoutCreatedData, CheckoutData, CheckoutFailedData, CheckoutResult, CheckoutSessionData, PaymentMethodSessionCreatedData, PaymentMethodSessionFailedData, PaymentMethodSessionResult, PlanChangeFailedData, PlanChangeResult, PlanChangeSuccessData, RevokeFailedData, RevokeResult, RevokeSuccessData, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardFailedData, SellerOnboardResult, SellerStatusFailedData, SellerStatusResult, SellerStatusSuccessData, WebhookVerifiedData, WebhookVerifyFailedData, WebhookVerifyResult
 from myus.domain.payment.provider.interface import PaymentInterface
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
@@ -17,7 +17,7 @@ class StripeProvider(PaymentInterface):
     @Result.shield_exception()
     def create_checkout(self, input: CheckoutData) -> Result[CheckoutResult, FatalError]:
         params = convert_stripe_params(input)
-        if isinstance(params, CheckoutFailed):
+        if isinstance(params, CheckoutFailedData):
             return Result.ok(params)
 
         stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -25,16 +25,16 @@ class StripeProvider(PaymentInterface):
             session = stripe.checkout.Session.create(**params)
         except stripe.APIConnectionError as e:
             log.error("network error", exc=e)
-            return Result.ok(CheckoutFailed(error=CheckoutError.NETWORK_ERROR, message=str(e)))
+            return Result.ok(CheckoutFailedData(error=CheckoutError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
             log.error("api error", exc=e)
-            return Result.ok(CheckoutFailed(error=CheckoutError.PROVIDER_REJECTED, message=str(e)))
+            return Result.ok(CheckoutFailedData(error=CheckoutError.PROVIDER_REJECTED, message=str(e)))
 
         if session.url is None or session.id is None:
             log.error("session missing url or id")
-            return Result.ok(CheckoutFailed(error=CheckoutError.PROVIDER_REJECTED, message="missing url or id in session"))
+            return Result.ok(CheckoutFailedData(error=CheckoutError.PROVIDER_REJECTED, message="missing url or id in session"))
 
-        return Result.ok(CheckoutCreated(session=CheckoutSessionData(
+        return Result.ok(CheckoutCreatedData(session=CheckoutSessionData(
             provider=PaymentProvider.STRIPE,
             external_id=session.id,
             redirect_url=session.url,
@@ -46,22 +46,22 @@ class StripeProvider(PaymentInterface):
             event = stripe.Webhook.construct_event(payload, signature, settings.STRIPE_WEBHOOK_SECRET)
         except stripe.SignatureVerificationError as e:
             log.warning("signature invalid", exc=e)
-            return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.INVALID_SIGNATURE, message=str(e)))
+            return Result.ok(WebhookVerifyFailedData(error=WebhookVerifyError.INVALID_SIGNATURE, message=str(e)))
         except ValueError as e:
             log.warning("payload malformed", exc=e)
-            return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.MALFORMED_PAYLOAD, message=str(e)))
+            return Result.ok(WebhookVerifyFailedData(error=WebhookVerifyError.MALFORMED_PAYLOAD, message=str(e)))
 
         event_type = stripe_event_type(event.type)
         if event_type is None:
-            return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"unsupported event_type={event.type}"))
+            return Result.ok(WebhookVerifyFailedData(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"unsupported event_type={event.type}"))
 
         stripe.api_key = settings.STRIPE_SECRET_KEY
         event_content = stripe_event_content(event_type, event.data.object.to_dict())
         if event_content is None:
-            return Result.ok(WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"no payment event_type={event.type} event_id={event.id}"))
+            return Result.ok(WebhookVerifyFailedData(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"no payment event_type={event.type} event_id={event.id}"))
 
         external_id, content = event_content
-        return Result.ok(WebhookVerified(event=convert_stripe_event(event, event_type, payload, external_id, content)))
+        return Result.ok(WebhookVerifiedData(event=convert_stripe_event(event, event_type, payload, external_id, content)))
 
     @Result.shield_exception()
     def cancel_subscription(self, external_id: str, idempotency_key: str) -> Result[CancelResult, FatalError]:
@@ -70,15 +70,15 @@ class StripeProvider(PaymentInterface):
             subscription = stripe.Subscription.modify(external_id, cancel_at_period_end=True, idempotency_key=idempotency_key)
         except stripe.InvalidRequestError as e:
             log.warning("not found", external_id=external_id, exc=e)
-            return Result.ok(CancelFailed(error=CancelError.NOT_FOUND, message=str(e)))
+            return Result.ok(CancelFailedData(error=CancelError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
             log.error("network error", exc=e)
-            return Result.ok(CancelFailed(error=CancelError.NETWORK_ERROR, message=str(e)))
+            return Result.ok(CancelFailedData(error=CancelError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
             log.error("api error", exc=e)
-            return Result.ok(CancelFailed(error=CancelError.PROVIDER_REJECTED, message=str(e)))
+            return Result.ok(CancelFailedData(error=CancelError.PROVIDER_REJECTED, message=str(e)))
 
-        return Result.ok(CancelSuccess(
+        return Result.ok(CancelSuccessData(
             canceled_at=datetime.now(timezone.utc),
             period_end=stripe_period_end(subscription),
         ))
@@ -90,21 +90,21 @@ class StripeProvider(PaymentInterface):
             subscription = stripe.Subscription.modify(external_id, cancel_at_period_end=False)
         except stripe.InvalidRequestError as e:
             log.warning("not found", external_id=external_id, exc=e)
-            return Result.ok(RevokeFailed(error=RevokeError.NOT_FOUND, message=str(e)))
+            return Result.ok(RevokeFailedData(error=RevokeError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
             log.error("network error", exc=e)
-            return Result.ok(RevokeFailed(error=RevokeError.NETWORK_ERROR, message=str(e)))
+            return Result.ok(RevokeFailedData(error=RevokeError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
             log.error("api error", exc=e)
-            return Result.ok(RevokeFailed(error=RevokeError.PROVIDER_REJECTED, message=str(e)))
+            return Result.ok(RevokeFailedData(error=RevokeError.PROVIDER_REJECTED, message=str(e)))
 
-        return Result.ok(RevokeSuccess(subscription=convert_stripe_subscription(subscription)))
+        return Result.ok(RevokeSuccessData(subscription=convert_stripe_subscription(subscription)))
 
     @Result.shield_exception()
     def change_plan(self, external_id: str, product_code: str) -> Result[PlanChangeResult, FatalError]:
         price_id = stripe_price_id(product_code)
         if len(price_id) == 0:
-            return Result.ok(PlanChangeFailed(error=PlanChangeError.UNKNOWN_PRODUCT, message=f"price_id not configured for product_code={product_code}"))
+            return Result.ok(PlanChangeFailedData(error=PlanChangeError.UNKNOWN_PRODUCT, message=f"price_id not configured for product_code={product_code}"))
 
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
@@ -118,15 +118,15 @@ class StripeProvider(PaymentInterface):
             )
         except stripe.InvalidRequestError as e:
             log.warning("not found", external_id=external_id, exc=e)
-            return Result.ok(PlanChangeFailed(error=PlanChangeError.NOT_FOUND, message=str(e)))
+            return Result.ok(PlanChangeFailedData(error=PlanChangeError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
             log.error("network error", exc=e)
-            return Result.ok(PlanChangeFailed(error=PlanChangeError.NETWORK_ERROR, message=str(e)))
+            return Result.ok(PlanChangeFailedData(error=PlanChangeError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
             log.error("api error", exc=e)
-            return Result.ok(PlanChangeFailed(error=PlanChangeError.PROVIDER_REJECTED, message=str(e)))
+            return Result.ok(PlanChangeFailedData(error=PlanChangeError.PROVIDER_REJECTED, message=str(e)))
 
-        return Result.ok(PlanChangeSuccess(subscription=convert_stripe_subscription(subscription)))
+        return Result.ok(PlanChangeSuccessData(subscription=convert_stripe_subscription(subscription)))
 
     @Result.shield_exception()
     def get_subscription(self, external_id: str) -> Result[ProviderSubscriptionData, FatalError]:
@@ -146,15 +146,15 @@ class StripeProvider(PaymentInterface):
             )
         except stripe.InvalidRequestError as e:
             log.warning("not found", customer_id=customer_id, exc=e)
-            return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.NOT_FOUND, message=str(e)))
+            return Result.ok(PaymentMethodSessionFailedData(error=PaymentMethodSessionError.NOT_FOUND, message=str(e)))
         except stripe.APIConnectionError as e:
             log.error("network error", exc=e)
-            return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.NETWORK_ERROR, message=str(e)))
+            return Result.ok(PaymentMethodSessionFailedData(error=PaymentMethodSessionError.NETWORK_ERROR, message=str(e)))
         except stripe.StripeError as e:
             log.error("api error", exc=e)
-            return Result.ok(PaymentMethodSessionFailed(error=PaymentMethodSessionError.PROVIDER_REJECTED, message=str(e)))
+            return Result.ok(PaymentMethodSessionFailedData(error=PaymentMethodSessionError.PROVIDER_REJECTED, message=str(e)))
 
-        return Result.ok(PaymentMethodSessionCreated(redirect_url=session.url))
+        return Result.ok(PaymentMethodSessionCreatedData(redirect_url=session.url))
 
     @Result.shield_exception()
     def onboard_seller(self, input: SellerOnboardData) -> Result[SellerOnboardResult, FatalError]:

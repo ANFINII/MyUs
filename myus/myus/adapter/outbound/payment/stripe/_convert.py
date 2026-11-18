@@ -14,7 +14,7 @@ from stripe.params.checkout import (
 from django.conf import settings
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentPaidContent, PayoutContent, ProviderSubscriptionData
-from myus.domain.payment.provider.data import CheckoutData, CheckoutFailed
+from myus.domain.payment.provider.data import CheckoutData, CheckoutFailedData
 from myus.utils.enum.i18n import Currency, Locale
 from myus.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, PayoutStatus, SubscriptionStatus, WebhookEventType
 from myus.utils.enum.user import PlanName
@@ -76,16 +76,16 @@ def fee_percent(fee: Money, price: Money) -> int:
     return int(fee.amount * 100 / price.amount)
 
 
-def convert_line_items(input: CheckoutData) -> list[SessionCreateParamsLineItem] | CheckoutFailed:
+def convert_line_items(input: CheckoutData) -> list[SessionCreateParamsLineItem] | CheckoutFailedData:
     match input.payment_type:
         case PaymentType.SUBSCRIPTION:
             price_id = stripe_price_id(input.product_code)
             if len(price_id) == 0:
-                return CheckoutFailed(error=CheckoutError.UNKNOWN_PRODUCT, message=f"price_id not configured for product_code={input.product_code}")
+                return CheckoutFailedData(error=CheckoutError.UNKNOWN_PRODUCT, message=f"price_id not configured for product_code={input.product_code}")
             return [SessionCreateParamsLineItem(price=price_id, quantity=1)]
         case PaymentType.ONE_TIME:
             if input.price.amount <= 0:
-                return CheckoutFailed(error=CheckoutError.INVALID_AMOUNT, message=f"invalid amount={input.price.amount}")
+                return CheckoutFailedData(error=CheckoutError.INVALID_AMOUNT, message=f"invalid amount={input.price.amount}")
             price_data = SessionCreateParamsLineItemPriceData(
                 currency=input.price.currency.value.lower(),
                 unit_amount=input.price.amount,
@@ -120,9 +120,9 @@ def convert_payment_params(input: CheckoutData) -> SessionCreateParams:
             assert_never(input.payment_type)
 
 
-def convert_stripe_params(input: CheckoutData) -> SessionCreateParams | CheckoutFailed:
+def convert_stripe_params(input: CheckoutData) -> SessionCreateParams | CheckoutFailedData:
     line_items = convert_line_items(input)
-    if isinstance(line_items, CheckoutFailed):
+    if isinstance(line_items, CheckoutFailedData):
         return line_items
 
     return SessionCreateParams(
