@@ -3,7 +3,7 @@ import { Plan } from './PlanCard'
 export const plans: Plan[] = [
   {
     name: 'Basic',
-    features: [{ key: 'series' }, { key: 'paidContent' }, { key: 'playlist' }, { key: 'individualAds', count: 1 }],
+    features: [{ key: 'series' }, { key: 'playlist' }, { key: 'individualAds', count: 1 }],
   },
   {
     name: 'Standard',

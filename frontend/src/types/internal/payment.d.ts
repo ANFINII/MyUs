@@ -38,6 +38,7 @@ export interface PaymentMethodOut {
 }
 
 export interface PaymentSellerOut {
+  isAvailable: boolean
   isRegistered: boolean
   isEnabled: boolean
 }

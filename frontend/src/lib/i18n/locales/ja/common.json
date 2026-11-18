@@ -47,7 +47,7 @@
     "playlistNotFound": "プレイリストが見つかりません",
     "playlistPlanRequired": "プレイリストは有料プランで作成できます",
     "seriesPlanRequired": "シリーズは有料プランで作成できます",
-    "paidContentPlanRequired": "有料記事は有料プランで販売できます",
+    "paidContentPlanRequired": "有料記事は Standard プラン以上で販売できます",
     "planNotFound": "プランが見つかりません",
     "alreadySubscribed": "すでに有料プランを契約しています",
     "followSelf": "自分自身はフォローできません",

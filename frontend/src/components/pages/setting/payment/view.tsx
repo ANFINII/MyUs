@@ -146,7 +146,7 @@ export default function Payment(props: Props): React.JSX.Element {
           </div>
         )}
 
-        {(isPaid || seller.isRegistered) && (
+        {(seller.isAvailable || seller.isRegistered) && (
           <section className={style.seller}>
             <h2 className={style.seller_title}>{t('setting.payment.seller.title')}</h2>
             <p className={style.seller_notice}>{sellerNotice}</p>
