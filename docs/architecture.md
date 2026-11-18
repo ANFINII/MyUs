@@ -155,10 +155,14 @@ flowchart LR
 
 ```bash
 # myus/envs/ に django.env・mysql.env・redis.env を用意する（envs/sample.env を参考にする）
-docker compose up -d
+docker compose up -d --build
 docker compose exec myus_backend python manage.py migrate --settings config.settings.local
-# http://127.0.0.1:8056
+# http://127.0.0.1:8000
 ```
+
+- `docker compose up -d` の1つで、BE・決済の worker・動画の encoder・MySQL・Redis が立ち上がる。止めるときは `docker compose down`
+- コンテナの中の MySQL・Redis の接続先は、`docker-compose.yml` の `environment` で `mysql`・`myus_redis` に上書きする。`django.env` は Mac で直接動かすときの値（`127.0.0.1`）のまま
+- Mac から docker の MySQL には `127.0.0.1:3356`、Redis には `127.0.0.1:6356` でつなぐ
 
 ### フロントエンド
 
