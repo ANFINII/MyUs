@@ -53,6 +53,13 @@
       },
       "title": "Balances",
       "type": "array"
+    },
+    "transfer_balances": {
+      "items": {
+        "$ref": "#/$defs/BalanceData"
+      },
+      "title": "Transfer Balances",
+      "type": "array"
     }
   },
   "required": [

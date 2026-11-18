@@ -75,6 +75,7 @@ Playlist (ユーザーが作る音楽の並び)
   └─ 曲の順序管理、公開・非公開
 
 Blog
+  └─ BlogPurchase (有料部分を買った人)
 
 Comic
   ├─ ComicPage
@@ -105,7 +106,8 @@ PaymentEvent (決済会社から届いたイベント)
 PaymentCustomer
   ├─ Subscription
   └─ PaymentTransaction
-       └─ PaymentLedgerEntry
+       ├─ PaymentLedgerEntry
+       └─ BlogPurchase
 PaymentSeller (記事を売る人の受け取り口座)
 PaymentPayout
 EsEvent / EsOutbox (集約のイベント)
@@ -229,6 +231,14 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - リッチテキスト
 - プレーンテキスト
 - サムネイル画像
+- 有料部分（`paid_text`）と値段（`price`・`currency`）。値段が 0 なら無料
+  - 付けられるのは Standard 以上のプラン（`Plan.is_paid_content`）で、売り手の口座の登録が済んでいる人だけ。有料部分か値段を変えるときだけ確かめるので、プランを下げても、付けてある有料部分はそのまま売れ、ほかの項目の編集もできる
+  - 値段は 100〜50,000 で、通貨は付けたときの投稿者の国/地域から決める（円か米ドル。ドルはセント）。有料部分があるなら値段が要り、値段があるなら有料部分が要る
+  - 詳細（`GET /media/blog/{ulid}`）は、投稿者本人と買った人にだけ `paid_text` を返す。ほかの人には空にして、値段と `is_purchased` を返す。一覧には有料部分を入れない
+  - 買う（`POST /payment/checkout/blog`・`create_blog_checkout`）：公開中で値段があり、自分の記事でなく、まだ買っておらず、投稿者の口座が使えるときだけ決済の画面を作る。Stripe の destination charge で、売上は投稿者の口座に送り、MyUs は利用料として値段の 15%（`PLATFORM_FEE_RATE`）を取る。決済が終わると記事の詳細に戻る
+
+#### BlogPurchase
+- 誰がどの記事を、どの取引で買ったか。ユーザーと記事の組で一意。`checkout.session.completed` の反映で作り、返金されたら消す。記事を消すと一緒に消える
 
 #### Chat（チャット）
 - 有効期限設定
@@ -368,6 +378,7 @@ flowchart TB
 | `invoice.payment_failed` | `PaymentFailed` | 取引の状態 |
 | `charge.refunded` | `RefundIssued` | 返金（`Refund`）・取引の状態 |
 | `payout.paid` | `PayoutPaid` | 入金・明細と入金の紐づけ |
+| `checkout.session.completed`（単発の決済で支払い済みのときだけ） | `PurchaseSucceeded` | 取引・売上（`Sale`）・決済手数料（`Fee`）・送金（`Transfer`）・記事の購入 |
 
 売上を作るのは `invoice.paid` だけにする（`payment_intent.succeeded` からも作ると二重に数えてしまうため）。
 
@@ -401,6 +412,10 @@ flowchart TB
 | `Sale`（売上） | ＋ | 税込の金額から `金額 × 10 / 110` を切り捨て |
 | `Refund`（返金） | − | 同上（符号はマイナス） |
 | `Fee`（決済手数料） | − | 0（カードの決済手数料は非課税） |
+| `Transfer`（投稿者への送金） | − | `Sale` と同じ式（符号はマイナス） |
+| `TransferReversal`（返金に伴う送金の取り消し） | ＋ | 同上（符号はプラス） |
+
+`Sale` と `Transfer` の消費税額を足すと、MyUs の取り分（利用料）にかかる消費税額になる。
 
 #### PaymentPayout
 - 決済会社から銀行口座への入金（金額・入金日・状態）。通帳との照合に使う。どの明細がこの入金に含まれるかは、明細の `payout` で分かる
@@ -420,10 +435,11 @@ flowchart TB
 - `uv run python manage.py replay_payment_events --confirm`：取引・明細・入金・サブスクリプションを消し、反映済みの `PaymentEvent` を古い順に流し直して作り直す。`--confirm` が無いと何もしない。途中で失敗したら全部元に戻る。worker を止めてから実行する
 - `uv run python manage.py export_event_schema`：`PaymentEvent` の `content` と集約のイベントの JSON スキーマを `tests/schema_compatibility/payment_event/`・`es_event/` に書き出す。過去のイベントを読めなくなる変更（項目の削除・型の変更・必須の項目の追加・enum の値の削除）は書き出さず、テストでも落ちる
 
-#### クリエイターへの支払い（Connect を作るときに足す）
-決済の時点でクリエイターに送金する形（Stripe の destination charge）では、MyUs が決済の主体になり、全額がいったん MyUs に入る。受け取り口座は `PaymentSeller` にある。売る機能を作るときに次を足す。
-- 明細の種類 `Transfer`（クリエイターへの送金。−）と `TransferReversal`（返金に伴う送金の取り消し。＋）。明細に `seller` を足す
-- MyUs の取り分は `Sale + Refund + Transfer + TransferReversal`。総額のまま残すので、売上を総額・純額のどちらで計上しても集計できる
+#### クリエイターへの支払い
+決済の時点でクリエイターに送金する形（Stripe の destination charge）では、MyUs が決済の主体になり、全額がいったん MyUs に入る。受け取り口座は `PaymentSeller` にある。
+- 決済のときに、値段から利用料を引いた額が投稿者の口座に送られる。送金は MyUs の残高の取引として `Transfer`（−）で記録する。決済手数料は MyUs が払う
+- 返金は画面に作らず、運営が Stripe のダッシュボードで行う。そのとき「送金を取り消す」と「利用料を返す」を選ぶ。送金の取り消しは `TransferReversal`（＋）で記録し、その取引の購入を消すので、買った人は有料部分を読めなくなる
+- MyUs の取り分は `Sale + Refund + Fee + Transfer + TransferReversal`。総額のまま残すので、売上を総額・純額のどちらで計上しても集計できる
 
 ## 技術アーキテクチャ
 

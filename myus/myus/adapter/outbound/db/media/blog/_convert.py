@@ -3,6 +3,8 @@ from myus.db.models.media import Blog
 from myus.domain.channel.data import ChannelData
 from myus.domain.hashtag.data import HashtagData
 from myus.domain.media.blog.data import BlogData
+from myus.domain.payment.data import Money
+from myus.utils.enum.i18n import Currency
 
 
 def convert_data(obj: Blog) -> BlogData:
@@ -14,6 +16,8 @@ def convert_data(obj: Blog) -> BlogData:
         title=obj.title,
         content=obj.content,
         richtext=obj.richtext,
+        paid_text=obj.paid_text,
+        price=Money(amount=obj.price, currency=Currency(obj.currency)),
         image=obj.image.name or "",
         read=obj.read,
         like=obj.like_count,
@@ -46,6 +50,9 @@ def marshal_data(data: BlogData) -> Blog:
         title=data.title,
         content=data.content,
         richtext=data.richtext,
+        paid_text=data.paid_text,
+        price=data.price.amount,
+        currency=data.price.currency,
         image=data.image,
         read=data.read,
         publish=data.publish,

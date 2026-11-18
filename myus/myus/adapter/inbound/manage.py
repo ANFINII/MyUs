@@ -22,7 +22,7 @@ from .media import convert_videos, convert_musics, convert_blogs, convert_comics
 from .schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from .schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
 from .schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
-from .schema.media.output import MediaCreateOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
+from .schema.media.output import MediaCreateOut, VideoOut, MusicOut, ManageBlogOut, ComicOut, PictureOut, ChatOut
 from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 
 
@@ -272,7 +272,7 @@ class ManageBlogAPI:
         return 200, BlogListOut(items=convert_blogs(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: BlogOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: ManageBlogOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("request", ulid=ulid)
 
@@ -296,7 +296,8 @@ class ManageBlogAPI:
                     assert_never(blog_ret.err_value)
 
         blog = blog_ret.ok_value
-        return 200, convert_blogs([blog])[0]
+        blog_out = convert_blogs([blog])[0]
+        return 200, ManageBlogOut(**blog_out.model_dump(), paid_text=blog.paid_text)
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})

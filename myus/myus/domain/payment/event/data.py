@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import PaymentProvider, PayoutStatus, SubscriptionStatus, WebhookEventType
@@ -43,8 +43,19 @@ class PaymentFailedContent:
 
 
 @dataclass(frozen=True, slots=True)
+class PurchasePaidContent:
+    customer_id: str
+    user_ulid: str
+    product_code: str
+    receipt_number: str
+    balance: BalanceData
+    transfer_balance: BalanceData
+
+
+@dataclass(frozen=True, slots=True)
 class RefundContent:
     balances: list[BalanceData]
+    transfer_balances: list[BalanceData] = field(default_factory=list)
 
 
 @dataclass(frozen=True, slots=True)
@@ -56,7 +67,7 @@ class PayoutContent:
     balance_external_ids: list[str]
 
 
-type PaymentEventContent = ProviderSubscriptionData | PaymentPaidContent | PaymentFailedContent | RefundContent | PayoutContent
+type PaymentEventContent = ProviderSubscriptionData | PaymentPaidContent | PaymentFailedContent | RefundContent | PayoutContent | PurchasePaidContent
 
 
 @dataclass(frozen=True, slots=True)

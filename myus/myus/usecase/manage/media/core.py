@@ -15,6 +15,7 @@ from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.message.interface import FilterOption as MessageFilterOption, MessageInterface, PageOption as MessagePageOption, SortOption as MessageSortOption
+from myus.domain.payment.data import Money
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
@@ -29,6 +30,7 @@ from ._convert import save_video_data, save_music_data, save_blog_data, save_com
 from ...category._convert import get_category_data
 from ...dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from ...notification._convert import create_publish_notification_data
+from ...payment._convert import get_seller_currency_data
 
 
 @Result.shield_exception()
@@ -345,7 +347,19 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
         log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
+    price = obj.price
+    is_paid_changed = input.paid_text != obj.paid_text or input.price != obj.price.amount
+    if is_paid_changed and (input.price > 0 or len(input.paid_text) > 0):
+        currency_ret = get_seller_currency_data(user_id)
+        if currency_ret.is_err:
+            return Result.err(currency_ret.err_value)
+
+        currency = currency_ret.ok_value
+        price = Money(amount=input.price, currency=currency)
+    elif is_paid_changed:
+        price = Money(amount=0, currency=obj.price.currency)
+
+    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, paid_text=input.paid_text, price=price, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
 

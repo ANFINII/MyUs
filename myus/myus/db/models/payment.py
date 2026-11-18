@@ -3,6 +3,7 @@ from django.db import models
 from myus.utils.constants.choice import CURRENCY_CHOICES, PROVIDER_CHOICES, PAYMENT_STATUS_CHOICES, LEDGER_ENTRY_TYPE_CHOICES, PAYOUT_STATUS_CHOICES, SUBSCRIPTION_STATUS_CHOICES, WEBHOOK_EVENT_TYPE_CHOICES
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import SubscriptionStatus, PaymentStatus, PayoutStatus
+from .media import Blog
 from .user import User
 
 DATETIME_MIN = datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
@@ -185,4 +186,23 @@ class PaymentLedgerEntry(models.Model):
         ]
         indexes = [
             models.Index(fields=["occurred_at"], name="payment_ledger_occurred_idx"),
+        ]
+
+
+class BlogPurchase(models.Model):
+    """BlogPurchase"""
+    id          = models.BigAutoField(primary_key=True)
+    user        = models.ForeignKey(User, on_delete=models.PROTECT, related_name="blog_purchases")
+    blog        = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="purchases")
+    transaction = models.ForeignKey(PaymentTransaction, on_delete=models.PROTECT, related_name="blog_purchases")
+    created     = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_id}:{self.blog_id}"
+
+    class Meta:
+        db_table = "blog_purchase"
+        verbose_name_plural = "001 BlogPurchase"
+        constraints = [
+            models.UniqueConstraint(fields=["user", "blog"], name="blog_purchase_user_blog_uniq"),
         ]

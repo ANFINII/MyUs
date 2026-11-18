@@ -13,7 +13,7 @@ from stripe.params.checkout import (
 )
 from django.conf import settings
 from myus.domain.payment.data import Money
-from myus.domain.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentPaidContent, PayoutContent, ProviderSubscriptionData
+from myus.domain.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, PurchasePaidContent
 from myus.domain.payment.provider.data import CheckoutData, CheckoutFailedData
 from myus.utils.enum.i18n import Currency, Locale
 from myus.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, PayoutStatus, SubscriptionStatus, WebhookEventType
@@ -115,7 +115,7 @@ def convert_payment_params(input: CheckoutData) -> SessionCreateParams:
                 pi_data["transfer_data"] = SessionCreateParamsPaymentIntentDataTransferData(destination=input.marketplace.seller_id)
                 if input.marketplace.application_fee.amount > 0:
                     pi_data["application_fee_amount"] = input.marketplace.application_fee.amount
-            return SessionCreateParams(payment_intent_data=pi_data)
+            return SessionCreateParams(payment_intent_data=pi_data, customer_creation="always")
         case _:
             assert_never(input.payment_type)
 
@@ -239,6 +239,18 @@ def convert_stripe_paid(invoice: stripe.Invoice, balance: stripe.BalanceTransact
         subscription_external_id=stripe_id(details.subscription) if details is not None else "",
         receipt_number=invoice.number or "",
         balance=convert_stripe_balance(balance),
+    )
+
+
+def convert_stripe_purchase(session: stripe.checkout.Session, payment_intent: stripe.PaymentIntent, charge: stripe.Charge, balance: stripe.BalanceTransaction, transfer_balance: stripe.BalanceTransaction) -> PurchasePaidContent:
+    metadata = payment_intent.metadata
+    return PurchasePaidContent(
+        customer_id=stripe_id(session.customer),
+        user_ulid=session.client_reference_id or "",
+        product_code=str(metadata["product_code"]) if "product_code" in metadata else "",
+        receipt_number=charge.receipt_number or "",
+        balance=convert_stripe_balance(balance),
+        transfer_balance=convert_stripe_balance(transfer_balance),
     )
 
 

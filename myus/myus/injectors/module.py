@@ -20,6 +20,7 @@ from myus.adapter.outbound.db.payment.customer.repository import PaymentCustomer
 from myus.adapter.outbound.db.payment.event.repository import PaymentEventRepository
 from myus.adapter.outbound.db.payment.ledger.repository import LedgerEntryRepository
 from myus.adapter.outbound.db.payment.payout.repository import PayoutRepository
+from myus.adapter.outbound.db.payment.purchase.repository import BlogPurchaseRepository
 from myus.adapter.outbound.db.payment.seller.repository import PaymentSellerRepository
 from myus.adapter.outbound.db.payment.subscription.repository import SubscriptionRepository
 from myus.adapter.outbound.db.payment.transaction.repository import TransactionRepository
@@ -51,6 +52,7 @@ from myus.domain.payment.event.interface import PaymentEventInterface
 from myus.domain.payment.ledger.interface import LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
 from myus.domain.payment.provider.interface import PaymentInterface
+from myus.domain.payment.purchase.interface import BlogPurchaseInterface
 from myus.domain.payment.seller.interface import PaymentSellerInterface
 from myus.domain.payment.subscription.event import SUBSCRIPTION_EVENT_CLASSES
 from myus.domain.payment.subscription.interface import SubscriptionInterface
@@ -196,6 +198,10 @@ class PaymentModule(Module):
     @provider
     def provide_payment_seller_repository(self) -> PaymentSellerInterface:
         return PaymentSellerRepository()
+
+    @provider
+    def provide_blog_purchase_repository(self) -> BlogPurchaseInterface:
+        return BlogPurchaseRepository()
 
     @provider
     def provide_subscription_repository(self) -> SubscriptionInterface:

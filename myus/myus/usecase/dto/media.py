@@ -8,6 +8,7 @@ from myus.domain.media.comic.data import ComicData
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
+from myus.domain.payment.data import Money
 from .comment import CommentDTO
 from .message import MessageDTO
 from .series import MediaSeriesDTO
@@ -67,6 +68,9 @@ class MusicDetailDTO(MediaDetailDTO):
 @dataclass(frozen=True, slots=True)
 class BlogDetailDTO(MediaDetailDTO):
     richtext: str
+    paid_text: str
+    price: Money
+    is_purchased: bool
     is_promotion: bool
     image: str
     comments: list[CommentDTO]
@@ -124,6 +128,8 @@ class BlogCreateDTO:
     title: str
     content: str
     richtext: str
+    paid_text: str
+    price: int
     is_promotion: bool
 
 
@@ -184,6 +190,8 @@ class BlogUpdateDTO:
     title: str
     content: str
     richtext: str
+    paid_text: str
+    price: int
     is_promotion: bool
     publish: bool
     publish_at: datetime

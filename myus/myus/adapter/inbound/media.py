@@ -33,6 +33,7 @@ from .schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, 
 from .schema.media.output import VideoDetailsOut, MusicDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
 from .schema.media.output import VideoSeriesOut, MusicSeriesOut, BlogSeriesOut, ComicSeriesOut, PictureSeriesOut, ChatSeriesOut
 from .schema.message import MessageOut
+from .schema.payment import MoneyOut
 from .schema.user import AuthorOut, MediaUserOut
 
 
@@ -420,6 +421,9 @@ class BlogAPI:
                 title=obj.title,
                 content=obj.content,
                 richtext=obj.richtext,
+                paid_text=obj.paid_text,
+                price=MoneyOut(amount=obj.price.amount, currency=obj.price.currency),
+                is_purchased=obj.is_purchased,
                 is_promotion=obj.is_promotion,
                 image=obj.image,
                 comments=convert_comments(obj.comments),
@@ -858,6 +862,7 @@ def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
             content=x.content,
             image=x.image,
             richtext=x.richtext,
+            price=MoneyOut(amount=x.price.amount, currency=x.price.currency),
             is_promotion=x.is_promotion,
             read=x.read,
             like=x.like,
