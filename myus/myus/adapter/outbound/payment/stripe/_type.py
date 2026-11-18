@@ -11,6 +11,7 @@ class StripeEventTypeMap:
     customer_subscription_deleted: WebhookEventType
     charge_refunded: WebhookEventType
     payout_paid: WebhookEventType
+    checkout_session_completed: WebhookEventType
 
 
 STRIPE_EVENT_TYPE_MAP = StripeEventTypeMap(
@@ -21,6 +22,7 @@ STRIPE_EVENT_TYPE_MAP = StripeEventTypeMap(
     customer_subscription_deleted=WebhookEventType.SUBSCRIPTION_CANCELED,
     charge_refunded=WebhookEventType.REFUND_ISSUED,
     payout_paid=WebhookEventType.PAYOUT_PAID,
+    checkout_session_completed=WebhookEventType.PURCHASE_SUCCEEDED,
 )
 
 

@@ -1,6 +1,8 @@
 from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
+from myus.domain.media.blog.interface import BlogInterface
+from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
 from myus.domain.payment.customer.interface import PaymentCustomerInterface
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import PaymentEventData
@@ -22,7 +24,7 @@ from myus.utils.enum.user import PlanName
 from myus.utils.functions.common import create_frontend_url
 from myus.utils.functions.map import country_currency
 from myus.utils.functions.transaction import atomic_result
-from ._convert import get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS
+from ._convert import get_blog_purchase_ids_data, get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS, PLATFORM_FEE_RATE
 from ..dto.ledger import LedgerRowDTO
 from ..dto.plan import PlanPriceDTO
 from ..dto.seller import SellerDTO
@@ -80,6 +82,79 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
 
     repo = get_payment_repository(CHECKOUT_PROVIDER)
     checkout_ret = repo.create_checkout(data)
+    if checkout_ret.is_err:
+        return Result.err(checkout_ret.err_value)
+
+    checkout = checkout_ret.ok_value
+    return Result.ok(checkout)
+
+
+@Result.shield_exception()
+def create_blog_checkout(user_id: int, blog_ulid: str, locale: Locale) -> Result[CheckoutResult, InputError]:
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    if user is None:
+        return Result.err(NotFoundError("error.userNotFound"))
+
+    repo = injector.get(BlogInterface)
+    ids_ret = repo.get_ids(MediaFilterOption(ulid=blog_ulid, publish=True), MediaSortOption(), MediaPageOption(limit=1))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.info("not found", blog_ulid=blog_ulid)
+        return Result.err(NotFoundError("error.mediaNotFound"))
+
+    blogs_ret = repo.bulk_get(ids)
+    if blogs_ret.is_err:
+        return Result.err(blogs_ret.err_value)
+
+    blogs = blogs_ret.ok_value
+    blog = blogs[0]
+    if blog.price.amount == 0:
+        log.warning("not paid content", blog_ulid=blog_ulid)
+        return Result.err(ValidationError("error.notPaidContent"))
+
+    if blog.channel.owner_id == user_id:
+        log.warning("own content", blog_ulid=blog_ulid, user_id=user_id)
+        return Result.err(ValidationError("error.purchaseOwnContent"))
+
+    purchase_ids_ret = get_blog_purchase_ids_data(user_id, blog.id)
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
+
+    purchase_ids = purchase_ids_ret.ok_value
+    if len(purchase_ids) > 0:
+        log.warning("already purchased", blog_ulid=blog_ulid, user_id=user_id)
+        return Result.err(ValidationError("error.alreadyPurchased"))
+
+    seller_ret = get_payment_seller_data(blog.channel.owner_id)
+    if seller_ret.is_err:
+        return Result.err(seller_ret.err_value)
+
+    seller = seller_ret.ok_value
+    if seller is None or not seller.is_enabled:
+        log.warning("seller not enabled", blog_ulid=blog_ulid, owner_id=blog.channel.owner_id)
+        return Result.err(ValidationError("error.sellerNotEnabled"))
+
+    blog_url = f"{create_frontend_url(locale)}/media/blog/{blog.ulid}"
+    data = CheckoutData(
+        product_code=blog.ulid,
+        description=blog.title,
+        price=blog.price,
+        payment_type=PaymentType.ONE_TIME,
+        customer=CustomerData(user_ulid=user.user.ulid, email=user.user.email),
+        redirect=RedirectUrlsData(success_url=blog_url, cancel_url=blog_url),
+        marketplace=MarketplaceData(seller_id=seller.external_id, application_fee=Money(amount=blog.price.amount * PLATFORM_FEE_RATE // 100, currency=blog.price.currency)),
+        locale=locale,
+    )
+
+    payment_repo = get_payment_repository(seller.provider)
+    checkout_ret = payment_repo.create_checkout(data)
     if checkout_ret.is_err:
         return Result.err(checkout_ret.err_value)
 

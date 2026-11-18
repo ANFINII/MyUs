@@ -9,7 +9,7 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Locale
 from myus.utils.enum.payment import CancelError, CheckoutError, PaymentMethodSessionError, PaymentProvider, PlanChangeError, RevokeError, SellerOnboardError, SellerStatusError, WebhookEventType, WebhookVerifyError
-from ._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_subscription, stripe_id, stripe_locale, stripe_period_end, stripe_price_id
+from ._convert import convert_stripe_balance, convert_stripe_event, convert_stripe_paid, convert_stripe_params, convert_stripe_payout, convert_stripe_purchase, convert_stripe_subscription, stripe_id, stripe_locale, stripe_period_end, stripe_price_id
 from ._type import stripe_event_type
 
 
@@ -233,14 +233,31 @@ def stripe_event_content(event_type: WebhookEventType, obj: dict[str, Any]) -> t
             if len(payment_intent_id) == 0:
                 return None
 
-            refunds = stripe.Refund.list(charge=charge.id, expand=["data.balance_transaction"]).auto_paging_iter()
+            refunds = list(stripe.Refund.list(charge=charge.id, expand=["data.balance_transaction", "data.transfer_reversal.balance_transaction"]).auto_paging_iter())
             balances = [convert_stripe_balance(r.balance_transaction) for r in refunds if isinstance(r.balance_transaction, stripe.BalanceTransaction)]
-            return payment_intent_id, RefundContent(balances=balances)
+            reversals = [r.transfer_reversal for r in refunds if isinstance(r.transfer_reversal, stripe.TransferReversal)]
+            transfer_balances = [convert_stripe_balance(r.balance_transaction) for r in reversals if isinstance(r.balance_transaction, stripe.BalanceTransaction)]
+            return payment_intent_id, RefundContent(balances=balances, transfer_balances=transfer_balances)
         case WebhookEventType.PAYOUT_PAID:
             payout = stripe.Payout.construct_from(obj, stripe.api_key)
             balance_transactions = stripe.BalanceTransaction.list(payout=payout.id).auto_paging_iter()
             balance_external_ids = [b.id for b in balance_transactions if b.type != "payout"]
             return payout.id, convert_stripe_payout(payout, balance_external_ids)
+        case WebhookEventType.PURCHASE_SUCCEEDED:
+            session = stripe.checkout.Session.construct_from(obj, stripe.api_key)
+            payment_intent_id = stripe_id(session.payment_intent)
+            if session.mode != "payment" or session.payment_status != "paid" or len(payment_intent_id) == 0:
+                return None
+
+            payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id, expand=["latest_charge.balance_transaction", "latest_charge.transfer.balance_transaction"])
+            charge = payment_intent.latest_charge
+            if not isinstance(charge, stripe.Charge) or not isinstance(charge.balance_transaction, stripe.BalanceTransaction):
+                raise ValueError(f"balance_transaction missing payment_intent={payment_intent.id}")
+
+            transfer = charge.transfer
+            if not isinstance(transfer, stripe.Transfer) or not isinstance(transfer.balance_transaction, stripe.BalanceTransaction):
+                raise ValueError(f"transfer missing payment_intent={payment_intent.id}")
+            return payment_intent.id, convert_stripe_purchase(session, payment_intent, charge, charge.balance_transaction, transfer.balance_transaction)
         case _:
             assert_never(event_type)
 

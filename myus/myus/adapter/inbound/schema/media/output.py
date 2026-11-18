@@ -4,6 +4,7 @@ from myus.utils.enum.media import EncodeStatus
 from ..channel import ChannelOut
 from ..comment import CommentOut
 from ..message import MessageOut
+from ..payment import MoneyOut
 from ..user import MediaUserOut
 
 
@@ -65,8 +66,13 @@ class MusicOut(MediaOut):
 
 class BlogOut(MediaOut):
     richtext: str
+    price: MoneyOut
     is_promotion: bool
     image: str
+
+
+class ManageBlogOut(BlogOut):
+    paid_richtext: str
 
 
 class ComicOut(MediaOut):
@@ -141,6 +147,9 @@ class MusicDetailOut(MediaDetailOut):
 
 class BlogDetailOut(MediaDetailOut):
     richtext: str
+    paid_richtext: str
+    price: MoneyOut
+    is_purchased: bool
     is_promotion: bool
     image: str
     comments: list[CommentOut]

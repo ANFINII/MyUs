@@ -2,15 +2,20 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from myus.domain.es.interface import EventStoreInterface
+from myus.domain.media.blog.interface import BlogInterface
+from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
 from myus.domain.payment.customer.data import PaymentCustomerData
 from myus.domain.payment.customer.interface import FilterOption as PaymentCustomerFilterOption, PageOption as PaymentCustomerPageOption, SortOption as PaymentCustomerSortOption, PaymentCustomerInterface
-from myus.domain.payment.event.data import BalanceData, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, RefundContent
+from myus.domain.payment.event.data import BalanceData, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, PurchasePaidContent, RefundContent
 from myus.domain.payment.event.interface import FilterOption as PaymentEventFilterOption, PageOption as PaymentEventPageOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from myus.domain.payment.ledger.data import LedgerEntryData
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.data import PayoutData
 from myus.domain.payment.payout.interface import FilterOption as PayoutFilterOption, PageOption as PayoutPageOption, SortOption as PayoutSortOption, PayoutInterface
+from myus.domain.payment.plan import get_plan
 from myus.domain.payment.provider.interface import PaymentInterface
+from myus.domain.payment.purchase.data import BlogPurchaseData
+from myus.domain.payment.purchase.interface import FilterOption as BlogPurchaseFilterOption, PageOption as BlogPurchasePageOption, SortOption as BlogPurchaseSortOption, BlogPurchaseInterface
 from myus.domain.payment.seller.data import PaymentSellerData
 from myus.domain.payment.seller.interface import FilterOption as PaymentSellerFilterOption, PageOption as PaymentSellerPageOption, SortOption as PaymentSellerSortOption, PaymentSellerInterface
 from myus.domain.payment.subscription.apply import replay
@@ -24,10 +29,11 @@ from myus.domain.payment.transaction.interface import FilterOption as Transactio
 from myus.domain.user.data import UserAllData
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
-from myus.utils.common.result import CommandError, FatalError, HistoryError, Result
+from myus.utils.common.result import AccessError, CommandError, FatalError, ForbiddenError, HistoryError, Result
+from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import CancelError, LedgerEntryType, PaymentProvider, PaymentStatus, SubscriptionStatus
 from myus.utils.enum.user import PlanName
-from myus.utils.functions.map import payment_status_rank
+from myus.utils.functions.map import country_currency, payment_status_rank
 from myus.utils.functions.payment import included_tax
 from ..es._convert import handle_command
 from ..user._convert import save_user_data
@@ -35,6 +41,7 @@ from ..user.core import get_user_data
 
 
 TAX_RATE = 10
+PLATFORM_FEE_RATE = 15
 REPLAY_BATCH_SIZE = 100
 PAYMENT_EVENT_MAX_ATTEMPTS = 30
 
@@ -91,6 +98,8 @@ def apply_payment_event(event: PaymentEventData) -> Result[None, CommandError]:
             ret = record_refund(event, refund)
         case PayoutContent() as payout:
             ret = save_payout_data(event, payout)
+        case PurchasePaidContent() as purchase:
+            ret = save_purchase_data(event, purchase)
         case _:
             assert_never(event.content)
 
@@ -138,6 +147,41 @@ def get_payment_seller_data(user_id: int) -> Result[PaymentSellerData | None, Fa
         return Result.ok(None)
 
     return Result.ok(sellers[0])
+
+
+@Result.shield_exception()
+def get_seller_currency_data(user_id: int) -> Result[Currency, AccessError]:
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    plan = get_plan(user.user_plan.plan) if user is not None else None
+    if user is None or plan is None or not plan.is_paid_content:
+        log.info("plan required", user_id=user_id)
+        return Result.err(ForbiddenError("error.paidContentPlanRequired"))
+
+    seller_ret = get_payment_seller_data(user_id)
+    if seller_ret.is_err:
+        return Result.err(seller_ret.err_value)
+
+    seller = seller_ret.ok_value
+    if seller is None or not seller.is_enabled:
+        log.info("seller not enabled", user_id=user_id)
+        return Result.err(ForbiddenError("error.sellerNotEnabled"))
+
+    return Result.ok(country_currency(user.profile.country))
+
+
+@Result.shield_exception()
+def get_blog_purchase_ids_data(user_id: int, blog_id: int) -> Result[list[int], FatalError]:
+    repo = injector.get(BlogPurchaseInterface)
+    ids_ret = repo.get_ids(BlogPurchaseFilterOption(user_id=user_id, blog_id=blog_id), BlogPurchaseSortOption(), BlogPurchasePageOption(limit=1))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    return Result.ok(ids)
 
 
 @Result.shield_exception()
@@ -391,6 +435,81 @@ def save_payment_data(event: PaymentEventData, paid: PaymentPaidContent) -> Resu
 
 
 @Result.shield_exception()
+def save_purchase_data(event: PaymentEventData, purchase: PurchasePaidContent) -> Result[None, FatalError]:
+    user_ret = get_user_data(ulid=purchase.user_ulid)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    if user is None:
+        log.error("not found", external_id=event.external_id, user_ulid=purchase.user_ulid)
+        return Result.err(FatalError("Purchase user not found"))
+
+    customer_ret = save_payment_customer_data(user.user.id, event.provider, purchase.customer_id)
+    if customer_ret.is_err:
+        return Result.err(customer_ret.err_value)
+
+    customer_id = customer_ret.ok_value
+    transaction_ret = get_transaction_data(event)
+    if transaction_ret.is_err:
+        return Result.err(transaction_ret.err_value)
+
+    payment_transaction = transaction_ret.ok_value
+    if payment_transaction is None:
+        transaction = TransactionData(
+            id=0,
+            payment_customer_id=customer_id,
+            subscription_id=0,
+            external_id=event.external_id,
+            currency=purchase.balance.currency,
+            tax_rate=TAX_RATE,
+            receipt_number=purchase.receipt_number,
+            status=PaymentStatus.CAPTURED,
+            paid_at=purchase.balance.occurred_at,
+            last_event_at=event.occurred_at,
+        )
+        save_ret = save_transaction_data(transaction)
+        if save_ret.is_err:
+            return Result.err(save_ret.err_value)
+
+        transaction_id = save_ret.ok_value
+        payment_transaction = replace(transaction, id=transaction_id)
+
+    sale_ret = save_ledger_entry_data(payment_transaction.id, event.id, LedgerEntryType.SALE, [purchase.balance])
+    if sale_ret.is_err:
+        return Result.err(sale_ret.err_value)
+
+    transfer_ret = save_ledger_entry_data(payment_transaction.id, event.id, LedgerEntryType.TRANSFER, [purchase.transfer_balance])
+    if transfer_ret.is_err:
+        return Result.err(transfer_ret.err_value)
+
+    blog_repo = injector.get(BlogInterface)
+    blog_ids_ret = blog_repo.get_ids(MediaFilterOption(ulid=purchase.product_code), MediaSortOption(), MediaPageOption(limit=1))
+    if blog_ids_ret.is_err:
+        return Result.err(blog_ids_ret.err_value)
+
+    blog_ids = blog_ids_ret.ok_value
+    if len(blog_ids) == 0:
+        log.error("not found", external_id=event.external_id, blog_ulid=purchase.product_code)
+        return Result.ok(None)
+
+    blog_id = blog_ids[0]
+    purchase_ids_ret = get_blog_purchase_ids_data(user.user.id, blog_id)
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
+
+    purchase_ids = purchase_ids_ret.ok_value
+    if len(purchase_ids) == 0:
+        repo = injector.get(BlogPurchaseInterface)
+        purchase_save_ret = repo.bulk_save([BlogPurchaseData(id=0, user_id=user.user.id, blog_id=blog_id, transaction_id=payment_transaction.id)])
+        if purchase_save_ret.is_err:
+            return Result.err(purchase_save_ret.err_value)
+
+    log.info("recorded", external_id=event.external_id, amount=purchase.balance.amount, blog_id=blog_id)
+    return Result.ok(None)
+
+
+@Result.shield_exception()
 def record_refund(event: PaymentEventData, refund: RefundContent) -> Result[None, FatalError]:
     transaction_ret = get_transaction_data(event)
     if transaction_ret.is_err:
@@ -405,9 +524,23 @@ def record_refund(event: PaymentEventData, refund: RefundContent) -> Result[None
     if ledger_ret.is_err:
         return Result.err(ledger_ret.err_value)
 
+    reversal_ret = save_ledger_entry_data(payment_transaction.id, event.id, LedgerEntryType.TRANSFER_REVERSAL, refund.transfer_balances)
+    if reversal_ret.is_err:
+        return Result.err(reversal_ret.err_value)
+
     status_ret = update_transaction_status(event, PaymentStatus.REFUNDED)
     if status_ret.is_err:
         return Result.err(status_ret.err_value)
+
+    purchase_repo = injector.get(BlogPurchaseInterface)
+    purchase_ids_ret = purchase_repo.get_ids(BlogPurchaseFilterOption(transaction_id=payment_transaction.id), BlogPurchaseSortOption(), BlogPurchasePageOption())
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
+
+    purchase_ids = purchase_ids_ret.ok_value
+    purchase_delete_ret = purchase_repo.bulk_delete(purchase_ids)
+    if purchase_delete_ret.is_err:
+        return Result.err(purchase_delete_ret.err_value)
 
     log.info("recorded", external_id=event.external_id)
     return Result.ok(None)
@@ -650,6 +783,16 @@ def save_payment_projection_data() -> Result[int, CommandError]:
 
 @Result.shield_exception()
 def delete_payment_projection_data() -> Result[None, FatalError]:
+    purchase_repo = injector.get(BlogPurchaseInterface)
+    purchase_ids_ret = purchase_repo.get_ids(BlogPurchaseFilterOption(), BlogPurchaseSortOption(), BlogPurchasePageOption())
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
+
+    purchase_ids = purchase_ids_ret.ok_value
+    purchase_ret = purchase_repo.bulk_delete(purchase_ids)
+    if purchase_ret.is_err:
+        return Result.err(purchase_ret.err_value)
+
     ledger_repo = injector.get(LedgerEntryInterface)
     ledger_ids_ret = ledger_repo.get_ids(LedgerEntryFilterOption(), LedgerEntrySortOption(), LedgerEntryPageOption())
     if ledger_ids_ret.is_err:

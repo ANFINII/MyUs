@@ -79,6 +79,7 @@ class WebhookEventType(str, Enum):
     SUBSCRIPTION_CANCELED = "SubscriptionCanceled"
     REFUND_ISSUED = "RefundIssued"
     PAYOUT_PAID = "PayoutPaid"
+    PURCHASE_SUCCEEDED = "PurchaseSucceeded"
 
 
 class WebhookVerifyError(str, Enum):
@@ -91,6 +92,8 @@ class LedgerEntryType(str, Enum):
     SALE = "Sale"
     REFUND = "Refund"
     FEE = "Fee"
+    TRANSFER = "Transfer"
+    TRANSFER_REVERSAL = "TransferReversal"
 
 
 class PayoutStatus(str, Enum):

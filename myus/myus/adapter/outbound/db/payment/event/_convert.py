@@ -1,7 +1,7 @@
 from typing import assert_never
 from pydantic import TypeAdapter
 from myus.db.models.payment import PaymentEvent
-from myus.domain.payment.event.data import PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, RefundContent
+from myus.domain.payment.event.data import PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, PurchasePaidContent, RefundContent
 from myus.utils.enum.payment import PaymentProvider, WebhookEventType
 
 
@@ -34,6 +34,8 @@ def convert_content(event_type: WebhookEventType, content: str) -> PaymentEventC
             return TypeAdapter(RefundContent).validate_json(content)
         case WebhookEventType.PAYOUT_PAID:
             return TypeAdapter(PayoutContent).validate_json(content)
+        case WebhookEventType.PURCHASE_SUCCEEDED:
+            return TypeAdapter(PurchasePaidContent).validate_json(content)
         case _:
             assert_never(event_type)
 

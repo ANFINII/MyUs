@@ -8,6 +8,11 @@ class PaymentCheckoutIn(BaseModel):
     locale: Locale
 
 
+class PaymentBlogCheckoutIn(BaseModel):
+    blog_ulid: str
+    locale: Locale
+
+
 class PaymentChangeIn(BaseModel):
     plan: str
 

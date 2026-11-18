@@ -32,6 +32,8 @@ class BlogIn(BaseModel):
     title: Title
     content: str
     richtext: str
+    paid_richtext: str
+    price_amount: int
     is_promotion: bool
 
 
@@ -86,6 +88,8 @@ class BlogUpdateIn(BaseModel):
     title: Title
     content: str
     richtext: str
+    paid_richtext: str
+    price_amount: int
     is_promotion: bool
     publish: bool
     publish_at: datetime
