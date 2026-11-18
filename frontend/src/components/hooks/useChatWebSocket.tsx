@@ -4,6 +4,9 @@ import { ChatMessage, ChatReply } from 'types/internal/message'
 import { WsCommand } from 'utils/constants/enum'
 import { snakeCamel } from 'utils/functions/convertCase'
 
+const RECONNECT_BASE_MS = 1000
+const RECONNECT_MAX_MS = 30000
+
 type ChatEvent =
   | { command: WsCommand.CreateMessage; message: Omit<ChatMessage, 'replyCount'> }
   | { command: WsCommand.CreateReplyMessage; message: Omit<ChatReply, 'replyCount'> }
@@ -49,14 +52,33 @@ export function useChatWebSocket(props: Props): void {
 
     const apiUrl = new URL(API_URL)
     const wsScheme = apiUrl.protocol === 'https:' ? 'wss' : 'ws'
-    const ws = new WebSocket(`${wsScheme}://${apiUrl.host}/ws/chat/detail/${ulid}`)
+    const url = `${wsScheme}://${apiUrl.host}/ws/chat/detail/${ulid}`
+    let ws: WebSocket | null = null
+    let timer: ReturnType<typeof setTimeout> | null = null
+    let retry = 0
+    let isClosed = false
 
-    ws.onmessage = (event: MessageEvent<string>) => {
-      handleChatEvent(snakeCamel(JSON.parse(event.data)) as ChatEvent)
+    const connect = () => {
+      ws = new WebSocket(url)
+      ws.onopen = () => {
+        retry = 0
+      }
+      ws.onmessage = (event: MessageEvent<string>) => {
+        handleChatEvent(snakeCamel(JSON.parse(event.data)) as ChatEvent)
+      }
+      ws.onclose = () => {
+        if (isClosed) return
+        timer = setTimeout(connect, Math.min(RECONNECT_BASE_MS * 2 ** retry, RECONNECT_MAX_MS))
+        retry += 1
+      }
     }
 
+    connect()
+
     return () => {
-      ws.close()
+      isClosed = true
+      if (timer) clearTimeout(timer)
+      ws?.close()
     }
   }, [ulid])
 }
