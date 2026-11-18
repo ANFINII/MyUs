@@ -3,7 +3,7 @@ from .data import BlogData
 
 
 BLOG_TITLE_MAX_LENGTH = 100
-BLOG_PRICE_MIN = 100
+BLOG_PRICE_MIN = 300
 BLOG_PRICE_MAX = 50000
 
 

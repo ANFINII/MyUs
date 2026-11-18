@@ -11,7 +11,7 @@ export const priceText = (amount: number, currency: Currency): string => (amount
 
 export const priceAmount = (text: string, currency: Currency): number => Math.round(Number(text) * 10 ** priceDigits(currency))
 
-const PRICE_MIN = 100
+const PRICE_MIN = 300
 const PRICE_MAX = 50000
 
 export const paidTextError = (paidText: string, price: number): string => {

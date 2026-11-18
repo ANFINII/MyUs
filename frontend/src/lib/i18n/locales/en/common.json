@@ -48,7 +48,7 @@
     "playlistPlanRequired": "Playlists are available on paid plans",
     "seriesPlanRequired": "Series are available on paid plans",
     "paidContentPlanRequired": "Paid articles are available on the Standard plan or higher",
-    "priceRange": "Enter a price between 100 and 50,000 (1.00 to 500.00 for USD)",
+    "priceRange": "Enter a price between 300 and 50,000 (3.00 to 500.00 for USD)",
     "paidTextRequired": "Enter the paid section when you set a price",
     "sellerNotEnabled": "The account to receive earnings is not registered",
     "notPaidContent": "This article is free",

@@ -48,7 +48,7 @@
     "playlistPlanRequired": "プレイリストは有料プランで作成できます",
     "seriesPlanRequired": "シリーズは有料プランで作成できます",
     "paidContentPlanRequired": "有料記事は Standard プラン以上で販売できます",
-    "priceRange": "値段は 100〜50,000 で入力してください（ドルは 1.00〜500.00）",
+    "priceRange": "値段は 300〜50,000 で入力してください（ドルは 3.00〜500.00）",
     "paidTextRequired": "値段を付けるときは有料部分を入力してください",
     "sellerNotEnabled": "売上を受け取る口座の登録が済んでいません",
     "notPaidContent": "この記事は無料です",
