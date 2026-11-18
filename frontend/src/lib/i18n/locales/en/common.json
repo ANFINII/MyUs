@@ -563,10 +563,10 @@
         "individualAds_one": "{{count}} custom ad slot",
         "individualAds_other": "{{count}} custom ad slots",
         "hideGlobalAds": "No site-wide ads",
+        "paidContent": "Sell paid articles",
         "musicDownload": "Music downloads",
         "playlist": "Create playlists",
         "series": "Create series",
-        "paidContent": "Sell paid articles",
         "basic": "Basic features",
         "withAds": "Includes ads"
       }

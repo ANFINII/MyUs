@@ -558,10 +558,10 @@
       "features": {
         "individualAds": "個別広告表示 {{count}}つ",
         "hideGlobalAds": "全体広告 非表示",
+        "paidContent": "有料記事の販売",
         "musicDownload": "楽曲ダウンロード",
         "playlist": "プレイリスト作成",
         "series": "シリーズ作成",
-        "paidContent": "有料記事の販売",
         "basic": "基本機能",
         "withAds": "広告あり"
       }
