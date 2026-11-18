@@ -1,10 +1,6 @@
 x-app: &app
+  image: myus-local
   restart: always
-  build:
-    context: .
-    dockerfile: Dockerfile
-    args:
-      UV_SYNC_ARGS: ""
   volumes:
     - ./myus:/code
   env_file:
@@ -24,6 +20,11 @@ services:
   myus_backend:
     <<: *app
     container_name: myus_backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UV_SYNC_ARGS: ""
     ports:
       - "127.0.0.1:8000:8000"
     command: sh -c 'python manage.py runserver 0.0.0.0:8000 --settings config.settings.local'
@@ -31,11 +32,13 @@ services:
   myus_worker:
     <<: *app
     container_name: myus_worker
+    pull_policy: never
     command: sh -c 'python manage.py process_payment_events --settings config.settings.local'
 
   myus_encoder:
     <<: *app
     container_name: myus_encoder
+    pull_policy: never
     command: sh -c 'python manage.py encode_videos --settings config.settings.local'
 
   mysql:
