@@ -17,6 +17,7 @@ import IconExclamation from 'components/parts/Icon/Exclamation'
 import IconLightning from 'components/parts/Icon/Lightning'
 import IconList from 'components/parts/Icon/List'
 import Search from 'components/parts/Input/Search'
+import Logo from 'components/parts/Logo'
 import style from './Header.module.scss'
 
 const NOTIFICATION_STALE_MS = 60 * 1000
@@ -75,7 +76,9 @@ export default function Header(props: Props): React.JSX.Element {
         </div>
 
         <div className={cx(style.nav_2, style.color_MyUs)} onClick={() => handleRouter('/')}>
-          <h1>MyUs</h1>
+          <h1>
+            <Logo height="1em" />
+          </h1>
         </div>
 
         <div className={cx(style.nav_3, style.search_box)}>

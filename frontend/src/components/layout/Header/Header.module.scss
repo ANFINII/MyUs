@@ -40,8 +40,9 @@
       justify-self: flex-start;
 
       h1 {
+        display: flex;
+        align-items: center;
         font-size: 1.8em;
-        font-weight: 500;
         margin: auto;
       }
     }
