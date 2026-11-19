@@ -159,6 +159,7 @@ envs
 myus/fixtures
 myus/logs
 myus/media
+myus/private
 myus/myus/db/migrations
 myus/myus/ai
 

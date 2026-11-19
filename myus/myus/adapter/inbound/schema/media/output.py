@@ -63,6 +63,16 @@ class MusicOut(MediaOut):
     gain: float
 
 
+class MusicHiresOut(BaseModel):
+    sample_rate: int
+    bit_depth: int
+    price: MoneyOut
+
+
+class ManageMusicOut(MusicOut):
+    hires: MusicHiresOut | None
+
+
 class BlogOut(MediaOut):
     richtext: str
     price: MoneyOut

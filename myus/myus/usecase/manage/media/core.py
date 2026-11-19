@@ -7,6 +7,8 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
+from myus.domain.media.hires.data import MusicHiresData
+from myus.domain.media.hires.interface import MusicHiresInterface
 from myus.domain.media.common import MEDIA_PAGE_SIZE, FilterOption, PageOption, SortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
@@ -23,12 +25,13 @@ from myus.utils.enum.media import EncodeStatus
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
-from myus.utils.functions.convert.audio_converter import measure_music_gain
-from myus.utils.functions.media import save_upload, validate_uploads
+from myus.utils.functions.convert.audio_converter import measure_music_gain, probe_audio
+from myus.utils.functions.media import probe_upload, save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
 from ._convert import save_video_data, save_music_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_music_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
 from ...category._convert import get_category_data
 from ...dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
+from ...media._convert import get_music_hires_data
 from ...notification._convert import create_publish_notification_data
 from ...payment._convert import get_seller_currency_data
 
@@ -185,7 +188,7 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 
 @Result.shield_exception()
-def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
+def get_manage_music(user_id: int, ulid: str) -> Result[tuple[MusicData, MusicHiresData | None], FindError]:
     repo = injector.get(MusicInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -202,7 +205,12 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, FindError]:
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    return Result.ok(replace(obj, image=create_url(obj.image), music=create_url(obj.music)))
+    hires_ret = get_music_hires_data(obj.id)
+    if hires_ret.is_err:
+        return Result.err(hires_ret.err_value)
+
+    hires = hires_ret.ok_value
+    return Result.ok((replace(obj, image=create_url(obj.image), music=create_url(obj.music)), hires))
 
 
 @Result.shield_exception()
@@ -269,6 +277,98 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
         return Result.err(NotFoundError("error.deleteFailed"))
 
     delete_ret = atomic_result(lambda: delete_music_data(delete_ids))
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(hires, MediaUpload.HIRES)])
+    if upload_ret.is_err:
+        return Result.err(upload_ret.err_value)
+
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.warning("not found", ulid=ulid)
+        return Result.err(NotFoundError("error.saveFailed"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    owner_id = obj.channel.owner_id
+    if owner_id != user_id:
+        log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
+        return Result.err(ForbiddenError("error.saveFailed"))
+
+    currency_ret = get_seller_currency_data(user_id)
+    if currency_ret.is_err:
+        return Result.err(currency_ret.err_value)
+
+    currency = currency_ret.ok_value
+    hires_ret = get_music_hires_data(obj.id)
+    if hires_ret.is_err:
+        return Result.err(hires_ret.err_value)
+
+    current = hires_ret.ok_value
+    price_data = Money(amount=price, currency=currency)
+    if hires is None:
+        if current is None:
+            log.error("hires required", ulid=ulid)
+            return Result.err(FatalError("hires required"))
+
+        save_data = replace(current, price=price_data)
+    else:
+        audio = probe_upload(hires, probe_audio)
+        path = save_upload(hires, MediaUpload.HIRES, obj.channel.ulid)
+        save_data = MusicHiresData(
+            id=current.id if current is not None else 0,
+            music_id=obj.id,
+            file=path,
+            sample_rate=audio.sample_rate,
+            bit_depth=audio.bit_depth,
+            price=price_data,
+        )
+
+    hires_repo = injector.get(MusicHiresInterface)
+    save_ret = hires_repo.bulk_save([save_data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_manage_music_hires(user_id: int, ulid: str) -> Result[None, FindError]:
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.warning("not found or owner mismatch", ulid=ulid, user_id=user_id)
+        return Result.err(NotFoundError("error.deleteFailed"))
+
+    hires_ret = get_music_hires_data(ids[0])
+    if hires_ret.is_err:
+        return Result.err(hires_ret.err_value)
+
+    hires = hires_ret.ok_value
+    if hires is None:
+        return Result.ok(None)
+
+    hires_repo = injector.get(MusicHiresInterface)
+    delete_ret = hires_repo.bulk_delete([hires.id])
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 

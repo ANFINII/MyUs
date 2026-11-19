@@ -25,6 +25,8 @@ MP3_BITRATE = "320k"
 class AudioInfo:
     codec: str
     bit_rate: int
+    sample_rate: int
+    bit_depth: int
 
 
 def is_conversion(filename: str) -> bool:
@@ -33,21 +35,31 @@ def is_conversion(filename: str) -> bool:
 
 
 def probe_audio(path: str) -> AudioInfo:
-    """ffprobeで最初の音声の形式とビットレートを読む。読めないときは空の形式と0を返す"""
+    """ffprobeで最初の音声の形式・ビットレート・サンプリング周波数・ビット深度を読む。読めないときは空の形式と0を返す"""
 
     ffprobe_path = shutil.which("ffprobe") or "ffprobe"
-    cmd = [ffprobe_path, "-v", "error", "-protocol_whitelist", "file", "-select_streams", "a:0", "-show_entries", "stream=codec_name,bit_rate:format=bit_rate", "-of", "json", path]
+    cmd = [ffprobe_path, "-v", "error", "-protocol_whitelist", "file", "-select_streams", "a:0", "-show_entries", "stream=codec_name,bit_rate,sample_rate,bits_per_raw_sample:format=bit_rate", "-of", "json", path]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=PROBE_TIMEOUT)
         probe = json.loads(result.stdout)
     except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError) as e:
         log.warning("probe failed", exc=e, path=path)
-        return AudioInfo(codec="", bit_rate=0)
+        return AudioInfo(codec="", bit_rate=0, sample_rate=0, bit_depth=0)
 
     streams = probe.get("streams") or [{}]
     stream = streams[0]
-    bit_rate = stream.get("bit_rate") or probe.get("format", {}).get("bit_rate") or "0"
-    return AudioInfo(codec=str(stream.get("codec_name", "")), bit_rate=int(bit_rate) if str(bit_rate).isdigit() else 0)
+    bit_rate = stream.get("bit_rate") or probe.get("format", {}).get("bit_rate")
+    return AudioInfo(
+        codec=str(stream.get("codec_name", "")),
+        bit_rate=probe_int(bit_rate),
+        sample_rate=probe_int(stream.get("sample_rate")),
+        bit_depth=probe_int(stream.get("bits_per_raw_sample")),
+    )
+
+
+def probe_int(value: object) -> int:
+    text = str(value)
+    return int(text) if text.isdigit() else 0
 
 
 def is_lossless(codec: str) -> bool:

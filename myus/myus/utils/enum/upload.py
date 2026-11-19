@@ -17,4 +17,5 @@ class ImageUpload(str, Enum):
 class MediaUpload(str, Enum):
     VIDEO = "video"
     MUSIC = "music"
+    HIRES = "hires"
     ADVERTISE = "advertise"

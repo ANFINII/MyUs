@@ -8,7 +8,7 @@ from myus.usecase.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO
 from myus.usecase.manage.advertise.core import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise
 from myus.usecase.manage.media.core import (
     get_manage_videos, get_manage_video, update_manage_video, delete_manage_video,
-    get_manage_musics, get_manage_music, update_manage_music, delete_manage_music,
+    get_manage_musics, get_manage_music, update_manage_music, delete_manage_music, update_manage_music_hires, delete_manage_music_hires,
     get_manage_blogs, get_manage_blog, update_manage_blog, delete_manage_blog,
     get_manage_comics, get_manage_comic, update_manage_comic, delete_manage_comic,
     get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture,
@@ -21,9 +21,10 @@ from .auth import auth_check
 from .media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from .schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from .schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
-from .schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
-from .schema.media.output import MediaCreateOut, VideoOut, MusicOut, ManageBlogOut, ComicOut, PictureOut, ChatOut
+from .schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, MusicHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
+from .schema.media.output import MediaCreateOut, VideoOut, ManageMusicOut, MusicHiresOut, ManageBlogOut, ComicOut, PictureOut, ChatOut
 from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
+from .schema.payment import MoneyOut
 
 
 class ManageVideoAPI:
@@ -162,7 +163,7 @@ class ManageMusicAPI:
         return 200, MusicListOut(items=convert_musics(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: MusicOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: ManageMusicOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("request", ulid=ulid)
 
@@ -185,8 +186,13 @@ class ManageMusicAPI:
                 case _:
                     assert_never(music_ret.err_value)
 
-        music = music_ret.ok_value
-        return 200, convert_musics([music])[0]
+        music, hires = music_ret.ok_value
+        music_out = convert_musics([music])[0]
+        if hires is None:
+            return 200, ManageMusicOut(**music_out.model_dump(), hires=None)
+
+        hires_out = MusicHiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth, price=MoneyOut(amount=hires.price.amount, currency=hires.price.currency))
+        return 200, ManageMusicOut(**music_out.model_dump(), hires=hires_out)
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -233,6 +239,62 @@ class ManageMusicAPI:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         delete_ret = delete_manage_music(user_id, input.ulids)
+        if delete_ret.is_err:
+            message = delete_ret.err_value.message
+            match delete_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
+
+        return 200, SuccessOut(message="OK")
+
+    @staticmethod
+    @router.put("/{ulid}/hires", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    def put_hires(request: HttpRequest, ulid: str, input: MusicHiresIn = Form(...), hires: UploadedFile | None = File(None)):
+        log.info("request", ulid=ulid, input=input, hires=hires)
+
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        update_ret = update_manage_music_hires(user_id, ulid, input.price, hires)
+        if update_ret.is_err:
+            message = update_ret.err_value.message
+            match update_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
+                case ForbiddenError():
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
+
+        return 200, SuccessOut(message="OK")
+
+    @staticmethod
+    @router.delete("/{ulid}/hires", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    def delete_hires(request: HttpRequest, ulid: str):
+        log.info("request", ulid=ulid)
+
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        delete_ret = delete_manage_music_hires(user_id, ulid)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
