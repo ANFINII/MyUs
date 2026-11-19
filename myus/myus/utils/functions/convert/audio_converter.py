@@ -72,7 +72,7 @@ def is_low_bit_rate(audio: AudioInfo) -> bool:
 
 
 def convert_mp3(input_path: str, output_path: str, bitrate: str = MP3_BITRATE) -> None:
-    """ffmpegで音声ファイルをMP3に変換する"""
+    """ffmpegで音楽ファイルをMP3に変換する"""
 
     ffmpeg_path = shutil.which("ffmpeg") or "ffmpeg"
     cmd = [
@@ -96,7 +96,7 @@ def convert_mp3(input_path: str, output_path: str, bitrate: str = MP3_BITRATE) -
 
 
 def save_converted_mp3(file: UploadedFile, path: str) -> str:
-    """音声ファイルをMP3に変換して保存する"""
+    """音楽ファイルをMP3に変換して保存する"""
 
     suffix = os.path.splitext(file.name or "upload")[1]
     with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp_in:

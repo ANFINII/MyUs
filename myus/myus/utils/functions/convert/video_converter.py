@@ -297,8 +297,8 @@ class VideoConverter:
             '-protocol_whitelist', 'file',
             '-i', input_path,
             '-y',
-            '-map', '0:v:0',  # 最初のビデオストリームのみ
-            '-map', '0:a:0?',  # 最初のオーディオストリーム（あれば）
+            '-map', '0:v:0',  # 最初の映像ストリームのみ
+            '-map', '0:a:0?',  # 最初の音声ストリーム（あれば）
         ])
 
         # スケーリングフィルター（最適化）
@@ -312,7 +312,7 @@ class VideoConverter:
             scale_filter = f"scale={profile.width}:{profile.height}:force_original_aspect_ratio=decrease:flags=bilinear"  # 高速
 
         cmd.extend(['-vf', scale_filter]) # パディング処理を簡略化
-        encoder = accelerator.encoder if accelerator else 'libx264' # ビデオエンコーダー設定
+        encoder = accelerator.encoder if accelerator else 'libx264' # 映像エンコーダー設定
         cmd.extend(['-c:v', encoder])
 
         # ビットレート設定（シンプル化）
@@ -357,7 +357,7 @@ class VideoConverter:
             '-sc_threshold', '0',
         ])
 
-        # オーディオ設定（超高速化）
+        # 音声設定（超高速化）
         cmd.extend([
             '-c:a', 'aac',
             '-b:a', profile.audio_bitrate,
@@ -463,7 +463,7 @@ class VideoConverter:
         video_stream = next((s for s in metadata['streams'] if s['codec_type'] == 'video'), None)
 
         if not video_stream:
-            raise ValueError("ビデオストリームが見つかりません")
+            raise ValueError("映像ストリームが見つかりません")
 
         original_height = int(video_stream.get('height', 0))
 
@@ -606,7 +606,7 @@ class VideoConverter:
             '-c:v', 'libx264',
             '-preset', 'ultrafast',  # 最速
             '-crf', '28',  # 品質下げて高速化
-            '-c:a', 'copy',  # オーディオコピーで高速化
+            '-c:a', 'copy',  # 音声コピーで高速化
             '-movflags', '+faststart',
             mp4_path
         ]
