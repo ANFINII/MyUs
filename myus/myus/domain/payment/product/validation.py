@@ -8,6 +8,8 @@ BLOG_PRICE_MIN = 300
 BLOG_PRICE_MAX = 50000
 MUSIC_HIRES_PRICE_MIN = 300
 MUSIC_HIRES_PRICE_MAX = 600
+COMIC_PRICE_MIN = 300
+COMIC_PRICE_MAX = 50000
 
 
 def price_range(product_type: ProductType) -> tuple[int, int]:
@@ -16,6 +18,8 @@ def price_range(product_type: ProductType) -> tuple[int, int]:
             return BLOG_PRICE_MIN, BLOG_PRICE_MAX
         case ProductType.MUSIC_HIRES:
             return MUSIC_HIRES_PRICE_MIN, MUSIC_HIRES_PRICE_MAX
+        case ProductType.COMIC:
+            return COMIC_PRICE_MIN, COMIC_PRICE_MAX
         case _:
             assert_never(product_type)
 

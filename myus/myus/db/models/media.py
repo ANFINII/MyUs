@@ -132,6 +132,7 @@ class Comic(models.Model, MediaModel):
     hashtag    = models.ManyToManyField(HashTag, through=ComicHashtag, blank=True)
     like       = models.ManyToManyField(User, related_name="comic_like", blank=True)
     read       = models.IntegerField(default=0)
+    free_pages = models.IntegerField()
     publish    = models.BooleanField(default=True)
     publish_at = models.DateTimeField(default=timezone.now)
     created    = models.DateTimeField(auto_now_add=True)

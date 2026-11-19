@@ -190,7 +190,7 @@ export const manageMusicLoader = ({ queryClient, params }: PageLoad<{ ulid: stri
 export const manageBlogLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
   Promise.all([queryClient.query(manageBlogQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery()), queryClient.query(paymentSellerQuery())])
 export const manageComicLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
-  Promise.all([queryClient.query(manageComicQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
+  Promise.all([queryClient.query(manageComicQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery()), queryClient.query(paymentSellerQuery())])
 export const managePictureLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
   Promise.all([queryClient.query(managePictureQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 export const manageChatLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>

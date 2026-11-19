@@ -51,6 +51,7 @@
     "paidContentPlanRequired": "有料記事は Standard プラン以上で販売できます",
     "priceRange": "値段は 300〜50,000 で入力してください（ドルは 3.00〜500.00）",
     "paidTextRequired": "値段を付けるときは有料部分を入力してください",
+    "freePagesRange": "無料で読めるページ数は、0 からページ数より 1 少ない数までで入力してください",
     "sellerNotEnabled": "売上を受け取る口座の登録が済んでいません",
     "notPaidContent": "販売していません",
     "purchaseOwnContent": "自分が販売しているものは購入できません",
@@ -414,6 +415,7 @@
       "richtext": "本文",
       "price": "値段（{{currency}}）",
       "paidText": "有料部分",
+      "freePages": "無料で読めるページ数",
       "salePlanHint": "販売するには、Standard 以上のプランが必要です。",
       "saleSellerHint": "販売するには、売上を受け取る口座の登録が必要です。",
       "saleSetting": "料金プランへ",
@@ -982,6 +984,10 @@
       "promotion": "この記事はプロモーションを含みます",
       "promotionBadge": "PR",
       "paidLine": "ここから先は有料部分です",
+      "paywallTitle": "この続きを読むには",
+      "paywallNotice": "購入後、読めるようになるまで少し時間がかかる場合があります。"
+    },
+    "comic": {
       "paywallTitle": "この続きを読むには",
       "paywallNotice": "購入後、読めるようになるまで少し時間がかかる場合があります。"
     },

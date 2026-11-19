@@ -99,6 +99,11 @@ export interface Comic extends Media {
   pages: string[]
 }
 
+export interface ManageComic extends Comic {
+  freePages: number
+  product: Product | null
+}
+
 export interface Picture extends Media {
   image: string
 }
@@ -179,8 +184,11 @@ export interface BlogDetail extends MediaDetail {
 
 export interface ComicDetail extends MediaDetail {
   image: string
+  pageCount: number
+  isPurchased: boolean
   pages: string[]
   comments: Comment[]
+  product: Product | null
 }
 
 export interface PictureDetail extends MediaDetail {

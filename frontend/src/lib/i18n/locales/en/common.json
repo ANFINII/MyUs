@@ -51,6 +51,7 @@
     "paidContentPlanRequired": "Paid articles are available on the Standard plan or higher",
     "priceRange": "Enter a price between 300 and 50,000 (3.00 to 500.00 for USD)",
     "paidTextRequired": "Enter the paid section when you set a price",
+    "freePagesRange": "Enter free pages from 0 up to one less than the number of pages",
     "sellerNotEnabled": "The account to receive earnings is not registered",
     "notPaidContent": "This is not for sale",
     "purchaseOwnContent": "You cannot buy what you are selling",
@@ -417,6 +418,7 @@
       "richtext": "Body",
       "price": "Price ({{currency}})",
       "paidText": "Paid section",
+      "freePages": "Free pages",
       "salePlanHint": "To sell, you need the Standard plan or higher.",
       "saleSellerHint": "To sell, register an account to receive your earnings.",
       "saleSetting": "Go to plans",
@@ -992,6 +994,10 @@
       "promotionBadge": "PR",
       "paidLine": "The rest of this article is paid",
       "paywallTitle": "Read the rest of this article",
+      "paywallNotice": "It may take a moment before you can read it after purchase."
+    },
+    "comic": {
+      "paywallTitle": "Read the rest of this comic",
       "paywallNotice": "It may take a moment before you can read it after purchase."
     },
     "userpage": {

@@ -58,5 +58,7 @@ def product_media_type(product_type: ProductType) -> MediaType:
             return MediaType.BLOG
         case ProductType.MUSIC_HIRES:
             return MediaType.MUSIC
+        case ProductType.COMIC:
+            return MediaType.COMIC
         case _:
             assert_never(product_type)

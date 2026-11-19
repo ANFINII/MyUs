@@ -17,6 +17,7 @@ def convert_data(obj: Comic) -> ComicData:
         pages=[p.image.name for p in obj.comic.all() if p.image.name],
         read=obj.read,
         like=obj.like_count,
+        free_pages=obj.free_pages,
         publish=obj.publish,
         publish_at=obj.publish_at,
         created=obj.created,
@@ -46,6 +47,7 @@ def marshal_data(data: ComicData) -> Comic:
         content=data.content,
         image=data.image,
         read=data.read,
+        free_pages=data.free_pages,
         publish=data.publish,
         publish_at=data.publish_at,
     )

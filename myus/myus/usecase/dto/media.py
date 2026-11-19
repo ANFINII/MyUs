@@ -82,8 +82,11 @@ class BlogDetailDTO(MediaDetailDTO):
 @dataclass(frozen=True, slots=True)
 class ComicDetailDTO(MediaDetailDTO):
     image: str
+    page_count: int
+    is_purchased: bool
     pages: list[str]
     comments: list[CommentDTO]
+    product: ProductData | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -203,6 +206,8 @@ class ComicUpdateDTO:
     category_ulid: str
     title: str
     content: str
+    price: int
+    free_pages: int
     publish: bool
     publish_at: datetime
 

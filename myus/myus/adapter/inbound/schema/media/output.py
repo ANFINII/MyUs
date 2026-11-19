@@ -93,6 +93,11 @@ class ComicOut(MediaOut):
     pages: list[str]
 
 
+class ManageComicOut(ComicOut):
+    free_pages: int
+    product: ProductOut | None
+
+
 class PictureOut(MediaOut):
     image: str
 
@@ -172,8 +177,11 @@ class BlogDetailOut(MediaDetailOut):
 
 class ComicDetailOut(MediaDetailOut):
     image: str
+    page_count: int
+    is_purchased: bool
     pages: list[str]
     comments: list[CommentOut]
+    product: ProductOut | None
 
 
 class PictureDetailOut(MediaDetailOut):

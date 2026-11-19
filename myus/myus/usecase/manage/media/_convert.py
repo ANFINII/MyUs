@@ -104,7 +104,7 @@ def delete_music_hires_data(data: MusicHiresData) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def save_comic_data(data: ComicData, category_data: CategoryData) -> Result[None, FatalError]:
+def save_comic_data(data: ComicData, category_data: CategoryData, product: ProductData | None) -> Result[None, FatalError]:
     repo = injector.get(ComicInterface)
     category_repo = injector.get(CategoryInterface)
     save_ret = repo.bulk_save([data])
@@ -114,6 +114,10 @@ def save_comic_data(data: ComicData, category_data: CategoryData) -> Result[None
     category_ret = category_repo.bulk_save(MediaType.COMIC, data.id, [category_data])
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
+
+    product_ret = save_product_data(product) if product is not None else delete_products_data(ProductType.COMIC, [data.id])
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
 
     return Result.ok(None)
 
@@ -224,6 +228,10 @@ def delete_blog_data(ids: list[int]) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def delete_comic_data(ids: list[int]) -> Result[None, FatalError]:
+    product_ret = delete_products_data(ProductType.COMIC, ids)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
     repo = injector.get(ComicInterface)
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
