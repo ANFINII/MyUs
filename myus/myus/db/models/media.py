@@ -2,7 +2,7 @@ from django_ulid.models import ulid
 from django.contrib import admin
 from django.db import models
 from django.utils import timezone
-from myus.utils.constants.choice import CURRENCY_CHOICES, ENCODE_STATUS_CHOICES
+from myus.utils.constants.choice import ENCODE_STATUS_CHOICES
 from myus.utils.enum.media import EncodeStatus
 from myus.utils.functions.file import comic_upload, hires_upload, image_upload, music_upload, private_storage, video_upload
 from .base import MediaModel
@@ -80,8 +80,6 @@ class MusicHires(models.Model):
     file        = models.FileField(upload_to=hires_upload, storage=private_storage, max_length=255)
     sample_rate = models.IntegerField()
     bit_depth   = models.IntegerField()
-    price       = models.IntegerField()
-    currency    = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
 
     def __str__(self):
         return str(self.music_id)
@@ -101,8 +99,6 @@ class Blog(models.Model, MediaModel):
     content      = models.TextField()
     richtext     = models.TextField()
     paid_text    = models.TextField(blank=True)
-    price        = models.IntegerField(default=0)
-    currency     = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
     image        = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
     category     = models.ManyToManyField(Category, blank=True)
     hashtag      = models.ManyToManyField(HashTag, through=BlogHashtag, blank=True)

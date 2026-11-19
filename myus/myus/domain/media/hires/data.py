@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from myus.domain.payment.data import Money
 
 
 @dataclass(frozen=True, slots=True)
@@ -9,4 +8,3 @@ class MusicHiresData:
     file: str
     sample_rate: int
     bit_depth: int
-    price: Money

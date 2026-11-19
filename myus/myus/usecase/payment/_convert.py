@@ -2,8 +2,6 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from myus.domain.es.interface import EventStoreInterface
-from myus.domain.media.blog.interface import BlogInterface
-from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
 from myus.domain.payment.customer.data import PaymentCustomerData
 from myus.domain.payment.customer.interface import FilterOption as PaymentCustomerFilterOption, PageOption as PaymentCustomerPageOption, SortOption as PaymentCustomerSortOption, PaymentCustomerInterface
 from myus.domain.payment.event.data import BalanceData, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, PurchasePaidContent, RefundContent
@@ -13,6 +11,8 @@ from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilt
 from myus.domain.payment.payout.data import PayoutData
 from myus.domain.payment.payout.interface import FilterOption as PayoutFilterOption, PageOption as PayoutPageOption, SortOption as PayoutSortOption, PayoutInterface
 from myus.domain.payment.plan import get_plan
+from myus.domain.payment.product.data import ProductData
+from myus.domain.payment.product.interface import FilterOption as ProductFilterOption, PageOption as ProductPageOption, SortOption as ProductSortOption, ProductInterface
 from myus.domain.payment.provider.interface import PaymentInterface
 from myus.domain.payment.purchase.data import PurchaseData
 from myus.domain.payment.purchase.interface import FilterOption as PurchaseFilterOption, PageOption as PurchasePageOption, SortOption as PurchaseSortOption, PurchaseInterface
@@ -34,7 +34,7 @@ from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import CancelError, LedgerEntryType, PaymentProvider, PaymentStatus, ProductType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.map import country_currency, payment_status_rank
-from myus.utils.functions.payment import included_tax, parse_product_code
+from myus.utils.functions.payment import included_tax
 from ..es._convert import handle_command
 from ..user._convert import save_user_data
 from ..user.core import get_user_data
@@ -174,9 +174,69 @@ def get_seller_currency_data(user_id: int) -> Result[Currency, AccessError]:
 
 
 @Result.shield_exception()
-def get_purchase_ids_data(user_id: int, product_type: ProductType, product_id: int) -> Result[list[int], FatalError]:
+def get_products_data(product_type: ProductType, object_ids: list[int]) -> Result[list[ProductData], FatalError]:
+    if len(object_ids) == 0:
+        return Result.ok([])
+
+    repo = injector.get(ProductInterface)
+    ids_ret = repo.get_ids(ProductFilterOption(product_type=product_type, object_ids=object_ids), ProductSortOption(), ProductPageOption(limit=len(object_ids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    return Result.ok(objs)
+
+
+@Result.shield_exception()
+def get_product_data(product_type: ProductType, object_id: int) -> Result[ProductData | None, FatalError]:
+    products_ret = get_products_data(product_type, [object_id])
+    if products_ret.is_err:
+        return Result.err(products_ret.err_value)
+
+    products = products_ret.ok_value
+    return Result.ok(products[0] if len(products) > 0 else None)
+
+
+@Result.shield_exception()
+def save_product_data(data: ProductData) -> Result[None, FatalError]:
+    repo = injector.get(ProductInterface)
+    save_ret = repo.bulk_save([data])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def delete_products_data(product_type: ProductType, object_ids: list[int]) -> Result[None, FatalError]:
+    if len(object_ids) == 0:
+        return Result.ok(None)
+
+    repo = injector.get(ProductInterface)
+    ids_ret = repo.get_ids(ProductFilterOption(product_type=product_type, object_ids=object_ids), ProductSortOption(), ProductPageOption(limit=len(object_ids)))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    delete_ret = repo.bulk_delete(ids)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def get_purchase_ids_data(product_ids: list[int], user_id: int = 0) -> Result[list[int], FatalError]:
+    if len(product_ids) == 0:
+        return Result.ok([])
+
     repo = injector.get(PurchaseInterface)
-    ids_ret = repo.get_ids(PurchaseFilterOption(user_id=user_id, product_type=product_type, product_ids=[product_id]), PurchaseSortOption(), PurchasePageOption(limit=1))
+    ids_ret = repo.get_ids(PurchaseFilterOption(user_id=user_id, product_ids=product_ids), PurchaseSortOption(), PurchasePageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -185,19 +245,18 @@ def get_purchase_ids_data(user_id: int, product_type: ProductType, product_id: i
 
 
 @Result.shield_exception()
-def get_product_ids_data(product_type: ProductType, ulid: str) -> Result[list[int], FatalError]:
-    match product_type:
-        case ProductType.BLOG:
-            repo = injector.get(BlogInterface)
-        case _:
-            assert_never(product_type)
+def get_product_purchase_ids_data(product_type: ProductType, object_ids: list[int]) -> Result[list[int], FatalError]:
+    products_ret = get_products_data(product_type, object_ids)
+    if products_ret.is_err:
+        return Result.err(products_ret.err_value)
 
-    ids_ret = repo.get_ids(MediaFilterOption(ulid=ulid), MediaSortOption(), MediaPageOption(limit=1))
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
+    products = products_ret.ok_value
+    purchase_ids_ret = get_purchase_ids_data([p.id for p in products])
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
 
-    ids = ids_ret.ok_value
-    return Result.ok(ids)
+    purchase_ids = purchase_ids_ret.ok_value
+    return Result.ok(purchase_ids)
 
 
 @Result.shield_exception()
@@ -499,12 +558,8 @@ def save_purchase_data(event: PaymentEventData, purchase: PurchasePaidContent) -
     if transfer_ret.is_err:
         return Result.err(transfer_ret.err_value)
 
-    product_type, product_ulid = parse_product_code(purchase.product_code)
-    if product_type is None:
-        log.error("unknown product", external_id=event.external_id, product_code=purchase.product_code)
-        return Result.ok(None)
-
-    product_ids_ret = get_product_ids_data(product_type, product_ulid)
+    product_repo = injector.get(ProductInterface)
+    product_ids_ret = product_repo.get_ids(ProductFilterOption(ulid=purchase.product_code), ProductSortOption(), ProductPageOption(limit=1))
     if product_ids_ret.is_err:
         return Result.err(product_ids_ret.err_value)
 
@@ -513,15 +568,14 @@ def save_purchase_data(event: PaymentEventData, purchase: PurchasePaidContent) -
         log.error("not found", external_id=event.external_id, product_code=purchase.product_code)
         return Result.ok(None)
 
-    product_id = product_ids[0]
-    purchase_ids_ret = get_purchase_ids_data(user.user.id, product_type, product_id)
+    purchase_ids_ret = get_purchase_ids_data(product_ids, user.user.id)
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 
     purchase_ids = purchase_ids_ret.ok_value
     if len(purchase_ids) == 0:
         repo = injector.get(PurchaseInterface)
-        purchase_save_ret = repo.bulk_save([PurchaseData(id=0, user_id=user.user.id, transaction_id=payment_transaction.id, product_type=product_type, product_id=product_id)])
+        purchase_save_ret = repo.bulk_save([PurchaseData(id=0, user_id=user.user.id, product_id=product_ids[0], transaction_id=payment_transaction.id)])
         if purchase_save_ret.is_err:
             return Result.err(purchase_save_ret.err_value)
 

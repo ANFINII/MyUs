@@ -8,7 +8,7 @@ from ._convert import convert_data, marshal_data
 from ...common import get_save_new_ids, page_queryset, sort_ids
 
 
-PURCHASE_FIELDS = ["user_id", "transaction_id", "product_type", "product_id"]
+PURCHASE_FIELDS = ["user_id", "product_id", "transaction_id"]
 
 
 class PurchaseRepository(PurchaseInterface):
@@ -17,12 +17,10 @@ class PurchaseRepository(PurchaseInterface):
         q_list: list[Q] = []
         if filter.user_id != 0:
             q_list.append(Q(user_id=filter.user_id))
-        if filter.transaction_id != 0:
-            q_list.append(Q(transaction_id=filter.transaction_id))
-        if filter.product_type is not None:
-            q_list.append(Q(product_type=filter.product_type))
         if len(filter.product_ids) > 0:
             q_list.append(Q(product_id__in=filter.product_ids))
+        if filter.transaction_id != 0:
+            q_list.append(Q(transaction_id=filter.transaction_id))
 
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"

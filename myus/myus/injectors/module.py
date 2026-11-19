@@ -21,6 +21,7 @@ from myus.adapter.outbound.db.payment.customer.repository import PaymentCustomer
 from myus.adapter.outbound.db.payment.event.repository import PaymentEventRepository
 from myus.adapter.outbound.db.payment.ledger.repository import LedgerEntryRepository
 from myus.adapter.outbound.db.payment.payout.repository import PayoutRepository
+from myus.adapter.outbound.db.payment.product.repository import ProductRepository
 from myus.adapter.outbound.db.payment.purchase.repository import PurchaseRepository
 from myus.adapter.outbound.db.payment.seller.repository import PaymentSellerRepository
 from myus.adapter.outbound.db.payment.subscription.repository import SubscriptionRepository
@@ -54,6 +55,7 @@ from myus.domain.payment.event.interface import PaymentEventInterface
 from myus.domain.payment.ledger.interface import LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
 from myus.domain.payment.provider.interface import PaymentInterface
+from myus.domain.payment.product.interface import ProductInterface
 from myus.domain.payment.purchase.interface import PurchaseInterface
 from myus.domain.payment.seller.interface import PaymentSellerInterface
 from myus.domain.payment.subscription.event import SUBSCRIPTION_EVENT_CLASSES
@@ -204,6 +206,10 @@ class PaymentModule(Module):
     @provider
     def provide_payment_seller_repository(self) -> PaymentSellerInterface:
         return PaymentSellerRepository()
+
+    @provider
+    def provide_product_repository(self) -> ProductInterface:
+        return ProductRepository()
 
     @provider
     def provide_purchase_repository(self) -> PurchaseInterface:

@@ -137,7 +137,7 @@ flowchart LR
     PE --> Worker[worker<br/>process_payment_events]
     Worker -->|サブスクリプション| Agg[Subscription 集約] --> ES[(es_event)]
     Agg --> Sub[(Subscription<br/>UserPlan)]
-    Worker -->|支払い・返金・入金・購入| Pay[(PaymentTransaction<br/>PaymentLedgerEntry<br/>PaymentPayout<br/>Purchase)]
+    Worker -->|支払い・返金・入金・購入| Pay[(PaymentTransaction<br/>PaymentLedgerEntry<br/>PaymentPayout<br/>Product<br/>Purchase)]
 ```
 
 詳細は [myus.md](myus.md) の「決済システム」と [roadmap.md](roadmap.md) を参照。

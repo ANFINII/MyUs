@@ -19,7 +19,6 @@ from myus.domain.payment.data import Money
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
-from myus.utils.enum.i18n import Currency
 from myus.utils.enum.media import CommentType, EncodeStatus, MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.payment import ProductType
@@ -36,7 +35,7 @@ from ..comment._convert import get_comments_data
 from ..dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from ..message._convert import get_messages_data
 from ..notification._convert import create_notification_data
-from ..payment._convert import get_purchase_ids_data, get_seller_currency_data
+from ..payment._convert import get_product_data, get_purchase_ids_data, get_seller_currency_data
 from ..series._convert import get_media_series_data
 
 
@@ -185,8 +184,8 @@ def create_blog(user_id: int, input: BlogCreateDTO, image: UploadedFile) -> Resu
         log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("error.createFailed"))
 
-    price = Money(amount=0, currency=Currency.JPY)
-    if input.price > 0 or len(input.paid_text) > 0:
+    price: Money | None = None
+    if len(input.paid_text) > 0:
         currency_ret = get_seller_currency_data(user_id)
         if currency_ret.is_err:
             return Result.err(currency_ret.err_value)
@@ -201,7 +200,6 @@ def create_blog(user_id: int, input: BlogCreateDTO, image: UploadedFile) -> Resu
         content=input.content,
         richtext=input.richtext,
         paid_text=input.paid_text,
-        price=price,
         is_promotion=input.is_promotion,
         image=save_upload(image, ImageUpload.BLOG, channel.ulid),
         read=0,
@@ -222,7 +220,7 @@ def create_blog(user_id: int, input: BlogCreateDTO, image: UploadedFile) -> Resu
 
     category_data = category_data_ret.ok_value
 
-    create_ret = atomic_result(lambda: create_blog_data(new_data, category_data))
+    create_ret = atomic_result(lambda: create_blog_data(new_data, category_data, price))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
@@ -868,10 +866,15 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         return Result.err(series_ret.err_value)
 
     series = series_ret.ok_value
+    product_ret = get_product_data(ProductType.BLOG, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
     is_owner = user_id == obj.channel.owner_id
     is_purchased = False
-    if user_id is not None and obj.price.amount > 0 and not is_owner:
-        purchase_ids_ret = get_purchase_ids_data(user_id, ProductType.BLOG, obj.id)
+    if user_id is not None and product is not None and not is_owner:
+        purchase_ids_ret = get_purchase_ids_data([product.id], user_id)
         if purchase_ids_ret.is_err:
             return Result.err(purchase_ids_ret.err_value)
 
@@ -885,11 +888,11 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         content=obj.content,
         richtext=obj.richtext,
         paid_text=obj.paid_text if is_owner or is_purchased else "",
-        price=obj.price,
         is_purchased=is_purchased,
         is_promotion=obj.is_promotion,
         image=create_url(obj.image),
         comments=comments,
+        product=product,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,

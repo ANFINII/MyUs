@@ -5,6 +5,11 @@ export interface Money {
   currency: Currency
 }
 
+export interface Product {
+  ulid: string
+  price: Money
+}
+
 export interface PaymentSubscriptionOut {
   isCanceled: boolean
   isPastDue: boolean
@@ -25,8 +30,8 @@ export interface PaymentCheckoutOut {
   url: string
 }
 
-export interface PaymentBlogCheckoutIn {
-  blogUlid: string
+export interface PaymentProductCheckoutIn {
+  productUlid: string
   locale: Locale
 }
 

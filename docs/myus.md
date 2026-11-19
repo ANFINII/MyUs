@@ -110,8 +110,10 @@ PaymentCustomer
   ├─ Subscription
   └─ PaymentTransaction
        ├─ PaymentLedgerEntry
-       └─ Purchase (買った人と、買った物の種類と ID)
-PaymentSeller (記事を売る人の受け取り口座)
+       └─ Purchase (誰がどの商品を買ったか)
+Product (売る物の種類と ID・値段。記事の有料部分・音楽のハイレゾ)
+  └─ Purchase
+PaymentSeller (商品を売る人の受け取り口座)
 PaymentPayout
 EsEvent / EsOutbox (集約のイベント)
 
@@ -207,7 +209,8 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - ハイレゾの販売。再生用の音楽とは別に、販売用の FLAC を編集画面で上げると、その曲が有料の販売データになる（`MusicHires`）
   - 売れるのは Standard 以上のプランで、売上を受け取る口座の登録が済んだ人。通貨は投稿者の国から決める
   - 音質は 24bit で、サンプリングレートは 48kHz〜192kHz。アップロードのときに ffprobe で読んで保存し、決まりは `domain/media/hires/validation.py` が保存の前に確かめる
-  - 値段は 300〜600。ドルは 3.00〜6.00
+  - 値段は 300〜600。ドルは 3.00〜6.00。値段は `Product` に持つ
+  - 購入した人がいるときは、販売をやめることも、曲を削除することもできない（`error.saleStopPurchased`・`error.deletePurchased`）
   - ファイルは変換せずに、公開しない置き場（`STORAGES["private"]`）に置く。開発は `myus/private`、本番は別の S3 のバケット
 - 再生時間は DB に持たない。一覧のカードにカーソルを乗せたとき・再生したときに、ブラウザが曲の情報（metadata）だけを読んで出す。再生中の曲のカードは出したままにする
 - 一覧のカードのジャケットを押すと、画面の下のミニプレイヤーで再生する。ページを移っても再生を続け、曲が終わったら同じ一覧の次の曲に進む（`MusicPlayerProvider`・`widgets/MiniPlayer`）
@@ -241,16 +244,22 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - リッチテキスト
 - プレーンテキスト
 - サムネイル画像
-- 有料部分（`paid_text`）と値段（`price`・`currency`）。値段が 0 なら無料
+- 有料部分（`paid_text`）と値段。有料部分があれば `Product` を作り、値段はそこに持つ。有料部分を空にすると `Product` を消す
   - 付けられるのは Standard 以上のプラン（`Plan.is_paid_content`）で、売り手の口座の登録が済んでいる人だけ。有料部分か値段を変えるときだけ確かめるので、プランを下げても、付けてある有料部分はそのまま売れ、ほかの項目の編集もできる
-  - 値段は 300〜50,000 で、通貨は付けたときの投稿者の国/地域から決める（円か米ドル。ドルはセント）。有料部分があるなら値段が要り、値段があるなら有料部分が要る
-  - 詳細（`GET /media/blog/{ulid}`）は、投稿者本人と買った人にだけ `paid_text` を返す。ほかの人には空にして、値段と `is_purchased` を返す。一覧には有料部分を入れない
-  - 買う（`POST /payment/checkout/blog`・`create_blog_checkout`）：公開中で値段があり、自分の記事でなく、まだ買っておらず、投稿者の口座が使えるときだけ決済の画面を作る。Stripe の destination charge で、売上は投稿者の口座に送り、MyUs は利用料として値段の 15%（`PLATFORM_FEE_RATE`）を取る。決済が終わると記事の詳細に戻る
+  - 値段は 300〜50,000 で、通貨は付けたときの投稿者の国/地域から決める（円か米ドル。ドルはセント）。値段の範囲は `domain/payment/product/validation.py` が確かめる。有料部分と値段の組み合わせの誤りは FE で出す
+  - 購入した人がいるときは、有料部分を空にすることも、記事を削除することもできない（`error.saleStopPurchased`・`error.deletePurchased`）
+  - 詳細（`GET /media/blog/{ulid}`）は、投稿者本人と買った人にだけ `paid_text` を返す。ほかの人には空にして、`product`（`ulid`・`price`。売っていなければ null）と `is_purchased` を返す。一覧には有料部分を入れない
+  - 買う：`POST /payment/checkout/product` に `product.ulid` を送る（「Product」の節）
+
+#### Product
+- 売る物の共通の表。売る人（`seller`）・種類（`product_type`：`Blog`・`MusicHires`）・売る物の ID（`object_id`：記事の id・音楽の id）・値段（`price`・`currency`）を持つ。種類と売る物の ID の組で一意。行があれば販売中
+- 売る物の中身は種類ごとの表に置く。記事の有料部分は `Blog.paid_text`、ハイレゾのファイルは `MusicHires.file`
+- 売る物を増やすときは、`ProductType` に値を足し、`product_media_type`（`utils/functions/map.py`）と値段の範囲（`domain/payment/product/validation.py`）に1か所ずつ足す。表・checkout・webhook は変えない
+- 買う（`POST /payment/checkout/product`・`create_product_checkout`）：`Product` があり、売る物が公開中で、自分が売る物でなく、まだ買っておらず、売る人の口座が使えるときだけ決済の画面を作る。Stripe の destination charge で、売上は売る人の口座に送り、MyUs は利用料として値段の 15%（`PLATFORM_FEE_RATE`）を取る。決済が終わると売る物の詳細に戻る
+- 決済の `product_code` は `Product` の ulid。webhook はこの ulid で `Product` を引いて `Purchase` を作る
 
 #### Purchase
-- 誰が何を、どの取引で買ったか。買った物は種類（`product_type`。今は `Blog`）と ID（`product_id`）で持つので、売る物を増やしても表を変えない。ユーザーと買った物の組で一意。`checkout.session.completed` の反映で作り、返金されたら消す
-- 決済の `product_code` は `種類:ulid`（`Blog:01H...`）の形にし、webhook はこの種類で買った物を引く
-- 買った物の ID には FK を張らない。買った人がいる記事は削除できない（`error.deletePurchased`）
+- 誰がどの `Product` を、どの取引で買ったか。`Product` に FK（PROTECT）を張る。ユーザーと商品の組で一意。`checkout.session.completed` の反映で作り、返金されたら消す
 
 #### Chat（チャット）
 - 有効期限設定
@@ -398,7 +407,7 @@ flowchart TB
 | `invoice.payment_failed` | `PaymentFailed` | 取引の状態 |
 | `charge.refunded` | `RefundIssued` | 返金（`Refund`）・取引の状態 |
 | `payout.paid` | `PayoutPaid` | 入金・明細と入金の紐づけ |
-| `checkout.session.completed`（単発の決済で支払い済みのときだけ） | `PurchaseSucceeded` | 取引・売上（`Sale`）・決済手数料（`Fee`）・送金（`Transfer`）・記事の購入 |
+| `checkout.session.completed`（単発の決済で支払い済みのときだけ） | `PurchaseSucceeded` | 取引・売上（`Sale`）・決済手数料（`Fee`）・送金（`Transfer`）・購入（`Purchase`） |
 
 売上を作るのは `invoice.paid` だけにする（`payment_intent.succeeded` からも作ると二重に数えてしまうため）。
 
@@ -410,7 +419,7 @@ flowchart TB
 - ユーザーと、決済会社ごとの顧客 ID（Stripe の `cus_...` など）の対応。取引・サブスクリプションは決済会社（`provider`）を持たず、顧客からたどる
 
 #### PaymentSeller
-- 記事を売る人と、決済会社ごとの受け取り口座（Stripe Connect の Express のアカウント `acct_...`）の対応。ユーザーと決済会社の組で1つ
+- 商品を売る人と、決済会社ごとの受け取り口座（Stripe Connect の Express のアカウント `acct_...`）の対応。ユーザーと決済会社の組で1つ
 - `is_enabled` は、決済会社がその口座での決済を認めているか（Stripe の `charges_enabled`）
 - 登録（`POST /payment/seller/onboard`・`onboard_seller`）は、Standard 以上のプラン（`Plan.is_paid_content`）の人だけ。口座が無ければ作り、決済会社の登録の画面の URL を返す。登録が終わるか、URL の期限が切れると決済の画面に戻る
 - 状態（`GET /payment/seller`・`get_seller`）は、まだ使えない口座のときだけ決済会社から取り直し、使えるようになっていれば `is_enabled` を保存する。Connect の webhook は使わない。今のプランで売れるか（`is_available`）と、値段に使う通貨（`currency`。国/地域から決める）も返す
