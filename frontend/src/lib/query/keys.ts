@@ -11,7 +11,6 @@ export const queryKeys = {
   passwordResetVerify: (token: string) => ['auth', 'reset', token] as const,
 
   home: (params: SearchParams) => ['home', params] as const,
-  recommend: (params: SearchParams) => ['recommend', params] as const,
   mediaVideos: (params: SearchParams) => ['media', 'video', params] as const,
   mediaVideo: (ulid: string) => ['media', 'video', ulid] as const,
   mediaMusics: (params: SearchParams) => ['media', 'music', params] as const,

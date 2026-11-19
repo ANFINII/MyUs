@@ -174,6 +174,12 @@ export enum MediaType {
   Chat = 'Chat',
 }
 
+export enum HomeSort {
+  Recommend = 'Recommend',
+  Trending = 'Trending',
+  Latest = 'Latest',
+}
+
 export enum EncodeStatus {
   Encoding = 'Encoding',
   Done = 'Done',

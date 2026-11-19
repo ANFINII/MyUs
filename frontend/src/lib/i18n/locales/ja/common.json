@@ -284,6 +284,11 @@
   "search": {
     "result": "「{{name}}」の検索結果「{{count}}」件"
   },
+  "homeSort": {
+    "Recommend": "おすすめ",
+    "Trending": "急上昇",
+    "Latest": "新着"
+  },
   "status": {
     "back": "戻る",
     "login": "ログイン",
@@ -294,7 +299,6 @@
   },
   "sideMenu": {
     "home": "ホーム",
-    "recommend": "急上昇",
     "follow": "フォロー",
     "channel": "チャンネル",
     "playlist": "プレイリスト",

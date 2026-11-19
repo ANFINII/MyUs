@@ -55,7 +55,6 @@ export const apiChannelSeries = (ulid: string) => base + `/media/series/channel/
 
 // Media
 export const apiHome = base + '/media/home'
-export const apiRecommend = base + '/media/recommend'
 
 export const apiVideos = base + '/media/video'
 export const apiVideo = (ulid: string) => base + `/media/video/${ulid}`

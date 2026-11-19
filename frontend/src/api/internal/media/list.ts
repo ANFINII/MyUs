@@ -1,14 +1,10 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { SearchParams, MediaHome, VideoList, MusicList, BlogList, ComicList, PictureList, ChatList } from 'types/internal/media/output'
-import { apiHome, apiRecommend, apiVideos, apiMusics, apiBlogs, apiComics, apiPictures, apiChats } from 'api/uri'
+import { apiHome, apiVideos, apiMusics, apiBlogs, apiComics, apiPictures, apiChats } from 'api/uri'
 
 export const getHome = async (params: SearchParams): Promise<ApiOut<MediaHome>> => {
   return await apiOut(apiClient('json').get(apiHome, { params }))
-}
-
-export const getRecommend = async (params: SearchParams): Promise<ApiOut<MediaHome>> => {
-  return await apiOut(apiClient('json').get(apiRecommend, { params }))
 }
 
 export const getVideos = async (params: SearchParams): Promise<ApiOut<VideoList>> => {

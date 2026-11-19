@@ -2,7 +2,7 @@ import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
 import { ChatMessage } from 'types/internal/message'
 import { Product } from 'types/internal/payment'
-import { EncodeStatus } from 'utils/constants/enum'
+import { EncodeStatus, HomeSort } from 'utils/constants/enum'
 
 export interface Search {
   name?: string
@@ -14,6 +14,7 @@ export interface SearchParams {
   limit?: number
   offset?: number
   channel?: string
+  sort?: HomeSort
 }
 
 export interface MediaUser {

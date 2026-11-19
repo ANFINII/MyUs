@@ -243,7 +243,7 @@ components/pages/media/video/
 
 ## 依存方向
 
-`parts/` ← `widgets/` ← `pages/` の片方向のみ依存する。逆方向や同階層への依存は禁止（ページ間で表示を共有するときだけ、`pages/` 同士の import を許容する。例: `recommend/index.tsx` が `home/view.tsx` を使う）。
+`parts/` ← `widgets/` ← `pages/` の片方向のみ依存する。逆方向や同階層への依存は禁止。
 
 `parts/` → `widgets/`・`pages/`、`widgets/` → `pages/` の import は、`eslint.config.mjs` の `import/no-restricted-paths` で検出する。
 

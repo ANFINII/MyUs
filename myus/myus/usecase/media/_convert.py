@@ -7,6 +7,7 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
+from myus.domain.media.common import SortType
 from myus.domain.media.hires.data import MusicHiresData
 from myus.domain.media.hires.interface import FilterOption as MusicHiresFilterOption, MusicHiresInterface, PageOption as MusicHiresPageOption, SortOption as MusicHiresSortOption
 from myus.domain.media.music.data import MusicData
@@ -22,7 +23,7 @@ from myus.domain.subscribe.interface import FilterOption, PageOption, SortOption
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.access_log import AccessType
-from myus.utils.enum.media import MediaType
+from myus.utils.enum.media import HomeSort, MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.payment import ProductType
 from ..access_log._convert import save_access_data
@@ -51,6 +52,16 @@ def get_media_repository(media_type: MediaType) -> MediaInterfaceType:
             return injector.get(ChatInterface)
         case _:
             assert_never(media_type)
+
+
+def home_sort_type(sort: HomeSort) -> SortType:
+    match sort:
+        case HomeSort.RECOMMEND | HomeSort.TRENDING:
+            return SortType.SCORE
+        case HomeSort.LATEST:
+            return SortType.CREATED
+        case _:
+            assert_never(sort)
 
 
 @Result.shield_exception()

@@ -1,5 +1,6 @@
 import { ParsedUrlQuery } from 'querystring'
 import { MediaHome } from 'types/internal/media/output'
+import { HomeSort } from 'utils/constants/enum'
 
 export const PAGE_SIZE = 50
 
@@ -8,6 +9,11 @@ export const isActive = (isbool: boolean) => (isbool ? 'active' : '')
 export const searchParams = (query: ParsedUrlQuery): { search?: string } => ({
   search: typeof query.search === 'string' && query.search ? query.search : undefined,
 })
+
+export const homeParams = (query: ParsedUrlQuery): { search?: string; sort: HomeSort } => {
+  const sort = Object.values(HomeSort).find((value) => value === query.sort) ?? HomeSort.Recommend
+  return { ...searchParams(query), sort }
+}
 
 export const pageParams = (query: ParsedUrlQuery): { search?: string; limit: number; offset: number; page: number } => {
   const search = typeof query.search === 'string' && query.search ? query.search : undefined

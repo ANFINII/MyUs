@@ -286,6 +286,11 @@
   "search": {
     "result": "{{count}} results for \"{{name}}\""
   },
+  "homeSort": {
+    "Recommend": "Recommended",
+    "Trending": "Trending",
+    "Latest": "Latest"
+  },
   "status": {
     "back": "Back",
     "login": "Log in",
@@ -296,7 +301,6 @@
   },
   "sideMenu": {
     "home": "Home",
-    "recommend": "Trending",
     "follow": "Following",
     "channel": "Channels",
     "playlist": "Playlists",
