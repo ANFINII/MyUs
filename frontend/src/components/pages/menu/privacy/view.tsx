@@ -32,7 +32,6 @@ export default function Privacy(): React.JSX.Element {
         <p>{t('menu.privacy.external.p2')}</p>
         <p>{t('menu.privacy.external.p3')}</p>
         <p>{t('menu.privacy.external.p4')}</p>
-        <p>{t('menu.privacy.external.p5')}</p>
         <Divide />
 
         <h2>{t('menu.privacy.security.title')}</h2>
