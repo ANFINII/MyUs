@@ -59,7 +59,7 @@ STORAGES = {
             "region_name": env.aws_s3_region_name,
             "default_acl": "private",
             "querystring_auth": True,
-            "querystring_expire": 300,
+            "querystring_expire": PRIVATE_URL_EXPIRE,
             "file_overwrite": False,
         },
     },

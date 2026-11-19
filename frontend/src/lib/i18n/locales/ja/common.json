@@ -56,6 +56,8 @@
     "alreadyPurchased": "すでに購入しています",
     "deletePurchased": "購入した人がいるため、削除できません",
     "saleStopPurchased": "購入した人がいるため、販売をやめられません",
+    "hiresNotFound": "この曲のハイレゾはありません",
+    "hiresNotPurchased": "この曲のハイレゾを購入していません",
     "planNotFound": "プランが見つかりません",
     "alreadySubscribed": "すでに有料プランを契約しています",
     "followSelf": "自分自身はフォローできません",

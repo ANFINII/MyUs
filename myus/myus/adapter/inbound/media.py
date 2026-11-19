@@ -8,6 +8,7 @@ from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.common import MEDIA_PAGE_SIZE
+from myus.domain.media.hires.data import MusicHiresData
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
@@ -18,7 +19,7 @@ from myus.usecase.dto.message import MessageDTO
 from myus.usecase.dto.user import AuthorDTO, MediaUserDTO
 from myus.usecase.media.core import create_video, create_music, create_blog, create_comic, create_picture, create_chat
 from myus.usecase.media.core import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
-from myus.usecase.media.core import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
+from myus.usecase.media.core import get_video_detail, get_music_detail, get_music_hires_url, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from myus.usecase.media.core import increment_media_read
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
@@ -28,7 +29,7 @@ from .schema.channel import ChannelOut
 from .schema.comment import CommentOut, ReplyOut
 from .schema.common import ErrorOut, ErrorType, Limit, Offset
 from .schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn
-from .schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, HashtagOut
+from .schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, MusicHiresOut, MusicHiresUrlOut, HashtagOut
 from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 from .schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
 from .schema.media.output import VideoDetailsOut, MusicDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
@@ -309,7 +310,10 @@ class MusicAPI:
                 image=obj.image,
                 music=obj.music,
                 gain=obj.gain,
+                is_purchased=obj.is_purchased,
                 comments=convert_comments(obj.comments),
+                hires=convert_music_hires(obj.hires),
+                product=convert_product(obj.product),
                 hashtags=convert_hashtags(obj.hashtags),
                 read=obj.read,
                 like=obj.like,
@@ -324,6 +328,35 @@ class MusicAPI:
         )
 
         return 200, data
+
+    @staticmethod
+    @router.get("/{ulid}/hires", response={200: MusicHiresUrlOut, 400: ErrorOut, 500: ErrorOut})
+    def hires(request: HttpRequest, ulid: str):
+        log.info("request", ulid=ulid)
+
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+
+        user_id = user_id_ret.ok_value
+        if user_id is None:
+            return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
+
+        url_ret = get_music_hires_url(user_id, ulid)
+        if url_ret.is_err:
+            message = url_ret.err_value.message
+            match url_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case ForbiddenError():
+                    return 400, ErrorOut(type=ErrorType.FORBIDDEN, message=message)
+                case FatalError():
+                    return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
+                case _:
+                    assert_never(url_ret.err_value)
+
+        url = url_ret.ok_value
+        return 200, MusicHiresUrlOut(url=url)
 
 
 class BlogAPI:
@@ -851,6 +884,13 @@ def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
         ) for x in objs
     ]
     return data
+
+
+def convert_music_hires(hires: MusicHiresData | None) -> MusicHiresOut | None:
+    if hires is None:
+        return None
+
+    return MusicHiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth)
 
 
 def convert_product(product: ProductData | None) -> ProductOut | None:

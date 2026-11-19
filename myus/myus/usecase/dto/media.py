@@ -5,6 +5,7 @@ from myus.domain.hashtag.data import HashtagData
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
+from myus.domain.media.hires.data import MusicHiresData
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
@@ -61,7 +62,10 @@ class MusicDetailDTO(MediaDetailDTO):
     image: str
     music: str
     gain: float
+    is_purchased: bool
     comments: list[CommentDTO]
+    hires: MusicHiresData | None
+    product: ProductData | None
 
 
 @dataclass(frozen=True, slots=True)

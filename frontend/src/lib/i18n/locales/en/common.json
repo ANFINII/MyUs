@@ -56,6 +56,8 @@
     "alreadyPurchased": "You have already bought this",
     "deletePurchased": "You cannot delete this because someone has bought it",
     "saleStopPurchased": "You cannot stop selling this because someone has bought it",
+    "hiresNotFound": "This song has no hi-res audio",
+    "hiresNotPurchased": "You have not bought the hi-res audio of this song",
     "planNotFound": "Plan not found",
     "alreadySubscribed": "You already have a paid plan",
     "followSelf": "You cannot follow yourself",

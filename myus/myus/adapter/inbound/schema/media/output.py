@@ -4,7 +4,7 @@ from myus.utils.enum.media import EncodeStatus
 from ..channel import ChannelOut
 from ..comment import CommentOut
 from ..message import MessageOut
-from ..payment import MoneyOut, ProductOut
+from ..payment import ProductOut
 from ..user import MediaUserOut
 
 
@@ -14,6 +14,10 @@ class MediaCreateOut(BaseModel):
 
 class MediaReadOut(BaseModel):
     read: int
+
+
+class MusicHiresUrlOut(BaseModel):
+    url: str
 
 
 class MediaOut(BaseModel):
@@ -66,11 +70,11 @@ class MusicOut(MediaOut):
 class MusicHiresOut(BaseModel):
     sample_rate: int
     bit_depth: int
-    price: MoneyOut
 
 
 class ManageMusicOut(MusicOut):
     hires: MusicHiresOut | None
+    product: ProductOut | None
 
 
 class BlogOut(MediaOut):
@@ -150,7 +154,10 @@ class MusicDetailOut(MediaDetailOut):
     image: str
     music: str
     gain: float
+    is_purchased: bool
     comments: list[CommentOut]
+    hires: MusicHiresOut | None
+    product: ProductOut | None
 
 
 class BlogDetailOut(MediaDetailOut):

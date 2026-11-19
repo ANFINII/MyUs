@@ -68,6 +68,11 @@ export interface Music extends Media {
   lyric: string
 }
 
+export interface MusicHires {
+  sampleRate: number
+  bitDepth: number
+}
+
 export interface Blog extends Media {
   richtext: string
   isPromotion: boolean
@@ -146,7 +151,10 @@ export interface MusicDetail extends MediaDetail {
   music: string
   gain: number
   lyric: string
+  isPurchased: boolean
   comments: Comment[]
+  hires: MusicHires | null
+  product: Product | null
 }
 
 export interface BlogDetail extends MediaDetail {
