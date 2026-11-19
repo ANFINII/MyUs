@@ -1,4 +1,5 @@
 import { createRouter, LocationRewrite } from '@tanstack/react-router'
+import { leaveUserPage } from 'lib/gtag'
 import { getLocale } from 'lib/i18n'
 import { queryClient } from 'lib/query/client'
 import { routeTree } from 'lib/routes'
@@ -52,6 +53,14 @@ export const router = createRouter({
 router.subscribe('onBeforeNavigate', ({ fromLocation, toLocation, pathChanged }) => {
   if (fromLocation === undefined || !pathChanged || !isOutdated()) return
   window.location.assign(toLocation.publicHref)
+})
+
+router.history.block({
+  blockerFn: ({ nextLocation }) => {
+    leaveUserPage(nextLocation.pathname)
+    return false
+  },
+  enableBeforeUnload: false,
 })
 
 declare module '@tanstack/react-router' {

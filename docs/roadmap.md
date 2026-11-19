@@ -134,10 +134,6 @@ flowchart LR
 
 - `db/models/` の `users.py`・`common.py`・`master.py` をモデルごとのファイルに分ける
 
-## ⏸ 投稿者ごとの Google Tag Manager
-
-マイページの `tag_manager_id` は登録できるが、読み込みはしていない。GTM は任意のスクリプトを動かせるので、投稿者の GTM を MyUs のページで読み込むと、投稿者が閲覧者のページで好きなスクリプトを動かせてしまう（Cookie 以外の情報の抜き取り・画面の書き換えなど）。入れるなら、MyUs のドメインとは別の場所で動かす仕組みが要る
-
 ## メディアの一覧の速さ
 
 今は困っていない。一覧が遅いと感じたら、`EXPLAIN` でどこが重いかを確かめてから、次を入れる。一覧を取る処理は `adapter/outbound/db/media/common.py`（`filter_queryset`・`sort_queryset`・`get_ids_queryset`）にまとまっている。

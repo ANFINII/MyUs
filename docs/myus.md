@@ -148,7 +148,7 @@ Advertise
 - バナー画像
 - フォロワー/フォロー数カウント
 - 広告表示設定
-- Google Tag Manager ID
+- GA4 の測定ID
 
 #### UserNotification
 - メディアタイプ別通知設定

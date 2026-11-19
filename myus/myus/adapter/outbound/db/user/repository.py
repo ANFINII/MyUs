@@ -17,7 +17,7 @@ PROFILE_FIELDS = [
     "last_name", "first_name", "birthday", "gender", "phone",
     "country", "postal_code", "prefecture", "city", "street", "introduction",
 ]
-MYPAGE_FIELDS = ["banner", "email", "content", "tag_manager_id", "is_advertise"]
+MYPAGE_FIELDS = ["banner", "email", "content", "measurement_id", "is_advertise"]
 NOTIFICATION_FIELDS = [
     "is_video", "is_music", "is_blog", "is_comic", "is_picture",
     "is_chat", "is_follow", "is_reply", "is_like", "is_views",

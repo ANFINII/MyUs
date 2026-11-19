@@ -202,7 +202,7 @@ def signup_user(input: SignupDTO) -> Result[None, FatalError]:
             content="",
             follower_count=0,
             following_count=0,
-            tag_manager_id="",
+            measurement_id="",
             is_advertise=False,
         ),
         notification=UserNotificationData(

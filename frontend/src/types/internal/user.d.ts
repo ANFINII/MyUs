@@ -68,7 +68,7 @@ export interface MypageOut {
   email: string
   followerCount: number
   followingCount: number
-  tagManagerId: string
+  measurementId: string
   plan: string
   planStartDate: string | null
   planEndDate: string | null
@@ -79,7 +79,7 @@ export interface MypageOut {
 export interface MypageIn {
   bannerFile?: File
   email: string
-  tagManagerId: string
+  measurementId: string
   isAdvertise: boolean
   content: string
 }

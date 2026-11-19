@@ -31,6 +31,11 @@ def has_postal_code(text: str) -> bool:
         return False
     return True
 
+def has_measurement_id(text: str) -> bool:
+    if re.fullmatch(r"G-[A-Z0-9]{4,18}", text):
+        return False
+    return True
+
 def has_url(text: str) -> bool:
     url = urlparse(text)
     if url.scheme == "https" and url.netloc:

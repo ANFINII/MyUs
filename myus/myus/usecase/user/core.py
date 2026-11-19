@@ -123,7 +123,7 @@ def update_mypage(user_id: int, input: SettingMyPageDTO, banner_file: UploadedFi
         banner=banner,
         email=input.email,
         content=input.content,
-        tag_manager_id=input.tag_manager_id,
+        measurement_id=input.measurement_id,
         is_advertise=input.is_advertise,
     )
 

@@ -236,6 +236,7 @@ components/pages/media/video/
 | `lib/i18n/` | 翻訳ファイルと i18next の設定 |
 | `lib/axios/` | API の通信の設定 |
 | `lib/gtm.ts` | Google Tag Manager の読み込み（本番で `VITE_GTM_ID` があるときだけ） |
+| `lib/gtag.ts` | ユーザーページの GA4 の計測。マイページの測定IDに、表示・クリック・フォローを送る。本番だけ動く |
 | `styles/` | グローバルな CSS と mixin（[css.md](css.md)） |
 | `types/` | 型定義 |
 | `utils/` | ユーティリティ関数 |

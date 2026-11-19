@@ -26,7 +26,7 @@ class SettingProfileIn(BaseModel):
 
 class SettingMyPageIn(BaseModel):
     email: Annotated[str, Field(max_length=255)]
-    tag_manager_id: Annotated[str, Field(max_length=10)]
+    measurement_id: Annotated[str, Field(max_length=20)]
     content: str
     is_advertise: bool
 
@@ -72,7 +72,7 @@ class SettingMyPageOut(BaseModel):
     content: str
     follower_count: int
     following_count: int
-    tag_manager_id: str
+    measurement_id: str
     plan: str
     plan_start_date: date | None
     plan_end_date: date | None

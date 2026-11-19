@@ -1,5 +1,6 @@
 import { noop, QueryClient } from '@tanstack/react-query'
 import { redirect } from '@tanstack/react-router'
+import { trackUserPageView } from 'lib/gtag'
 import {
   blogQuery,
   blogsQuery,
@@ -133,6 +134,7 @@ export const playlistLoader = ({ queryClient, params }: PageLoad<{ ulid: string 
 export const userPageLoader = ({ queryClient, params, search }: PageLoad<{ ulid: string }>) => {
   const query = searchParams(search)
   const userPage = queryClient.query(userPageQuery(params.ulid))
+  userPage.then((data) => trackUserPageView(params.ulid, data.measurementId, `${data.nickname} - MyUs`)).catch(noop)
   const media = userPage
     .then((data) => {
       const channelUlid = selectChannelUlid(data.channels, search.channel)

@@ -48,7 +48,7 @@ class MyPageData:
     content: str
     follower_count: int
     following_count: int
-    tag_manager_id: str
+    measurement_id: str
     is_advertise: bool
 
 

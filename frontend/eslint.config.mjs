@@ -104,4 +104,10 @@ export default [
       ],
     },
   },
+  {
+    files: ['src/lib/gtag.ts'],
+    rules: {
+      'prefer-rest-params': 'off', // arguments を許可
+    },
+  },
 ]
