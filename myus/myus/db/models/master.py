@@ -21,7 +21,6 @@ class NgWord(models.Model):
     """NgWord"""
     id      = models.BigAutoField(primary_key=True)
     word    = models.CharField(max_length=30, unique=True)
-    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.word
