@@ -78,7 +78,6 @@ Playlist (ユーザーが作る音楽の並び)
   └─ 曲の順序管理、公開・非公開
 
 Blog
-  └─ BlogPurchase (有料部分を買った人)
 
 Comic
   ├─ ComicPage
@@ -110,7 +109,7 @@ PaymentCustomer
   ├─ Subscription
   └─ PaymentTransaction
        ├─ PaymentLedgerEntry
-       └─ BlogPurchase
+       └─ Purchase (買った人と、買った物の種類と ID)
 PaymentSeller (記事を売る人の受け取り口座)
 PaymentPayout
 EsEvent / EsOutbox (集約のイベント)
@@ -242,8 +241,10 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
   - 詳細（`GET /media/blog/{ulid}`）は、投稿者本人と買った人にだけ `paid_text` を返す。ほかの人には空にして、値段と `is_purchased` を返す。一覧には有料部分を入れない
   - 買う（`POST /payment/checkout/blog`・`create_blog_checkout`）：公開中で値段があり、自分の記事でなく、まだ買っておらず、投稿者の口座が使えるときだけ決済の画面を作る。Stripe の destination charge で、売上は投稿者の口座に送り、MyUs は利用料として値段の 15%（`PLATFORM_FEE_RATE`）を取る。決済が終わると記事の詳細に戻る
 
-#### BlogPurchase
-- 誰がどの記事を、どの取引で買ったか。ユーザーと記事の組で一意。`checkout.session.completed` の反映で作り、返金されたら消す。記事を消すと一緒に消える
+#### Purchase
+- 誰が何を、どの取引で買ったか。買った物は種類（`product_type`。今は `Blog`）と ID（`product_id`）で持つので、売る物を増やしても表を変えない。ユーザーと買った物の組で一意。`checkout.session.completed` の反映で作り、返金されたら消す
+- 決済の `product_code` は `種類:ulid`（`Blog:01H...`）の形にし、webhook はこの種類で買った物を引く
+- 買った物の ID には FK を張らない。買った人がいる記事は削除できない（`error.deletePurchased`）
 
 #### Chat（チャット）
 - 有効期限設定
