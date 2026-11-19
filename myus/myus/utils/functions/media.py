@@ -3,12 +3,13 @@ import os
 import shutil
 import subprocess
 import tempfile
-from typing import assert_never
+from collections.abc import Callable
+from typing import TypeVar, assert_never
 from PIL import Image, UnidentifiedImageError
 from ninja import UploadedFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import TemporaryUploadedFile
-from .convert.audio_converter import is_conversion, save_converted_mp3
+from .convert.audio_converter import is_conversion, is_low_bit_rate, probe_audio, save_converted_mp3
 from .file import advertise_image_path, advertise_video_path, avatar_path, comic_path, file_extension, image_path, musics_path, video_path
 from ..common.logger import log
 from ..common.result import Result, ValidationError
@@ -19,6 +20,8 @@ from ..enum.upload import ImageUpload, MediaUpload
 type UploadType = ImageUpload | MediaUpload
 
 PROBE_TIMEOUT = 60
+
+T = TypeVar("T")
 
 
 def upload_rule(upload_type: UploadType) -> UploadRuleData:
@@ -57,6 +60,12 @@ def validate_uploads(files: list[tuple[UploadedFile | None, UploadType]]) -> Res
             log.warning("unsupported format", upload_type=upload_type.value, extension=extension, content_type=content_type)
             return Result.err(ValidationError("error.fileTypeInvalid"))
 
+        if upload_type == MediaUpload.MUSIC:
+            audio = probe_upload(file, probe_audio)
+            if is_low_bit_rate(audio):
+                log.warning("low bit rate", codec=audio.codec, bit_rate=audio.bit_rate)
+                return Result.err(ValidationError("error.musicBitRateLow"))
+
     return Result.ok(None)
 
 
@@ -82,16 +91,21 @@ def media_formats(upload_type: MediaUpload) -> set[str]:
             assert_never(upload_type)
 
 
-def is_media(file: UploadedFile, upload_type: MediaUpload) -> bool:
+def probe_upload(file: UploadedFile, probe: Callable[[str], T]) -> T:
     if isinstance(file, TemporaryUploadedFile):
-        formats = probe_formats(file.temporary_file_path())
+        result = probe(file.temporary_file_path())
     else:
         with tempfile.NamedTemporaryFile() as tmp:
             for chunk in file.chunks():
                 tmp.write(chunk)
             tmp.flush()
-            formats = probe_formats(tmp.name)
+            result = probe(tmp.name)
     file.seek(0)
+    return result
+
+
+def is_media(file: UploadedFile, upload_type: MediaUpload) -> bool:
+    formats = probe_upload(file, probe_formats)
     return len(formats) > 0 and formats <= media_formats(upload_type)
 
 
