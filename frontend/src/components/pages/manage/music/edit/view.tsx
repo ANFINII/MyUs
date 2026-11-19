@@ -32,12 +32,12 @@ import LyricEditor from '../LyricEditor'
 interface Props {
   channels: Channel[]
   categories: Category[]
-  data: Music
   seller: PaymentSellerOut
+  data: Music
 }
 
 export default function ManageMusicEdit(props: Props): React.JSX.Element {
-  const { channels, categories, data, seller } = props
+  const { channels, categories, seller, data } = props
   const { categoryUlid, title, content, lyric, publish, publishAt } = data
 
   const router = useRouter()
