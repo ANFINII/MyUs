@@ -1,9 +1,12 @@
 common/network
 common/parameters
 common/ecr
+common/acm
 general/cost
 general/iam-role
 products/myus/media
 products/myus/database
 products/myus/compute
+products/myus/dns
+products/myus/mail
 products/myus/monitoring

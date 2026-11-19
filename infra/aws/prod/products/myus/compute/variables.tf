@@ -1,3 +1,14 @@
+data "terraform_remote_state" "acm" {
+  backend = "s3"
+
+  config = {
+    bucket  = "terraform-myus-prod"
+    key     = "common/acm/terraform.tfstate"
+    region  = "ap-northeast-1"
+    profile = "myus-prod"
+  }
+}
+
 data "terraform_remote_state" "network" {
   backend = "s3"
 
@@ -55,6 +66,9 @@ locals {
 
   # database variables
   mysql = data.terraform_remote_state.database.outputs.mysql
+
+  # acm variables
+  acm = data.terraform_remote_state.acm.outputs.acm
 
   # media variables
   media = data.terraform_remote_state.media.outputs.media

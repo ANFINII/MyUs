@@ -2,6 +2,7 @@ locals {
   env       = "prod"
   region    = "ap-northeast-1"
   base_name = "myus-prod"
+  domain    = "myus.media"
 }
 
 locals {
@@ -10,6 +11,7 @@ locals {
     env       = local.env
     region    = local.region
     profile   = local.base_name
+    domain    = local.domain
 
     vpc_cidr16 = "10.0"
 
