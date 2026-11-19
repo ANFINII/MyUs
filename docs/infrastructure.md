@@ -326,6 +326,24 @@ sequenceDiagram
     GH->>EC2: 終わるまで get-command-invocation で待つ
 ```
 
+### DB のスキーマの変更
+
+`myus/myus/db/migrations/` は Git の管理外なので、デプロイではマイグレーションを流さない。本番の DB は次の手順で手作業で変える。EC2 には SSM のセッションで入り、`/opt/myus` で行う。
+
+1. 最初のデプロイ：空の DB に、使い捨てのコンテナでマイグレーションを作って流す。イメージの中は `app` ユーザーでは書けないので root で動かす。作ったファイルはコンテナと一緒に消える
+
+   ```bash
+   docker compose run --rm -u root backend sh -c "python manage.py makemigrations myus && python manage.py migrate"
+   ```
+
+2. その後のモデルの変更：PR に書いた `sqlmigrate` の SQL を、デプロイの前に `run_sql` で流す。SQL は標準入力で渡し、1文ずつ流す。表を消す・列を消す変更は、新しいコードが使わなくなってから流す
+
+   ```bash
+   docker compose exec -T backend python manage.py run_sql < change.sql
+   ```
+
+3. 流したら、その PR に「本番に流した」と日時をコメントで残す。どの SQL を流したかの記録は PR で持つ
+
 ### 監視の流れ
 
 CloudFront のメトリクスは us-east-1 にしか無く、アラームの通知先は同じリージョンの SNS でないといけないので、SNS のトピックを東京と us-east-1 の 2 つ作っている。どちらも同じメールアドレスに送る。
