@@ -68,7 +68,7 @@ flowchart LR
 | フロント配信 | **S3** + **CloudFront**（OAC） | `prod/products/myus/frontend`。`myus.media`・`www.myus.media` で配信する。SPA なので、`/` と S3 に無いパスには `index.html` を返す。`frontend.yml` が main でビルドし、`assets/` は長くキャッシュし、それ以外は毎回確かめるようにして S3 に送り、キャッシュを消す |
 | メディア保存 | **S3** | `django-storages[s3]` の `S3Storage`（`config/settings/prod.py` の `STORAGES`）。バケットは非公開にし、EC2 のロールで書く |
 | メディア配信 | **CloudFront**（OAC） | HLS（`.m3u8` / `.ts`）・画像を配信する。有料コンテンツは **署名付き Cookie** で保護する |
-| メール | **SES** | 今の SMTP の設定のまま、接続先を SES の SMTP（`email-smtp.ap-northeast-1.amazonaws.com`）にする（`django-ses` は入れなくてよい）。本番利用申請（サンドボックス解除）が必要。SPF・DKIM・DMARC は Route 53 で設定する |
+| メール | **SES** | 今の SMTP の設定のまま、接続先を SES の SMTP（`email-smtp.ap-northeast-1.amazonaws.com`）にする（`django-ses` は入れなくてよい）。本番利用申請（サンドボックス解除）が必要。SPF・DKIM・DMARC は Route 53 で設定する。SES は送るだけなので、`myus.media` に届くメールは転送サービスの ImprovMX で運営用の Gmail に転送する（MX は `mail` のスタックが作る） |
 | シークレット | **SSM Parameter Store**（SecureString） | Stripe キー・JWT シークレットなど。EC2 の IAM ロールで読み取り、起動時に環境変数へ展開する |
 | DNS | **Route 53** | `myus.media`・`www.myus.media`（フロント）・`api.myus.media`・`media.myus.media` |
 | 監視 | **CloudWatch**（Agent・Alarms）+ **AWS Budgets** | `prod/products/myus/monitoring` が、EC2 のステータスチェック・CPU クレジット・ディスクの使用率（CloudWatch Agent が送る）、RDS の空き容量・CPU、API の CloudFront の 5xx の割合にアラームを付け、SNS からメールで通知する。CloudFront のメトリクスは us-east-1 にあるので、5xx のアラームと SNS のトピックは us-east-1 にも作る。予算超過は `prod/general/cost` がメールで通知する |
