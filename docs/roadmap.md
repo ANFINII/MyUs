@@ -151,20 +151,26 @@ flowchart LR
 
 - 環境は `prod` の 1 つで始める。`stg` は必要になってから足す
 - スタック（state）は `infra/aws/prod/{general,common,products/myus}/<名前>/` に分ける
-- 通知は最初はメールだけにする（Chatbot・Slack は入れない）
+- 通知は今はメールで送る。運用の通知は、あとで Slack にまとめる。予算・費用の異常・監視のアラームを SNS に送り、Amazon Q Developer in chat applications（旧 AWS Chatbot）で Slack に流す
 - NAT を使わない。EC2 はパブリックサブネット、RDS は VPC の外に出られない datastore サブネットに置く
 
 ### 先に手作業でやること
 
-- AWS アカウントを作り、ルートユーザーに MFA を付ける
-- 普段使う IAM ユーザー（または Identity Center）を作り、AWS CLI のプロファイル `myus-prod` を用意する
-- Terraform を入れる
-- state 用の S3 バケット `terraform-myus-prod` を作り、バージョニングを有効にする
-- `prod/general/iam-role` と `prod/general/cost` を手元から `apply` する（CI のロールが無いと CI から apply できないため）
+- ルートユーザーと管理用のアカウントに MFA が付いているかを確かめる
 - GitHub のリポジトリの Variables に `AWS_ACCOUNT_ID`、Secrets に `TF_VAR_EMAILS_FOR_COST`・`TF_VAR_EMAILS_FOR_ALARM`（どちらも `["xxx@example.com"]` の形）を入れる。`AWS_ACCOUNT_ID` が空のあいだ、CI は `fmt`・`validate` だけを流す
 - `AWS_ACCOUNT_ID` を入れたら、Actions の `infra` を main で手動実行して、残りのスタックを `stacks.txt` の順に apply する
 - `prod/products/myus/monitoring` を apply したら、SNS から届く確認のメールのリンクを開く（東京と us-east-1 の 2 通）。開くまでアラームは届かない
 - `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる。`FIXME` のままのパラメータがあると、デプロイは止まる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
+
+### AWS アカウントの今の形
+
+2026-11-19 に次のところまで済ませた。
+
+- AWS の組織は 3 つのアカウントでできている。サービスを置くのは `MyUs`。`MyUs Management Account` は組織と請求、`MyUs Identity Delegated Admin` は Identity Center を持つ
+- Identity Center はアカウントへの割り当てを管理できない形で作られたので、手元からは `MyUs` の IAM ユーザー `terraform` のアクセスキーで入る。プロファイルは `myus-prod`。キーは `~/.aws/credentials` にあり、作り直すときはキーの説明 `Mac terraform myus-prod` を目印にする
+- 管理用のアカウントにある組織の SCP は、アカウントを作ったときに使えるリージョンを `ap-southeast-2`・`us-east-1`・`us-west-2` に絞っていた。`RegionFloor` に `ap-northeast-1` を、`UsEast1Partitional` に `cloudwatch:*`・`sns:*` を手で足した。東京で急に権限のエラーが出たら、AWS に戻されていないかをまずここで見る
+- state 用の S3 バケット `terraform-myus-prod` を作り、バージョニングと公開の遮断を有効にした
+- `prod/general/iam-role` と `prod/general/cost` を手元から apply した。予算の通知先は運営用の Gmail
 
 ### ドメインとメールの手作業
 
