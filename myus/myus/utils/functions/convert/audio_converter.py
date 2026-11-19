@@ -12,13 +12,13 @@ from django.core.files.storage import default_storage
 from ...common.logger import log
 
 
-MP3_TIMEOUT = 600
-PROBE_TIMEOUT = 60
-MP3_BITRATE = "320k"
 MIN_BIT_RATE = 180000
-LOUDNESS_TIMEOUT = 600
-TARGET_LOUDNESS = -14.0
 MIN_GAIN = -20.0
+TARGET_LOUDNESS = -14.0
+PROBE_TIMEOUT = 60
+LOUDNESS_TIMEOUT = 600
+MP3_TIMEOUT = 600
+MP3_BITRATE = "320k"
 
 
 @dataclass(frozen=True, slots=True)
