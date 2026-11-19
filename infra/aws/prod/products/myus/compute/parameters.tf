@@ -1,6 +1,6 @@
 locals {
   parameters = {
-    DOMAIN_URL              = "https://${aws_cloudfront_distribution.api.domain_name}"
+    DOMAIN_URL              = "https://api.${local.p.domain}"
     MYSQL_HOST              = local.mysql.host
     MYSQL_PORT              = tostring(local.mysql.port)
     MYSQL_DATABASE          = local.mysql.database

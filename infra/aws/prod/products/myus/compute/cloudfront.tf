@@ -7,6 +7,7 @@ data "aws_cloudfront_origin_request_policy" "all_viewer_and_cloudfront_headers" 
 }
 
 resource "aws_cloudfront_distribution" "api" {
+  aliases         = ["api.${local.p.domain}"]
   enabled         = true
   is_ipv6_enabled = true
   http_version    = "http2and3"
@@ -26,7 +27,9 @@ resource "aws_cloudfront_distribution" "api" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = local.acm.cloudfront_certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2025"
   }
 
   default_cache_behavior {

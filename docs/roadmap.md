@@ -165,11 +165,15 @@ flowchart LR
 - `prod/products/myus/monitoring` を apply したら、SNS から届く確認のメールのリンクを開く（東京と us-east-1 の 2 通）。開くまでアラームは届かない
 - `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる。`FIXME` のままのパラメータがあると、デプロイは止まる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
 
-### 順番
+### ドメインとメールの手作業
 
-| 順 | スタック | 内容 |
-|---|---|---|
-| 1 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.myus.media`）を付ける。`myus.media` のホストゾーンは Route 53 でドメインを買ったときにできているので、`dns` のスタックで import するか data で引く |
+`acm`・`dns`・`mail` のスタックを apply したあとに行う。
+
+- Vercel のプロジェクトに `myus.media` と `www.myus.media` を足す。レコードは `dns` のスタックが作っている
+- Parameter Store の `ALLOWED_HOSTS`・`CORS_ALLOWED_ORIGINS`・`CSRF_TRUSTED_ORIGINS`・`FRONTEND_URL` を、`api.myus.media`・`https://myus.media` に合わせて入れる。`EMAIL_FROM` は `noreply@myus.media` のように `myus.media` のアドレスにする
+- Vercel の環境変数の API の URL を `https://api.myus.media` にする
+- SES の管理画面で、`myus.media` の DKIM と MAIL FROM が「確認済み」になったかを確かめる
+- DMARC は `p=none` で始めている。問い合わせを受けるアドレスを決めたら、報告の宛先（`rua`）を足し、届いた報告を見て `p=quarantine` に上げる
 
 次の BE の作業は、最初のデプロイより前に済ませる。
 

@@ -56,6 +56,8 @@ module "media" {
   source = "../../../../modules/cloudfront-oac"
 
   bucket_name                         = "${local.p.base_name}-media"
+  domain_name                         = "media.${local.p.domain}"
+  acm_certificate_arn                 = local.acm.cloudfront_certificate_arn
   cloudfront_origin_access_control_id = aws_cloudfront_origin_access_control.media.id
   cache_policy_id                     = data.aws_cloudfront_cache_policy.caching_optimized.id
   response_headers_policy_id          = data.aws_cloudfront_response_headers_policy.simple_cors.id

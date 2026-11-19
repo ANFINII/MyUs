@@ -223,23 +223,30 @@ flowchart LR
         network[1. network<br/>VPC・サブネット・SG]
         parameters[2. parameters<br/>SSM の入れ物]
         ecr[3. ecr<br/>myus-backend]
+        acm[4. acm<br/>CloudFront の証明書<br/>myus.media・*.myus.media]
     end
     subgraph general[general]
-        cost[4. cost<br/>Budgets・異常検知]
-        iam[5. iam-role<br/>GitHub Actions の OIDC ロール]
+        cost[5. cost<br/>Budgets・異常検知]
+        iam[6. iam-role<br/>GitHub Actions の OIDC ロール]
     end
     subgraph myus[products/myus]
-        media[6. media<br/>S3・CloudFront]
-        database[7. database<br/>RDS MySQL]
-        compute[8. compute<br/>EC2・CloudFront・IAM]
-        monitoring[9. monitoring<br/>CloudWatch Alarms・SNS]
+        media[7. media<br/>S3・CloudFront<br/>media.myus.media]
+        database[8. database<br/>RDS MySQL]
+        compute[9. compute<br/>EC2・CloudFront・IAM<br/>api.myus.media]
+        dns[10. dns<br/>Route 53 のレコード<br/>api・media・Vercel]
+        mail[11. mail<br/>SES・DKIM・MAIL FROM・DMARC]
+        monitoring[12. monitoring<br/>CloudWatch Alarms・SNS]
     end
 
+    acm --> media
+    acm --> compute
     network --> database
     network --> compute
     parameters --> compute
     database --> compute
     media --> compute
+    media --> dns
+    compute --> dns
     database --> monitoring
     compute --> monitoring
 ```
