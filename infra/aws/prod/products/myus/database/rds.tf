@@ -21,6 +21,11 @@ resource "aws_db_parameter_group" "mysql84" {
     value = "utf8mb4_unicode_ci"
   }
 
+  parameter {
+    name  = "sql_mode"
+    value = "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+  }
+
   tags = {
     Name = "myus-mysql84-${local.p.env}"
   }
