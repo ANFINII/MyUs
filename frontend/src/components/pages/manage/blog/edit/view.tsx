@@ -32,12 +32,12 @@ import style from '../../Form.module.scss'
 interface Props {
   channels: Channel[]
   categories: Category[]
-  data: Blog
   seller: PaymentSellerOut
+  data: Blog
 }
 
 export default function ManageBlogEdit(props: Props): React.JSX.Element {
-  const { channels, categories, data, seller } = props
+  const { channels, categories, seller, data } = props
   const { categoryUlid, title, content, richtext, paidText, publish, publishAt, isPromotion } = data
   const price = data.product?.price.amount ?? 0
   const currency = data.product?.price.currency ?? seller.currency
