@@ -49,3 +49,12 @@
     height: 38px;
   }
 }
+
+@media screen and (max-width: 668px) {
+  .main {
+    left: 0;
+    width: 100%;
+    height: calc(100% - 138px);
+    padding: 12px;
+  }
+}

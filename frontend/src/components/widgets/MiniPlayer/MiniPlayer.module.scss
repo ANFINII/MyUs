@@ -63,3 +63,10 @@
     cursor: pointer;
   }
 }
+
+@media screen and (max-width: 668px) {
+  .mini_player {
+    bottom: 56px;
+    left: 0;
+  }
+}

@@ -121,3 +121,22 @@
     }
   }
 }
+
+@media screen and (max-width: 668px) {
+  .searchtag {
+    left: 0;
+    width: 100%;
+
+    .input input {
+      width: 120px;
+    }
+
+    .tags {
+      width: calc(100vw - 98px);
+
+      &.active {
+        width: calc(100vw - 270px);
+      }
+    }
+  }
+}
