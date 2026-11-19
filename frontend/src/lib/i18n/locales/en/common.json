@@ -857,9 +857,8 @@
         "title": "Use of External Services",
         "p1": "Stripe: payments and sending earnings to posters",
         "p2": "Amazon Web Services: storing and delivering data, and sending emails",
-        "p3": "Vercel: delivering the web pages",
-        "p4": "These companies are outside Japan (such as in the United States), and personal information may be handled abroad.",
-        "p5": "Cookies are used to keep you logged in."
+        "p3": "These companies are outside Japan (such as in the United States), and personal information may be handled abroad.",
+        "p4": "Cookies are used to keep you logged in."
       },
       "security": {
         "title": "Security",
