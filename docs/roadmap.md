@@ -157,13 +157,6 @@ flowchart LR
 - 通知は今はメールで送る。運用の通知は、あとで Slack にまとめる。予算・費用の異常・監視のアラームを SNS に送り、Amazon Q Developer in chat applications（旧 AWS Chatbot）で Slack に流す
 - NAT を使わない。EC2 はパブリックサブネット、RDS は VPC の外に出られない datastore サブネットに置く
 
-### 先に手作業でやること
-
-- GitHub のリポジトリの Variables に `AWS_ACCOUNT_ID`、Secrets に `TF_VAR_EMAILS_FOR_COST`・`TF_VAR_EMAILS_FOR_ALARM`（どちらも `["xxx@example.com"]` の形）を入れる。`AWS_ACCOUNT_ID` が空のあいだ、CI は `fmt`・`validate` だけを流す
-- `AWS_ACCOUNT_ID` を入れたら、Actions の `infra` を main で手動実行して、残りのスタックを `stacks.txt` の順に apply する
-- `prod/products/myus/monitoring` を apply したら、SNS から届く確認のメールのリンクを開く（東京と us-east-1 の 2 通）。開くまでアラームは届かない
-- `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる。`FIXME` のままのパラメータがあると、デプロイは止まる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
-
 ### AWS アカウントの今の形
 
 2026-11-19 に次のところまで済ませた。
@@ -174,13 +167,14 @@ flowchart LR
 - state 用の S3 バケット `terraform-myus-prod` を作り、バージョニングと公開の遮断を有効にした
 - `prod/general/iam-role` と `prod/general/cost` を手元から apply した。予算の通知先は運営用の Gmail
 - 管理用のアカウントのルートユーザーと、普段「AWS sign-ins」から入るときの AWS Builder ID に MFA を付けた。Builder ID のメールは運営用の Gmail に `+builderid` を付けたもので、回復用のメールは個人のもの
+- GitHub に `AWS_ACCOUNT_ID` と `TF_VAR_EMAILS_FOR_COST`・`TF_VAR_EMAILS_FOR_ALARM` を入れ、すべてのスタックを apply した。監視の SNS の確認のメールも、東京と us-east-1 の両方で開いた
+- SSM の `/myus/prod/` に、すべてのパラメータの本当の値を入れた。メールは SES の SMTP 用の IAM ユーザー `ses-smtp-myus-prod` を手で作り、その認証情報を入れた。このユーザーに許しているのは `myus.media` から送ることだけ。Stripe はテスト環境の値で、webhook の送り先は `https://api.myus.media/api/payment/webhook`
+- パラメータの値を変えるときは `aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/<名前> --value '...'` で入れ、デプロイし直す
 
 ### ドメインとメールの手作業
 
-`acm`・`dns`・`mail` のスタックを apply したあとに行う。
+SES の `myus.media` の DKIM と MAIL FROM は確認済みになっている。
 
-- Parameter Store の `ALLOWED_HOSTS`・`CORS_ALLOWED_ORIGINS`・`CSRF_TRUSTED_ORIGINS`・`FRONTEND_URL` を、`api.myus.media`・`https://myus.media` に合わせて入れる。`EMAIL_FROM` は `noreply@myus.media` のように `myus.media` のアドレスにする
-- SES の管理画面で、`myus.media` の DKIM と MAIL FROM が「確認済み」になったかを確かめる
 - DMARC は `p=none` で始めている。問い合わせを受けるアドレスを決めたら、報告の宛先（`rua`）を足し、届いた報告を見て `p=quarantine` に上げる
 
 有料のメディアを CloudFront の署名付き Cookie で守るのは、有料のメディアを出すときに `prod/products/myus/media` に足す。
@@ -201,7 +195,7 @@ flowchart LR
 
 `myus.media` を 2026-11-19 に Route 53 Domains で取った。年 50 USD で、自動更新・移管ロック・WHOIS の代理公開を有効にし、連絡先のメールの確認も済んでいる。
 
-- 使う前に「MyUs」の商標の登録状況を J-PlatPat と米国の USPTO で確かめる。`myus.com` を MyUS.com という海外の転送サービスが使っている
+商標は J-PlatPat と米国の USPTO で確かめた。日本では「myus」の登録は見つからなかった。米国の「MYUS」は MyUS.com の運営会社のもので、区分は 39 の運送・保管だけなので、投稿サービスの MyUs とは重ならない。ロゴや見た目は MyUS.com に似せない。
 
 ### 事業者としての手続き
 
@@ -233,10 +227,12 @@ flowchart LR
 - 明細に出る名前（statement descriptor）と、問い合わせ先を設定する
 - Connect の本番の申請をする。プラットフォームとしての情報と、投稿者への説明を求められる
 - テスト環境での確認は「決済」の章を済ませておく
+- 本番を有効にしたら、本番の値段（Price）と webhook を作り、SSM の `STRIPE_*` を本番の値に差し替えてデプロイし直す
 
 ### メールと問い合わせ
 
-- `myus.media` に届くメールは、転送サービスの ImprovMX で運営用の Gmail に転送する。MX と SPF は `mail` のスタックが作っている。ImprovMX に運営用の Gmail で登録し、`myus.media` を足して、`support@` を運営用の Gmail に転送する
+`myus.media` に届くメールは、転送サービスの ImprovMX で運営用の Gmail に転送している。転送するのは `support@` だけ。MX と SPF は `mail` のスタックが作っている。ImprovMX のアカウントは運営用の Gmail で作った。ImprovMX から転送されたメールは、Gmail で迷惑メールに入りやすい。
+
 - 返信は、Gmail の「他のメールアドレスを追加」で `support@myus.media` を足し、SES の SMTP（`email-smtp.ap-northeast-1.amazonaws.com`・587・TLS）で送る。ユーザー名とパスワードは SSM の `EMAIL_HOST_USER`・`EMAIL_HOST_PASSWORD` と同じ。一般の宛先に届くのは、SES の本番利用が通ってから
 - SES の本番利用の申請を出す。送るメールの種類と、バウンス・苦情の扱いを書く
 - 問い合わせの窓口をサイトのどこに出すかを決める
