@@ -18,13 +18,12 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from .advertise import convert_advertises
 from .auth import auth_check
-from .media import convert_videos, convert_musics, convert_blogs, convert_product, convert_comics, convert_pictures, convert_chats
+from .media import convert_videos, convert_musics, convert_music_hires, convert_blogs, convert_product, convert_comics, convert_pictures, convert_chats
 from .schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from .schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
 from .schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, MusicHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
-from .schema.media.output import MediaCreateOut, VideoOut, ManageMusicOut, MusicHiresOut, ManageBlogOut, ComicOut, PictureOut, ChatOut
+from .schema.media.output import MediaCreateOut, VideoOut, ManageMusicOut, ManageBlogOut, ComicOut, PictureOut, ChatOut
 from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
-from .schema.payment import MoneyOut
 
 
 class ManageVideoAPI:
@@ -188,11 +187,7 @@ class ManageMusicAPI:
 
         music, hires, product = music_ret.ok_value
         music_out = convert_musics([music])[0]
-        if hires is None or product is None:
-            return 200, ManageMusicOut(**music_out.model_dump(), hires=None)
-
-        hires_out = MusicHiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth, price=MoneyOut(amount=product.price.amount, currency=product.price.currency))
-        return 200, ManageMusicOut(**music_out.model_dump(), hires=hires_out)
+        return 200, ManageMusicOut(**music_out.model_dump(), hires=convert_music_hires(hires), product=convert_product(product))
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})

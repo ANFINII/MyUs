@@ -180,9 +180,10 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_BASE_URL = f"{DOMAIN_URL}{MEDIA_URL}"
 
+PRIVATE_URL_EXPIRE = 300
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "private": {"BACKEND": "django.core.files.storage.FileSystemStorage", "OPTIONS": {"location": os.path.join(BASE_DIR, "private"), "base_url": None}},
+    "private": {"BACKEND": "config.storages.SignedFileSystemStorage", "OPTIONS": {"location": os.path.join(BASE_DIR, "private")}},
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 

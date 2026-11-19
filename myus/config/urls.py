@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import URLPattern, URLResolver, include, path
-from config.views import serve_media
+from config.views import serve_media, serve_private
 from myus.adapter.inbound.routers import api
 
 
@@ -17,3 +17,4 @@ if settings.DEBUG:
     """ メディアファイルを扱う時の開発環境時の設定 """
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += [path("media/<path:path>", serve_media)]
+    urlpatterns += [path("private/<str:token>", serve_private)]

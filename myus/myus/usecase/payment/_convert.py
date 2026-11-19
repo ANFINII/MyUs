@@ -245,13 +245,13 @@ def get_purchase_ids_data(product_ids: list[int], user_id: int = 0) -> Result[li
 
 
 @Result.shield_exception()
-def get_product_purchase_ids_data(product_type: ProductType, object_ids: list[int]) -> Result[list[int], FatalError]:
+def get_product_purchase_ids_data(product_type: ProductType, object_ids: list[int], user_id: int = 0) -> Result[list[int], FatalError]:
     products_ret = get_products_data(product_type, object_ids)
     if products_ret.is_err:
         return Result.err(products_ret.err_value)
 
     products = products_ret.ok_value
-    purchase_ids_ret = get_purchase_ids_data([p.id for p in products])
+    purchase_ids_ret = get_purchase_ids_data([p.id for p in products], user_id)
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 

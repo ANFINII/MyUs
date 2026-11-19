@@ -212,6 +212,9 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
   - 値段は 300〜600。ドルは 3.00〜6.00。値段は `Product` に持つ
   - 購入した人がいるときは、販売をやめることも、曲を削除することもできない（`error.saleStopPurchased`・`error.deletePurchased`）
   - ファイルは変換せずに、公開しない置き場（`STORAGES["private"]`）に置く。開発は `myus/private`、本番は別の S3 のバケット
+  - 詳細（`GET /media/music/{ulid}`）は、`hires`（サンプリングレート・ビット深度。売っていなければ null）・`product`（`ulid`・`price`）・`is_purchased` を返す。ファイルの場所は返さない
+  - ダウンロード（`GET /media/music/{ulid}/hires`・`get_music_hires_url`）：投稿者と購入した人にだけ、5分（`PRIVATE_URL_EXPIRE`）だけ使える URL を返す。購入していなければ `error.hiresNotPurchased`
+  - 本番は S3 の署名付き URL。開発は `config/storages.py` の `SignedFileSystemStorage` が署名付きの URL（`/private/{token}`）を作り、DEBUG のときだけの `serve_private` が署名と期限を確かめて渡す
 - 再生時間は DB に持たない。一覧のカードにカーソルを乗せたとき・再生したときに、ブラウザが曲の情報（metadata）だけを読んで出す。再生中の曲のカードは出したままにする
 - 一覧のカードのジャケットを押すと、画面の下のミニプレイヤーで再生する。ページを移っても再生を続け、曲が終わったら同じ一覧の次の曲に進む（`MusicPlayerProvider`・`widgets/MiniPlayer`）
 - 詳細のプレイヤーの横と、一覧のカードにカーソルを乗せると出る「＋」から、プレイリストに足す。その場で新しいプレイリストも作れる（`widgets/PlaylistAdd`）

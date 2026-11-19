@@ -2,7 +2,10 @@ import mimetypes
 import re
 from pathlib import Path
 from django.conf import settings
+from django.core import signing
+from django.core.files.storage import storages
 from django.http import FileResponse, HttpRequest, HttpResponse, HttpResponseBase
+from config.storages import PRIVATE_URL_SALT
 
 
 def serve_media(request: HttpRequest, path: str) -> HttpResponseBase:
@@ -44,6 +47,21 @@ def serve_media(request: HttpRequest, path: str) -> HttpResponseBase:
     file_response["Accept-Ranges"] = "bytes"
     file_response["Content-Length"] = file_size
     return file_response
+
+
+def serve_private(request: HttpRequest, token: str) -> HttpResponseBase:
+    """署名付きURLの非公開ファイル配信"""
+
+    try:
+        name = signing.loads(token, salt=PRIVATE_URL_SALT, max_age=settings.PRIVATE_URL_EXPIRE)
+    except signing.BadSignature:
+        return HttpResponse(status=403)
+
+    storage = storages["private"]
+    if not storage.exists(name):
+        return HttpResponse(status=404)
+
+    return FileResponse(storage.open(name, "rb"), as_attachment=True, filename=Path(name).name)
 
 
 def _parse_range(header: str, file_size: int) -> tuple[int, int] | None:

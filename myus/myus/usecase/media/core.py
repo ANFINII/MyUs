@@ -18,24 +18,25 @@ from myus.domain.media.video.interface import VideoInterface
 from myus.domain.payment.data import Money
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
-from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
+from myus.utils.common.result import AccessError, FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
 from myus.utils.enum.media import CommentType, EncodeStatus, MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from myus.utils.enum.payment import ProductType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
 from myus.utils.functions.convert.audio_converter import measure_music_gain
+from myus.utils.functions.file import private_storage
 from myus.utils.functions.map import comment_type_no_map
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
-from ._convert import get_media_repository, get_media_user_data, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
+from ._convert import get_media_repository, get_media_user_data, get_music_hires_data, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
 from ..category._convert import get_category_data
 from ..channel.core import get_channel_data
 from ..comment._convert import get_comments_data
 from ..dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from ..message._convert import get_messages_data
 from ..notification._convert import create_notification_data
-from ..payment._convert import get_product_data, get_purchase_ids_data, get_seller_currency_data
+from ..payment._convert import get_product_data, get_product_purchase_ids_data, get_purchase_ids_data, get_seller_currency_data
 from ..series._convert import get_media_series_data
 
 
@@ -799,6 +800,25 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         return Result.err(series_ret.err_value)
 
     series = series_ret.ok_value
+    hires_ret = get_music_hires_data(obj.id)
+    if hires_ret.is_err:
+        return Result.err(hires_ret.err_value)
+
+    hires = hires_ret.ok_value
+    product_ret = get_product_data(ProductType.MUSIC_HIRES, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
+    is_purchased = False
+    if user_id is not None and product is not None and user_id != obj.channel.owner_id:
+        purchase_ids_ret = get_purchase_ids_data([product.id], user_id)
+        if purchase_ids_ret.is_err:
+            return Result.err(purchase_ids_ret.err_value)
+
+        purchase_ids = purchase_ids_ret.ok_value
+        is_purchased = len(purchase_ids) > 0
+
     data = MusicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -808,7 +828,10 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         image=create_url(obj.image),
         music=create_url(obj.music),
         gain=obj.gain,
+        is_purchased=is_purchased,
         comments=comments,
+        hires=hires,
+        product=product,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -821,6 +844,46 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     )
 
     return Result.ok(data)
+
+
+@Result.shield_exception()
+def get_music_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
+    repo = injector.get(MusicInterface)
+    ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption(limit=1))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        log.info("not found", ulid=ulid)
+        return Result.err(NotFoundError("error.mediaNotFound"))
+
+    objs_ret = repo.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    obj = objs[0]
+    hires_ret = get_music_hires_data(obj.id)
+    if hires_ret.is_err:
+        return Result.err(hires_ret.err_value)
+
+    hires = hires_ret.ok_value
+    if hires is None:
+        log.info("hires not found", ulid=ulid)
+        return Result.err(NotFoundError("error.hiresNotFound"))
+
+    if user_id != obj.channel.owner_id:
+        purchase_ids_ret = get_product_purchase_ids_data(ProductType.MUSIC_HIRES, [obj.id], user_id)
+        if purchase_ids_ret.is_err:
+            return Result.err(purchase_ids_ret.err_value)
+
+        purchase_ids = purchase_ids_ret.ok_value
+        if len(purchase_ids) == 0:
+            log.warning("not purchased", ulid=ulid, user_id=user_id)
+            return Result.err(ForbiddenError("error.hiresNotPurchased"))
+
+    return Result.ok(private_storage().url(hires.file))
 
 
 @Result.shield_exception()
