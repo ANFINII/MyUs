@@ -14,6 +14,7 @@ class ComicData:
     pages: list[str]
     read: int
     like: int
+    free_pages: int
     publish: bool
     publish_at: datetime
     created: datetime

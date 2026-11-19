@@ -469,8 +469,9 @@ class ManageComicAPI:
                 case _:
                     assert_never(comic_ret.err_value)
 
-        comic = comic_ret.ok_value
-        return 200, convert_comics([comic])[0]
+        comic, product = comic_ret.ok_value
+        comic_out = convert_comics([comic])[0]
+        return 200, comic_out.model_copy(update={"product": convert_product(product)})
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -520,6 +521,8 @@ class ManageComicAPI:
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case NotFoundError():
                     return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():

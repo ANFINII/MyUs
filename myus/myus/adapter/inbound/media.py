@@ -545,8 +545,11 @@ class ComicAPI:
                 title=obj.title,
                 content=obj.content,
                 image=obj.image,
+                page_count=obj.page_count,
+                is_purchased=obj.is_purchased,
                 pages=obj.pages,
                 comments=convert_comments(obj.comments),
+                product=convert_product(obj.product),
                 hashtags=convert_hashtags(obj.hashtags),
                 read=obj.read,
                 like=obj.like,
@@ -907,6 +910,7 @@ def convert_comics(objs: list[ComicData]) -> list[ComicOut]:
             title=x.title,
             content=x.content,
             image=x.image,
+            free_pages=x.free_pages,
             pages=x.pages,
             read=x.read,
             like=x.like,
@@ -916,6 +920,7 @@ def convert_comics(objs: list[ComicData]) -> list[ComicOut]:
             updated=x.updated,
             channel=convert_channel(x.channel),
             category_ulid=x.category_ulid,
+            product=None,
         ) for x in objs
     ]
     return data

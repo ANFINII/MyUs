@@ -5,10 +5,12 @@ import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { ComicUpdateIn } from 'types/internal/media/input'
 import { Comic } from 'types/internal/media/output'
+import { PaymentSellerOut } from 'types/internal/payment'
 import { putManageComic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { previewUrl } from 'utils/functions/file'
+import { paidPagesError } from 'utils/functions/price'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -24,17 +26,21 @@ import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import ComicModal from 'components/widgets/Modal/Comic'
+import PaidPagesInput from 'components/widgets/PaidPagesInput'
 import style from '../../Form.module.scss'
 
 interface Props {
   channels: Channel[]
   categories: Category[]
+  seller: PaymentSellerOut
   data: Comic
 }
 
 export default function ManageComicEdit(props: Props): React.JSX.Element {
-  const { channels, categories, data } = props
-  const { categoryUlid, title, content, publish, publishAt } = data
+  const { channels, categories, seller, data } = props
+  const { categoryUlid, title, content, freePages, publish, publishAt } = data
+  const price = data.product?.price.amount ?? 0
+  const currency = data.product?.price.currency ?? seller.currency
 
   const router = useRouter()
   const { t } = useTranslation()
@@ -42,8 +48,9 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
+  const [isSale, setIsSale] = useState<boolean>(data.product !== null)
   const [previewPages, setPreviewPages] = useState<string[]>([])
-  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid, title, content, publish, publishAt: datetimeISO(publishAt) })
+  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid, title, content, price, freePages, publish, publishAt: datetimeISO(publishAt) })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
@@ -53,6 +60,9 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (file: File) => setValues({ ...values, image: file })
+  const handleSale = () => setIsSale(!isSale)
+  const handlePrice = (price: number) => setValues({ ...values, price })
+  const handleFreePages = (freePages: number) => setValues({ ...values, freePages })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
@@ -69,8 +79,14 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
     if (!validate({ categoryUlid, title, content })) return
+    const paidError = isSale ? paidPagesError(values.price, values.freePages, data.pages.length) : ''
+    if (paidError !== '') {
+      handleToast(paidError, true)
+      return
+    }
+    const request = isSale ? values : { ...values, price: 0, freePages: 0 }
     handleLoading(true)
-    const ret = await putManageComic(data.ulid, values)
+    const ret = await putManageComic(data.ulid, request)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Put), true)
@@ -98,6 +114,17 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
           <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
+          <PaidPagesInput
+            isSale={isSale}
+            price={values.price}
+            freePages={values.freePages}
+            currency={currency}
+            isAvailable={seller.isAvailable || data.product !== null}
+            isEnabled={seller.isEnabled || data.product !== null}
+            onSale={handleSale}
+            onPrice={handlePrice}
+            onFreePages={handleFreePages}
+          />
         </VStack>
       </form>
       <ComicModal open={isModal} onClose={handleModal} pages={previewPages} />

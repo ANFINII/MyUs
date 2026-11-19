@@ -12,4 +12,7 @@ def validate(obj: ComicData) -> Result[None, ValidationError]:
     if len(obj.pages) == 0:
         return Result.err(ValidationError("error.pageRequired"))
 
+    if not 0 <= obj.free_pages < len(obj.pages):
+        return Result.err(ValidationError("error.freePagesRange"))
+
     return Result.ok(None)

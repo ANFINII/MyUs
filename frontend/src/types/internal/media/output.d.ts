@@ -90,7 +90,9 @@ export interface Blog extends Media {
 
 export interface Comic extends Media {
   image: string
+  freePages: number
   pages: string[]
+  product: Product | null
 }
 
 export interface Picture extends Media {
@@ -173,8 +175,11 @@ export interface BlogDetail extends MediaDetail {
 
 export interface ComicDetail extends MediaDetail {
   image: string
+  pageCount: number
+  isPurchased: boolean
   pages: string[]
   comments: Comment[]
+  product: Product | null
 }
 
 export interface PictureDetail extends MediaDetail {

@@ -595,7 +595,7 @@ def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 
 @Result.shield_exception()
-def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
+def get_manage_comic(user_id: int, ulid: str) -> Result[tuple[ComicData, ProductData | None], FindError]:
     repo = injector.get(ComicInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -612,10 +612,13 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, FindError]:
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    return Result.ok(replace(obj,
-        image=create_url(obj.image),
-        pages=[create_url(p) for p in obj.pages],
-    ))
+    product_ret = get_product_data(ProductType.COMIC, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
+    data = replace(obj, image=create_url(obj.image), pages=[create_url(p) for p in obj.pages])
+    return Result.ok((data, product))
 
 
 @Result.shield_exception()
@@ -645,7 +648,39 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
         log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    update_data = replace(obj, title=input.title, content=input.content, publish=input.publish, publish_at=input.publish_at)
+    product_ret = get_product_data(ProductType.COMIC, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
+    if input.price == 0 and product is not None:
+        purchase_ids_ret = get_purchase_ids_data([product.id])
+        if purchase_ids_ret.is_err:
+            return Result.err(purchase_ids_ret.err_value)
+
+        purchase_ids = purchase_ids_ret.ok_value
+        if len(purchase_ids) > 0:
+            log.warning("purchased", ulid=ulid, user_id=user_id)
+            return Result.err(ValidationError("error.saleStopPurchased"))
+
+    save_product = product if input.price > 0 else None
+    is_price_changed = product is None or input.price != product.price.amount
+    if input.price > 0 and is_price_changed:
+        currency_ret = get_seller_currency_data(user_id)
+        if currency_ret.is_err:
+            return Result.err(currency_ret.err_value)
+
+        currency = currency_ret.ok_value
+        save_product = ProductData(
+            id=product.id if product is not None else 0,
+            ulid=product.ulid if product is not None else "",
+            seller_id=user_id,
+            product_type=ProductType.COMIC,
+            object_id=obj.id,
+            price=Money(amount=input.price, currency=currency),
+        )
+
+    update_data = replace(obj, title=input.title, content=input.content, free_pages=input.free_pages, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
 
@@ -655,7 +690,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
 
     category_data = category_data_ret.ok_value
 
-    save_ret = atomic_result(lambda: save_comic_data(update_data, category_data))
+    save_ret = atomic_result(lambda: save_comic_data(update_data, category_data, save_product))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -668,7 +703,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
 
 
 @Result.shield_exception()
-def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, InputError]:
     repo = injector.get(ComicInterface)
     ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
@@ -678,6 +713,15 @@ def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, FindErro
     if len(delete_ids) != len(set(ulids)):
         log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
+
+    purchase_ids_ret = get_product_purchase_ids_data(ProductType.COMIC, delete_ids)
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
+
+    purchase_ids = purchase_ids_ret.ok_value
+    if len(purchase_ids) > 0:
+        log.warning("purchased", ulids=ulids, user_id=user_id)
+        return Result.err(ValidationError("error.deletePurchased"))
 
     delete_ret = atomic_result(lambda: delete_comic_data(delete_ids))
     if delete_ret.is_err:

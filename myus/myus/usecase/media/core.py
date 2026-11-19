@@ -267,6 +267,7 @@ def create_comic(user_id: int, input: ComicCreateDTO, image: UploadedFile, pages
         pages=[save_upload(p, ImageUpload.COMIC_PAGE, channel.ulid) for p in pages],
         read=0,
         like=0,
+        free_pages=0,
         publish=input.publish,
         publish_at=input.publish_at,
         created=datetime.min,
@@ -590,11 +591,7 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
     objs = objs_ret.ok_value
 
-    data = [replace(o,
-        image=create_url(o.image),
-        pages=[create_url(p) for p in o.pages],
-    ) for o in objs]
-
+    data = [replace(o, image=create_url(o.image), pages=[]) for o in objs]
     return Result.ok((data, total))
 
 
@@ -981,14 +978,33 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         return Result.err(series_ret.err_value)
 
     series = series_ret.ok_value
+    product_ret = get_product_data(ProductType.COMIC, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
+    is_owner = user_id == obj.channel.owner_id
+    is_purchased = False
+    if user_id is not None and product is not None and not is_owner:
+        purchase_ids_ret = get_purchase_ids_data([product.id], user_id)
+        if purchase_ids_ret.is_err:
+            return Result.err(purchase_ids_ret.err_value)
+
+        purchase_ids = purchase_ids_ret.ok_value
+        is_purchased = len(purchase_ids) > 0
+
+    pages = obj.pages if product is None or is_owner or is_purchased else obj.pages[:obj.free_pages]
     data =ComicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image),
-        pages=[create_url(p) for p in obj.pages],
+        page_count=len(obj.pages),
+        is_purchased=is_purchased,
+        pages=[create_url(p) for p in pages],
         comments=comments,
+        product=product,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,

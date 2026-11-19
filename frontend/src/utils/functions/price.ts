@@ -19,3 +19,9 @@ export const paidTextError = (paidText: string, price: number): string => {
   if (paidText === '' && price !== 0) return 'error.paidTextRequired'
   return ''
 }
+
+export const paidPagesError = (price: number, freePages: number, pageCount: number): string => {
+  if (price < PRICE_MIN || price > PRICE_MAX) return 'error.priceRange'
+  if (freePages < 0 || freePages >= pageCount) return 'error.freePagesRange'
+  return ''
+}

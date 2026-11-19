@@ -101,6 +101,8 @@ class ComicUpdateIn(BaseModel):
     category_ulid: str
     title: Title
     content: str
+    price: int
+    free_pages: int
     publish: bool
     publish_at: datetime
 
