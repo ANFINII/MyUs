@@ -96,11 +96,8 @@ export interface ManageBlog extends Blog {
 
 export interface Comic extends Media {
   image: string
-  pages: string[]
-}
-
-export interface ManageComic extends Comic {
   freePages: number
+  pages: string[]
   product: Product | null
 }
 

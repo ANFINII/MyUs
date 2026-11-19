@@ -90,11 +90,8 @@ class ManageBlogOut(BlogOut):
 
 class ComicOut(MediaOut):
     image: str
-    pages: list[str]
-
-
-class ManageComicOut(ComicOut):
     free_pages: int
+    pages: list[str]
     product: ProductOut | None
 
 

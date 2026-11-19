@@ -4,7 +4,7 @@ import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { ComicUpdateIn } from 'types/internal/media/input'
-import { ManageComic } from 'types/internal/media/output'
+import { Comic } from 'types/internal/media/output'
 import { PaymentSellerOut } from 'types/internal/payment'
 import { putManageComic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
@@ -32,7 +32,7 @@ import style from '../../Form.module.scss'
 interface Props {
   channels: Channel[]
   categories: Category[]
-  data: ManageComic
+  data: Comic
   seller: PaymentSellerOut
 }
 

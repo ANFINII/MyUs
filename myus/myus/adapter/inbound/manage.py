@@ -22,7 +22,7 @@ from .media import convert_videos, convert_musics, convert_music_hires, convert_
 from .schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from .schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
 from .schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, MusicHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
-from .schema.media.output import MediaCreateOut, VideoOut, ManageMusicOut, ManageBlogOut, ManageComicOut, PictureOut, ChatOut
+from .schema.media.output import MediaCreateOut, VideoOut, ManageMusicOut, ManageBlogOut, ComicOut, PictureOut, ChatOut
 from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 
 
@@ -446,7 +446,7 @@ class ManageComicAPI:
         return 200, ComicListOut(items=convert_comics(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ManageComicOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: ComicOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("request", ulid=ulid)
 
@@ -471,7 +471,7 @@ class ManageComicAPI:
 
         comic, product = comic_ret.ok_value
         comic_out = convert_comics([comic])[0]
-        return 200, ManageComicOut(**comic_out.model_dump(), free_pages=comic.free_pages, product=convert_product(product))
+        return 200, comic_out.model_copy(update={"product": convert_product(product)})
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})

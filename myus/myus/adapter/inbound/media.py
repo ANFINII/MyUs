@@ -906,6 +906,7 @@ def convert_comics(objs: list[ComicData]) -> list[ComicOut]:
             title=x.title,
             content=x.content,
             image=x.image,
+            free_pages=x.free_pages,
             pages=x.pages,
             read=x.read,
             like=x.like,
@@ -915,6 +916,7 @@ def convert_comics(objs: list[ComicData]) -> list[ComicOut]:
             updated=x.updated,
             channel=convert_channel(x.channel),
             category_ulid=x.category_ulid,
+            product=None,
         ) for x in objs
     ]
     return data
