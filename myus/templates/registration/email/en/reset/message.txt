@@ -1,11 +1,15 @@
 Dear {{ nickname }},
 
-Please set a new password from the URL below.
+We received a request to reset your password.
+Open the URL below to set a new password.
 This link is valid for 1 hour.
 
-Password reset URL
-{{ frontend_url }}/account/reset/confirm?token={{ token }}
+> Reset password
+{{ action_url }}
 
-If you did not request a password reset, please ignore this email.
+If you did not request this, delete this email. Your password will not change.
 
+--
 MyUs
+https://myus.media
+This is a send-only address. For questions, contact support@myus.media.
