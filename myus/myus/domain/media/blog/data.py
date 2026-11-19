@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from ...channel.data import ChannelData
 from ...hashtag.data import HashtagData
-from ...payment.data import Money
 
 
 @dataclass(frozen=True, slots=True)
@@ -13,7 +12,6 @@ class BlogData:
     content: str
     richtext: str
     paid_text: str
-    price: Money
     image: str
     read: int
     like: int

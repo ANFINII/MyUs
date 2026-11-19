@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
-from myus.utils.enum.payment import ProductType
 from .data import PurchaseData
 
 
@@ -13,9 +12,8 @@ class SortType(Enum):
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     user_id: int = 0
-    transaction_id: int = 0
-    product_type: ProductType | None = None
     product_ids: list[int] = field(default_factory=list)
+    transaction_id: int = 0
 
 
 @dataclass(frozen=True, slots=True)

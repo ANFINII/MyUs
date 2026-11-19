@@ -8,8 +8,8 @@ class PaymentCheckoutIn(BaseModel):
     locale: Locale
 
 
-class PaymentBlogCheckoutIn(BaseModel):
-    blog_ulid: str
+class PaymentProductCheckoutIn(BaseModel):
+    product_ulid: str
     locale: Locale
 
 
@@ -62,6 +62,11 @@ class PaymentSubscriptionOut(BaseModel):
 class MoneyOut(BaseModel):
     amount: int
     currency: Currency
+
+
+class ProductOut(BaseModel):
+    ulid: str
+    price: MoneyOut
 
 
 class PaymentPlanOut(BaseModel):

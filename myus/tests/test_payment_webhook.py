@@ -5,14 +5,14 @@ from datetime import datetime, timezone
 from io import StringIO
 from django.core.management import call_command
 from django.db import connection
-from myus.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Subscription
+from myus.db.models.payment import PaymentEvent, PaymentLedgerEntry, PaymentPayout, PaymentTransaction, Product, Purchase, Subscription
 from myus.db.models.user import User, UserPlan
-from myus.domain.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, RefundContent
+from myus.domain.payment.event.data import BalanceData, PaymentEventContent, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, PurchasePaidContent, RefundContent
 from myus.usecase.payment._convert import PAYMENT_EVENT_MAX_ATTEMPTS
 from myus.usecase.payment.core import export_ledger, process_payment_events, receive_payment_event, replay_payment_events, requeue_payment_events
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.i18n import Currency
-from myus.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, PayoutStatus, SubscriptionStatus, WebhookEventType
+from myus.utils.enum.payment import LedgerEntryType, PaymentProvider, PaymentStatus, PayoutStatus, ProductType, SubscriptionStatus, WebhookEventType
 from myus.utils.enum.user import PlanName
 from tests.fakes import provider_subscription
 
@@ -69,6 +69,23 @@ def paid(user: User, subscription_external_id: str = "sub_1") -> PaymentPaidCont
         receipt_number="INV-0001",
         balance=balance("txn_1", 1100, 40),
     )
+
+
+def purchase_paid(user: User, product_code: str) -> PurchasePaidContent:
+    return PurchasePaidContent(
+        customer_id="cus_buyer",
+        user_ulid=user.ulid,
+        product_code=product_code,
+        receipt_number="",
+        balance=balance("txn_p1", 500, 40),
+        transfer_balance=balance("txn_t1", -425, 0),
+    )
+
+
+def make_product(seller: User, product_type: ProductType) -> Product:
+    created = Product.objects.create(seller=seller, product_type=product_type, object_id=1, price=500, currency=Currency.JPY)
+    product: Product = Product.objects.get(id=created.id)
+    return product
 
 
 def user_plan(user: User) -> UserPlan:
@@ -360,3 +377,39 @@ def test_export_ledger_command_writes_csv_in_japan_time(make_user: Callable[[str
     lines = out.getvalue().splitlines()
     assert lines[0] == "日時,決済会社,種類,金額,消費税額,通貨,取引ID,請求書番号,入金ID,入金日"
     assert lines[1:] == ["2026-10-02 09:00:00,Stripe,Refund,-550,-50,JPY,pi_1,INV-0001,,"]
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("product_type", list(ProductType))
+def test_purchase_is_recorded_by_product_ulid(make_user: Callable[[str], User], product_type: ProductType) -> None:
+    seller = make_user("bob")
+    buyer = make_user("alice")
+    product = make_product(seller, product_type)
+
+    assert send(WebhookEventType.PURCHASE_SUCCEEDED, "pi_p1", "evt_1", purchase_paid(buyer, product.ulid))
+
+    assert list(Purchase.objects.values_list("user_id", "product_id")) == [(buyer.id, product.id)]
+    assert ledger(LedgerEntryType.SALE) == [("txn_p1", 500, 45)]
+
+
+@pytest.mark.django_db
+def test_purchase_of_unknown_product_is_not_recorded(make_user: Callable[[str], User]) -> None:
+    buyer = make_user("alice")
+
+    assert send(WebhookEventType.PURCHASE_SUCCEEDED, "pi_p1", "evt_1", purchase_paid(buyer, "01UNKNOWNPRODUCT0000000000"))
+
+    assert not Purchase.objects.exists()
+    assert payment_event("evt_1").last_error == ""
+
+
+@pytest.mark.django_db
+def test_refund_deletes_purchase(make_user: Callable[[str], User]) -> None:
+    seller = make_user("bob")
+    buyer = make_user("alice")
+    product = make_product(seller, ProductType.BLOG)
+    send(WebhookEventType.PURCHASE_SUCCEEDED, "pi_p1", "evt_1", purchase_paid(buyer, product.ulid))
+
+    assert send(WebhookEventType.REFUND_ISSUED, "pi_p1", "evt_2", RefundContent(balances=[balance("txn_r1", -500, 0)]))
+
+    assert not Purchase.objects.exists()
+    assert transaction_status("pi_p1") == PaymentStatus.REFUNDED

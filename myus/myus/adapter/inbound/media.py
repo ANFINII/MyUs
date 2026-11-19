@@ -11,6 +11,7 @@ from myus.domain.media.common import MEDIA_PAGE_SIZE
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
+from myus.domain.payment.product.data import ProductData
 from myus.usecase.dto.comment import CommentDTO, ReplyDTO
 from myus.usecase.dto.media import VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from myus.usecase.dto.message import MessageDTO
@@ -33,7 +34,7 @@ from .schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, 
 from .schema.media.output import VideoDetailsOut, MusicDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
 from .schema.media.output import VideoSeriesOut, MusicSeriesOut, BlogSeriesOut, ComicSeriesOut, PictureSeriesOut, ChatSeriesOut
 from .schema.message import MessageOut
-from .schema.payment import MoneyOut
+from .schema.payment import MoneyOut, ProductOut
 from .schema.user import AuthorOut, MediaUserOut
 
 
@@ -421,7 +422,7 @@ class BlogAPI:
                 content=obj.content,
                 richtext=obj.richtext,
                 paid_text=obj.paid_text,
-                price=MoneyOut(amount=obj.price.amount, currency=obj.price.currency),
+                product=convert_product(obj.product),
                 is_purchased=obj.is_purchased,
                 is_promotion=obj.is_promotion,
                 image=obj.image,
@@ -852,6 +853,13 @@ def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
     return data
 
 
+def convert_product(product: ProductData | None) -> ProductOut | None:
+    if product is None:
+        return None
+
+    return ProductOut(ulid=product.ulid, price=MoneyOut(amount=product.price.amount, currency=product.price.currency))
+
+
 def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
     data = [
         BlogOut(
@@ -860,7 +868,6 @@ def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
             content=x.content,
             image=x.image,
             richtext=x.richtext,
-            price=MoneyOut(amount=x.price.amount, currency=x.price.currency),
             is_promotion=x.is_promotion,
             read=x.read,
             like=x.like,

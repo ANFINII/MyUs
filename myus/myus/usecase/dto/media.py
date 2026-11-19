@@ -8,7 +8,7 @@ from myus.domain.media.comic.data import ComicData
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
-from myus.domain.payment.data import Money
+from myus.domain.payment.product.data import ProductData
 from .comment import CommentDTO
 from .message import MessageDTO
 from .series import MediaSeriesDTO
@@ -68,7 +68,7 @@ class MusicDetailDTO(MediaDetailDTO):
 class BlogDetailDTO(MediaDetailDTO):
     richtext: str
     paid_text: str
-    price: Money
+    product: ProductData | None
     is_purchased: bool
     is_promotion: bool
     image: str

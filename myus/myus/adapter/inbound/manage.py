@@ -18,7 +18,7 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from .advertise import convert_advertises
 from .auth import auth_check
-from .media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
+from .media import convert_videos, convert_musics, convert_blogs, convert_product, convert_comics, convert_pictures, convert_chats
 from .schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from .schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
 from .schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, MusicHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
@@ -186,12 +186,12 @@ class ManageMusicAPI:
                 case _:
                     assert_never(music_ret.err_value)
 
-        music, hires = music_ret.ok_value
+        music, hires, product = music_ret.ok_value
         music_out = convert_musics([music])[0]
-        if hires is None:
+        if hires is None or product is None:
             return 200, ManageMusicOut(**music_out.model_dump(), hires=None)
 
-        hires_out = MusicHiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth, price=MoneyOut(amount=hires.price.amount, currency=hires.price.currency))
+        hires_out = MusicHiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth, price=MoneyOut(amount=product.price.amount, currency=product.price.currency))
         return 200, ManageMusicOut(**music_out.model_dump(), hires=hires_out)
 
     @staticmethod
@@ -244,6 +244,8 @@ class ManageMusicAPI:
             match delete_ret.err_value:
                 case NotFoundError():
                     return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -300,6 +302,8 @@ class ManageMusicAPI:
             match delete_ret.err_value:
                 case NotFoundError():
                     return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
@@ -357,9 +361,9 @@ class ManageBlogAPI:
                 case _:
                     assert_never(blog_ret.err_value)
 
-        blog = blog_ret.ok_value
+        blog, product = blog_ret.ok_value
         blog_out = convert_blogs([blog])[0]
-        return 200, ManageBlogOut(**blog_out.model_dump(), paid_text=blog.paid_text)
+        return 200, ManageBlogOut(**blog_out.model_dump(), paid_text=blog.paid_text, product=convert_product(product))
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})

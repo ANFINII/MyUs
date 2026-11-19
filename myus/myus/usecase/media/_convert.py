@@ -15,12 +15,16 @@ from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
+from myus.domain.payment.data import Money
+from myus.domain.payment.product.data import ProductData
+from myus.domain.payment.product.interface import ProductInterface
 from myus.domain.subscribe.interface import FilterOption, PageOption, SortOption, SubscribeInterface
 from myus.injectors.container import injector
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.access_log import AccessType
 from myus.utils.enum.media import MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from myus.utils.enum.payment import ProductType
 from ..access_log._convert import save_access_data
 from ..dto.user import MediaUserDTO
 from ..notification._convert import create_notification_data, delete_notification_data
@@ -125,7 +129,7 @@ def create_music_data(data: MusicData, category_data: CategoryData) -> Result[in
 
 
 @Result.shield_exception()
-def create_blog_data(data: BlogData, category_data: CategoryData) -> Result[int, FatalError]:
+def create_blog_data(data: BlogData, category_data: CategoryData, price: Money | None) -> Result[int, FatalError]:
     repo = injector.get(BlogInterface)
     category_repo = injector.get(CategoryInterface)
     ids_ret = repo.bulk_save([data])
@@ -137,6 +141,13 @@ def create_blog_data(data: BlogData, category_data: CategoryData) -> Result[int,
     category_ret = category_repo.bulk_save(MediaType.BLOG, new_ids[0], [category_data])
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
+
+    if price is not None:
+        product_repo = injector.get(ProductInterface)
+        product = ProductData(id=0, ulid="", seller_id=data.channel.owner_id, product_type=ProductType.BLOG, object_id=new_ids[0], price=price)
+        product_ret = product_repo.bulk_save([product])
+        if product_ret.is_err:
+            return Result.err(product_ret.err_value)
 
     return Result.ok(new_ids[0])
 

@@ -1,8 +1,6 @@
 from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
-from myus.domain.media.blog.interface import BlogInterface
-from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
 from myus.domain.payment.customer.interface import PaymentCustomerInterface
 from myus.domain.payment.data import Money
 from myus.domain.payment.event.data import PaymentEventData
@@ -10,6 +8,7 @@ from myus.domain.payment.event.interface import FilterOption as PaymentEventFilt
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
 from myus.domain.payment.plan import PLANS, get_plan, plan_price
+from myus.domain.payment.product.interface import FilterOption as ProductFilterOption, PageOption as ProductPageOption, ProductInterface, SortOption as ProductSortOption
 from myus.domain.payment.provider.data import CancelResult, CancelSuccessData, CancelFailedData, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccessData, RedirectUrlsData, RevokeResult, RevokeSuccessData, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardResult, SellerStatusFailedData, SellerStatusSuccessData, WebhookVerifyResult
 from myus.domain.payment.seller.data import PaymentSellerData
 from myus.domain.payment.subscription.data import SubscriptionData
@@ -19,16 +18,16 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, CommandError, ConflictError, FatalError, FindError, ForbiddenError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
 from myus.utils.enum.i18n import Locale
-from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, ProductType, SubscriptionStatus
+from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.common import create_frontend_url
-from myus.utils.functions.map import country_currency
-from myus.utils.functions.payment import create_product_code
+from myus.utils.functions.map import country_currency, product_media_type
 from myus.utils.functions.transaction import atomic_result
 from ._convert import get_purchase_ids_data, get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS, PLATFORM_FEE_RATE
 from ..dto.ledger import LedgerRowDTO
 from ..dto.plan import PlanPriceDTO
 from ..dto.seller import SellerDTO
+from ..media._convert import get_media_repository
 from ..user.core import get_user_data
 
 
@@ -91,7 +90,7 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
 
 
 @Result.shield_exception()
-def create_blog_checkout(user_id: int, blog_ulid: str, locale: Locale) -> Result[CheckoutResult, InputError]:
+def create_product_checkout(user_id: int, product_ulid: str, locale: Locale) -> Result[CheckoutResult, InputError]:
     user_ret = get_user_data(user_id=user_id)
     if user_ret.is_err:
         return Result.err(user_ret.err_value)
@@ -100,57 +99,65 @@ def create_blog_checkout(user_id: int, blog_ulid: str, locale: Locale) -> Result
     if user is None:
         return Result.err(NotFoundError("error.userNotFound"))
 
-    repo = injector.get(BlogInterface)
-    ids_ret = repo.get_ids(MediaFilterOption(ulid=blog_ulid, publish=True), MediaSortOption(), MediaPageOption(limit=1))
+    repo = injector.get(ProductInterface)
+    ids_ret = repo.get_ids(ProductFilterOption(ulid=product_ulid), ProductSortOption(), ProductPageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
     if len(ids) == 0:
-        log.info("not found", blog_ulid=blog_ulid)
-        return Result.err(NotFoundError("error.mediaNotFound"))
-
-    blogs_ret = repo.bulk_get(ids)
-    if blogs_ret.is_err:
-        return Result.err(blogs_ret.err_value)
-
-    blogs = blogs_ret.ok_value
-    blog = blogs[0]
-    if blog.price.amount == 0:
-        log.warning("not paid content", blog_ulid=blog_ulid)
+        log.warning("not paid content", product_ulid=product_ulid)
         return Result.err(ValidationError("error.notPaidContent"))
 
-    if blog.channel.owner_id == user_id:
-        log.warning("own content", blog_ulid=blog_ulid, user_id=user_id)
+    products_ret = repo.bulk_get(ids)
+    if products_ret.is_err:
+        return Result.err(products_ret.err_value)
+
+    products = products_ret.ok_value
+    product = products[0]
+    media_type = product_media_type(product.product_type)
+    media_repo = get_media_repository(media_type)
+    objs_ret = media_repo.bulk_get([product.object_id])
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    if len(objs) == 0 or not objs[0].publish:
+        log.info("not found", product_ulid=product_ulid)
+        return Result.err(NotFoundError("error.mediaNotFound"))
+
+    obj = objs[0]
+    if product.seller_id == user_id:
+        log.warning("own content", product_ulid=product_ulid, user_id=user_id)
         return Result.err(ValidationError("error.purchaseOwnContent"))
 
-    purchase_ids_ret = get_purchase_ids_data(user_id, ProductType.BLOG, blog.id)
+    purchase_ids_ret = get_purchase_ids_data([product.id], user_id)
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 
     purchase_ids = purchase_ids_ret.ok_value
     if len(purchase_ids) > 0:
-        log.warning("already purchased", blog_ulid=blog_ulid, user_id=user_id)
+        log.warning("already purchased", product_ulid=product_ulid, user_id=user_id)
         return Result.err(ValidationError("error.alreadyPurchased"))
 
-    seller_ret = get_payment_seller_data(blog.channel.owner_id)
+    seller_ret = get_payment_seller_data(product.seller_id)
     if seller_ret.is_err:
         return Result.err(seller_ret.err_value)
 
     seller = seller_ret.ok_value
     if seller is None or not seller.is_enabled:
-        log.warning("seller not enabled", blog_ulid=blog_ulid, owner_id=blog.channel.owner_id)
+        log.warning("seller not enabled", product_ulid=product_ulid, seller_id=product.seller_id)
         return Result.err(ValidationError("error.sellerNotEnabled"))
 
-    blog_url = f"{create_frontend_url(locale)}/media/blog/{blog.ulid}"
+    media_url = f"{create_frontend_url(locale)}/media/{media_type.value.lower()}/{obj.ulid}"
     data = CheckoutData(
-        product_code=create_product_code(ProductType.BLOG, blog.ulid),
-        description=blog.title,
-        price=blog.price,
+        product_code=product.ulid,
+        description=obj.title,
+        price=product.price,
         payment_type=PaymentType.ONE_TIME,
         customer=CustomerData(user_ulid=user.user.ulid, email=user.user.email),
-        redirect=RedirectUrlsData(success_url=blog_url, cancel_url=blog_url),
-        marketplace=MarketplaceData(seller_id=seller.external_id, application_fee=Money(amount=blog.price.amount * PLATFORM_FEE_RATE // 100, currency=blog.price.currency)),
+        redirect=RedirectUrlsData(success_url=media_url, cancel_url=media_url),
+        marketplace=MarketplaceData(seller_id=seller.external_id, application_fee=Money(amount=product.price.amount * PLATFORM_FEE_RATE // 100, currency=product.price.currency)),
         locale=locale,
     )
 

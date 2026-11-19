@@ -39,7 +39,8 @@ interface Props {
 export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const { channels, categories, data, seller } = props
   const { categoryUlid, title, content, richtext, paidText, publish, publishAt, isPromotion } = data
-  const { amount: price, currency } = data.price
+  const price = data.product?.price.amount ?? 0
+  const currency = data.product?.price.currency ?? seller.currency
 
   const router = useRouter()
   const { t } = useTranslation()
@@ -111,7 +112,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
           <PaidTextInput
             paidText={values.paidText}
             price={values.price}
-            currency={price > 0 ? currency : seller.currency}
+            currency={currency}
             isAvailable={seller.isAvailable || paidText !== ''}
             isEnabled={seller.isEnabled || paidText !== ''}
             onPaidText={handlePaidText}

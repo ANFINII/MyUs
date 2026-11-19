@@ -1,4 +1,5 @@
 import datetime
+from django_ulid.models import ulid
 from django.db import models
 from myus.utils.constants.choice import CURRENCY_CHOICES, PROVIDER_CHOICES, PRODUCT_TYPE_CHOICES, PAYMENT_STATUS_CHOICES, LEDGER_ENTRY_TYPE_CHOICES, PAYOUT_STATUS_CHOICES, SUBSCRIPTION_STATUS_CHOICES, WEBHOOK_EVENT_TYPE_CHOICES
 from myus.utils.enum.i18n import Currency
@@ -188,24 +189,41 @@ class PaymentLedgerEntry(models.Model):
         ]
 
 
-class Purchase(models.Model):
-    """Purchase"""
+class Product(models.Model):
+    """Product"""
     id           = models.BigAutoField(primary_key=True)
-    user         = models.ForeignKey(User, on_delete=models.PROTECT, related_name="purchases")
-    transaction  = models.ForeignKey(PaymentTransaction, on_delete=models.PROTECT, related_name="purchases")
+    ulid         = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    seller       = models.ForeignKey(User, on_delete=models.PROTECT, related_name="products")
     product_type = models.CharField(max_length=20, choices=PRODUCT_TYPE_CHOICES)
-    product_id   = models.BigIntegerField()
-    created      = models.DateTimeField(auto_now_add=True)
+    object_id    = models.BigIntegerField()
+    price        = models.IntegerField()
+    currency     = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
 
     def __str__(self):
-        return f"{self.user_id}:{self.product_type}:{self.product_id}"
+        return f"{self.product_type}:{self.object_id}"
+
+    class Meta:
+        db_table = "product"
+        verbose_name_plural = "001 Product"
+        constraints = [
+            models.UniqueConstraint(fields=["product_type", "object_id"], name="product_type_object_uniq"),
+        ]
+
+
+class Purchase(models.Model):
+    """Purchase"""
+    id          = models.BigAutoField(primary_key=True)
+    user        = models.ForeignKey(User, on_delete=models.PROTECT, related_name="purchases")
+    product     = models.ForeignKey(Product, on_delete=models.PROTECT, related_name="purchases")
+    transaction = models.ForeignKey(PaymentTransaction, on_delete=models.PROTECT, related_name="purchases")
+    created     = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_id}:{self.product_id}"
 
     class Meta:
         db_table = "purchase"
         verbose_name_plural = "001 Purchase"
         constraints = [
-            models.UniqueConstraint(fields=["user", "product_type", "product_id"], name="purchase_user_product_uniq"),
-        ]
-        indexes = [
-            models.Index(fields=["product_type", "product_id"], name="purchase_product_idx"),
+            models.UniqueConstraint(fields=["user", "product"], name="purchase_user_product_uniq"),
         ]

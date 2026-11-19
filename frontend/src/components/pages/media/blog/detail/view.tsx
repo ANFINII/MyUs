@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { BlogDetailOut } from 'types/internal/media/output'
-import { postPaymentBlogCheckout } from 'api/internal/payment'
+import { postPaymentProductCheckout } from 'api/internal/payment'
 import { FetchError, MediaPath } from 'utils/constants/enum'
 import { toLocale } from 'utils/functions/convertEnum'
 import { formatPrice } from 'utils/functions/price'
@@ -25,7 +25,7 @@ interface Props {
 export default function BlogDetail(props: Props): React.JSX.Element {
   const { data } = props
   const { detail, list, series } = data
-  const { publish, richtext, paidText, price, isPurchased, isPromotion, ...other } = detail
+  const { publish, richtext, paidText, product, isPurchased, isPromotion, ...other } = detail
 
   const router = useRouter()
   const { t, i18n } = useTranslation()
@@ -33,12 +33,12 @@ export default function BlogDetail(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [isPurchaseLoading, setIsPurchaseLoading] = useState<boolean>(false)
 
-  const isLocked = price.amount > 0 && paidText === '' && !isPurchased
+  const isLocked = product !== null && paidText === '' && !isPurchased
 
-  const handlePurchase = async () => {
+  const handlePurchase = async (productUlid: string) => {
     setIsPurchaseLoading(true)
     const locale = toLocale(router.locale)
-    const ret = await postPaymentBlogCheckout({ blogUlid: detail.ulid, locale })
+    const ret = await postPaymentProductCheckout({ productUlid, locale })
     if (ret.isErr()) {
       setIsPurchaseLoading(false)
       handleToast(errorMessage(ret.error, FetchError.Post), true)
@@ -51,11 +51,11 @@ export default function BlogDetail(props: Props): React.JSX.Element {
     <Main metaTitle="Blog" toast={toast}>
       <MediaDetail publish={publish}>
         <BlogArticle richtext={richtext} paidText={paidText} isPromotion={isPromotion} />
-        {isLocked && (
+        {isLocked && product !== null && (
           <section className={style.paywall}>
             <p className={style.paywall_title}>{t('media.blog.paywallTitle')}</p>
-            <p className={style.paywall_price}>{formatPrice(price.amount, price.currency, i18n.language)}</p>
-            {user.isActive ? <Button color="green" name={t('media.blog.purchase')} loading={isPurchaseLoading} onClick={handlePurchase} /> : <LoginRequired />}
+            <p className={style.paywall_price}>{formatPrice(product.price.amount, product.price.currency, i18n.language)}</p>
+            {user.isActive ? <Button color="green" name={t('media.blog.purchase')} loading={isPurchaseLoading} onClick={() => handlePurchase(product.ulid)} /> : <LoginRequired />}
             <p className={style.paywall_notice}>{t('media.blog.paywallNotice')}</p>
           </section>
         )}

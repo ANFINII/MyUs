@@ -1,7 +1,7 @@
 from typing import assert_never
 from ..enum.i18n import Country, Currency, Locale
-from ..enum.media import CommentType, CommentTypeNo
-from ..enum.payment import PaymentStatus
+from ..enum.media import CommentType, CommentTypeNo, MediaType
+from ..enum.payment import PaymentStatus, ProductType
 
 
 def comment_type_map(type_no: CommentTypeNo) -> CommentType:
@@ -50,3 +50,13 @@ def country_currency(country: Country) -> Currency:
             return Currency.JPY
         case _:
             return Currency.USD
+
+
+def product_media_type(product_type: ProductType) -> MediaType:
+    match product_type:
+        case ProductType.BLOG:
+            return MediaType.BLOG
+        case ProductType.MUSIC_HIRES:
+            return MediaType.MUSIC
+        case _:
+            assert_never(product_type)

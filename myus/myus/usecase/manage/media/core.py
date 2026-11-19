@@ -8,7 +8,6 @@ from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
 from myus.domain.media.hires.data import MusicHiresData
-from myus.domain.media.hires.interface import MusicHiresInterface
 from myus.domain.media.common import MEDIA_PAGE_SIZE, FilterOption, PageOption, SortOption
 from myus.domain.media.music.data import MusicData
 from myus.domain.media.music.interface import MusicInterface
@@ -18,7 +17,7 @@ from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.message.interface import FilterOption as MessageFilterOption, MessageInterface, PageOption as MessagePageOption, SortOption as MessageSortOption
 from myus.domain.payment.data import Money
-from myus.domain.payment.purchase.interface import FilterOption as PurchaseFilterOption, PageOption as PurchasePageOption, PurchaseInterface, SortOption as PurchaseSortOption
+from myus.domain.payment.product.data import ProductData
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, InputError, NotFoundError, Result, ValidationError, WriteError
@@ -30,12 +29,12 @@ from myus.utils.functions.common import create_url
 from myus.utils.functions.convert.audio_converter import measure_music_gain, probe_audio
 from myus.utils.functions.media import probe_upload, save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
-from ._convert import save_video_data, save_music_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_music_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
+from ._convert import save_video_data, save_music_data, save_music_hires_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_music_data, delete_music_hires_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
 from ...category._convert import get_category_data
 from ...dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from ...media._convert import get_music_hires_data
 from ...notification._convert import create_publish_notification_data
-from ...payment._convert import get_seller_currency_data
+from ...payment._convert import get_product_data, get_product_purchase_ids_data, get_purchase_ids_data, get_seller_currency_data
 
 
 @Result.shield_exception()
@@ -190,7 +189,7 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 
 @Result.shield_exception()
-def get_manage_music(user_id: int, ulid: str) -> Result[tuple[MusicData, MusicHiresData | None], FindError]:
+def get_manage_music(user_id: int, ulid: str) -> Result[tuple[MusicData, MusicHiresData | None, ProductData | None], FindError]:
     repo = injector.get(MusicInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -212,7 +211,12 @@ def get_manage_music(user_id: int, ulid: str) -> Result[tuple[MusicData, MusicHi
         return Result.err(hires_ret.err_value)
 
     hires = hires_ret.ok_value
-    return Result.ok((replace(obj, image=create_url(obj.image), music=create_url(obj.music)), hires))
+    product_ret = get_product_data(ProductType.MUSIC_HIRES, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
+    return Result.ok((replace(obj, image=create_url(obj.image), music=create_url(obj.music)), hires, product))
 
 
 @Result.shield_exception()
@@ -267,7 +271,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO, image: U
 
 
 @Result.shield_exception()
-def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, InputError]:
     repo = injector.get(MusicInterface)
     ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
@@ -277,6 +281,15 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, FindErro
     if len(delete_ids) != len(set(ulids)):
         log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
+
+    purchase_ids_ret = get_product_purchase_ids_data(ProductType.MUSIC_HIRES, delete_ids)
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
+
+    purchase_ids = purchase_ids_ret.ok_value
+    if len(purchase_ids) > 0:
+        log.warning("purchased", ulids=ulids, user_id=user_id)
+        return Result.err(ValidationError("error.deletePurchased"))
 
     delete_ret = atomic_result(lambda: delete_music_data(delete_ids))
     if delete_ret.is_err:
@@ -322,13 +335,17 @@ def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: Upload
         return Result.err(hires_ret.err_value)
 
     current = hires_ret.ok_value
-    price_data = Money(amount=price, currency=currency)
+    product_ret = get_product_data(ProductType.MUSIC_HIRES, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
     if hires is None:
         if current is None:
             log.error("hires required", ulid=ulid)
             return Result.err(FatalError("hires required"))
 
-        save_data = replace(current, price=price_data)
+        save_data = current
     else:
         audio = probe_upload(hires, probe_audio)
         path = save_upload(hires, MediaUpload.HIRES, obj.channel.ulid)
@@ -338,11 +355,17 @@ def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: Upload
             file=path,
             sample_rate=audio.sample_rate,
             bit_depth=audio.bit_depth,
-            price=price_data,
         )
 
-    hires_repo = injector.get(MusicHiresInterface)
-    save_ret = hires_repo.bulk_save([save_data])
+    save_product = ProductData(
+        id=product.id if product is not None else 0,
+        ulid=product.ulid if product is not None else "",
+        seller_id=user_id,
+        product_type=ProductType.MUSIC_HIRES,
+        object_id=obj.id,
+        price=Money(amount=price, currency=currency),
+    )
+    save_ret = atomic_result(lambda: save_music_hires_data(save_data, save_product))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -350,7 +373,7 @@ def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: Upload
 
 
 @Result.shield_exception()
-def delete_manage_music_hires(user_id: int, ulid: str) -> Result[None, FindError]:
+def delete_manage_music_hires(user_id: int, ulid: str) -> Result[None, InputError]:
     repo = injector.get(MusicInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -369,8 +392,16 @@ def delete_manage_music_hires(user_id: int, ulid: str) -> Result[None, FindError
     if hires is None:
         return Result.ok(None)
 
-    hires_repo = injector.get(MusicHiresInterface)
-    delete_ret = hires_repo.bulk_delete([hires.id])
+    purchase_ids_ret = get_product_purchase_ids_data(ProductType.MUSIC_HIRES, [hires.music_id])
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
+
+    purchase_ids = purchase_ids_ret.ok_value
+    if len(purchase_ids) > 0:
+        log.warning("purchased", ulid=ulid, user_id=user_id)
+        return Result.err(ValidationError("error.saleStopPurchased"))
+
+    delete_ret = atomic_result(lambda: delete_music_hires_data(hires))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
@@ -402,7 +433,7 @@ def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: i
 
 
 @Result.shield_exception()
-def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
+def get_manage_blog(user_id: int, ulid: str) -> Result[tuple[BlogData, ProductData | None], FindError]:
     repo = injector.get(BlogInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -419,7 +450,12 @@ def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, FindError]:
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    return Result.ok(replace(obj, image=create_url(obj.image)))
+    product_ret = get_product_data(ProductType.BLOG, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
+    return Result.ok((replace(obj, image=create_url(obj.image)), product))
 
 
 @Result.shield_exception()
@@ -449,19 +485,39 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
         log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
 
-    price = obj.price
-    is_paid_changed = input.paid_text != obj.paid_text or input.price != obj.price.amount
-    if is_paid_changed and (input.price > 0 or len(input.paid_text) > 0):
+    product_ret = get_product_data(ProductType.BLOG, obj.id)
+    if product_ret.is_err:
+        return Result.err(product_ret.err_value)
+
+    product = product_ret.ok_value
+    if len(input.paid_text) == 0 and product is not None:
+        purchase_ids_ret = get_purchase_ids_data([product.id])
+        if purchase_ids_ret.is_err:
+            return Result.err(purchase_ids_ret.err_value)
+
+        purchase_ids = purchase_ids_ret.ok_value
+        if len(purchase_ids) > 0:
+            log.warning("purchased", ulid=ulid, user_id=user_id)
+            return Result.err(ValidationError("error.saleStopPurchased"))
+
+    save_product = product if len(input.paid_text) > 0 else None
+    is_paid_changed = input.paid_text != obj.paid_text or product is None or input.price != product.price.amount
+    if len(input.paid_text) > 0 and is_paid_changed:
         currency_ret = get_seller_currency_data(user_id)
         if currency_ret.is_err:
             return Result.err(currency_ret.err_value)
 
         currency = currency_ret.ok_value
-        price = Money(amount=input.price, currency=currency)
-    elif is_paid_changed:
-        price = Money(amount=0, currency=obj.price.currency)
+        save_product = ProductData(
+            id=product.id if product is not None else 0,
+            ulid=product.ulid if product is not None else "",
+            seller_id=user_id,
+            product_type=ProductType.BLOG,
+            object_id=obj.id,
+            price=Money(amount=input.price, currency=currency),
+        )
 
-    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, paid_text=input.paid_text, price=price, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
+    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, paid_text=input.paid_text, publish=input.publish, publish_at=input.publish_at, is_promotion=input.is_promotion)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
 
@@ -471,7 +527,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
 
     category_data = category_data_ret.ok_value
 
-    save_ret = atomic_result(lambda: save_blog_data(update_data, category_data))
+    save_ret = atomic_result(lambda: save_blog_data(update_data, category_data, save_product))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -495,8 +551,7 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, InputErro
         log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    purchase_repo = injector.get(PurchaseInterface)
-    purchase_ids_ret = purchase_repo.get_ids(PurchaseFilterOption(product_type=ProductType.BLOG, product_ids=delete_ids), PurchaseSortOption(), PurchasePageOption(limit=1))
+    purchase_ids_ret = get_product_purchase_ids_data(ProductType.BLOG, delete_ids)
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 

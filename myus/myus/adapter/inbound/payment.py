@@ -3,13 +3,13 @@ from typing import assert_never
 from ninja import Router
 from django.http import HttpRequest
 from myus.domain.payment.provider.data import CancelFailedData, CancelSuccessData, CheckoutCreatedData, CheckoutFailedData, PaymentMethodSessionCreatedData, PaymentMethodSessionFailedData, PlanChangeFailedData, PlanChangeSuccessData, RevokeFailedData, RevokeSuccessData, SellerOnboardCreatedData, SellerOnboardFailedData, WebhookVerifiedData, WebhookVerifyFailedData
-from myus.usecase.payment.core import cancel_subscription, change_plan, create_blog_checkout, create_checkout, create_payment_method_session, get_plan_prices, get_seller, get_subscription, onboard_seller, receive_payment_event, revoke_cancellation, verify_webhook
+from myus.usecase.payment.core import cancel_subscription, change_plan, create_checkout, create_payment_method_session, create_product_checkout, get_plan_prices, get_seller, get_subscription, onboard_seller, receive_payment_event, revoke_cancellation, verify_webhook
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from myus.utils.enum.payment import PaymentProvider, SubscriptionStatus, WebhookVerifyError
 from .auth import auth_check
 from .schema.common import ErrorOut, ErrorType
-from .schema.payment import MoneyOut, PaymentBlogCheckoutIn, PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentSellerOnboardIn, PaymentSellerOnboardOut, PaymentSellerOut, PaymentSubscriptionOut, PaymentWebhookOut
+from .schema.payment import MoneyOut, PaymentCancelOut, PaymentChangeIn, PaymentCheckoutIn, PaymentCheckoutOut, PaymentMethodIn, PaymentMethodOut, PaymentPlanOut, PaymentProductCheckoutIn, PaymentSellerOnboardIn, PaymentSellerOnboardOut, PaymentSellerOut, PaymentSubscriptionOut, PaymentWebhookOut
 
 
 class PaymentAPI:
@@ -100,9 +100,9 @@ class PaymentAPI:
                 return 500, ErrorOut(type=ErrorType.INTERNAL, message="error.checkoutFailed")
 
     @staticmethod
-    @router.post("/checkout/blog", response={200: PaymentCheckoutOut, 400: ErrorOut, 500: ErrorOut})
-    def checkout_blog(request: HttpRequest, input: PaymentBlogCheckoutIn):
-        log.info("request", blog_ulid=input.blog_ulid, locale=input.locale.value)
+    @router.post("/checkout/product", response={200: PaymentCheckoutOut, 400: ErrorOut, 500: ErrorOut})
+    def checkout_product(request: HttpRequest, input: PaymentProductCheckoutIn):
+        log.info("request", product_ulid=input.product_ulid, locale=input.locale.value)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -112,7 +112,7 @@ class PaymentAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        checkout_ret = create_blog_checkout(user_id, input.blog_ulid, input.locale)
+        checkout_ret = create_product_checkout(user_id, input.product_ulid, input.locale)
         if checkout_ret.is_err:
             message = checkout_ret.err_value.message
             match checkout_ret.err_value:
