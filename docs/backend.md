@@ -305,7 +305,7 @@ return Result.ok(new_ids)
 | adapter/inbound | HTTP・WebSocket のリクエスト/レスポンス変換、認証チェック。schema（`adapter/inbound/schema/`）を持つ | usecase, DTO, domain の Data・`PageOption`・定数 |
 | usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
 | domain/<ドメイン> | 抽象定義（ABC, dataclass）とルール（`validation.py`） | なし |
-| domain/<ドメイン>/<集約> | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数。いまは `domain/payment/subscription` | Data, utils |
+| domain/<ドメイン>/<集約> | Event Sourcing の集約（`state.py`・`event.py`・`decide.py`・`apply.py`）。I/O を持たない純粋な関数。いまは `domain/payment/subscription`。集約の状態から query model を作る Projector は usecase の `project_<集約>_data` に置き、反映した seq を `es_projection_progress` に同じトランザクションで保存する | Data, utils |
 | adapter/outbound/db | Repository の実装、DBアクセス | Django ORM, interface |
 | adapter/outbound/payment | 決済会社（Stripe など）の Interface の実装 | interface, 外部の SDK |
 | utils | どの層からも使う汎用の関数・定数・enum | なし（domain・injector・usecase を import しない） |

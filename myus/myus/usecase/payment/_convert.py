@@ -2,6 +2,8 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import assert_never
 from myus.domain.es.interface import EventStoreInterface
+from myus.domain.es.projection.data import ProjectionProgressData
+from myus.domain.es.projection.interface import FilterOption as ProjectionProgressFilterOption, PageOption as ProjectionProgressPageOption, ProjectionProgressInterface, SortOption as ProjectionProgressSortOption
 from myus.domain.payment.customer.data import PaymentCustomerData
 from myus.domain.payment.customer.interface import FilterOption as PaymentCustomerFilterOption, PageOption as PaymentCustomerPageOption, SortOption as PaymentCustomerSortOption, PaymentCustomerInterface
 from myus.domain.payment.event.data import BalanceData, PaymentEventData, PaymentFailedContent, PaymentPaidContent, PayoutContent, ProviderSubscriptionData, PurchasePaidContent, RefundContent
@@ -30,6 +32,7 @@ from myus.domain.user.data import UserAllData
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, CommandError, FatalError, ForbiddenError, HistoryError, Result
+from myus.utils.enum.es import ProjectorName
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.payment import CancelError, LedgerEntryType, PaymentProvider, PaymentStatus, ProductType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
@@ -341,9 +344,97 @@ def save_provider_subscription_data(provider_subscription: ProviderSubscriptionD
         return Result.err(command_ret.err_value)
 
     state = command_ret.ok_value
+    project_ret = project_subscription_data(state)
+    if project_ret.is_err:
+        return Result.err(project_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def project_subscription_data(state: SubscriptionState) -> Result[None, FatalError]:
+    aggregate_id = subscription_aggregate_id(state.detail.provider, state.detail.external_id)
+    repo = injector.get(ProjectionProgressInterface)
+    filter = ProjectionProgressFilterOption(projector=ProjectorName.SUBSCRIPTION, aggregate_type=SUBSCRIPTION_AGGREGATE_TYPE, aggregate_id=aggregate_id)
+    ids_ret = repo.get_ids(filter, ProjectionProgressSortOption(), ProjectionProgressPageOption(limit=1))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    progresses_ret = repo.bulk_get(ids)
+    if progresses_ret.is_err:
+        return Result.err(progresses_ret.err_value)
+
+    progresses = progresses_ret.ok_value
+    progress = progresses[0] if len(progresses) > 0 else None
+    if progress is not None and state.seq <= progress.last_applied_seq:
+        return Result.ok(None)
+
     save_ret = save_subscription_data(state)
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
+
+    new_progress = ProjectionProgressData(
+        id=progress.id if progress is not None else 0,
+        projector=ProjectorName.SUBSCRIPTION,
+        aggregate_type=SUBSCRIPTION_AGGREGATE_TYPE,
+        aggregate_id=aggregate_id,
+        last_applied_seq=state.seq,
+    )
+    progress_ret = repo.bulk_save([new_progress])
+    if progress_ret.is_err:
+        return Result.err(progress_ret.err_value)
+
+    return Result.ok(None)
+
+
+@Result.shield_exception()
+def save_subscription_projection_data() -> Result[int, CommandError]:
+    delete_ret = delete_subscription_projection_data()
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    repo = injector.get(EventStoreInterface)
+    aggregate_ids_ret = repo.get_aggregate_ids(SUBSCRIPTION_AGGREGATE_TYPE)
+    if aggregate_ids_ret.is_err:
+        return Result.err(aggregate_ids_ret.err_value)
+
+    aggregate_ids = aggregate_ids_ret.ok_value
+    for aggregate_id in aggregate_ids:
+        state_ret = get_subscription_state_data(aggregate_id)
+        if state_ret.is_err:
+            return Result.err(state_ret.err_value)
+
+        state = state_ret.ok_value
+        project_ret = project_subscription_data(state)
+        if project_ret.is_err:
+            return Result.err(project_ret.err_value)
+
+    log.info("reprojected", projector=ProjectorName.SUBSCRIPTION.value, count=len(aggregate_ids))
+    return Result.ok(len(aggregate_ids))
+
+
+@Result.shield_exception()
+def delete_subscription_projection_data() -> Result[None, FatalError]:
+    subscription_repo = injector.get(SubscriptionInterface)
+    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(), SubscriptionSortOption(), SubscriptionPageOption())
+    if subscription_ids_ret.is_err:
+        return Result.err(subscription_ids_ret.err_value)
+
+    subscription_ids = subscription_ids_ret.ok_value
+    subscription_ret = subscription_repo.bulk_delete(subscription_ids)
+    if subscription_ret.is_err:
+        return Result.err(subscription_ret.err_value)
+
+    progress_repo = injector.get(ProjectionProgressInterface)
+    progress_ids_ret = progress_repo.get_ids(ProjectionProgressFilterOption(projector=ProjectorName.SUBSCRIPTION), ProjectionProgressSortOption(), ProjectionProgressPageOption())
+    if progress_ids_ret.is_err:
+        return Result.err(progress_ids_ret.err_value)
+
+    progress_ids = progress_ids_ret.ok_value
+    progress_ret = progress_repo.bulk_delete(progress_ids)
+    if progress_ret.is_err:
+        return Result.err(progress_ret.err_value)
 
     return Result.ok(None)
 
@@ -897,13 +988,7 @@ def delete_payment_projection_data() -> Result[None, FatalError]:
     if transaction_ret.is_err:
         return Result.err(transaction_ret.err_value)
 
-    subscription_repo = injector.get(SubscriptionInterface)
-    subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(), SubscriptionSortOption(), SubscriptionPageOption())
-    if subscription_ids_ret.is_err:
-        return Result.err(subscription_ids_ret.err_value)
-
-    subscription_ids = subscription_ids_ret.ok_value
-    subscription_ret = subscription_repo.bulk_delete(subscription_ids)
+    subscription_ret = delete_subscription_projection_data()
     if subscription_ret.is_err:
         return Result.err(subscription_ret.err_value)
 

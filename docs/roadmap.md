@@ -27,9 +27,9 @@
 
 ### 今の状態
 
-Phase 1〜5 は完了した（ES の基盤・保存形式の検査・webhook の受け口と worker・Subscription 集約・解約の要求と結果の記録）。今の仕組みは [myus.md](myus.md) の「決済システム」、コードの決まりは [backend.md](backend.md) にある。
+Phase 1〜5 と Phase 6 の一部は完了した（ES の基盤・保存形式の検査・webhook の受け口と worker・Subscription 集約・解約の要求と結果の記録・Subscription の進捗つきの Projector と `reproject`）。今の仕組みは [myus.md](myus.md) の「決済システム」、コードの決まりは [backend.md](backend.md) にある。
 
-checkout を要求と結果に分けることと Phase 6 以降は **保留**。進めるときは、その時点の規模と問題を見て Phase ごとに決める。解約で結果が分からないまま残った要求を自動で呼び直す worker は、必要になったら足す（今は次の解約で同じ冪等キーを使って呼び直す）。
+checkout を要求と結果に分けることと、Phase 6 の残り・Phase 7 以降は **保留**。進めるときは、その時点の規模と問題を見て Phase ごとに決める。解約で結果が分からないまま残った要求を自動で呼び直す worker は、必要になったら足す（今は次の解約で同じ冪等キーを使って呼び直す）。
 
 ### 進め方の原則
 
@@ -63,8 +63,8 @@ flowchart LR
 | テーブル | 役割 | 状態 |
 |---|---|---|
 | `es_event` | 集約ごとのイベント履歴（追記のみ）。`(aggregate_type, aggregate_id, seq)` 一意 | あり |
-| `es_outbox` | 確定したイベントの配信記録 | あり（配信は Phase 6） |
-| `es_projection_progress` | Projector ごとの進捗 | Phase 6 で足す |
+| `es_outbox` | 確定したイベントの配信記録 | あり（読む worker は、非同期の Projector が要るときに作る） |
+| `es_projection_progress` | Projector・集約ごとの反映済みの seq | あり |
 | `es_snapshot` | 集約の状態のキャッシュ | イベントが多い集約（Ledger）で `replay` が遅くなってから足す |
 | `es_<集約>_<事実>_index` | 事実索引（一意性・過去の事実への参照）。追記のみ | Phase 7（Ledger）で足す |
 
@@ -74,7 +74,8 @@ flowchart LR
 | `myus/usecase/es/_convert.py` | `handle_command`（集約に書き込む共通の手順） | あり |
 | `myus/usecase/<ドメイン>/_convert.py` | 集約ごとのコマンド（`payment` の `save_subscription_event_data` など） | あり |
 | `myus/usecase/receiver/` | Receiver（外の事実やほかの集約のイベントを受けてコマンドを打つ） | Phase 6 以降 |
-| `myus/usecase/projector/`・`query/` | Projector と専用の Writer、query usecase と Reader | Phase 6 |
+| `myus/usecase/<ドメイン>/_convert.py` の `project_<集約>_data` | Projector（集約の状態から query model と進捗を書く） | あり。Subscription は顧客の保存などを使うので、import が循環しないよう `usecase/payment/_convert.py` に置いた |
+| `myus/usecase/query/` | query usecase と Reader | Phase 6 の残り |
 
 ---
 
@@ -83,11 +84,13 @@ flowchart LR
 - Stripe のサブスクリプションは支払いが終わってから作られるので、checkout の時点ではサブスクリプションの ID（集約の ID）が無く、今の Subscription 集約には載せられない。載せるには checkout 用の別の集約が要るが、checkout の画面は二重に作っても支払われるのは1つだけで、得るものが小さい。有料プランの契約中に新しく checkout できないことは、`create_checkout` で今の `Subscription` を見て止めている
 - 進めるときは、解約と同じく要求の EventId を冪等キーにする（解約の形は myus.md の「決済システム」）
 
-### ⏸ Phase 6: Projector と query model
+### ⏸ Phase 6 の残り: 非同期の Projector と世代
 
-- `es_outbox` の通知は「どの集約に新しいイベントがあるか」だけに使い、イベントはイベントストアから取り直す
-- 投影の結果と `last_applied_seq` を同じトランザクションで保存する。保存済みより進んでいないときは保存しない
-- 再投影は query model と進捗に世代（`generation`）を持たせ、新しい世代を並行して作ってから切り替える。`replay_payment_events` を `reproject --projector <name>` に置き換える
+済んだこと：Subscription の Projector は、追記と同じトランザクションで投影と `last_applied_seq` を保存し、反映済みより進んでいないときは保存しない。`reproject --projector Subscription --confirm` で `es_event` から作り直せる（worker を止め、消してから1つのトランザクションで作る）。
+
+- 投影を追記と別に作りたくなったら、`es_outbox` を読む worker を作る。通知は「どの集約に新しいイベントがあるか」だけに使い、イベントはイベントストアから取り直す
+- 動かしたまま作り直したくなったら、query model と進捗に世代（`generation`）を持たせ、新しい世代を並行して作ってから切り替える
+- 取引・帳簿を集約にしたら（Phase 7）、`replay_payment_events` を `reproject` に置き換える
 
 ### ⏸ Phase 7: 取引・入金・帳簿
 

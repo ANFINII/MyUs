@@ -23,7 +23,7 @@ from myus.utils.enum.user import PlanName
 from myus.utils.functions.common import create_frontend_url
 from myus.utils.functions.map import country_currency, product_media_type
 from myus.utils.functions.transaction import atomic_result
-from ._convert import get_purchase_ids_data, get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS, PLATFORM_FEE_RATE
+from ._convert import get_purchase_ids_data, get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, save_subscription_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS, PLATFORM_FEE_RATE
 from ..dto.ledger import LedgerRowDTO
 from ..dto.plan import PlanPriceDTO
 from ..dto.seller import SellerDTO
@@ -546,6 +546,11 @@ def requeue_payment_events() -> Result[int, FatalError]:
 @Result.shield_exception()
 def replay_payment_events() -> Result[int, CommandError]:
     return atomic_result(lambda: save_payment_projection_data())
+
+
+@Result.shield_exception()
+def reproject_subscriptions() -> Result[int, CommandError]:
+    return atomic_result(lambda: save_subscription_projection_data())
 
 
 @Result.shield_exception()
