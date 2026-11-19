@@ -54,6 +54,9 @@ class ComicRepository(ComicInterface):
                 if model.id in new_id_set
                 for seq, page_path in enumerate(obj.pages)
             ])
+            for obj, model in zip(objs, models):
+                if model.id not in new_id_set:
+                    save_pages(model.id, obj.pages)
 
         return Result.ok(new_ids)
 
@@ -76,3 +79,19 @@ class ComicRepository(ComicInterface):
         Comic.objects.filter(id=media_id).update(read=F("read") + 1)
         read = Comic.objects.filter(id=media_id).values_list("read", flat=True).first()
         return Result.ok(read if read is not None else 0)
+
+
+def save_pages(comic_id: int, pages: list[str]) -> None:
+    current = {p.image.name: p for p in ComicPage.objects.filter(comic_id=comic_id)}
+    ComicPage.objects.filter(comic_id=comic_id).exclude(image__in=pages).delete()
+
+    kept = [(seq, current[path]) for seq, path in enumerate(pages) if path in current]
+    for index, (_, page) in enumerate(kept):
+        page.sequence = -(index + 1)
+    ComicPage.objects.bulk_update([page for _, page in kept], ["sequence"])
+
+    for seq, page in kept:
+        page.sequence = seq
+    ComicPage.objects.bulk_update([page for _, page in kept], ["sequence"])
+
+    ComicPage.objects.bulk_create([ComicPage(comic_id=comic_id, image=path, sequence=seq) for seq, path in enumerate(pages) if path not in current])

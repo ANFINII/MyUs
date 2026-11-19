@@ -1,0 +1,108 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .label {
+    font-size: 14px;
+    color: rgb(50, 50, 50);
+
+    .required {
+      margin-left: 4px;
+      color: rgb(220, 0, 0);
+    }
+  }
+
+  .pages {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+    min-height: 60px;
+    padding: 10px;
+    margin: 0;
+    list-style: none;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 5px;
+    background: rgb(250, 250, 250);
+
+    &.error {
+      background: rgb(255, 240, 240);
+    }
+  }
+
+  .page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: 5px;
+    background: rgb(255, 255, 255);
+    cursor: grab;
+
+    &.dragging {
+      opacity: 0.4;
+    }
+
+    &.drag_over {
+      outline: 2px solid rgb(0, 130, 255);
+    }
+  }
+
+  .image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background: rgb(240, 240, 240);
+  }
+
+  .number {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    min-width: 20px;
+    padding: 0 6px;
+    font-size: 12px;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px;
+    border-top: 1px solid rgb(235, 235, 235);
+  }
+
+  .action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 24px;
+    padding: 0;
+    color: rgb(80, 80, 80);
+    border: none;
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(0, 100, 255);
+      background: rgb(235, 242, 255);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+
+  .hint {
+    margin: 0;
+    font-size: 12px;
+    color: rgb(120, 120, 120);
+  }
+}

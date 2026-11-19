@@ -105,6 +105,7 @@ class ComicUpdateIn(BaseModel):
     free_pages: int
     publish: bool
     publish_at: datetime
+    pages: list[str]
 
 
 class PictureUpdateIn(BaseModel):

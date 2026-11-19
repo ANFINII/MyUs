@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
-import { ComicIn } from 'types/internal/media/input'
+import { ComicIn, ComicPageItem } from 'types/internal/media/input'
 import { postComicCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
@@ -22,6 +22,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import ComicPageEditor from 'components/widgets/ComicPageEditor'
 import ComicModal from 'components/widgets/Modal/Comic'
 import style from '../../Form.module.scss'
 
@@ -41,7 +42,8 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [previewPages, setPreviewPages] = useState<string[]>([])
+  const [previewCover, setPreviewCover] = useState<string>('')
+  const [pages, setPages] = useState<ComicPageItem[]>([])
   const [values, setValues] = useState<ComicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '' })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
@@ -51,27 +53,25 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (file: File) => setValues({ ...values, image: file })
-  const handleMultiFile = (files: File[]) => setValues({ ...values, pages: files })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
   const handleModal = () => {
     if (isModal) {
-      previewPages.forEach((url) => URL.revokeObjectURL(url))
-      setPreviewPages([])
+      URL.revokeObjectURL(previewCover)
+      setPreviewCover('')
     } else {
-      const { image, pages = [] } = values
-      const files = image ? [image, ...pages] : pages
-      setPreviewPages(files.map((file) => previewUrl(file)))
+      setPreviewCover(values.image ? previewUrl(values.image) : '')
     }
     setIsModal(!isModal)
   }
 
   const handleForm = async () => {
-    const { channelUlid, categoryUlid, title, content, image, pages } = values
-    if (!validate({ channelUlid, categoryUlid, title, content, image, pages })) return
+    const { channelUlid, categoryUlid, title, content, image } = values
+    const files = pages.flatMap((page) => (page.file === null ? [] : [page.file]))
+    if (!validate({ channelUlid, categoryUlid, title, content, image, pages: files })) return
     handleLoading(true)
-    const ret = await postComicCreate(values)
+    const ret = await postComicCreate({ ...values, pages: files })
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Post), true)
@@ -98,10 +98,10 @@ export default function ComicCreate(props: Props): React.JSX.Element {
           <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
-          <InputFile label={t('manage.form.pages')} accept="image/*" required error={error} onMultiChange={handleMultiFile} />
+          <ComicPageEditor label={t('manage.form.pages')} pages={pages} required error={error} onChange={setPages} />
         </VStack>
       </form>
-      <ComicModal open={isModal} onClose={handleModal} pages={previewPages} />
+      <ComicModal open={isModal} onClose={handleModal} pages={[previewCover, ...pages.map((page) => page.src)].filter((src) => src !== '')} />
     </Main>
   )
 }
