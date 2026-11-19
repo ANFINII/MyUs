@@ -156,11 +156,11 @@ class MusicDetailOut(MediaDetailOut):
 class BlogDetailOut(MediaDetailOut):
     richtext: str
     paid_text: str
-    product: ProductOut | None
     is_purchased: bool
     is_promotion: bool
     image: str
     comments: list[CommentOut]
+    product: ProductOut | None
 
 
 class ComicDetailOut(MediaDetailOut):

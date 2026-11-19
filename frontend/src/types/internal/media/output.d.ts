@@ -152,11 +152,11 @@ export interface MusicDetail extends MediaDetail {
 export interface BlogDetail extends MediaDetail {
   richtext: string
   paidText: string
-  product: Product | null
   isPurchased: boolean
   isPromotion: boolean
   image: string
   comments: Comment[]
+  product: Product | null
 }
 
 export interface ComicDetail extends MediaDetail {

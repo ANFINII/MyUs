@@ -68,11 +68,11 @@ class MusicDetailDTO(MediaDetailDTO):
 class BlogDetailDTO(MediaDetailDTO):
     richtext: str
     paid_text: str
-    product: ProductData | None
     is_purchased: bool
     is_promotion: bool
     image: str
     comments: list[CommentDTO]
+    product: ProductData | None
 
 
 @dataclass(frozen=True, slots=True)
