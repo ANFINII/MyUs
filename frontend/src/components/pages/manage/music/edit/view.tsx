@@ -4,7 +4,8 @@ import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { MusicUpdateIn } from 'types/internal/media/input'
-import { Music } from 'types/internal/media/output'
+import { ManageMusic } from 'types/internal/media/output'
+import { PaymentSellerOut } from 'types/internal/payment'
 import { putManageMusic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
@@ -25,16 +26,18 @@ import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../../Form.module.scss'
+import HiresSale from '../HiresSale'
 import LyricEditor from '../LyricEditor'
 
 interface Props {
   channels: Channel[]
   categories: Category[]
-  data: Music
+  data: ManageMusic
+  seller: PaymentSellerOut
 }
 
 export default function ManageMusicEdit(props: Props): React.JSX.Element {
-  const { channels, categories, data } = props
+  const { channels, categories, data, seller } = props
   const { categoryUlid, title, content, lyric, publish, publishAt } = data
 
   const router = useRouter()
@@ -106,6 +109,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
           </div>
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
           <InputFile label={t('manage.form.music')} accept="audio/*" onChange={handleFile} />
+          <HiresSale ulid={data.ulid} seller={seller} hires={data.hires} product={data.product} handleToast={handleToast} />
         </VStack>
       </form>
       {isModal && <LyricEditor src={musicUrl || data.music} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}

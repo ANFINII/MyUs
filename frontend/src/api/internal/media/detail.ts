@@ -1,7 +1,7 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
-import { VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut } from 'types/internal/media/output'
-import { apiVideo, apiMusic, apiBlog, apiComic, apiPicture, apiChat } from 'api/uri'
+import { VideoDetailOut, MusicDetailOut, MusicHiresUrlOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut } from 'types/internal/media/output'
+import { apiVideo, apiMusic, apiMusicHires, apiBlog, apiComic, apiPicture, apiChat } from 'api/uri'
 
 export const getVideo = async (ulid: string): Promise<ApiOut<VideoDetailOut>> => {
   return await apiOut(apiClient('json').get(apiVideo(ulid)))
@@ -9,6 +9,10 @@ export const getVideo = async (ulid: string): Promise<ApiOut<VideoDetailOut>> =>
 
 export const getMusic = async (ulid: string): Promise<ApiOut<MusicDetailOut>> => {
   return await apiOut(apiClient('json').get(apiMusic(ulid)))
+}
+
+export const getMusicHiresUrl = async (ulid: string): Promise<ApiOut<MusicHiresUrlOut>> => {
+  return await apiOut(apiClient('json').get(apiMusicHires(ulid)))
 }
 
 export const getBlog = async (ulid: string): Promise<ApiOut<BlogDetailOut>> => {

@@ -60,6 +60,11 @@ export interface MusicUpdateIn extends MediaUpdateIn {
   music?: File
 }
 
+export interface MusicHiresIn {
+  price: number
+  hires?: File
+}
+
 export interface BlogUpdateIn extends MediaUpdateIn {
   richtext: string
   paidText: string

@@ -73,6 +73,15 @@ export interface MusicHires {
   bitDepth: number
 }
 
+export interface ManageMusic extends Music {
+  hires: MusicHires | null
+  product: Product | null
+}
+
+export interface MusicHiresUrlOut {
+  url: string
+}
+
 export interface Blog extends Media {
   richtext: string
   isPromotion: boolean

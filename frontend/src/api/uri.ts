@@ -62,6 +62,7 @@ export const apiVideo = (ulid: string) => base + `/media/video/${ulid}`
 
 export const apiMusics = base + '/media/music'
 export const apiMusic = (ulid: string) => base + `/media/music/${ulid}`
+export const apiMusicHires = (ulid: string) => base + `/media/music/${ulid}/hires`
 
 export const apiBlogs = base + '/media/blog'
 export const apiBlog = (ulid: string) => base + `/media/blog/${ulid}`
@@ -96,6 +97,7 @@ export const apiManageVideo = (ulid: string) => base + `/manage/media/video/${ul
 
 export const apiManageMusics = base + '/manage/media/music'
 export const apiManageMusic = (ulid: string) => base + `/manage/media/music/${ulid}`
+export const apiManageMusicHires = (ulid: string) => base + `/manage/media/music/${ulid}/hires`
 
 export const apiManageBlogs = base + '/manage/media/blog'
 export const apiManageBlog = (ulid: string) => base + `/manage/media/blog/${ulid}`

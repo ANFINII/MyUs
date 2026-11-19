@@ -1,0 +1,16 @@
+.hires {
+  padding: 12px 16px;
+  border: 1px solid rgb(230, 230, 230);
+  border-radius: 8px;
+
+  .hires_title {
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .hires_note {
+    margin-top: -4px;
+    font-size: 12px;
+    color: rgb(120, 120, 120);
+  }
+}

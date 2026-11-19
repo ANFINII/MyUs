@@ -58,6 +58,8 @@
     "saleStopPurchased": "You cannot stop selling this because someone has bought it",
     "hiresNotFound": "This song has no hi-res audio",
     "hiresNotPurchased": "You have not bought the hi-res audio of this song",
+    "hiresInvalid": "Choose a 24-bit FLAC file at 48kHz to 192kHz",
+    "hiresPriceRange": "Enter a price between 300 and 600 (3.00 to 6.00 for USD)",
     "planNotFound": "Plan not found",
     "alreadySubscribed": "You already have a paid plan",
     "followSelf": "You cannot follow yourself",
@@ -349,6 +351,12 @@
       "addRow": "Add a line below",
       "deleteRow": "Delete line"
     },
+    "hires": {
+      "title": "Hi-res sales",
+      "file": "Hi-res audio (FLAC)",
+      "fileHint": "You can choose a 24-bit FLAC file at 48kHz to 192kHz",
+      "stop": "Stop selling"
+    },
     "header": {
       "selected": "{{count}} selected",
       "bulkDelete": "Delete selected"
@@ -404,9 +412,9 @@
       "richtext": "Body",
       "price": "Price ({{currency}})",
       "paidText": "Paid section",
-      "paidPlanHint": "To add a paid section, you need the Standard plan or higher.",
-      "paidSellerHint": "To add a paid section, register an account to receive your earnings.",
-      "paidSetting": "Go to plans",
+      "salePlanHint": "To sell, you need the Standard plan or higher.",
+      "saleSellerHint": "To sell, register an account to receive your earnings.",
+      "saleSetting": "Go to plans",
       "promotion": "Contains promotion",
       "url": "Link URL",
       "period": "Period",
@@ -914,17 +922,22 @@
     }
   },
   "media": {
+    "purchase": "Buy",
     "series": {
       "label": "Series",
       "count_one": "{{count}} post",
       "count_other": "{{count}} posts"
+    },
+    "music": {
+      "hiresTitle": "Hi-res audio",
+      "hiresDownload": "Download hi-res audio",
+      "hiresNotice": "It may take a moment before you can download it after purchase."
     },
     "blog": {
       "promotion": "This post contains promotions",
       "promotionBadge": "PR",
       "paidLine": "The rest of this article is paid",
       "paywallTitle": "Read the rest of this article",
-      "purchase": "Buy",
       "paywallNotice": "It may take a moment before you can read it after purchase."
     },
     "userpage": {

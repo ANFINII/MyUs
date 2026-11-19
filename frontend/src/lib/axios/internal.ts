@@ -6,15 +6,16 @@ type ContentType = 'json' | 'form'
 
 const JSON_TIMEOUT_MS = 10000 // 10秒
 const FILE_UPLOAD_TIMEOUT_MS = 60000 // 1分
+export const LARGE_UPLOAD_TIMEOUT_MS = 1800000 // 30分
 
-const axiosInstance = (baseURL: string, contentType: ContentType) => {
+const axiosInstance = (baseURL: string, contentType: ContentType, timeout: number) => {
   const client = axios.create({
     baseURL,
     withCredentials: true,
     headers: {
       'Content-Type': contentType === 'json' ? 'application/json' : 'multipart/form-data',
     },
-    timeout: contentType === 'json' ? JSON_TIMEOUT_MS : FILE_UPLOAD_TIMEOUT_MS,
+    timeout,
     paramsSerializer: { indexes: null },
     formSerializer: { indexes: null },
   })
@@ -22,4 +23,4 @@ const axiosInstance = (baseURL: string, contentType: ContentType) => {
   return client
 }
 
-export const apiClient = (type: ContentType) => axiosInstance(API_URL, type)
+export const apiClient = (type: ContentType, timeout = type === 'json' ? JSON_TIMEOUT_MS : FILE_UPLOAD_TIMEOUT_MS) => axiosInstance(API_URL, type, timeout)
