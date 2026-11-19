@@ -622,8 +622,8 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[tuple[ComicData, Product
 
 
 @Result.shield_exception()
-def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: UploadedFile | None = None) -> Result[None, WriteError]:
-    upload_ret = validate_uploads([(image, ImageUpload.COMIC)])
+def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: UploadedFile | None, new_pages: list[UploadedFile]) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.COMIC), *[(p, ImageUpload.COMIC_PAGE) for p in new_pages]])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
@@ -647,6 +647,13 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
     if owner_id != user_id:
         log.error("owner mismatch", ulid=ulid, user_id=user_id, owner_id=owner_id)
         return Result.err(ForbiddenError("error.saveFailed"))
+
+    url_paths = {create_url(p): p for p in obj.pages}
+    kept_urls = [url for url in input.pages if url != ""]
+    is_kept_valid = len(set(kept_urls)) == len(kept_urls) and all(url in url_paths for url in kept_urls)
+    if not is_kept_valid or len(input.pages) - len(kept_urls) != len(new_pages):
+        log.warning("pages mismatch", ulid=ulid, user_id=user_id)
+        return Result.err(ValidationError("error.saveFailed"))
 
     product_ret = get_product_data(ProductType.COMIC, obj.id)
     if product_ret.is_err:
@@ -680,7 +687,12 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateDTO, image: U
             price=Money(amount=input.price, currency=currency),
         )
 
-    update_data = replace(obj, title=input.title, content=input.content, free_pages=input.free_pages, publish=input.publish, publish_at=input.publish_at)
+    new_paths = [save_upload(p, ImageUpload.COMIC_PAGE, obj.channel.ulid) for p in new_pages]
+    page_paths: list[str] = []
+    for url in input.pages:
+        page_paths.append(url_paths[url] if url != "" else new_paths.pop(0))
+
+    update_data = replace(obj, title=input.title, content=input.content, pages=page_paths, free_pages=input.free_pages, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
 

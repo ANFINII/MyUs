@@ -76,7 +76,15 @@ export interface BlogUpdateIn extends MediaUpdateIn {
 export interface ComicUpdateIn extends MediaUpdateIn {
   price: number
   freePages: number
+  pages: string[]
   image?: File
+  newPages?: File[]
+}
+
+export interface ComicPageItem {
+  key: string
+  src: string
+  file: File | null
 }
 
 export interface PictureUpdateIn extends MediaUpdateIn {

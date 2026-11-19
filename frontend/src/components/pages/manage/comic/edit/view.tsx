@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
-import { ComicUpdateIn } from 'types/internal/media/input'
+import { ComicPageItem, ComicUpdateIn } from 'types/internal/media/input'
 import { Comic } from 'types/internal/media/output'
 import { PaymentSellerOut } from 'types/internal/payment'
 import { putManageComic } from 'api/internal/manage/update'
@@ -25,6 +25,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import ComicPageEditor from 'components/widgets/ComicPageEditor'
 import ComicModal from 'components/widgets/Modal/Comic'
 import PaidPagesInput from 'components/widgets/PaidPagesInput'
 import style from '../../Form.module.scss'
@@ -49,8 +50,9 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isSale, setIsSale] = useState<boolean>(data.product !== null)
-  const [previewPages, setPreviewPages] = useState<string[]>([])
-  const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid, title, content, price, freePages, publish, publishAt: datetimeISO(publishAt) })
+  const [previewCover, setPreviewCover] = useState<string>('')
+  const [pages, setPages] = useState<ComicPageItem[]>(data.pages.map((src) => ({ key: src, src, file: null })))
+  const [values, setValues] = useState<Omit<ComicUpdateIn, 'pages'>>({ categoryUlid, title, content, price, freePages, publish, publishAt: datetimeISO(publishAt) })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
@@ -68,23 +70,25 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
 
   const handleModal = () => {
     if (isModal) {
-      previewPages.forEach((url) => URL.revokeObjectURL(url))
-      setPreviewPages([])
+      if (values.image) URL.revokeObjectURL(previewCover)
+      setPreviewCover('')
     } else {
-      setPreviewPages([values.image ? previewUrl(values.image) : data.image, ...data.pages])
+      setPreviewCover(values.image ? previewUrl(values.image) : data.image)
     }
     setIsModal(!isModal)
   }
 
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
-    if (!validate({ categoryUlid, title, content })) return
-    const paidError = isSale ? paidPagesError(values.price, values.freePages, data.pages.length) : ''
+    if (!validate({ categoryUlid, title, content, pages })) return
+    const paidError = isSale ? paidPagesError(values.price, values.freePages, pages.length) : ''
     if (paidError !== '') {
       handleToast(paidError, true)
       return
     }
-    const request = isSale ? values : { ...values, price: 0, freePages: 0 }
+    const sale = isSale ? values : { ...values, price: 0, freePages: 0 }
+    const newPages = pages.flatMap((page) => (page.file === null ? [] : [page.file]))
+    const request = { ...sale, pages: pages.map((page) => (page.file === null ? page.src : '')), newPages }
     handleLoading(true)
     const ret = await putManageComic(data.ulid, request)
     handleLoading(false)
@@ -114,6 +118,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
           <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
+          <ComicPageEditor label={t('manage.form.pages')} pages={pages} required error={error} onChange={setPages} />
           <PaidPagesInput
             isSale={isSale}
             price={values.price}
@@ -127,7 +132,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
           />
         </VStack>
       </form>
-      <ComicModal open={isModal} onClose={handleModal} pages={previewPages} />
+      <ComicModal open={isModal} onClose={handleModal} pages={[previewCover, ...pages.map((page) => page.src)]} />
     </Main>
   )
 }

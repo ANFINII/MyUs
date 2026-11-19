@@ -26,6 +26,9 @@ from .schema.media.output import MediaCreateOut, VideoOut, MusicOut, BlogOut, Co
 from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 
 
+UploadedFiles = list[UploadedFile]
+
+
 class ManageVideoAPI:
     """ManageVideoAPI"""
 
@@ -475,8 +478,8 @@ class ManageComicAPI:
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
-    def put(request: HttpRequest, ulid: str, input: ComicUpdateIn = Form(...), image: UploadedFile | None = File(None)):
-        log.info("request", ulid=ulid, input=input, image=image)
+    def put(request: HttpRequest, ulid: str, input: ComicUpdateIn = Form(...), image: UploadedFile | None = File(None), new_pages: UploadedFiles | None = File(None)):
+        log.info("request", ulid=ulid, input=input, image=image, new_pages=new_pages)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -487,7 +490,7 @@ class ManageComicAPI:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
         dto = ComicUpdateDTO(**input.model_dump())
-        update_ret = update_manage_comic(user_id, ulid, dto, image)
+        update_ret = update_manage_comic(user_id, ulid, dto, image, new_pages or [])
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
