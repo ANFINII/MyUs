@@ -396,6 +396,7 @@ class UserAPI:
             nickname=user.user.nickname,
             email=user.mypage.email,
             content=user.mypage.content,
+            measurement_id=user.mypage.measurement_id,
             date_joined=user.user.date_joined,
             follower_count=user.mypage.follower_count,
             following_count=user.mypage.following_count,

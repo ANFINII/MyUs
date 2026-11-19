@@ -1,5 +1,5 @@
 from myus.utils.common.result import Result, ValidationError
-from myus.utils.functions.validation import has_email, has_username, has_number, has_phone, has_postal_code
+from myus.utils.functions.validation import has_email, has_username, has_number, has_phone, has_postal_code, has_measurement_id
 from .data import UserAllData
 
 
@@ -24,5 +24,8 @@ def validate(obj: UserAllData) -> Result[None, ValidationError]:
 
     if len(obj.mypage.email) > 0 and has_email(obj.mypage.email):
         return Result.err(ValidationError("error.emailInvalid"))
+
+    if len(obj.mypage.measurement_id) > 0 and has_measurement_id(obj.mypage.measurement_id):
+        return Result.err(ValidationError("error.measurementIdInvalid"))
 
     return Result.ok(None)

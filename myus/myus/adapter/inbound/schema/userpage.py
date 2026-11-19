@@ -10,6 +10,7 @@ class UserPageOut(BaseModel):
     nickname: str
     email: str
     content: str
+    measurement_id: str
     date_joined: datetime
     follower_count: int
     following_count: int

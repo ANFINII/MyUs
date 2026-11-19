@@ -6,6 +6,7 @@ import { putChannel } from 'api/internal/channel'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
 import { previewUrl } from 'utils/functions/file'
+import { isMeasurementId } from 'utils/functions/validation'
 import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRouter } from 'components/hooks/useRouter'
@@ -78,6 +79,10 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   }
 
   const handleSubmit = async () => {
+    if (mypageValues.measurementId !== '' && !isMeasurementId(mypageValues.measurementId)) {
+      handleError(FetchError.Put, 'error.measurementIdInvalid')
+      return
+    }
     handleLoading(true)
     const request: MypageIn = { ...mypageValues, bannerFile }
     const ret = await putSettingMypage(request)
@@ -159,8 +164,8 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
         <TableRow isIndent label={t('setting.mypage.advertise')}>
           {mypageValues.plan === 'Free' ? <Toggle isActive={mypageValues.isAdvertise} disable /> : <Toggle isActive={mypageValues.isAdvertise} onClick={handleToggle} />}
         </TableRow>
-        <TableRow label={t('setting.mypage.tagId')}>
-          <Input name="tagManagerId" value={mypageValues.tagManagerId} placeholder={t('setting.mypage.tagIdPlaceholder')} maxLength={10} onChange={handleMypageInput} />
+        <TableRow label={t('setting.mypage.measurementId')}>
+          <Input name="measurementId" value={mypageValues.measurementId} placeholder="G-XXXXXXXXXX" maxLength={20} onChange={handleMypageInput} />
         </TableRow>
         <TableRow label={t('setting.mypage.content')}>
           <Textarea name="content" defaultValue={mypageValues.content} onChange={handleMypageText} />

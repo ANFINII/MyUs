@@ -77,7 +77,7 @@ class SettingProfileDTO:
 @dataclass(frozen=True, slots=True)
 class SettingMyPageDTO:
     email: str
-    tag_manager_id: str
+    measurement_id: str
     content: str
     is_advertise: bool
 

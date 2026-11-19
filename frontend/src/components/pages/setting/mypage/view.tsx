@@ -74,8 +74,8 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
         <TableRow isIndent label={t('setting.mypage.advertise')}>
           <Toggle isActive={mypage.isAdvertise} disable />
         </TableRow>
-        <TableRow isIndent label={t('setting.mypage.tagId')}>
-          GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
+        <TableRow isIndent label={t('setting.mypage.measurementId')}>
+          {mypage.measurementId}
         </TableRow>
         <TableRow isIndent label={t('setting.mypage.content')}>
           <div className="pv_4 ws_wrap">{mypage.content}</div>

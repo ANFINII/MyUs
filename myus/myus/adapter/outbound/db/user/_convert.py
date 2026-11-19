@@ -61,7 +61,7 @@ def mypage_data(mypage: MyPage) -> MyPageData:
         content=mypage.content,
         follower_count=mypage.follower_count,
         following_count=mypage.following_count,
-        tag_manager_id=mypage.tag_manager_id,
+        measurement_id=mypage.measurement_id,
         is_advertise=mypage.is_advertise,
     )
 
@@ -130,7 +130,7 @@ def marshal_mypage_data(user: User, data: UserAllData) -> MyPage:
         content=mypage.content,
         follower_count=mypage.follower_count,
         following_count=mypage.following_count,
-        tag_manager_id=mypage.tag_manager_id,
+        measurement_id=mypage.measurement_id,
         is_advertise=mypage.is_advertise,
     )
 

@@ -7,6 +7,7 @@ export interface UserPage {
   nickname: string
   email: string
   content: string
+  measurementId: string
   dateJoined: string
   followerCount: number
   followingCount: number

@@ -134,7 +134,7 @@ class SettingMyPageAPI:
             content=mypage.content,
             follower_count=mypage.follower_count,
             following_count=mypage.following_count,
-            tag_manager_id=mypage.tag_manager_id,
+            measurement_id=mypage.measurement_id,
             plan=user_plan.plan,
             plan_start_date=user_plan.start_date,
             plan_end_date=user_plan.end_date,

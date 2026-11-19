@@ -1,6 +1,7 @@
-import { ChangeEvent, Fragment, useState } from 'react'
+import { ChangeEvent, Fragment, MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
+import { trackUserPageEvent } from 'lib/gtag'
 import { Advertise } from 'types/internal/advertise'
 import { Search } from 'types/internal/media/output'
 import { Playlist } from 'types/internal/playlist'
@@ -101,10 +102,24 @@ export default function Userpage(props: Props): React.JSX.Element {
     }
     setIsFollow(ret.value.isFollow)
     setFollowerCount(ret.value.followerCount)
+    trackUserPageEvent(ret.value.isFollow ? 'follow' : 'unfollow', { contentType: 'user', itemId: ulid })
     if (isModal) handleModal()
   }
 
+  const handleTab = (key: TabKey) => {
+    setSelectedTab(key)
+    trackUserPageEvent('select_content', { contentType: 'tab', itemId: key })
+  }
+
+  const handleContentClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (!(e.target instanceof Element)) return
+    const href = e.target.closest('a')?.getAttribute('href')
+    if (!href) return
+    trackUserPageEvent('select_content', { contentType: selectedTab, itemId: href })
+  }
+
   const handleChannelSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    trackUserPageEvent('select_content', { contentType: 'channel', itemId: e.target.value })
     router.replace({ pathname: `/userpage/${ulid}`, query: { channel: e.target.value } })
   }
 
@@ -132,69 +147,71 @@ export default function Userpage(props: Props): React.JSX.Element {
           <SelectBox label={t('media.userpage.channel')} value={channelUlid} options={channelOptions} className={style.channel} onChange={handleChannelSelect} />
         </HStack>
 
-        <Tabs items={tabItems} selected={selectedTab} onSelect={setSelectedTab} />
+        <Tabs items={tabItems} selected={selectedTab} onSelect={handleTab} />
 
         <hr className={style.hr} />
       </div>
 
-      {selectedTab === TabKey.Info && (
-        <div className={style.information}>
-          <section className={style.section}>
-            <h2>{t('media.userpage.ownerInfo')}</h2>
-            <p className={style.info_item}>{t('media.userpage.email', { email })}</p>
-            <p className={style.info_item}>{t('media.userpage.joined', { date: formattedDate })}</p>
-            <p className={style.info_label}>{t('media.userpage.content')}</p>
-            <p className={style.info_content}>{content}</p>
-          </section>
+      <div onClick={handleContentClick}>
+        {selectedTab === TabKey.Info && (
+          <div className={style.information}>
+            <section className={style.section}>
+              <h2>{t('media.userpage.ownerInfo')}</h2>
+              <p className={style.info_item}>{t('media.userpage.email', { email })}</p>
+              <p className={style.info_item}>{t('media.userpage.joined', { date: formattedDate })}</p>
+              <p className={style.info_label}>{t('media.userpage.content')}</p>
+              <p className={style.info_content}>{content}</p>
+            </section>
 
-          <section className={style.section}>
-            <h2>{t('media.userpage.channelInfo')}</h2>
-            {selectedChannel && (
-              <div className={style.channel_info}>
-                <ExImage src={selectedChannel.avatar} title={selectedChannel.name} className={style.channel_avatar} />
-                <div className={style.channel_detail}>
-                  <span className={style.channel_name}>{selectedChannel.name}</span>
-                  <span className={style.channel_count}>{t('media.userpage.subscriber', { count: selectedChannel.count })}</span>
+            <section className={style.section}>
+              <h2>{t('media.userpage.channelInfo')}</h2>
+              {selectedChannel && (
+                <div className={style.channel_info}>
+                  <ExImage src={selectedChannel.avatar} title={selectedChannel.name} className={style.channel_avatar} />
+                  <div className={style.channel_detail}>
+                    <span className={style.channel_name}>{selectedChannel.name}</span>
+                    <span className={style.channel_count}>{t('media.userpage.subscriber', { count: selectedChannel.count })}</span>
+                  </div>
                 </div>
-              </div>
-            )}
-            <p className={style.info_label}>{t('media.userpage.description')}</p>
-            <p className={style.info_content}>{selectedChannel?.description}</p>
-          </section>
-        </div>
-      )}
+              )}
+              <p className={style.info_label}>{t('media.userpage.description')}</p>
+              <p className={style.info_content}>{selectedChannel?.description}</p>
+            </section>
+          </div>
+        )}
 
-      {selectedTab === TabKey.Posts && <MediaIndexList media={media} />}
+        {selectedTab === TabKey.Posts && <MediaIndexList media={media} />}
 
-      {selectedTab === TabKey.Series &&
-        (seriesGroups.length === 0 ? (
-          <Empty content={t('media.userpage.seriesEmpty')} />
-        ) : (
-          seriesGroups.map(({ mediaType, items }, index) => (
-            <Fragment key={mediaType}>
-              {index > 0 && <Divide />}
-              <CardIndexList title={mediaType}>
-                {items.map((item) => (
-                  <SeriesCard key={item.ulid} item={item} />
-                ))}
-              </CardIndexList>
-            </Fragment>
-          ))
-        ))}
+        {selectedTab === TabKey.Series &&
+          (seriesGroups.length === 0 ? (
+            <Empty content={t('media.userpage.seriesEmpty')} />
+          ) : (
+            seriesGroups.map(({ mediaType, items }, index) => (
+              <Fragment key={mediaType}>
+                {index > 0 && <Divide />}
+                <CardIndexList title={mediaType}>
+                  {items.map((item) => (
+                    <SeriesCard key={item.ulid} item={item} />
+                  ))}
+                </CardIndexList>
+              </Fragment>
+            ))
+          ))}
 
-      {selectedTab === TabKey.Playlist &&
-        (playlists.length === 0 ? <Empty content={t('media.userpage.playlistEmpty')} /> : <CardList items={playlists} Content={PlaylistCard} />)}
+        {selectedTab === TabKey.Playlist &&
+          (playlists.length === 0 ? <Empty content={t('media.userpage.playlistEmpty')} /> : <CardList items={playlists} Content={PlaylistCard} />)}
 
-      {selectedTab === TabKey.Advertise &&
-        (advertises.length === 0 ? (
-          <Empty content={t('media.userpage.advertiseEmpty')} />
-        ) : (
-          <VStack gap="4">
-            {advertises.map((item) => (
-              <AdvertiseCard key={item.ulid} item={item} />
-            ))}
-          </VStack>
-        ))}
+        {selectedTab === TabKey.Advertise &&
+          (advertises.length === 0 ? (
+            <Empty content={t('media.userpage.advertiseEmpty')} />
+          ) : (
+            <VStack gap="4">
+              {advertises.map((item) => (
+                <AdvertiseCard key={item.ulid} item={item} />
+              ))}
+            </VStack>
+          ))}
+      </div>
       <FollowDeleteModal open={isModal} onClose={handleModal} onAction={handleFollow} avatar={avatar} ulid={ulid} nickname={nickname} followerCount={followerCount} />
     </Main>
   )
