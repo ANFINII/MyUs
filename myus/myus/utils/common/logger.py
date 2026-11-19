@@ -142,6 +142,13 @@ class Log:
         # 既存のハンドラーをクリア
         self._logger.handlers.clear()
 
+        if self.IS_JSON:
+            stream_handler = StreamHandler()
+            stream_handler.setLevel(INFO)
+            stream_handler.setFormatter(Formatter("%(message)s"))
+            self._logger.addHandler(stream_handler)
+            return
+
         # ファイルハンドラー（エラー以上）
         log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
@@ -153,15 +160,8 @@ class Log:
             encoding="utf-8"
         )
         error_file_handler.setLevel(ERROR)
-        error_file_handler.setFormatter(Formatter("%(message)s") if self.IS_JSON else PlainFormatter(self.LOG_FORMAT, self.DATE_FORMAT))
+        error_file_handler.setFormatter(PlainFormatter(self.LOG_FORMAT, self.DATE_FORMAT))
         self._logger.addHandler(error_file_handler)
-
-        if self.IS_JSON:
-            stream_handler = StreamHandler()
-            stream_handler.setLevel(INFO)
-            stream_handler.setFormatter(Formatter("%(message)s"))
-            self._logger.addHandler(stream_handler)
-            return
 
         # coloredlogsを使用して色を設定
         coloredlogs.install(
