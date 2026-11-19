@@ -164,13 +164,12 @@ flowchart LR
 - `AWS_ACCOUNT_ID` を入れたら、Actions の `infra` を main で手動実行して、残りのスタックを `stacks.txt` の順に apply する
 - `prod/products/myus/monitoring` を apply したら、SNS から届く確認のメールのリンクを開く（東京と us-east-1 の 2 通）。開くまでアラームは届かない
 - `prod/common/parameters` を apply したら、各パラメータの本当の値を CLI で入れる。`FIXME` のままのパラメータがあると、デプロイは止まる（`aws ssm put-parameter --profile myus-prod --type SecureString --overwrite --name /myus/prod/SECRET_KEY --value '...'`）
-- ドメインを決めて買う（順 1 までに）。取得先と候補は「本番を始める前の整備（コード以外）」の章にある
 
 ### 順番
 
 | 順 | スタック | 内容 |
 |---|---|---|
-| 1 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.<ドメイン>`）を付ける。ドメインが要る |
+| 1 | `prod/common/acm`・`prod/products/myus/dns`・`prod/products/myus/mail` | ACM・Route 53・SES（SPF・DKIM・DMARC）。media の CloudFront に別名（`media.myus.media`）を付ける。`myus.media` のホストゾーンは Route 53 でドメインを買ったときにできているので、`dns` のスタックで import するか data で引く |
 
 次の BE の作業は、最初のデプロイより前に済ませる。
 
@@ -192,14 +191,11 @@ flowchart LR
 
 ### ドメイン
 
-- 取得先は **Route 53 Domains** にする。DNS を Route 53 と Terraform で持つので、買うとホストゾーンが同じ AWS アカウントにでき、ネームサーバーの付け替えが要らない
-  - Cloudflare Registrar は原価で安いが、DNS を Cloudflare に置くことが条件になり、Route 53 で持つ方針と合わない
-  - お名前.com などの国内の取得先は、初年度だけ安く更新が高いことが多く、不要なメールやオプションも多い
-- `myus.com` は 1999 年から MyUS.com という海外の転送サービスが持っていて、取れない。`myus.net`・`myus.io`・`myus.app`・`myus.co`・`myus.jp` も取られている
-- 2026-11-19 の時点で空いていそうなのは `myus.tv`・`myus.media`・`myus.page`・`getmyus.com`。Route 53 で扱える TLD か、値段はいくらかを、買う前に確かめる
-- 買ったら、自動更新と移管ロックを有効にし、WHOIS の代理公開を有効にする
-- 決めたら [infrastructure.md](infrastructure.md) の `myus.xxx` を本当のドメインに直す
-- 同じ名前のサービスがあるので、使う前に商標の登録状況を J-PlatPat で確かめる
+`myus.media` を 2026-11-19 に Route 53 Domains で取った。年 50 USD。
+
+- 自動更新・移管ロック・WHOIS の代理公開が有効になっているかを確かめる
+- 連絡先のメールに届く確認のメールのリンクを 15 日以内に開く。開かないとドメインが止まる
+- 使う前に「MyUs」の商標の登録状況を J-PlatPat と米国の USPTO で確かめる。`myus.com` を MyUS.com という海外の転送サービスが使っている
 
 ### 事業者としての手続き
 
@@ -230,7 +226,7 @@ flowchart LR
 
 ### メールと問い合わせ
 
-- `support@<ドメイン>` など、問い合わせを受けるアドレスを用意する。SES は送るだけなので、受ける先を別に決める
+- `support@myus.media` など、問い合わせを受けるアドレスを用意する。SES は送るだけなので、受ける先を別に決める
 - SES の本番利用の申請を出す。送るメールの種類と、バウンス・苦情の扱いを書く
 - 問い合わせの窓口をサイトのどこに出すかを決める
 
