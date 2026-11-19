@@ -14,7 +14,6 @@ from ...common.logger import log
 
 MP3_TIMEOUT = 600
 PROBE_TIMEOUT = 60
-LOSSLESS_CODECS = {"flac", "alac"}
 MP3_BITRATE = "320k"
 MIN_BIT_RATE = 180000
 LOUDNESS_TIMEOUT = 600
@@ -52,7 +51,7 @@ def probe_audio(path: str) -> AudioInfo:
 
 
 def is_lossless(codec: str) -> bool:
-    return codec in LOSSLESS_CODECS or codec.startswith("pcm_")
+    return codec == "flac" or codec.startswith("pcm_")
 
 
 def is_low_bit_rate(audio: AudioInfo) -> bool:
