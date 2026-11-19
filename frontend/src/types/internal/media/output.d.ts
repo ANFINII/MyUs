@@ -66,7 +66,6 @@ export interface Music extends Media {
   music: string
   gain: number
   lyric: string
-  download: boolean
 }
 
 export interface Blog extends Media {
@@ -147,7 +146,6 @@ export interface MusicDetail extends MediaDetail {
   music: string
   gain: number
   lyric: string
-  download: boolean
   comments: Comment[]
 }
 

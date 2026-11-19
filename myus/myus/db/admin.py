@@ -221,7 +221,7 @@ class VideoAdmin(ImportExportModelAdmin):
 
 @admin.register(Music)
 class MusicAdmin(ImportExportModelAdmin):
-    list_display = ("id", "channel", "title", "read", "total_like", "comment_count", "download", "publish", "created", "updated")
+    list_display = ("id", "channel", "title", "read", "total_like", "comment_count", "publish", "created", "updated")
     list_select_related = ("channel",)
     search_fields = ("title", "channel__owner__nickname", "created")
     ordering = ("channel", "-created")
@@ -231,7 +231,7 @@ class MusicAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "music", "like", "read", "publish", "publish_at", "download")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "music", "like", "read", "publish", "publish_at")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 

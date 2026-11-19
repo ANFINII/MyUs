@@ -16,7 +16,6 @@ class MusicData:
     gain: float
     read: int
     like: int
-    download: bool
     publish: bool
     publish_at: datetime
     created: datetime

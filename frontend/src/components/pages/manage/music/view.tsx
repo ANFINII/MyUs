@@ -126,20 +126,6 @@ export default function ManageMusics(props: Props): React.JSX.Element {
       ),
     },
     {
-      key: 'download',
-      header: 'DL',
-      align: 'center',
-      sortable: true,
-      sortValue: (m) => (m.download ? 1 : 0),
-      className: style.narrow,
-      cellClass: style.publish,
-      cell: (m) => (
-        <div className={style.publish_inner}>
-          <Toggle isActive={m.download} disable />
-        </div>
-      ),
-    },
-    {
       key: 'publish',
       header: t('manage.table.publish'),
       align: 'center',

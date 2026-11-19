@@ -388,7 +388,6 @@
       "content": "内容",
       "lyric": "歌詞",
       "lyricHint": "行の頭に [00:12.00] のような時刻を付けると、詳細画面で再生に合わせて歌詞が流れます",
-      "download": "ダウンロード許可",
       "thumbnail": "サムネイル",
       "image": "画像",
       "pages": "ページ画像",
@@ -569,8 +568,7 @@
       "features": {
         "individualAds": "個別広告表示 {{count}}つ",
         "hideGlobalAds": "全体広告 非表示",
-        "paidContent": "有料記事の販売",
-        "musicDownload": "楽曲ダウンロード",
+        "paidContent": "有料記事・音楽の販売",
         "playlist": "プレイリスト作成",
         "series": "シリーズ作成",
         "basic": "基本機能",

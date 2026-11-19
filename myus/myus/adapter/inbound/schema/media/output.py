@@ -61,7 +61,6 @@ class MusicOut(MediaOut):
     image: str
     music: str
     gain: float
-    download: bool
 
 
 class BlogOut(MediaOut):
@@ -141,7 +140,6 @@ class MusicDetailOut(MediaDetailOut):
     image: str
     music: str
     gain: float
-    download: bool
     comments: list[CommentOut]
 
 
