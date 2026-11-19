@@ -127,4 +127,4 @@ usecase が DB から読んだ値（なければ `None`・一覧なら `list`）
 ### DB の制約（UniqueConstraint など）との関係
 
 - `subscribe` の `UniqueConstraint(fields=["user", "channel"])` のような DB の制約は、domain のルールをすり抜けたときの最後の守りとして残す
-- 制約に引っかかったとき（`IntegrityError`）に adapter で `ValidationError` に変えて返す形にはしない。Interface は `Result[T, FatalError]` を返す決まりなので、ルールとして利用者に返すエラーは domain の関数で先に確かめる
+- 制約に引っかかったとき（`IntegrityError`）に adapter で `ValidationError` に変えて返す形にはしない。Interface は `Result[T, FatalError]` を返す決まりなので、ルールとしてユーザーに返すエラーは domain の関数で先に確かめる

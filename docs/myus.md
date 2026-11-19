@@ -172,7 +172,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - **created/updated**: 作成/更新日時
 
 #### チャンネルの利用フロー
-1. ユーザー登録時にデフォルトチャンネルが自動作成される
+1. アカウント登録時にデフォルトチャンネルが自動作成される
 2. メディア投稿時、ユーザーのデフォルトチャンネル（`is_default=True`）を取得
 3. メディアはチャンネルに紐づいて作成される
 4. メディア一覧・詳細では `channel.owner` から作者情報を取得
@@ -208,7 +208,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - 一覧のカードのジャケットを押すと、画面の下のミニプレイヤーで再生する。ページを移っても再生を続け、曲が終わったら同じ一覧の次の曲に進む（`MusicPlayerProvider`・`widgets/MiniPlayer`）
 - 詳細のプレイヤーの横と、一覧のカードにカーソルを乗せると出る「＋」から、プレイリストに足す。その場で新しいプレイリストも作れる（`widgets/PlaylistAdd`）
 - 歌詞テキスト。行の頭に `[mm:ss.xx]`（LRC の書き方）の時刻があれば、詳細画面で再生に合わせて今の行を光らせて自動でスクロールし、行を押すとそこから再生する（`widgets/Lyric`・`utils/functions/lyric.ts`）。時刻が無ければそのまま出す
-- 時刻は、音楽の作成・編集画面の「歌詞の時刻を付ける」のモーダル（`pages/manage/music/LyricEditor`）で、曲を再生しながら行ごとに記録できる。歌詞と時刻もその場で直せ、±0.1 秒の調整・同期の見え方の確認ができる。「反映する」で歌詞の欄に戻し、フォームの保存で保存する。作成画面では選んだ音声ファイルをそのまま再生する
+- 時刻は、音楽の作成・編集画面の「歌詞の時刻を付ける」のモーダル（`pages/manage/music/LyricEditor`）で、曲を再生しながら行ごとに記録できる。歌詞と時刻もその場で直せ、±0.1 秒の調整・同期の見え方の確認ができる。「反映する」で歌詞の欄に戻し、フォームの保存で保存する。作成画面では選んだ音楽ファイルをそのまま再生する
 - 曲ごとの音の大きさの違いをならす。アップロードのときに ffmpeg の loudnorm で大きさ（LUFS）を測り、-14 LUFS より大きい曲だけ、その差を `gain`（dB。0〜-20）に入れる。再生するときは、音量にその分を掛けて下げる（`utils/functions/volume.ts` の `gainVolume`）。ファイルは書き換えない。小さい曲を上げることはしない
 - 検索対応
 
@@ -289,7 +289,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 #### 料金プラン（`myus/domain/payment/plan.py`）
 - テーブルではなくコードの定数（Free・Basic・Standard・Premium・Ultimate）
-- 価格（通貨ごとの `Money`。円とドル）、広告表示上限など。Stripe の価格 ID は環境変数（`STRIPE_PRICE_ID_*`）
+- 値段（通貨ごとの `Money`。円とドル）、広告表示上限など。Stripe の Price の ID は環境変数（`STRIPE_PRICE_ID_*`）
 
 #### Category / HashTag
 - カテゴリーは日本語と英語の名前を持つ。ハッシュタグは入力された名前だけ
@@ -328,7 +328,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 ```mermaid
 flowchart TB
-    User[利用者] -->|申し込み・解約| API["API<br/>/payment/checkout・/payment/cancel"]
+    User[ユーザー] -->|申し込み・解約| API["API<br/>/payment/checkout・/payment/cancel"]
     API -->|PaymentInterface| Stripe[Stripe]
     Stripe -->|webhook| Webhook["API /payment/webhook<br/>署名を検証して記録し、すぐ 200 を返す"]
     Webhook --> PE[(PaymentEvent<br/>受信の記録)]
@@ -365,8 +365,8 @@ flowchart TB
 #### 通貨
 - 円とドルに対応する。ユーザーの国/地域（`Profile.country`）で決め、日本は円、それ以外はドル（`utils/functions/map.py` の `country_currency`）
 - 契約中は契約の通貨を使う。国/地域を変えても、契約中のプランの請求の通貨は変わらない。契約が無ければ国/地域で決める
-- 価格は `domain/payment/plan.py` の `Plan.prices`（通貨ごとの `Money`。金額は最小単位で、$4.00 は 400）。FE は `GET /payment/plans` から受け取り、価格を直書きしない
-- ドルの価格は、円の価格を為替で換算してきりのよい額にそろえた決まった値（550円 → $4.00・1,100円 → $8.00・1,650円 → $12.00・3,300円 → $24.00）。為替が大きく動いたら見直す。Stripe の Price の金額を変えても、契約中の人の金額は変わらず、新しく契約する人から変わる。Stripe の Adaptive Pricing（請求のたびに為替で換算）は、価格が毎月変わり、画面に正確な金額を出せないので使わない
+- 値段は `domain/payment/plan.py` の `Plan.prices`（通貨ごとの `Money`。金額は最小単位で、$4.00 は 400）。FE は `GET /payment/plans` から受け取り、値段を直書きしない
+- ドルの値段は、円の値段を為替で換算してきりのよい額にそろえた決まった値（550円 → $4.00・1,100円 → $8.00・1,650円 → $12.00・3,300円 → $24.00）。為替が大きく動いたら見直す。Stripe の Price の金額を変えても、契約中の人の金額は変わらず、新しく契約する人から変わる。Stripe の Adaptive Pricing（請求のたびに為替で換算）は、値段が毎月変わり、画面に正確な金額を出せないので使わない
 - Stripe は Price ID（`STRIPE_PRICE_ID_*`）をそのまま使い、Price の `currency_options` に通貨ごとの金額を持たせる。checkout で `currency` を渡す。プラン変更は契約の通貨を引き継ぐ
 - 国/地域の候補は YouTube Premium の対象国・地域に中国を足した121（`Country`）
 
@@ -386,7 +386,7 @@ flowchart TB
 
 | Stripe のイベント | 種類 | 作るもの |
 |---|---|---|
-| `customer.subscription.created`・`updated`・`deleted` | `SubscriptionCreated` など | サブスクリプション・利用者のプラン |
+| `customer.subscription.created`・`updated`・`deleted` | `SubscriptionCreated` など | サブスクリプション・ユーザーのプラン |
 | `invoice.paid` | `PaymentSucceeded` | 取引・売上（`Sale`）・決済手数料（`Fee`） |
 | `invoice.payment_failed` | `PaymentFailed` | 取引の状態 |
 | `charge.refunded` | `RefundIssued` | 返金（`Refund`）・取引の状態 |
@@ -409,7 +409,7 @@ flowchart TB
 - 状態（`GET /payment/seller`・`get_seller`）は、まだ使えない口座のときだけ決済会社から取り直し、使えるようになっていれば `is_enabled` を保存する。Connect の webhook は使わない。今のプランで売れるか（`is_available`）と、値段に使う通貨（`currency`。国/地域から決める）も返す
 
 #### Subscription
-- 継続課金の状態（顧客・決済会社のサブスクリプション ID・商品・契約時の価格・状態・期間）
+- 継続課金の状態（顧客・決済会社のサブスクリプション ID・商品・契約時の値段・状態・期間）
 
 #### PaymentTransaction
 - 1回の請求・支払い（取引）。顧客・サブスクリプション・通貨・税率・状態・支払日・請求書の番号（Stripe の請求書の番号）を持つ
@@ -435,7 +435,7 @@ flowchart TB
 
 `PaymentTransaction`・`PaymentPayout` は、最後に反映したイベントの日時（`last_event_at`）を持ち、それより古いイベントが後から届いても反映しない。明細は届いた順に関係なく、まだ無いものだけ追記する。
 
-サブスクリプションのイベントは、まず Subscription 集約（`myus/domain/payment/subscription/` の `state.py`・`event.py`・`decide.py`・`apply.py`）に通す（`myus/usecase/payment/_convert.py` の `save_subscription_event_data`）。集約は決済会社の状態と今の状態を比べて、必要なイベントだけを `es_event` に追記し、追記後の状態を返す。`Subscription`・`UserPlan` は、この集約の状態から同じトランザクションで作る（届く順番の判断は集約だけが行い、`Subscription` は `last_event_at` を比べない。`last_event_at` には集約が最後に受け入れた日時を入れる）。画面は今まで通り `Subscription`・`UserPlan` を読む。プランの変更（`POST /payment/change`・`change_plan`）は、Stripe のサブスクリプションの価格を差し替え（すぐに変わり、差額は日割りで次の請求で精算する。Stripe の `proration_behavior=create_prorations`）、Stripe が返したサブスクリプションを集約に通す（`Subscription.PlanChanged.V1`）。無料プランへの変更は解約で行う。解約（`cancel_subscription`）は、まず集約に解約の要求（`Subscription.CancellationRequested.V1`）を記録し、そのイベントの ID を冪等キーにして Stripe で期間の終わりの解約を予約する。成功したら Stripe から今のサブスクリプションを取り直して同じように集約に通す（`Subscription` を直接書かない）。webhook を待たずに `canceled_at` が入るので、2回目の解約は Stripe を呼ばずに止まる。決済の画面は `GET /payment/subscription`（`get_subscription`）で今のサブスクリプションが解約予定かどうかと期間の終わりを読み、解約予定なら「〇〇に解約されます」と出して、変更・解約のボタンを隠す。解約の取り消し（`POST /payment/cancel/revoke`・`revoke_cancellation`）は、解約予定のときだけ受け付け、Stripe の期間の終わりの解約の予約を外して（`cancel_at_period_end=false`）、Stripe が返したサブスクリプションを集約に通す。集約は、決済会社の側で解約の日時が空に戻ったら `Subscription.CancellationRevoked.V1` を記録する（Stripe のダッシュボードで取り消したときも同じ）。支払い方法（カード）の変更（`POST /payment/method`・`create_payment_method_session`）は、決済会社が用意する画面に送る（Stripe の Billing Portal を、支払い方法の変更だけの流れ `payment_method_update` で開く）。変更が終わると決済の画面に戻る。Stripe に断られたら `Subscription.CancellationFailed.V1` を記録する。通信に失敗して結果が分からないときは要求を残し、次の解約で同じ冪等キーを使って呼び直す（Stripe 側で二重にならない）。要求や失敗の記録は、届く順番の判断に使う日時（`last_occurred_at`）を変えない。集約の ID は決済会社のサブスクリプションの ID から `stripe:sub_xxx` の形で決めるので、ID を引くための表は持たない。同じサブスクリプションの最初のイベントが同時に届いても、`es_event` の `(aggregate_type, aggregate_id, seq)` の一意制約でぶつかり、コマンドの再試行で片方にまとまる。`replay_payment_events` で流し直すと、まだ集約の無いサブスクリプションは古い順に集約が作られ、既にある集約はイベントが増えずに同じ状態から `Subscription`・`UserPlan` を作り直す（既存データの移行もこれで行う）。
+サブスクリプションのイベントは、まず Subscription 集約（`myus/domain/payment/subscription/` の `state.py`・`event.py`・`decide.py`・`apply.py`）に通す（`myus/usecase/payment/_convert.py` の `save_subscription_event_data`）。集約は決済会社の状態と今の状態を比べて、必要なイベントだけを `es_event` に追記し、追記後の状態を返す。`Subscription`・`UserPlan` は、この集約の状態から同じトランザクションで作る（届く順番の判断は集約だけが行い、`Subscription` は `last_event_at` を比べない。`last_event_at` には集約が最後に受け入れた日時を入れる）。画面は今まで通り `Subscription`・`UserPlan` を読む。プランの変更（`POST /payment/change`・`change_plan`）は、Stripe のサブスクリプションの値段を差し替え（すぐに変わり、差額は日割りで次の請求で精算する。Stripe の `proration_behavior=create_prorations`）、Stripe が返したサブスクリプションを集約に通す（`Subscription.PlanChanged.V1`）。無料プランへの変更は解約で行う。解約（`cancel_subscription`）は、まず集約に解約の要求（`Subscription.CancellationRequested.V1`）を記録し、そのイベントの ID を冪等キーにして Stripe で期間の終わりの解約を予約する。成功したら Stripe から今のサブスクリプションを取り直して同じように集約に通す（`Subscription` を直接書かない）。webhook を待たずに `canceled_at` が入るので、2回目の解約は Stripe を呼ばずに止まる。決済の画面は `GET /payment/subscription`（`get_subscription`）で今のサブスクリプションが解約予定かどうかと期間の終わりを読み、解約予定なら「〇〇に解約されます」と出して、変更・解約のボタンを隠す。解約の取り消し（`POST /payment/cancel/revoke`・`revoke_cancellation`）は、解約予定のときだけ受け付け、Stripe の期間の終わりの解約の予約を外して（`cancel_at_period_end=false`）、Stripe が返したサブスクリプションを集約に通す。集約は、決済会社の側で解約の日時が空に戻ったら `Subscription.CancellationRevoked.V1` を記録する（Stripe のダッシュボードで取り消したときも同じ）。支払い方法（カード）の変更（`POST /payment/method`・`create_payment_method_session`）は、決済会社が用意する画面に送る（Stripe の Billing Portal を、支払い方法の変更だけの流れ `payment_method_update` で開く）。変更が終わると決済の画面に戻る。Stripe に断られたら `Subscription.CancellationFailed.V1` を記録する。通信に失敗して結果が分からないときは要求を残し、次の解約で同じ冪等キーを使って呼び直す（Stripe 側で二重にならない）。要求や失敗の記録は、届く順番の判断に使う日時（`last_occurred_at`）を変えない。集約の ID は決済会社のサブスクリプションの ID から `stripe:sub_xxx` の形で決めるので、ID を引くための表は持たない。同じサブスクリプションの最初のイベントが同時に届いても、`es_event` の `(aggregate_type, aggregate_id, seq)` の一意制約でぶつかり、コマンドの再試行で片方にまとまる。`replay_payment_events` で流し直すと、まだ集約の無いサブスクリプションは古い順に集約が作られ、既にある集約はイベントが増えずに同じ状態から `Subscription`・`UserPlan` を作り直す（既存データの移行もこれで行う）。
 
 支払いのイベントが、対象のサブスクリプションより先に届いたときは、反映を失敗にして、worker が次の回にもう一度反映する（返金が取引より先に届いたときも同じ）。失敗が30回（10秒ごとで約5分）に達したら反映を諦めて `log.error` を出す。原因を直したら `requeue_payment_events` で戻す。
 
@@ -448,8 +448,8 @@ flowchart TB
 - `uv run python manage.py replay_payment_events --confirm`：取引・明細・入金・サブスクリプションを消し、反映済みの `PaymentEvent` を古い順に流し直して作り直す。`--confirm` が無いと何もしない。途中で失敗したら全部元に戻る。worker を止めてから実行する
 - `uv run python manage.py export_event_schema`：`PaymentEvent` の `content` と集約のイベントの JSON スキーマを `tests/schema_compatibility/payment_event/`・`es_event/` に書き出す。過去のイベントを読めなくなる変更（項目の削除・型の変更・必須の項目の追加・enum の値の削除）は書き出さず、テストでも落ちる
 
-#### クリエイターへの支払い
-決済の時点でクリエイターに送金する形（Stripe の destination charge）では、MyUs が決済の主体になり、全額がいったん MyUs に入る。受け取り口座は `PaymentSeller` にある。
+#### 投稿者への支払い
+決済の時点で投稿者に送金する形（Stripe の destination charge）では、MyUs が決済の主体になり、全額がいったん MyUs に入る。受け取り口座は `PaymentSeller` にある。
 - 決済のときに、値段から利用料を引いた額が投稿者の口座に送られる。送金は MyUs の残高の取引として `Transfer`（−）で記録する。決済手数料は MyUs が払う
 - 返金は画面に作らず、運営が Stripe のダッシュボードで行う。そのとき「送金を取り消す」と「利用料を返す」を選ぶ。送金の取り消しは `TransferReversal`（＋）で記録し、その取引の購入を消すので、買った人は有料部分を読めなくなる
 - MyUs の取り分は `Sale + Refund + Fee + Transfer + TransferReversal`。総額のまま残すので、売上を総額・純額のどちらで計上しても集計できる
@@ -472,7 +472,7 @@ flowchart TB
 ## セキュリティ設計
 
 ### 認証・認可
-- 会員登録はメールに送ったリンクから行う
+- アカウント登録はメールに送ったリンクから行う
 - JWT（access 1日・refresh 30日）を Cookie で渡す。ログアウトでトークンの `jti` を失効させる（Redis のキャッシュ）。パスワードを変えると、それまでのトークンは使えなくなる
 - パスワードは Django の `validate_password` で確かめる（よくあるパスワードや、ユーザー名に似たものを弾く）
 - ログイン・メール送信に回数の制限（IP ごと）。ログインはアカウントごとにも失敗の回数で止める。本番は回数を Redis に記録し、プロセスをまたいで数える
