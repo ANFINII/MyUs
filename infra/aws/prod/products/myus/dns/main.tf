@@ -89,18 +89,40 @@ resource "aws_route53_record" "media_aaaa" {
   }
 }
 
-resource "aws_route53_record" "frontend" {
+resource "aws_route53_record" "frontend_a" {
+  for_each = toset([local.frontend.domain_name, "www.${local.frontend.domain_name}"])
+
   zone_id = data.aws_route53_zone.main.zone_id
-  name    = local.p.domain
+  name    = each.value
   type    = "A"
-  ttl     = 300
-  records = [local.vercel_ip]
+
+  alias {
+    name                   = local.frontend.cloudfront_domain_name
+    zone_id                = local.frontend.cloudfront_zone_id
+    evaluate_target_health = false
+  }
 }
 
-resource "aws_route53_record" "frontend_www" {
+resource "aws_route53_record" "frontend_aaaa" {
+  for_each = toset([local.frontend.domain_name, "www.${local.frontend.domain_name}"])
+
   zone_id = data.aws_route53_zone.main.zone_id
-  name    = "www.${local.p.domain}"
-  type    = "CNAME"
-  ttl     = 300
-  records = [local.vercel_cname]
+  name    = each.value
+  type    = "AAAA"
+
+  alias {
+    name                   = local.frontend.cloudfront_domain_name
+    zone_id                = local.frontend.cloudfront_zone_id
+    evaluate_target_health = false
+  }
+}
+
+moved {
+  from = aws_route53_record.frontend
+  to   = aws_route53_record.frontend_a["myus.media"]
+}
+
+moved {
+  from = aws_route53_record.frontend_www
+  to   = aws_route53_record.frontend_a["www.myus.media"]
 }

@@ -9,6 +9,12 @@ variable "domain_name" {
   default     = null
 }
 
+variable "alternate_domain_names" {
+  description = "domain_name のほかに付ける CloudFront の別名。証明書がこの名前も含んでいること"
+  type        = list(string)
+  default     = []
+}
+
 variable "acm_certificate_arn" {
   description = "domain_name の証明書 (us-east-1 の ACM)。domain_name と一緒に渡す"
   type        = string
@@ -26,6 +32,12 @@ variable "cache_policy_id" {
 variable "response_headers_policy_id" {
   type    = string
   default = null
+}
+
+variable "is_spa" {
+  description = "SPA のとき true。/ で index.html を返し、S3 に無いパスにも index.html を返す"
+  type        = bool
+  default     = false
 }
 
 variable "noncurrent_version_expiration_days" {
