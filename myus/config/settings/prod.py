@@ -52,6 +52,17 @@ STORAGES = {
             "file_overwrite": False,
         },
     },
+    "private": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": env.hires_bucket_name,
+            "region_name": env.aws_s3_region_name,
+            "default_acl": "private",
+            "querystring_auth": True,
+            "querystring_expire": 300,
+            "file_overwrite": False,
+        },
+    },
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 MEDIA_BASE_URL = f"https://{env.media_domain}/"

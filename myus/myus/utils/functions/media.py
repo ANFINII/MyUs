@@ -10,10 +10,10 @@ from ninja import UploadedFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import TemporaryUploadedFile
 from .convert.audio_converter import is_conversion, is_low_bit_rate, probe_audio, save_converted_mp3
-from .file import advertise_image_path, advertise_video_path, avatar_path, comic_path, file_extension, image_path, musics_path, video_path
+from .file import advertise_image_path, advertise_video_path, avatar_path, comic_path, file_extension, hires_path, image_path, musics_path, private_storage, video_path
 from ..common.logger import log
 from ..common.result import Result, ValidationError
-from ..constants.upload import IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_FORMATS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
+from ..constants.upload import HIRES_EXTENSIONS, HIRES_FORMATS, HIRES_MAX_SIZE, IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_FORMATS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
 from ..enum.upload import ImageUpload, MediaUpload
 
 
@@ -32,6 +32,8 @@ def upload_rule(upload_type: UploadType) -> UploadRuleData:
             return UploadRuleData(extensions=VIDEO_EXTENSIONS, content_type_prefix="video/", max_size=VIDEO_MAX_SIZE)
         case MediaUpload.MUSIC:
             return UploadRuleData(extensions=MUSIC_EXTENSIONS, content_type_prefix="audio/", max_size=MUSIC_MAX_SIZE)
+        case MediaUpload.HIRES:
+            return UploadRuleData(extensions=HIRES_EXTENSIONS, content_type_prefix="audio/", max_size=HIRES_MAX_SIZE)
         case _:
             assert_never(upload_type)
 
@@ -87,6 +89,8 @@ def media_formats(upload_type: MediaUpload) -> set[str]:
             return VIDEO_FORMATS
         case MediaUpload.MUSIC:
             return MUSIC_FORMATS
+        case MediaUpload.HIRES:
+            return HIRES_FORMATS
         case _:
             assert_never(upload_type)
 
@@ -144,6 +148,8 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
             path = musics_path(ulid)
             if is_conversion(filename):
                 return save_converted_mp3(file, path)
+        case MediaUpload.HIRES:
+            return private_storage().save(hires_path(ulid), file)
         case _:
             assert_never(upload_type)
     return default_storage.save(path, file)

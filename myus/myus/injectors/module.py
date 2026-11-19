@@ -10,6 +10,7 @@ from myus.adapter.outbound.db.hashtag.repository import HashtagRepository
 from myus.adapter.outbound.db.media.blog.repository import BlogRepository
 from myus.adapter.outbound.db.media.chat.repository import ChatRepository
 from myus.adapter.outbound.db.media.comic.repository import ComicRepository
+from myus.adapter.outbound.db.media.hires.repository import MusicHiresRepository
 from myus.adapter.outbound.db.media.music.repository import MusicRepository
 from myus.adapter.outbound.db.media.picture.repository import PictureRepository
 from myus.adapter.outbound.db.media.video.repository import VideoRepository
@@ -41,6 +42,7 @@ from myus.domain.hashtag.interface import HashtagInterface
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.interface import ComicInterface
+from myus.domain.media.hires.interface import MusicHiresInterface
 from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.interface import VideoInterface
@@ -85,6 +87,10 @@ class MediaModule(Module):
     @provider
     def provide_music_repository(self) -> MusicInterface:
         return MusicRepository()
+
+    @provider
+    def provide_music_hires_repository(self) -> MusicHiresInterface:
+        return MusicHiresRepository()
 
     @provider
     def provide_blog_repository(self) -> BlogInterface:

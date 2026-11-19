@@ -81,6 +81,10 @@ class MusicUpdateIn(BaseModel):
     publish_at: datetime
 
 
+class MusicHiresIn(BaseModel):
+    price: int
+
+
 class BlogUpdateIn(BaseModel):
     category_ulid: str
     title: Title

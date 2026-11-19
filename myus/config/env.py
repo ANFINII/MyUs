@@ -55,6 +55,7 @@ class Environment:
     aws_storage_bucket_name: str = ""
     aws_s3_region_name: str = "ap-northeast-1"
     media_domain: str = ""
+    hires_bucket_name: str = ""
 
 
 def load_env(env_path: Path) -> None:

@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any
+from django.core.files.storage import Storage, storages
 from .common import new_ulid
 from ..enum.upload import ImageUpload, MediaUpload
 
@@ -22,6 +23,10 @@ def video_path(type: MediaUpload, ulid: str, extension: str) -> str:
 
 def musics_path(ulid: str) -> str:
     return f"musics/channel_{ulid}/{new_ulid()}.mp3"
+
+
+def hires_path(ulid: str) -> str:
+    return f"hires/channel_{ulid}/{new_ulid()}.flac"
 
 
 def comic_path(ulid: str, extension: str) -> str:
@@ -66,6 +71,10 @@ def music_upload(obj: Any, filename: str) -> str:
     return musics_path(str(obj.channel.ulid))
 
 
+def hires_upload(obj: Any, filename: str) -> str:
+    return hires_path(str(obj.music.channel.ulid))
+
+
 def comic_upload(obj: Any, filename: str) -> str:
     return comic_path(str(obj.channel.ulid), file_extension(filename))
 
@@ -76,3 +85,7 @@ def advertise_image_upload(obj: Any, filename: str) -> str:
 
 def advertise_video_upload(obj: Any, filename: str) -> str:
     return advertise_video_path(str(obj.author.ulid), file_extension(filename))
+
+
+def private_storage() -> Storage:
+    return storages["private"]

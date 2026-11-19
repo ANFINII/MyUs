@@ -180,6 +180,12 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_BASE_URL = f"{DOMAIN_URL}{MEDIA_URL}"
 
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "private": {"BACKEND": "django.core.files.storage.FileSystemStorage", "OPTIONS": {"location": os.path.join(BASE_DIR, "private"), "base_url": None}},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+
 # File upload size limits
 FILE_UPLOAD_PERMISSIONS = 0o644
 DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024  # 50MB (ファイル以外のPOSTデータの上限。ブログ本文にbase64の画像が入るため)

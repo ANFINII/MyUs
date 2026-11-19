@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 from myus.utils.constants.choice import CURRENCY_CHOICES, ENCODE_STATUS_CHOICES
 from myus.utils.enum.media import EncodeStatus
-from myus.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
+from myus.utils.functions.file import comic_upload, hires_upload, image_upload, music_upload, private_storage, video_upload
 from .base import MediaModel
 from .channel import Channel
 from .hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
@@ -71,6 +71,26 @@ class Music(models.Model, MediaModel):
             models.Index(fields=["channel", "publish"], name="music_channel_publish_idx"),
             models.Index(fields=["publish", "-created"], name="music_publish_created_idx"),
         ]
+
+
+class MusicHires(models.Model):
+    """MusicHires"""
+    id          = models.BigAutoField(primary_key=True)
+    music       = models.OneToOneField(Music, on_delete=models.CASCADE, related_name="hires")
+    file        = models.FileField(upload_to=hires_upload, storage=private_storage, max_length=255)
+    sample_rate = models.IntegerField()
+    bit_depth   = models.IntegerField()
+    price       = models.IntegerField()
+    currency    = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.music_id)
+
+    class Meta:
+        db_table = "music_hires"
+        verbose_name_plural = "02 MusicHires"
 
 
 # Blog
