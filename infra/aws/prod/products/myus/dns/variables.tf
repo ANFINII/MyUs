@@ -9,6 +9,17 @@ data "terraform_remote_state" "media" {
   }
 }
 
+data "terraform_remote_state" "frontend" {
+  backend = "s3"
+
+  config = {
+    bucket  = "terraform-myus-prod"
+    key     = "products/myus/frontend/terraform.tfstate"
+    region  = "ap-northeast-1"
+    profile = "myus-prod"
+  }
+}
+
 data "terraform_remote_state" "compute" {
   backend = "s3"
 
@@ -27,10 +38,9 @@ locals {
   # media variables
   media = data.terraform_remote_state.media.outputs.media
 
+  # frontend variables
+  frontend = data.terraform_remote_state.frontend.outputs.frontend
+
   # compute variables
   api = data.terraform_remote_state.compute.outputs.api
-
-  # Vercel
-  vercel_ip    = "76.76.21.21"
-  vercel_cname = "cname.vercel-dns.com"
 }

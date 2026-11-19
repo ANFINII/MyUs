@@ -82,4 +82,27 @@ data "aws_iam_policy_document" "deploy" {
     ]
     resources = ["*"]
   }
+
+  statement {
+    actions   = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::${local.p.base_name}-frontend"]
+  }
+
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:DeleteObject",
+    ]
+    resources = ["arn:aws:s3:::${local.p.base_name}-frontend/*"]
+  }
+
+  statement {
+    actions   = ["cloudfront:ListDistributions"]
+    resources = ["*"]
+  }
+
+  statement {
+    actions   = ["cloudfront:CreateInvalidation"]
+    resources = ["arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/*"]
+  }
 }

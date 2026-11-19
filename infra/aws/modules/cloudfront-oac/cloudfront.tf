@@ -2,9 +2,11 @@ resource "aws_cloudfront_distribution" "main" {
   enabled         = true
   is_ipv6_enabled = true
 
-  aliases = local.acm_enabled ? [var.domain_name] : []
+  aliases = local.acm_enabled ? concat([var.domain_name], var.alternate_domain_names) : []
 
   price_class = "PriceClass_200"
+
+  default_root_object = var.is_spa ? "index.html" : null
 
   origin {
     origin_id                = aws_s3_bucket.main.id
@@ -29,6 +31,17 @@ resource "aws_cloudfront_distribution" "main" {
     response_headers_policy_id = var.response_headers_policy_id
 
     compress = true
+  }
+
+  dynamic "custom_error_response" {
+    for_each = var.is_spa ? [403, 404] : []
+
+    content {
+      error_code            = custom_error_response.value
+      response_code         = 200
+      response_page_path    = "/index.html"
+      error_caching_min_ttl = 0
+    }
   }
 
   restrictions {

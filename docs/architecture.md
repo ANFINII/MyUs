@@ -13,7 +13,7 @@
 | メディア | ffmpeg（HLS 変換） / video.js / Tiptap |
 | 開発環境 | Docker Compose / uv / pnpm |
 | 静的解析・テスト | mypy / ruff / pytest / ESLint / Vitest |
-| CI・配信 | GitHub Actions / Vercel |
+| CI・配信 | GitHub Actions / S3 + CloudFront |
 | 本番のインフラ | AWS（EC2・RDS・S3・CloudFront・SSM）/ Terraform（[infrastructure.md](infrastructure.md)） |
 
 ## 全体構成
@@ -41,7 +41,7 @@ flowchart LR
     Outbound -->|PaymentInterface の実装| Stripe
 ```
 
-- フロントエンドは SPA として Vercel から配信し、バックエンドの REST API を呼ぶ
+- フロントエンドは SPA として S3 と CloudFront から配信し、バックエンドの REST API を呼ぶ
 - バックエンドは Daphne（ASGI）で HTTP と WebSocket の両方を受ける
 - WebSocket のメッセージは Redis の Channel Layer で配る
 - メディアは、開発はローカルディスク、本番は S3 に置いて CloudFront から配信する

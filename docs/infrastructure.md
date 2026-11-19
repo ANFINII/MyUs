@@ -6,7 +6,7 @@
 
 | 領域 | 現状 |
 |---|---|
-| フロントエンド | Vite + React（SPA）。`frontend/vercel.json` で Vercel にデプロイ |
+| フロントエンド | Vite + React（SPA）。ビルドしたファイルを S3 に置き、CloudFront から `myus.media`・`www.myus.media` で配信する |
 | バックエンド | Django 6.1 + django-ninja。ASGI（daphne）で HTTP と WebSocket（Channels）を処理する。docker-compose では `runserver`（daphne が入っているので ASGI で動く）で `myus_backend:8000` を起動している |
 | DB | MySQL 8.4（docker-compose のコンテナ） |
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
@@ -14,7 +14,7 @@
 | 決済 | Stripe（webhook あり） |
 | 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換は、API が動画を変換前（`encode_status` が `Encoding`）のまま保存し、`myus_encoder`（`encode_videos`）が DB を定期的に読んで変換する |
 | メール | 開発は `console.EmailBackend`（送信されない）。本番（`config/settings/prod.py`）は SMTP で送る。接続先は `EMAIL_HOST`・`EMAIL_PORT`・`EMAIL_HOST_USER`・`EMAIL_HOST_PASSWORD`、送信元は `EMAIL_FROM` |
-| CI | GitHub Actions。`backend.yml`：mypy・ruff・`manage.py check`・pytest、`frontend.yml`：`pnpm check`・`pnpm test`・ビルド、`github-actions.yml`：ワークフロー自体の検査（actionlint・zizmor）、`deploy.yml`：本番へのデプロイ、`infra.yml`：Terraform の plan・apply |
+| CI | GitHub Actions。`backend.yml`：mypy・ruff・`manage.py check`・pytest、`frontend.yml`：`pnpm check`・`pnpm test`・ビルド・main では S3 へのデプロイ、`github-actions.yml`：ワークフロー自体の検査（actionlint・zizmor）、`deploy.yml`：本番へのデプロイ、`infra.yml`：Terraform の plan・apply |
 
 ---
 
@@ -22,7 +22,7 @@
 
 **「フェーズ 1 で小さく安く本番化し、ユーザーが増えたらフェーズ 2 へ移行する」** 二段階の構成にする。
 
-- フロントは **Vercel を継続**する（SPA の配信は Vercel で十分で、移行するメリットが小さい）
+- フロントも **S3 + CloudFront** で配信する。SPA はビルドしたファイルを置くだけなので、外のサービスを増やさずに AWS と Terraform にまとめる
 - メディアは最初から **S3 + CloudFront** に置く（あとから移すとデータ移行が大変なため）
 - インフラはすべて **Terraform** で管理し、フェーズ 2 への移行もコードの差し替えで行う
 - リージョンは **東京（ap-northeast-1）**
@@ -34,7 +34,8 @@
 ```mermaid
 flowchart LR
     User[ユーザー]
-    Vercel[Vercel<br/>フロント SPA]
+    CF_FRONT[CloudFront<br/>myus]
+    S3_FRONT[(S3<br/>フロント SPA)]
     CF_API[CloudFront<br/>api.myus]
     CF_MEDIA[CloudFront<br/>media.myus]
     subgraph VPC[VPC（パブリック・datastore サブネット・NAT なし）]
@@ -46,7 +47,7 @@ flowchart LR
     Stripe[Stripe]
     SSM[SSM Parameter Store]
 
-    User --> Vercel
+    User --> CF_FRONT -->|OAC| S3_FRONT
     User -->|HTTPS / WSS| CF_API --> EC2
     User --> CF_MEDIA -->|OAC| S3
     EC2 --> RDS
@@ -64,11 +65,12 @@ flowchart LR
 | API の入口 | **CloudFront** + **ACM** | TLS 終端。WebSocket にも対応している。ALB（月 $20 以上）を使わずに HTTPS 化できる。オリジンへのアクセスは CloudFront のマネージドプレフィックスリストに限定する。CloudFront → EC2 は HTTP（80 番）になる（EC2 に証明書を置かないため）。暗号化が要るようになったら ALB か EC2 側の TLS を足す |
 | DB | **RDS for MySQL db.t4g.micro**（シングル AZ, gp3 20GB） | 自動バックアップ（7 日）とパッチ適用を任せる。パスワードは Terraform の ephemeral な `random_password` で作り、RDS（`password_wo`）と SSM の `/myus/prod/MYSQL_PASSWORD`（`value_wo`）に同じ値を入れる。state には残らない |
 | キャッシュ・Channel Layer | EC2 上の **Redis コンテナ** | フェーズ 1 では ElastiCache を使わずにコストを抑える |
+| フロント配信 | **S3** + **CloudFront**（OAC） | `prod/products/myus/frontend`。`myus.media`・`www.myus.media` で配信する。SPA なので、`/` と S3 に無いパスには `index.html` を返す。`frontend.yml` が main でビルドし、`assets/` は長くキャッシュし、それ以外は毎回確かめるようにして S3 に送り、キャッシュを消す |
 | メディア保存 | **S3** | `django-storages[s3]` の `S3Storage`（`config/settings/prod.py` の `STORAGES`）。バケットは非公開にし、EC2 のロールで書く |
 | メディア配信 | **CloudFront**（OAC） | HLS（`.m3u8` / `.ts`）・画像を配信する。有料コンテンツは **署名付き Cookie** で保護する |
 | メール | **SES** | 今の SMTP の設定のまま、接続先を SES の SMTP（`email-smtp.ap-northeast-1.amazonaws.com`）にする（`django-ses` は入れなくてよい）。本番利用申請（サンドボックス解除）が必要。SPF・DKIM・DMARC は Route 53 で設定する |
 | シークレット | **SSM Parameter Store**（SecureString） | Stripe キー・JWT シークレットなど。EC2 の IAM ロールで読み取り、起動時に環境変数へ展開する |
-| DNS | **Route 53** | `myus.media`（Vercel）・`api.myus.media`・`media.myus.media` |
+| DNS | **Route 53** | `myus.media`・`www.myus.media`（フロント）・`api.myus.media`・`media.myus.media` |
 | 監視 | **CloudWatch**（Agent・Alarms）+ **AWS Budgets** | `prod/products/myus/monitoring` が、EC2 のステータスチェック・CPU クレジット・ディスクの使用率（CloudWatch Agent が送る）、RDS の空き容量・CPU、API の CloudFront の 5xx の割合にアラームを付け、SNS からメールで通知する。CloudFront のメトリクスは us-east-1 にあるので、5xx のアラームと SNS のトピックは us-east-1 にも作る。予算超過は `prod/general/cost` がメールで通知する |
 | デプロイ | **GitHub Actions** → **ECR** → EC2（SSM Run Command で `docker compose pull && up -d`） | 認証は OIDC で行う（アクセスキーを使わない）。`.github/workflows/deploy.yml` が arm64 のイメージを buildx で作って ECR に push し、ライブラリの層は GitHub Actions のキャッシュで使い回す。`compute/deploy/` の `compose.yml`・`deploy.sh` を EC2 に送って実行する。`deploy.sh` は SSM の `/myus/prod/` から `django.env` を作ってから起動する |
 
@@ -105,7 +107,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     User[ユーザー]
-    Vercel[Vercel]
+    CF_FRONT[CloudFront<br/>フロント]
     WAF[WAF]
     CF_API[CloudFront]
     CF_MEDIA[CloudFront<br/>署名付き Cookie]
@@ -122,7 +124,7 @@ flowchart LR
     S3[(S3)]
     EB[EventBridge<br/>Scheduler]
 
-    User --> Vercel
+    User --> CF_FRONT --> S3
     User --> WAF --> CF_API --> ALB
     ALB -->|/api| API
     ALB -->|/ws| WS
@@ -204,7 +206,6 @@ infra/
 | 環境変数の値 | 入れ物（`prod/common/parameters` の `/myus/prod/<名前>`）だけを Terraform で `FIXME` の値で作り、本当の値は `aws ssm put-parameter --overwrite` で入れる。Git にも state にも残らない（`value_wo`）。DB のパスワードは `prod/products/myus/database` が作って `/myus/prod/MYSQL_PASSWORD` に入れる。DB の接続先・メディアのバケットなど Terraform で決まる値は `prod/products/myus/compute` が `/myus/prod/` に入れる |
 | SES の本番利用申請・サービスクォータの引き上げ | AWS に申請する |
 | ドメインの購入 | 手作業で行う（DNS レコードはコードで管理する） |
-| Vercel のプロジェクト・環境変数 | Vercel の画面で設定する |
 | DB・S3 のデータ | バックアップで守る（RDS の自動バックアップ、S3 のバージョニング） |
 
 ---
@@ -231,14 +232,16 @@ flowchart LR
     end
     subgraph myus[products/myus]
         media[7. media<br/>S3・CloudFront<br/>media.myus.media]
-        database[8. database<br/>RDS MySQL]
-        compute[9. compute<br/>EC2・CloudFront・IAM<br/>api.myus.media]
-        dns[10. dns<br/>Route 53 のレコード<br/>api・media・Vercel]
-        mail[11. mail<br/>SES・DKIM・MAIL FROM・DMARC]
-        monitoring[12. monitoring<br/>CloudWatch Alarms・SNS]
+        frontend[8. frontend<br/>S3・CloudFront<br/>myus.media・www.myus.media]
+        database[9. database<br/>RDS MySQL]
+        compute[10. compute<br/>EC2・CloudFront・IAM<br/>api.myus.media]
+        dns[11. dns<br/>Route 53 のレコード<br/>フロント・api・media]
+        mail[12. mail<br/>SES・DKIM・MAIL FROM・DMARC]
+        monitoring[13. monitoring<br/>CloudWatch Alarms・SNS]
     end
 
     acm --> media
+    acm --> frontend
     acm --> compute
     network --> database
     network --> compute
@@ -246,22 +249,24 @@ flowchart LR
     database --> compute
     media --> compute
     media --> dns
+    frontend --> dns
     compute --> dns
     database --> monitoring
     compute --> monitoring
 ```
 
-`ecr`・`cost`・`iam-role` はほかのスタックの outputs を読まない。`iam-role` のデプロイ用のロールは、ECR のリポジトリと EC2 を名前（`myus-backend`・`myus-api-prod`）で指している。
+`ecr`・`cost`・`iam-role` はほかのスタックの outputs を読まない。`iam-role` のデプロイ用のロールは、ECR のリポジトリ・EC2・フロントのバケットを名前（`myus-backend`・`myus-api-prod`・`myus-prod-frontend`）で指している。
 
 ### リクエストの流れ
 
 ```mermaid
 flowchart LR
     User[ユーザー]
-    Vercel[Vercel<br/>フロント SPA]
     Stripe[Stripe]
 
     subgraph aws[AWS ap-northeast-1]
+        CF_FRONT[CloudFront フロント<br/>CachingOptimized<br/>無いパスは index.html]
+        S3_FRONT[(S3<br/>myus-prod-frontend)]
         CF_API[CloudFront API<br/>キャッシュなし<br/>CloudFront-Forwarded-Proto を付ける]
         CF_MEDIA[CloudFront メディア<br/>CachingOptimized]
         S3[(S3<br/>myus-prod-media)]
@@ -283,7 +288,7 @@ flowchart LR
         end
     end
 
-    User --> Vercel
+    User -->|HTTPS| CF_FRONT -->|OAC| S3_FRONT
     User -->|HTTPS / WSS| CF_API
     Stripe -->|webhook| CF_API
     CF_API -->|HTTP :80<br/>CloudFront のプレフィックスリストだけ許可| backend
@@ -310,6 +315,7 @@ sequenceDiagram
     participant ECR as ECR<br/>myus-backend
     participant EC2 as EC2<br/>/opt/myus
     participant SSM as SSM Parameter Store
+    participant S3F as S3<br/>myus-prod-frontend
 
     Dev->>GH: PR を出す
     GH->>AWS: infra.yml check・plan（github-actions-terraform-plan）
@@ -324,6 +330,10 @@ sequenceDiagram
     EC2->>ECR: docker compose pull
     EC2->>EC2: docker compose up -d
     GH->>EC2: 終わるまで get-command-invocation で待つ
+    Note over GH: FE が変わったら frontend.yml（github-actions-deploy）
+    GH->>GH: vite build
+    GH->>S3F: assets/ と、それ以外を分けて sync
+    GH->>AWS: CloudFront のキャッシュを消す
 ```
 
 ### DB のスキーマの変更
