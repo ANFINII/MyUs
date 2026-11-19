@@ -48,6 +48,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
+  const [isSale, setIsSale] = useState<boolean>(data.product !== null)
   const [previewPages, setPreviewPages] = useState<string[]>([])
   const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid, title, content, price, freePages, publish, publishAt: datetimeISO(publishAt) })
 
@@ -59,6 +60,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (file: File) => setValues({ ...values, image: file })
+  const handleSale = () => setIsSale(!isSale)
   const handlePrice = (price: number) => setValues({ ...values, price })
   const handleFreePages = (freePages: number) => setValues({ ...values, freePages })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
@@ -77,13 +79,14 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
     if (!validate({ categoryUlid, title, content })) return
-    const paidError = paidPagesError(values.price, values.freePages, data.pages.length)
+    const paidError = isSale ? paidPagesError(values.price, values.freePages, data.pages.length) : ''
     if (paidError !== '') {
       handleToast(paidError, true)
       return
     }
+    const request = isSale ? values : { ...values, price: 0, freePages: 0 }
     handleLoading(true)
-    const ret = await putManageComic(data.ulid, values)
+    const ret = await putManageComic(data.ulid, request)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Put), true)
@@ -112,11 +115,13 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
           <PaidPagesInput
+            isSale={isSale}
             price={values.price}
             freePages={values.freePages}
             currency={currency}
             isAvailable={seller.isAvailable || data.product !== null}
             isEnabled={seller.isEnabled || data.product !== null}
+            onSale={handleSale}
             onPrice={handlePrice}
             onFreePages={handleFreePages}
           />

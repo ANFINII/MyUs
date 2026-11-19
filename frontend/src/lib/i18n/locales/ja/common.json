@@ -413,6 +413,7 @@
       "video": "動画",
       "music": "音楽",
       "richtext": "本文",
+      "sale": "有料で販売する",
       "price": "値段（{{currency}}）",
       "paidText": "有料部分",
       "freePages": "無料で読めるページ数",

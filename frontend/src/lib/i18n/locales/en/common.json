@@ -416,6 +416,7 @@
       "video": "Video",
       "music": "Audio",
       "richtext": "Body",
+      "sale": "Sell this",
       "price": "Price ({{currency}})",
       "paidText": "Paid section",
       "freePages": "Free pages",
