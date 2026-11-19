@@ -30,9 +30,12 @@ export default function Main(props: Props): React.JSX.Element {
       <Meta title={title || metaTitle} {...meta} />
       {type === 'defalt' && (
         <>
-          <div>
-            {title && <h1 className={style.title}>{title}</h1>}
-            {search?.name && <section className={style.search_message}>{t('search.result', { name: search.name, count: search.count })}</section>}
+          <div className={style.header}>
+            <div>
+              {title && <h1 className={style.title}>{title}</h1>}
+              {search?.name && <section className={style.search_message}>{t('search.result', { name: search.name, count: search.count })}</section>}
+            </div>
+            {button && <div className={style.button}>{button}</div>}
           </div>
           {children}
         </>

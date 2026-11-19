@@ -10,6 +10,12 @@ class MediaType(str, Enum):
     CHAT = "Chat"
 
 
+class HomeSort(str, Enum):
+    RECOMMEND = "Recommend"
+    TRENDING = "Trending"
+    LATEST = "Latest"
+
+
 class CommentTypeNo(int, Enum):
     VIDEO = 1
     MUSIC = 2

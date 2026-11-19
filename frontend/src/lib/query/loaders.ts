@@ -37,7 +37,6 @@ import {
   paymentSubscriptionQuery,
   pictureQuery,
   picturesQuery,
-  recommendQuery,
   settingMypageQuery,
   settingNotificationQuery,
   settingProfileQuery,
@@ -57,7 +56,7 @@ import {
 import { postMediaRead } from 'api/internal/media/read'
 import { MediaType } from 'utils/constants/enum'
 import { selectChannelUlid } from 'utils/functions/channel'
-import { pageParams, searchParams } from 'utils/functions/common'
+import { homeParams, pageParams, searchParams } from 'utils/functions/common'
 
 export interface PageLoad<TParams> {
   queryClient: QueryClient
@@ -88,8 +87,7 @@ export const signupLoader = ({ queryClient, search }: PageLoad<object>) => verif
 export const passwordResetLoader = ({ queryClient, search }: PageLoad<object>) => verifyLoader(search.token, (token) => queryClient.query(passwordResetQuery(token)))
 export const withdrawalLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery())
 
-export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(searchParams(search)))
-export const recommendLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(recommendQuery(searchParams(search)))
+export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(homeParams(search)))
 export const videosLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(videosQuery(listParams(search)))
 export const musicsLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(musicsQuery(listParams(search)))
 export const blogsLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(blogsQuery(listParams(search)))

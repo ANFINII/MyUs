@@ -14,7 +14,6 @@ import Avatar from 'components/parts/Avatar'
 import IconBell from 'components/parts/Icon/Bell'
 import IconCloud from 'components/parts/Icon/Cloud'
 import IconExclamation from 'components/parts/Icon/Exclamation'
-import IconLightning from 'components/parts/Icon/Lightning'
 import IconList from 'components/parts/Icon/List'
 import Search from 'components/parts/Input/Search'
 import Logo from 'components/parts/Logo'
@@ -85,22 +84,18 @@ export default function Header(props: Props): React.JSX.Element {
           <Search value={search} onChange={handleSearch} />
         </div>
 
-        <div className={cx(style.nav_4, style.color)} onClick={() => handleRouter('/recommend')}>
-          <IconLightning size="1.5em" type="fill" />
-        </div>
-
-        <div className={cx(style.nav_5, style.color, isCloud && style.active)} onClick={handleCloud}>
+        <div className={cx(style.nav_4, style.color, isCloud && style.active)} onClick={handleCloud}>
           <IconCloud size="1.5em" />
           <DropMenuCloud open={isCloud} onClose={handleCloud} />
         </div>
 
-        <div className={cx(style.nav_6, style.color, isNotice && style.active)} onClick={handleNotice}>
+        <div className={cx(style.nav_5, style.color, isNotice && style.active)} onClick={handleNotice}>
           <IconBell size="1.5em" className={cx(style.bell, notificationCount > 0 && style.active)} />
           <IconExclamation size="1.2em" className={cx(style.exclamation, notificationCount > 0 && style.active)} />
           <DropMenuNotice open={isNotice} notifications={notifications} onClose={handleNotice} />
         </div>
 
-        <div className={cx(style.nav_7, style.color, isProfile && style.active)} onClick={handleProfile}>
+        <div className={cx(style.nav_6, style.color, isProfile && style.active)} onClick={handleProfile}>
           <Avatar src={user.avatar} title={user.nickname} size="32" className={cx(style.account, isProfile && style.active)} />
           <DropMenuProfile open={isProfile} onClose={handleProfile} />
         </div>

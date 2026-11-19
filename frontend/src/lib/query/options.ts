@@ -24,7 +24,7 @@ import {
 } from 'api/internal/manage/get'
 import { getManageSeries, getManageSeriesList } from 'api/internal/manage/series'
 import { getBlog, getChat, getComic, getMusic, getPicture, getVideo } from 'api/internal/media/detail'
-import { getBlogs, getChats, getComics, getHome, getMusics, getPictures, getRecommend, getVideos } from 'api/internal/media/list'
+import { getBlogs, getChats, getComics, getHome, getMusics, getPictures, getVideos } from 'api/internal/media/list'
 import { getPaymentPlans, getPaymentSeller, getPaymentSubscription } from 'api/internal/payment'
 import { getPlaylist, getPlaylists, getUserPlaylists } from 'api/internal/playlist'
 import { getChannelSeries } from 'api/internal/series'
@@ -39,7 +39,6 @@ export const subscribeChannelsQuery = () => queryOptions({ queryKey: queryKeys.s
 export const categoriesQuery = () => queryOptions({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()), refetchOnMount: false })
 
 export const homeQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), refetchOnMount: false })
-export const recommendQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.recommend(params), queryFn: () => toQuery(getRecommend(params)), refetchOnMount: false })
 
 export const videosQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaVideos(params), queryFn: () => toQuery(getVideos(params)), refetchOnMount: false })
 export const musicsQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.mediaMusics(params), queryFn: () => toQuery(getMusics(params)), refetchOnMount: false })

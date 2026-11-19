@@ -18,10 +18,11 @@ from myus.usecase.dto.media import VideoCreateDTO, MusicCreateDTO, BlogCreateDTO
 from myus.usecase.dto.message import MessageDTO
 from myus.usecase.dto.user import AuthorDTO, MediaUserDTO
 from myus.usecase.media.core import create_video, create_music, create_blog, create_comic, create_picture, create_chat
-from myus.usecase.media.core import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
+from myus.usecase.media.core import get_home, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from myus.usecase.media.core import get_video_detail, get_music_detail, get_music_hires_url, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from myus.usecase.media.core import increment_media_read
 from myus.utils.common.logger import log
+from myus.utils.enum.media import HomeSort
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from myus.utils.functions.common import create_url, get_client_ip
 from .auth import auth_check
@@ -46,10 +47,10 @@ class HomeAPI:
 
     @staticmethod
     @router.get("", response={200: HomeOut, 500: ErrorOut})
-    def get(request: HttpRequest, search: str = ""):
-        log.info("request", search=search)
+    def get(request: HttpRequest, search: str = "", sort: HomeSort = HomeSort.RECOMMEND):
+        log.info("request", search=search, sort=sort)
 
-        ret = get_home(8, search)
+        ret = get_home(8, search, sort)
         if ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
@@ -61,33 +62,6 @@ class HomeAPI:
             comics=convert_comics(home.comics),
             pictures=convert_pictures(home.pictures),
             chats=convert_chats(home.chats),
-        )
-
-        return 200, data
-
-
-class RecommendAPI:
-    """RecommendAPI"""
-
-    router = Router()
-
-    @staticmethod
-    @router.get("", response={200: HomeOut, 500: ErrorOut})
-    def get(request: HttpRequest, search: str = ""):
-        log.info("request", search=search)
-
-        ret = get_recommend(8, search)
-        if ret.is_err:
-            return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
-
-        recommend = ret.ok_value
-        data = HomeOut(
-            videos=convert_videos(recommend.videos),
-            musics=convert_musics(recommend.musics),
-            blogs=convert_blogs(recommend.blogs),
-            comics=convert_comics(recommend.comics),
-            pictures=convert_pictures(recommend.pictures),
-            chats=convert_chats(recommend.chats),
         )
 
         return 200, data

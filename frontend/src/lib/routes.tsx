@@ -38,7 +38,6 @@ import {
   picturesLoader,
   playlistLoader,
   playlistsLoader,
-  recommendLoader,
   settingMypageLoader,
   settingNotificationLoader,
   settingPasswordLoader,
@@ -81,7 +80,6 @@ const page = <TPath extends string>(path: TPath, load: PageImport, loader?: Page
 
 export const routeTree = rootRoute.addChildren([
   page('/', () => import('components/pages/home'), homeLoader),
-  page('/recommend', () => import('components/pages/recommend'), recommendLoader),
   page('/userpage/$ulid', () => import('components/pages/userpage'), userPageLoader),
   page('/media/video', () => import('components/pages/media/video'), videosLoader),
   page('/media/video/$ulid', () => import('components/pages/media/video/detail'), videoLoader),

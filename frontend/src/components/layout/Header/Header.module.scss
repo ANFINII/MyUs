@@ -23,7 +23,7 @@
 
   .nav {
     display: grid;
-    grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em 3em;
+    grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em;
     grid-template-rows: 2.5em;
     align-items: center;
     text-align: center;
@@ -64,11 +64,6 @@
     .nav_6 {
       position: relative;
       grid-column: 6/7;
-    }
-
-    .nav_7 {
-      position: relative;
-      grid-column: 7/8;
       justify-self: center;
     }
   }
@@ -120,7 +115,7 @@
 
   @media screen and (max-width: 668px) {
     .nav {
-      grid-template-columns: 3em 5.5em minmax(0, 1fr) 2.5em 2.5em 2.5em 2.5em;
+      grid-template-columns: 3em 5.5em minmax(0, 1fr) 2.5em 2.5em 2.5em;
     }
   }
 }
