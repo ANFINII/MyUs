@@ -58,6 +58,7 @@ locals {
 
   # media variables
   media = data.terraform_remote_state.media.outputs.media
+  hires = data.terraform_remote_state.media.outputs.hires
 
   compose_version = "v5.6.1"
 }

@@ -6,6 +6,7 @@ locals {
     MYSQL_DATABASE          = local.mysql.database
     MYSQL_USER              = local.mysql.user
     AWS_STORAGE_BUCKET_NAME = local.media.bucket_name
+    HIRES_BUCKET_NAME       = local.hires.bucket_name
     AWS_S3_REGION_NAME      = local.p.region
     MEDIA_DOMAIN            = local.media.domain_name
   }

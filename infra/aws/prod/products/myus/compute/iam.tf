@@ -50,7 +50,10 @@ data "aws_iam_policy_document" "api" {
   statement {
     actions = ["s3:ListBucket"]
 
-    resources = [local.media.bucket_arn]
+    resources = [
+      local.media.bucket_arn,
+      local.hires.bucket_arn,
+    ]
   }
 
   statement {
@@ -60,7 +63,10 @@ data "aws_iam_policy_document" "api" {
       "s3:DeleteObject",
     ]
 
-    resources = ["${local.media.bucket_arn}/*"]
+    resources = [
+      "${local.media.bucket_arn}/*",
+      "${local.hires.bucket_arn}/*",
+    ]
   }
 }
 

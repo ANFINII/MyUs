@@ -10,7 +10,7 @@
 | バックエンド | Django 6.1 + django-ninja。ASGI（daphne）で HTTP と WebSocket（Channels）を処理する。docker-compose では `runserver`（daphne が入っているので ASGI で動く）で `myus_backend:8000` を起動している |
 | DB | MySQL 8.4（docker-compose のコンテナ） |
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
-| メディア | 開発は `MEDIA_ROOT`（ローカルディスク）、本番（`config/settings/prod.py`）は `django-storages` で S3 に保存し、CloudFront の `MEDIA_DOMAIN` から配信する。接続先は `AWS_STORAGE_BUCKET_NAME`・`AWS_S3_REGION_NAME`・`MEDIA_DOMAIN`（S3 へは EC2 のロールで書くのでキーは要らない）。動画は ffmpeg で HLS に変換し、worker は元の動画を一時フォルダに取り出して変換した結果を保存先に上げる（`myus/myus/utils/functions/convert/`） |
+| メディア | 開発は `MEDIA_ROOT`（ローカルディスク）、本番（`config/settings/prod.py`）は `django-storages` で S3 に保存し、CloudFront の `MEDIA_DOMAIN` から配信する。接続先は `AWS_STORAGE_BUCKET_NAME`・`AWS_S3_REGION_NAME`・`MEDIA_DOMAIN`（S3 へは EC2 のロールで書くのでキーは要らない）。販売するハイレゾの FLAC は、配信しない別のバケット（`HIRES_BUCKET_NAME`）に置き、5分だけ使える署名付き URL で渡す（`STORAGES["private"]`）。動画は ffmpeg で HLS に変換し、worker は元の動画を一時フォルダに取り出して変換した結果を保存先に上げる（`myus/myus/utils/functions/convert/`） |
 | 決済 | Stripe（webhook あり） |
 | 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換は、API が動画を変換前（`encode_status` が `Encoding`）のまま保存し、`myus_encoder`（`encode_videos`）が DB を定期的に読んで変換する |
 | メール | 開発は `console.EmailBackend`（送信されない）。本番（`config/settings/prod.py`）は SMTP で送る。接続先は `EMAIL_HOST`・`EMAIL_PORT`・`EMAIL_HOST_USER`・`EMAIL_HOST_PASSWORD`、送信元は `EMAIL_FROM` |
@@ -258,6 +258,7 @@ flowchart LR
         CF_API[CloudFront API<br/>キャッシュなし<br/>CloudFront-Forwarded-Proto を付ける]
         CF_MEDIA[CloudFront メディア<br/>CachingOptimized]
         S3[(S3<br/>myus-prod-media)]
+        S3_HIRES[(S3<br/>myus-prod-hires<br/>配信しない)]
         SSM[SSM Parameter Store<br/>/myus/prod/]
 
         subgraph vpc[VPC 10.0.0.0/16]
@@ -285,6 +286,8 @@ flowchart LR
     worker --> RDS
     encoder --> RDS
     backend -->|アップロード| S3
+    backend -->|ハイレゾの保存・署名付き URL| S3_HIRES
+    User -->|署名付き URL で取得| S3_HIRES
     encoder -->|元の動画を取り出し・HLS を置く| S3
     ec2 -.デプロイのときに読む.-> SSM
 ```
