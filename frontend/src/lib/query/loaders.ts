@@ -85,6 +85,7 @@ const verifyLoader = async <T>(token: string | undefined, load: (token: string) 
 
 export const signupLoader = ({ queryClient, search }: PageLoad<object>) => verifyLoader(search.token, (token) => queryClient.query(signupQuery(token)))
 export const passwordResetLoader = ({ queryClient, search }: PageLoad<object>) => verifyLoader(search.token, (token) => queryClient.query(passwordResetQuery(token)))
+export const withdrawalLoader = ({ queryClient }: PageLoad<object>) => queryClient.query(userQuery())
 
 export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(searchParams(search)))
 export const recommendLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(recommendQuery(searchParams(search)))

@@ -49,6 +49,7 @@ import {
   userPageLoader,
   videoLoader,
   videosLoader,
+  withdrawalLoader,
 } from 'lib/query/loaders'
 import PageLayout from 'components/layout/PageLayout'
 
@@ -112,8 +113,8 @@ export const routeTree = rootRoute.addChildren([
   page('/account/reset', () => import('components/pages/account/reset')),
   page('/account/reset/confirm', () => import('components/pages/account/reset/confirm'), passwordResetLoader),
   page('/account/reset/done', () => import('components/pages/account/reset/done')),
-  page('/account/withdrawal', () => import('components/pages/account/withdrawal')),
-  page('/account/withdrawal/confirm', () => import('components/pages/account/withdrawal/confirm')),
+  page('/account/withdrawal', () => import('components/pages/account/withdrawal'), withdrawalLoader),
+  page('/account/withdrawal/confirm', () => import('components/pages/account/withdrawal/confirm'), withdrawalLoader),
 
   page('/manage', () => import('components/pages/manage'), manageLoader),
   page('/manage/video', () => import('components/pages/manage/video'), manageVideosLoader),
