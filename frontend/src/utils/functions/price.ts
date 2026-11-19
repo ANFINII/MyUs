@@ -15,7 +15,7 @@ const PRICE_MIN = 300
 const PRICE_MAX = 50000
 
 export const paidTextError = (paidText: string, price: number): string => {
-  if (paidText !== '' && (price < PRICE_MIN || price > PRICE_MAX)) return 'error.priceRange'
-  if (paidText === '' && price !== 0) return 'error.paidTextRequired'
+  if (price < PRICE_MIN || price > PRICE_MAX) return 'error.priceRange'
+  if (paidText === '') return 'error.paidTextRequired'
   return ''
 }

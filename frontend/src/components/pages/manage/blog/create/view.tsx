@@ -47,6 +47,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
+  const [isSale, setIsSale] = useState<boolean>(false)
   const [values, setValues] = useState<BlogIn>({ ...initBlog, channelUlid, publishAt: datetimeISO() })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
@@ -60,6 +61,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
+  const handleSale = () => setIsSale(!isSale)
   const handlePaidText = (paidText: string) => setValues({ ...values, paidText })
   const handlePrice = (price: number) => setValues({ ...values, price })
 
@@ -71,13 +73,14 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const handleForm = async () => {
     const { channelUlid, categoryUlid, title, content, richtext, image } = values
     if (!validate({ channelUlid, categoryUlid, title, content, richtext, image })) return
-    const paidError = paidTextError(values.paidText, values.price)
+    const paidError = isSale ? paidTextError(values.paidText, values.price) : ''
     if (paidError !== '') {
       handleToast(paidError, true)
       return
     }
+    const request = isSale ? values : { ...values, paidText: '', price: 0 }
     handleLoading(true)
-    const ret = await postBlogCreate(values)
+    const ret = await postBlogCreate(request)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Post), true)
@@ -107,17 +110,19 @@ export default function BlogCreate(props: Props): React.JSX.Element {
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
           <TextEditor label={t('manage.form.richtext')} value={values.richtext} required error={error} onChange={handleRichtext} />
           <PaidTextInput
+            isSale={isSale}
             paidText={values.paidText}
             price={values.price}
             currency={seller.currency}
             isAvailable={seller.isAvailable}
             isEnabled={seller.isEnabled}
+            onSale={handleSale}
             onPaidText={handlePaidText}
             onPrice={handlePrice}
           />
         </VStack>
       </form>
-      <BlogModal open={isModal} onClose={handleModal} richtext={values.richtext} paidText={values.paidText} isPromotion={values.isPromotion} />
+      <BlogModal open={isModal} onClose={handleModal} richtext={values.richtext} paidText={isSale ? values.paidText : ''} isPromotion={values.isPromotion} />
     </Main>
   )
 }
