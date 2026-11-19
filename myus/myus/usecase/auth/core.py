@@ -138,13 +138,12 @@ def signup_send_email(email: str, locale: Locale) -> Result[str, FatalError]:
         return Result.ok("error.emailTaken")
 
     token = signup_token(email)
-    frontend_url = create_frontend_url(locale)
+    url = f"{create_frontend_url(locale)}/account/signup?token={token}"
     mail = mail_locale(locale).value
-    if not send_template_mail(f"registration/email/{mail}/account", {"frontend_url": frontend_url, "token": token}, email):
+    if not send_template_mail(f"registration/email/{mail}/account", {"action_url": url}, email):
         return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
-        url = f"{frontend_url}/account/signup?token={token}"
         log.info("verify URL (dev)", url=url)
 
     return Result.ok("")
@@ -295,13 +294,12 @@ def password_reset_send_email(email: str, locale: Locale) -> Result[str, FatalEr
         return Result.ok("")
 
     token = password_reset_token(user_data.user.id, email, user_data.user.password)
-    frontend_url = create_frontend_url(locale)
+    url = f"{create_frontend_url(locale)}/account/reset/confirm?token={token}"
     mail = mail_locale(locale).value
-    if not send_template_mail(f"registration/email/{mail}/reset", {"frontend_url": frontend_url, "token": token, "nickname": user_data.user.nickname}, email):
+    if not send_template_mail(f"registration/email/{mail}/reset", {"action_url": url, "nickname": user_data.user.nickname}, email):
         return Result.ok("error.mailSendFailed")
 
     if settings.DEBUG:
-        url = f"{frontend_url}/account/reset/confirm?token={token}"
         log.info("reset URL (dev)", url=url)
 
     return Result.ok("")

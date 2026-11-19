@@ -1,0 +1,11 @@
+{% extends "registration/email/base.html" %}
+{% block title %}パスワードを再設定してください{% endblock %}
+{% block preheader %}下のボタンから、新しいパスワードを設定してください。{% endblock %}
+{% block heading %}パスワードを再設定してください{% endblock %}
+{% block lead %}{{ nickname }} 様、パスワードの再設定の申し込みを受け付けました。下のボタンから、新しいパスワードを設定してください。{% endblock %}
+{% block button %}パスワードを再設定する{% endblock %}
+{% block limit_label %}有効期限{% endblock %}
+{% block limit %}1時間{% endblock %}
+{% block fallback %}ボタンが押せないときは、次の URL をブラウザに貼りつけてください。{% endblock %}
+{% block ignore %}申し込んでいない場合は、このメールを削除してください。パスワードは変わりません。{% endblock %}
+{% block footer %}このメールは送信専用です。お問い合わせは support@myus.media まで。{% endblock %}

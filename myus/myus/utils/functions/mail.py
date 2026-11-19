@@ -7,8 +7,9 @@ from ..common.logger import log
 def send_template_mail(template_dir: str, context: dict[str, str], email: str) -> bool:
     subject = render_to_string(f"{template_dir}/subject.txt").strip()
     message = render_to_string(f"{template_dir}/message.txt", context)
+    html_message = render_to_string(f"{template_dir}/message.html", context)
     try:
-        send_mail(subject, message, None, [email])
+        send_mail(subject, message, None, [email], html_message=html_message)
     except (SMTPException, OSError) as e:
         log.error("send failed", exc=e)
         return False

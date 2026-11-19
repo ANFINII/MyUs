@@ -1,0 +1,12 @@
+{% extends "registration/email/base.html" %}
+{% block lang %}en{% endblock %}
+{% block title %}Reset your password{% endblock %}
+{% block preheader %}Set a new password from the button below.{% endblock %}
+{% block heading %}Reset your password{% endblock %}
+{% block lead %}Dear {{ nickname }}, we received a request to reset your password. Set a new password from the button below.{% endblock %}
+{% block button %}Reset password{% endblock %}
+{% block limit_label %}Valid for{% endblock %}
+{% block limit %}1 hour{% endblock %}
+{% block fallback %}If the button does not work, paste this URL into your browser.{% endblock %}
+{% block ignore %}If you did not request this, delete this email. Your password will not change.{% endblock %}
+{% block footer %}This is a send-only address. For questions, contact support@myus.media.{% endblock %}
