@@ -241,7 +241,6 @@ SES の `myus.media` の DKIM と MAIL FROM は確認済みになっている。
 
 ### 公開の前に
 
-- Google Search Console にドメインを登録し、サイトマップを送る
-- OGP の画像・favicon・サイト名を整える
+- Google Search Console にドメインを登録し、サイトマップ（`https://myus.media/sitemap.xml`）を送る。サイトマップと `robots.txt` は `frontend/public/` にある。新しい一覧の画面を足したら、サイトマップにも足す
 - 公式の SNS アカウントの名前を押さえる
 - 障害のときの告知先を決める

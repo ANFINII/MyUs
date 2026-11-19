@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://myus.media/</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/media/video</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/media/music</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/media/blog</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/media/comic</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/media/picture</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/media/chat</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/menu/knowledge</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/menu/userpolicy</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/menu/privacy</loc>
+  </url>
+  <url>
+    <loc>https://myus.media/menu/commerce</loc>
+  </url>
+</urlset>

@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /account/
+Disallow: /manage/
+Disallow: /setting/
+
+Sitemap: https://myus.media/sitemap.xml
