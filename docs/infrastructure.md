@@ -336,6 +336,15 @@ sequenceDiagram
    docker compose run --rm -u root backend sh -c "python manage.py makemigrations myus && python manage.py migrate"
    ```
 
+   公開するまでは、本番に本当のデータが無いので、モデルを変えても SQL は書かずに手元の `0001_initial.py` を作り直してよい。そのときは本番の DB を空にしてから 1 をやり直す。公開したあとは 2 の SQL のやり方に切り替える
+
+   ```bash
+   docker compose stop backend worker encoder
+   echo "DROP DATABASE myus; CREATE DATABASE myus;" | docker compose run --rm -T backend python manage.py run_sql
+   docker compose run --rm -u root backend sh -c "python manage.py makemigrations myus && python manage.py migrate"
+   docker compose up -d
+   ```
+
 2. その後のモデルの変更：PR に書いた `sqlmigrate` の SQL を、デプロイの前に `run_sql` で流す。SQL は標準入力で渡し、1文ずつ流す。表を消す・列を消す変更は、新しいコードが使わなくなってから流す
 
    ```bash

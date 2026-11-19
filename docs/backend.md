@@ -295,6 +295,7 @@ return Result.ok(new_ids)
 
 ### モデルの列を足すとき
 - マイグレーションは git の管理外なので、PR には `sqlmigrate` で出した SQL を書く
+- 公開するまでは、本番の DB を空にして作り直すので、SQL は書かなくてよい。手順は [infrastructure.md](infrastructure.md) の「DB のスキーマの変更」にある
 - 初期値は、要るときだけ付ける。保存するときに必ず渡す列（ブログの `currency` など）には付けない。既存の行を埋める値は、SQL で `ADD COLUMN ... DEFAULT 'JPY'` のあとに `DROP DEFAULT` する
 - `default=Currency.JPY` のように enum を初期値にすると、`sqlmigrate` の SQL では `'Currency.JPY'` と enum の名前になり、既存の行が読めなくなる。PR の SQL では値（`'JPY'`）に直す
 
