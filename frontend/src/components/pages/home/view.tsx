@@ -8,7 +8,6 @@ import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import SelectBox from 'components/parts/Input/SelectBox'
-import HStack from 'components/parts/Stack/Horizontal'
 import MediaIndexList from 'components/widgets/Card/MediaIndexList'
 
 interface Props {
@@ -29,10 +28,7 @@ export default function Homes(props: Props): React.JSX.Element {
   const handleSort = (e: ChangeEvent<HTMLSelectElement>) => router.push({ pathname: router.pathname, query: { ...router.query, sort: e.target.value } })
 
   return (
-    <Main title={title} search={search}>
-      <HStack justify="end">
-        <SelectBox value={sort} options={sortOptions} onChange={handleSort} />
-      </HStack>
+    <Main title={title} search={search} button={<SelectBox value={sort} options={sortOptions} onChange={handleSort} />}>
       <Divide />
       <MediaIndexList media={data} />
     </Main>
