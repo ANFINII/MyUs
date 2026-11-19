@@ -46,10 +46,6 @@ export default function Privacy(): React.JSX.Element {
 
         <h2>{t('menu.privacy.contact.title')}</h2>
         <p>{t('menu.privacy.contact.p1')}</p>
-        <Divide />
-
-        <h2>{t('menu.privacy.revision.title')}</h2>
-        <p>{t('menu.privacy.revision.p1')}</p>
       </article>
     </Main>
   )

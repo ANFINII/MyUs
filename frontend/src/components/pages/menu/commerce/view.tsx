@@ -10,7 +10,7 @@ export default function Commerce(): React.JSX.Element {
   const rows = items.map((item) => ({ label: t(`menu.commerce.${item}.label`), content: t(`menu.commerce.${item}.content`) }))
 
   return (
-    <Main title={t('menu.commerce.title')} type="table" isFooter={false}>
+    <Main title={t('menu.commerce.title')} type="table">
       <SideTable rows={rows} />
     </Main>
   )
