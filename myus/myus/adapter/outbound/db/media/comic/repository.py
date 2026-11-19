@@ -12,7 +12,7 @@ from ..common import filter_queryset, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
-COMIC_FIELDS = ["channel_id", "title", "content", "image", "publish", "publish_at", "updated"]
+COMIC_FIELDS = ["channel_id", "title", "content", "image", "free_pages", "publish", "publish_at", "updated"]
 
 
 class ComicRepository(ComicInterface):
