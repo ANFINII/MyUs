@@ -82,8 +82,6 @@ class MusicHires(models.Model):
     bit_depth   = models.IntegerField()
     price       = models.IntegerField()
     currency    = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
-    created     = models.DateTimeField(auto_now_add=True)
-    updated     = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.music_id)

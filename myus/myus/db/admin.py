@@ -126,30 +126,30 @@ class UserAdmin(ImportExportModelAdmin):
 
 @admin.register(AccessLog)
 class AccessLogAdmin(ImportExportModelAdmin):
-    list_display = ("id", "ip_address", "type", "type_id", "created", "updated")
+    list_display = ("id", "ip_address", "type", "type_id", "updated")
     search_fields = ("ip_address", "type", "type_id")
     ordering = ("id", "type", "type_id")
-    readonly_fields = ("ip_address", "type", "created", "updated")
+    readonly_fields = ("ip_address", "type", "updated")
 
     # 詳細画面
     fieldsets = [
-        ("確認項目", {"fields": ("ip_address", "type", "created", "updated")})
+        ("確認項目", {"fields": ("ip_address", "type", "updated")})
     ]
 
 
 @admin.register(SearchTag)
 class SearchTagAdmin(ImportExportModelAdmin):
-    list_display = ("id", "author", "sequence", "name", "created")
+    list_display = ("id", "author", "sequence", "name")
     list_select_related = ("author",)
     list_per_page = 20
-    search_fields = ("author__nickname", "name", "created")
-    ordering = ("author", "sequence", "created")
-    readonly_fields = ("author", "created")
+    search_fields = ("author__nickname", "name")
+    ordering = ("author", "sequence")
+    readonly_fields = ("author",)
 
     # 詳細画面
     fieldsets = [
         ("編集項目", {"fields": ("sequence", "name")}),
-        ("確認項目", {"fields": ("author", "created")})
+        ("確認項目", {"fields": ("author",)})
     ]
 
     def save_model(self, request, obj, form, change):
@@ -189,16 +189,14 @@ class CategoryAdmin(ImportExportModelAdmin):
 
 @admin.register(NgWord)
 class NgWordAdmin(ImportExportModelAdmin):
-    list_display = ("id", "word", "created")
+    list_display = ("id", "word")
     list_editable = ("word",)
     search_fields = ("word",)
     ordering = ("id",)
-    readonly_fields = ("created",)
 
     # 詳細画面
     fieldsets = [
         ("編集項目", {"fields": ("word",)}),
-        ("確認項目", {"fields": ("created",)}),
     ]
 
 

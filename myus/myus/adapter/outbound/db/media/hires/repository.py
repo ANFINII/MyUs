@@ -8,7 +8,7 @@ from ._convert import convert_data, marshal_data
 from ...common import get_save_new_ids, page_queryset, sort_ids
 
 
-MUSIC_HIRES_FIELDS = ["music_id", "file", "sample_rate", "bit_depth", "price", "currency", "updated"]
+MUSIC_HIRES_FIELDS = ["music_id", "file", "sample_rate", "bit_depth", "price", "currency"]
 
 
 class MusicHiresRepository(MusicHiresInterface):
