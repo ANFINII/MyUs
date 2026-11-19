@@ -761,17 +761,17 @@
         "p1": "Uploading content to the Service without the permission of the copyright holder is prohibited.",
         "p2": "Uploading derivative works, including those created with AI, to the Service without the permission of the copyright holder is prohibited.",
         "p3": "The copyright in original content uploaded to the Service belongs to its author.",
-        "p4": "Posters warrant that they hold the rights necessary for the content they post or have permission from the rights holders. Any problem concerning rights shall be resolved by the poster.",
+        "p4": "Posters warrant that they hold the rights necessary for the content they post or have permission from the rights holders.\nAny problem concerning rights shall be resolved by the poster.",
         "p5": "Posters grant the operator, free of charge, permission to copy and convert posted content (such as converting video and music formats and resizing images) to the extent necessary to store, display, and deliver it on the Service.",
         "p6": "This permission ends when the poster deletes the post.",
         "p7": "Reports of posts that infringe rights are accepted at our contact address (support@myus.media), and such posts are removed after review."
       },
       "article3": {
         "title": "Article 3. Posting Music",
-        "p1": "Original music may be posted after obtaining permission from everyone who holds rights to its lyrics, composition, performance, and recording. Collaborative works may also be posted with the permission of the other rights holders. Any problem with rights holders shall be resolved by the poster.",
-        "p2": "Covers (performing or singing) of other people's songs may be posted only for songs managed by collecting societies (such as JASRAC and NexTone) with which the operator has a license agreement. The societies with which we have agreements will be announced on this page. At present, we have no such agreements.",
+        "p1": "Original music may be posted after obtaining permission from everyone who holds rights to its lyrics, composition, performance, and recording.\nCollaborative works may also be posted with the permission of the other rights holders.\nAny problem with rights holders shall be resolved by the poster.",
+        "p2": "Covers (performing or singing) of other people's songs may be posted only for songs managed by collecting societies (such as JASRAC and NexTone) with which the operator has a license agreement.\nThe societies with which we have agreements will be announced on this page.\nAt present, we have no such agreements.",
         "p3": "Works that use all or part of other people's recordings (such as CD or streaming audio) cannot be posted.",
-        "p4": "Only original works for which permission to sell has been obtained from everyone who holds rights to the lyrics, composition, performance, and recording can be sold as hi-res audio. Arrangements with other rights holders, such as how earnings are shared, are the poster's responsibility. Covers cannot be sold."
+        "p4": "Only original works for which permission to sell has been obtained from everyone who holds rights to the lyrics, composition, performance, and recording can be sold as hi-res audio.\nArrangements with other rights holders, such as how earnings are shared, are the poster's responsibility.\nCovers cannot be sold."
       },
       "article4": {
         "title": "Article 4. Prohibited Conduct",
@@ -792,31 +792,31 @@
       },
       "article6": {
         "title": "Article 6. Paid Plans",
-        "p1": "Prices of paid plans are shown on the plans page. You pay on the day you subscribe, and the plan renews and is charged automatically every month.",
-        "p2": "You can cancel at any time from the plans page and keep using the paid plan until the end of the period you have paid for. No prorated refund is given for cancellation.",
-        "p3": "When you change plans, the new plan takes effect immediately. The difference is prorated and settled on your next bill."
+        "p1": "Prices of paid plans are shown on the plans page.\nYou pay on the day you subscribe, and the plan renews and is charged automatically every month.",
+        "p2": "You can cancel at any time from the plans page and keep using the paid plan until the end of the period you have paid for.\nNo prorated refund is given for cancellation.",
+        "p3": "When you change plans, the new plan takes effect immediately.\nThe difference is prorated and settled on your next bill."
       },
       "article7": {
         "title": "Article 7. Paid Content",
         "p1": "Posters on the Standard plan or higher who have registered an account to receive earnings can sell paid sections of articles and hi-res audio.",
-        "p2": "At the time of payment, the sale price minus a 15% system fee is sent to the poster's account. The operator pays the payment processing fees.",
+        "p2": "At the time of payment, the sale price minus a 15% system fee is sent to the poster's account.\nThe operator pays the payment processing fees.",
         "p3": "When a buyer is refunded, the amount sent to the poster is reversed.",
         "p4": "Content that someone has bought cannot be deleted or taken off sale.",
         "p5": "Purchased content may be used only for the buyer's personal enjoyment.",
-        "p6": "Downloaded hi-res audio may also be used only for the buyer's personal listening. You may not copy it for others or make it public.",
+        "p6": "Downloaded hi-res audio may also be used only for the buyer's personal listening.\nYou may not copy it for others or make it public.",
         "p7": "You can download hi-res audio again at any time from the song's detail page.",
-        "p8": "Due to the nature of digital content, returns and refunds are not accepted after purchase. However, if the content cannot be used because of a defect, we will refund it after you contact us.",
+        "p8": "Due to the nature of digital content, returns and refunds are not accepted after purchase.\nHowever, if the content cannot be used because of a defect, we will refund it after you contact us.",
         "p9": "Once refunded, the content can no longer be used, and the hi-res audio can no longer be downloaded."
       },
       "article8": {
         "title": "Article 8. Disclaimer",
-        "p1": "The operator is not responsible for the content of posts. Any problem caused by a post shall be resolved by the poster.",
+        "p1": "The operator is not responsible for the content of posts.\nAny problem caused by a post shall be resolved by the poster.",
         "p2": "The operator may stop the Service without notice for maintenance, failures, and similar reasons."
       },
       "article9": {
         "title": "Article 9. Changes to the Terms and Governing Law",
-        "p1": "The operator may change these Terms of Service. Changed terms take effect when they are posted on this page.",
-        "p2": "These Terms of Service are governed by the laws of Japan. The district court having jurisdiction over the operator's address shall be the exclusive court of first instance for any dispute concerning the Service."
+        "p1": "The operator may change these Terms of Service.\nChanged terms take effect when they are posted on this page.",
+        "p2": "These Terms of Service are governed by the laws of Japan.\nThe district court having jurisdiction over the operator's address shall be the exclusive court of first instance for any dispute concerning the Service."
       }
     },
     "privacy": {
@@ -825,7 +825,7 @@
         "title": "Information We Collect",
         "p1": "Account and profile: email address, user name, nickname, name, date of birth, gender, country/region, and phone number and address (if entered)",
         "p2": "Usage records: actions such as views, likes, and follows, IP address, and cookies",
-        "p3": "Payments: records of payments and earnings. Credit card numbers are handled by Stripe, and the operator does not receive them",
+        "p3": "Payments: records of payments and earnings.\nCredit card numbers are handled by Stripe, and the operator does not receive them",
         "p4": "Posts: content you post and its title, description, and so on"
       },
       "purpose": {
@@ -856,7 +856,7 @@
       "request": {
         "title": "Requests for Disclosure, Correction, or Deletion",
         "p1": "When you request disclosure, correction, deletion, or suspension of use of your personal information, we will respond without delay after confirming your identity.",
-        "p2": "You can withdraw from the settings page. Requests to delete information after withdrawal are accepted at our contact address."
+        "p2": "You can withdraw from the settings page.\nRequests to delete information after withdrawal are accepted at our contact address."
       },
       "contact": {
         "title": "Contact",
@@ -864,7 +864,7 @@
       },
       "revision": {
         "title": "Changes to This Policy",
-        "p1": "We may change this Privacy Policy as needed. Changes will be posted on this page."
+        "p1": "We may change this Privacy Policy as needed.\nChanges will be posted on this page."
       }
     },
     "commerce": {
