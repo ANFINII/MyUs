@@ -855,6 +855,8 @@ def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
             updated=x.updated,
             channel=convert_channel(x.channel),
             category_ulid=x.category_ulid,
+            hires=None,
+            product=None,
         ) for x in objs
     ]
     return data
@@ -882,6 +884,7 @@ def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
             content=x.content,
             image=x.image,
             richtext=x.richtext,
+            paid_text="",
             is_promotion=x.is_promotion,
             read=x.read,
             like=x.like,
@@ -891,6 +894,7 @@ def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
             updated=x.updated,
             channel=convert_channel(x.channel),
             category_ulid=x.category_ulid,
+            product=None,
         ) for x in objs
     ]
     return data

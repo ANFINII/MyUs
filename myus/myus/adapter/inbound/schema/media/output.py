@@ -60,31 +60,25 @@ class VideoOut(MediaOut):
     encode_status: EncodeStatus
 
 
-class MusicOut(MediaOut):
-    lyric: str
-    image: str
-    music: str
-    gain: float
-
-
 class MusicHiresOut(BaseModel):
     sample_rate: int
     bit_depth: int
 
 
-class ManageMusicOut(MusicOut):
+class MusicOut(MediaOut):
+    lyric: str
+    image: str
+    music: str
+    gain: float
     hires: MusicHiresOut | None
     product: ProductOut | None
 
 
 class BlogOut(MediaOut):
     richtext: str
+    paid_text: str
     is_promotion: bool
     image: str
-
-
-class ManageBlogOut(BlogOut):
-    paid_text: str
     product: ProductOut | None
 
 

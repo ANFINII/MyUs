@@ -22,7 +22,7 @@ from .media import convert_videos, convert_musics, convert_music_hires, convert_
 from .schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from .schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
 from .schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, MusicHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
-from .schema.media.output import MediaCreateOut, VideoOut, ManageMusicOut, ManageBlogOut, ComicOut, PictureOut, ChatOut
+from .schema.media.output import MediaCreateOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
 from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 
 
@@ -162,7 +162,7 @@ class ManageMusicAPI:
         return 200, MusicListOut(items=convert_musics(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ManageMusicOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: MusicOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("request", ulid=ulid)
 
@@ -187,7 +187,7 @@ class ManageMusicAPI:
 
         music, hires, product = music_ret.ok_value
         music_out = convert_musics([music])[0]
-        return 200, ManageMusicOut(**music_out.model_dump(), hires=convert_music_hires(hires), product=convert_product(product))
+        return 200, music_out.model_copy(update={"hires": convert_music_hires(hires), "product": convert_product(product)})
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -333,7 +333,7 @@ class ManageBlogAPI:
         return 200, BlogListOut(items=convert_blogs(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ManageBlogOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: BlogOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("request", ulid=ulid)
 
@@ -358,7 +358,7 @@ class ManageBlogAPI:
 
         blog, product = blog_ret.ok_value
         blog_out = convert_blogs([blog])[0]
-        return 200, ManageBlogOut(**blog_out.model_dump(), paid_text=blog.paid_text, product=convert_product(product))
+        return 200, blog_out.model_copy(update={"paid_text": blog.paid_text, "product": convert_product(product)})
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
