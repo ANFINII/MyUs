@@ -35,7 +35,7 @@ def is_conversion(filename: str) -> bool:
 
 
 def probe_audio(path: str) -> AudioInfo:
-    """ffprobeで最初の音声の形式・ビットレート・サンプリング周波数・ビット深度を読む。読めないときは空の形式と0を返す"""
+    """ffprobeで最初の音声の形式・ビットレート・サンプリングレート・ビット深度を読む。読めないときは空の形式と0を返す"""
 
     ffprobe_path = shutil.which("ffprobe") or "ffprobe"
     cmd = [ffprobe_path, "-v", "error", "-protocol_whitelist", "file", "-select_streams", "a:0", "-show_entries", "stream=codec_name,bit_rate,sample_rate,bits_per_raw_sample:format=bit_rate", "-of", "json", path]
