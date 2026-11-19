@@ -77,6 +77,22 @@ resource "aws_route53_record" "mail_from_spf" {
   records = ["v=spf1 include:amazonses.com ~all"]
 }
 
+resource "aws_route53_record" "receive_mx" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = local.p.domain
+  type    = "MX"
+  ttl     = 300
+  records = ["10 mx1.improvmx.com", "20 mx2.improvmx.com"]
+}
+
+resource "aws_route53_record" "receive_spf" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = local.p.domain
+  type    = "TXT"
+  ttl     = 300
+  records = ["v=spf1 include:spf.improvmx.com include:amazonses.com ~all"]
+}
+
 resource "aws_route53_record" "dmarc" {
   zone_id = data.aws_route53_zone.main.zone_id
   name    = "_dmarc.${local.p.domain}"
