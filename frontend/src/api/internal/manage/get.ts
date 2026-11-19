@@ -2,7 +2,7 @@ import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { Advertise, AdvertiseList, AdvertiseSearchParams } from 'types/internal/advertise'
 import { VideoList, MusicList, BlogList, ComicList, PictureList, ChatList } from 'types/internal/media/output'
-import { SearchParams, Video, Music, ManageBlog, Comic, Picture, Chat } from 'types/internal/media/output'
+import { SearchParams, Video, ManageMusic, ManageBlog, Comic, Picture, Chat } from 'types/internal/media/output'
 import {
   apiManageVideos,
   apiManageVideo,
@@ -48,7 +48,7 @@ export const getManageVideo = async (ulid: string): Promise<ApiOut<Video>> => {
   return await apiOut(apiClient('json').get(apiManageVideo(ulid)))
 }
 
-export const getManageMusic = async (ulid: string): Promise<ApiOut<Music>> => {
+export const getManageMusic = async (ulid: string): Promise<ApiOut<ManageMusic>> => {
   return await apiOut(apiClient('json').get(apiManageMusic(ulid)))
 }
 
