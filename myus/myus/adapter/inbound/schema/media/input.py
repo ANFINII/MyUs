@@ -21,7 +21,6 @@ class MusicIn(BaseModel):
     title: Title
     content: str
     lyric: str
-    download: bool
 
 
 class BlogIn(BaseModel):
@@ -78,7 +77,6 @@ class MusicUpdateIn(BaseModel):
     title: Title
     content: str
     lyric: str
-    download: bool
     publish: bool
     publish_at: datetime
 

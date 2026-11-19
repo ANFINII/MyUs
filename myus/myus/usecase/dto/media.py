@@ -61,7 +61,6 @@ class MusicDetailDTO(MediaDetailDTO):
     image: str
     music: str
     gain: float
-    download: bool
     comments: list[CommentDTO]
 
 
@@ -116,7 +115,6 @@ class MusicCreateDTO:
     title: str
     content: str
     lyric: str
-    download: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -179,7 +177,6 @@ class MusicUpdateDTO:
     title: str
     content: str
     lyric: str
-    download: bool
     publish: bool
     publish_at: datetime
 

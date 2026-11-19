@@ -9,7 +9,6 @@ class Plan:
     name: str
     prices: list[Money]
     max_advertise: int
-    is_music_download: bool
     is_playlist: bool
     is_series: bool
     is_hide_global_advertise: bool
@@ -22,7 +21,6 @@ PLANS = [
         name=PlanName.FREE,
         prices=[Money(amount=0, currency=Currency.JPY), Money(amount=0, currency=Currency.USD)],
         max_advertise=0,
-        is_music_download=False,
         is_playlist=False,
         is_series=False,
         is_hide_global_advertise=False,
@@ -33,7 +31,6 @@ PLANS = [
         name=PlanName.BASIC,
         prices=[Money(amount=550, currency=Currency.JPY), Money(amount=400, currency=Currency.USD)],
         max_advertise=1,
-        is_music_download=False,
         is_playlist=True,
         is_series=True,
         is_hide_global_advertise=False,
@@ -44,34 +41,31 @@ PLANS = [
         name=PlanName.STANDARD,
         prices=[Money(amount=1100, currency=Currency.JPY), Money(amount=800, currency=Currency.USD)],
         max_advertise=2,
-        is_music_download=False,
         is_playlist=True,
         is_series=True,
         is_hide_global_advertise=True,
         is_paid_content=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 2つ\n・全体広告非表示\n・有料記事の販売",
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 2つ\n・全体広告非表示\n・有料記事・音楽の販売",
     ),
     Plan(
         name=PlanName.PREMIUM,
         prices=[Money(amount=1650, currency=Currency.JPY), Money(amount=1200, currency=Currency.USD)],
         max_advertise=3,
-        is_music_download=True,
         is_playlist=True,
         is_series=True,
         is_hide_global_advertise=True,
         is_paid_content=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 3つ\n・全体広告非表示\n・有料記事の販売\n・楽曲ダウンロード",
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 3つ\n・全体広告非表示\n・有料記事・音楽の販売",
     ),
     Plan(
         name=PlanName.ULTIMATE,
         prices=[Money(amount=3300, currency=Currency.JPY), Money(amount=2400, currency=Currency.USD)],
         max_advertise=4,
-        is_music_download=True,
         is_playlist=True,
         is_series=True,
         is_hide_global_advertise=True,
         is_paid_content=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 4つ\n・全体広告非表示\n・有料記事の販売\n・楽曲ダウンロード",
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 4つ\n・全体広告非表示\n・有料記事・音楽の販売",
     ),
 ]
 

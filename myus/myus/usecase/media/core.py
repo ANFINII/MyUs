@@ -16,7 +16,6 @@ from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.payment.data import Money
-from myus.domain.payment.plan import get_plan
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
@@ -38,7 +37,6 @@ from ..message._convert import get_messages_data
 from ..notification._convert import create_notification_data
 from ..payment._convert import get_blog_purchase_ids_data, get_seller_currency_data
 from ..series._convert import get_media_series_data
-from ..user.core import get_user_data
 
 
 @Result.shield_exception()
@@ -133,7 +131,6 @@ def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile, image
         gain=measure_music_gain(music_path),
         read=0,
         like=0,
-        download=input.download,
         publish=input.publish,
         publish_at=input.publish_at,
         created=datetime.min,
@@ -798,22 +795,12 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
-    is_music_download = False
-    if user_id is not None:
-        user_ret = get_user_data(user_id=user_id)
-        if user_ret.is_err:
-            return Result.err(user_ret.err_value)
-
-        user = user_ret.ok_value
-        plan = get_plan(user.user_plan.plan) if user is not None else None
-        is_music_download = plan is not None and plan.is_music_download
-
     series_ret = get_media_series_data(MediaType.MUSIC, obj.id)
     if series_ret.is_err:
         return Result.err(series_ret.err_value)
 
     series = series_ret.ok_value
-    data =MusicDetailDTO(
+    data = MusicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
@@ -822,7 +809,6 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         image=create_url(obj.image),
         music=create_url(obj.music),
         gain=obj.gain,
-        download=obj.download and is_music_download,
         comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,

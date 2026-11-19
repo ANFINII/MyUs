@@ -19,7 +19,6 @@ def convert_data(obj: Music) -> MusicData:
         gain=obj.gain,
         read=obj.read,
         like=obj.like_count,
-        download=obj.download,
         publish=obj.publish,
         publish_at=obj.publish_at,
         created=obj.created,
@@ -52,7 +51,6 @@ def marshal_data(data: MusicData) -> Music:
         music=data.music,
         gain=data.gain,
         read=data.read,
-        download=data.download,
         publish=data.publish,
         publish_at=data.publish_at,
     )

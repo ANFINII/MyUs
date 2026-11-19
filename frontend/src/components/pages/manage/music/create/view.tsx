@@ -16,7 +16,6 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconInfo from 'components/parts/Icon/Info'
 import Input from 'components/parts/Input'
-import CheckBox from 'components/parts/Input/CheckBox'
 import DatePicker from 'components/parts/Input/DatePicker'
 import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
@@ -43,7 +42,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [musicUrl, setMusicUrl] = useState<string>('')
-  const [values, setValues] = useState<MusicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', lyric: '', download: true })
+  const [values, setValues] = useState<MusicIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', lyric: '' })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
@@ -52,7 +51,6 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
   const handleImage = (file: File) => setValues({ ...values, image: file })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
@@ -105,7 +103,6 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
           <VStack gap="2">
             <InputFile label={t('manage.form.music')} accept="audio/*" required error={error} onChange={handleFile} />
-            <CheckBox label={t('manage.form.download')} name="download" defaultChecked onChange={handleCheck} />
           </VStack>
         </VStack>
       </form>

@@ -7,7 +7,6 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import ExImage from 'components/parts/ExImage'
-import IconDownload from 'components/parts/Icon/Download'
 import SpeedControl from 'components/parts/SpeedControl'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
@@ -26,7 +25,7 @@ interface Props {
 export default function MusicDetail(props: Props): React.JSX.Element {
   const { data } = props
   const { detail, list, series } = data
-  const { image, music, gain, lyric, download, publish, ...other } = detail
+  const { image, music, gain, lyric, publish, ...other } = detail
 
   const { t } = useTranslation()
   const { toast, handleToast } = useToast()
@@ -60,11 +59,6 @@ export default function MusicDetail(props: Props): React.JSX.Element {
               <SpeedControl value={speed} onChange={handleSpeed} className={style.speed} />
               <div className={style.actions}>
                 <PlaylistAdd musicUlid={other.ulid} />
-                {download && (
-                  <a href={music} download className={style.download}>
-                    <IconDownload size="1.5em" />
-                  </a>
-                )}
               </div>
             </HStack>
           </VStack>

@@ -59,7 +59,6 @@ class Music(models.Model, MediaModel):
     hashtag    = models.ManyToManyField(HashTag, through=MusicHashtag, blank=True)
     like       = models.ManyToManyField(User, related_name="music_like", blank=True)
     read       = models.IntegerField(default=0)
-    download   = models.BooleanField(default=True)
     publish    = models.BooleanField(default=True)
     publish_at = models.DateTimeField(default=timezone.now)
     created    = models.DateTimeField(auto_now_add=True)
