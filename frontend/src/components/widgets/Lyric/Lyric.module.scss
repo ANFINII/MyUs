@@ -1,9 +1,9 @@
 .lyric {
   position: relative;
-  height: 320px;
+  height: 200px;
   padding: 20px;
   border-radius: 10px;
-  background: rgb(18, 18, 18);
+  background: rgb(20, 20, 20);
   transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   overflow-y: auto;
   scrollbar-width: none;
@@ -13,7 +13,7 @@
   }
 
   &.expand {
-    height: 640px;
+    height: 520px;
   }
 
   .line {
