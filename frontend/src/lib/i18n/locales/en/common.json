@@ -760,7 +760,8 @@
         "title": "Article 2. Copyright",
         "p1": "Uploading content to the Service without the permission of the copyright holder is prohibited.",
         "p2": "Uploading derivative works, including those created with AI, to the Service without the permission of the copyright holder is prohibited.",
-        "p3": "The copyright in original content uploaded to the Service belongs to its author."
+        "p3": "The copyright in original content uploaded to the Service belongs to its author.",
+        "p4": "Posters warrant that they hold the rights necessary for the content they post or have permission from the rights holders. Any problem concerning rights shall be resolved by the poster."
       },
       "article3": {
         "title": "Article 3. Prohibited Conduct",
@@ -768,99 +769,166 @@
         "p2": "Uploading adult (18+) content is prohibited.",
         "p3": "Uploading content containing violent or cruel depictions is prohibited.",
         "p4": "Defaming or slandering specific individuals or the general public is prohibited.",
-        "p5": "Scraping content on MyUs is prohibited."
+        "p5": "Scraping content on MyUs is prohibited.",
+        "p6": "Redistributing, reselling, or publishing purchased content outside the Service is prohibited.",
+        "p7": "Impersonating others is prohibited.",
+        "p8": "Any act that interferes with the operation of the Service is prohibited."
       },
       "article4": {
         "title": "Article 4. Advertising and Affiliate Links",
         "p1": "You are free to include advertising, such as affiliate links, in your blogs.",
         "p2": "If your blog contains advertising, turn on \"Contains promotion\" on the create or edit screen.",
         "p3": "The post will show \"This post contains promotions\" so readers can read it with confidence."
+      },
+      "article5": {
+        "title": "Article 5. License to Posted Content",
+        "p1": "Posters grant the operator, free of charge, permission to copy and convert posted content (such as converting video and music formats and resizing images) to the extent necessary to store, display, and deliver it on the Service.",
+        "p2": "This permission ends when the poster deletes the post."
+      },
+      "article6": {
+        "title": "Article 6. Posting Music",
+        "p1": "Original music may be posted after obtaining permission from everyone who holds rights to its lyrics, composition, performance, and recording. Collaborative works may also be posted with the permission of the other rights holders. Any problem with rights holders shall be resolved by the poster.",
+        "p2": "Covers (performing or singing) of other people's songs may be posted only for songs managed by collecting societies (such as JASRAC and NexTone) with which the operator has a license agreement. The societies with which we have agreements will be announced on this page. At present, we have no such agreements.",
+        "p3": "Works that use all or part of other people's recordings (such as CD or streaming audio) cannot be posted.",
+        "p4": "Only original works for which permission to sell has been obtained from everyone who holds rights to the lyrics, composition, performance, and recording can be sold as hi-res audio. Arrangements with other rights holders, such as how earnings are shared, are the poster's responsibility. Covers cannot be sold."
+      },
+      "article7": {
+        "title": "Article 7. Paid Plans",
+        "p1": "Prices of paid plans are shown on the plans page. You pay on the day you subscribe, and the plan renews and is charged automatically every month.",
+        "p2": "You can cancel at any time from the plans page and keep using the paid plan until the end of the period you have paid for. No prorated refund is given for cancellation.",
+        "p3": "When you change plans, the new plan takes effect immediately. The difference is prorated and settled on your next bill."
+      },
+      "article8": {
+        "title": "Article 8. Selling Paid Content",
+        "p1": "Posters on the Standard plan or higher who have registered an account to receive earnings can sell paid sections of articles and hi-res audio.",
+        "p2": "At the time of payment, the sale price minus a 15% system fee is sent to the poster's account. The operator pays the payment processing fees.",
+        "p3": "When a buyer is refunded, the amount sent to the poster is reversed.",
+        "p4": "Content that someone has bought cannot be deleted or taken off sale."
+      },
+      "article9": {
+        "title": "Article 9. Using Purchased Content",
+        "p1": "Purchased content may be used only for the buyer's personal enjoyment.",
+        "p2": "Downloaded hi-res audio may also be used only for the buyer's personal listening. You may not copy it for others or make it public.",
+        "p3": "You can download hi-res audio again at any time from the song's detail page.",
+        "p4": "Due to the nature of digital content, returns and refunds are not accepted after purchase. However, if the content cannot be used because of a defect, we will refund it after you contact us.",
+        "p5": "Once refunded, the content can no longer be used, and the hi-res audio can no longer be downloaded."
+      },
+      "article10": {
+        "title": "Article 10. Suspension and Account Deletion",
+        "p1": "The operator may delete posts, suspend use, or delete the accounts of users who violate these Terms of Service.",
+        "p2": "Reports of posts that infringe rights are accepted at our contact address (support@myus.media), and such posts are removed after review."
+      },
+      "article11": {
+        "title": "Article 11. Disclaimer",
+        "p1": "The operator is not responsible for the content of posts. Any problem caused by a post shall be resolved by the poster.",
+        "p2": "The operator may stop the Service without notice for maintenance, failures, and similar reasons."
+      },
+      "article12": {
+        "title": "Article 12. Changes to the Terms",
+        "p1": "The operator may change these Terms of Service. Changed terms take effect when they are posted on this page."
+      },
+      "article13": {
+        "title": "Article 13. Governing Law and Jurisdiction",
+        "p1": "These Terms of Service are governed by the laws of Japan. The district court having jurisdiction over the operator's address shall be the exclusive court of first instance for any dispute concerning the Service."
       }
     },
     "privacy": {
       "title": "Privacy Policy",
       "collect": {
         "title": "Information We Collect",
-        "content": ""
+        "p1": "Account and profile: email address, user name, nickname, name, date of birth, gender, country/region, and phone number and address (if entered)",
+        "p2": "Usage records: actions such as views, likes, and follows, IP address, and cookies",
+        "p3": "Payments: records of payments and earnings. Credit card numbers are handled by Stripe, and the operator does not receive them",
+        "p4": "Posts: content you post and its title, description, and so on"
       },
       "purpose": {
         "title": "Purpose of Use",
-        "content": ""
+        "p1": "To provide the Service, verify identity, and handle logins",
+        "p2": "To process payments for paid plans and paid content, and to send earnings to posters",
+        "p3": "To send notices and emails",
+        "p4": "To prevent misuse and improve the Service"
       },
       "thirdParty": {
         "title": "Disclosure to Third Parties",
-        "content": ""
+        "p1": "Except as required by law, we do not provide personal information to third parties without consent.",
+        "p2": "Posts and profiles you make public can be seen by other users."
       },
       "external": {
         "title": "Use of External Services",
-        "content": ""
+        "p1": "Stripe: payments and sending earnings to posters",
+        "p2": "Amazon Web Services: storing and delivering data, and sending emails",
+        "p3": "Vercel: delivering the web pages",
+        "p4": "These companies are outside Japan (such as in the United States), and personal information may be handled abroad.",
+        "p5": "Cookies are used to keep you logged in."
       },
       "security": {
         "title": "Security",
-        "content": ""
+        "p1": "Communication is encrypted (HTTPS), and passwords are stored as hashes.",
+        "p2": "Access to stored information is limited to what is necessary to run the Service."
       },
       "request": {
         "title": "Requests for Disclosure, Correction, or Deletion",
-        "content": ""
+        "p1": "When you request disclosure, correction, deletion, or suspension of use of your personal information, we will respond without delay after confirming your identity.",
+        "p2": "You can withdraw from the settings page. Requests to delete information after withdrawal are accepted at our contact address."
       },
       "contact": {
         "title": "Contact",
-        "content": ""
+        "p1": "support@myus.media"
       },
       "revision": {
         "title": "Changes to This Policy",
-        "content": ""
+        "p1": "We may change this Privacy Policy as needed. Changes will be posted on this page."
       }
     },
     "commerce": {
       "title": "Specified Commercial Transactions Act",
       "seller": {
         "label": "Seller",
-        "content": ""
+        "content": "As we are a sole proprietor, this will be disclosed without delay upon request."
       },
       "representative": {
         "label": "Representative",
-        "content": ""
+        "content": "As we are a sole proprietor, this will be disclosed without delay upon request."
       },
       "address": {
         "label": "Address",
-        "content": ""
+        "content": "As we are a sole proprietor, this will be disclosed without delay upon request."
       },
       "phone": {
         "label": "Phone",
-        "content": ""
+        "content": "As we are a sole proprietor, this will be disclosed without delay upon request."
       },
       "email": {
         "label": "Email",
-        "content": ""
+        "content": "support@myus.media"
       },
       "price": {
         "label": "Price",
-        "content": ""
+        "content": "Prices of paid plans are shown on the plans page, and prices of paid content are shown on each content page (tax included)."
       },
       "extraFee": {
         "label": "Additional fees",
-        "content": ""
+        "content": "Internet connection fees are borne by the customer."
       },
       "payment": {
         "label": "Payment method",
-        "content": ""
+        "content": "Credit card (payments are processed by Stripe)"
       },
       "paymentTiming": {
         "label": "Payment timing",
-        "content": ""
+        "content": "Paid plans are charged when you subscribe and then renewed and charged automatically every month. Paid content is charged at the time of purchase."
       },
       "delivery": {
         "label": "Delivery",
-        "content": ""
+        "content": "Available immediately after payment is completed. It may take a moment to be reflected."
       },
       "cancel": {
         "label": "Cancellation and refunds",
-        "content": ""
+        "content": "Paid plans can be canceled at any time and used until the end of the period you have paid for. No prorated refund is given. Due to the nature of digital content, paid content cannot be returned or refunded after purchase. However, if it cannot be used because of a defect, we will refund it after you contact us."
       },
       "environment": {
         "label": "System requirements",
-        "content": ""
+        "content": "The latest versions of Google Chrome, Safari, Microsoft Edge, and Firefox"
       }
     },
     "knowledge": {
@@ -874,7 +942,7 @@
       },
       "music": {
         "label": "Music",
-        "content": "Post music, audio, audiobooks, and more."
+        "content": "Post music, audio, audiobooks, and more. On the Standard plan or higher, you can also sell hi-res audio of your original songs."
       },
       "blog": {
         "label": "Blog",
