@@ -62,19 +62,16 @@ export interface Video extends Media {
   encodeStatus: EncodeStatus
 }
 
-export interface Music extends Media {
-  image: string
-  music: string
-  gain: number
-  lyric: string
-}
-
 export interface MusicHires {
   sampleRate: number
   bitDepth: number
 }
 
-export interface ManageMusic extends Music {
+export interface Music extends Media {
+  image: string
+  music: string
+  gain: number
+  lyric: string
   hires: MusicHires | null
   product: Product | null
 }
@@ -85,12 +82,9 @@ export interface MusicHiresUrlOut {
 
 export interface Blog extends Media {
   richtext: string
+  paidText: string
   isPromotion: boolean
   image: string
-}
-
-export interface ManageBlog extends Blog {
-  paidText: string
   product: Product | null
 }
 

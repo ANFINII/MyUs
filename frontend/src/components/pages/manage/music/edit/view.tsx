@@ -4,7 +4,7 @@ import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { MusicUpdateIn } from 'types/internal/media/input'
-import { ManageMusic } from 'types/internal/media/output'
+import { Music } from 'types/internal/media/output'
 import { PaymentSellerOut } from 'types/internal/payment'
 import { putManageMusic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
@@ -32,7 +32,7 @@ import LyricEditor from '../LyricEditor'
 interface Props {
   channels: Channel[]
   categories: Category[]
-  data: ManageMusic
+  data: Music
   seller: PaymentSellerOut
 }
 
