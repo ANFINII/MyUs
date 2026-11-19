@@ -10,6 +10,10 @@ class PaymentType(str, Enum):
     ONE_TIME = "OneTime"
 
 
+class ProductType(str, Enum):
+    BLOG = "Blog"
+
+
 class CheckoutError(str, Enum):
     UNKNOWN_PRODUCT = "UnknownProduct"
     INVALID_AMOUNT = "InvalidAmount"

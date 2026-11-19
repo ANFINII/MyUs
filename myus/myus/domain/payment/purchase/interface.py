@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
-from .data import BlogPurchaseData
+from myus.utils.enum.payment import ProductType
+from .data import PurchaseData
 
 
 class SortType(Enum):
@@ -12,8 +13,9 @@ class SortType(Enum):
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     user_id: int = 0
-    blog_id: int = 0
     transaction_id: int = 0
+    product_type: ProductType | None = None
+    product_ids: list[int] = field(default_factory=list)
 
 
 @dataclass(frozen=True, slots=True)
@@ -28,17 +30,17 @@ class PageOption:
     offset: int = 0
 
 
-class BlogPurchaseInterface(ABC):
+class PurchaseInterface(ABC):
     @abstractmethod
     def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> Result[list[BlogPurchaseData], FatalError]:
+    def bulk_get(self, ids: list[int]) -> Result[list[PurchaseData], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[BlogPurchaseData]) -> Result[list[int], FatalError]:
+    def bulk_save(self, objs: list[PurchaseData]) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod

@@ -54,6 +54,7 @@
     "notPaidContent": "この記事は無料です",
     "purchaseOwnContent": "自分の記事は購入できません",
     "alreadyPurchased": "すでに購入しています",
+    "deletePurchased": "買った人がいる記事は削除できません",
     "planNotFound": "プランが見つかりません",
     "alreadySubscribed": "すでに有料プランを契約しています",
     "followSelf": "自分自身はフォローできません",

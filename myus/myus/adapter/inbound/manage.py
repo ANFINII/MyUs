@@ -411,6 +411,8 @@ class ManageBlogAPI:
             match delete_ret.err_value:
                 case NotFoundError():
                     return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
+                case ValidationError():
+                    return 400, ErrorOut(type=ErrorType.VALIDATION, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:

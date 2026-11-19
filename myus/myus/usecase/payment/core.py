@@ -19,12 +19,13 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import AccessError, CommandError, ConflictError, FatalError, FindError, ForbiddenError, HistoryCorruptedError, InputError, NotFoundError, Result, ValidationError
 from myus.utils.enum.i18n import Locale
-from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, SubscriptionStatus
+from myus.utils.enum.payment import CancelError, PaymentProvider, PaymentType, ProductType, SubscriptionStatus
 from myus.utils.enum.user import PlanName
 from myus.utils.functions.common import create_frontend_url
 from myus.utils.functions.map import country_currency
+from myus.utils.functions.payment import create_product_code
 from myus.utils.functions.transaction import atomic_result
-from ._convert import get_blog_purchase_ids_data, get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS, PLATFORM_FEE_RATE
+from ._convert import get_purchase_ids_data, get_payment_repository, get_payment_seller_data, save_payment_seller_data, get_active_subscription_data, save_payment_event_data, save_provider_subscription_data, save_cancellation_request_data, save_cancellation_failure_data, save_processed_payment_event_data, save_failed_payment_event_data, save_payment_projection_data, PAYMENT_EVENT_MAX_ATTEMPTS, PLATFORM_FEE_RATE
 from ..dto.ledger import LedgerRowDTO
 from ..dto.plan import PlanPriceDTO
 from ..dto.seller import SellerDTO
@@ -123,7 +124,7 @@ def create_blog_checkout(user_id: int, blog_ulid: str, locale: Locale) -> Result
         log.warning("own content", blog_ulid=blog_ulid, user_id=user_id)
         return Result.err(ValidationError("error.purchaseOwnContent"))
 
-    purchase_ids_ret = get_blog_purchase_ids_data(user_id, blog.id)
+    purchase_ids_ret = get_purchase_ids_data(user_id, ProductType.BLOG, blog.id)
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 
@@ -143,7 +144,7 @@ def create_blog_checkout(user_id: int, blog_ulid: str, locale: Locale) -> Result
 
     blog_url = f"{create_frontend_url(locale)}/media/blog/{blog.ulid}"
     data = CheckoutData(
-        product_code=blog.ulid,
+        product_code=create_product_code(ProductType.BLOG, blog.ulid),
         description=blog.title,
         price=blog.price,
         payment_type=PaymentType.ONE_TIME,

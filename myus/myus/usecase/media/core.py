@@ -22,6 +22,7 @@ from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotF
 from myus.utils.enum.i18n import Currency
 from myus.utils.enum.media import CommentType, EncodeStatus, MediaType
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from myus.utils.enum.payment import ProductType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
 from myus.utils.functions.convert.audio_converter import measure_music_gain
@@ -35,7 +36,7 @@ from ..comment._convert import get_comments_data
 from ..dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from ..message._convert import get_messages_data
 from ..notification._convert import create_notification_data
-from ..payment._convert import get_blog_purchase_ids_data, get_seller_currency_data
+from ..payment._convert import get_purchase_ids_data, get_seller_currency_data
 from ..series._convert import get_media_series_data
 
 
@@ -870,7 +871,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     is_owner = user_id == obj.channel.owner_id
     is_purchased = False
     if user_id is not None and obj.price.amount > 0 and not is_owner:
-        purchase_ids_ret = get_blog_purchase_ids_data(user_id, obj.id)
+        purchase_ids_ret = get_purchase_ids_data(user_id, ProductType.BLOG, obj.id)
         if purchase_ids_ret.is_err:
             return Result.err(purchase_ids_ret.err_value)
 

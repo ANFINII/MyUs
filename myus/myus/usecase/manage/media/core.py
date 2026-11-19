@@ -18,11 +18,13 @@ from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.message.interface import FilterOption as MessageFilterOption, MessageInterface, PageOption as MessagePageOption, SortOption as MessageSortOption
 from myus.domain.payment.data import Money
+from myus.domain.payment.purchase.interface import FilterOption as PurchaseFilterOption, PageOption as PurchasePageOption, PurchaseInterface, SortOption as PurchaseSortOption
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
-from myus.utils.common.result import FatalError, FindError, ForbiddenError, NotFoundError, Result, ValidationError, WriteError
+from myus.utils.common.result import FatalError, FindError, ForbiddenError, InputError, NotFoundError, Result, ValidationError, WriteError
 from myus.utils.enum.media import EncodeStatus
 from myus.utils.enum.notification import NotificationObjectType, NotificationTypeNo
+from myus.utils.enum.payment import ProductType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
 from myus.utils.functions.convert.audio_converter import measure_music_gain, probe_audio
@@ -482,7 +484,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateDTO, image: Upl
 
 
 @Result.shield_exception()
-def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError]:
+def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, InputError]:
     repo = injector.get(BlogInterface)
     ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
@@ -492,6 +494,16 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, FindError
     if len(delete_ids) != len(set(ulids)):
         log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
+
+    purchase_repo = injector.get(PurchaseInterface)
+    purchase_ids_ret = purchase_repo.get_ids(PurchaseFilterOption(product_type=ProductType.BLOG, product_ids=delete_ids), PurchaseSortOption(), PurchasePageOption(limit=1))
+    if purchase_ids_ret.is_err:
+        return Result.err(purchase_ids_ret.err_value)
+
+    purchase_ids = purchase_ids_ret.ok_value
+    if len(purchase_ids) > 0:
+        log.warning("purchased", ulids=ulids, user_id=user_id)
+        return Result.err(ValidationError("error.deletePurchased"))
 
     delete_ret = atomic_result(lambda: delete_blog_data(delete_ids))
     if delete_ret.is_err:
