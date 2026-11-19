@@ -33,6 +33,7 @@
 ## インポート
 
 - ファイルの先頭で行う（ローカルインポート禁止、`TYPE_CHECKING`禁止）
+  - `config/asgi.py` だけは例外。モデルを読み込む `websocket_urlpatterns` は、`get_asgi_application()` で Django の準備を済ませたあとに import する。先に import すると、本番の daphne が `AppRegistryNotReady` で起動できない
 - **`import X` 文は全て先頭にまとめる**（section に関係なく `from` より上）
   - 例: `import jwt` は `from dataclasses import replace` より上
 - **`from X import Y` 文は section 順**: 標準ライブラリ → サードパーティ → Django → プロジェクト内（絶対パス）→ 同じ層の中（相対パス）
