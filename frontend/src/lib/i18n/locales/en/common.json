@@ -761,7 +761,7 @@
         "p1": "Uploading content to the Service without the permission of the copyright holder is prohibited.",
         "p2": "Uploading derivative works, including those created with AI, to the Service without the permission of the copyright holder is prohibited.",
         "p3": "The copyright in original content uploaded to the Service belongs to its author.",
-        "p4": "Posters warrant that they hold all rights necessary for the content they post."
+        "p4": "Posters warrant that they hold the rights necessary for the content they post or have permission from the rights holders. Any problem concerning rights shall be resolved by the poster."
       },
       "article3": {
         "title": "Article 3. Prohibited Conduct",
@@ -787,10 +787,10 @@
       },
       "article6": {
         "title": "Article 6. Posting Music",
-        "p1": "Original music may be posted only if you hold all rights to the lyrics, composition, performance, and recording.",
+        "p1": "Original music may be posted after obtaining permission from everyone who holds rights to its lyrics, composition, performance, and recording. Collaborative works may also be posted with the permission of the other rights holders. Any problem with rights holders shall be resolved by the poster.",
         "p2": "Covers (performing or singing) of other people's songs may be posted only for songs managed by collecting societies (such as JASRAC and NexTone) with which the operator has a license agreement. The societies with which we have agreements will be announced on this page. At present, we have no such agreements.",
         "p3": "Works that use all or part of other people's recordings (such as CD or streaming audio) cannot be posted.",
-        "p4": "Only original works for which you hold all rights to the lyrics, composition, performance, and recording can be sold as hi-res audio. Covers cannot be sold."
+        "p4": "Only original works for which permission to sell has been obtained from everyone who holds rights to the lyrics, composition, performance, and recording can be sold as hi-res audio. Arrangements with other rights holders, such as how earnings are shared, are the poster's responsibility. Covers cannot be sold."
       },
       "article7": {
         "title": "Article 7. Paid Plans",
