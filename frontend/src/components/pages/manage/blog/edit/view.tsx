@@ -48,6 +48,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
+  const [isSale, setIsSale] = useState<boolean>(paidText !== '')
   const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid, title, content, richtext, paidText, price, publish, isPromotion, publishAt: datetimeISO(publishAt) })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
@@ -62,6 +63,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const handlePromotion = () => setValues({ ...values, isPromotion: !values.isPromotion })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
+  const handleSale = () => setIsSale(!isSale)
   const handlePaidText = (paidText: string) => setValues({ ...values, paidText })
   const handlePrice = (price: number) => setValues({ ...values, price })
 
@@ -73,13 +75,14 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   const handleForm = async () => {
     const { categoryUlid, title, content, richtext } = values
     if (!validate({ categoryUlid, title, content, richtext })) return
-    const paidError = paidTextError(values.paidText, values.price)
+    const paidError = isSale ? paidTextError(values.paidText, values.price) : ''
     if (paidError !== '') {
       handleToast(paidError, true)
       return
     }
+    const request = isSale ? values : { ...values, paidText: '', price: 0 }
     handleLoading(true)
-    const ret = await putManageBlog(data.ulid, values)
+    const ret = await putManageBlog(data.ulid, request)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Put), true)
@@ -110,17 +113,19 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
           <TextEditor label={t('manage.form.richtext')} value={values.richtext} required error={error} onChange={handleRichtext} />
           <PaidTextInput
+            isSale={isSale}
             paidText={values.paidText}
             price={values.price}
             currency={currency}
             isAvailable={seller.isAvailable || paidText !== ''}
             isEnabled={seller.isEnabled || paidText !== ''}
+            onSale={handleSale}
             onPaidText={handlePaidText}
             onPrice={handlePrice}
           />
         </VStack>
       </form>
-      <BlogModal open={isModal} onClose={handleModal} richtext={values.richtext} paidText={values.paidText} isPromotion={values.isPromotion} />
+      <BlogModal open={isModal} onClose={handleModal} richtext={values.richtext} paidText={isSale ? values.paidText : ''} isPromotion={values.isPromotion} />
     </Main>
   )
 }

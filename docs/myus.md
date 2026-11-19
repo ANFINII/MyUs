@@ -215,7 +215,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
   - ファイルは変換せずに、公開しない置き場（`STORAGES["private"]`）に置く。開発は `myus/private`、本番は別の S3 のバケット
   - 詳細（`GET /media/music/{ulid}`）は、`hires`（サンプリングレート・ビット深度。売っていなければ null）・`product`（`ulid`・`price`）・`is_purchased` を返す。ファイルの場所は返さない
   - ダウンロード（`GET /media/music/{ulid}/hires`・`get_music_hires_url`）：投稿者と購入した人にだけ、5分（`PRIVATE_URL_EXPIRE`）だけ使える URL を返す。購入していなければ `error.hiresNotPurchased`
-  - 編集画面の「ハイレゾの販売」（`pages/manage/music/HiresSale`）：FLAC の先頭の情報（STREAMINFO）を読んで、24bit・48kHz〜192kHz かと値段の範囲を確かめてから送る（`utils/functions/hires.ts`）。大きなファイルなので、この送信だけタイムアウトを30分（`LARGE_UPLOAD_TIMEOUT_MS`）にする。Standard 未満や口座が無いときは案内（`widgets/SellerHint`）を出す
+  - 編集画面の「ハイレゾの販売」（`pages/manage/music/HiresSale`）：FLAC の先頭の情報（STREAMINFO）を読んで、24bit・48kHz〜192kHz かと値段の範囲を確かめてから送る（`utils/functions/hires.ts`）。大きなファイルなので、この送信だけタイムアウトを30分（`LARGE_UPLOAD_TIMEOUT_MS`）にする。「有料で販売する」の切り替えを入れたときだけ入力欄を出す。販売中は切り替えを入れたまま固定し、止めるのは「販売をやめる」のボタンにする。Standard 未満や口座が無いときは切り替えを押せなくし、案内（`widgets/SellerHint`）を出す
   - 詳細画面：投稿者と購入した人には「ハイレゾをダウンロード」、ほかの人には購入の枠（`widgets/Paywall`。記事の有料部分と同じ部品）を出す
   - 本番は S3 の署名付き URL。開発は `config/storages.py` の `SignedFileSystemStorage` が署名付きの URL（`/private/{token}`）を作り、DEBUG のときだけの `serve_private` が署名と期限を確かめて渡す
 - 再生時間は DB に持たない。一覧のカードにカーソルを乗せたとき・再生したときに、ブラウザが曲の情報（metadata）だけを読んで出す。再生中の曲のカードは出したままにする

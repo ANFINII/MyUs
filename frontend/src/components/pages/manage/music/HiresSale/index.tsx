@@ -15,6 +15,7 @@ import { useLoading } from 'components/hooks/useLoading'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
+import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import SellerHint from 'components/widgets/SellerHint'
@@ -38,11 +39,14 @@ export default function HiresSale(props: Props): React.JSX.Element {
   const [file, setFile] = useState<File | null>(null)
   const [fileHires, setFileHires] = useState<MusicHires | null>(null)
   const [text, setText] = useState<string>(priceText(product?.price.amount ?? 0, currency))
+  const [isSale, setIsSale] = useState<boolean>(hires !== null)
 
   const isAvailable = seller.isAvailable || hires !== null
   const isEnabled = seller.isEnabled || hires !== null
+  const isSellable = isAvailable && isEnabled
   const selectedHires = file === null ? hires : fileHires
 
+  const handleSale = () => setIsSale(!isSale)
   const handlePrice = (e: ChangeEvent<HTMLInputElement>) => setText(e.target.value)
 
   const handleFile = async (selected: File) => {
@@ -80,22 +84,27 @@ export default function HiresSale(props: Props): React.JSX.Element {
     }
     setFile(null)
     setText('')
+    setIsSale(false)
     await queryClient.invalidateQueries({ queryKey: queryKeys.manageMusic(ulid) })
     handleToast(Fetch.Delete, false)
   }
 
-  if (!isAvailable || !isEnabled) return <SellerHint isAvailable={isAvailable} />
-
   return (
-    <VStack gap="4" className={style.hires}>
-      <p className={style.hires_title}>{t('manage.hires.title')}</p>
-      <InputFile label={t('manage.hires.file')} accept=".flac,audio/flac" onChange={handleFile} />
-      <p className={style.hires_note}>{selectedHires === null ? t('manage.hires.fileHint') : hiresLabel(selectedHires)}</p>
-      <Input label={t('manage.form.price', { currency })} type="number" name="hiresPrice" value={text} onChange={handlePrice} />
-      <HStack gap="4">
-        <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleSave} />
-        {hires !== null && <Button color="red" size="s" name={t('manage.hires.stop')} loading={loading} onClick={handleStop} />}
-      </HStack>
-    </VStack>
+    <>
+      <ToggleCard label={t('manage.form.sale')} isActive={isSale} disable={!isSellable || hires !== null} onClick={isSellable && hires === null ? handleSale : undefined} />
+      {!isSellable && <SellerHint isAvailable={isAvailable} />}
+      {isSale && (
+        <VStack gap="4" className={style.hires}>
+          <p className={style.hires_title}>{t('manage.hires.title')}</p>
+          <InputFile label={t('manage.hires.file')} accept=".flac,audio/flac" onChange={handleFile} />
+          <p className={style.hires_note}>{selectedHires === null ? t('manage.hires.fileHint') : hiresLabel(selectedHires)}</p>
+          <Input label={t('manage.form.price', { currency })} type="number" name="hiresPrice" value={text} onChange={handlePrice} />
+          <HStack gap="4">
+            <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleSave} />
+            {hires !== null && <Button color="red" size="s" name={t('manage.hires.stop')} loading={loading} onClick={handleStop} />}
+          </HStack>
+        </VStack>
+      )}
+    </>
   )
 }
