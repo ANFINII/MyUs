@@ -50,6 +50,7 @@ export default function UserPolicy(): React.JSX.Element {
         <p>{t('menu.userpolicy.article6.p1')}</p>
         <p>{t('menu.userpolicy.article6.p2')}</p>
         <p>{t('menu.userpolicy.article6.p3')}</p>
+        <p>{t('menu.userpolicy.article6.p4')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article7.title')}</h2>

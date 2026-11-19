@@ -787,9 +787,10 @@
       },
       "article6": {
         "title": "Article 6. Posting Music",
-        "p1": "You may post only original music for which you hold all rights to the lyrics, composition, performance, and recording.",
-        "p2": "Covers of other people's songs, works that use part of other people's recordings, and songs managed by collecting societies such as JASRAC and NexTone cannot be posted.",
-        "p3": "To sell hi-res audio, you must hold the rights to the recording (master rights)."
+        "p1": "Original music may be posted only if you hold all rights to the lyrics, composition, performance, and recording.",
+        "p2": "Covers (performing or singing) of other people's songs may be posted only for songs managed by collecting societies (such as JASRAC and NexTone) with which the operator has a license agreement. The societies with which we have agreements will be announced on this page. At present, we have no such agreements.",
+        "p3": "Works that use all or part of other people's recordings (such as CD or streaming audio) cannot be posted.",
+        "p4": "Only original works for which you hold all rights to the lyrics, composition, performance, and recording can be sold as hi-res audio. Covers cannot be sold."
       },
       "article7": {
         "title": "Article 7. Paid Plans",
