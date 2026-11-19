@@ -73,14 +73,14 @@ resource "aws_acm_certificate" "cloudfront" {
 
 resource "aws_route53_record" "cloudfront_validation" {
   for_each = {
-    for dvo in aws_acm_certificate.cloudfront.domain_validation_options : dvo.resource_record_name => dvo...
+    for dvo in aws_acm_certificate.cloudfront.domain_validation_options : dvo.domain_name => dvo
   }
 
   zone_id         = data.aws_route53_zone.main.zone_id
-  name            = each.value[0].resource_record_name
-  type            = each.value[0].resource_record_type
+  name            = each.value.resource_record_name
+  type            = each.value.resource_record_type
   ttl             = 300
-  records         = [each.value[0].resource_record_value]
+  records         = [each.value.resource_record_value]
   allow_overwrite = true
 }
 
