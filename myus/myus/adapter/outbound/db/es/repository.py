@@ -14,6 +14,11 @@ class EventStoreRepository(EventStoreInterface):
         self.event_types = {event_class: event_type for event_type, event_class in event_classes.items()}
 
     @Result.shield_exception()
+    def get_aggregate_ids(self, aggregate_type: str) -> Result[list[str], FatalError]:
+        qs = EsEvent.objects.filter(aggregate_type=aggregate_type, seq=1).order_by("id")
+        return Result.ok(list(qs.values_list("aggregate_id", flat=True)))
+
+    @Result.shield_exception()
     def load(self, aggregate_type: str, aggregate_id: str, after_seq: int) -> Result[list[EventEnvelope[Any]], HistoryError]:
         objs = list(EsEvent.objects.filter(aggregate_type=aggregate_type, aggregate_id=aggregate_id, seq__gt=after_seq).order_by("seq"))
         envelopes: list[EventEnvelope[Any]] = []

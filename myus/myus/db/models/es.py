@@ -1,4 +1,5 @@
 from django.db import models
+from myus.utils.constants.choice import PROJECTOR_CHOICES
 
 
 class EsEvent(models.Model):
@@ -40,4 +41,23 @@ class EsOutbox(models.Model):
         verbose_name_plural = "002 EsOutbox"
         constraints = [
             models.UniqueConstraint(fields=["aggregate_type", "aggregate_id", "seq"], name="es_outbox_aggregate_seq_uniq"),
+        ]
+
+
+class EsProjectionProgress(models.Model):
+    """EsProjectionProgress"""
+    id               = models.BigAutoField(primary_key=True)
+    projector        = models.CharField(max_length=50, choices=PROJECTOR_CHOICES)
+    aggregate_type   = models.CharField(max_length=50)
+    aggregate_id     = models.CharField(max_length=255)
+    last_applied_seq = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.projector}:{self.aggregate_type}:{self.aggregate_id}:{self.last_applied_seq}"
+
+    class Meta:
+        db_table = "es_projection_progress"
+        verbose_name_plural = "002 EsProjectionProgress"
+        constraints = [
+            models.UniqueConstraint(fields=["projector", "aggregate_type", "aggregate_id"], name="es_projection_progress_uniq"),
         ]
