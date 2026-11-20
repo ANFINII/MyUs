@@ -7,12 +7,15 @@ import style from './Search.module.scss'
 
 interface Props {
   value?: string
+  isFull?: boolean
+  autoFocus?: boolean
   className?: string
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  onSearch?: () => void
 }
 
 export default function Search(props: Props): React.JSX.Element {
-  const { value, className, onChange } = props
+  const { value, isFull = false, autoFocus = false, className, onChange, onSearch } = props
 
   const router = useRouter()
   const { t } = useTranslation()
@@ -20,6 +23,7 @@ export default function Search(props: Props): React.JSX.Element {
   const handleSearch = () => {
     const query = value ? { search: value } : {}
     router.push({ pathname: router.pathname, query })
+    onSearch?.()
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -27,8 +31,8 @@ export default function Search(props: Props): React.JSX.Element {
   }
 
   return (
-    <div className={cx(style.searchbar, className)}>
-      <input type="search" name="search" placeholder={t('input.search')} value={value} onChange={onChange} onKeyDown={handleKeyDown} className={style.input} />
+    <div className={cx(style.searchbar, isFull && style.full, className)}>
+      <input type="search" name="search" placeholder={t('input.search')} value={value} autoFocus={autoFocus} onChange={onChange} onKeyDown={handleKeyDown} className={style.input} />
       <button onClick={handleSearch} className={style.icon}>
         <IconSearch size="16" />
       </button>

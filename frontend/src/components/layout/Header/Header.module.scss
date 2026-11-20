@@ -92,6 +92,45 @@
     justify-content: center;
   }
 
+  .search_open {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    color: rgb(255, 255, 255);
+    border: none;
+    background: none;
+  }
+
+  .search_bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: 56px;
+    padding: 0 12px;
+    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+    z-index: 75;
+  }
+
+  .search_back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    color: rgb(255, 255, 255);
+    border: none;
+    background: none;
+  }
+
   .account {
     border-radius: 50%;
 
@@ -120,6 +159,18 @@
   @media screen and (max-width: 668px) {
     .nav {
       grid-template-columns: 3em 5.5em minmax(0, 1fr) 2.5em 2.5em 2.5em;
+    }
+
+    .search_box {
+      justify-content: flex-end;
+    }
+
+    .search_wide {
+      display: none;
+    }
+
+    .search_open {
+      display: flex;
     }
   }
 }
