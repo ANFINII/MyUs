@@ -1,0 +1,291 @@
+<title>MyUs 本番構成</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 上から、利用者のリクエスト → デプロイ → 監視 → リソースの表 → 変更の記録。図は横長で、狭い幅では横にスクロール */
+:root {
+  --bg: #f4f6fa;
+  --panel: #ffffff;
+  --ink: #14203a;
+  --muted: #5c667d;
+  --line: #d6dbe6;
+  --teal: #0f6f7a;
+  --pink: #b8176f;
+  --sans: "IBM Plex Sans JP", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0e1424; --panel: #161e33; --ink: #e6eaf4; --muted: #9aa3ba; --line: #2c3654; --teal: #4fc1cc; --pink: #f272b8; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0e1424; --panel: #161e33; --ink: #e6eaf4; --muted: #9aa3ba; --line: #2c3654; --teal: #4fc1cc; --pink: #f272b8; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.75; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 32px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 40px; }
+header { display: flex; flex-direction: column; gap: 6px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; color: var(--teal); }
+h1 { margin: 0; font-size: 28px; line-height: 1.3; font-weight: 600; text-wrap: balance; }
+h2 { margin: 0; font-size: 18px; font-weight: 600; text-wrap: balance; }
+p { margin: 0; max-width: 68ch; }
+.lead { color: var(--muted); }
+section { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.scroll { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+svg { display: block; width: 100%; min-width: 760px; height: auto; color: var(--ink); font-family: var(--sans); }
+figcaption { font-size: 13px; color: var(--muted); max-width: 80ch; }
+code, .mono { font-family: var(--mono); font-size: 12.5px; }
+
+svg .box { fill: var(--panel); stroke: var(--ink); stroke-width: 1.2; }
+svg .group { fill: none; stroke: var(--teal); stroke-width: 1.4; stroke-dasharray: 6 4; }
+svg .hot { fill: var(--panel); stroke: var(--teal); stroke-width: 1.8; }
+svg .plan { fill: var(--panel); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+svg .edge { fill: none; stroke: var(--ink); stroke-width: 1.2; }
+svg .edge.dash { stroke-dasharray: 5 4; stroke: var(--muted); }
+svg .t { fill: var(--ink); font-size: 13px; font-weight: 600; }
+svg .s { fill: var(--muted); font-size: 11.5px; font-family: var(--mono); }
+svg .l { fill: var(--ink); font-size: 11.5px; }
+svg .gt { fill: var(--teal); font-size: 12px; font-weight: 600; }
+svg .pk { fill: var(--pink); font-size: 11.5px; font-weight: 600; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+th, td { padding: 9px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+td:first-child { white-space: nowrap; font-weight: 600; }
+ul.log { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; }
+.log .d { font-family: var(--mono); color: var(--muted); font-size: 12.5px; margin-right: 8px; }
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">myus.media · ap-northeast-1 · 2026-11-21</span>
+  <h1>MyUs 本番構成</h1>
+  <p class="lead">AWS の本番アカウント（996601532051）で動いている構成。Terraform は <code>infra/aws/prod</code> の 13 スタック。構成を変えたら、このページと <code>docs/infrastructure.md</code> を一緒に直す。</p>
+</header>
+
+<section>
+  <h2>リクエストの流れ</h2>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 990 470" role="img" aria-label="ブラウザは3つの CloudFront を通り、フロントは S3、API は EC2 の backend、メディアは S3 から受け取る。EC2 の中の4つのコンテナが RDS・SES・S3 を使う。">
+      <defs>
+        <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker>
+      </defs>
+
+      <rect class="box" x="20" y="200" width="120" height="56" rx="8"/>
+      <text class="t" x="80" y="224" text-anchor="middle">ブラウザ</text>
+      <text class="s" x="80" y="243" text-anchor="middle">React SPA</text>
+
+      <rect class="box" x="20" y="300" width="120" height="44" rx="8"/>
+      <text class="t" x="80" y="327" text-anchor="middle">Stripe</text>
+
+      <rect class="box" x="250" y="40" width="180" height="52" rx="8"/>
+      <text class="t" x="340" y="62" text-anchor="middle">CloudFront</text>
+      <text class="s" x="340" y="80" text-anchor="middle">myus.media・www</text>
+      <rect class="box" x="250" y="202" width="180" height="52" rx="8"/>
+      <text class="t" x="340" y="224" text-anchor="middle">CloudFront</text>
+      <text class="s" x="340" y="242" text-anchor="middle">api.myus.media</text>
+      <rect class="box" x="250" y="380" width="180" height="52" rx="8"/>
+      <text class="t" x="340" y="402" text-anchor="middle">CloudFront</text>
+      <text class="s" x="340" y="420" text-anchor="middle">media.myus.media</text>
+
+      <path class="edge" d="M140 212 H160 V66 H248" marker-end="url(#a1)"/>
+      <text class="l" x="204" y="59" text-anchor="middle">HTML・JS</text>
+      <path class="edge" d="M140 228 H248" marker-end="url(#a1)"/>
+      <text class="l" x="193" y="221" text-anchor="middle">REST・WS</text>
+      <path class="edge" d="M140 244 H160 V406 H248" marker-end="url(#a1)"/>
+      <text class="l" x="204" y="399" text-anchor="middle">画像・HLS</text>
+      <path class="edge" d="M140 322 H228 V244 H248" marker-end="url(#a1)"/>
+      <text class="l" x="172" y="315">webhook</text>
+
+      <rect class="box" x="520" y="40" width="180" height="52" rx="8"/>
+      <text class="t" x="610" y="62" text-anchor="middle">S3</text>
+      <text class="s" x="610" y="80" text-anchor="middle">myus-prod-frontend</text>
+      <path class="edge" d="M430 66 H518" marker-end="url(#a1)"/>
+      <text class="l" x="474" y="59" text-anchor="middle">OAC</text>
+
+      <rect class="group" x="520" y="125" width="300" height="230" rx="10"/>
+      <text class="gt" x="532" y="146">EC2 t4g.small・メモリ 2GB＋スワップ 2GB</text>
+
+      <rect class="hot" x="540" y="165" width="125" height="52" rx="7"/>
+      <text class="t" x="602" y="187" text-anchor="middle">backend</text>
+      <text class="s" x="602" y="205" text-anchor="middle">uvicorn・768MB</text>
+      <rect class="hot" x="680" y="165" width="125" height="52" rx="7"/>
+      <text class="t" x="742" y="187" text-anchor="middle">worker</text>
+      <text class="s" x="742" y="205" text-anchor="middle">決済・256MB</text>
+      <rect class="hot" x="540" y="275" width="125" height="52" rx="7"/>
+      <text class="t" x="602" y="297" text-anchor="middle">encoder</text>
+      <text class="s" x="602" y="315" text-anchor="middle">HLS・MP3・640MB</text>
+      <rect class="hot" x="680" y="275" width="125" height="52" rx="7"/>
+      <text class="t" x="742" y="297" text-anchor="middle">redis</text>
+      <text class="s" x="742" y="315" text-anchor="middle">128MB</text>
+      <path class="edge" d="M640 217 L708 273" marker-end="url(#a1)"/>
+      <text class="l" x="684" y="242">WS の配信</text>
+
+      <path class="edge" d="M430 228 H480 V191 H538" marker-end="url(#a1)"/>
+      <text class="l" x="436" y="221">EIP :80</text>
+
+      <rect class="box" x="520" y="380" width="180" height="52" rx="8"/>
+      <text class="t" x="610" y="402" text-anchor="middle">S3</text>
+      <text class="s" x="610" y="420" text-anchor="middle">メディア</text>
+      <path class="edge" d="M430 406 H518" marker-end="url(#a1)"/>
+      <text class="l" x="474" y="399" text-anchor="middle">OAC</text>
+      <path class="edge" d="M602 327 V378" marker-end="url(#a1)"/>
+      <text class="l" x="612" y="344">保存・変換結果</text>
+
+      <rect class="box" x="870" y="150" width="105" height="52" rx="8"/>
+      <text class="t" x="922" y="172" text-anchor="middle">RDS</text>
+      <text class="s" x="922" y="190" text-anchor="middle">MySQL 8.4</text>
+      <path class="edge" d="M820 176 H868" marker-end="url(#a1)"/>
+      <text class="l" x="844" y="169" text-anchor="middle">3306</text>
+
+      <rect class="box" x="870" y="245" width="105" height="52" rx="8"/>
+      <text class="t" x="922" y="267" text-anchor="middle">SES</text>
+      <text class="s" x="922" y="285" text-anchor="middle">noreply@</text>
+      <path class="edge" d="M820 271 H868" marker-end="url(#a1)"/>
+      <text class="l" x="844" y="264" text-anchor="middle">SMTP</text>
+
+      <rect class="box" x="870" y="340" width="105" height="52" rx="8"/>
+      <text class="t" x="922" y="362" text-anchor="middle">S3</text>
+      <text class="s" x="922" y="380" text-anchor="middle">ハイレゾ</text>
+      <path class="edge" d="M790 355 V366 H868" marker-end="url(#a1)"/>
+      <text class="l" x="826" y="384" text-anchor="middle">署名 URL</text>
+    </svg>
+    </div>
+    <figcaption>API は CloudFront から EC2 の EIP の 80 番に届き、受けられるのは CloudFront のプレフィックスリストだけ。動画とオーディオは変換前のまま S3 に置き、encoder が後から HLS・MP3 に変える。4 つのコンテナにはメモリの上限があり、1 つが使いすぎてもそのコンテナだけが落ちて上がり直す。RDS は外への経路のないサブネットにあり、EC2 からだけつなげる。</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>デプロイの流れ</h2>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 990 250" role="img" aria-label="main への push で3つのワークフローが動き、インフラは Terraform、BE は ECR と SSM で EC2 に、FE は S3 と CloudFront に配る。">
+      <defs>
+        <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker>
+      </defs>
+      <rect class="box" x="20" y="100" width="140" height="52" rx="8"/>
+      <text class="t" x="90" y="122" text-anchor="middle">GitHub</text>
+      <text class="s" x="90" y="140" text-anchor="middle">main に push</text>
+
+      <path class="edge" d="M160 126 H190 V44 H218" marker-end="url(#a2)"/>
+      <path class="edge" d="M160 126 H218" marker-end="url(#a2)"/>
+      <path class="edge" d="M160 126 H190 V204 H218" marker-end="url(#a2)"/>
+
+      <rect class="box" x="220" y="20" width="180" height="48" rx="8"/>
+      <text class="t" x="310" y="40" text-anchor="middle">infra.yml</text>
+      <text class="s" x="310" y="57" text-anchor="middle">plan・apply</text>
+      <rect class="box" x="220" y="102" width="180" height="48" rx="8"/>
+      <text class="t" x="310" y="122" text-anchor="middle">deploy.yml</text>
+      <text class="s" x="310" y="139" text-anchor="middle">BE のイメージ</text>
+      <rect class="box" x="220" y="180" width="180" height="48" rx="8"/>
+      <text class="t" x="310" y="200" text-anchor="middle">frontend.yml</text>
+      <text class="s" x="310" y="217" text-anchor="middle">vite build</text>
+
+      <rect class="box" x="470" y="20" width="250" height="48" rx="8"/>
+      <text class="t" x="595" y="40" text-anchor="middle">Terraform の 13 スタック</text>
+      <text class="s" x="595" y="57" text-anchor="middle">stacks.txt の順</text>
+      <path class="edge" d="M400 44 H468" marker-end="url(#a2)"/>
+      <text class="l" x="434" y="37" text-anchor="middle">OIDC</text>
+
+      <rect class="box" x="470" y="102" width="130" height="48" rx="8"/>
+      <text class="t" x="535" y="122" text-anchor="middle">ECR</text>
+      <text class="s" x="535" y="139" text-anchor="middle">myus-backend</text>
+      <rect class="box" x="650" y="102" width="150" height="48" rx="8"/>
+      <text class="t" x="725" y="122" text-anchor="middle">SSM</text>
+      <text class="s" x="725" y="139" text-anchor="middle">Run Command</text>
+      <rect class="hot" x="850" y="102" width="125" height="48" rx="8"/>
+      <text class="t" x="912" y="122" text-anchor="middle">EC2</text>
+      <text class="s" x="912" y="139" text-anchor="middle">pull・up -d</text>
+      <path class="edge" d="M400 126 H468" marker-end="url(#a2)"/>
+      <text class="l" x="434" y="119" text-anchor="middle">push</text>
+      <path class="edge" d="M600 126 H648" marker-end="url(#a2)"/>
+      <path class="edge" d="M800 126 H848" marker-end="url(#a2)"/>
+
+      <rect class="box" x="470" y="180" width="130" height="48" rx="8"/>
+      <text class="t" x="535" y="200" text-anchor="middle">S3</text>
+      <text class="s" x="535" y="217" text-anchor="middle">sync</text>
+      <rect class="box" x="650" y="180" width="150" height="48" rx="8"/>
+      <text class="t" x="725" y="200" text-anchor="middle">CloudFront</text>
+      <text class="s" x="725" y="217" text-anchor="middle">キャッシュを消す</text>
+      <path class="edge" d="M400 204 H468" marker-end="url(#a2)"/>
+      <path class="edge" d="M600 204 H648" marker-end="url(#a2)"/>
+    </svg>
+    </div>
+    <figcaption>GitHub Actions は OIDC で AWS のロールを借り、アクセスキーは持たない。BE は SSM で EC2 に <code>compose.yml</code> と命令を送り、新しいイメージに入れ替える。DB のマイグレーションはデプロイでは流さず、PR に書いた SQL を <code>run_sql</code> で手で流す。本番の DB のデータは、運営者の指示があるまで消さない。</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>監視と通知</h2>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 990 200" role="img" aria-label="CloudWatch のアラームは東京と us-east-1 の SNS に送られ、メールで届く。Slack は予定。">
+      <defs>
+        <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker>
+      </defs>
+      <rect class="box" x="20" y="20" width="360" height="160" rx="8"/>
+      <text class="t" x="36" y="46">CloudWatch のアラーム</text>
+      <text class="l" x="36" y="74">EC2：ステータス・CPU クレジット・メモリ・ディスク</text>
+      <text class="l" x="36" y="98">RDS：空き容量・CPU</text>
+      <text class="l" x="36" y="122">CloudFront（api）：5xx の割合</text>
+      <text class="s" x="36" y="150">メモリとディスクは CloudWatch Agent が送る</text>
+
+      <rect class="box" x="450" y="30" width="170" height="52" rx="8"/>
+      <text class="t" x="535" y="52" text-anchor="middle">SNS</text>
+      <text class="s" x="535" y="70" text-anchor="middle">東京</text>
+      <rect class="box" x="450" y="118" width="170" height="52" rx="8"/>
+      <text class="t" x="535" y="140" text-anchor="middle">SNS</text>
+      <text class="s" x="535" y="158" text-anchor="middle">us-east-1</text>
+      <path class="edge" d="M380 56 H448" marker-end="url(#a3)"/>
+      <text class="l" x="414" y="49" text-anchor="middle">EC2・RDS</text>
+      <path class="edge" d="M380 144 H448" marker-end="url(#a3)"/>
+      <text class="l" x="414" y="137" text-anchor="middle">5xx</text>
+
+      <rect class="box" x="700" y="30" width="200" height="52" rx="8"/>
+      <text class="t" x="800" y="52" text-anchor="middle">メール</text>
+      <text class="s" x="800" y="70" text-anchor="middle">運営の Gmail</text>
+      <rect class="plan" x="700" y="118" width="200" height="52" rx="8"/>
+      <text class="t" x="800" y="140" text-anchor="middle">Slack</text>
+      <text class="pk" x="800" y="158" text-anchor="middle">#infra-alert（予定）</text>
+      <path class="edge" d="M620 56 H698" marker-end="url(#a3)"/>
+      <path class="edge" d="M620 144 H650 V64 H698" marker-end="url(#a3)"/>
+      <path class="edge dash" d="M620 56 H660 V144 H698" marker-end="url(#a3)"/>
+    </svg>
+    </div>
+    <figcaption>CloudFront のメトリクスは us-east-1 にしかないので、SNS は 2 つある。Slack は Amazon Q Developer in chat applications でつなぐ予定で、Slack のワークスペースの許可を待っている。予算（月 $100）は AWS Budgets から直接メールが届く。</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>主なリソース</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>領域</th><th>サービス</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td>ドメイン</td><td>Route 53・ACM</td><td><code>myus.media</code> の登録と DNS。証明書は CloudFront 用に us-east-1 で作る</td></tr>
+      <tr><td>フロント</td><td>S3・CloudFront</td><td>SPA。403・404 は <code>/index.html</code> を返す</td></tr>
+      <tr><td>API</td><td>EC2 t4g.small</td><td>Docker Compose で 4 コンテナ。CPU クレジットは standard</td></tr>
+      <tr><td>DB</td><td>RDS db.t4g.micro</td><td>MySQL 8.4。<code>sql_mode</code> は strict</td></tr>
+      <tr><td>メディア</td><td>S3・CloudFront</td><td>公開のメディアと、配信しないハイレゾの 2 つのバケット。ハイレゾは 5 分だけ使える署名付き URL で渡す</td></tr>
+      <tr><td>メールの送信</td><td>SES</td><td><code>noreply@myus.media</code>。DKIM・SPF・DMARC・MAIL FROM（<code>mail.myus.media</code>）。今はサンドボックス</td></tr>
+      <tr><td>メールの受信</td><td>ImprovMX</td><td><code>support@myus.media</code> を運営の Gmail に転送する。AWS の外</td></tr>
+      <tr><td>設定の値</td><td>SSM パラメータストア</td><td><code>/myus/prod/</code>。デプロイのときに読む</td></tr>
+      <tr><td>運用の入口</td><td>SSM</td><td>Run Command でデプロイ、Session Manager で DB にトンネル。SSH は開けない</td></tr>
+      <tr><td>イメージ</td><td>ECR</td><td><code>myus-backend</code>。backend・worker・encoder が同じイメージを使う</td></tr>
+      <tr><td>組織</td><td>Organizations</td><td>SCP で使えるリージョンを東京と us-east-1 に絞る</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>変更の記録</h2>
+  <ul class="log">
+    <li><span class="d">2026-11-21</span>本番の ASGI サーバーを daphne から uvicorn にした。大きいファイルを受け取っても、メモリに丸ごと載せない（#1574）</li>
+    <li><span class="d">2026-11-20</span>オーディオの MP3 への変換と音の大きさの測定を encoder に移した（#1569・#1570）</li>
+    <li><span class="d">2026-11-20</span>コンテナにメモリの上限、EC2 にスワップ、メモリのアラームを足した（#1568）</li>
+    <li><span class="d">2026-11-19</span>フロントを Vercel から S3 と CloudFront に移した</li>
+  </ul>
+</section>
+</div>
