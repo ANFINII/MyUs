@@ -43,7 +43,7 @@ export default function Reset(): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={t('account.reset.title')} toast={toast}>
+    <Main metaTitle={t('account.reset.title')} size="s" toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.reset.title')}</h1>

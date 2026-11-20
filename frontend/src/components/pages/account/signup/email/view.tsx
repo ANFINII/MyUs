@@ -44,7 +44,7 @@ export default function SignupEmail(): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={t('account.signup.title')} toast={toast}>
+    <Main metaTitle={t('account.signup.title')} size="s" toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('account.signup.title')}</h1>

@@ -14,7 +14,7 @@ export default function Withdrawal(): React.JSX.Element {
   const handleNext = () => router.push('/account/withdrawal/confirm')
 
   return (
-    <Main metaTitle={t('account.withdrawal.title')}>
+    <Main metaTitle={t('account.withdrawal.title')} size="s">
       <article className={style.account}>
         <div className={style.form}>
           <h1 className={style.title}>{t('account.withdrawal.title')}</h1>

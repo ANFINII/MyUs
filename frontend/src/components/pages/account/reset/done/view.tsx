@@ -12,7 +12,7 @@ export default function ResetDone(): React.JSX.Element {
   const handleBack = () => router.push('/account/login')
 
   return (
-    <Main metaTitle={t('account.reset.confirmTitle')}>
+    <Main metaTitle={t('account.reset.confirmTitle')} size="s">
       <article className={style.account}>
         <div className={style.form}>
           <h1 className={style.title}>{t('account.reset.confirmTitle')}</h1>

@@ -45,6 +45,27 @@
     margin: 24px 0;
   }
 
+  .content {
+    width: 100%;
+    margin: 0 auto;
+
+    &.s {
+      max-width: 380px;
+    }
+
+    &.m {
+      max-width: 480px;
+    }
+
+    &.l {
+      max-width: 960px;
+    }
+
+    &.xl {
+      max-width: 1200px;
+    }
+  }
+
   p textarea {
     height: 38px;
   }

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Search } from 'types/internal/media/output'
 import { ToastType, MetaType } from 'types/internal/other'
+import cx from 'utils/functions/cx'
 import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
 import Meta from 'components/layout/Head/Meta'
@@ -12,6 +13,7 @@ interface Props {
   metaTitle?: string
   meta?: MetaType
   type?: 'defalt' | 'table'
+  size?: 's' | 'm' | 'l' | 'xl'
   search?: Search
   toast?: ToastType
   isFooter?: boolean
@@ -20,10 +22,12 @@ interface Props {
 }
 
 export default function Main(props: Props): React.JSX.Element {
-  const { title, metaTitle, meta, type = 'defalt', search, toast, isFooter = true, button, children } = props
+  const { title, metaTitle, meta, type = 'defalt', size, search, toast, isFooter = true, button, children } = props
 
   const { t } = useTranslation()
   const { user } = useUser()
+
+  const content = size ? <div className={cx(style.content, style[size])}>{children}</div> : children
 
   return (
     <main className={style.main}>
@@ -37,7 +41,7 @@ export default function Main(props: Props): React.JSX.Element {
             </div>
             {button && <div className={style.button}>{button}</div>}
           </div>
-          {children}
+          {content}
         </>
       )}
 
@@ -47,7 +51,7 @@ export default function Main(props: Props): React.JSX.Element {
             {title && <h1 className={style.title}>{title}</h1>}
             {button && user.isActive && <div className={style.button}>{button}</div>}
           </div>
-          <article className={style.article}>{children}</article>
+          <article className={style.article}>{content}</article>
           {isFooter && <Footer />}
         </>
       )}

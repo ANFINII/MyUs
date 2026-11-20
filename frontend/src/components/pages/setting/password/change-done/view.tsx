@@ -13,7 +13,7 @@ export default function PasswordChangeDone(): React.JSX.Element {
   const handleBack = () => router.push('/setting/profile')
 
   return (
-    <Main title={t('setting.password.title')}>
+    <Main title={t('setting.password.title')} size="s">
       <article className={style.article_pass}>
         <div className={cx(style.form_account, style.password_done)}>
           <p className="fs_14">{t('setting.password.done')}</p>

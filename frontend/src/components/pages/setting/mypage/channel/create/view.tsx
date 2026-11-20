@@ -64,7 +64,7 @@ export default function ChannelCreate(): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={t('setting.channelCreate.title')} toast={toast}>
+    <Main metaTitle={t('setting.channelCreate.title')} size="s" toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('setting.channelCreate.title')}</h1>

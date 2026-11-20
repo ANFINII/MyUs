@@ -55,7 +55,7 @@ export default function Login(): React.JSX.Element {
   }
 
   return (
-    <Main title={t('status.login')} toast={toast}>
+    <Main title={t('status.login')} size="s" toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('welcome')}</h1>

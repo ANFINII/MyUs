@@ -48,7 +48,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={t('account.withdrawal.title')} toast={toast}>
+    <Main metaTitle={t('account.withdrawal.title')} size="s" toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.withdrawal.title')}</h1>

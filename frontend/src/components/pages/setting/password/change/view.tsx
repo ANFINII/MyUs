@@ -45,7 +45,7 @@ export default function PasswordChange(): React.JSX.Element {
   }
 
   return (
-    <Main title={t('setting.password.title')} toast={toast}>
+    <Main title={t('setting.password.title')} size="s" toast={toast}>
       <article className={style.article_pass}>
         <form method="POST" action="" className={style.form_account}>
           <VStack gap="8">

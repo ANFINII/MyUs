@@ -55,7 +55,7 @@ export default function ResetConfirm(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={t('account.reset.confirmTitle')} toast={toast}>
+    <Main metaTitle={t('account.reset.confirmTitle')} size="s" toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.reset.confirmTitle')}</h1>
