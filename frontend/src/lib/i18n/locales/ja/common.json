@@ -303,7 +303,9 @@
     "follow": "フォロー",
     "channel": "チャンネル",
     "playlist": "プレイリスト",
-    "userpolicy": "利用規約"
+    "knowledge": "機能概要",
+    "userpolicy": "利用規約",
+    "privacy": "プライバシーポリシー"
   },
   "cloudMenu": {
     "manage": "投稿管理",
@@ -917,6 +919,7 @@
       }
     },
     "knowledge": {
+      "title": "機能概要",
       "myus": {
         "label": "MyUs",
         "content": "MyUsは総合SNS投稿サイトです。是非いろいろなアイディアを投稿して楽しみましょう!"
