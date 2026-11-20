@@ -1,9 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { errorMessage } from 'lib/error'
 import { postPasswordResetEmail } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { toLocale } from 'utils/functions/convertEnum'
+import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -21,6 +21,7 @@ export default function Reset(): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
+  const { message, handleError } = useApiError({ handleToast })
   const [email, setEmail] = useState<string>('')
 
   const handleBack = () => router.push('/account/login')
@@ -35,7 +36,7 @@ export default function Reset(): React.JSX.Element {
     const ret = await postPasswordResetEmail(email, locale)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(errorMessage(ret.error, FetchError.Error), true)
+      handleError(FetchError.Error, ret.error.message)
       return
     }
     handleToast(t('account.form.mailSent'), false)
@@ -46,6 +47,9 @@ export default function Reset(): React.JSX.Element {
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.reset.title')}</h1>
+          {message && (
+            <Alert type="error" isPlain>{message}</Alert>
+          )}
           <VStack gap="8">
             <Input type="email" name="email" placeholder={t('account.form.email')} maxLength={255} required error={error} onChange={handleInput} />
             <Alert type="info">{t('account.reset.emailNotice')}</Alert>

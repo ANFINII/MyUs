@@ -1,15 +1,16 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { errorMessage } from 'lib/error'
 import { SignupIn } from 'types/internal/auth'
 import { postSignup } from 'api/internal/auth'
 import { Country, FetchError, GenderType } from 'utils/constants/enum'
 import { nowDate, selectDate } from 'utils/functions/datetime'
+import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
+import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Password from 'components/parts/Input/Password'
@@ -48,6 +49,7 @@ export default function Signup(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
+  const { message, handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<SignupIn>({ ...initSignup, token, email, country: router.locale === 'en' ? Country.Us : Country.Jp })
 
   const { years, months, days } = selectDate()
@@ -65,7 +67,7 @@ export default function Signup(props: Props): React.JSX.Element {
     const ret = await postSignup(values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(errorMessage(ret.error, FetchError.Post), true)
+      handleError(FetchError.Post, ret.error.message)
       return
     }
     handleBack()
@@ -76,6 +78,9 @@ export default function Signup(props: Props): React.JSX.Element {
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('account.signup.title')}</h1>
+          {message && (
+            <Alert type="error" isPlain>{message}</Alert>
+          )}
           <VStack gap="8">
             <VStack gap="4">
               <p>{t('account.signup.name')}</p>
