@@ -56,7 +56,7 @@ def product_media_type(product_type: ProductType) -> MediaType:
     match product_type:
         case ProductType.BLOG:
             return MediaType.BLOG
-        case ProductType.AUDIO_HIRES:
+        case ProductType.HIRES:
             return MediaType.AUDIO
         case ProductType.COMIC:
             return MediaType.COMIC

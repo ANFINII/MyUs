@@ -73,8 +73,8 @@ class Audio(models.Model, MediaModel):
         ]
 
 
-class AudioHires(models.Model):
-    """AudioHires"""
+class Hires(models.Model):
+    """Hires"""
     id          = models.BigAutoField(primary_key=True)
     audio       = models.OneToOneField(Audio, on_delete=models.CASCADE, related_name="hires")
     file        = models.FileField(upload_to=hires_upload, storage=private_storage, max_length=255)
@@ -85,8 +85,8 @@ class AudioHires(models.Model):
         return str(self.audio_id)
 
     class Meta:
-        db_table = "audio_hires"
-        verbose_name_plural = "02 AudioHires"
+        db_table = "hires"
+        verbose_name_plural = "02 Hires"
 
 
 # Blog

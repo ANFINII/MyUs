@@ -10,7 +10,7 @@ from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
 from myus.domain.media.common import MEDIA_PAGE_SIZE, FilterOption, PageOption, SortOption
-from myus.domain.media.hires.data import AudioHiresData
+from myus.domain.media.hires.data import HiresData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
@@ -29,10 +29,10 @@ from myus.utils.functions.common import create_url
 from myus.utils.functions.convert.audio_converter import measure_audio_gain, probe_audio
 from myus.utils.functions.media import probe_upload, save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
-from ._convert import save_video_data, save_audio_data, save_audio_hires_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_audio_data, delete_audio_hires_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
+from ._convert import save_video_data, save_audio_data, save_hires_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_audio_data, delete_hires_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
 from ...category._convert import get_category_data
 from ...dto.media import VideoUpdateDTO, AudioUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
-from ...media._convert import get_audio_hires_data
+from ...media._convert import get_hires_data
 from ...notification._convert import create_publish_notification_data
 from ...payment._convert import get_product_data, get_product_purchase_ids_data, get_purchase_ids_data, get_seller_currency_data
 
@@ -189,7 +189,7 @@ def get_manage_audios(user_id: int, search: str, channel_ulid: str = "", limit: 
 
 
 @Result.shield_exception()
-def get_manage_audio(user_id: int, ulid: str) -> Result[tuple[AudioData, AudioHiresData | None, ProductData | None], FindError]:
+def get_manage_audio(user_id: int, ulid: str) -> Result[tuple[AudioData, HiresData | None, ProductData | None], FindError]:
     repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -206,12 +206,12 @@ def get_manage_audio(user_id: int, ulid: str) -> Result[tuple[AudioData, AudioHi
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    hires_ret = get_audio_hires_data(obj.id)
+    hires_ret = get_hires_data(obj.id)
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
     hires = hires_ret.ok_value
-    product_ret = get_product_data(ProductType.AUDIO_HIRES, obj.id)
+    product_ret = get_product_data(ProductType.HIRES, obj.id)
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
@@ -282,7 +282,7 @@ def delete_manage_audio(user_id: int, ulids: list[str]) -> Result[None, InputErr
         log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    purchase_ids_ret = get_product_purchase_ids_data(ProductType.AUDIO_HIRES, delete_ids)
+    purchase_ids_ret = get_product_purchase_ids_data(ProductType.HIRES, delete_ids)
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 
@@ -299,7 +299,7 @@ def delete_manage_audio(user_id: int, ulids: list[str]) -> Result[None, InputErr
 
 
 @Result.shield_exception()
-def update_manage_audio_hires(user_id: int, ulid: str, price: int, hires: UploadedFile | None = None) -> Result[None, WriteError]:
+def update_manage_hires(user_id: int, ulid: str, price: int, hires: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(hires, MediaUpload.HIRES)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
@@ -330,12 +330,12 @@ def update_manage_audio_hires(user_id: int, ulid: str, price: int, hires: Upload
         return Result.err(currency_ret.err_value)
 
     currency = currency_ret.ok_value
-    hires_ret = get_audio_hires_data(obj.id)
+    hires_ret = get_hires_data(obj.id)
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
     current = hires_ret.ok_value
-    product_ret = get_product_data(ProductType.AUDIO_HIRES, obj.id)
+    product_ret = get_product_data(ProductType.HIRES, obj.id)
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
@@ -349,7 +349,7 @@ def update_manage_audio_hires(user_id: int, ulid: str, price: int, hires: Upload
     else:
         audio = probe_upload(hires, probe_audio)
         path = save_upload(hires, MediaUpload.HIRES, obj.channel.ulid)
-        save_data = AudioHiresData(
+        save_data = HiresData(
             id=current.id if current is not None else 0,
             audio_id=obj.id,
             file=path,
@@ -361,11 +361,11 @@ def update_manage_audio_hires(user_id: int, ulid: str, price: int, hires: Upload
         id=product.id if product is not None else 0,
         ulid=product.ulid if product is not None else "",
         seller_id=user_id,
-        product_type=ProductType.AUDIO_HIRES,
+        product_type=ProductType.HIRES,
         object_id=obj.id,
         price=Money(amount=price, currency=currency),
     )
-    save_ret = atomic_result(lambda: save_audio_hires_data(save_data, save_product))
+    save_ret = atomic_result(lambda: save_hires_data(save_data, save_product))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -373,7 +373,7 @@ def update_manage_audio_hires(user_id: int, ulid: str, price: int, hires: Upload
 
 
 @Result.shield_exception()
-def delete_manage_audio_hires(user_id: int, ulid: str) -> Result[None, InputError]:
+def delete_manage_hires(user_id: int, ulid: str) -> Result[None, InputError]:
     repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -384,7 +384,7 @@ def delete_manage_audio_hires(user_id: int, ulid: str) -> Result[None, InputErro
         log.warning("not found or owner mismatch", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    hires_ret = get_audio_hires_data(ids[0])
+    hires_ret = get_hires_data(ids[0])
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
@@ -392,7 +392,7 @@ def delete_manage_audio_hires(user_id: int, ulid: str) -> Result[None, InputErro
     if hires is None:
         return Result.ok(None)
 
-    purchase_ids_ret = get_product_purchase_ids_data(ProductType.AUDIO_HIRES, [hires.audio_id])
+    purchase_ids_ret = get_product_purchase_ids_data(ProductType.HIRES, [hires.audio_id])
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 
@@ -401,7 +401,7 @@ def delete_manage_audio_hires(user_id: int, ulid: str) -> Result[None, InputErro
         log.warning("purchased", ulid=ulid, user_id=user_id)
         return Result.err(ValidationError("error.saleStopPurchased"))
 
-    delete_ret = atomic_result(lambda: delete_audio_hires_data(hires))
+    delete_ret = atomic_result(lambda: delete_hires_data(hires))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 

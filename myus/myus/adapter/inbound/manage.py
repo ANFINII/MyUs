@@ -8,7 +8,7 @@ from myus.usecase.dto.media import VideoUpdateDTO, AudioUpdateDTO, BlogUpdateDTO
 from myus.usecase.manage.advertise.core import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise
 from myus.usecase.manage.media.core import (
     get_manage_videos, get_manage_video, update_manage_video, delete_manage_video,
-    get_manage_audios, get_manage_audio, update_manage_audio, delete_manage_audio, update_manage_audio_hires, delete_manage_audio_hires,
+    get_manage_audios, get_manage_audio, update_manage_audio, delete_manage_audio, update_manage_hires, delete_manage_hires,
     get_manage_blogs, get_manage_blog, update_manage_blog, delete_manage_blog,
     get_manage_comics, get_manage_comic, update_manage_comic, delete_manage_comic,
     get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture,
@@ -18,10 +18,10 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from .advertise import convert_advertises
 from .auth import auth_check
-from .media import convert_videos, convert_audios, convert_audio_hires, convert_blogs, convert_product, convert_comics, convert_pictures, convert_chats
+from .media import convert_videos, convert_audios, convert_hires, convert_blogs, convert_product, convert_comics, convert_pictures, convert_chats
 from .schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from .schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
-from .schema.media.input import BulkDeleteIn, VideoUpdateIn, AudioUpdateIn, AudioHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
+from .schema.media.input import BulkDeleteIn, VideoUpdateIn, AudioUpdateIn, HiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from .schema.media.output import MediaCreateOut, VideoOut, AudioOut, BlogOut, ComicOut, PictureOut, ChatOut
 from .schema.media.output import VideoListOut, AudioListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 
@@ -190,7 +190,7 @@ class ManageAudioAPI:
 
         audio, hires, product = audio_ret.ok_value
         audio_out = convert_audios([audio])[0]
-        return 200, audio_out.model_copy(update={"hires": convert_audio_hires(hires), "product": convert_product(product)})
+        return 200, audio_out.model_copy(update={"hires": convert_hires(hires), "product": convert_product(product)})
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
@@ -253,7 +253,7 @@ class ManageAudioAPI:
 
     @staticmethod
     @router.put("/{ulid}/hires", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
-    def put_hires(request: HttpRequest, ulid: str, input: AudioHiresIn = Form(...), hires: UploadedFile | None = File(None)):
+    def put_hires(request: HttpRequest, ulid: str, input: HiresIn = Form(...), hires: UploadedFile | None = File(None)):
         log.info("request", ulid=ulid, input=input, hires=hires)
 
         user_id_ret = auth_check(request)
@@ -264,7 +264,7 @@ class ManageAudioAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_audio_hires(user_id, ulid, input.price, hires)
+        update_ret = update_manage_hires(user_id, ulid, input.price, hires)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -294,7 +294,7 @@ class ManageAudioAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        delete_ret = delete_manage_audio_hires(user_id, ulid)
+        delete_ret = delete_manage_hires(user_id, ulid)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:

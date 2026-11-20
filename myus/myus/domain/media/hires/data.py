@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
-class AudioHiresData:
+class HiresData:
     id: int
     audio_id: int
     file: str

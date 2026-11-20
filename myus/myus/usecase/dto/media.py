@@ -6,7 +6,7 @@ from myus.domain.media.audio.data import AudioData
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
-from myus.domain.media.hires.data import AudioHiresData
+from myus.domain.media.hires.data import HiresData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
 from myus.domain.payment.product.data import ProductData
@@ -64,7 +64,7 @@ class AudioDetailDTO(MediaDetailDTO):
     gain: float
     is_purchased: bool
     comments: list[CommentDTO]
-    hires: AudioHiresData | None
+    hires: HiresData | None
     product: ProductData | None
 
 

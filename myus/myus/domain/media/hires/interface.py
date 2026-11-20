@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from myus.utils.common.result import FatalError, Result
-from .data import AudioHiresData
+from .data import HiresData
 
 
 class SortType(Enum):
@@ -26,17 +26,17 @@ class PageOption:
     offset: int = 0
 
 
-class AudioHiresInterface(ABC):
+class HiresInterface(ABC):
     @abstractmethod
     def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> Result[list[AudioHiresData], FatalError]:
+    def bulk_get(self, ids: list[int]) -> Result[list[HiresData], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[AudioHiresData]) -> Result[list[int], FatalError]:
+    def bulk_save(self, objs: list[HiresData]) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod

@@ -8,8 +8,8 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.hires.data import AudioHiresData
-from myus.domain.media.hires.interface import AudioHiresInterface
+from myus.domain.media.hires.data import HiresData
+from myus.domain.media.hires.interface import HiresInterface
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
@@ -76,8 +76,8 @@ def save_blog_data(data: BlogData, category_data: CategoryData, product: Product
 
 
 @Result.shield_exception()
-def save_audio_hires_data(data: AudioHiresData, product: ProductData) -> Result[None, FatalError]:
-    repo = injector.get(AudioHiresInterface)
+def save_hires_data(data: HiresData, product: ProductData) -> Result[None, FatalError]:
+    repo = injector.get(HiresInterface)
     save_ret = repo.bulk_save([data])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
@@ -90,13 +90,13 @@ def save_audio_hires_data(data: AudioHiresData, product: ProductData) -> Result[
 
 
 @Result.shield_exception()
-def delete_audio_hires_data(data: AudioHiresData) -> Result[None, FatalError]:
-    repo = injector.get(AudioHiresInterface)
+def delete_hires_data(data: HiresData) -> Result[None, FatalError]:
+    repo = injector.get(HiresInterface)
     delete_ret = repo.bulk_delete([data.id])
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    product_ret = delete_products_data(ProductType.AUDIO_HIRES, [data.audio_id])
+    product_ret = delete_products_data(ProductType.HIRES, [data.audio_id])
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
@@ -176,7 +176,7 @@ def delete_video_data(ids: list[int]) -> Result[None, FatalError]:
 
 @Result.shield_exception()
 def delete_audio_data(ids: list[int]) -> Result[None, FatalError]:
-    product_ret = delete_products_data(ProductType.AUDIO_HIRES, ids)
+    product_ret = delete_products_data(ProductType.HIRES, ids)
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 

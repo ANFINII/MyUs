@@ -81,7 +81,7 @@ class AudioUpdateIn(BaseModel):
     publish_at: datetime
 
 
-class AudioHiresIn(BaseModel):
+class HiresIn(BaseModel):
     price: int
 
 

@@ -12,7 +12,7 @@ from myus.adapter.outbound.db.media.audio.repository import AudioRepository
 from myus.adapter.outbound.db.media.blog.repository import BlogRepository
 from myus.adapter.outbound.db.media.chat.repository import ChatRepository
 from myus.adapter.outbound.db.media.comic.repository import ComicRepository
-from myus.adapter.outbound.db.media.hires.repository import AudioHiresRepository
+from myus.adapter.outbound.db.media.hires.repository import HiresRepository
 from myus.adapter.outbound.db.media.picture.repository import PictureRepository
 from myus.adapter.outbound.db.media.video.repository import VideoRepository
 from myus.adapter.outbound.db.message.repository import MessageRepository
@@ -46,7 +46,7 @@ from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.hires.interface import AudioHiresInterface
+from myus.domain.media.hires.interface import HiresInterface
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.message.interface import MessageInterface
@@ -93,8 +93,8 @@ class MediaModule(Module):
         return AudioRepository()
 
     @provider
-    def provide_audio_hires_repository(self) -> AudioHiresInterface:
-        return AudioHiresRepository()
+    def provide_hires_repository(self) -> HiresInterface:
+        return HiresRepository()
 
     @provider
     def provide_blog_repository(self) -> BlogInterface:

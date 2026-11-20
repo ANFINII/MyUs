@@ -29,7 +29,7 @@ from myus.utils.functions.file import private_storage
 from myus.utils.functions.map import comment_type_no_map
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
-from ._convert import get_media_repository, home_sort_type, get_media_user_data, get_audio_hires_data, create_video_data, create_audio_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
+from ._convert import get_media_repository, home_sort_type, get_media_user_data, get_hires_data, create_video_data, create_audio_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
 from ..category._convert import get_category_data
 from ..channel.core import get_channel_data
 from ..comment._convert import get_comments_data
@@ -765,12 +765,12 @@ def get_audio_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         return Result.err(series_ret.err_value)
 
     series = series_ret.ok_value
-    hires_ret = get_audio_hires_data(obj.id)
+    hires_ret = get_hires_data(obj.id)
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
     hires = hires_ret.ok_value
-    product_ret = get_product_data(ProductType.AUDIO_HIRES, obj.id)
+    product_ret = get_product_data(ProductType.HIRES, obj.id)
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
@@ -812,7 +812,7 @@ def get_audio_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
 
 @Result.shield_exception()
-def get_audio_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
+def get_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
     repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
@@ -829,7 +829,7 @@ def get_audio_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    hires_ret = get_audio_hires_data(obj.id)
+    hires_ret = get_hires_data(obj.id)
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
@@ -839,7 +839,7 @@ def get_audio_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
         return Result.err(NotFoundError("error.hiresNotFound"))
 
     if user_id != obj.channel.owner_id:
-        purchase_ids_ret = get_product_purchase_ids_data(ProductType.AUDIO_HIRES, [obj.id], user_id)
+        purchase_ids_ret = get_product_purchase_ids_data(ProductType.HIRES, [obj.id], user_id)
         if purchase_ids_ret.is_err:
             return Result.err(purchase_ids_ret.err_value)
 

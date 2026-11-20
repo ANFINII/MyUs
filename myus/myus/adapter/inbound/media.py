@@ -9,7 +9,7 @@ from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.common import MEDIA_PAGE_SIZE
-from myus.domain.media.hires.data import AudioHiresData
+from myus.domain.media.hires.data import HiresData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
 from myus.domain.payment.product.data import ProductData
@@ -19,7 +19,7 @@ from myus.usecase.dto.message import MessageDTO
 from myus.usecase.dto.user import AuthorDTO, MediaUserDTO
 from myus.usecase.media.core import create_video, create_audio, create_blog, create_comic, create_picture, create_chat
 from myus.usecase.media.core import get_home, get_videos, get_audios, get_blogs, get_comics, get_pictures, get_chats
-from myus.usecase.media.core import get_video_detail, get_audio_detail, get_audio_hires_url, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
+from myus.usecase.media.core import get_video_detail, get_audio_detail, get_hires_url, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from myus.usecase.media.core import increment_media_read
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
@@ -30,7 +30,7 @@ from .schema.channel import ChannelOut
 from .schema.comment import CommentOut, ReplyOut
 from .schema.common import ErrorOut, ErrorType, Limit, Offset
 from .schema.media.input import VideoIn, AudioIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn
-from .schema.media.output import HomeOut, VideoOut, AudioOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, AudioHiresOut, AudioHiresUrlOut, HashtagOut
+from .schema.media.output import HomeOut, VideoOut, AudioOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, HiresOut, HiresUrlOut, HashtagOut
 from .schema.media.output import VideoListOut, AudioListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 from .schema.media.output import VideoDetailOut, AudioDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
 from .schema.media.output import VideoDetailsOut, AudioDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
@@ -286,7 +286,7 @@ class AudioAPI:
                 gain=obj.gain,
                 is_purchased=obj.is_purchased,
                 comments=convert_comments(obj.comments),
-                hires=convert_audio_hires(obj.hires),
+                hires=convert_hires(obj.hires),
                 product=convert_product(obj.product),
                 hashtags=convert_hashtags(obj.hashtags),
                 read=obj.read,
@@ -304,7 +304,7 @@ class AudioAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}/hires", response={200: AudioHiresUrlOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}/hires", response={200: HiresUrlOut, 400: ErrorOut, 500: ErrorOut})
     def hires(request: HttpRequest, ulid: str):
         log.info("request", ulid=ulid)
 
@@ -316,7 +316,7 @@ class AudioAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        url_ret = get_audio_hires_url(user_id, ulid)
+        url_ret = get_hires_url(user_id, ulid)
         if url_ret.is_err:
             message = url_ret.err_value.message
             match url_ret.err_value:
@@ -330,7 +330,7 @@ class AudioAPI:
                     assert_never(url_ret.err_value)
 
         url = url_ret.ok_value
-        return 200, AudioHiresUrlOut(url=url)
+        return 200, HiresUrlOut(url=url)
 
 
 class BlogAPI:
@@ -865,11 +865,11 @@ def convert_audios(objs: list[AudioData]) -> list[AudioOut]:
     return data
 
 
-def convert_audio_hires(hires: AudioHiresData | None) -> AudioHiresOut | None:
+def convert_hires(hires: HiresData | None) -> HiresOut | None:
     if hires is None:
         return None
 
-    return AudioHiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth)
+    return HiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth)
 
 
 def convert_product(product: ProductData | None) -> ProductOut | None:

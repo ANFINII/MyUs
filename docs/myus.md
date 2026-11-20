@@ -72,7 +72,7 @@ Video
 
 Audio
   ├─ オーディオファイル、ジャケット画像、歌詞
-  └─ AudioHires (販売するハイレゾ。1曲に1つ)
+  └─ Hires (販売するハイレゾ。1曲に1つ)
 
 Playlist (ユーザーが作るオーディオの並び)
   ├─ PlaylistAudio
@@ -207,14 +207,14 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
   - MP3 以外は、WAV・FLAC・AAC・Ogg などどれも、320kbps の MP3 に変換する。音を削る形式を変換し直すときも、高いビットレートのほうが失う音が少ないため
   - WAV・AIFF（`pcm_*`）・FLAC のように音を削らない形式を除き、ビットレートが 192kbps より低いものは上げ直してもらう（`error.audioBitRateLow`）。測った値は作ったときの値より少し低く出るので、180kbps を境にしている
 - ジャケット画像（無ければチャンネルのアバターを出す）
-- ハイレゾの販売。再生用のオーディオとは別に、販売用の FLAC を編集画面で上げると、その曲が有料の販売データになる（`AudioHires`）
+- ハイレゾの販売。再生用のオーディオとは別に、販売用の FLAC を編集画面で上げると、その曲が有料の販売データになる（`Hires`）
   - 売れるのは Standard 以上のプランで、売上を受け取る口座の登録が済んだ人。通貨は投稿者の国から決める
   - 音質は 24bit で、サンプリングレートは 48kHz〜192kHz。アップロードのときに ffprobe で読んで保存し、決まりは `domain/media/hires/validation.py` が保存の前に確かめる
   - 値段は 300〜600。ドルは 3.00〜6.00。値段は `Product` に持つ
   - 購入した人がいるときは、販売をやめることも、曲を削除することもできない（`error.saleStopPurchased`・`error.deletePurchased`）
   - ファイルは変換せずに、公開しない置き場（`STORAGES["private"]`）に置く。開発は `myus/private`、本番は別の S3 のバケット
   - 詳細（`GET /media/audio/{ulid}`）は、`hires`（サンプリングレート・ビット深度。売っていなければ null）・`product`（`ulid`・`price`）・`is_purchased` を返す。ファイルの場所は返さない
-  - ダウンロード（`GET /media/audio/{ulid}/hires`・`get_audio_hires_url`）：投稿者と購入した人にだけ、5分（`PRIVATE_URL_EXPIRE`）だけ使える URL を返す。購入していなければ `error.hiresNotPurchased`
+  - ダウンロード（`GET /media/audio/{ulid}/hires`・`get_hires_url`）：投稿者と購入した人にだけ、5分（`PRIVATE_URL_EXPIRE`）だけ使える URL を返す。購入していなければ `error.hiresNotPurchased`
   - 編集画面の「ハイレゾの販売」（`pages/manage/audio/HiresSale`）：FLAC の先頭の情報（STREAMINFO）を読んで、24bit・48kHz〜192kHz かと値段の範囲を確かめてから送る（`utils/functions/hires.ts`）。大きなファイルなので、この送信だけタイムアウトを30分（`LARGE_UPLOAD_TIMEOUT_MS`）にする。「有料で販売する」の切り替えを入れたときだけ入力欄を出す。販売中は切り替えを入れたまま固定し、止めるのは「販売をやめる」のボタンにする。Standard 未満や口座が無いときは切り替えを押せなくし、案内（`widgets/SellerHint`）を出す
   - 詳細画面：投稿者と購入した人には「ハイレゾをダウンロード」、ほかの人には購入の枠（`widgets/Paywall`。記事の有料部分と同じ部品）を出す
   - 本番は S3 の署名付き URL。開発は `config/storages.py` の `SignedFileSystemStorage` が署名付きの URL（`/private/{token}`）を作り、DEBUG のときだけの `serve_private` が署名と期限を確かめて渡す
@@ -260,8 +260,8 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
   - 買う：`POST /payment/checkout/product` に `product.ulid` を送る（「Product」の節）
 
 #### Product
-- 売る物の共通の表。売る人（`seller`）・種類（`product_type`：`Blog`・`AudioHires`）・売る物の ID（`object_id`：記事の id・オーディオの id）・値段（`price`・`currency`）を持つ。種類と売る物の ID の組で一意。行があれば販売中
-- 売る物の中身は種類ごとの表に置く。記事の有料部分は `Blog.paid_text`、ハイレゾのファイルは `AudioHires.file`
+- 売る物の共通の表。売る人（`seller`）・種類（`product_type`：`Blog`・`Hires`）・売る物の ID（`object_id`：記事の id・オーディオの id）・値段（`price`・`currency`）を持つ。種類と売る物の ID の組で一意。行があれば販売中
+- 売る物の中身は種類ごとの表に置く。記事の有料部分は `Blog.paid_text`、ハイレゾのファイルは `Hires.file`
 - 売る物を増やすときは、`ProductType` に値を足し、`product_media_type`（`utils/functions/map.py`）と値段の範囲（`domain/payment/product/validation.py`）に1か所ずつ足す。表・checkout・webhook は変えない
 - 買う（`POST /payment/checkout/product`・`create_product_checkout`）：`Product` があり、売る物が公開中で、自分が売る物でなく、まだ買っておらず、売る人の口座が使えるときだけ決済の画面を作る。Stripe の destination charge で、売上は売る人の口座に送り、MyUs は利用料として値段の 15%（`PLATFORM_FEE_RATE`）を取る。決済が終わると売る物の詳細に戻る
 - 決済の `product_code` は `Product` の ulid。webhook はこの ulid で `Product` を引いて `Purchase` を作る

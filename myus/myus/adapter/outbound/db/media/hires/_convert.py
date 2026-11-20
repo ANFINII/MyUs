@@ -1,9 +1,9 @@
-from myus.db.models.media import AudioHires
-from myus.domain.media.hires.data import AudioHiresData
+from myus.db.models.media import Hires
+from myus.domain.media.hires.data import HiresData
 
 
-def convert_data(obj: AudioHires) -> AudioHiresData:
-    return AudioHiresData(
+def convert_data(obj: Hires) -> HiresData:
+    return HiresData(
         id=obj.id,
         audio_id=obj.audio_id,
         file=obj.file.name or "",
@@ -12,8 +12,8 @@ def convert_data(obj: AudioHires) -> AudioHiresData:
     )
 
 
-def marshal_data(data: AudioHiresData) -> AudioHires:
-    return AudioHires(
+def marshal_data(data: HiresData) -> Hires:
+    return Hires(
         id=data.id if data.id != 0 else None,
         audio_id=data.audio_id,
         file=data.file,

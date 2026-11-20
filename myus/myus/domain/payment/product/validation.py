@@ -6,8 +6,8 @@ from .data import ProductData
 
 BLOG_PRICE_MIN = 300
 BLOG_PRICE_MAX = 50000
-AUDIO_HIRES_PRICE_MIN = 300
-AUDIO_HIRES_PRICE_MAX = 600
+HIRES_PRICE_MIN = 300
+HIRES_PRICE_MAX = 600
 COMIC_PRICE_MIN = 300
 COMIC_PRICE_MAX = 50000
 
@@ -16,8 +16,8 @@ def price_range(product_type: ProductType) -> tuple[int, int]:
     match product_type:
         case ProductType.BLOG:
             return BLOG_PRICE_MIN, BLOG_PRICE_MAX
-        case ProductType.AUDIO_HIRES:
-            return AUDIO_HIRES_PRICE_MIN, AUDIO_HIRES_PRICE_MAX
+        case ProductType.HIRES:
+            return HIRES_PRICE_MIN, HIRES_PRICE_MAX
         case ProductType.COMIC:
             return COMIC_PRICE_MIN, COMIC_PRICE_MAX
         case _:

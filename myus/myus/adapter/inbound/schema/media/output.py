@@ -16,7 +16,7 @@ class MediaReadOut(BaseModel):
     read: int
 
 
-class AudioHiresUrlOut(BaseModel):
+class HiresUrlOut(BaseModel):
     url: str
 
 
@@ -60,7 +60,7 @@ class VideoOut(MediaOut):
     encode_status: EncodeStatus
 
 
-class AudioHiresOut(BaseModel):
+class HiresOut(BaseModel):
     sample_rate: int
     bit_depth: int
 
@@ -70,7 +70,7 @@ class AudioOut(MediaOut):
     image: str
     audio: str
     gain: float
-    hires: AudioHiresOut | None
+    hires: HiresOut | None
     product: ProductOut | None
 
 
@@ -152,7 +152,7 @@ class AudioDetailOut(MediaDetailOut):
     gain: float
     is_purchased: bool
     comments: list[CommentOut]
-    hires: AudioHiresOut | None
+    hires: HiresOut | None
     product: ProductOut | None
 
 
