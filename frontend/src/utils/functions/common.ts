@@ -3,6 +3,7 @@ import { MediaHome } from 'types/internal/media/output'
 import { HomeSort } from 'utils/constants/enum'
 
 export const PAGE_SIZE = 50
+export const MEDIA_TITLE_MAX = 100
 
 export const isActive = (isbool: boolean) => (isbool ? 'active' : '')
 

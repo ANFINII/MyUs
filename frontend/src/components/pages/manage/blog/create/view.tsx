@@ -7,6 +7,7 @@ import { BlogIn } from 'types/internal/media/input'
 import { PaymentSellerOut } from 'types/internal/payment'
 import { postBlogCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
+import { MEDIA_TITLE_MAX } from 'utils/functions/common'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { paidTextError } from 'utils/functions/price'
 import { useLoading } from 'components/hooks/useLoading'
@@ -105,7 +106,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
           <ToggleCard label={t('manage.form.promotion')} isActive={values.isPromotion} onClick={handlePromotion} />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.title')} name="title" maxLength={MEDIA_TITLE_MAX} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
           <TextEditor label={t('manage.form.richtext')} value={values.richtext} required error={error} onChange={handleRichtext} />

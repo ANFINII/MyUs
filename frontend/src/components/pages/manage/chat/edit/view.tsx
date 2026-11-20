@@ -7,6 +7,7 @@ import { ChatUpdateIn } from 'types/internal/media/input'
 import { Chat } from 'types/internal/media/output'
 import { putManageChat } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
+import { MEDIA_TITLE_MAX } from 'utils/functions/common'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
@@ -81,7 +82,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.title')} name="title" maxLength={MEDIA_TITLE_MAX} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <DatePicker label={t('manage.form.period')} name="period" value={values.period} required error={error} onChange={handlePeriod} />
         </VStack>

@@ -8,6 +8,7 @@ import { Comic } from 'types/internal/media/output'
 import { PaymentSellerOut } from 'types/internal/payment'
 import { putManageComic } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
+import { MEDIA_TITLE_MAX } from 'utils/functions/common'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { previewUrl } from 'utils/functions/file'
 import { paidPagesError } from 'utils/functions/price'
@@ -115,7 +116,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.title')} name="title" maxLength={MEDIA_TITLE_MAX} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
           <ComicPageEditor label={t('manage.form.pages')} pages={pages} required error={error} onChange={setPages} />
