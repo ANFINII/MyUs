@@ -2,6 +2,8 @@
 
 本番インフラの構成。Terraform は `infra/aws/` にあり、残りの作業は [roadmap.md](roadmap.md) の「インフラ」にある。
 
+今の本番の構成を図にしたものは [aws-architecture.html](aws-architecture.html) にある。claude.ai のアーティファクト（https://claude.ai/artifact/YPksTsPwxBfxxto7enMKoE）として公開しているものと同じ中身で、構成を変えたらこの md と一緒に直し、アーティファクトも同じ URL で出し直す。
+
 ## 前提（現状の構成）
 
 | 領域 | 現状 |
@@ -64,7 +66,7 @@ flowchart LR
 
 | 用途 | サービス | 内容 |
 |---|---|---|
-| API・WebSocket | **EC2 t4g.small**（ARM, 2vCPU / 2GB） | 今の docker-compose をほぼそのまま使う。`backend`（uvicorn。HTTP+WS）、`worker`（決済のイベントの反映）、`encoder`（動画の HLS 変換）、`redis` の 4 コンテナ |
+| API・WebSocket | **EC2 t4g.small**（ARM, 2vCPU / 2GB） | 今の docker-compose をほぼそのまま使う。`backend`（uvicorn。HTTP+WS）、`worker`（決済のイベントの反映）、`encoder`（動画の HLS 変換・オーディオの MP3 変換）、`redis` の 4 コンテナ |
 | API の入口 | **CloudFront** + **ACM** | TLS 終端。WebSocket にも対応している。ALB（月 $20 以上）を使わずに HTTPS 化できる。オリジンは CloudFront の **VPC オリジン**で、プライベートサブネットの EC2 に直接つなぐ。VPC オリジンは無料。WebSocket も VPC オリジンを通る（2026 年 5 月から）。EC2 の SG の 80 番は、CloudFront のマネージドプレフィックスリストからだけ許可する。CloudFront → EC2 は HTTP（80 番）になる（EC2 に証明書を置かないため）。暗号化が要るようになったら ALB か EC2 側の TLS を足す |
 | ネットワーク | **VPC**・**NAT インスタンス**・**S3 の Gateway エンドポイント** | EC2 は外から入る経路のない `app` サブネットに置き、パブリック IP を持たない。外への通信（Stripe API・SES の SMTP・ECR・SSM・CloudWatch・Docker Hub・dnf・GitHub）は、パブリックサブネットの NAT インスタンス（fck-nat の AMI・t4g.nano）を通る。NAT Gateway は月 $45 以上かかるので使わない。S3 への通信と ECR のイメージの層は、無料の Gateway エンドポイントで NAT を通らずに S3 に行く。NAT インスタンスは 1 台なので、止まると EC2 から外に出られなくなる（API は CloudFront から届くので受け付けは続く）。RDS は外への経路のない `datastore` サブネットに置く |
 | DB | **RDS for MySQL db.t4g.micro**（シングル AZ, gp3 20GB） | 自動バックアップ（7 日）とパッチ適用を任せる。パスワードは Terraform の ephemeral な `random_password` で作り、RDS（`password_wo`）と SSM の `/myus/prod/MYSQL_PASSWORD`（`value_wo`）に同じ値を入れる。state には残らない |
@@ -121,7 +123,7 @@ flowchart LR
     subgraph VPC[VPC（マルチ AZ）]
         ALB[ALB]
         API[ECS Fargate<br/>api（gunicorn）]
-        WS[ECS Fargate<br/>ws（daphne）]
+        WS[ECS Fargate<br/>ws（uvicorn）]
         WORKER[ECS Fargate<br/>worker]
         RDS[(RDS MySQL<br/>Multi-AZ)]
         REDIS[(ElastiCache<br/>Valkey)]
@@ -153,7 +155,7 @@ flowchart LR
 | 入口 | CloudFront → EC2 | CloudFront + **WAF** → **ALB**（パスで `api` / `ws` に振り分け） |
 | DB | RDS シングル AZ | RDS **Multi-AZ**（さらに伸びたら Aurora MySQL Serverless v2） |
 | Redis | EC2 上のコンテナ | **ElastiCache for Valkey** |
-| 非同期処理 | worker が DB を定期的に読む（決済のイベントは `myus_worker`、動画の変換は `myus_encoder`） | **SQS**（DLQ 付き）→ `worker` |
+| 非同期処理 | worker が DB を定期的に読む（決済のイベントは `myus_worker`、動画とオーディオの変換は `myus_encoder`） | **SQS**（DLQ 付き）→ `worker` |
 | 動画変換 | ffmpeg（`encoder` コンテナ） | **MediaConvert**（S3 へのアップロードをトリガーに実行、ABR 対応） |
 | 予約公開（`publish_at`） | 定期処理は持たない。一覧・詳細・通知を取るときに `publish_at` が今より前のものだけに絞る | **EventBridge Scheduler**（公開の瞬間に通知を送るなど、その時点で処理が要るようになったら） |
 | 不適切コンテンツ対策 | なし | **Rekognition** のモデレーション（任意） |
@@ -287,7 +289,7 @@ flowchart LR
                 subgraph ec2[EC2 myus-api-prod・SG api]
                     backend[backend<br/>uvicorn :80]
                     worker[worker<br/>決済のイベント]
-                    encoder[encoder<br/>HLS 変換]
+                    encoder[encoder<br/>HLS・MP3 の変換]
                     redis[(redis)]
                 end
             end
@@ -309,7 +311,7 @@ flowchart LR
     backend -->|アップロード| S3
     backend -->|ハイレゾの保存・署名付き URL| S3_HIRES
     User -->|署名付き URL で取得| S3_HIRES
-    encoder -->|元の動画を取り出し・HLS を置く| S3
+    encoder -->|元のファイルを取り出し・変換結果を置く| S3
     ec2 -.デプロイのときに読む.-> SSM
     ec2 -->|0.0.0.0/0| NAT --> Internet
 ```
