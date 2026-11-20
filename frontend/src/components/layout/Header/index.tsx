@@ -76,7 +76,7 @@ export default function Header(props: Props): React.JSX.Element {
 
         <div className={cx(style.nav_2, style.color_MyUs)} onClick={() => handleRouter('/')}>
           <h1>
-            <Logo height="1em" />
+            <Logo className={style.logo} />
           </h1>
         </div>
 
