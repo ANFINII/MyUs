@@ -7,12 +7,13 @@ from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.audio.validation import validate
 from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
+from myus.utils.enum.media import EncodeStatus
 from ._convert import convert_data, marshal_data, marshal_hires_data
 from ..common import filter_queryset, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
-AUDIO_FIELDS = ["channel_id", "title", "content", "lyric", "image", "audio", "gain", "publish", "publish_at", "updated"]
+AUDIO_FIELDS = ["channel_id", "title", "content", "lyric", "image", "audio", "gain", "encode_status", "publish", "publish_at", "updated"]
 HIRES_FIELDS = ["audio_id", "file", "sample_rate", "bit_depth"]
 
 
@@ -20,9 +21,17 @@ class AudioRepository(AudioInterface):
     def queryset(self) -> QuerySet[Audio]:
         return Audio.objects.select_related("channel", "channel__owner", "hires").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
 
+    def filter_audio_queryset(self, filter: FilterOption) -> QuerySet[Audio]:
+        qs = Audio.objects.all()
+        if filter.publish:
+            qs = qs.filter(encode_status=EncodeStatus.DONE)
+        if filter.encode_status is not None:
+            qs = qs.filter(encode_status=filter.encode_status)
+        return qs
+
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
-        qs = get_ids_queryset(Audio.objects.all(), filter, sort, page)
+        qs = get_ids_queryset(self.filter_audio_queryset(filter), filter, sort, page)
         return Result.ok(list(qs.values_list("id", flat=True)))
 
     @Result.shield_exception()
@@ -58,7 +67,7 @@ class AudioRepository(AudioInterface):
 
     @Result.shield_exception()
     def count(self, filter: FilterOption) -> Result[int, FatalError]:
-        qs = filter_queryset(Audio.objects.all(), filter)
+        qs = filter_queryset(self.filter_audio_queryset(filter), filter)
         return Result.ok(qs.count())
 
     @Result.shield_exception()

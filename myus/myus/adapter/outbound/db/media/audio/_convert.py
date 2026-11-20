@@ -3,6 +3,7 @@ from myus.db.models.media import Audio, Hires
 from myus.domain.channel.data import ChannelData
 from myus.domain.hashtag.data import HashtagData
 from myus.domain.media.audio.data import AudioData, HiresData
+from myus.utils.enum.media import EncodeStatus
 
 
 def convert_data(obj: Audio) -> AudioData:
@@ -17,6 +18,7 @@ def convert_data(obj: Audio) -> AudioData:
         image=obj.image.name or "",
         audio=obj.audio.name or "",
         gain=obj.gain,
+        encode_status=EncodeStatus(obj.encode_status),
         read=obj.read,
         like=obj.like_count,
         publish=obj.publish,
@@ -60,6 +62,7 @@ def marshal_data(data: AudioData) -> Audio:
         image=data.image,
         audio=data.audio,
         gain=data.gain,
+        encode_status=data.encode_status,
         read=data.read,
         publish=data.publish,
         publish_at=data.publish_at,

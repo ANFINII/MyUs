@@ -6,8 +6,8 @@ import subprocess
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from ninja import UploadedFile
-from django.core.files.base import ContentFile
+from botocore.exceptions import BotoCoreError, ClientError
+from django.core.files import File
 from django.core.files.storage import default_storage
 from ...common.logger import log
 
@@ -28,6 +28,12 @@ class AudioInfo:
     sample_rate: int
     bit_depth: int
     duration: float
+
+
+@dataclass(frozen=True, slots=True)
+class AudioConvert:
+    audio: str
+    gain: float
 
 
 def is_conversion(filename: str) -> bool:
@@ -104,26 +110,6 @@ def convert_mp3(input_path: str, output_path: str, bitrate: str = MP3_BITRATE) -
         raise
 
 
-def save_converted_mp3(file: UploadedFile, path: str) -> str:
-    """オーディオファイルをMP3に変換して保存する"""
-
-    suffix = os.path.splitext(file.name or "upload")[1]
-    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp_in:
-        for chunk in file.chunks():
-            tmp_in.write(chunk)
-        tmp_in_path = tmp_in.name
-
-    tmp_out_path = tmp_in_path.rsplit(".", 1)[0] + ".mp3"
-    try:
-        convert_mp3(tmp_in_path, tmp_out_path)
-        with open(tmp_out_path, "rb") as f:
-            return default_storage.save(path, ContentFile(f.read()))
-    finally:
-        os.unlink(tmp_in_path)
-        if os.path.exists(tmp_out_path):
-            os.unlink(tmp_out_path)
-
-
 def measure_loudness(input_path: str) -> float:
     """ffmpegで曲の大きさをLUFSで測る。測れないときは目標の大きさを返す"""
 
@@ -156,16 +142,37 @@ def audio_gain(loudness: float) -> float:
     return round(max(MIN_GAIN, min(0.0, TARGET_LOUDNESS - loudness)), 1)
 
 
-def measure_audio_gain(audio_path: str) -> float:
-    """保存済みの曲を一時ファイルに写して測り、再生時に下げるdBを返す"""
+def convert_audio(audio_path: str) -> AudioConvert:
+    """保存済みの曲を一時フォルダに取り出し、MP3以外はMP3に変換して保存先に上げ、MP3の相対パスと再生時に下げるdBを返す。音質が低いときや変換できないときは空のパスを返す"""
 
-    suffix = os.path.splitext(audio_path)[1]
     try:
-        with tempfile.NamedTemporaryFile(suffix=suffix) as tmp:
-            with default_storage.open(audio_path, "rb") as src:
-                shutil.copyfileobj(src, tmp)
-            tmp.flush()
-            return audio_gain(measure_loudness(tmp.name))
-    except OSError as e:
-        log.warning("read failed", exc=e, audio_path=audio_path)
-        return 0.0
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            input_path = os.path.join(tmp_dir, os.path.basename(audio_path))
+            with default_storage.open(audio_path, "rb") as src, open(input_path, "wb") as dst:
+                shutil.copyfileobj(src, dst)
+
+            audio = probe_audio(input_path)
+            if is_low_bit_rate(audio):
+                log.warning("low bit rate", audio_path=audio_path, codec=audio.codec, bit_rate=audio.bit_rate)
+                return AudioConvert(audio="", gain=0.0)
+
+            if not is_conversion(audio_path):
+                return AudioConvert(audio=audio_path, gain=audio_gain(measure_loudness(input_path)))
+
+            output_path = os.path.join(tmp_dir, "convert.mp3")
+            convert_mp3(input_path, output_path)
+            with open(output_path, "rb") as f:
+                save_path = default_storage.save(os.path.splitext(audio_path)[0] + ".mp3", File(f))
+            return AudioConvert(audio=save_path, gain=audio_gain(measure_loudness(output_path)))
+    except Exception as e:
+        log.error("convert failed", exc=e, audio_path=audio_path)
+        return AudioConvert(audio="", gain=0.0)
+
+
+def delete_audio(audio_path: str) -> None:
+    """保存済みの曲を保存先から消す。消せないときはログだけ出す"""
+
+    try:
+        default_storage.delete(audio_path)
+    except (OSError, BotoCoreError, ClientError) as e:
+        log.warning("delete failed", exc=e, audio_path=audio_path)

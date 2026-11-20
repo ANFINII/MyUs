@@ -12,7 +12,7 @@
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
 | メディア | 開発は `MEDIA_ROOT`（ローカルディスク）、本番（`config/settings/prod.py`）は `django-storages` で S3 に保存し、CloudFront の `MEDIA_DOMAIN` から配信する。接続先は `AWS_STORAGE_BUCKET_NAME`・`AWS_S3_REGION_NAME`・`MEDIA_DOMAIN`（S3 へは EC2 のロールで書くのでキーは要らない）。販売するハイレゾの FLAC は、配信しない別のバケット（`HIRES_BUCKET_NAME`）に置き、5分だけ使える署名付き URL で渡す（`STORAGES["private"]`）。動画は ffmpeg で HLS に変換し、worker は元の動画を一時フォルダに取り出して変換した結果を保存先に上げる（`myus/myus/utils/functions/convert/`） |
 | 決済 | Stripe（webhook あり） |
-| 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換は、API が動画を変換前（`encode_status` が `Encoding`）のまま保存し、`myus_encoder`（`encode_videos`）が DB を定期的に読んで変換する |
+| 非同期処理 | 決済の webhook は記録だけして、`myus_worker`（`process_payment_events`）が DB を定期的に読んで反映する。動画の HLS 変換とオーディオの MP3 への変換・音の大きさの測定は、API がファイルを変換前（`encode_status` が `Encoding`）のまま保存し、`myus_encoder`（`encode_videos`）が DB を定期的に読んで、1回のループで動画とオーディオの両方を処理する |
 | メール | 開発は `console.EmailBackend`（送信されない）。本番（`config/settings/prod.py`）は SMTP で送る。接続先は `EMAIL_HOST`・`EMAIL_PORT`・`EMAIL_HOST_USER`・`EMAIL_HOST_PASSWORD`、送信元は `EMAIL_FROM` |
 | CI | GitHub Actions。`backend.yml`：mypy・ruff・`manage.py check`・pytest、`frontend.yml`：`pnpm check`・`pnpm test`・ビルド・main では S3 へのデプロイ、`github-actions.yml`：ワークフロー自体の検査（actionlint・zizmor）、`deploy.yml`：本番へのデプロイ、`infra.yml`：Terraform の plan・apply |
 
@@ -74,10 +74,11 @@ flowchart LR
 | 監視 | **CloudWatch**（Agent・Alarms）+ **AWS Budgets** | `prod/products/myus/monitoring` が、EC2 のステータスチェック・CPU クレジット・メモリとディスクの使用率（CloudWatch Agent が送る）、RDS の空き容量・CPU、API の CloudFront の 5xx の割合にアラームを付け、SNS からメールで通知する。CloudFront のメトリクスは us-east-1 にあるので、5xx のアラームと SNS のトピックは us-east-1 にも作る。予算超過は `prod/general/cost` がメールで通知する |
 | デプロイ | **GitHub Actions** → **ECR** → EC2（SSM Run Command で `docker compose pull && up -d`） | 認証は OIDC で行う（アクセスキーを使わない）。`.github/workflows/deploy.yml` が arm64 のイメージを buildx で作って ECR に push し、ライブラリの層は GitHub Actions のキャッシュで使い回す。`compute/deploy/` の `compose.yml`・`deploy.sh` を EC2 に送って実行する。`deploy.sh` は SSM の `/myus/prod/` から `django.env` を作ってから起動する |
 
-### HLS 変換の分離
+### HLS 変換・MP3 変換の分離
 
-- アップロードされたら、API はファイルを S3 に置いて **動画を変換前のまま保存するだけ**にする
+- アップロードされたら、API はファイルを S3 に置いて **動画・オーディオを変換前のまま保存するだけ**にする
 - `encoder` コンテナ（`encode_videos`）が変換前の動画を S3 から一時フォルダに取り出して ffmpeg で変換し、結果を S3 に置く
+- オーディオも同じ `encoder` コンテナが処理する。S3 から一時フォルダに取り出し、ビットレートを確かめ、MP3 以外は MP3 に変換して S3 に置き、音の大きさを測る。変換したときは、`Done` に保存したあとで元のファイルを S3 から消す
 - 同じ EC2 内でも、コンテナ（プロセス）を分けて CPU 制限（`cpus:`）をかければ API への影響を抑えられる
 - メモリが 2GB しかないので、コンテナごとにメモリの上限（`mem_limit`）を付け、EC2 に 2GB のスワップを置いている。1 つのコンテナが使いすぎても、そのコンテナだけが落ちて `restart: always` で上がり直し、OS ごと固まらない
 

@@ -78,7 +78,6 @@
     "deleteFailed": "Failed to delete",
     "fileTypeInvalid": "Unsupported file type",
     "fileTooLarge": "The file is too large",
-    "audioBitRateLow": "The audio quality is too low. Upload a source of 192kbps or higher, or a WAV or FLAC file",
     "searchTagLimit": "You can add up to 20 search tags",
     "checkoutFailed": "Failed to start the payment",
     "cancelFailed": "Failed to cancel the subscription. Please try again later",
@@ -400,9 +399,11 @@
       "created": "Posted",
       "createdAt": "Created"
     },
-    "video": {
+    "encode": {
       "encoding": "Converting",
-      "encodeFailed": "Conversion failed",
+      "failed": "Conversion failed"
+    },
+    "video": {
       "encodeFailedNotice": "Conversion failed. Please re-upload the video."
     },
     "form": {

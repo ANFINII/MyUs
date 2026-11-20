@@ -27,7 +27,7 @@ from myus.utils.enum.notification import NotificationObjectType, NotificationTyp
 from myus.utils.enum.payment import ProductType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
-from myus.utils.functions.convert.audio_converter import measure_audio_gain, probe_audio
+from myus.utils.functions.convert.audio_converter import probe_audio
 from myus.utils.functions.media import probe_upload, save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
 from ._convert import save_video_data, save_audio_data, save_hires_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_audio_data, delete_hires_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
@@ -246,8 +246,7 @@ def update_manage_audio(user_id: int, ulid: str, input: AudioUpdateDTO, image: U
     if image is not None:
         update_data = replace(update_data, image=save_upload(image, ImageUpload.AUDIO, obj.channel.ulid))
     if audio is not None:
-        audio_path = save_upload(audio, MediaUpload.AUDIO, obj.channel.ulid)
-        update_data = replace(update_data, audio=audio_path, gain=measure_audio_gain(audio_path))
+        update_data = replace(update_data, audio=save_upload(audio, MediaUpload.AUDIO, obj.channel.ulid), gain=0.0, encode_status=EncodeStatus.ENCODING)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
@@ -258,7 +257,7 @@ def update_manage_audio(user_id: int, ulid: str, input: AudioUpdateDTO, image: U
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    if not obj.publish and input.publish:
+    if not obj.publish and input.publish and obj.encode_status == EncodeStatus.DONE:
         notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.AUDIO, obj.id, NotificationObjectType.AUDIO)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)

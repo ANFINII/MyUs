@@ -123,7 +123,7 @@ repository と usecase は例外を投げず、`Result[T, E]` を返す。
 
 - チャットのメッセージとスレッドは Django Channels の WebSocket で送受信する
 - 動画は変換前のまま保存し、worker（`encode_videos`・docker-compose の `myus_encoder`）が ffmpeg で HLS に変換して、video.js で再生する
-- 音楽はアップロード時に ffmpeg で MP3 に変換する
+- オーディオは変換前のまま保存し、動画と同じ worker が ffmpeg で MP3 に変換して、音の大きさを測る
 - ブログなどの本文は Tiptap で編集し、表示時に DOMPurify で無害化する
 
 ## 決済

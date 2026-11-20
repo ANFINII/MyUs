@@ -6,7 +6,7 @@ import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Video, VideoList } from 'types/internal/media/output'
 import { deleteManageVideos } from 'api/internal/manage/delete'
-import { EncodeStatus, FetchError } from 'utils/constants/enum'
+import { FetchError } from 'utils/constants/enum'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
@@ -19,6 +19,7 @@ import IconArrow from 'components/parts/Icon/Arrow'
 import Toggle from 'components/parts/Input/Toggle'
 import Link from 'components/parts/Link'
 import style from '../Media.module.scss'
+import ManageEncodeStatus from '../_container/EncodeStatus'
 import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
 
@@ -86,8 +87,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
           <a className={style.title_link} onClick={() => handleEdit(v)}>
             {v.title}
           </a>
-          {v.encodeStatus === EncodeStatus.Failed && <span className={style.encode_failed}>{t('manage.video.encodeFailed')}</span>}
-          {v.encodeStatus === EncodeStatus.Encoding && <span className={style.encode_status}>{t('manage.video.encoding')}</span>}
+          <ManageEncodeStatus status={v.encodeStatus} />
         </>
       ),
     },

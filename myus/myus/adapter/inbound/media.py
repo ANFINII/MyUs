@@ -849,6 +849,7 @@ def convert_audios(objs: list[AudioData]) -> list[AudioOut]:
             image=x.image,
             audio=x.audio,
             gain=x.gain,
+            encode_status=x.encode_status,
             read=x.read,
             like=x.like,
             publish=x.publish,

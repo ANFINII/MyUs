@@ -70,6 +70,7 @@ class AudioOut(MediaOut):
     image: str
     audio: str
     gain: float
+    encode_status: EncodeStatus
     hires: HiresOut | None
     product: ProductOut | None
 
