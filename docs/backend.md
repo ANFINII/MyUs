@@ -233,10 +233,7 @@ if ret.is_err:
 - 項目が1つだけなら、DTOを作らず値で渡す
 
 ### 内部データ構造: dataclass
-- `@dataclass(frozen=True, slots=True)`
-- サフィックス: `Data`
-- domain interfaceのdataclassにはフィールドの初期値を設定しない
-- dataclass はフィールドだけを持ち、メソッドを持たない。ルールは `validation.py` の `validate` に書き、repository の `bulk_save` が保存する前に呼ぶ（「Validation（ドメインのルール）」を参照）
+- domain の Data の決まりは [domain.md](domain.md) の「Data」にある
 
 ## アーキテクチャ
 
@@ -245,30 +242,7 @@ if ret.is_err:
 - usecase層ではinjector経由でinterfaceを取得（adapter/outbound の実装を直接インポートしない）
 
 ### Interface層（抽象クラス）
-- **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
-- 雛形: `myus/domain/search_tag/interface.py` を参照
-- 必須メソッド: `get_ids(filter, sort, page)` / `bulk_get(ids)` の読み取り2点
-- `page`は各ドメインの`interface.py`の`PageOption`。メディアは`domain/media/common.py`にある
-  - `limit`の初期値は0で、上限なし。件数の上限がドメインで決まっているものだけ、その値にする。`search_tag`は`SEARCH_TAG_MAX_COUNT`、メディアは`MEDIA_PAGE_SIZE`
-  - `offset`の初期値は0
-  - 初期値が0のドメインは`PageOption()`で全部取れる。`limit=0`は、初期値が0でないメディアなどで全部取るときだけ書く
-  - 切り出しは`adapter/outbound/db/common.py`の`page_queryset(qs, page)`。`page`は同じファイルの`PageOption`という Protocol で受けるので、どのドメインの`PageOption`も渡せる
-- 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
-- 必須型: `FilterOption` / `SortOption` / `PageOption` dataclass + `SortType` enum
-- メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
-- 「使わないから書く」「使うから簡略化する」のどちらも禁止：使う分だけ既存の形で書く
-- 条件で消す・取る専用のメソッド（`delete(type_no, object_id, ...)` など）は作らない。`FilterOption`に条件を足し、`get_ids`で ID を取ってから`bulk_delete`・`bulk_get`する
-- private メソッド（`_` プレフィックス）を Interface に宣言しない（抽象化は公開 API のみ。private ヘルパーは Repository 実装側に置く）
-- 雛形と違う形を認めるのは次の場合だけ（新しく足すときも、同じ種類の既存の形に合わせる）
-  - `bulk_save`で表せない更新：加算・切り替え・既読など（`save_read`・`save_count`・`save_follow_count`・`media_like`・`comment_like`、通知の`delete_by_user`・`confirm`）
-  - 一覧に付ける判定：`is_liked`・`get_liked_ids`
-  - 認証：`UserInterface.authenticate`
-  - メディアの`SortOption`・`FilterOption`
-    - スコア順で登録しているチャンネルの投稿を上げるときは、`SortOption`の`user_id`を使う
-    - 詳細ページで今のメディアを一覧から外すときは、`FilterOption`の`exclude_id`を使う。通知の`exclude_user_id`と同じ形にし、条件のためだけの`ExcludeOption`は作らない
-  - 広告の検索の条件：広告はメディアの種類ではないので、`FilterOption`・`SortOption`・`SortType`は`domain/advertise/interface.py`に広告用を置く。広告にはスコアがないので`SortType`は`ID`・`CREATED`だけで、`FilterOption`に広告の種類の`advertise_type`を持つ
-  - カテゴリ・ハッシュタグの`bulk_save(media_type, media_id, objs)`：メディアへの紐づけの保存
-  - 外部サービスの窓口（`PaymentInterface`）：DBのリポジトリではないため`get_ids`・`bulk_get`を持たない
+- Interface の決まりは [domain.md](domain.md) の「Interface」にある
 
 ### Converterパターン
 - `_convert.py`に変換関数を定義
@@ -326,25 +300,7 @@ return Result.ok(new_ids)
 
 ## Validation（ドメインのルール）
 
-目的は「DB に不正なデータを入れない」こと。画面に出すエラー（入力の確かめ・文言）は FE で扱い、BE のルールは画面向けにしない。
-
-- データのルール（長さ・数など）は `domain/<ドメイン>/validation.py` の関数 `validate(obj)` に書く。adapter・usecase に置かない
-  - 名前は `validate`（`_data` を付けない）。1 つのファイルに複数あるときは `validate_xxx` にする
-  - 引数は保存する Data、戻り値は `Result[None, ValidationError]`
-  - 数・重複のように Data 1 つでは決まらないルールだけは、`validate(objs)` で list を受け取る（例：検索タグの 20 個まで。ハッシュタグは名前の `validate(obj)` と分けて `validate_count(objs)` にしている）
-  - Data（`data.py`）はフィールドだけを持ち、メソッドを持たない
-  - `validation.py` は Data と utils だけを import し、I/O を持たない
-  - エラーの文言は media（ドメイン）ごとに分けず、`error.titleLength`・`error.pageRequired` のように共通にする。画面には出さない（BE のログにだけ出る）ので、FE の i18n には足さない
-  - ルールに使う定数（`COMIC_TITLE_MAX_LENGTH` など）は同じ `validation.py` に置く
-- repository の `bulk_save` は、保存する前に各 Data を `validate` に通し、だめなら保存せずに `FatalError` を返す
-  - usecase・コマンドなど、どの経路から保存しても必ずルールを通る
-  - Interface の `Result[T, FatalError]` の決まりはそのまま
-  - ここで止まるのは FE をすり抜けた不正なリクエストかバグのときだけなので、500 で返してよい
-- usecase は今までどおり `XxxData(...)`・`replace(...)` で Data を組み立てる。ルールを確かめる処理は書かない
-- DB から読むとき（adapter/outbound/db の `convert_data`）は確かめない（読み込みは止めない）
-- adapter の schema（`Field(max_length=...)`）は入力の形を確かめるものとして残してよい。DB に入れてよいかの判断は `validate` が持つ
-- 確かめるルールがない Data には `validation.py` を作らない
-- 例とDB を見ないと決まらないルールは [domain-validation.md](domain-validation.md) を参照
+ルールの決まりと例は [domain.md](domain.md) の「ルール」にある。
 
 ## パフォーマンス
 

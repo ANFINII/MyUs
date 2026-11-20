@@ -6,6 +6,7 @@
 
 ### バックエンド（myus/）
 - ルールファイル: [docs/backend.md](docs/backend.md)
+- domain: [docs/domain.md](docs/domain.md)
 - 対象: Python/Djangoコード
 - 確認後: `uv run mypy myus config tests` と `uv run ruff check myus config tests --extend-ignore I` でリンターチェックを実行（ruff の `I`（import の並べ替え）は `docs/backend.md` の import の決まりと合わないため除く）
 

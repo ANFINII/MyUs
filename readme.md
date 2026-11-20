@@ -89,4 +89,4 @@
 - 構成・設計・アーキテクチャは [docs/architecture.md](docs/architecture.md) にまとめています。
 - 機能・データモデル・決済の仕組みは [docs/myus.md](docs/myus.md) にまとめています。
 - まだ終わっていないもの・保留しているものは [docs/roadmap.md](docs/roadmap.md) にまとめています。
-- コードの決まりは [docs/backend.md](docs/backend.md)・[docs/frontend.md](docs/frontend.md)・[docs/css.md](docs/css.md) にまとめています。
+- コードの決まりは [docs/backend.md](docs/backend.md)・[docs/domain.md](docs/domain.md)・[docs/frontend.md](docs/frontend.md)・[docs/css.md](docs/css.md) にまとめています。
