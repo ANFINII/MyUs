@@ -10,9 +10,9 @@ import { useUser } from 'components/hooks/useUser'
 import DropMenuCloud from 'components/layout/Header/DropMenu/Cloud'
 import DropMenuNotice from 'components/layout/Header/DropMenu/Notice'
 import DropMenuProfile from 'components/layout/Header/DropMenu/Profile'
+import SearchBar from 'components/layout/Header/SearchBar'
 import SideMenu from 'components/layout/Header/SideMenu'
 import Avatar from 'components/parts/Avatar'
-import IconArrow from 'components/parts/Icon/Arrow'
 import IconBell from 'components/parts/Icon/Bell'
 import IconCloud from 'components/parts/Icon/Cloud'
 import IconExclamation from 'components/parts/Icon/Exclamation'
@@ -37,8 +37,8 @@ export default function Header(props: Props): React.JSX.Element {
   const [isCloud, setIsCloud] = useState<boolean>(false)
   const [isNotice, setIsNotice] = useState<boolean>(false)
   const [isProfile, setIsProfile] = useState<boolean>(false)
-  const [search, setSearch] = useState<string>('')
   const [isSearchBar, setIsSearchBar] = useState<boolean>(false)
+  const [search, setSearch] = useState<string>('')
 
   const notificationQuery = useQuery({
     queryKey: queryKeys.notification,
@@ -56,8 +56,8 @@ export default function Header(props: Props): React.JSX.Element {
     setIsNotice(!isNotice)
   }
   const handleProfile = () => setIsProfile(!isProfile)
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
   const handleSearchBar = () => setIsSearchBar(!isSearchBar)
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
   const handleCoverClose = () => {
     setIsCloud(false)
@@ -107,14 +107,7 @@ export default function Header(props: Props): React.JSX.Element {
         </div>
       </nav>
 
-      {isSearchBar && (
-        <div className={style.search_bar}>
-          <button type="button" className={cx(style.search_back, style.color)} onClick={handleSearchBar}>
-            <IconArrow size="20" type="left" />
-          </button>
-          <Search value={search} isFull autoFocus onChange={handleSearch} onSearch={handleSearchBar} />
-        </div>
-      )}
+      {isSearchBar && <SearchBar value={search} onChange={handleSearch} onClose={handleSearchBar} />}
     </header>
   )
 }
