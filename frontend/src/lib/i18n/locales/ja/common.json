@@ -746,7 +746,12 @@
   "advertise": {
     "title": "広告表示",
     "channel": "チャンネル広告",
-    "global": "MyUs 広告"
+    "global": "MyUs 広告",
+    "badge": "広告",
+    "skipIn": "{{count}} 秒後にスキップできます",
+    "skip": "広告をスキップ",
+    "mute": "音を消す",
+    "unmute": "音を出す"
   },
   "menu": {
     "userpolicy": {

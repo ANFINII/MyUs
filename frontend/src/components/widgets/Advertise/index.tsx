@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
-import { getGlobalAdvertises, getUserAdvertises } from 'api/internal/advertise'
+import { globalAdvertisesQuery } from 'lib/query/options'
+import { getUserAdvertises } from 'api/internal/advertise'
 import cx from 'utils/functions/cx'
 import VStack from 'components/parts/Stack/Vertical'
 import AdvertiseCard from 'components/widgets/Card/Advertise'
@@ -18,7 +19,7 @@ export default function Advertise(props: Props): React.JSX.Element {
 
   const { t } = useTranslation()
   const advertises = useQuery({ queryKey: queryKeys.userAdvertises(userUlid), queryFn: () => toQuery(getUserAdvertises(userUlid)), enabled: userUlid !== '' })
-  const globalAdvertises = useQuery({ queryKey: queryKeys.globalAdvertises, queryFn: () => toQuery(getGlobalAdvertises()) })
+  const globalAdvertises = useQuery(globalAdvertisesQuery())
   const items = advertises.data?.items ?? []
   const globalItems = globalAdvertises.data?.items ?? []
 
