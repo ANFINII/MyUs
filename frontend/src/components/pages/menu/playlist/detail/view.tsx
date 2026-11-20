@@ -38,7 +38,7 @@ interface Props {
 
 export default function PlaylistDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { ulid, title, description, image, thumbnailAudioUlid, publish, isOwner, author, audios } = data
+  const { ulid, title, description, image, thumbnailUlid, publish, isOwner, author, audios } = data
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -50,7 +50,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const [isModal, setIsModal] = useState<boolean>(false)
   const [editTitle, setEditTitle] = useState<string>(title)
   const [editDescription, setEditDescription] = useState<string>(description)
-  const [editThumbnail, setEditThumbnail] = useState<string>(thumbnailAudioUlid)
+  const [editThumbnail, setEditThumbnail] = useState<string>(thumbnailUlid)
   const [isEditPublish, setIsEditPublish] = useState<boolean>(publish)
   const [editAudios, setEditAudios] = useState<Audio[]>(audios)
   const { dragIndex, dragOverIndex, dragItem } = useDragSort(editAudios, setEditAudios)
@@ -73,7 +73,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const handleEdit = () => {
     setEditTitle(title)
     setEditDescription(description)
-    setEditThumbnail(thumbnailAudioUlid)
+    setEditThumbnail(thumbnailUlid)
     setIsEditPublish(publish)
     setEditAudios(audios)
     setIsEdit(!isEdit)
@@ -82,7 +82,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   const handleSave = async () => {
     handleLoading(true)
     const thumbnail = editAudios.some((m) => m.ulid === editThumbnail) ? editThumbnail : ''
-    const ret = await putPlaylist(ulid, { title: editTitle, description: editDescription, thumbnailAudioUlid: thumbnail, publish: isEditPublish, audioUlids: editAudios.map((m) => m.ulid) })
+    const ret = await putPlaylist(ulid, { title: editTitle, description: editDescription, thumbnailUlid: thumbnail, publish: isEditPublish, audioUlids: editAudios.map((m) => m.ulid) })
     handleLoading(false)
     if (ret.isErr()) return handleToast(errorMessage(ret.error, FetchError.Put), true)
     await queryClient.invalidateQueries({ queryKey: queryKeys.mediaPlaylists })
