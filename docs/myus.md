@@ -12,7 +12,7 @@ MyUsは「My Idea Know Us」を由来とする、YouTube型UIを採用した総�
 - **Blog**: ブログ投稿
 - **Comic**: 漫画投稿
 - **Picture**: 画像投稿
-- **Chat**: リアルタイムチャット
+- **Chat**: チャット投稿
 
 ### ユーザー機能
 - 認証システム
