@@ -21,7 +21,6 @@ export default function UserPolicy(): React.JSX.Element {
         <p>{t('menu.userpolicy.article2.p2')}</p>
         <p>{t('menu.userpolicy.article2.p3')}</p>
         <p>{t('menu.userpolicy.article2.p4')}</p>
-        <p>{t('menu.userpolicy.article2.p5')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article3.title')}</h2>
@@ -33,13 +32,14 @@ export default function UserPolicy(): React.JSX.Element {
 
         <h2>{t('menu.userpolicy.article4.title')}</h2>
         <p>{t('menu.userpolicy.article4.p1')}</p>
-        <p>{t('menu.userpolicy.article4.p2')}</p>
-        <p>{t('menu.userpolicy.article4.p3')}</p>
-        <p>{t('menu.userpolicy.article4.p4')}</p>
-        <p>{t('menu.userpolicy.article4.p5')}</p>
-        <p>{t('menu.userpolicy.article4.p6')}</p>
-        <p>{t('menu.userpolicy.article4.p7')}</p>
-        <p>{t('menu.userpolicy.article4.p8')}</p>
+        <p className="list_item">{t('menu.userpolicy.article4.p2')}</p>
+        <p className="list_item">{t('menu.userpolicy.article4.p3')}</p>
+        <p className="list_item">{t('menu.userpolicy.article4.p4')}</p>
+        <p className="list_item">{t('menu.userpolicy.article4.p5')}</p>
+        <p className="list_item">{t('menu.userpolicy.article4.p6')}</p>
+        <p className="list_item">{t('menu.userpolicy.article4.p7')}</p>
+        <p className="list_item">{t('menu.userpolicy.article4.p8')}</p>
+        <p className="list_item">{t('menu.userpolicy.article4.p9')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article5.title')}</h2>
@@ -51,6 +51,7 @@ export default function UserPolicy(): React.JSX.Element {
         <p>{t('menu.userpolicy.article6.p1')}</p>
         <p>{t('menu.userpolicy.article6.p2')}</p>
         <p>{t('menu.userpolicy.article6.p3')}</p>
+        <p>{t('menu.userpolicy.article6.p4')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article7.title')}</h2>
@@ -60,7 +61,6 @@ export default function UserPolicy(): React.JSX.Element {
         <p>{t('menu.userpolicy.article7.p4')}</p>
         <p>{t('menu.userpolicy.article7.p5')}</p>
         <p>{t('menu.userpolicy.article7.p6')}</p>
-        <p>{t('menu.userpolicy.article7.p7')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article8.title')}</h2>
