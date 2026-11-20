@@ -789,7 +789,14 @@
       "article4": {
         "title": "Article 4. Prohibited Conduct",
         "p1": "The following are prohibited.",
-        "p2": "・Violating the law\n・Posting adult (18+) works\n・Posting works with violent or cruel depictions\n・Defaming others\n・Impersonating others\n・Collecting content on the Service by scraping\n・Distributing, selling, or publishing purchased content outside the Service\n・Interfering with the operation of the Service"
+        "p2": "・Violating the law",
+        "p3": "・Posting adult (18+) works",
+        "p4": "・Posting works with violent or cruel depictions",
+        "p5": "・Defaming others",
+        "p6": "・Impersonating others",
+        "p7": "・Collecting content on the Service by scraping",
+        "p8": "・Distributing, selling, or publishing purchased content outside the Service",
+        "p9": "・Interfering with the operation of the Service"
       },
       "article5": {
         "title": "Article 5. Advertising in Blogs",
