@@ -26,6 +26,12 @@
     background: rgb(255, 240, 240);
   }
 
+  &.plain {
+    padding: 0;
+    border: none;
+    background: none;
+  }
+
   .icon {
     display: flex;
     align-items: center;

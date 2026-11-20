@@ -14,17 +14,18 @@ const iconMap = {
 
 interface Props {
   type?: AlertType
+  isPlain?: boolean
   className?: string
   children: React.ReactNode
 }
 
 export default function Alert(props: Props): React.JSX.Element {
-  const { type = 'info', className, children } = props
+  const { type = 'info', isPlain, className, children } = props
 
   const Icon = iconMap[type]
 
   return (
-    <div className={cx(style.alert, style[type], className)}>
+    <div className={cx(style.alert, style[type], isPlain && style.plain, className)}>
       <span className={style.icon}>
         <Icon size="16" />
       </span>

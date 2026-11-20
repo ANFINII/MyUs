@@ -1,9 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { errorMessage } from 'lib/error'
 import { WithdrawalIn } from 'types/internal/auth'
 import { postWithdrawal } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
+import { useApiError } from 'components/hooks/useApiError'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
@@ -23,6 +23,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
+  const { message, handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<WithdrawalIn>({ password: '' })
 
   const handleBack = () => router.push('/account/withdrawal')
@@ -39,7 +40,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
     const ret = await postWithdrawal(request)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(errorMessage(ret.error, FetchError.Post), true)
+      handleError(FetchError.Post, ret.error.message)
       return
     }
     resetUser()
@@ -51,6 +52,9 @@ export default function WithdrawalConfirm(): React.JSX.Element {
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.withdrawal.title')}</h1>
+          {message && (
+            <Alert type="error" isPlain>{message}</Alert>
+          )}
           <VStack gap="8">
             <Alert type="error">{t('account.withdrawal.confirm')}</Alert>
             <Password value={values.password} name="password" placeholder={t('account.form.password')} error={error} onChange={handleInput} />
