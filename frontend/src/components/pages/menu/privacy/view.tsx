@@ -32,6 +32,7 @@ export default function Privacy(): React.JSX.Element {
         <p>{t('menu.privacy.external.p2')}</p>
         <p>{t('menu.privacy.external.p3')}</p>
         <p>{t('menu.privacy.external.p4')}</p>
+        <p>{t('menu.privacy.external.p5')}</p>
         <Divide />
 
         <h2>{t('menu.privacy.security.title')}</h2>
@@ -44,8 +45,13 @@ export default function Privacy(): React.JSX.Element {
         <p>{t('menu.privacy.request.p2')}</p>
         <Divide />
 
+        <h2>{t('menu.privacy.change.title')}</h2>
+        <p>{t('menu.privacy.change.p1')}</p>
+        <Divide />
+
         <h2>{t('menu.privacy.contact.title')}</h2>
         <p>{t('menu.privacy.contact.p1')}</p>
+        <p>{t('menu.privacy.contact.p2')}</p>
       </article>
     </Main>
   )
