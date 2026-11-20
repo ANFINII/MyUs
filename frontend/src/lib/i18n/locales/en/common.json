@@ -931,7 +931,7 @@
       },
       "video": {
         "label": "Video",
-        "content": "Post video content."
+        "content": "Post videos."
       },
       "audio": {
         "label": "Audio",
@@ -943,15 +943,19 @@
       },
       "comic": {
         "label": "Comic",
-        "content": "Post comics."
+        "content": "Post comics. You can also sell them with a free preview."
       },
       "picture": {
         "label": "Picture",
-        "content": "Post photos, images, illustrations, and more."
+        "content": "Post photos and illustrations."
       },
       "chat": {
         "label": "Chat",
         "content": "Talk with people from all over the world. You can also use it like a message board."
+      },
+      "channel": {
+        "label": "Channels",
+        "content": "Create channels to organize your posts. You can also subscribe to channels you like."
       },
       "playlist": {
         "label": "Playlists",
@@ -959,7 +963,7 @@
       },
       "mypage": {
         "label": "My page",
-        "content": "Build up your own page and grow your followers."
+        "content": "Check and change your information in one place. Build up your user page and grow your followers."
       },
       "follow": {
         "label": "Following",
@@ -967,11 +971,11 @@
       },
       "searchTag": {
         "label": "Search tags",
-        "content": "Show up to 20 words you search for often. You can change their order in Manage posts."
+        "content": "Save up to 20 words you search for often. You can also reorder them in the tag bar."
       },
       "manage": {
         "label": "Manage posts",
-        "content": "Edit, hide, or delete your posts. You can also add tags here."
+        "content": "Edit, hide, or delete your posts. You can also manage series and ads."
       }
     },
     "channel": {
