@@ -22,13 +22,13 @@
 
     .description {
       display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 9;
       max-width: 272px;
-      font-size: 13px;
       padding: 6px;
       overflow: hidden;
+      font-size: 13px;
       word-break: break-all;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 9;
     }
   }
 }

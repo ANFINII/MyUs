@@ -23,8 +23,8 @@
     margin-bottom: auto;
     margin-top: auto;
     height: 32px;
-    border-radius: 32px;
     font-size: 16px;
+    border-radius: 32px;
   }
 
   input[type='search']::-webkit-search-decoration {
@@ -45,26 +45,26 @@
 .input {
   width: 700px;
   padding: 0;
-  text-indent: 10px;
   line-height: 32px;
+  color: rgb(3, 3, 3);
   border: 0;
   outline: 0;
-  color: rgb(3, 3, 3);
   background: none;
+  text-indent: 10px;
   transition: width 0.1s linear;
 }
 
 .icon {
   display: flex;
-  width: 32px;
-  height: 32px;
-  margin: 0 -2px 0 0;
   float: right;
   justify-content: center;
   align-items: center;
+  width: 32px;
+  height: 32px;
+  margin: 0 -2px 0 0;
+  color: rgb(255, 255, 255);
   border-radius: 50%;
   background: rgb(30, 75, 165);
-  color: rgb(255, 255, 255);
   border: none;
   appearance: none;
   -moz-appearance: none;
@@ -73,7 +73,6 @@
 }
 
 /* メディアクエリ */
-
 /* 1376pxまでの幅の場合に適応される  */
 @media screen and (max-width: 1376px) {
   .input {

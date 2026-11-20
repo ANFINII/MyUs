@@ -10,21 +10,21 @@
   .chat_footer {
     position: sticky;
     bottom: 0;
+    z-index: 50;
     width: 100%;
     margin: 0;
     margin-top: auto;
     padding: 0 12px 6px 12px;
-    z-index: 50;
 
     &::before {
-      content: '';
       position: absolute;
       top: 4px;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgb(255, 255, 255);
       z-index: -1;
+      background: rgb(255, 255, 255);
+      content: '';
     }
   }
 }

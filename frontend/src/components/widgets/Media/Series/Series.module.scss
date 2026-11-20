@@ -1,7 +1,7 @@
 .series {
+  overflow: hidden;
   border: 1px solid rgb(220, 220, 220);
   border-radius: 6px;
-  overflow: hidden;
 
   .header {
     display: flex;
@@ -36,8 +36,8 @@
   max-height: 144px;
   margin: 0;
   padding: 0;
-  list-style: none;
   overflow-y: auto;
+  list-style: none;
 
   .item {
     display: flex;
@@ -75,8 +75,8 @@
   .item_title {
     flex: 1;
     min-width: 0;
-    font-size: 13px;
     overflow: hidden;
+    font-size: 13px;
     text-overflow: ellipsis;
     white-space: nowrap;
   }

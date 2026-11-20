@@ -39,10 +39,10 @@
       gap: 4px;
       width: 100%;
       padding: 0;
-      border: none;
-      background: none;
       color: inherit;
       font: inherit;
+      border: none;
+      background: none;
       cursor: pointer;
 
       &:hover {
@@ -54,7 +54,6 @@
         color: rgb(130, 130, 130);
       }
     }
-
   }
 
   .th_right {
@@ -74,8 +73,8 @@
   }
 
   .td {
-    text-overflow: ellipsis;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .tr {

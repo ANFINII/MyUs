@@ -9,9 +9,9 @@
     flex-shrink: 0;
     width: 160px;
     height: 160px;
+    overflow: hidden;
     border-radius: 6px;
     background: rgb(30, 30, 30);
-    overflow: hidden;
   }
 
   .thumbnail {
@@ -30,8 +30,8 @@
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  min-width: 0;
   gap: 12px;
+  min-width: 0;
 
   .heading {
     display: flex;
@@ -114,9 +114,9 @@
   .index {
     width: 32px;
     font-size: 13px;
-    font-variant-numeric: tabular-nums;
     text-align: center;
     color: rgb(120, 120, 120);
+    font-variant-numeric: tabular-nums;
   }
 
   .grip {

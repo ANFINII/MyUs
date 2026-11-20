@@ -24,24 +24,24 @@
     margin-top: 5px;
     margin-bottom: 5px;
     padding: 5px 10px;
-    border-radius: 3px;
-    background: rgb(240, 240, 242);
     font-family: monospace;
     white-space: pre-wrap;
+    border-radius: 3px;
+    background: rgb(240, 240, 242);
 
     code {
       padding: 0;
-      background: none;
       font-size: 0.9em;
       color: inherit;
+      background: none;
     }
   }
 
   code {
     padding: 0.2em 0.4em;
+    font-size: 0.85em;
     border-radius: 3px;
     background: rgb(240, 240, 242);
-    font-size: 0.85em;
   }
 
   a {

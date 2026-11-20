@@ -1,6 +1,6 @@
 .checkbox {
   .input {
-    appearance: none;
+    float: left;
     width: 16px;
     height: 16px;
     margin-top: 5px;
@@ -8,7 +8,7 @@
     border-radius: 5px;
     background-color: rgb(255, 255, 255);
     background-image: var(--bs-form-check-bg-image);
-    float: left;
+    appearance: none;
     cursor: pointer;
 
     &:checked {

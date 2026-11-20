@@ -24,11 +24,11 @@
       height: 36px;
       padding: 6px 36px 6px 12px;
       font-size: 14px;
+      text-align: left;
+      color: rgb(0, 0, 0);
       border: 1px solid rgb(200, 200, 200);
       border-radius: 5px;
       background: rgb(255, 255, 255);
-      text-align: left;
-      color: rgb(0, 0, 0);
       cursor: pointer;
 
       &.placeholder {
@@ -51,8 +51,8 @@
       position: absolute;
       right: 10px;
       top: 50%;
-      transform: translateY(-50%);
       color: rgb(120, 120, 120);
+      transform: translateY(-50%);
       pointer-events: none;
     }
 
@@ -62,11 +62,11 @@
       left: 0;
       z-index: 10;
       width: 280px;
+      padding: 12px;
       background: rgb(255, 255, 255);
       border: 1px solid rgb(220, 220, 220);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      padding: 12px;
 
       &.below {
         top: calc(100% + 4px);
@@ -86,16 +86,16 @@
         }
 
         .nav_button {
-          width: 28px;
-          height: 28px;
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 28px;
+          height: 28px;
           font-size: 18px;
+          color: rgb(50, 50, 50);
           background: transparent;
           border: 1px solid transparent;
           border-radius: 6px;
-          color: rgb(50, 50, 50);
           cursor: pointer;
 
           &:hover {
@@ -111,11 +111,11 @@
         margin-bottom: 4px;
 
         .weekday {
+          padding: 4px 0;
           text-align: center;
           font-size: 12px;
           font-weight: 600;
           color: rgb(120, 120, 120);
-          padding: 4px 0;
 
           &.sunday {
             color: rgb(220, 38, 38);
@@ -137,15 +137,15 @@
         }
 
         .day {
-          height: 32px;
           display: flex;
           align-items: center;
           justify-content: center;
+          height: 32px;
           font-size: 14px;
+          color: rgb(30, 30, 30);
           background: transparent;
           border: 1px solid transparent;
           border-radius: 6px;
-          color: rgb(30, 30, 30);
           cursor: pointer;
 
           &:hover:not(:disabled) {
@@ -166,8 +166,8 @@
           }
 
           &.selected {
-            background: rgb(44, 110, 203);
             color: rgb(255, 255, 255);
+            background: rgb(44, 110, 203);
           }
 
           &.selected:hover {
@@ -177,8 +177,8 @@
           &.disabled,
           &:disabled {
             color: rgb(200, 200, 200);
-            cursor: not-allowed;
             background: transparent;
+            cursor: not-allowed;
           }
         }
       }
@@ -204,8 +204,8 @@
 
   .error_text {
     padding-top: 2px;
-    text-indent: 4px;
     font-size: 12px;
     color: rgb(255, 0, 0);
+    text-indent: 4px;
   }
 }

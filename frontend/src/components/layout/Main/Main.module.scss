@@ -19,22 +19,22 @@
     height: 30px;
     font-size: 24px;
     color: rgb(50, 70, 140);
-    user-select: none;
     white-space: nowrap;
+    user-select: none;
 
     span {
-      font-size: 18px;
       margin: 6px 0 0 10px;
+      font-size: 18px;
     }
   }
 
   .search_message {
     display: inline-block;
-    list-style: none;
     padding: 0;
     margin: 0 0 0 8px;
     font-size: 14px;
     color: rgb(33, 37, 41);
+    list-style: none;
   }
 
   .button {

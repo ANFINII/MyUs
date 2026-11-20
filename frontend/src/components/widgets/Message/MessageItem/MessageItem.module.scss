@@ -47,16 +47,16 @@
       }
 
       time {
+        margin-left: 8px;
         font-size: 11px;
         color: rgb(120, 120, 120);
-        margin-left: 8px;
       }
     }
 
     .message_text {
+      overflow: hidden;
       font-size: 14px;
       line-height: 1.42;
-      overflow: hidden;
       overflow-wrap: break-word;
 
       > * + * {
@@ -88,24 +88,24 @@
         margin-top: 5px;
         margin-bottom: 5px;
         padding: 5px 10px;
-        border-radius: 3px;
-        background: rgb(240, 240, 242);
         font-family: monospace;
         white-space: pre-wrap;
+        border-radius: 3px;
+        background: rgb(240, 240, 242);
 
         code {
           padding: 0;
-          background: none;
           font-size: 0.9em;
           color: inherit;
+          background: none;
         }
       }
 
       code {
         padding: 0.2em 0.4em;
+        font-size: 0.85em;
         border-radius: 3px;
         background: rgb(240, 240, 242);
-        font-size: 0.85em;
       }
 
       a {
@@ -151,11 +151,11 @@
     top: 4px;
     right: 8px;
     opacity: 0;
-    transition: opacity 0.1s;
     border: 1px solid rgb(210, 210, 210);
     border-radius: 5px;
     background: rgb(255, 255, 255);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: opacity 0.1s;
 
     button {
       border-radius: 5px;

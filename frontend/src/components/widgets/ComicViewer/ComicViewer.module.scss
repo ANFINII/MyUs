@@ -46,10 +46,10 @@
     .next {
       display: flex;
       flex: 1;
-      min-width: 48px;
       align-items: center;
       justify-content: center;
       align-self: stretch;
+      min-width: 48px;
       color: rgba(255, 255, 255, 0.3);
       cursor: pointer;
       transition: color 0.2s, background 0.2s;
@@ -74,9 +74,9 @@
   .footer {
     position: relative;
     display: flex;
-    margin-top: 12px;
     align-items: center;
     justify-content: center;
+    margin-top: 12px;
 
     .counter {
       position: absolute;
@@ -105,9 +105,9 @@
       .thumbnail {
         width: 48px;
         height: 32px;
+        overflow: hidden;
         border: 2px solid transparent;
         border-radius: 3px;
-        overflow: hidden;
         opacity: 0.4;
         transition: opacity 0.2s, border-color 0.2s;
         cursor: pointer;

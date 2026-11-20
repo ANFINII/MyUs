@@ -55,8 +55,8 @@
 .video-js *,
 .video-js:after,
 .video-js:before {
-  color: inherit;
   box-sizing: inherit;
+  color: inherit;
   font-size: inherit;
   line-height: inherit;
 }
@@ -68,8 +68,8 @@
 }
 
 .video-js {
-  font-size: 14px;
   overflow: hidden;
+  font-size: 14px;
 }
 
 .video-js .vjs-menu-button-inline:hover,
@@ -77,33 +77,26 @@
   width: 8.35em;
 }
 
-.video-js
-  .vjs-volume-menu-button.vjs-volume-menu-button-horizontal:hover
-  .vjs-menu
-  .vjs-menu-content {
+.video-js .vjs-volume-menu-button.vjs-volume-menu-button-horizontal:hover .vjs-menu .vjs-menu-content {
   width: 6.35em;
   height: 3em;
 }
 
 .video-js .vjs-control:focus:before,
 .video-js .vjs-control:hover:before {
-  text-shadow: 0 0 1em #2483d5, 0 0 1em #2483d5, 0 0 1em #2483d5;
+  text-shadow: 0 0 1em rgb(36, 131, 213), 0 0 1em rgb(36, 131, 213), 0 0 1em rgb(36, 131, 213);
 }
 
 .video-js .vjs-control:focus:before,
 .video-js .vjs-control:hover,
 .video-js .vjs-control:focus {
-  text-shadow: 0 0 1em rgba(0, 149, 255, 0.8),
-    0 0 2em rgba(0, 150, 255, 0.5),
-    0 0 3em rgba(0, 150, 255, 0.2);
+  text-shadow: 0 0 1em rgba(0, 149, 255, 0.8), 0 0 2em rgba(0, 150, 255, 0.5), 0 0 3em rgba(0, 150, 255, 0.2);
 }
 
 .vjs-subs-caps-button .vjs-menu-button:focus:before,
 .vjs-subs-caps-button .vjs-menu-button:hover,
 .vjs-subs-caps-button .vjs-menu-button:focus {
-  text-shadow: 0 0 1em rgba(0, 149, 255, 0.8),
-    0 0 2em rgba(0, 150, 255, 0.5),
-    0 0 3em rgba(0, 150, 255, 0.2);
+  text-shadow: 0 0 1em rgba(0, 149, 255, 0.8), 0 0 2em rgba(0, 150, 255, 0.5), 0 0 3em rgba(0, 150, 255, 0.2);
 }
 
 .video-js .vjs-spacer,
@@ -113,21 +106,21 @@
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  flex: 1 1 auto;
   -webkit-box-flex: 1 1 auto;
   -moz-box-flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
 }
 
 .video-js .vjs-time-control {
+  flex: 0 1 auto;
+  width: 1; /* auto → 1*/
+  padding: 0;
   -webkit-box-flex: 0 1 auto;
   -moz-box-flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
-  flex: 0 1 auto;
-  width: 1; /* auto → 1*/
-  padding: 0;
 }
 
 .video-js .vjs-time-control.vjs-time-divider {
@@ -213,8 +206,8 @@
 .video-js.not-hover.vjs-has-started.vjs-playing.vjs-user-active .vjs-control-bar,
 .video-js.not-hover.vjs-has-started.vjs-playing.vjs-user-inactive .vjs-control-bar,
 .video-js.vjs-has-started.vjs-playing.vjs-user-inactive .vjs-control-bar {
-  visibility: visible;
   opacity: 1;
+  visibility: visible;
   -webkit-backface-visibility: hidden;
   -webkit-transform: translateY(3em);
   -moz-transform: translateY(3em);
@@ -233,8 +226,8 @@
 .video-js.not-hover.vjs-has-started.vjs-playing.vjs-user-active .vjs-progress-control,
 .video-js.not-hover.vjs-has-started.vjs-playing.vjs-user-inactive .vjs-progress-control,
 .video-js.vjs-has-started.vjs-playing.vjs-user-inactive .vjs-progress-control {
-  height: 0.25em;
   top: -0.25em;
+  height: 0.25em;
   pointer-events: none;
   -webkit-transition: height 1s, top 1s;
   -moz-transition: height 1s, top 1s;
@@ -268,10 +261,10 @@
   width: 2em;
   height: 2em;
   line-height: 2em;
-  border: 0.06666em solid rgb(255, 255, 255);
   font-size: 2.5em;
-  background: rgba(0, 105, 255, 0.2);
   color: rgb(255, 255, 255);
+  border: 0.06666em solid rgb(255, 255, 255);
+  background: rgba(0, 105, 255, 0.2);
   -webkit-transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
   -moz-transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
   -ms-transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
@@ -284,18 +277,18 @@
 }
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-content {
-  background: transparent;
-  width: 10em;
   left: -3.5em;
+  width: 10em;
   max-height: auto;
   padding-bottom: 0.5em;
+  background: transparent;
 }
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item,
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-title {
   margin: 0.3em 0;
   border-radius: 0.3em;
-  background: #151b17;
+  background: rgb(21, 27, 23);
 }
 
 .vjs-menu li.vjs-menu-title {
@@ -305,19 +298,19 @@
 }
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item.vjs-selected {
-  background: #2483d5;
+  background: rgb(36, 131, 213);
 }
 
 .video-js .vjs-big-play-button {
-  background: rgba(0, 0, 0, 0.1);
-  font-size: 2.5em;
-  border: none;
-  border-radius: 50%;
   width: 1.6em;
   height: 1.6em !important;
-  line-height: 1.6em !important;
   margin-left: -0.8em;
   margin-top: -0.8em !important;
+  font-size: 2.5em;
+  line-height: 1.6em !important;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 50%;
   opacity: 0;
   transition: opacity 0.2s, background-color 0.1s;
 }
@@ -327,10 +320,10 @@
   left: 54%;
   width: 0;
   height: 0;
-  content: '';
   border-color: transparent transparent transparent rgb(255, 255, 255);
   border-style: solid;
   border-width: 9px 0 9px 15px;
+  content: '';
   transform: translate(-50%, -50%);
 }
 
@@ -353,11 +346,11 @@
 }
 
 .video-js .vjs-control-bar2 {
-  background: #000000;
+  background: rgb(0, 0, 0);
 }
 
 .video-js .vjs-control-bar {
-  color: #ffffff;
+  color: rgb(255, 255, 255);
   font-size: 12px;
   background: rgba(0, 0, 0, 0.3) !important;
 }
@@ -418,9 +411,9 @@
 /* リストホバー自動再生 */
 .video .video-js .vjs-big-play-button {
   display: none;
+  color: rgba(255, 255, 255, 0);
   border: 0 solid rgb(255, 255, 255);
   opacity: 0;
-  color: rgba(255, 255, 255, 0);
   background: rgba(255, 255, 255, 0);
 }
 
@@ -473,11 +466,11 @@
   position: absolute;
   bottom: 40px;
   right: 0;
+  z-index: 100;
   min-width: 200px;
   padding: 0;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
 
   &.vjs-hidden {
     display: none;
@@ -489,11 +482,11 @@
   position: absolute;
   bottom: 40px;
   right: 0;
+  z-index: 100;
   padding: 0;
   min-width: 200px;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
 
   &.vjs-hidden {
     display: none;
@@ -506,9 +499,9 @@
 
 .vjs-settings-menu-item {
   display: flex;
-  padding: 8px 16px;
   justify-content: space-between;
   align-items: center;
+  padding: 8px 16px;
   transition: background-color 0.2s;
   cursor: pointer;
 

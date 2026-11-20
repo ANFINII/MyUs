@@ -62,9 +62,9 @@
     gap: 10px;
     padding: 16px 0;
     margin: 0;
-    list-style: none;
     border-top: 1px solid rgb(230, 230, 230);
     border-bottom: 1px solid rgb(230, 230, 230);
+    list-style: none;
 
     &:last-child {
       border-bottom: none;
@@ -78,9 +78,9 @@
       color: rgb(80, 80, 80);
 
       &::before {
-        content: '✓';
         font-weight: 700;
         color: rgb(0, 70, 175);
+        content: '✓';
       }
     }
   }

@@ -2,10 +2,10 @@
   position: relative;
   height: 200px;
   padding: 20px;
+  overflow-y: auto;
   border-radius: 10px;
   background: rgb(20, 20, 20);
   transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow-y: auto;
   scrollbar-width: none;
 
   &::-webkit-scrollbar {

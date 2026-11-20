@@ -8,12 +8,12 @@
     display: block;
     top: 0;
     left: 0;
+    z-index: 60;
     width: 100%;
     height: 100%;
     padding: 8px;
-    background: rgb(255, 255, 255);
     overflow-y: auto;
-    z-index: 60;
+    background: rgb(255, 255, 255);
     @include scrollbar.scrollbar;
   }
 
@@ -27,8 +27,8 @@
   }
 
   .content_detail {
-    font-size: 14px;
     margin: 10px 0 0 56px;
+    font-size: 14px;
     white-space: pre-wrap;
 
     .content_body {

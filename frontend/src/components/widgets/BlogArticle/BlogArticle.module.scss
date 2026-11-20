@@ -3,7 +3,6 @@
 .article {
   height: auto;
   background: rgb(255, 255, 255);
-
   @include tiptap.tiptap;
 
   img {
@@ -32,9 +31,9 @@
 
     &::before,
     &::after {
-      content: '';
       flex: 1;
       border-top: 1px dashed rgb(200, 200, 200);
+      content: '';
     }
   }
 }

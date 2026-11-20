@@ -29,9 +29,9 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.42;
-    tab-size: 4;
     white-space: pre-wrap;
     outline: none;
+    tab-size: 4;
 
     > * + * {
       margin-top: 0.75em;
@@ -134,26 +134,26 @@
 
 .error {
   :global(.tiptap) {
-    background: rgb(255, 240, 240);
     color: rgb(0, 0, 0);
+    background: rgb(255, 240, 240);
   }
 }
 
 .error_text {
   padding-top: 2px;
   font-size: 12px;
-  text-indent: 4px;
   color: rgb(255, 0, 0);
+  text-indent: 4px;
 }
 
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   padding: 8px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border-bottom: 1px solid rgb(204, 204, 204);
   border-radius: 5px 5px 0 0;
   background: rgb(255, 255, 255);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   .group {
     display: flex;
@@ -188,22 +188,22 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    vertical-align: middle;
     width: 32px;
     height: 32px;
     padding: 0;
-    border: none;
-    border-radius: 4px;
-    background: transparent;
+    vertical-align: middle;
     font-size: 13px;
     font-weight: 600;
     line-height: 1;
     color: rgb(68, 68, 68);
+    border: none;
+    border-radius: 4px;
+    background: transparent;
     cursor: pointer;
 
     &:hover {
-      background: rgb(240, 240, 240);
       color: inherit;
+      background: rgb(240, 240, 240);
     }
   }
 
@@ -214,11 +214,11 @@
   .select {
     height: 28px;
     padding: 0 4px;
+    font-size: 12px;
+    color: rgb(68, 68, 68);
     border: 1px solid rgb(204, 204, 204);
     border-radius: 3px;
     background: rgb(255, 255, 255);
-    font-size: 12px;
-    color: rgb(68, 68, 68);
     cursor: pointer;
   }
 }

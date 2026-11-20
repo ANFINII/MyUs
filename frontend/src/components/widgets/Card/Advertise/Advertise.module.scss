@@ -6,9 +6,9 @@
 
   .thumbnail {
     min-width: 192px;
-    object-fit: cover;
     border: 1px solid rgb(220, 220, 220);
     border-radius: 6px;
+    object-fit: cover;
   }
 
   .content {
@@ -16,12 +16,12 @@
 
     .title {
       display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
+      overflow: hidden;
       font-size: 14px;
       color: rgb(3, 3, 3);
       word-break: break-all;
-      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
     }
 
     .font {

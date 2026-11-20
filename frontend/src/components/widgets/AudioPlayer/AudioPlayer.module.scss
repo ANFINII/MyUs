@@ -1,12 +1,12 @@
 .player {
   position: relative;
+  z-index: 40;
   height: 2.5em;
-  text-shadow: 1px 1px 0 rgb(0, 0, 0);
   color: rgb(255, 255, 255);
   border: 1px solid rgb(0, 135, 180);
   border-radius: 5px;
   background: rgb(0, 135, 180);
-  z-index: 40;
+  text-shadow: 1px 1px 0 rgb(0, 0, 0);
 
   > div {
     position: absolute;
@@ -21,13 +21,13 @@
   .playpause {
     top: 0;
     left: 0;
+    z-index: 2;
     width: 2.5em;
     height: 100%;
     text-align: left;
+    border-right: 0 solid rgb(0, 135, 180);
     text-indent: -9999px;
     cursor: pointer;
-    z-index: 2;
-    border-right: 0px solid rgb(0, 135, 180);
     border-right-color: rgba(255, 255, 255, 0.1);
 
     &:hover,
@@ -69,8 +69,8 @@
       top: 0;
       width: 40%;
       height: 100%;
-      content: "";
       background: rgb(255, 255, 255);
+      content: "";
     }
 
     &::before {
@@ -87,10 +87,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2;
     width: 2.5em;
     height: 100%;
     cursor: pointer;
-    z-index: 2;
     user-select: none;
 
     &:hover,
@@ -134,12 +134,12 @@
     top: 50%;
     left: calc(2.5em + 8px);
     right: calc(7.5em + 8px);
+    z-index: 1;
     height: 18px;
     margin-top: -9px;
     border-radius: 10px;
     background: rgb(50, 50, 50);
     cursor: pointer;
-    z-index: 1;
 
     div {
       position: absolute;
@@ -151,15 +151,15 @@
     }
 
     .bar_loaded {
+      z-index: 1;
       background: rgba(255, 255, 255, 0.3);
       border-radius: 10px;
-      z-index: 1;
     }
 
     .bar_played {
+      z-index: 2;
       background: linear-gradient(to right, rgb(50, 150, 255) 50%, rgb(255, 0, 130));
       border-radius: 10px;
-      z-index: 2;
       box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
     }
 
@@ -181,15 +181,15 @@
   .volume {
     top: 0;
     right: 0;
+    z-index: 100;
     width: 2.5em;
     height: 100%;
     text-align: left;
-    text-indent: -9999px;
-    border-left: 0px solid rgb(0, 135, 180);
-    border-left-color: rgba(0, 0, 0, 0.25);
+    border-left: 0 solid rgb(0, 135, 180);
     border-radius: 10px;
+    text-indent: -9999px;
+    border-left-color: rgba(0, 0, 0, 0.25);
     cursor: pointer;
-    z-index: 100;
 
     &:hover,
     &:focus {
@@ -205,24 +205,24 @@
         position: relative;
         top: 40%;
         left: 35%;
+        z-index: 1;
         width: 0.313em;
         height: 0.375em;
         background: rgb(255, 255, 255);
-        z-index: 1;
         filter: drop-shadow(1px 1px 0 rgb(0, 0, 0));
 
         &::before {
           position: absolute;
-          content: "";
           top: 50%;
           right: -0.25em;
+          z-index: 2;
           width: 0;
           height: 0;
           margin-top: -0.5em;
           border: 0.5em solid transparent;
           border-left: none;
+          content: "";
           border-right-color: rgb(255, 255, 255);
-          z-index: 2;
         }
       }
     }
@@ -244,18 +244,18 @@
       height: 6.25em;
       border-radius: 5px;
       background: rgb(0, 135, 180);
-      cursor: default;
       box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.15), 1px -1px 1px rgba(0, 0, 0, 0.15);
+      cursor: default;
 
       > div {
         position: relative;
+        z-index: 1;
         width: 9px;
         height: 80%;
         margin: 30% auto 0;
         background: rgb(50, 50, 50);
         border-radius: 10px;
         cursor: pointer;
-        z-index: 1;
 
         div {
           position: absolute;
@@ -346,7 +346,6 @@
   // 音量波アイコン（ミュートでない時のみ）
   &:not(.muted) .volume_button .icon::after {
     position: absolute;
-    content: "";
     top: 0.063em;
     left: 0.563em;
     width: 0.313em;
@@ -354,6 +353,7 @@
     border: 0.25em double rgb(255, 255, 255);
     border-width: 0.25em 0.25em 0 0;
     border-radius: 0 0.938em 0 0;
+    content: "";
     transform: rotate(45deg);
   }
 }

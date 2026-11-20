@@ -1,11 +1,11 @@
 .sidebar {
   position: fixed;
   top: 56px;
+  z-index: 60;
   width: 72px;
   height: calc(100% - 56px);
   background: rgb(0, 0, 50);
   user-select: none;
-  z-index: 60;
 
   .sidebar_color {
     &:hover {
@@ -26,10 +26,10 @@
 
     li {
       display: flex;
-      text-align: center;
       align-items: center;
       justify-content: center;
       min-height: 88px;
+      text-align: center;
       font-size: 14px;
       color: rgb(125, 125, 125);
     }

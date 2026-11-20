@@ -3,18 +3,18 @@
   grid-column: 1/-1;
   grid-row: 1/2;
   top: 0;
+  z-index: 70;
   width: 100%;
   height: 56px;
   color: rgb(255, 255, 255);
   background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
-  z-index: 70;
 
   &::after {
-    content: '';
     position: absolute;
     bottom: 0;
     height: 2px;
     background: rgb(0, 60, 255);
+    content: '';
   }
 
   &.loading::after {
@@ -26,8 +26,8 @@
     grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em;
     grid-template-rows: 2.5em;
     align-items: center;
-    text-align: center;
     padding: 8px 0;
+    text-align: center;
 
     .nav_1 {
       position: relative;
@@ -42,8 +42,8 @@
       h1 {
         display: flex;
         align-items: center;
-        font-size: 1.8em;
         margin: auto;
+        font-size: 1.8em;
       }
     }
 
@@ -81,7 +81,7 @@
     }
   }
 
-  .color_MyUs {
+  .color_myus {
     &:hover {
       color: rgb(0, 239, 239);
       cursor: pointer;
@@ -143,6 +143,7 @@
   0% {
     width: 0%;
   }
+
   100% {
     width: 100%;
   }
@@ -152,10 +153,10 @@
   position: fixed;
   display: none;
   top: 0;
+  z-index: 90;
   width: 100%;
   height: 100%;
   transition: all 0.2s;
-  z-index: 90;
 
   &.active {
     display: block;
@@ -168,10 +169,10 @@
   display: none;
   top: 0;
   left: 0;
+  z-index: 80;
   width: 100%;
   height: 100%;
   transition: all 0.2s;
-  z-index: 80;
 
   &.active {
     display: block;

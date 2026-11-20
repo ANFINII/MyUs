@@ -1,7 +1,7 @@
 .spinner {
   display: inline-block;
-  border-radius: 50%;
   box-sizing: border-box;
+  border-radius: 50%;
   animation: rotation 0.5s linear infinite;
 
   &.white {

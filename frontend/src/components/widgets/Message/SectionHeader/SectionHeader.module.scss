@@ -4,8 +4,8 @@
   min-height: 55px;
   height: fit-content;
   padding: 5px 0 5px 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   white-space: nowrap;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
   h1 {
     display: inline;
@@ -29,9 +29,9 @@
     }
 
     .content_icon {
+      flex-shrink: 0;
       width: 14px;
       height: 14px;
-      flex-shrink: 0;
     }
   }
 

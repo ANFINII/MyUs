@@ -42,8 +42,8 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr;
-  grid-gap: 3px;
   margin-top: 16px;
+  grid-gap: 3px;
 }
 
 .form_account {
@@ -62,9 +62,9 @@
 }
 
 .channel {
+  flex-shrink: 0;
   width: 200px;
   margin: 10px 0;
-  flex-shrink: 0;
 }
 
 .account {

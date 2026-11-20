@@ -3,9 +3,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(auto, 312px));
   grid-template-rows: auto;
-  grid-gap: 15px;
   justify-content: center;
   margin-top: 16px;
+  grid-gap: 15px;
 }
 
 /* 668pxまでの幅の場合に適応される  */

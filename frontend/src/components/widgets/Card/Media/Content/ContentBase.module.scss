@@ -1,13 +1,13 @@
 .content_base {
   .media_title {
     display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
     height: 42px;
+    overflow: hidden;
     font-size: 14px;
     color: rgb(3, 3, 3);
     word-break: break-all;
-    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .content {
@@ -23,10 +23,10 @@
 
     .nickname {
       display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
       margin: 0;
       overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
     }
 
     .margin {

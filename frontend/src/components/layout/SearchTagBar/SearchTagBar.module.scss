@@ -2,10 +2,10 @@
   position: fixed;
   top: 56px;
   left: 72px;
+  z-index: 50;
   width: calc(100% - 72px);
   height: 26px;
   background: rgb(240, 240, 240);
-  z-index: 50;
 
   .button {
     display: none;
@@ -32,9 +32,9 @@
 
   .tags {
     width: calc(100vw - 170px);
-    line-height: 1.8;
     overflow-x: scroll;
     overflow-y: hidden;
+    line-height: 1.8;
     white-space: nowrap;
     scrollbar-width: none;
 
@@ -96,8 +96,8 @@
 
   .drag_handle {
     display: flex;
-    color: rgb(160, 160, 160);
     align-items: center;
+    color: rgb(160, 160, 160);
     cursor: grab;
 
     &:hover {
@@ -110,10 +110,10 @@
   }
 
   .delete_button {
-    color: rgb(160, 160, 160);
     display: flex;
     align-items: center;
     margin: 0 -2px;
+    color: rgb(160, 160, 160);
     cursor: pointer;
 
     &:hover {
