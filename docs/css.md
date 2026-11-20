@@ -50,6 +50,9 @@
 ```scss
 .element {
   // 1. レイアウト
+  position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,9 +71,27 @@
   border-radius: 5px;
   background: rgb(245, 245, 245);
   // 5. その他
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: all 0.2s;
+  z-index: 80;
   cursor: pointer;
 }
 ```
+
+MyUs でよく使うプロパティは、次の分類に入れる。同じ分類の中も、この表の順に並べる。
+
+| 分類 | プロパティ |
+| --- | --- |
+| 1. レイアウト | `position`・`top`・`right`・`bottom`・`left`・`display`・`flex-direction`・`flex-wrap`・`justify-content`・`align-items`・`align-self`・`gap`・`flex`・`flex-shrink`・`grid-template-columns`・`grid-template-rows`・`grid-column`・`grid-row` |
+| 2. ボックスモデル | `width`・`min-width`・`max-width`・`height`・`min-height`・`max-height`・`padding`・`margin`・`box-sizing`・`object-fit` |
+| 3. テキスト | `font-family`・`font-size`・`font-weight`・`line-height`・`text-align`・`text-decoration`・`text-overflow`・`text-indent`・`white-space`・`word-break`・`overflow-wrap`・`list-style`・`color` |
+| 4. 装飾 | `border`・`border-radius`・`outline`・`box-shadow`・`background` |
+| 5. その他 | `overflow`・`overflow-x`・`overflow-y`・`opacity`・`transform`・`transition`・`animation`・`z-index`・`pointer-events`・`user-select`・`cursor` |
+
+- `padding-top` や `border-bottom` のような一辺だけのものは、もとのプロパティと同じ分類に入れる
+- `cursor` のような操作に関わるものは、どのセレクタでも一番下に書く
+- 表にないプロパティは、近い役目のものと同じ分類に入れる
 
 ## 空行ルール
 
