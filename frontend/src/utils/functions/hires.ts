@@ -5,7 +5,7 @@ const HIRES_BIT_DEPTH = 24
 const HIRES_SAMPLE_RATE_MIN = 48000
 const HIRES_SAMPLE_RATE_MAX = 192000
 const HIRES_PRICE_MIN = 300
-const HIRES_PRICE_MAX = 600
+const HIRES_PRICE_MAX = 5000
 
 export const flacHires = async (file: File): Promise<Hires | null> => {
   const bytes = new Uint8Array(await file.slice(0, FLAC_HEADER_SIZE).arrayBuffer())

@@ -211,7 +211,8 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
   - 売れるのは Standard 以上のプランで、売上を受け取る口座の登録が済んだ人。通貨は投稿者の国から決める
   - 音質は 24bit で、サンプリングレートは 48kHz〜192kHz。アップロードのときに ffprobe で読んで保存し、決まりは `domain/media/audio/validation.py` の `validate_hires` が保存の前に確かめる
   - ハイレゾはオーディオの集約の中に置く（`AudioData.hires: HiresData | None`）。オーディオの Repository が一緒に取り、`bulk_save` でハイレゾの作成・更新・削除まで行う。`hires` を `None` にして保存すると、ハイレゾの行も消える
-  - 値段は 300〜600。ドルは 3.00〜6.00。値段は `Product` に持つ
+  - 値段は 300〜5,000。ドルは 3.00〜50.00。値段は `Product` に持つ
+  - 長さが1時間以上のハイレゾを売れるのは Premium 以上のプランで、`Plan.is_long_hires` で決める。アップロードのときに ffprobe で長さを読み、`HIRES_LONG_SECONDS` 以上でプランが足りなければ `error.hiresLongPlanRequired` にする。長さは保存しないので、プランを下げても、上げてあるハイレゾはそのまま売れる
   - 購入した人がいるときは、販売をやめることも、曲を削除することもできない（`error.saleStopPurchased`・`error.deletePurchased`）
   - ファイルは変換せずに、公開しない置き場（`STORAGES["private"]`）に置く。開発は `myus/private`、本番は別の S3 のバケット
   - 詳細（`GET /media/audio/{ulid}`）は、`hires`（サンプリングレート・ビット深度。売っていなければ null）・`product`（`ulid`・`price`）・`is_purchased` を返す。ファイルの場所は返さない
@@ -244,6 +245,7 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - ページ順序制御
 - 作成・編集画面のページのエディタ（`widgets/ComicPageEditor`）で、ページを足す・外す・並べ替える。編集では `PUT /manage/media/comic/{ulid}` に、残すページの URL と新しいページの目印（空の文字）を並べた `pages` と、新しいページのファイル `new_pages` を送る。外したページの行は消し、残すページの行は消さずに並びだけ変える。行を作り直すと、django_cleanup が残すページのファイルまで消すため
 - 販売するときは、投稿者が決めたページ数までを試し読みにし、その先は購入した人と投稿者だけに URL を返す
+  - 値段は 300〜5,000。ドルは 3.00〜50.00。範囲の外は `error.comicPriceRange`
 
 #### Picture（画像）
 - 画像ファイル

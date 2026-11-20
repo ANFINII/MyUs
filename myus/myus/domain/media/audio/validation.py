@@ -6,6 +6,7 @@ from ..common import MEDIA_TITLE_MAX
 HIRES_BIT_DEPTH = 24
 HIRES_SAMPLE_RATE_MIN = 48000
 HIRES_SAMPLE_RATE_MAX = 192000
+HIRES_LONG_SECONDS = 3600
 
 
 def validate(obj: AudioData) -> Result[None, ValidationError]:
