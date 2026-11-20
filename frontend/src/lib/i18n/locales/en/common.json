@@ -858,7 +858,7 @@
         "p1": "Stripe: payments and sending earnings to posters",
         "p2": "Amazon Web Services: storing and delivering data, and sending emails",
         "p3": "Google Analytics: for user pages where the poster has registered a measurement ID, viewing records are sent to that poster's Google Analytics",
-        "p4": "These companies are outside Japan, and personal information may be handled abroad, such as in the United States.",
+        "p4": "These companies are based in the United States, and personal information may be handled outside Japan.",
         "p5": "Cookies are used to keep you logged in and to measure views with Google Analytics."
       },
       "security": {
