@@ -49,6 +49,10 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         log.warning("unknown plan", plan=plan_name)
         return Result.err(NotFoundError("error.planNotFound"))
 
+    if plan.name == PlanName.ULTIMATE:
+        log.warning("ultimate plan requested", user_id=user_id)
+        return Result.err(ValidationError("error.planNotAvailable"))
+
     subscription_repo = injector.get(SubscriptionInterface)
     subscription_ids_ret = subscription_repo.get_ids(SubscriptionFilterOption(customer_user_id=user_id), SubscriptionSortOption(), SubscriptionPageOption())
     if subscription_ids_ret.is_err:
@@ -332,6 +336,10 @@ def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputE
 
     if plan.name == PlanName.FREE:
         return Result.err(ValidationError("error.planChangeToFree"))
+
+    if plan.name == PlanName.ULTIMATE:
+        log.warning("ultimate plan requested", user_id=user_id)
+        return Result.err(ValidationError("error.planNotAvailable"))
 
     subscription_ret = get_active_subscription_data(user_id)
     if subscription_ret.is_err:
