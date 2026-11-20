@@ -3,6 +3,7 @@ import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { AdvertiseSearchParams } from 'types/internal/advertise'
 import { SearchParams } from 'types/internal/media/output'
+import { getGlobalAdvertises } from 'api/internal/advertise'
 import { getPasswordResetVerify, getSignupVerify } from 'api/internal/auth'
 import { getCategories } from 'api/internal/category'
 import { getChannels, getSubscribeChannels } from 'api/internal/channel'
@@ -67,6 +68,7 @@ export const userPagePlaylistsQuery = (ulid: string) =>
   queryOptions({ queryKey: queryKeys.userPagePlaylists(ulid), queryFn: () => toQuery(getUserPlaylists(ulid)), refetchOnMount: false })
 export const userPageAdvertisesQuery = (ulid: string, params: SearchParams) =>
   queryOptions({ queryKey: queryKeys.userPageAdvertise(ulid, params), queryFn: () => toQuery(getUserPageAdvertises(ulid, params)), refetchOnMount: false })
+export const globalAdvertisesQuery = () => queryOptions({ queryKey: queryKeys.globalAdvertises, queryFn: () => toQuery(getGlobalAdvertises()), refetchOnMount: false })
 
 export const followsQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.follows(params), queryFn: () => toQuery(getFollow(params)), refetchOnMount: false })
 export const followersQuery = (params: SearchParams) => queryOptions({ queryKey: queryKeys.followers(params), queryFn: () => toQuery(getFollower(params)), refetchOnMount: false })

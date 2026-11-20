@@ -12,6 +12,7 @@ import {
   comicsQuery,
   followersQuery,
   followsQuery,
+  globalAdvertisesQuery,
   homeQuery,
   manageAdvertiseQuery,
   manageAdvertisesQuery,
@@ -97,7 +98,8 @@ export const chatsLoader = ({ queryClient, search }: PageLoad<object>) => queryC
 
 export const videoLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
   postMediaRead({ ulid: params.ulid, mediaType: MediaType.Video })
-  return queryClient.query(videoQuery(params.ulid))
+  const advertises = queryClient.query(globalAdvertisesQuery()).catch(noop)
+  return Promise.all([queryClient.query(videoQuery(params.ulid)), advertises])
 }
 
 export const musicLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {

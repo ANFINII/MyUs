@@ -754,7 +754,12 @@
   "advertise": {
     "title": "Ads",
     "channel": "Channel ads",
-    "global": "MyUs ads"
+    "global": "MyUs ads",
+    "badge": "Ad",
+    "skipIn": "You can skip in {{count}}s",
+    "skip": "Skip ad",
+    "mute": "Mute",
+    "unmute": "Unmute"
   },
   "menu": {
     "userpolicy": {
