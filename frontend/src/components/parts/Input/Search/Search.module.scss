@@ -99,6 +99,10 @@
 
 /* 668pxまでの幅の場合に適応される  */
 @media screen and (max-width: 668px) {
+  .searchbar:not(.full) {
+    background: none;
+  }
+
   .input {
     width: 0;
   }
