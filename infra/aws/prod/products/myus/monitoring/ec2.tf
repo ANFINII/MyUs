@@ -36,6 +36,25 @@ resource "aws_cloudwatch_metric_alarm" "ec2_cpu_credit" {
   }
 }
 
+resource "aws_cloudwatch_metric_alarm" "ec2_memory" {
+  alarm_name          = "${local.name}-ec2-memory"
+  alarm_description   = "EC2 のメモリの使用率が高い。足りなくなると OS ごと固まる"
+  namespace           = "CWAgent"
+  metric_name         = "mem_used_percent"
+  statistic           = "Maximum"
+  period              = 60
+  evaluation_periods  = 3
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 90
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.alarm.arn]
+  ok_actions          = [aws_sns_topic.alarm.arn]
+
+  dimensions = {
+    InstanceId = local.api.instance_id
+  }
+}
+
 resource "aws_cloudwatch_metric_alarm" "ec2_disk" {
   alarm_name          = "${local.name}-ec2-disk"
   alarm_description   = "EC2 のルートボリュームの使用率が高い。値が届かないときも鳴らす（CloudWatch Agent が止まっているかもしれない）"

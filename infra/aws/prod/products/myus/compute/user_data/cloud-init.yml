@@ -3,6 +3,10 @@ package_update: true
 packages:
   - docker
   - amazon-cloudwatch-agent
+swap:
+  filename: /swapfile
+  size: 2G
+  maxsize: 2G
 write_files:
   - path: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
     content: |
@@ -11,6 +15,10 @@ write_files:
         "metrics": {
           "append_dimensions": { "InstanceId": "$${aws:InstanceId}" },
           "metrics_collected": {
+            "mem": {
+              "measurement": ["used_percent"],
+              "metrics_collection_interval": 60
+            },
             "disk": {
               "resources": ["/"],
               "measurement": ["used_percent"],

@@ -15,22 +15,26 @@ x-app: &app
 services:
   backend:
     <<: *app
+    mem_limit: 768m
     ports:
       - "80:8000"
     command: daphne -b 0.0.0.0 -p 8000 config.asgi:application
 
   worker:
     <<: *app
+    mem_limit: 256m
     command: python manage.py process_payment_events
 
   encoder:
     <<: *app
     cpus: "1.0"
+    mem_limit: 640m
     command: python manage.py encode_videos
 
   redis:
     image: redis:7-alpine
     restart: always
+    mem_limit: 128m
     env_file:
       - django.env
     command: sh -c 'redis-server --requirepass "$$REDIS_PASSWORD"'
