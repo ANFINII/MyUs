@@ -1,29 +1,18 @@
 # Third-Party Licenses
 
-このファイルは、MyUsプロジェクトで使用しているサードパーティのコード・スニペットのライセンス情報をまとめたものです。
+このファイルは、MyUs のコードに取り込んだ他人のコードのライセンスをまとめたものです。
+npm と PyPI から入れるパッケージのライセンスは、それぞれのパッケージに含まれています。
+
+MyUs のコードの著作権は運営者にあり、ライセンスは付与していません。
 
 
 ## Apache License 2.0
 
-### MyUs Project
-Copyright 2020 MyUs Co.,Ltd
+### Video.js
+Copyright 2010-present Video.js contributors
+https://github.com/videojs/video.js
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-
-### video.js - Gary Katsevman
-Copyright Gary Katsevman, Inc.
-https://github.com/gkatsev
+`frontend/src/components/widgets/Video/videojs.tsx` は、Video.js の React の使い方の例をもとにしています。
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
