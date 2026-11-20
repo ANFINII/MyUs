@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import Main from 'components/layout/Main'
 import SideTable from 'components/widgets/Table/Side'
 
-const items = ['myus', 'video', 'audio', 'blog', 'comic', 'picture', 'chat', 'mypage', 'follow', 'searchTag', 'manage'] as const
+const items = ['myus', 'video', 'audio', 'blog', 'comic', 'picture', 'chat', 'playlist', 'mypage', 'follow', 'searchTag', 'manage'] as const
 
 export default function Knowledge(): React.JSX.Element {
   const { t } = useTranslation()
