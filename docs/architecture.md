@@ -2,6 +2,8 @@
 
 [README](../readme.md)
 
+本番の AWS の構成は [infrastructure.md](infrastructure.md) と、図にした [aws-architecture.html](aws-architecture.html) にある。
+
 ## 技術スタック
 
 | 領域 | 技術 |
