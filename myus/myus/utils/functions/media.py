@@ -10,10 +10,10 @@ from ninja import UploadedFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import TemporaryUploadedFile
 from .convert.audio_converter import is_conversion, is_low_bit_rate, probe_audio, save_converted_mp3
-from .file import advertise_image_path, advertise_video_path, avatar_path, comic_path, file_extension, hires_path, image_path, musics_path, private_storage, video_path
+from .file import advertise_image_path, advertise_video_path, audios_path, avatar_path, comic_path, file_extension, hires_path, image_path, private_storage, video_path
 from ..common.logger import log
 from ..common.result import Result, ValidationError
-from ..constants.upload import HIRES_EXTENSIONS, HIRES_FORMATS, HIRES_MAX_SIZE, IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, MUSIC_EXTENSIONS, MUSIC_FORMATS, MUSIC_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
+from ..constants.upload import HIRES_EXTENSIONS, HIRES_FORMATS, HIRES_MAX_SIZE, IMAGE_EXTENSIONS, IMAGE_FORMATS, IMAGE_MAX_SIZE, AUDIO_EXTENSIONS, AUDIO_FORMATS, AUDIO_MAX_SIZE, VIDEO_EXTENSIONS, VIDEO_FORMATS, VIDEO_MAX_SIZE, UploadRuleData
 from ..enum.upload import ImageUpload, MediaUpload
 
 
@@ -30,8 +30,8 @@ def upload_rule(upload_type: UploadType) -> UploadRuleData:
             return UploadRuleData(extensions=IMAGE_EXTENSIONS, content_type_prefix="image/", max_size=IMAGE_MAX_SIZE)
         case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
             return UploadRuleData(extensions=VIDEO_EXTENSIONS, content_type_prefix="video/", max_size=VIDEO_MAX_SIZE)
-        case MediaUpload.MUSIC:
-            return UploadRuleData(extensions=MUSIC_EXTENSIONS, content_type_prefix="audio/", max_size=MUSIC_MAX_SIZE)
+        case MediaUpload.AUDIO:
+            return UploadRuleData(extensions=AUDIO_EXTENSIONS, content_type_prefix="audio/", max_size=AUDIO_MAX_SIZE)
         case MediaUpload.HIRES:
             return UploadRuleData(extensions=HIRES_EXTENSIONS, content_type_prefix="audio/", max_size=HIRES_MAX_SIZE)
         case _:
@@ -62,11 +62,11 @@ def validate_uploads(files: list[tuple[UploadedFile | None, UploadType]]) -> Res
             log.warning("unsupported format", upload_type=upload_type.value, extension=extension, content_type=content_type)
             return Result.err(ValidationError("error.fileTypeInvalid"))
 
-        if upload_type == MediaUpload.MUSIC:
+        if upload_type == MediaUpload.AUDIO:
             audio = probe_upload(file, probe_audio)
             if is_low_bit_rate(audio):
                 log.warning("low bit rate", codec=audio.codec, bit_rate=audio.bit_rate)
-                return Result.err(ValidationError("error.musicBitRateLow"))
+                return Result.err(ValidationError("error.audioBitRateLow"))
 
     return Result.ok(None)
 
@@ -87,8 +87,8 @@ def media_formats(upload_type: MediaUpload) -> set[str]:
     match upload_type:
         case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
             return VIDEO_FORMATS
-        case MediaUpload.MUSIC:
-            return MUSIC_FORMATS
+        case MediaUpload.AUDIO:
+            return AUDIO_FORMATS
         case MediaUpload.HIRES:
             return HIRES_FORMATS
         case _:
@@ -144,8 +144,8 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
             path = video_path(upload_type, ulid, extension)
         case MediaUpload.ADVERTISE:
             path = advertise_video_path(ulid, extension)
-        case MediaUpload.MUSIC:
-            path = musics_path(ulid)
+        case MediaUpload.AUDIO:
+            path = audios_path(ulid)
             if is_conversion(filename):
                 return save_converted_mp3(file, path)
         case MediaUpload.HIRES:
@@ -159,7 +159,7 @@ def image_upload_path(upload_type: ImageUpload, ulid: str, extension: str) -> st
     match upload_type:
         case ImageUpload.USER | ImageUpload.CHANNEL:
             return avatar_path(upload_type, ulid, extension)
-        case ImageUpload.VIDEO | ImageUpload.MUSIC | ImageUpload.BLOG | ImageUpload.COMIC | ImageUpload.PICTURE:
+        case ImageUpload.VIDEO | ImageUpload.AUDIO | ImageUpload.BLOG | ImageUpload.COMIC | ImageUpload.PICTURE:
             return image_path(upload_type, ulid, extension)
         case ImageUpload.COMIC_PAGE:
             return comic_path(ulid, extension)

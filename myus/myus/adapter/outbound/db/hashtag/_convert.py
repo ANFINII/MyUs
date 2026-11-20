@@ -1,7 +1,7 @@
 from typing import assert_never
 from django_ulid.models import ulid
 from django.db.models import Model
-from myus.db.models.hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
+from myus.db.models.hashtag import HashTag, VideoHashtag, AudioHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
 from myus.domain.hashtag.data import HashtagData
 from myus.utils.enum.media import MediaType
 
@@ -31,8 +31,8 @@ def get_through_model(media_type: MediaType) -> tuple[type[Model], str]:
     match media_type:
         case MediaType.VIDEO:
             return (VideoHashtag, "video_id")
-        case MediaType.MUSIC:
-            return (MusicHashtag, "music_id")
+        case MediaType.AUDIO:
+            return (AudioHashtag, "audio_id")
         case MediaType.BLOG:
             return (BlogHashtag, "blog_id")
         case MediaType.COMIC:

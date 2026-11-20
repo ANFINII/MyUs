@@ -4,10 +4,10 @@ from django.db import models
 from django.utils import timezone
 from myus.utils.constants.choice import ENCODE_STATUS_CHOICES
 from myus.utils.enum.media import EncodeStatus
-from myus.utils.functions.file import comic_upload, hires_upload, image_upload, music_upload, private_storage, video_upload
+from myus.utils.functions.file import audio_upload, comic_upload, hires_upload, image_upload, private_storage, video_upload
 from .base import MediaModel
 from .channel import Channel
-from .hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
+from .hashtag import HashTag, VideoHashtag, AudioHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
 from .master import Category
 from .user import User
 
@@ -43,21 +43,21 @@ class Video(models.Model, MediaModel):
 
 
 
-# Music
-class Music(models.Model, MediaModel):
-    """Music"""
+# Audio
+class Audio(models.Model, MediaModel):
+    """Audio"""
     id         = models.BigAutoField(primary_key=True)
     ulid       = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
+    channel    = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="audios")
     title      = models.CharField(max_length=100)
     content    = models.TextField()
     lyric      = models.TextField()
     image      = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    music      = models.FileField(upload_to=music_upload, max_length=255, blank=True)
+    audio      = models.FileField(upload_to=audio_upload, max_length=255, blank=True)
     gain       = models.FloatField(default=0)
     category   = models.ManyToManyField(Category, blank=True)
-    hashtag    = models.ManyToManyField(HashTag, through=MusicHashtag, blank=True)
-    like       = models.ManyToManyField(User, related_name="music_like", blank=True)
+    hashtag    = models.ManyToManyField(HashTag, through=AudioHashtag, blank=True)
+    like       = models.ManyToManyField(User, related_name="audio_like", blank=True)
     read       = models.IntegerField(default=0)
     publish    = models.BooleanField(default=True)
     publish_at = models.DateTimeField(default=timezone.now)
@@ -65,28 +65,28 @@ class Music(models.Model, MediaModel):
     updated    = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = "music"
-        verbose_name_plural = "02 Music"
+        db_table = "audio"
+        verbose_name_plural = "02 Audio"
         indexes = [
-            models.Index(fields=["channel", "publish"], name="music_channel_publish_idx"),
-            models.Index(fields=["publish", "-created"], name="music_publish_created_idx"),
+            models.Index(fields=["channel", "publish"], name="audio_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="audio_publish_created_idx"),
         ]
 
 
-class MusicHires(models.Model):
-    """MusicHires"""
+class Hires(models.Model):
+    """Hires"""
     id          = models.BigAutoField(primary_key=True)
-    music       = models.OneToOneField(Music, on_delete=models.CASCADE, related_name="hires")
+    audio       = models.OneToOneField(Audio, on_delete=models.CASCADE, related_name="hires")
     file        = models.FileField(upload_to=hires_upload, storage=private_storage, max_length=255)
     sample_rate = models.IntegerField()
     bit_depth   = models.IntegerField()
 
     def __str__(self):
-        return str(self.music_id)
+        return str(self.audio_id)
 
     class Meta:
-        db_table = "music_hires"
-        verbose_name_plural = "02 MusicHires"
+        db_table = "hires"
+        verbose_name_plural = "02 Hires"
 
 
 # Blog

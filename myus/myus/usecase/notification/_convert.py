@@ -137,7 +137,7 @@ def delete_notification_data(object_type: NotificationObjectType, object_ids: li
 def get_enabled_types(setting: UserNotificationData) -> tuple[NotificationTypeNo, ...]:
     enabled = {
         NotificationTypeNo.VIDEO: setting.is_video,
-        NotificationTypeNo.MUSIC: setting.is_music,
+        NotificationTypeNo.AUDIO: setting.is_audio,
         NotificationTypeNo.BLOG: setting.is_blog,
         NotificationTypeNo.COMIC: setting.is_comic,
         NotificationTypeNo.PICTURE: setting.is_picture,

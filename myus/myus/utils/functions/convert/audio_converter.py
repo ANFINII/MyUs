@@ -72,7 +72,7 @@ def is_low_bit_rate(audio: AudioInfo) -> bool:
 
 
 def convert_mp3(input_path: str, output_path: str, bitrate: str = MP3_BITRATE) -> None:
-    """ffmpegで音楽ファイルをMP3に変換する"""
+    """ffmpegでオーディオファイルをMP3に変換する"""
 
     ffmpeg_path = shutil.which("ffmpeg") or "ffmpeg"
     cmd = [
@@ -96,7 +96,7 @@ def convert_mp3(input_path: str, output_path: str, bitrate: str = MP3_BITRATE) -
 
 
 def save_converted_mp3(file: UploadedFile, path: str) -> str:
-    """音楽ファイルをMP3に変換して保存する"""
+    """オーディオファイルをMP3に変換して保存する"""
 
     suffix = os.path.splitext(file.name or "upload")[1]
     with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp_in:
@@ -141,22 +141,22 @@ def measure_loudness(input_path: str) -> float:
     return loudness if math.isfinite(loudness) else TARGET_LOUDNESS
 
 
-def music_gain(loudness: float) -> float:
+def audio_gain(loudness: float) -> float:
     """目標より大きい曲だけ、再生時に下げるdBを返す"""
 
     return round(max(MIN_GAIN, min(0.0, TARGET_LOUDNESS - loudness)), 1)
 
 
-def measure_music_gain(music_path: str) -> float:
+def measure_audio_gain(audio_path: str) -> float:
     """保存済みの曲を一時ファイルに写して測り、再生時に下げるdBを返す"""
 
-    suffix = os.path.splitext(music_path)[1]
+    suffix = os.path.splitext(audio_path)[1]
     try:
         with tempfile.NamedTemporaryFile(suffix=suffix) as tmp:
-            with default_storage.open(music_path, "rb") as src:
+            with default_storage.open(audio_path, "rb") as src:
                 shutil.copyfileobj(src, tmp)
             tmp.flush()
-            return music_gain(measure_loudness(tmp.name))
+            return audio_gain(measure_loudness(tmp.name))
     except OSError as e:
-        log.warning("read failed", exc=e, music_path=music_path)
+        log.warning("read failed", exc=e, audio_path=audio_path)
         return 0.0

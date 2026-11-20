@@ -1,8 +1,8 @@
 from dataclasses import replace
 from django.utils import timezone
+from myus.domain.media.audio.data import AudioData
+from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
-from myus.domain.media.music.data import MusicData
-from myus.domain.media.music.interface import MusicInterface
 from myus.domain.payment.plan import get_plan
 from myus.domain.playlist.data import PlaylistData
 from myus.domain.playlist.interface import FilterOption, PageOption, PlaylistInterface, SortOption
@@ -14,19 +14,19 @@ from ..dto.playlist import PlaylistDTO
 from ..user.core import get_user_data
 
 
-def is_visible_music(music: MusicData, user_id: int | None) -> bool:
-    is_public = music.publish and music.publish_at <= timezone.now()
-    return is_public or music.channel.owner_id == user_id
+def is_visible_audio(audio: AudioData, user_id: int | None) -> bool:
+    is_public = audio.publish and audio.publish_at <= timezone.now()
+    return is_public or audio.channel.owner_id == user_id
 
 
-def music_image(music: MusicData) -> str:
-    return music.image or music.channel.avatar
+def audio_image(audio: AudioData) -> str:
+    return audio.image or audio.channel.avatar
 
 
-def playlist_image(musics: list[MusicData], image: str) -> str:
+def playlist_image(audios: list[AudioData], image: str) -> str:
     if image:
         return create_url(image)
-    return create_url(music_image(musics[0])) if len(musics) > 0 else ""
+    return create_url(audio_image(audios[0])) if len(audios) > 0 else ""
 
 
 @Result.shield_exception()
@@ -91,77 +91,77 @@ def get_playlists_data(filter: FilterOption, user_id: int | None) -> Result[list
         return Result.err(playlists_ret.err_value)
 
     playlists = playlists_ret.ok_value
-    music_repo = injector.get(MusicInterface)
-    musics_ret = music_repo.bulk_get(list({music_id for p in playlists for music_id in p.music_ids}))
-    if musics_ret.is_err:
-        return Result.err(musics_ret.err_value)
+    audio_repo = injector.get(AudioInterface)
+    audios_ret = audio_repo.bulk_get(list({audio_id for p in playlists for audio_id in p.audio_ids}))
+    if audios_ret.is_err:
+        return Result.err(audios_ret.err_value)
 
-    all_musics = musics_ret.ok_value
-    music_map = {m.id: m for m in all_musics if is_visible_music(m, user_id)}
+    all_audios = audios_ret.ok_value
+    audio_map = {m.id: m for m in all_audios if is_visible_audio(m, user_id)}
     data: list[PlaylistDTO] = []
     for p in playlists:
-        musics = [music_map[music_id] for music_id in p.music_ids if music_id in music_map]
-        image = playlist_image(musics, p.image)
-        data.append(PlaylistDTO(ulid=p.ulid, title=p.title, image=image, publish=p.publish, count=len(musics), music_ulids=[m.ulid for m in musics], updated=p.updated))
+        audios = [audio_map[audio_id] for audio_id in p.audio_ids if audio_id in audio_map]
+        image = playlist_image(audios, p.image)
+        data.append(PlaylistDTO(ulid=p.ulid, title=p.title, image=image, publish=p.publish, count=len(audios), audio_ulids=[m.ulid for m in audios], updated=p.updated))
 
     return Result.ok(data)
 
 
 @Result.shield_exception()
-def get_music_data(music_ulid: str, user_id: int) -> Result[MusicData | None, FatalError]:
-    repo = injector.get(MusicInterface)
-    ids_ret = repo.get_ids(MediaFilterOption(ulid=music_ulid), MediaSortOption(), MediaPageOption(limit=1))
+def get_audio_data(audio_ulid: str, user_id: int) -> Result[AudioData | None, FatalError]:
+    repo = injector.get(AudioInterface)
+    ids_ret = repo.get_ids(MediaFilterOption(ulid=audio_ulid), MediaSortOption(), MediaPageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    musics_ret = repo.bulk_get(ids)
-    if musics_ret.is_err:
-        return Result.err(musics_ret.err_value)
+    audios_ret = repo.bulk_get(ids)
+    if audios_ret.is_err:
+        return Result.err(audios_ret.err_value)
 
-    all_musics = musics_ret.ok_value
-    musics = [m for m in all_musics if is_visible_music(m, user_id)]
-    return Result.ok(musics[0] if len(musics) > 0 else None)
+    all_audios = audios_ret.ok_value
+    audios = [m for m in all_audios if is_visible_audio(m, user_id)]
+    return Result.ok(audios[0] if len(audios) > 0 else None)
 
 
 @Result.shield_exception()
-def get_music_ids_data(music_ulids: list[str], user_id: int) -> Result[list[int], FatalError]:
-    if len(music_ulids) == 0:
+def get_audio_ids_data(audio_ulids: list[str], user_id: int) -> Result[list[int], FatalError]:
+    if len(audio_ulids) == 0:
         return Result.ok([])
 
-    repo = injector.get(MusicInterface)
-    ids_ret = repo.get_ids(MediaFilterOption(ulids=music_ulids), MediaSortOption(), MediaPageOption(limit=0))
+    repo = injector.get(AudioInterface)
+    ids_ret = repo.get_ids(MediaFilterOption(ulids=audio_ulids), MediaSortOption(), MediaPageOption(limit=0))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
     ids = ids_ret.ok_value
-    musics_ret = repo.bulk_get(ids)
-    if musics_ret.is_err:
-        return Result.err(musics_ret.err_value)
+    audios_ret = repo.bulk_get(ids)
+    if audios_ret.is_err:
+        return Result.err(audios_ret.err_value)
 
-    all_musics = musics_ret.ok_value
-    ulid_map = {m.ulid: m.id for m in all_musics if is_visible_music(m, user_id)}
-    return Result.ok(list(dict.fromkeys(ulid_map[u] for u in music_ulids if u in ulid_map)))
+    all_audios = audios_ret.ok_value
+    ulid_map = {m.ulid: m.id for m in all_audios if is_visible_audio(m, user_id)}
+    return Result.ok(list(dict.fromkeys(ulid_map[u] for u in audio_ulids if u in ulid_map)))
 
 
 @Result.shield_exception()
-def get_hidden_music_ids_data(music_ids: list[int], user_id: int) -> Result[set[int], FatalError]:
-    repo = injector.get(MusicInterface)
-    musics_ret = repo.bulk_get(music_ids)
-    if musics_ret.is_err:
-        return Result.err(musics_ret.err_value)
+def get_hidden_audio_ids_data(audio_ids: list[int], user_id: int) -> Result[set[int], FatalError]:
+    repo = injector.get(AudioInterface)
+    audios_ret = repo.bulk_get(audio_ids)
+    if audios_ret.is_err:
+        return Result.err(audios_ret.err_value)
 
-    musics = musics_ret.ok_value
-    return Result.ok({m.id for m in musics if not is_visible_music(m, user_id)})
+    audios = audios_ret.ok_value
+    return Result.ok({m.id for m in audios if not is_visible_audio(m, user_id)})
 
 
-def keep_hidden_music_ids(old_ids: list[int], new_ids: list[int], hidden_ids: set[int]) -> list[int]:
+def keep_hidden_audio_ids(old_ids: list[int], new_ids: list[int], hidden_ids: set[int]) -> list[int]:
     ret = list(new_ids)
-    for i, music_id in enumerate(old_ids):
-        if music_id in hidden_ids:
-            ret.insert(min(i, len(ret)), music_id)
+    for i, audio_id in enumerate(old_ids):
+        if audio_id in hidden_ids:
+            ret.insert(min(i, len(ret)), audio_id)
     return ret
 
 
-def music_urls(musics: list[MusicData]) -> list[MusicData]:
-    return [replace(m, image=create_url(m.image), music=create_url(m.music)) for m in musics]
+def audio_urls(audios: list[AudioData]) -> list[AudioData]:
+    return [replace(m, image=create_url(m.image), audio=create_url(m.audio)) for m in audios]

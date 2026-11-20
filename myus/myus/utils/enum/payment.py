@@ -12,7 +12,7 @@ class PaymentType(str, Enum):
 
 class ProductType(str, Enum):
     BLOG = "Blog"
-    MUSIC_HIRES = "MusicHires"
+    HIRES = "Hires"
     COMIC = "Comic"
 
 

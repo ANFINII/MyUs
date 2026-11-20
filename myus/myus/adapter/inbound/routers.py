@@ -5,8 +5,8 @@ from .category import CategoryAPI
 from .channel import ChannelAPI
 from .comment import CommentAPI
 from .hashtag import MediaHashtagAPI
-from .manage import ManageVideoAPI, ManageMusicAPI, ManageBlogAPI, ManageComicAPI, ManagePictureAPI, ManageChatAPI, ManageAdvertiseAPI
-from .media import HomeAPI, VideoAPI, MusicAPI, BlogAPI, ComicAPI, PictureAPI, ChatAPI, MediaReadAPI
+from .manage import ManageVideoAPI, ManageAudioAPI, ManageBlogAPI, ManageComicAPI, ManagePictureAPI, ManageChatAPI, ManageAdvertiseAPI
+from .media import HomeAPI, VideoAPI, AudioAPI, BlogAPI, ComicAPI, PictureAPI, ChatAPI, MediaReadAPI
 from .message import MessageAPI
 from .payment import PaymentAPI
 from .playlist import PlaylistAPI
@@ -26,7 +26,7 @@ api.add_router("/setting/notification", SettingNotificationAPI().router, tags=["
 api.add_router("/payment", PaymentAPI().router, tags=["Payment"])
 
 api.add_router("/manage/media/video", ManageVideoAPI().router, tags=["Manage Video"])
-api.add_router("/manage/media/music", ManageMusicAPI().router, tags=["Manage Music"])
+api.add_router("/manage/media/audio", ManageAudioAPI().router, tags=["Manage Audio"])
 api.add_router("/manage/media/blog", ManageBlogAPI().router, tags=["Manage Blog"])
 api.add_router("/manage/media/comic", ManageComicAPI().router, tags=["Manage Comic"])
 api.add_router("/manage/media/picture", ManagePictureAPI().router, tags=["Manage Picture"])
@@ -37,7 +37,7 @@ api.add_router("/manage/advertise", ManageAdvertiseAPI().router, tags=["Manage A
 api.add_router("/channel", ChannelAPI().router, tags=["Channel"])
 api.add_router("/media/home", HomeAPI().router, tags=["Media Home"])
 api.add_router("/media/video", VideoAPI().router, tags=["Media Video"])
-api.add_router("/media/music", MusicAPI().router, tags=["Media Music"])
+api.add_router("/media/audio", AudioAPI().router, tags=["Media Audio"])
 api.add_router("/media/blog", BlogAPI().router, tags=["Media Blog"])
 api.add_router("/media/comic", ComicAPI().router, tags=["Media Comic"])
 api.add_router("/media/picture", PictureAPI().router, tags=["Media Picture"])

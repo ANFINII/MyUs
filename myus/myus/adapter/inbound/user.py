@@ -13,7 +13,7 @@ from myus.utils.common.result import FatalError, NotFoundError, ValidationError
 from myus.utils.functions.common import create_url
 from .advertise import convert_advertises
 from .auth import auth_check
-from .media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
+from .media import convert_videos, convert_audios, convert_blogs, convert_comics, convert_pictures, convert_chats
 from .schema.advertise import AdvertiseListOut
 from .schema.channel import ChannelOut
 from .schema.common import ErrorOut, ErrorType, SuccessOut
@@ -448,7 +448,7 @@ class UserAPI:
         media = media_ret.ok_value
         data = UserPageMediaOut(
             videos=convert_videos(media.videos),
-            musics=convert_musics(media.musics),
+            audios=convert_audios(media.audios),
             blogs=convert_blogs(media.blogs),
             comics=convert_comics(media.comics),
             pictures=convert_pictures(media.pictures),

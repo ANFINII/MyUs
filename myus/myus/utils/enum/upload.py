@@ -6,7 +6,7 @@ class ImageUpload(str, Enum):
     MYPAGE = "mypage"
     CHANNEL = "channel"
     VIDEO = "video"
-    MUSIC = "music"
+    AUDIO = "audio"
     BLOG = "blog"
     COMIC = "comic"
     COMIC_PAGE = "comic_page"
@@ -16,6 +16,6 @@ class ImageUpload(str, Enum):
 
 class MediaUpload(str, Enum):
     VIDEO = "video"
-    MUSIC = "music"
+    AUDIO = "audio"
     HIRES = "hires"
     ADVERTISE = "advertise"

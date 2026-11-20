@@ -3,7 +3,7 @@ from django.db.models import Exists, OuterRef, Q
 from django.db.models.functions import Now
 from django.db.models.query import QuerySet
 from myus.db.models.comment import Comment
-from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
+from myus.db.models.media import Video, Audio, Blog, Comic, Picture, Chat
 from myus.db.models.message import Message
 from myus.db.models.notification import Notification
 from myus.db.models.users import Follow
@@ -93,8 +93,8 @@ class NotificationRepository(NotificationInterface):
             match object_type:
                 case NotificationObjectType.VIDEO:
                     content_map.update({f"{object_type.value}:{o.id}": o for o in Video.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
-                case NotificationObjectType.MUSIC:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Music.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
+                case NotificationObjectType.AUDIO:
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Audio.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
                 case NotificationObjectType.BLOG:
                     content_map.update({f"{object_type.value}:{o.id}": o for o in Blog.objects.filter(id__in=obj_ids, publish=True, publish_at__lte=Now())})
                 case NotificationObjectType.COMIC:

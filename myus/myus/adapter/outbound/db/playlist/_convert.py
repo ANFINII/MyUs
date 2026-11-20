@@ -12,7 +12,7 @@ def convert_data(obj: Playlist) -> PlaylistData:
         description=obj.description,
         image=str(obj.image),
         publish=obj.publish,
-        music_ids=[pm.music_id for pm in obj.playlist_musics.all()],
+        audio_ids=[pm.audio_id for pm in obj.playlist_audios.all()],
         created=obj.created,
         updated=obj.updated,
     )

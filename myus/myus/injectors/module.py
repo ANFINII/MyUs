@@ -8,11 +8,11 @@ from myus.adapter.outbound.db.es.projection.repository import ProjectionProgress
 from myus.adapter.outbound.db.es.repository import EventStoreRepository
 from myus.adapter.outbound.db.follow.repository import FollowRepository
 from myus.adapter.outbound.db.hashtag.repository import HashtagRepository
+from myus.adapter.outbound.db.media.audio.repository import AudioRepository
 from myus.adapter.outbound.db.media.blog.repository import BlogRepository
 from myus.adapter.outbound.db.media.chat.repository import ChatRepository
 from myus.adapter.outbound.db.media.comic.repository import ComicRepository
-from myus.adapter.outbound.db.media.hires.repository import MusicHiresRepository
-from myus.adapter.outbound.db.media.music.repository import MusicRepository
+from myus.adapter.outbound.db.media.hires.repository import HiresRepository
 from myus.adapter.outbound.db.media.picture.repository import PictureRepository
 from myus.adapter.outbound.db.media.video.repository import VideoRepository
 from myus.adapter.outbound.db.message.repository import MessageRepository
@@ -42,11 +42,11 @@ from myus.domain.es.interface import EventStoreInterface
 from myus.domain.es.projection.interface import ProjectionProgressInterface
 from myus.domain.follow.interface import FollowInterface
 from myus.domain.hashtag.interface import HashtagInterface
+from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.hires.interface import MusicHiresInterface
-from myus.domain.media.music.interface import MusicInterface
+from myus.domain.media.hires.interface import HiresInterface
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.message.interface import MessageInterface
@@ -56,8 +56,8 @@ from myus.domain.payment.customer.interface import PaymentCustomerInterface
 from myus.domain.payment.event.interface import PaymentEventInterface
 from myus.domain.payment.ledger.interface import LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
-from myus.domain.payment.provider.interface import PaymentInterface
 from myus.domain.payment.product.interface import ProductInterface
+from myus.domain.payment.provider.interface import PaymentInterface
 from myus.domain.payment.purchase.interface import PurchaseInterface
 from myus.domain.payment.seller.interface import PaymentSellerInterface
 from myus.domain.payment.subscription.event import SUBSCRIPTION_EVENT_CLASSES
@@ -89,12 +89,12 @@ class MediaModule(Module):
         return VideoRepository()
 
     @provider
-    def provide_music_repository(self) -> MusicInterface:
-        return MusicRepository()
+    def provide_audio_repository(self) -> AudioInterface:
+        return AudioRepository()
 
     @provider
-    def provide_music_hires_repository(self) -> MusicHiresInterface:
-        return MusicHiresRepository()
+    def provide_hires_repository(self) -> HiresInterface:
+        return HiresRepository()
 
     @provider
     def provide_blog_repository(self) -> BlogInterface:

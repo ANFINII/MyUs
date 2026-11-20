@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from myus.domain.channel.data import ChannelData
 from myus.domain.hashtag.data import HashtagData
+from myus.domain.media.audio.data import AudioData
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
-from myus.domain.media.hires.data import MusicHiresData
-from myus.domain.media.music.data import MusicData
+from myus.domain.media.hires.data import HiresData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
 from myus.domain.payment.product.data import ProductData
@@ -19,7 +19,7 @@ from .user import MediaUserDTO
 @dataclass(frozen=True, slots=True)
 class HomeDTO:
     videos: list[VideoData]
-    musics: list[MusicData]
+    audios: list[AudioData]
     blogs: list[BlogData]
     comics: list[ComicData]
     pictures: list[PictureData]
@@ -57,14 +57,14 @@ class VideoDetailDTO(MediaDetailDTO):
 
 
 @dataclass(frozen=True, slots=True)
-class MusicDetailDTO(MediaDetailDTO):
+class AudioDetailDTO(MediaDetailDTO):
     lyric: str
     image: str
-    music: str
+    audio: str
     gain: float
     is_purchased: bool
     comments: list[CommentDTO]
-    hires: MusicHiresData | None
+    hires: HiresData | None
     product: ProductData | None
 
 
@@ -114,7 +114,7 @@ class VideoCreateDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class MusicCreateDTO:
+class AudioCreateDTO:
     channel_ulid: str
     category_ulid: str
     publish: bool
@@ -179,7 +179,7 @@ class VideoUpdateDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class MusicUpdateDTO:
+class AudioUpdateDTO:
     category_ulid: str
     title: str
     content: str

@@ -1,6 +1,6 @@
 from typing import assert_never
 from myus.db.models.master import Category
-from myus.db.models.media import Blog, Chat, Comic, Music, Picture, Video
+from myus.db.models.media import Audio, Blog, Chat, Comic, Picture, Video
 from myus.domain.category.data import CategoryData
 from myus.utils.enum.media import MediaType
 
@@ -14,12 +14,12 @@ def convert_data(obj: Category) -> CategoryData:
     )
 
 
-def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
+def get_media_model(media_type: MediaType) -> type[Video] | type[Audio] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
     match media_type:
         case MediaType.VIDEO:
             return Video
-        case MediaType.MUSIC:
-            return Music
+        case MediaType.AUDIO:
+            return Audio
         case MediaType.BLOG:
             return Blog
         case MediaType.COMIC:

@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.db.models import Prefetch, Q
 from django.db.models.query import QuerySet
-from myus.db.models.playlist import Playlist, PlaylistMusic
+from myus.db.models.playlist import Playlist, PlaylistAudio
 from myus.domain.playlist.data import PlaylistData
 from myus.domain.playlist.interface import FilterOption, PageOption, PlaylistInterface, SortOption
 from myus.domain.playlist.validation import validate
@@ -15,7 +15,7 @@ PLAYLIST_FIELDS = ["author_id", "title", "description", "image", "publish", "upd
 
 class PlaylistRepository(PlaylistInterface):
     def queryset(self) -> QuerySet[Playlist]:
-        return Playlist.objects.prefetch_related(Prefetch("playlist_musics", queryset=PlaylistMusic.objects.order_by("sequence")))
+        return Playlist.objects.prefetch_related(Prefetch("playlist_audios", queryset=PlaylistAudio.objects.order_by("sequence")))
 
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
@@ -57,11 +57,11 @@ class PlaylistRepository(PlaylistInterface):
         with transaction.atomic():
             new_ids = get_save_new_ids(models, PLAYLIST_FIELDS)
             playlist_ids = [model.id for model in models]
-            PlaylistMusic.objects.filter(playlist_id__in=playlist_ids).delete()
-            PlaylistMusic.objects.bulk_create([
-                PlaylistMusic(playlist_id=model.id, music_id=music_id, sequence=seq)
+            PlaylistAudio.objects.filter(playlist_id__in=playlist_ids).delete()
+            PlaylistAudio.objects.bulk_create([
+                PlaylistAudio(playlist_id=model.id, audio_id=audio_id, sequence=seq)
                 for obj, model in zip(objs, models)
-                for seq, music_id in enumerate(obj.music_ids)
+                for seq, audio_id in enumerate(obj.audio_ids)
             ])
 
         return Result.ok(new_ids)

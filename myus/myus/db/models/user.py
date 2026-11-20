@@ -110,7 +110,7 @@ class UserNotification(models.Model):
     id         = models.BigAutoField(primary_key=True)
     user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name="notification")
     is_video   = models.BooleanField(default=False)
-    is_music   = models.BooleanField(default=False)
+    is_audio   = models.BooleanField(default=False)
     is_blog    = models.BooleanField(default=False)
     is_comic   = models.BooleanField(default=False)
     is_picture = models.BooleanField(default=False)

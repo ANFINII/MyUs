@@ -13,7 +13,7 @@ class VideoIn(BaseModel):
     content: str
 
 
-class MusicIn(BaseModel):
+class AudioIn(BaseModel):
     channel_ulid: str
     category_ulid: str
     publish: bool
@@ -72,7 +72,7 @@ class VideoUpdateIn(BaseModel):
     publish_at: datetime
 
 
-class MusicUpdateIn(BaseModel):
+class AudioUpdateIn(BaseModel):
     category_ulid: str
     title: Title
     content: str
@@ -81,7 +81,7 @@ class MusicUpdateIn(BaseModel):
     publish_at: datetime
 
 
-class MusicHiresIn(BaseModel):
+class HiresIn(BaseModel):
     price: int
 
 

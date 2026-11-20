@@ -1,15 +1,15 @@
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface
+from myus.domain.media.audio.data import AudioData
+from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.hires.data import MusicHiresData
-from myus.domain.media.hires.interface import MusicHiresInterface
-from myus.domain.media.music.data import MusicData
-from myus.domain.media.music.interface import MusicInterface
+from myus.domain.media.hires.data import HiresData
+from myus.domain.media.hires.interface import HiresInterface
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
@@ -42,14 +42,14 @@ def save_video_data(data: VideoData, category_data: CategoryData) -> Result[None
 
 
 @Result.shield_exception()
-def save_music_data(data: MusicData, category_data: CategoryData) -> Result[None, FatalError]:
-    repo = injector.get(MusicInterface)
+def save_audio_data(data: AudioData, category_data: CategoryData) -> Result[None, FatalError]:
+    repo = injector.get(AudioInterface)
     category_repo = injector.get(CategoryInterface)
     save_ret = repo.bulk_save([data])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
-    category_ret = category_repo.bulk_save(MediaType.MUSIC, data.id, [category_data])
+    category_ret = category_repo.bulk_save(MediaType.AUDIO, data.id, [category_data])
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
 
@@ -76,8 +76,8 @@ def save_blog_data(data: BlogData, category_data: CategoryData, product: Product
 
 
 @Result.shield_exception()
-def save_music_hires_data(data: MusicHiresData, product: ProductData) -> Result[None, FatalError]:
-    repo = injector.get(MusicHiresInterface)
+def save_hires_data(data: HiresData, product: ProductData) -> Result[None, FatalError]:
+    repo = injector.get(HiresInterface)
     save_ret = repo.bulk_save([data])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
@@ -90,13 +90,13 @@ def save_music_hires_data(data: MusicHiresData, product: ProductData) -> Result[
 
 
 @Result.shield_exception()
-def delete_music_hires_data(data: MusicHiresData) -> Result[None, FatalError]:
-    repo = injector.get(MusicHiresInterface)
+def delete_hires_data(data: HiresData) -> Result[None, FatalError]:
+    repo = injector.get(HiresInterface)
     delete_ret = repo.bulk_delete([data.id])
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    product_ret = delete_products_data(ProductType.MUSIC_HIRES, [data.music_id])
+    product_ret = delete_products_data(ProductType.HIRES, [data.audio_id])
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
@@ -175,25 +175,25 @@ def delete_video_data(ids: list[int]) -> Result[None, FatalError]:
 
 
 @Result.shield_exception()
-def delete_music_data(ids: list[int]) -> Result[None, FatalError]:
-    product_ret = delete_products_data(ProductType.MUSIC_HIRES, ids)
+def delete_audio_data(ids: list[int]) -> Result[None, FatalError]:
+    product_ret = delete_products_data(ProductType.HIRES, ids)
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
-    repo = injector.get(MusicInterface)
+    repo = injector.get(AudioInterface)
     delete_ret = repo.bulk_delete(ids)
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
-    notification_ret = delete_notification_data(NotificationObjectType.MUSIC, ids)
+    notification_ret = delete_notification_data(NotificationObjectType.AUDIO, ids)
     if notification_ret.is_err:
         return Result.err(notification_ret.err_value)
 
-    comment_ret = delete_comments_data(CommentTypeNo.MUSIC, ids)
+    comment_ret = delete_comments_data(CommentTypeNo.AUDIO, ids)
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
 
-    series_ret = delete_series_media_data(MediaType.MUSIC, ids)
+    series_ret = delete_series_media_data(MediaType.AUDIO, ids)
     if series_ret.is_err:
         return Result.err(series_ret.err_value)
 

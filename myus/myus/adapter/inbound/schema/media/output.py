@@ -16,7 +16,7 @@ class MediaReadOut(BaseModel):
     read: int
 
 
-class MusicHiresUrlOut(BaseModel):
+class HiresUrlOut(BaseModel):
     url: str
 
 
@@ -60,17 +60,17 @@ class VideoOut(MediaOut):
     encode_status: EncodeStatus
 
 
-class MusicHiresOut(BaseModel):
+class HiresOut(BaseModel):
     sample_rate: int
     bit_depth: int
 
 
-class MusicOut(MediaOut):
+class AudioOut(MediaOut):
     lyric: str
     image: str
-    music: str
+    audio: str
     gain: float
-    hires: MusicHiresOut | None
+    hires: HiresOut | None
     product: ProductOut | None
 
 
@@ -104,8 +104,8 @@ class VideoListOut(BaseModel):
     total: int
 
 
-class MusicListOut(BaseModel):
-    items: list[MusicOut]
+class AudioListOut(BaseModel):
+    items: list[AudioOut]
     total: int
 
 
@@ -131,7 +131,7 @@ class ChatListOut(BaseModel):
 
 class HomeOut(BaseModel):
     videos: list[VideoOut]
-    musics: list[MusicOut]
+    audios: list[AudioOut]
     blogs: list[BlogOut]
     comics: list[ComicOut]
     pictures: list[PictureOut]
@@ -145,14 +145,14 @@ class VideoDetailOut(MediaDetailOut):
     comments: list[CommentOut]
 
 
-class MusicDetailOut(MediaDetailOut):
+class AudioDetailOut(MediaDetailOut):
     lyric: str
     image: str
-    music: str
+    audio: str
     gain: float
     is_purchased: bool
     comments: list[CommentOut]
-    hires: MusicHiresOut | None
+    hires: HiresOut | None
     product: ProductOut | None
 
 
@@ -199,16 +199,16 @@ class VideoDetailsOut(BaseModel):
     series: VideoSeriesOut
 
 
-class MusicSeriesOut(BaseModel):
+class AudioSeriesOut(BaseModel):
     ulid: str
     title: str
-    items: list[MusicOut]
+    items: list[AudioOut]
 
 
-class MusicDetailsOut(BaseModel):
-    detail: MusicDetailOut
-    list: list[MusicOut]
-    series: MusicSeriesOut
+class AudioDetailsOut(BaseModel):
+    detail: AudioDetailOut
+    list: list[AudioOut]
+    series: AudioSeriesOut
 
 
 class BlogSeriesOut(BaseModel):

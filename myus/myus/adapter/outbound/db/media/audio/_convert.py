@@ -1,21 +1,21 @@
 from django_ulid.models import ulid
-from myus.db.models.media import Music
+from myus.db.models.media import Audio
 from myus.domain.channel.data import ChannelData
 from myus.domain.hashtag.data import HashtagData
-from myus.domain.media.music.data import MusicData
+from myus.domain.media.audio.data import AudioData
 
 
-def convert_data(obj: Music) -> MusicData:
+def convert_data(obj: Audio) -> AudioData:
     assert hasattr(obj, "like_count"), "like_count is required"
     category = next(iter(obj.category.all()), None)
-    return MusicData(
+    return AudioData(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         lyric=obj.lyric,
         image=obj.image.name or "",
-        music=obj.music.name or "",
+        audio=obj.audio.name or "",
         gain=obj.gain,
         read=obj.read,
         like=obj.like_count,
@@ -39,8 +39,8 @@ def convert_data(obj: Music) -> MusicData:
     )
 
 
-def marshal_data(data: MusicData) -> Music:
-    return Music(
+def marshal_data(data: AudioData) -> Audio:
+    return Audio(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid if data.ulid else ulid.new(),
         channel_id=data.channel.id,
@@ -48,7 +48,7 @@ def marshal_data(data: MusicData) -> Music:
         content=data.content,
         lyric=data.lyric,
         image=data.image,
-        music=data.music,
+        audio=data.audio,
         gain=data.gain,
         read=data.read,
         publish=data.publish,

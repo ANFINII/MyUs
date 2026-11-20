@@ -3,7 +3,7 @@ from enum import Enum
 
 class AccessType(str, Enum):
     VIDEO = "Video"
-    MUSIC = "Music"
+    AUDIO = "Audio"
     BLOG = "Blog"
     COMIC = "Comic"
     PICTURE = "Picture"
