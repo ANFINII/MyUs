@@ -12,9 +12,9 @@ class ComicData:
     content: str
     image: str
     pages: list[str]
+    free_pages: int
     read: int
     like: int
-    free_pages: int
     publish: bool
     publish_at: datetime
     created: datetime

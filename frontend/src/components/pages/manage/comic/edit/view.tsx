@@ -39,7 +39,7 @@ interface Props {
 
 export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { channels, categories, seller, data } = props
-  const { categoryUlid, title, content, freePages, publish, publishAt } = data
+  const { categoryUlid, title, content, publish, publishAt, freePages } = data
   const price = data.product?.price.amount ?? 0
   const currency = data.product?.price.currency ?? seller.currency
 
@@ -52,7 +52,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const [isSale, setIsSale] = useState<boolean>(data.product !== null)
   const [previewCover, setPreviewCover] = useState<string>('')
   const [pages, setPages] = useState<ComicPageItem[]>(data.pages.map((src) => ({ key: src, src, file: null })))
-  const [values, setValues] = useState<Omit<ComicUpdateIn, 'pages'>>({ categoryUlid, title, content, price, freePages, publish, publishAt: datetimeISO(publishAt) })
+  const [values, setValues] = useState<Omit<ComicUpdateIn, 'pages'>>({ categoryUlid, title, content, price, publish, publishAt: datetimeISO(publishAt), freePages })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
@@ -81,7 +81,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
     if (!validate({ categoryUlid, title, content, pages })) return
-    const paidError = isSale ? paidPagesError(values.price, values.freePages, pages.length) : ''
+    const paidError = isSale ? paidPagesError(values.price, pages.length, values.freePages) : ''
     if (paidError !== '') {
       handleToast(paidError, true)
       return

@@ -206,10 +206,10 @@ class ComicUpdateDTO:
     title: str
     content: str
     price: int
-    free_pages: int
     publish: bool
     publish_at: datetime
     pages: list[str]
+    free_pages: int
 
 
 @dataclass(frozen=True, slots=True)

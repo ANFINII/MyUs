@@ -84,8 +84,8 @@ class BlogOut(MediaOut):
 
 class ComicOut(MediaOut):
     image: str
-    free_pages: int
     pages: list[str]
+    free_pages: int
     product: ProductOut | None
 
 

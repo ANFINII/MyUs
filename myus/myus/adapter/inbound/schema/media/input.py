@@ -102,10 +102,10 @@ class ComicUpdateIn(BaseModel):
     title: Title
     content: str
     price: int
-    free_pages: int
     publish: bool
     publish_at: datetime
     pages: list[str]
+    free_pages: int
 
 
 class PictureUpdateIn(BaseModel):
