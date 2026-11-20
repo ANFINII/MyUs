@@ -6,7 +6,7 @@
 
 | 領域 | 技術 |
 |---|---|
-| バックエンド | Python 3.15 / Django 6 / django-ninja / Daphne（ASGI） / Django Channels |
+| バックエンド | Python 3.15 / Django 6 / django-ninja / uvicorn（ASGI。開発は Daphne） / Django Channels |
 | フロントエンド | React 19 / TypeScript / Vite / TanStack Router / TanStack Query / React Compiler |
 | データベース・キャッシュ | MySQL 8.4 / Redis 7 |
 | 決済 | Stripe |
@@ -21,7 +21,7 @@
 ```mermaid
 flowchart LR
     Browser[ブラウザ<br/>React SPA]
-    subgraph Backend[バックエンド（Daphne / ASGI）]
+    subgraph Backend[バックエンド（uvicorn / ASGI）]
         Inbound[adapter/inbound<br/>HTTP・WebSocket]
         Usecase[usecase]
         Domain[domain<br/>data・interface・集約]
@@ -42,7 +42,7 @@ flowchart LR
 ```
 
 - フロントエンドは SPA として S3 と CloudFront から配信し、バックエンドの REST API を呼ぶ
-- バックエンドは Daphne（ASGI）で HTTP と WebSocket の両方を受ける
+- バックエンドは ASGI で HTTP と WebSocket の両方を受ける。本番は uvicorn、開発の `runserver` は Daphne
 - WebSocket のメッセージは Redis の Channel Layer で配る
 - メディアは、開発はローカルディスク、本番は S3 に置いて CloudFront から配信する
 
