@@ -1,15 +1,15 @@
 from myus.utils.common.result import Result, ValidationError
 from .data import AudioData, HiresData
+from ..common import MEDIA_TITLE_MAX
 
 
-AUDIO_TITLE_MAX_LENGTH = 100
 HIRES_BIT_DEPTH = 24
 HIRES_SAMPLE_RATE_MIN = 48000
 HIRES_SAMPLE_RATE_MAX = 192000
 
 
 def validate(obj: AudioData) -> Result[None, ValidationError]:
-    if len(obj.title) > AUDIO_TITLE_MAX_LENGTH:
+    if len(obj.title) > MEDIA_TITLE_MAX:
         return Result.err(ValidationError("error.titleLength"))
 
     if len(obj.audio) == 0:

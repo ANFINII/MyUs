@@ -4,6 +4,7 @@ from myus.utils.enum.media import EncodeStatus
 
 
 MEDIA_PAGE_SIZE = 50
+MEDIA_TITLE_MAX = 100
 
 
 class SortType(Enum):
