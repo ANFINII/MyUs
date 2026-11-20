@@ -5,7 +5,7 @@ from myus.injectors.container import injector
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, Result
 from myus.utils.enum.media import EncodeStatus
-from myus.utils.functions.convert.audio_converter import AudioConvert, convert_audio
+from myus.utils.functions.convert.audio_converter import AudioConvert, convert_audio, delete_audio
 from myus.utils.functions.convert.video_encoding import VideoConvert, convert_video
 from myus.utils.functions.transaction import atomic_result
 from ._convert import save_encode_failed_data, save_encoded_video_data, save_audio_encode_failed_data, save_encoded_audio_data
@@ -83,6 +83,9 @@ def encode_audios(limit: int) -> Result[int, FatalError]:
         save_ret = atomic_result(lambda: save_encoded_audio_data(audio.id, result))
         if save_ret.is_err:
             return Result.err(save_ret.err_value)
+
+        if result.audio != audio.audio:
+            delete_audio(audio.audio)
         encoded_count += 1
 
     return Result.ok(encoded_count)

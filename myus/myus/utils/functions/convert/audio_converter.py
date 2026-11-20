@@ -6,6 +6,7 @@ import subprocess
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
+from botocore.exceptions import BotoCoreError, ClientError
 from django.core.files import File
 from django.core.files.storage import default_storage
 from ...common.logger import log
@@ -166,3 +167,12 @@ def convert_audio(audio_path: str) -> AudioConvert:
     except Exception as e:
         log.error("convert failed", exc=e, audio_path=audio_path)
         return AudioConvert(audio="", gain=0.0)
+
+
+def delete_audio(audio_path: str) -> None:
+    """保存済みの曲を保存先から消す。消せないときはログだけ出す"""
+
+    try:
+        default_storage.delete(audio_path)
+    except (OSError, BotoCoreError, ClientError) as e:
+        log.warning("delete failed", exc=e, audio_path=audio_path)
