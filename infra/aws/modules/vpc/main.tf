@@ -81,3 +81,44 @@ resource "aws_route_table_association" "datastore" {
   subnet_id      = each.value.id
   route_table_id = aws_route_table.datastore.id
 }
+
+###
+# app: NAT インスタンスを通って外に出るサブネット
+###
+resource "aws_subnet" "app" {
+  for_each = local.app_subnets
+
+  vpc_id            = aws_vpc.main.id
+  availability_zone = each.value.availability_zone
+  cidr_block        = each.value.cidr_block
+
+  tags = {
+    Name = "${var.name}-app-${each.key}"
+  }
+}
+
+resource "aws_route_table" "app" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "${var.name}-app"
+  }
+}
+
+resource "aws_route_table_association" "app" {
+  for_each = aws_subnet.app
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.app.id
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.app.id]
+
+  tags = {
+    Name = "${var.name}-s3"
+  }
+}

@@ -49,3 +49,28 @@ resource "aws_vpc_security_group_ingress_rule" "database_from_api_mysql" {
   from_port                    = 3306
   to_port                      = 3306
 }
+
+###
+# nat: VPC の中からの通信だけを受けて外に出す
+###
+resource "aws_security_group" "nat" {
+  name        = "nat-${local.p.env}"
+  description = "Security Group for NAT"
+  vpc_id      = local.vpc.vpc_id
+
+  tags = {
+    Name = "nat-${local.p.env}"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "nat_from_vpc" {
+  security_group_id = aws_security_group.nat.id
+  cidr_ipv4         = local.vpc.cidr_block
+  ip_protocol       = "-1"
+}
+
+resource "aws_vpc_security_group_egress_rule" "nat_to_all" {
+  security_group_id = aws_security_group.nat.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}

@@ -40,7 +40,8 @@ flowchart LR
     S3_FRONT[(S3<br/>フロント SPA)]
     CF_API[CloudFront<br/>api.myus]
     CF_MEDIA[CloudFront<br/>media.myus]
-    subgraph VPC[VPC（パブリック・datastore サブネット・NAT なし）]
+    subgraph VPC[VPC（パブリック・app・datastore サブネット）]
+        NAT[NAT インスタンス<br/>fck-nat t4g.nano]
         EC2[EC2 t4g.small<br/>docker compose<br/>uvicorn / worker / Redis]
         RDS[(RDS MySQL<br/>db.t4g.micro)]
     end
@@ -50,11 +51,13 @@ flowchart LR
     SSM[SSM Parameter Store]
 
     User --> CF_FRONT -->|OAC| S3_FRONT
-    User -->|HTTPS / WSS| CF_API --> EC2
+    User -->|HTTPS / WSS| CF_API -->|VPC オリジン| EC2
     User --> CF_MEDIA -->|OAC| S3
     EC2 --> RDS
-    EC2 --> S3
-    EC2 --> SES
+    EC2 -->|Gateway エンドポイント| S3
+    EC2 --> NAT
+    NAT --> SES
+    NAT --> Stripe
     EC2 -.起動時に取得.-> SSM
     Stripe -->|webhook| CF_API
 ```
@@ -64,7 +67,8 @@ flowchart LR
 | 用途 | サービス | 内容 |
 |---|---|---|
 | API・WebSocket | **EC2 t4g.small**（ARM, 2vCPU / 2GB） | 今の docker-compose をほぼそのまま使う。`backend`（uvicorn。HTTP+WS）、`worker`（決済のイベントの反映）、`encoder`（動画の HLS 変換・オーディオの MP3 変換）、`redis` の 4 コンテナ |
-| API の入口 | **CloudFront** + **ACM** | TLS 終端。WebSocket にも対応している。ALB（月 $20 以上）を使わずに HTTPS 化できる。オリジンへのアクセスは CloudFront のマネージドプレフィックスリストに限定する。CloudFront → EC2 は HTTP（80 番）になる（EC2 に証明書を置かないため）。暗号化が要るようになったら ALB か EC2 側の TLS を足す |
+| API の入口 | **CloudFront** + **ACM** | TLS 終端。WebSocket にも対応している。ALB（月 $20 以上）を使わずに HTTPS 化できる。オリジンは CloudFront の **VPC オリジン**で、プライベートサブネットの EC2 に直接つなぐ。VPC オリジンは無料。WebSocket も VPC オリジンを通る（2026 年 5 月から）。EC2 の SG の 80 番は、CloudFront のマネージドプレフィックスリストからだけ許可する。CloudFront → EC2 は HTTP（80 番）になる（EC2 に証明書を置かないため）。暗号化が要るようになったら ALB か EC2 側の TLS を足す |
+| ネットワーク | **VPC**・**NAT インスタンス**・**S3 の Gateway エンドポイント** | EC2 は外から入る経路のない `app` サブネットに置き、パブリック IP を持たない。外への通信（Stripe API・SES の SMTP・ECR・SSM・CloudWatch・Docker Hub・dnf・GitHub）は、パブリックサブネットの NAT インスタンス（fck-nat の AMI・t4g.nano）を通る。NAT Gateway は月 $45 以上かかるので使わない。S3 への通信と ECR のイメージの層は、無料の Gateway エンドポイントで NAT を通らずに S3 に行く。NAT インスタンスは 1 台なので、止まると EC2 から外に出られなくなる（API は CloudFront から届くので受け付けは続く）。RDS は外への経路のない `datastore` サブネットに置く |
 | DB | **RDS for MySQL db.t4g.micro**（シングル AZ, gp3 20GB） | 自動バックアップ（7 日）とパッチ適用を任せる。パスワードは Terraform の ephemeral な `random_password` で作り、RDS（`password_wo`）と SSM の `/myus/prod/MYSQL_PASSWORD`（`value_wo`）に同じ値を入れる。state には残らない |
 | キャッシュ・Channel Layer | EC2 上の **Redis コンテナ** | フェーズ 1 では ElastiCache を使わずにコストを抑える |
 | フロント配信 | **S3** + **CloudFront**（OAC） | `prod/products/myus/frontend`。`myus.media`・`www.myus.media` で配信する。SPA なので、`/` と S3 に無いパスには `index.html` を返す。`frontend.yml` が main でビルドし、`assets/` は長くキャッシュし、それ以外は毎回確かめるようにして S3 に送り、キャッシュを消す |
@@ -89,12 +93,13 @@ flowchart LR
 | 項目 | 目安 |
 |---|---|
 | EC2 t4g.small + EBS 30GB | $18 |
-| パブリック IPv4（1 個） | $4 |
+| NAT インスタンス t4g.nano + EBS 4GB | $4 |
+| パブリック IPv4（1 個・NAT インスタンス） | $4 |
 | RDS db.t4g.micro + 20GB | $20 |
 | S3（100GB） | $3 |
 | CloudFront | 無料枠（月 1TB）内なら $0 |
 | Route 53・SES・SSM・CloudWatch | $2〜5 |
-| **合計** | **約 $45〜50** |
+| **合計** | **約 $50〜55** |
 
 ※ 料金は目安。正確な金額は AWS Pricing Calculator で確認する。
 
@@ -157,12 +162,10 @@ flowchart LR
 
 ### NAT Gateway を避ける工夫
 
-NAT Gateway は 1 個で月 $45 以上かかるため、次のどちらかで回避する。
+NAT Gateway は 1 個で月 $45 以上かかるため、フェーズ 1 では NAT インスタンス（fck-nat）で外に出ている。フェーズ 2 でも、次の組み合わせで NAT Gateway を後回しにできる。
 
-- Fargate タスクをパブリックサブネットに置き、セキュリティグループで ALB からの通信だけを許可する
-- プライベートサブネットに置く場合は、S3（Gateway 型・無料）・ECR・SSM・SQS・CloudWatch Logs の VPC エンドポイントを作る
-
-Stripe API など外部への通信が必要なので、プライベートサブネットにする場合は最終的に NAT が必要になる。フェーズ 2 の初期はパブリックサブネットに置く方針をおすすめする。
+- Fargate タスクも `app` サブネットに置き、今の NAT インスタンスと S3 の Gateway エンドポイントを使い続ける
+- 通信が増えて NAT インスタンスが細くなったら、ECR・SSM・SQS・CloudWatch Logs の VPC エンドポイント（1 個で月 $8 ほど）を足すか、NAT Gateway に替える
 
 ---
 
@@ -225,7 +228,7 @@ Terraform で作るものを、スタックの依存・リクエストの流れ�
 ```mermaid
 flowchart LR
     subgraph common[common]
-        network[1. network<br/>VPC・サブネット・SG]
+        network[1. network<br/>VPC・サブネット・SG<br/>NAT インスタンス・S3 エンドポイント]
         parameters[2. parameters<br/>SSM の入れ物]
         ecr[3. ecr<br/>myus-backend]
         acm[4. acm<br/>CloudFront の証明書<br/>myus.media・*.myus.media]
@@ -238,7 +241,7 @@ flowchart LR
         media[7. media<br/>S3・CloudFront<br/>media.myus.media]
         frontend[8. frontend<br/>S3・CloudFront<br/>myus.media・www.myus.media]
         database[9. database<br/>RDS MySQL]
-        compute[10. compute<br/>EC2・CloudFront・IAM<br/>api.myus.media]
+        compute[10. compute<br/>EC2・CloudFront・VPC オリジン・IAM<br/>api.myus.media]
         dns[11. dns<br/>Route 53 のレコード<br/>フロント・api・media]
         mail[12. mail<br/>SES・DKIM・MAIL FROM・DMARC]
         monitoring[13. monitoring<br/>CloudWatch Alarms・SNS]
@@ -267,6 +270,7 @@ flowchart LR
 flowchart LR
     User[ユーザー]
     Stripe[Stripe]
+    Internet[インターネット<br/>Stripe API・SES の SMTP・ECR・SSM など]
 
     subgraph aws[AWS ap-northeast-1]
         CF_FRONT[CloudFront フロント<br/>CachingOptimized<br/>無いパスは index.html]
@@ -279,7 +283,10 @@ flowchart LR
 
         subgraph vpc[VPC 10.0.0.0/16]
             subgraph public[パブリックサブネット]
-                subgraph ec2[EC2 myus-api-prod・EIP・SG api]
+                NAT[NAT インスタンス<br/>myus-prod-nat・SG nat]
+            end
+            subgraph app[app サブネット・パブリック IP なし]
+                subgraph ec2[EC2 myus-api-prod・SG api]
                     backend[backend<br/>uvicorn :80]
                     worker[worker<br/>決済のイベント]
                     encoder[encoder<br/>HLS・MP3 の変換]
@@ -295,7 +302,7 @@ flowchart LR
     User -->|HTTPS| CF_FRONT -->|OAC| S3_FRONT
     User -->|HTTPS / WSS| CF_API
     Stripe -->|webhook| CF_API
-    CF_API -->|HTTP :80<br/>CloudFront のプレフィックスリストだけ許可| backend
+    CF_API -->|VPC オリジン・HTTP :80<br/>CloudFront のプレフィックスリストだけ許可| backend
     User -->|HTTPS| CF_MEDIA -->|OAC| S3
     backend --> redis
     backend -->|:3306<br/>SG api からだけ許可| RDS
@@ -306,6 +313,7 @@ flowchart LR
     User -->|署名付き URL で取得| S3_HIRES
     encoder -->|元のファイルを取り出し・変換結果を置く| S3
     ec2 -.デプロイのときに読む.-> SSM
+    ec2 -->|0.0.0.0/0| NAT --> Internet
 ```
 
 ### デプロイの流れ
@@ -342,7 +350,13 @@ sequenceDiagram
 
 ### DB のスキーマの変更
 
-`myus/myus/db/migrations/` は Git の管理外なので、デプロイではマイグレーションを流さない。本番の DB は次の手順で手作業で変える。EC2 には SSM のセッションで入り、`/opt/myus` で行う。
+`myus/myus/db/migrations/` は Git の管理外なので、デプロイではマイグレーションを流さない。本番の DB は次の手順で手作業で変える。EC2 には SSM のセッションで入り、`/opt/myus` で行う。EC2 は作り直すとインスタンス ID が変わるので、`Name` のタグから引く。
+
+```bash
+aws ssm start-session --profile myus-prod --target "$(aws ec2 describe-instances --profile myus-prod \
+  --filters Name=tag:Name,Values=myus-api-prod Name=instance-state-name,Values=running \
+  --query 'Reservations[0].Instances[0].InstanceId' --output text)"
+```
 
 1. 最初のデプロイ：空の DB に、使い捨てのコンテナでマイグレーションを作って流す。イメージの中は `app` ユーザーでは書けないので root で動かす。作ったファイルはコンテナと一緒に消える
 

@@ -13,3 +13,11 @@ output "public_subnet_ids" {
 output "datastore_subnet_ids" {
   value = { for k, s in aws_subnet.datastore : k => s.id }
 }
+
+output "app_subnet_ids" {
+  value = { for k, s in aws_subnet.app : k => s.id }
+}
+
+output "app_route_table_id" {
+  value = aws_route_table.app.id
+}
