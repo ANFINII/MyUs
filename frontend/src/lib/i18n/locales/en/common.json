@@ -959,6 +959,10 @@
         "label": "Chat",
         "content": "Talk with people from all over the world. You can also use it like a message board."
       },
+      "playlist": {
+        "label": "Playlists",
+        "content": "Collect and arrange your favorite audio, and share it on your user page."
+      },
       "mypage": {
         "label": "My page",
         "content": "Build up your own page and grow your followers."
