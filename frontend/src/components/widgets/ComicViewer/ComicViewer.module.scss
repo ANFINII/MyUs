@@ -62,12 +62,12 @@
 
     .page {
       flex: 0 1 auto;
-    }
 
-    .page img {
-      display: block;
-      max-width: 100%;
-      max-height: calc(100vh - 240px);
+      img {
+        display: block;
+        max-width: 100%;
+        max-height: calc(100vh - 240px);
+      }
     }
   }
 
@@ -101,33 +101,33 @@
     .thumbnails {
       display: flex;
       gap: 4px;
-    }
 
-    .thumbnails .thumbnail {
-      width: 48px;
-      height: 32px;
-      border: 2px solid transparent;
-      border-radius: 3px;
-      overflow: hidden;
-      opacity: 0.4;
-      transition: opacity 0.2s, border-color 0.2s;
-      cursor: pointer;
+      .thumbnail {
+        width: 48px;
+        height: 32px;
+        border: 2px solid transparent;
+        border-radius: 3px;
+        overflow: hidden;
+        opacity: 0.4;
+        transition: opacity 0.2s, border-color 0.2s;
+        cursor: pointer;
 
-      &.active {
-        border-color: rgb(0, 120, 255);
-        opacity: 1;
+        &.active {
+          border-color: rgb(0, 120, 255);
+          opacity: 1;
+        }
+
+        &:hover {
+          opacity: 0.7;
+        }
+
+        img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
       }
-
-      &:hover {
-        opacity: 0.7;
-      }
-    }
-
-    .thumbnails .thumbnail img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
   }
 }

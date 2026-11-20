@@ -36,21 +36,21 @@
       min-height: 20px;
       margin: -3px 0 0 0;
       white-space: nowrap;
-    }
 
-    .message_meta p {
-      display: inline;
-      margin: 0;
-      font-size: 14px;
-      font-weight: 500;
-      white-space: nowrap;
-      color: rgb(100, 100, 100);
-    }
+      p {
+        display: inline;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+        color: rgb(100, 100, 100);
+      }
 
-    .message_meta time {
-      margin-left: 8px;
-      font-size: 11px;
-      color: rgb(120, 120, 120);
+      time {
+        margin-left: 8px;
+        font-size: 11px;
+        color: rgb(120, 120, 120);
+      }
     }
 
     .message_text {
@@ -58,60 +58,60 @@
       line-height: 1.42;
       overflow-wrap: break-word;
       overflow: hidden;
-    }
 
-    .message_text > * + * {
-      margin-top: 0.5em;
-    }
+      > * + * {
+        margin-top: 0.5em;
+      }
 
-    .message_text p {
-      padding: 0;
-      margin: 0;
-    }
+      p {
+        padding: 0;
+        margin: 0;
+      }
 
-    .message_text ul {
-      padding-left: 1.5em;
-      list-style-type: disc;
-    }
+      ul {
+        padding-left: 1.5em;
+        list-style-type: disc;
+      }
 
-    .message_text ol {
-      padding-left: 1.5em;
-      list-style-type: decimal;
-    }
+      ol {
+        padding-left: 1.5em;
+        list-style-type: decimal;
+      }
 
-    .message_text blockquote {
-      padding-left: 16px;
-      margin-left: 0;
-      border-left: 4px solid rgb(204, 204, 204);
-    }
+      blockquote {
+        padding-left: 16px;
+        margin-left: 0;
+        border-left: 4px solid rgb(204, 204, 204);
+      }
 
-    .message_text pre {
-      padding: 5px 10px;
-      margin-top: 5px;
-      margin-bottom: 5px;
-      font-family: monospace;
-      white-space: pre-wrap;
-      border-radius: 3px;
-      background: rgb(240, 240, 242);
-    }
+      pre {
+        padding: 5px 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-family: monospace;
+        white-space: pre-wrap;
+        border-radius: 3px;
+        background: rgb(240, 240, 242);
 
-    .message_text pre code {
-      padding: 0;
-      font-size: 0.9em;
-      color: inherit;
-      background: none;
-    }
+        code {
+          padding: 0;
+          font-size: 0.9em;
+          color: inherit;
+          background: none;
+        }
+      }
 
-    .message_text code {
-      padding: 0.2em 0.4em;
-      font-size: 0.85em;
-      border-radius: 3px;
-      background: rgb(240, 240, 242);
-    }
+      code {
+        padding: 0.2em 0.4em;
+        font-size: 0.85em;
+        border-radius: 3px;
+        background: rgb(240, 240, 242);
+      }
 
-    .message_text a {
-      text-decoration: underline;
-      color: rgb(0, 102, 204);
+      a {
+        text-decoration: underline;
+        color: rgb(0, 102, 204);
+      }
     }
 
     .message_thread_row {
