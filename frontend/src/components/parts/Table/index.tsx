@@ -8,8 +8,10 @@ export default function Table(props: Props): React.JSX.Element {
   const { children } = props
 
   return (
-    <table className={style.table}>
-      <tbody>{children}</tbody>
-    </table>
+    <div className={style.table}>
+      <table>
+        <tbody>{children}</tbody>
+      </table>
+    </div>
   )
 }
