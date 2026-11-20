@@ -8,6 +8,7 @@ import { Audio } from 'types/internal/media/output'
 import { PaymentSellerOut } from 'types/internal/payment'
 import { putManageAudio } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
+import { MEDIA_TITLE_MAX } from 'utils/functions/common'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
@@ -99,7 +100,7 @@ export default function ManageAudioEdit(props: Props): React.JSX.Element {
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.title')} name="title" maxLength={MEDIA_TITLE_MAX} value={values.title} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
           <Textarea label={t('manage.form.lyric')} name="lyric" className={style.lyric} value={values.lyric} onChange={handleText} />
           <div className={style.lyric_hint}>

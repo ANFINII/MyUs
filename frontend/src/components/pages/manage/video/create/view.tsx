@@ -6,6 +6,7 @@ import { Channel } from 'types/internal/channel'
 import { VideoIn } from 'types/internal/media/input'
 import { postVideoCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
+import { MEDIA_TITLE_MAX } from 'utils/functions/common'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -77,7 +78,7 @@ export default function VideoCreate(props: Props): React.JSX.Element {
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.title')} name="title" maxLength={MEDIA_TITLE_MAX} required error={error} onChange={handleInput} />
           <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
           <InputFile label={t('manage.form.video')} accept="video/*" required error={error} onChange={handleMovie} />
