@@ -58,9 +58,11 @@ export default function Login(): React.JSX.Element {
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('welcome')}</h1>
-          {message && (
-            <Alert type="error" isPlain>{message}</Alert>
-          )}
+          <div className={style.message}>
+            {message && (
+              <Alert type="error" isPlain className={style.error}>{message}</Alert>
+            )}
+          </div>
 
           <VStack gap="8">
             <Input type="text" name="username" placeholder={t('account.login.username')} required error={error} onChange={handleInput} />

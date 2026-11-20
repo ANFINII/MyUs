@@ -67,9 +67,11 @@ export default function ChannelCreate(): React.JSX.Element {
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('setting.channelCreate.title')}</h1>
-          {message && (
-            <Alert type="error" isPlain>{message}</Alert>
-          )}
+          <div className={style.message}>
+            {message && (
+              <Alert type="error" isPlain className={style.error}>{message}</Alert>
+            )}
+          </div>
 
           <VStack gap="8">
             <VStack gap="4" align="center">
