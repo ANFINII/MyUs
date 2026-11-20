@@ -953,6 +953,10 @@
         "label": "Chat",
         "content": "Talk with people from all over the world. You can also use it like a message board."
       },
+      "channel": {
+        "label": "Channels",
+        "content": "Create channels to organize your posts. You can also subscribe to channels you like."
+      },
       "playlist": {
         "label": "Playlists",
         "content": "Collect and arrange your favorite audio, and share it on your user page."
