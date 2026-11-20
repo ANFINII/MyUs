@@ -5,6 +5,14 @@ from ...hashtag.data import HashtagData
 
 
 @dataclass(frozen=True, slots=True)
+class HiresData:
+    id: int
+    file: str
+    sample_rate: int
+    bit_depth: int
+
+
+@dataclass(frozen=True, slots=True)
 class AudioData:
     id: int
     ulid: str
@@ -23,3 +31,4 @@ class AudioData:
     category_ulid: str
     channel: ChannelData
     hashtags: list[HashtagData]
+    hires: HiresData | None

@@ -2,11 +2,10 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from myus.domain.channel.data import ChannelData
 from myus.domain.hashtag.data import HashtagData
-from myus.domain.media.audio.data import AudioData
+from myus.domain.media.audio.data import AudioData, HiresData
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
-from myus.domain.media.hires.data import HiresData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
 from myus.domain.payment.product.data import ProductData

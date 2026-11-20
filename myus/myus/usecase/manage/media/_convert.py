@@ -1,3 +1,4 @@
+from dataclasses import replace
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface
 from myus.domain.media.audio.data import AudioData
@@ -8,8 +9,6 @@ from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.hires.data import HiresData
-from myus.domain.media.hires.interface import HiresInterface
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
@@ -76,8 +75,8 @@ def save_blog_data(data: BlogData, category_data: CategoryData, product: Product
 
 
 @Result.shield_exception()
-def save_hires_data(data: HiresData, product: ProductData) -> Result[None, FatalError]:
-    repo = injector.get(HiresInterface)
+def save_hires_data(data: AudioData, product: ProductData) -> Result[None, FatalError]:
+    repo = injector.get(AudioInterface)
     save_ret = repo.bulk_save([data])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
@@ -90,13 +89,13 @@ def save_hires_data(data: HiresData, product: ProductData) -> Result[None, Fatal
 
 
 @Result.shield_exception()
-def delete_hires_data(data: HiresData) -> Result[None, FatalError]:
-    repo = injector.get(HiresInterface)
-    delete_ret = repo.bulk_delete([data.id])
-    if delete_ret.is_err:
-        return Result.err(delete_ret.err_value)
+def delete_hires_data(data: AudioData) -> Result[None, FatalError]:
+    repo = injector.get(AudioInterface)
+    save_ret = repo.bulk_save([replace(data, hires=None)])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
-    product_ret = delete_products_data(ProductType.HIRES, [data.audio_id])
+    product_ret = delete_products_data(ProductType.HIRES, [data.id])
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
