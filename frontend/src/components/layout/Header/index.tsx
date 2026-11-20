@@ -17,7 +17,6 @@ import IconBell from 'components/parts/Icon/Bell'
 import IconCloud from 'components/parts/Icon/Cloud'
 import IconExclamation from 'components/parts/Icon/Exclamation'
 import IconList from 'components/parts/Icon/List'
-import IconSearch from 'components/parts/Icon/Search'
 import Search from 'components/parts/Input/Search'
 import Logo from 'components/parts/Logo'
 import style from './Header.module.scss'
@@ -87,10 +86,8 @@ export default function Header(props: Props): React.JSX.Element {
         </div>
 
         <div className={cx(style.nav_3, style.search_box)}>
-          <Search value={search} className={style.search_wide} onChange={handleSearch} />
-          <button type="button" title={t('input.search')} className={cx(style.search_open, style.color)} onClick={handleSearchBar}>
-            <IconSearch size="20" />
-          </button>
+          <Search value={search} onChange={handleSearch} />
+          <button type="button" title={t('input.search')} className={style.search_open} onClick={handleSearchBar}></button>
         </div>
 
         <div className={cx(style.nav_4, style.color, isCloud && style.active)} onClick={handleCloud}>

@@ -48,6 +48,7 @@
     }
 
     .nav_3 {
+      position: relative;
       grid-column: 3/4;
     }
 
@@ -93,15 +94,13 @@
   }
 
   .search_open {
+    position: absolute;
+    inset: 0;
     display: none;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
     padding: 0;
-    color: rgb(255, 255, 255);
     border: none;
     background: none;
+    cursor: pointer;
   }
 
   .search_bar {
@@ -161,16 +160,8 @@
       grid-template-columns: 3em 5.5em minmax(0, 1fr) 2.5em 2.5em 2.5em;
     }
 
-    .search_box {
-      justify-content: flex-end;
-    }
-
-    .search_wide {
-      display: none;
-    }
-
     .search_open {
-      display: flex;
+      display: block;
     }
   }
 }
