@@ -34,6 +34,7 @@ class AudioInfo:
 class AudioConvert:
     audio: str
     gain: float
+    is_low_bit_rate: bool
 
 
 def is_conversion(filename: str) -> bool:
@@ -143,7 +144,7 @@ def audio_gain(loudness: float) -> float:
 
 
 def convert_audio(audio_path: str) -> AudioConvert:
-    """保存済みの曲を一時フォルダに取り出し、MP3以外はMP3に変換して保存先に上げ、MP3の相対パスと再生時に下げるdBを返す。音質が低いときや変換できないときは空のパスを返す"""
+    """保存済みの曲を一時フォルダに取り出し、MP3以外はMP3に変換して保存先に上げ、MP3の相対パスと再生時に下げるdBを返す。変換できないときは空のパスを、音質が低いときは is_low_bit_rate を返す"""
 
     try:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -154,19 +155,19 @@ def convert_audio(audio_path: str) -> AudioConvert:
             audio = probe_audio(input_path)
             if is_low_bit_rate(audio):
                 log.warning("low bit rate", audio_path=audio_path, codec=audio.codec, bit_rate=audio.bit_rate)
-                return AudioConvert(audio="", gain=0.0)
+                return AudioConvert(audio="", gain=0.0, is_low_bit_rate=True)
 
             if not is_conversion(audio_path):
-                return AudioConvert(audio=audio_path, gain=audio_gain(measure_loudness(input_path)))
+                return AudioConvert(audio=audio_path, gain=audio_gain(measure_loudness(input_path)), is_low_bit_rate=False)
 
             output_path = os.path.join(tmp_dir, "convert.mp3")
             convert_mp3(input_path, output_path)
             with open(output_path, "rb") as f:
                 save_path = default_storage.save(os.path.splitext(audio_path)[0] + ".mp3", File(f))
-            return AudioConvert(audio=save_path, gain=audio_gain(measure_loudness(output_path)))
+            return AudioConvert(audio=save_path, gain=audio_gain(measure_loudness(output_path)), is_low_bit_rate=False)
     except Exception as e:
         log.error("convert failed", exc=e, audio_path=audio_path)
-        return AudioConvert(audio="", gain=0.0)
+        return AudioConvert(audio="", gain=0.0, is_low_bit_rate=False)
 
 
 def delete_audio(audio_path: str) -> None:

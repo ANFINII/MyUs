@@ -398,7 +398,8 @@
     },
     "encode": {
       "encoding": "変換中",
-      "failed": "変換できませんでした"
+      "failed": "変換できませんでした",
+      "lowBitRate": "音質が低いため公開できません。192kbps 以上のオーディオファイルか、WAV・FLAC を上げ直してください"
     },
     "video": {
       "encodeFailedNotice": "変換できませんでした。動画を上げ直してください。"
