@@ -961,7 +961,7 @@
       },
       "playlist": {
         "label": "Playlists",
-        "content": "Collect and arrange your favorite audio. Add a description and a thumbnail chosen from the audio images, and use \"Play all\" to listen in order. Public playlists appear on your user page. Available on the Basic plan or higher."
+        "content": "Collect and arrange your favorite audio, and share it on your user page."
       },
       "mypage": {
         "label": "My page",
