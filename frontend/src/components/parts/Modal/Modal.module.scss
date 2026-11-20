@@ -14,20 +14,20 @@
 
   &[open] {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
   }
 
   .container {
     display: flex;
+    flex-direction: column;
     width: 100%;
     max-height: calc(100vh - 32px);
     border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     background: rgb(255, 255, 255);
-    flex-direction: column;
     overflow: hidden;
     animation: fade_in 0.2s ease-out;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
     &.s {
       max-width: 400px;
@@ -44,9 +44,9 @@
 
   .header {
     display: flex;
-    padding: 16px;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    padding: 16px;
     border-bottom: 1px solid rgb(225, 230, 240);
 
     .title {
@@ -83,9 +83,9 @@
 
   .footer {
     display: flex;
-    padding: 16px;
-    gap: 8px;
     justify-content: flex-end;
+    gap: 8px;
+    padding: 16px;
     border-top: 1px solid rgb(225, 230, 240);
   }
 }

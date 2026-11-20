@@ -4,9 +4,9 @@
   padding: 20px;
   border-radius: 10px;
   background: rgb(20, 20, 20);
-  transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow-y: auto;
   scrollbar-width: none;
+  overflow-y: auto;
+  transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
   &::-webkit-scrollbar {
     display: none;
@@ -17,8 +17,8 @@
   }
 
   .line {
-    margin: 0;
     padding: 4px 0;
+    margin: 0;
     font-size: 14px;
     line-height: 1.7;
     white-space: pre-wrap;

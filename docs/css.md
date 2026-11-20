@@ -7,7 +7,7 @@
 - `pages/`ではグローバルCSS（`styles/`配下）を利用してよい
   - `styles/global/`：全体のスタイル（`reset.scss`・`style.scss` など）と mixin（`mixin/scrollbar.scss`・`mixin/tiptap.scss`）
   - `styles/internal/`：特定の画面・ライブラリ向け（`registration.scss`・`videojs-myus.scss` など）
-- ネスト構文で記述する（子要素は親クラスの中にネスト、3階層まで）
+- ネスト構文で記述する。子要素は親クラスの中にネストし、5階層までにする。`&:hover`・`&.active` のように `&` で始まるものは階層に数えない
 - インラインスタイルは使用しない。ただし、再生位置のバーの幅のように値が連続して変わるものだけは `style` で渡してよい
 - 動的スタイルはクラスの切り替え（`cx()`。`utils/functions/cx.ts`）で対応
 

@@ -25,10 +25,10 @@
     height: 100%;
     text-align: left;
     text-indent: -9999px;
-    cursor: pointer;
-    z-index: 2;
-    border-right: 0px solid rgb(0, 135, 180);
+    border-right: 0 solid rgb(0, 135, 180);
     border-right-color: rgba(255, 255, 255, 0.1);
+    z-index: 2;
+    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -65,11 +65,11 @@
 
     &::before,
     &::after {
+      content: "";
       position: absolute;
       top: 0;
       width: 40%;
       height: 100%;
-      content: "";
       background: rgb(255, 255, 255);
     }
 
@@ -85,13 +85,13 @@
   .skip {
     top: 0;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 2.5em;
     height: 100%;
-    cursor: pointer;
     z-index: 2;
     user-select: none;
+    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -132,14 +132,14 @@
 
   .bar {
     top: 50%;
-    left: calc(2.5em + 8px);
     right: calc(7.5em + 8px);
+    left: calc(2.5em + 8px);
     height: 18px;
     margin-top: -9px;
     border-radius: 10px;
     background: rgb(50, 50, 50);
-    cursor: pointer;
     z-index: 1;
+    cursor: pointer;
 
     div {
       position: absolute;
@@ -151,16 +151,16 @@
     }
 
     .bar_loaded {
-      background: rgba(255, 255, 255, 0.3);
       border-radius: 10px;
+      background: rgba(255, 255, 255, 0.3);
       z-index: 1;
     }
 
     .bar_played {
-      background: linear-gradient(to right, rgb(50, 150, 255) 50%, rgb(255, 0, 130));
       border-radius: 10px;
-      z-index: 2;
       box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
+      background: linear-gradient(to right, rgb(50, 150, 255) 50%, rgb(255, 0, 130));
+      z-index: 2;
     }
 
     .bar_time {
@@ -168,12 +168,12 @@
       top: 0;
       right: 0;
       left: 0;
-      z-index: 3;
       display: flex;
       justify-content: space-between;
       padding: 0 8px;
       font-size: 11px;
       line-height: 18px;
+      z-index: 3;
       pointer-events: none;
     }
   }
@@ -185,11 +185,11 @@
     height: 100%;
     text-align: left;
     text-indent: -9999px;
-    border-left: 0px solid rgb(0, 135, 180);
+    border-left: 0 solid rgb(0, 135, 180);
     border-left-color: rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    cursor: pointer;
     z-index: 100;
+    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -201,19 +201,19 @@
       height: 100%;
 
       .icon {
-        display: block;
         position: relative;
         top: 40%;
         left: 35%;
+        display: block;
         width: 0.313em;
         height: 0.375em;
         background: rgb(255, 255, 255);
-        z-index: 1;
         filter: drop-shadow(1px 1px 0 rgb(0, 0, 0));
+        z-index: 1;
 
         &::before {
-          position: absolute;
           content: "";
+          position: absolute;
           top: 50%;
           right: -0.25em;
           width: 0;
@@ -239,23 +239,23 @@
     .volume_adjust {
       position: absolute;
       top: -9999px;
-      left: 0;
       right: -1px;
+      left: 0;
       height: 6.25em;
       border-radius: 5px;
+      box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.15), 1px -1px 1px rgba(0, 0, 0, 0.15);
       background: rgb(0, 135, 180);
       cursor: default;
-      box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.15), 1px -1px 1px rgba(0, 0, 0, 0.15);
 
       > div {
         position: relative;
         width: 9px;
         height: 80%;
         margin: 30% auto 0;
-        background: rgb(50, 50, 50);
         border-radius: 10px;
-        cursor: pointer;
+        background: rgb(50, 50, 50);
         z-index: 1;
+        cursor: pointer;
 
         div {
           position: absolute;
@@ -263,9 +263,9 @@
           left: 0;
           width: 100%;
           height: 100%;
-          background: linear-gradient(to top, rgb(50, 150, 255) 30%, rgb(255, 0, 130));
-          box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
           border-radius: 10px;
+          box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
+          background: linear-gradient(to top, rgb(50, 150, 255) 30%, rgb(255, 0, 130));
         }
       }
     }
@@ -318,14 +318,14 @@
     .volume .volume_adjust,
     .volume:hover .volume_adjust {
       top: 50%;
+      right: 0.75em;
       bottom: auto;
       left: 2.5em;
-      right: 0.75em;
       height: 9px;
       margin-top: -4.5px;
-      background: none;
       border-radius: 10px;
       box-shadow: none;
+      background: none;
       opacity: 1;
 
       > div {
@@ -345,8 +345,8 @@
 
   // 音量波アイコン（ミュートでない時のみ）
   &:not(.muted) .volume_button .icon::after {
-    position: absolute;
     content: "";
+    position: absolute;
     top: 0.063em;
     left: 0.563em;
     width: 0.313em;

@@ -40,9 +40,9 @@
 
 .article_pass {
   display: grid;
+  grid-gap: 3px;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr;
-  grid-gap: 3px;
   margin-top: 16px;
 }
 
@@ -62,9 +62,9 @@
 }
 
 .channel {
+  flex-shrink: 0;
   width: 200px;
   margin: 10px 0;
-  flex-shrink: 0;
 }
 
 .account {

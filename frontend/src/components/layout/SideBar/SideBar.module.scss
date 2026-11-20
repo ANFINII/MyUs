@@ -4,8 +4,8 @@
   width: 72px;
   height: calc(100% - 56px);
   background: rgb(0, 0, 50);
-  user-select: none;
   z-index: 60;
+  user-select: none;
 
   .sidebar_color {
     &:hover {
@@ -26,11 +26,11 @@
 
     li {
       display: flex;
-      text-align: center;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 88px;
       font-size: 14px;
+      text-align: center;
       color: rgb(125, 125, 125);
     }
   }

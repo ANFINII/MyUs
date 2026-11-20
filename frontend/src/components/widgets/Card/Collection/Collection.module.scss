@@ -9,8 +9,8 @@
   .thumbnail_box {
     position: relative;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 195px;
     border-radius: 6px 6px 0 0;
     background: rgb(30, 30, 30);
@@ -48,11 +48,11 @@
   .title {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
     height: 42px;
     font-size: 14px;
-    color: rgb(3, 3, 3);
     word-break: break-all;
+    -webkit-line-clamp: 2;
+    color: rgb(3, 3, 3);
     overflow: hidden;
   }
 

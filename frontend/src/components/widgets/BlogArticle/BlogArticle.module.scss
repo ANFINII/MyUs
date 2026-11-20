@@ -3,7 +3,6 @@
 .article {
   height: auto;
   background: rgb(255, 255, 255);
-
   @include tiptap.tiptap;
 
   img {

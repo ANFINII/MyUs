@@ -3,13 +3,13 @@
   right: 0;
   bottom: 0;
   left: 72px;
-  z-index: 100;
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 12px;
   padding: 4px;
   color: rgb(255, 255, 255);
   background: rgb(15, 15, 15);
+  z-index: 100;
 
   .thumbnail {
     flex-shrink: 0;
@@ -25,19 +25,19 @@
   }
 
   .title {
-    overflow: hidden;
     font-size: 14px;
-    color: rgb(255, 255, 255);
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: rgb(255, 255, 255);
+    overflow: hidden;
   }
 
   .channel {
-    overflow: hidden;
     font-size: 12px;
-    color: rgb(170, 170, 170);
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: rgb(170, 170, 170);
+    overflow: hidden;
   }
 
   .player {
@@ -48,8 +48,8 @@
     display: flex;
     padding: 4px;
     color: rgb(220, 220, 220);
-    background: none;
     border: none;
+    background: none;
     cursor: pointer;
 
     &.active {

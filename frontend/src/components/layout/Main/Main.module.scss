@@ -10,30 +10,30 @@
 
   .header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
   }
 
   .title {
     display: inline-block;
     height: 30px;
     font-size: 24px;
+    white-space: nowrap;
     color: rgb(50, 70, 140);
     user-select: none;
-    white-space: nowrap;
 
     span {
-      font-size: 18px;
       margin: 6px 0 0 10px;
+      font-size: 18px;
     }
   }
 
   .search_message {
     display: inline-block;
-    list-style: none;
     padding: 0;
     margin: 0 0 0 8px;
     font-size: 14px;
+    list-style: none;
     color: rgb(33, 37, 41);
   }
 

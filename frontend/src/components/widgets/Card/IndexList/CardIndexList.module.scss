@@ -1,18 +1,18 @@
 .card_list {
   position: relative;
   display: grid;
+  justify-content: center;
+  grid-gap: 15px;
   grid-template-columns: repeat(auto-fill, minmax(auto, 312px));
   grid-template-rows: 25px auto;
-  grid-gap: 15px;
-  justify-content: center;
 
   h2 {
     display: inline;
     grid-column: 1/-1;
     grid-row: 1/2;
-    font-size: 16px;
     max-height: 25px;
     margin: 0;
+    font-size: 16px;
     overflow-y: auto;
   }
 }

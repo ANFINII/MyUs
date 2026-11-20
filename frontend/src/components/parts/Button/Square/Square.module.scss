@@ -2,15 +2,15 @@
   width: 52px;
   height: 26px;
   font-size: 14px;
-  color: rgb(255, 255, 255);
-  border: 0px;
   line-height: 1.2;
+  color: rgb(255, 255, 255);
+  border: 0;
   cursor: pointer;
 
   .flex {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
   }
 
   .spinner {

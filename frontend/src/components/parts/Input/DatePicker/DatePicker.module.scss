@@ -24,11 +24,11 @@
       height: 36px;
       padding: 6px 36px 6px 12px;
       font-size: 14px;
+      text-align: left;
+      color: rgb(0, 0, 0);
       border: 1px solid rgb(200, 200, 200);
       border-radius: 5px;
       background: rgb(255, 255, 255);
-      text-align: left;
-      color: rgb(0, 0, 0);
       cursor: pointer;
 
       &.placeholder {
@@ -42,17 +42,17 @@
 
       &.active,
       &:focus-visible {
-        outline: none;
         border-color: rgb(40, 130, 250);
+        outline: none;
       }
     }
 
     .icon {
       position: absolute;
-      right: 10px;
       top: 50%;
-      transform: translateY(-50%);
+      right: 10px;
       color: rgb(120, 120, 120);
+      transform: translateY(-50%);
       pointer-events: none;
     }
 
@@ -60,13 +60,13 @@
       position: absolute;
       bottom: calc(100% + 4px);
       left: 0;
-      z-index: 10;
       width: 280px;
-      background: rgb(255, 255, 255);
+      padding: 12px;
       border: 1px solid rgb(220, 220, 220);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      padding: 12px;
+      background: rgb(255, 255, 255);
+      z-index: 10;
 
       &.below {
         top: calc(100% + 4px);
@@ -75,8 +75,8 @@
 
       .nav {
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 8px;
 
         .title {
@@ -86,16 +86,16 @@
         }
 
         .nav_button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
           width: 28px;
           height: 28px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
           font-size: 18px;
-          background: transparent;
+          color: rgb(50, 50, 50);
           border: 1px solid transparent;
           border-radius: 6px;
-          color: rgb(50, 50, 50);
+          background: transparent;
           cursor: pointer;
 
           &:hover {
@@ -106,16 +106,16 @@
 
       .weekdays {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
         gap: 2px;
+        grid-template-columns: repeat(7, 1fr);
         margin-bottom: 4px;
 
         .weekday {
-          text-align: center;
+          padding: 4px 0;
           font-size: 12px;
           font-weight: 600;
+          text-align: center;
           color: rgb(120, 120, 120);
-          padding: 4px 0;
 
           &.sunday {
             color: rgb(220, 38, 38);
@@ -129,23 +129,23 @@
 
       .grid {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
         gap: 2px;
+        grid-template-columns: repeat(7, 1fr);
 
         .empty {
           height: 32px;
         }
 
         .day {
-          height: 32px;
           display: flex;
-          align-items: center;
           justify-content: center;
+          align-items: center;
+          height: 32px;
           font-size: 14px;
-          background: transparent;
+          color: rgb(30, 30, 30);
           border: 1px solid transparent;
           border-radius: 6px;
-          color: rgb(30, 30, 30);
+          background: transparent;
           cursor: pointer;
 
           &:hover:not(:disabled) {
@@ -166,8 +166,8 @@
           }
 
           &.selected {
-            background: rgb(44, 110, 203);
             color: rgb(255, 255, 255);
+            background: rgb(44, 110, 203);
           }
 
           &.selected:hover {
@@ -177,8 +177,8 @@
           &.disabled,
           &:disabled {
             color: rgb(200, 200, 200);
-            cursor: not-allowed;
             background: transparent;
+            cursor: not-allowed;
           }
         }
       }
@@ -195,8 +195,8 @@
         background: rgb(255, 255, 255);
 
         &:focus-visible {
-          outline: none;
           border-color: rgb(40, 130, 250);
+          outline: none;
         }
       }
     }
@@ -204,8 +204,8 @@
 
   .error_text {
     padding-top: 2px;
-    text-indent: 4px;
     font-size: 12px;
+    text-indent: 4px;
     color: rgb(255, 0, 0);
   }
 }

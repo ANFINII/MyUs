@@ -21,8 +21,8 @@
 }
 
 .list {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
   border: 1px solid rgb(220, 220, 220);
   border-radius: 6px;
@@ -62,10 +62,10 @@
   .title {
     flex: 1;
     min-width: 0;
-    overflow: hidden;
+    font-size: 14px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 14px;
+    overflow: hidden;
   }
 
   .private {

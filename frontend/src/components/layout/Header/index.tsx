@@ -79,7 +79,7 @@ export default function Header(props: Props): React.JSX.Element {
           <SideMenu open={isSideMenu} onClose={handleSideMenu} />
         </div>
 
-        <div className={cx(style.nav_2, style.color_MyUs)} onClick={() => handleRouter('/')}>
+        <div className={cx(style.nav_2, style.color_myus)} onClick={() => handleRouter('/')}>
           <h1>
             <Logo className={style.logo} />
           </h1>

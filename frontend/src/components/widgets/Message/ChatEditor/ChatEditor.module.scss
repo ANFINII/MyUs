@@ -23,17 +23,17 @@
     padding: 8px 12px;
     font-size: 14px;
     line-height: 1.42;
-    outline: none;
-    overflow-y: auto;
     word-break: break-word;
     overflow-wrap: break-word;
+    outline: none;
+    overflow-y: auto;
 
     :global(p.is-editor-empty:first-child::before) {
+      content: attr(data-placeholder);
       float: left;
       height: 0;
       color: rgb(160, 160, 160);
       pointer-events: none;
-      content: attr(data-placeholder);
     }
 
     > * + * {
@@ -53,14 +53,14 @@
 
     .mic_button {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       width: 32px;
       height: 32px;
       padding: 0;
+      color: rgb(100, 100, 100);
       border: none;
       border-radius: 4px;
-      color: rgb(100, 100, 100);
       background: transparent;
       cursor: pointer;
 

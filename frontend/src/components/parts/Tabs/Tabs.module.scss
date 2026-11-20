@@ -5,13 +5,13 @@
 
   a {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 34px;
     padding: 0 24px;
     font-size: 14px;
-    color: rgb(150, 150, 150);
     text-decoration: none;
+    color: rgb(150, 150, 150);
     border-bottom: 2px solid transparent;
     transition: all 20ms 0s ease;
     cursor: pointer;

@@ -36,14 +36,14 @@
     overflow-y: scroll;
 
     &.active {
-      min-height: 104px;
       height: fit-content;
+      min-height: 104px;
     }
   }
 
   .content_detail_p1 {
-    font-size: 14px;
     margin: 10px 0 0 56px;
+    font-size: 14px;
     white-space: pre-wrap;
   }
 
@@ -78,8 +78,8 @@
 
 .like_fill {
   padding: 0;
-  border: none;
   appearance: none;
+  border: none;
   background: transparent;
   cursor: pointer;
 }
@@ -91,7 +91,7 @@
   @include scrollbar.scrollbar;
 
   &.active {
-    min-height: 500px;
     height: fit-content;
+    min-height: 500px;
   }
 }

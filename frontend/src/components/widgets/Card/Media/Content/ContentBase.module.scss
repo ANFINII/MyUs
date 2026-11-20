@@ -2,11 +2,11 @@
   .media_title {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
     height: 42px;
     font-size: 14px;
-    color: rgb(3, 3, 3);
     word-break: break-all;
+    -webkit-line-clamp: 2;
+    color: rgb(3, 3, 3);
     overflow: hidden;
   }
 
@@ -16,16 +16,16 @@
 
     .font {
       height: 16px;
-      line-height: 1;
       font-size: 13px;
+      line-height: 1;
       color: rgb(40, 70, 150);
     }
 
     .nickname {
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
       margin: 0;
+      -webkit-line-clamp: 1;
       overflow: hidden;
     }
 

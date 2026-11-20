@@ -20,10 +20,10 @@
   .title {
     flex: 1;
     min-width: 0;
-    overflow: hidden;
+    font-weight: 600;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-weight: 600;
+    overflow: hidden;
   }
 
   .position {
@@ -34,8 +34,8 @@
 
 .list {
   max-height: 144px;
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
   overflow-y: auto;
 
@@ -44,8 +44,8 @@
     align-items: center;
     gap: 8px;
     padding: 6px 12px;
-    color: rgb(30, 30, 30);
     text-decoration: none;
+    color: rgb(30, 30, 30);
 
     &:hover {
       background: rgb(245, 245, 245);
@@ -68,16 +68,16 @@
     flex-shrink: 0;
     width: 64px;
     height: 36px;
-    border-radius: 4px;
     object-fit: cover;
+    border-radius: 4px;
   }
 
   .item_title {
     flex: 1;
     min-width: 0;
     font-size: 13px;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
   }
 }
