@@ -18,7 +18,7 @@ services:
     mem_limit: 768m
     ports:
       - "80:8000"
-    command: daphne -b 0.0.0.0 -p 8000 config.asgi:application
+    command: uvicorn config.asgi:application --host 0.0.0.0 --port 8000 --timeout-keep-alive 65
 
   worker:
     <<: *app

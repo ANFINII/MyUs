@@ -7,7 +7,7 @@
 | 領域 | 現状 |
 |---|---|
 | フロントエンド | Vite + React（SPA）。ビルドしたファイルを S3 に置き、CloudFront から `myus.media`・`www.myus.media` で配信する |
-| バックエンド | Django 6.1 + django-ninja。ASGI（daphne）で HTTP と WebSocket（Channels）を処理する。docker-compose では `runserver`（daphne が入っているので ASGI で動く）で `myus_backend:8000` を起動している |
+| バックエンド | Django 6.1 + django-ninja。ASGI で HTTP と WebSocket（Channels）を処理する。本番は uvicorn で動かす。daphne は受け取ったファイルを丸ごとメモリに載せるので、大きいファイルを上げるとメモリの上限を超える。uvicorn は少しずつ渡し、Django がディスクの一時ファイルに書く。docker-compose では `runserver`（daphne が入っているので ASGI で動く）で `myus_backend:8000` を起動している |
 | DB | MySQL 8.4（docker-compose のコンテナ） |
 | キャッシュ・Channel Layer | Redis 7（docker-compose のコンテナ） |
 | メディア | 開発は `MEDIA_ROOT`（ローカルディスク）、本番（`config/settings/prod.py`）は `django-storages` で S3 に保存し、CloudFront の `MEDIA_DOMAIN` から配信する。接続先は `AWS_STORAGE_BUCKET_NAME`・`AWS_S3_REGION_NAME`・`MEDIA_DOMAIN`（S3 へは EC2 のロールで書くのでキーは要らない）。販売するハイレゾの FLAC は、配信しない別のバケット（`HIRES_BUCKET_NAME`）に置き、5分だけ使える署名付き URL で渡す（`STORAGES["private"]`）。動画は ffmpeg で HLS に変換し、worker は元の動画を一時フォルダに取り出して変換した結果を保存先に上げる（`myus/myus/utils/functions/convert/`） |
@@ -39,7 +39,7 @@ flowchart LR
     CF_API[CloudFront<br/>api.myus]
     CF_MEDIA[CloudFront<br/>media.myus]
     subgraph VPC[VPC（パブリック・datastore サブネット・NAT なし）]
-        EC2[EC2 t4g.small<br/>docker compose<br/>daphne / worker / Redis]
+        EC2[EC2 t4g.small<br/>docker compose<br/>uvicorn / worker / Redis]
         RDS[(RDS MySQL<br/>db.t4g.micro)]
     end
     S3[(S3<br/>メディア)]
@@ -61,7 +61,7 @@ flowchart LR
 
 | 用途 | サービス | 内容 |
 |---|---|---|
-| API・WebSocket | **EC2 t4g.small**（ARM, 2vCPU / 2GB） | 今の docker-compose をほぼそのまま使う。`daphne`（HTTP+WS）、`worker`（決済のイベントの反映）、`encoder`（動画の HLS 変換）、`redis` の 4 コンテナ |
+| API・WebSocket | **EC2 t4g.small**（ARM, 2vCPU / 2GB） | 今の docker-compose をほぼそのまま使う。`backend`（uvicorn。HTTP+WS）、`worker`（決済のイベントの反映）、`encoder`（動画の HLS 変換）、`redis` の 4 コンテナ |
 | API の入口 | **CloudFront** + **ACM** | TLS 終端。WebSocket にも対応している。ALB（月 $20 以上）を使わずに HTTPS 化できる。オリジンへのアクセスは CloudFront のマネージドプレフィックスリストに限定する。CloudFront → EC2 は HTTP（80 番）になる（EC2 に証明書を置かないため）。暗号化が要るようになったら ALB か EC2 側の TLS を足す |
 | DB | **RDS for MySQL db.t4g.micro**（シングル AZ, gp3 20GB） | 自動バックアップ（7 日）とパッチ適用を任せる。パスワードは Terraform の ephemeral な `random_password` で作り、RDS（`password_wo`）と SSM の `/myus/prod/MYSQL_PASSWORD`（`value_wo`）に同じ値を入れる。state には残らない |
 | キャッシュ・Channel Layer | EC2 上の **Redis コンテナ** | フェーズ 1 では ElastiCache を使わずにコストを抑える |
@@ -278,7 +278,7 @@ flowchart LR
         subgraph vpc[VPC 10.0.0.0/16]
             subgraph public[パブリックサブネット]
                 subgraph ec2[EC2 myus-api-prod・EIP・SG api]
-                    backend[backend<br/>daphne :80]
+                    backend[backend<br/>uvicorn :80]
                     worker[worker<br/>決済のイベント]
                     encoder[encoder<br/>HLS 変換]
                     redis[(redis)]
