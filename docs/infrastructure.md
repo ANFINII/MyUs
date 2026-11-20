@@ -71,7 +71,7 @@ flowchart LR
 | メール | **SES** | 今の SMTP の設定のまま、接続先を SES の SMTP（`email-smtp.ap-northeast-1.amazonaws.com`）にする（`django-ses` は入れなくてよい）。本番利用申請（サンドボックス解除）が必要。SPF・DKIM・DMARC は Route 53 で設定する。SES は送るだけなので、`myus.media` に届くメールは転送サービスの ImprovMX で運営用の Gmail に転送する（MX は `mail` のスタックが作る） |
 | シークレット | **SSM Parameter Store**（SecureString） | Stripe キー・JWT シークレットなど。EC2 の IAM ロールで読み取り、起動時に環境変数へ展開する |
 | DNS | **Route 53** | `myus.media`・`www.myus.media`（フロント）・`api.myus.media`・`media.myus.media` |
-| 監視 | **CloudWatch**（Agent・Alarms）+ **AWS Budgets** | `prod/products/myus/monitoring` が、EC2 のステータスチェック・CPU クレジット・ディスクの使用率（CloudWatch Agent が送る）、RDS の空き容量・CPU、API の CloudFront の 5xx の割合にアラームを付け、SNS からメールで通知する。CloudFront のメトリクスは us-east-1 にあるので、5xx のアラームと SNS のトピックは us-east-1 にも作る。予算超過は `prod/general/cost` がメールで通知する |
+| 監視 | **CloudWatch**（Agent・Alarms）+ **AWS Budgets** | `prod/products/myus/monitoring` が、EC2 のステータスチェック・CPU クレジット・メモリとディスクの使用率（CloudWatch Agent が送る）、RDS の空き容量・CPU、API の CloudFront の 5xx の割合にアラームを付け、SNS からメールで通知する。CloudFront のメトリクスは us-east-1 にあるので、5xx のアラームと SNS のトピックは us-east-1 にも作る。予算超過は `prod/general/cost` がメールで通知する |
 | デプロイ | **GitHub Actions** → **ECR** → EC2（SSM Run Command で `docker compose pull && up -d`） | 認証は OIDC で行う（アクセスキーを使わない）。`.github/workflows/deploy.yml` が arm64 のイメージを buildx で作って ECR に push し、ライブラリの層は GitHub Actions のキャッシュで使い回す。`compute/deploy/` の `compose.yml`・`deploy.sh` を EC2 に送って実行する。`deploy.sh` は SSM の `/myus/prod/` から `django.env` を作ってから起動する |
 
 ### HLS 変換の分離
@@ -79,6 +79,7 @@ flowchart LR
 - アップロードされたら、API はファイルを S3 に置いて **動画を変換前のまま保存するだけ**にする
 - `encoder` コンテナ（`encode_videos`）が変換前の動画を S3 から一時フォルダに取り出して ffmpeg で変換し、結果を S3 に置く
 - 同じ EC2 内でも、コンテナ（プロセス）を分けて CPU 制限（`cpus:`）をかければ API への影響を抑えられる
+- メモリが 2GB しかないので、コンテナごとにメモリの上限（`mem_limit`）を付け、EC2 に 2GB のスワップを置いている。1 つのコンテナが使いすぎても、そのコンテナだけが落ちて `restart: always` で上がり直し、OS ごと固まらない
 
 ### コスト目安（東京リージョン・月額）
 
@@ -371,7 +372,7 @@ CloudFront のメトリクスは us-east-1 にしか無く、アラームの通�
 flowchart LR
     subgraph tokyo[ap-northeast-1]
         EC2[EC2<br/>ステータスチェック・CPU クレジット]
-        Agent[CloudWatch Agent<br/>ディスクの使用率]
+        Agent[CloudWatch Agent<br/>メモリ・ディスクの使用率]
         RDS[(RDS<br/>空き容量・CPU)]
         Alarm[CloudWatch Alarms]
         SNS[SNS<br/>myus-prod-alarm]
