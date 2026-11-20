@@ -305,7 +305,9 @@
     "follow": "Following",
     "channel": "Channels",
     "playlist": "Playlists",
-    "userpolicy": "Terms of Service"
+    "knowledge": "Features",
+    "userpolicy": "Terms of Service",
+    "privacy": "Privacy Policy"
   },
   "cloudMenu": {
     "manage": "Manage posts",
@@ -925,6 +927,7 @@
       }
     },
     "knowledge": {
+      "title": "Features",
       "myus": {
         "label": "MyUs",
         "content": "MyUs is an all-in-one social posting site. Share all kinds of ideas and have fun!"
