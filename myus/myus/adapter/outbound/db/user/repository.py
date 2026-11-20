@@ -22,7 +22,7 @@ NOTIFICATION_FIELDS = [
     "is_video", "is_audio", "is_blog", "is_comic", "is_picture",
     "is_chat", "is_follow", "is_reply", "is_like", "is_views",
 ]
-USER_PLAN_FIELDS = ["plan", "is_paid", "is_ultimate_invited", "start_date", "end_date"]
+USER_PLAN_FIELDS = ["plan", "is_paid", "start_date", "end_date"]
 
 
 class UserRepository(UserInterface):

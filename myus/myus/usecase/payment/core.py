@@ -7,7 +7,7 @@ from myus.domain.payment.event.data import PaymentEventData
 from myus.domain.payment.event.interface import FilterOption as PaymentEventFilterOption, PageOption as PaymentEventPageOption, SortOption as PaymentEventSortOption, PaymentEventInterface
 from myus.domain.payment.ledger.interface import FilterOption as LedgerEntryFilterOption, PageOption as LedgerEntryPageOption, SortOption as LedgerEntrySortOption, LedgerEntryInterface
 from myus.domain.payment.payout.interface import PayoutInterface
-from myus.domain.payment.plan import PLANS, get_plan, is_plan_available, plan_price
+from myus.domain.payment.plan import PLANS, get_plan, plan_price
 from myus.domain.payment.product.interface import FilterOption as ProductFilterOption, PageOption as ProductPageOption, ProductInterface, SortOption as ProductSortOption
 from myus.domain.payment.provider.data import CancelResult, CancelSuccessData, CancelFailedData, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, PaymentMethodSessionResult, PlanChangeResult, PlanChangeSuccessData, RedirectUrlsData, RevokeResult, RevokeSuccessData, SellerOnboardCreatedData, SellerOnboardData, SellerOnboardResult, SellerStatusFailedData, SellerStatusSuccessData, WebhookVerifyResult
 from myus.domain.payment.seller.data import PaymentSellerData
@@ -49,8 +49,8 @@ def create_checkout(user_id: int, plan_name: str, locale: Locale) -> Result[Chec
         log.warning("unknown plan", plan=plan_name)
         return Result.err(NotFoundError("error.planNotFound"))
 
-    if not is_plan_available(plan, user.user_plan.is_ultimate_invited):
-        log.warning("plan not available", user_id=user_id, plan=plan_name)
+    if plan.name == PlanName.ULTIMATE:
+        log.warning("ultimate plan requested", user_id=user_id)
         return Result.err(ValidationError("error.planNotAvailable"))
 
     subscription_repo = injector.get(SubscriptionInterface)
@@ -207,22 +207,25 @@ def get_subscription(user_id: int) -> Result[SubscriptionData | None, FatalError
 
 @Result.shield_exception()
 def get_plan_prices(user_id: int) -> Result[list[PlanPriceDTO], FindError]:
-    user_ret = get_user_data(user_id=user_id)
-    if user_ret.is_err:
-        return Result.err(user_ret.err_value)
-
-    user = user_ret.ok_value
-    if user is None:
-        return Result.err(NotFoundError("error.userNotFound"))
-
     subscription_ret = get_subscription(user_id)
     if subscription_ret.is_err:
         return Result.err(subscription_ret.err_value)
 
     subscription = subscription_ret.ok_value
-    currency = subscription.price.currency if subscription is not None else country_currency(user.profile.country)
-    plans = [p for p in PLANS if is_plan_available(p, user.user_plan.is_ultimate_invited)]
-    return Result.ok([PlanPriceDTO(name=p.name, price=plan_price(p, currency)) for p in plans])
+    if subscription is not None:
+        currency = subscription.price.currency
+    else:
+        user_ret = get_user_data(user_id=user_id)
+        if user_ret.is_err:
+            return Result.err(user_ret.err_value)
+
+        user = user_ret.ok_value
+        if user is None:
+            return Result.err(NotFoundError("error.userNotFound"))
+
+        currency = country_currency(user.profile.country)
+
+    return Result.ok([PlanPriceDTO(name=p.name, price=plan_price(p, currency)) for p in PLANS])
 
 
 @Result.shield_exception()
@@ -326,14 +329,6 @@ def revoke_cancellation(user_id: int) -> Result[RevokeResult, InputError]:
 
 @Result.shield_exception()
 def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputError]:
-    user_ret = get_user_data(user_id=user_id)
-    if user_ret.is_err:
-        return Result.err(user_ret.err_value)
-
-    user = user_ret.ok_value
-    if user is None:
-        return Result.err(NotFoundError("error.userNotFound"))
-
     plan = get_plan(plan_name)
     if plan is None:
         log.warning("unknown plan", plan=plan_name)
@@ -342,8 +337,8 @@ def change_plan(user_id: int, plan_name: str) -> Result[PlanChangeResult, InputE
     if plan.name == PlanName.FREE:
         return Result.err(ValidationError("error.planChangeToFree"))
 
-    if not is_plan_available(plan, user.user_plan.is_ultimate_invited):
-        log.warning("plan not available", user_id=user_id, plan=plan_name)
+    if plan.name == PlanName.ULTIMATE:
+        log.warning("ultimate plan requested", user_id=user_id)
         return Result.err(ValidationError("error.planNotAvailable"))
 
     subscription_ret = get_active_subscription_data(user_id)

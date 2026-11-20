@@ -85,7 +85,6 @@ def user_plan_data(user_plan: UserPlan) -> UserPlanData:
     return UserPlanData(
         plan=user_plan.plan,
         is_paid=user_plan.is_paid,
-        is_ultimate_invited=user_plan.is_ultimate_invited,
         start_date=user_plan.start_date,
         end_date=user_plan.end_date,
     )
@@ -159,7 +158,6 @@ def marshal_user_plan_data(user: User, data: UserAllData) -> UserPlan:
         user=user,
         plan=user_plan.plan,
         is_paid=user_plan.is_paid,
-        is_ultimate_invited=user_plan.is_ultimate_invited,
         start_date=user_plan.start_date,
         end_date=user_plan.end_date,
     )

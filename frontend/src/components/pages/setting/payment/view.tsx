@@ -39,8 +39,8 @@ export default function Payment(props: Props): React.JSX.Element {
   const [selectedPlan, setSelectedPlan] = useState<string>('')
 
   const currentPlan = mypage.plan
+  const purchasable = plans.filter((plan) => plan.name !== 'Free')
   const priceMap = new Map(planPrices.map((p) => [p.name, p.price]))
-  const purchasable = plans.filter((plan) => plan.name !== 'Free' && priceMap.has(plan.name))
   const isPaid = currentPlan !== 'Free'
   const isCanceled = isPaid && subscription.isCanceled
   const isPastDue = isPaid && subscription.isPastDue

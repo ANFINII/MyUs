@@ -70,6 +70,5 @@ class UserNotificationData:
 class UserPlanData:
     plan: str
     is_paid: bool
-    is_ultimate_invited: bool
     start_date: date | None
     end_date: date | None

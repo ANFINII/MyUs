@@ -83,9 +83,5 @@ def get_plan(name: str) -> Plan | None:
     return PLAN_MAP.get(name)
 
 
-def is_plan_available(plan: Plan, is_ultimate_invited: bool) -> bool:
-    return plan.name != PlanName.ULTIMATE or is_ultimate_invited
-
-
 def plan_price(plan: Plan, currency: Currency) -> Money:
     return next(p for p in plan.prices if p.currency == currency)
