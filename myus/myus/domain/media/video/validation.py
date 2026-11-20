@@ -1,12 +1,10 @@
 from myus.utils.common.result import Result, ValidationError
 from .data import VideoData
-
-
-VIDEO_TITLE_MAX_LENGTH = 100
+from ..common import MEDIA_TITLE_MAX
 
 
 def validate(obj: VideoData) -> Result[None, ValidationError]:
-    if len(obj.title) > VIDEO_TITLE_MAX_LENGTH:
+    if len(obj.title) > MEDIA_TITLE_MAX:
         return Result.err(ValidationError("error.titleLength"))
 
     if len(obj.video) == 0:
