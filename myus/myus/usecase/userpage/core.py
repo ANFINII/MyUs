@@ -8,7 +8,7 @@ from myus.utils.common.result import FatalError, Result
 from myus.utils.functions.common import create_url
 from ..advertise._convert import is_active
 from ..dto.media import HomeDTO
-from ..media.core import get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
+from ..media.core import get_videos, get_audios, get_blogs, get_comics, get_pictures, get_chats
 
 
 @Result.shield_exception()
@@ -17,9 +17,9 @@ def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int =
     if videos_ret.is_err:
         return Result.err(videos_ret.err_value)
 
-    musics_ret = get_musics(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
-    if musics_ret.is_err:
-        return Result.err(musics_ret.err_value)
+    audios_ret = get_audios(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
+    if audios_ret.is_err:
+        return Result.err(audios_ret.err_value)
 
     blogs_ret = get_blogs(search, owner_id=owner_id, channel_id=channel_id, limit=limit)
     if blogs_ret.is_err:
@@ -38,12 +38,12 @@ def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int =
         return Result.err(chats_ret.err_value)
 
     videos, _ = videos_ret.ok_value
-    musics, _ = musics_ret.ok_value
+    audios, _ = audios_ret.ok_value
     blogs, _ = blogs_ret.ok_value
     comics, _ = comics_ret.ok_value
     pictures, _ = pictures_ret.ok_value
     chats, _ = chats_ret.ok_value
-    return Result.ok(HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats))
+    return Result.ok(HomeDTO(videos=videos, audios=audios, blogs=blogs, comics=comics, pictures=pictures, chats=chats))
 
 
 @Result.shield_exception()

@@ -2,13 +2,13 @@
 
 ## サービス概要
 
-MyUsは「My Idea Know Us」を由来とする、YouTube型UIを採用した総合メディアプラットフォームSNSです。動画、音楽、漫画、画像、ブログ、チャットなど多様なメディアコンテンツの投稿・共有が可能で、リアルタイム通信機能も備えた統合型プラットフォームです。
+MyUsは「My Idea Know Us」を由来とする、YouTube型UIを採用した総合メディアプラットフォームSNSです。動画、オーディオ、漫画、画像、ブログ、チャットなど多様なメディアコンテンツの投稿・共有が可能で、リアルタイム通信機能も備えた統合型プラットフォームです。
 
 ## 主要機能
 
 ### コンテンツ投稿機能
 - **Video**: 動画アップロード
-- **Music**: 音楽アップロード
+- **Audio**: オーディオのアップロード。音楽のほか、オーディオブックのような音声も投稿できる
 - **Blog**: リッチテキストエディタ対応ブログ。有料部分を付けて記事ごとに売れる（Standard 以上）
 - **Comic**: 漫画投稿
 - **Picture**: 画像投稿
@@ -20,7 +20,7 @@ MyUsは「My Idea Know Us」を由来とする、YouTube型UIを採用した総�
 - マイページ機能
 - 通知設定
 - 料金プラン管理
-- プレイリスト（音楽を集めて並べる）
+- プレイリスト（オーディオを集めて並べる）
 - シリーズ（チャンネルの同じ種類の投稿をまとめる）
 - 個別広告の掲載（数はプランで決まる）
 - 有料記事の販売（売上を受け取る口座の登録。Stripe Connect）
@@ -56,7 +56,7 @@ Channel
   ├─ is_default
   └─ メディアコンテンツ
         ├─ videos
-        ├─ musics
+        ├─ audios
         ├─ comics
         ├─ pictures
         ├─ blogs
@@ -70,12 +70,12 @@ Video
   ├─ 動画ファイル、変換ファイル、サムネイル、変換の状態
   └─ カテゴリー、ハッシュタグ、いいね、閲覧数
 
-Music
-  ├─ 音楽ファイル、ジャケット画像、歌詞
-  └─ MusicHires (販売するハイレゾ。1曲に1つ)
+Audio
+  ├─ オーディオファイル、ジャケット画像、歌詞
+  └─ AudioHires (販売するハイレゾ。1曲に1つ)
 
-Playlist (ユーザーが作る音楽の並び)
-  ├─ PlaylistMusic
+Playlist (ユーザーが作るオーディオの並び)
+  ├─ PlaylistAudio
   └─ 曲の順序管理、公開・非公開
 
 Blog
@@ -111,7 +111,7 @@ PaymentCustomer
   └─ PaymentTransaction
        ├─ PaymentLedgerEntry
        └─ Purchase (誰がどの商品を買ったか)
-Product (売る物の種類と ID・値段。記事の有料部分・音楽のハイレゾ)
+Product (売る物の種類と ID・値段。記事の有料部分・オーディオのハイレゾ)
   └─ Purchase
 PaymentSeller (商品を売る人の受け取り口座)
 PaymentPayout
@@ -200,40 +200,40 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 
 動画は変換前（`Encoding`）のまま保存し、worker（`encode_videos`。docker-compose の `myus_encoder`）が古い順に ffmpeg で HLS に変換する。元の動画を一時フォルダに取り出して変換し、できた `.m3u8`・`.ts`・`.mp4` を保存先に上げて `Done` にする。続けて3回失敗したら壊れたファイルとみなして `Failed` にし、それ以上は試さない。公開の一覧・詳細には `Done` の動画だけを出す。`Failed` の動画は、管理画面の一覧に「変換できませんでした」と出し、編集で動画のファイルを上げ直すと `Encoding` に戻る。
 
-#### Music（音楽）
-- 音楽ファイル。編集画面で差し替えられ、差し替えたときは曲の大きさも測り直す
+#### Audio（オーディオ）
+- オーディオファイル。編集画面で差し替えられ、差し替えたときは曲の大きさも測り直す
 - アップロードのときに ffprobe で音声の形式とビットレートを読む（`utils/functions/convert/audio_converter.py`）
   - MP3 は変換せずにそのまま保存する。変換し直すと音が悪くなるため
   - MP3 以外は、WAV・FLAC・AAC・Ogg などどれも、320kbps の MP3 に変換する。音を削る形式を変換し直すときも、高いビットレートのほうが失う音が少ないため
-  - WAV・AIFF（`pcm_*`）・FLAC のように音を削らない形式を除き、ビットレートが 192kbps より低いものは上げ直してもらう（`error.musicBitRateLow`）。測った値は作ったときの値より少し低く出るので、180kbps を境にしている
+  - WAV・AIFF（`pcm_*`）・FLAC のように音を削らない形式を除き、ビットレートが 192kbps より低いものは上げ直してもらう（`error.audioBitRateLow`）。測った値は作ったときの値より少し低く出るので、180kbps を境にしている
 - ジャケット画像（無ければチャンネルのアバターを出す）
-- ハイレゾの販売。再生用の音楽とは別に、販売用の FLAC を編集画面で上げると、その曲が有料の販売データになる（`MusicHires`）
+- ハイレゾの販売。再生用のオーディオとは別に、販売用の FLAC を編集画面で上げると、その曲が有料の販売データになる（`AudioHires`）
   - 売れるのは Standard 以上のプランで、売上を受け取る口座の登録が済んだ人。通貨は投稿者の国から決める
   - 音質は 24bit で、サンプリングレートは 48kHz〜192kHz。アップロードのときに ffprobe で読んで保存し、決まりは `domain/media/hires/validation.py` が保存の前に確かめる
   - 値段は 300〜600。ドルは 3.00〜6.00。値段は `Product` に持つ
   - 購入した人がいるときは、販売をやめることも、曲を削除することもできない（`error.saleStopPurchased`・`error.deletePurchased`）
   - ファイルは変換せずに、公開しない置き場（`STORAGES["private"]`）に置く。開発は `myus/private`、本番は別の S3 のバケット
-  - 詳細（`GET /media/music/{ulid}`）は、`hires`（サンプリングレート・ビット深度。売っていなければ null）・`product`（`ulid`・`price`）・`is_purchased` を返す。ファイルの場所は返さない
-  - ダウンロード（`GET /media/music/{ulid}/hires`・`get_music_hires_url`）：投稿者と購入した人にだけ、5分（`PRIVATE_URL_EXPIRE`）だけ使える URL を返す。購入していなければ `error.hiresNotPurchased`
-  - 編集画面の「ハイレゾの販売」（`pages/manage/music/HiresSale`）：FLAC の先頭の情報（STREAMINFO）を読んで、24bit・48kHz〜192kHz かと値段の範囲を確かめてから送る（`utils/functions/hires.ts`）。大きなファイルなので、この送信だけタイムアウトを30分（`LARGE_UPLOAD_TIMEOUT_MS`）にする。「有料で販売する」の切り替えを入れたときだけ入力欄を出す。販売中は切り替えを入れたまま固定し、止めるのは「販売をやめる」のボタンにする。Standard 未満や口座が無いときは切り替えを押せなくし、案内（`widgets/SellerHint`）を出す
+  - 詳細（`GET /media/audio/{ulid}`）は、`hires`（サンプリングレート・ビット深度。売っていなければ null）・`product`（`ulid`・`price`）・`is_purchased` を返す。ファイルの場所は返さない
+  - ダウンロード（`GET /media/audio/{ulid}/hires`・`get_audio_hires_url`）：投稿者と購入した人にだけ、5分（`PRIVATE_URL_EXPIRE`）だけ使える URL を返す。購入していなければ `error.hiresNotPurchased`
+  - 編集画面の「ハイレゾの販売」（`pages/manage/audio/HiresSale`）：FLAC の先頭の情報（STREAMINFO）を読んで、24bit・48kHz〜192kHz かと値段の範囲を確かめてから送る（`utils/functions/hires.ts`）。大きなファイルなので、この送信だけタイムアウトを30分（`LARGE_UPLOAD_TIMEOUT_MS`）にする。「有料で販売する」の切り替えを入れたときだけ入力欄を出す。販売中は切り替えを入れたまま固定し、止めるのは「販売をやめる」のボタンにする。Standard 未満や口座が無いときは切り替えを押せなくし、案内（`widgets/SellerHint`）を出す
   - 詳細画面：投稿者と購入した人には「ハイレゾをダウンロード」、ほかの人には購入の枠（`widgets/Paywall`。記事の有料部分と同じ部品）を出す
   - 本番は S3 の署名付き URL。開発は `config/storages.py` の `SignedFileSystemStorage` が署名付きの URL（`/private/{token}`）を作り、DEBUG のときだけの `serve_private` が署名と期限を確かめて渡す
 - 再生時間は DB に持たない。一覧のカードにカーソルを乗せたとき・再生したときに、ブラウザが曲の情報（metadata）だけを読んで出す。再生中の曲のカードは出したままにする
-- 一覧のカードのジャケットを押すと、画面の下のミニプレイヤーで再生する。ページを移っても再生を続け、曲が終わったら同じ一覧の次の曲に進む（`MusicPlayerProvider`・`widgets/MiniPlayer`）
+- 一覧のカードのジャケットを押すと、画面の下のミニプレイヤーで再生する。ページを移っても再生を続け、曲が終わったら同じ一覧の次の曲に進む（`AudioPlayerProvider`・`widgets/MiniPlayer`）
 - 詳細のプレイヤーの横と、一覧のカードにカーソルを乗せると出る「＋」から、プレイリストに足す。その場で新しいプレイリストも作れる（`widgets/PlaylistAdd`）
 - 歌詞テキスト。行の頭に `[mm:ss.xx]`（LRC の書き方）の時刻があれば、詳細画面で再生に合わせて今の行を光らせて自動でスクロールし、行を押すとそこから再生する（`widgets/Lyric`・`utils/functions/lyric.ts`）。時刻が無ければそのまま出す
-- 時刻は、音楽の作成・編集画面の「歌詞の時刻を付ける」のモーダル（`pages/manage/music/LyricEditor`）で、曲を再生しながら行ごとに記録できる。歌詞と時刻もその場で直せ、±0.1 秒の調整・同期の見え方の確認ができる。「反映する」で歌詞の欄に戻し、フォームの保存で保存する。作成画面では選んだ音楽ファイルをそのまま再生する
+- 時刻は、オーディオの作成・編集画面の「歌詞の時刻を付ける」のモーダル（`pages/manage/audio/LyricEditor`）で、曲を再生しながら行ごとに記録できる。歌詞と時刻もその場で直せ、±0.1 秒の調整・同期の見え方の確認ができる。「反映する」で歌詞の欄に戻し、フォームの保存で保存する。作成画面では選んだオーディオファイルをそのまま再生する
 - 曲ごとの音の大きさの違いをならす。アップロードのときに ffmpeg の loudnorm で大きさ（LUFS）を測り、-14 LUFS より大きい曲だけ、その差を `gain`（dB。0〜-20）に入れる。再生するときは、音量にその分を掛けて下げる（`utils/functions/volume.ts` の `gainVolume`）。ファイルは書き換えない。小さい曲を上げることはしない
 - 検索対応
 
 #### Playlist（プレイリスト）
-- ユーザーが音楽を集めて並べる。曲の並びは `PlaylistMusic` の `sequence` で持つ
+- ユーザーがオーディオを集めて並べる。曲の並びは `PlaylistAudio` の `sequence` で持つ
 - 公開・非公開をプレイリストごとに選ぶ。非公開は作った人だけが見られる
 - 1つのプレイリストに入る曲は200曲まで。同じ曲は1回だけ入る
 - 作る・曲を足す・編集するのは有料プラン（Basic 以上。`Plan.is_playlist`）だけ。解約したあとも、見る・再生・曲を外す・削除はできる
 - 公開されていない曲は、曲の持ち主以外には出さない
 - 説明文は1000文字まで。サムネイルは中の曲の画像から選び、その画像を `image` に入れる。選んでいないときは1曲目の画像にする
-- 名前・説明文・サムネイル・公開・曲の並びは `PUT /media/playlist/{ulid}` でまとめて保存し、曲を1つ足すのは `POST /media/playlist/{ulid}/music`
+- 名前・説明文・サムネイル・公開・曲の並びは `PUT /media/playlist/{ulid}` でまとめて保存し、曲を1つ足すのは `POST /media/playlist/{ulid}/audio`
 - 自分のプレイリストはサイドメニューの「プレイリスト」（`/menu/playlist`）、中身は `/menu/playlist/$ulid`。中身では「すべて再生」でミニプレイヤーに流し、持ち主は名前・説明文・サムネイル・公開・曲の並び替え・削除を編集できる
 - ユーザーページの「投稿」の右の「プレイリスト」に、その人の公開プレイリストだけを出す
 
@@ -260,8 +260,8 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
   - 買う：`POST /payment/checkout/product` に `product.ulid` を送る（「Product」の節）
 
 #### Product
-- 売る物の共通の表。売る人（`seller`）・種類（`product_type`：`Blog`・`MusicHires`）・売る物の ID（`object_id`：記事の id・音楽の id）・値段（`price`・`currency`）を持つ。種類と売る物の ID の組で一意。行があれば販売中
-- 売る物の中身は種類ごとの表に置く。記事の有料部分は `Blog.paid_text`、ハイレゾのファイルは `MusicHires.file`
+- 売る物の共通の表。売る人（`seller`）・種類（`product_type`：`Blog`・`AudioHires`）・売る物の ID（`object_id`：記事の id・オーディオの id）・値段（`price`・`currency`）を持つ。種類と売る物の ID の組で一意。行があれば販売中
+- 売る物の中身は種類ごとの表に置く。記事の有料部分は `Blog.paid_text`、ハイレゾのファイルは `AudioHires.file`
 - 売る物を増やすときは、`ProductType` に値を足し、`product_media_type`（`utils/functions/map.py`）と値段の範囲（`domain/payment/product/validation.py`）に1か所ずつ足す。表・checkout・webhook は変えない
 - 買う（`POST /payment/checkout/product`・`create_product_checkout`）：`Product` があり、売る物が公開中で、自分が売る物でなく、まだ買っておらず、売る人の口座が使えるときだけ決済の画面を作る。Stripe の destination charge で、売上は売る人の口座に送り、MyUs は利用料として値段の 15%（`PLATFORM_FEE_RATE`）を取る。決済が終わると売る物の詳細に戻る
 - 決済の `product_code` は `Product` の ulid。webhook はこの ulid で `Product` を引いて `Purchase` を作る

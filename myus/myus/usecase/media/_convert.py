@@ -1,6 +1,8 @@
 from typing import assert_never
 from myus.domain.category.data import CategoryData
 from myus.domain.category.interface import CategoryInterface
+from myus.domain.media.audio.data import AudioData
+from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
@@ -8,10 +10,8 @@ from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
 from myus.domain.media.common import SortType
-from myus.domain.media.hires.data import MusicHiresData
-from myus.domain.media.hires.interface import FilterOption as MusicHiresFilterOption, MusicHiresInterface, PageOption as MusicHiresPageOption, SortOption as MusicHiresSortOption
-from myus.domain.media.music.data import MusicData
-from myus.domain.media.music.interface import MusicInterface
+from myus.domain.media.hires.data import AudioHiresData
+from myus.domain.media.hires.interface import AudioHiresInterface, FilterOption as AudioHiresFilterOption, PageOption as AudioHiresPageOption, SortOption as AudioHiresSortOption
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
@@ -31,7 +31,7 @@ from ..dto.user import MediaUserDTO
 from ..notification._convert import create_notification_data, delete_notification_data
 
 
-type MediaInterfaceType = VideoInterface | MusicInterface | BlogInterface | ComicInterface | PictureInterface | ChatInterface
+type MediaInterfaceType = VideoInterface | AudioInterface | BlogInterface | ComicInterface | PictureInterface | ChatInterface
 
 VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 
@@ -40,8 +40,8 @@ def get_media_repository(media_type: MediaType) -> MediaInterfaceType:
     match media_type:
         case MediaType.VIDEO:
             return injector.get(VideoInterface)
-        case MediaType.MUSIC:
-            return injector.get(MusicInterface)
+        case MediaType.AUDIO:
+            return injector.get(AudioInterface)
         case MediaType.BLOG:
             return injector.get(BlogInterface)
         case MediaType.COMIC:
@@ -90,9 +90,9 @@ def get_media_user_data(is_like: bool, channel_id: int, user_id: int | None) -> 
 
 
 @Result.shield_exception()
-def get_music_hires_data(music_id: int) -> Result[MusicHiresData | None, FatalError]:
-    repo = injector.get(MusicHiresInterface)
-    ids_ret = repo.get_ids(MusicHiresFilterOption(music_id=music_id), MusicHiresSortOption(), MusicHiresPageOption(limit=1))
+def get_audio_hires_data(audio_id: int) -> Result[AudioHiresData | None, FatalError]:
+    repo = injector.get(AudioHiresInterface)
+    ids_ret = repo.get_ids(AudioHiresFilterOption(audio_id=audio_id), AudioHiresSortOption(), AudioHiresPageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
@@ -123,8 +123,8 @@ def create_video_data(data: VideoData, category_data: CategoryData) -> Result[in
 
 
 @Result.shield_exception()
-def create_music_data(data: MusicData, category_data: CategoryData) -> Result[int, FatalError]:
-    repo = injector.get(MusicInterface)
+def create_audio_data(data: AudioData, category_data: CategoryData) -> Result[int, FatalError]:
+    repo = injector.get(AudioInterface)
     category_repo = injector.get(CategoryInterface)
     ids_ret = repo.bulk_save([data])
     if ids_ret.is_err:
@@ -132,7 +132,7 @@ def create_music_data(data: MusicData, category_data: CategoryData) -> Result[in
 
     new_ids = ids_ret.ok_value
     assert len(new_ids) == 1, "作成に失敗しました"
-    category_ret = category_repo.bulk_save(MediaType.MUSIC, new_ids[0], [category_data])
+    category_ret = category_repo.bulk_save(MediaType.AUDIO, new_ids[0], [category_data])
     if category_ret.is_err:
         return Result.err(category_ret.err_value)
 

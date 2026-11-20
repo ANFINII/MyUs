@@ -206,7 +206,7 @@ def signup_user(input: SignupDTO) -> Result[None, FatalError]:
         ),
         notification=UserNotificationData(
             is_video=False,
-            is_music=False,
+            is_audio=False,
             is_blog=False,
             is_comic=False,
             is_picture=False,

@@ -147,7 +147,7 @@ def update_notification(user_id: int, input: SettingNotificationDTO) -> Result[N
 
     notification = UserNotificationData(
         is_video=input.is_video,
-        is_music=input.is_music,
+        is_audio=input.is_audio,
         is_blog=input.is_blog,
         is_comic=input.is_comic,
         is_picture=input.is_picture,

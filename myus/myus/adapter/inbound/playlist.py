@@ -2,13 +2,13 @@ from typing import assert_never
 from ninja import Router
 from django.http import HttpRequest
 from myus.usecase.dto.playlist import PlaylistCreateDTO, PlaylistDetailDTO, PlaylistDTO, PlaylistUpdateDTO
-from myus.usecase.playlist.core import add_playlist_music, create_playlist, delete_playlist, get_my_playlists, get_playlist, get_user_playlists, remove_playlist_music, update_playlist
+from myus.usecase.playlist.core import add_playlist_audio, create_playlist, delete_playlist, get_my_playlists, get_playlist, get_user_playlists, remove_playlist_audio, update_playlist
 from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError
 from .auth import auth_check
-from .media import convert_author, convert_musics
+from .media import convert_audios, convert_author
 from .schema.common import ErrorOut, ErrorType, SuccessOut
-from .schema.playlist import PlaylistCreateOut, PlaylistDetailOut, PlaylistIn, PlaylistListOut, PlaylistMusicIn, PlaylistOut, PlaylistUpdateIn
+from .schema.playlist import PlaylistAudioIn, PlaylistCreateOut, PlaylistDetailOut, PlaylistIn, PlaylistListOut, PlaylistOut, PlaylistUpdateIn
 
 
 class PlaylistAPI:
@@ -165,8 +165,8 @@ class PlaylistAPI:
         return 200, SuccessOut(message="OK")
 
     @staticmethod
-    @router.post("/{ulid}/music", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
-    def add_music(request: HttpRequest, ulid: str, input: PlaylistMusicIn):
+    @router.post("/{ulid}/audio", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    def add_audio(request: HttpRequest, ulid: str, input: PlaylistAudioIn):
         log.info("request", ulid=ulid, input=input)
 
         user_id_ret = auth_check(request)
@@ -177,7 +177,7 @@ class PlaylistAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        ret = add_playlist_music(user_id, ulid, input.music_ulid)
+        ret = add_playlist_audio(user_id, ulid, input.audio_ulid)
         if ret.is_err:
             message = ret.err_value.message
             match ret.err_value:
@@ -193,9 +193,9 @@ class PlaylistAPI:
         return 200, SuccessOut(message="OK")
 
     @staticmethod
-    @router.delete("/{ulid}/music/{music_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
-    def remove_music(request: HttpRequest, ulid: str, music_ulid: str):
-        log.info("request", ulid=ulid, music_ulid=music_ulid)
+    @router.delete("/{ulid}/audio/{audio_ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
+    def remove_audio(request: HttpRequest, ulid: str, audio_ulid: str):
+        log.info("request", ulid=ulid, audio_ulid=audio_ulid)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -205,7 +205,7 @@ class PlaylistAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        ret = remove_playlist_music(user_id, ulid, music_ulid)
+        ret = remove_playlist_audio(user_id, ulid, audio_ulid)
         if ret.is_err:
             message = ret.err_value.message
             match ret.err_value:
@@ -229,7 +229,7 @@ def convert_playlists(objs: list[PlaylistDTO]) -> list[PlaylistOut]:
             image=x.image,
             publish=x.publish,
             count=x.count,
-            music_ulids=x.music_ulids,
+            audio_ulids=x.audio_ulids,
             updated=x.updated,
         ) for x in objs
     ]
@@ -242,11 +242,11 @@ def convert_playlist_detail(obj: PlaylistDetailDTO) -> PlaylistDetailOut:
         title=obj.title,
         description=obj.description,
         image=obj.image,
-        thumbnail_music_ulid=obj.thumbnail_music_ulid,
+        thumbnail_audio_ulid=obj.thumbnail_audio_ulid,
         publish=obj.publish,
         is_owner=obj.is_owner,
         updated=obj.updated,
         author=convert_author(obj.author),
-        musics=convert_musics(obj.musics),
+        audios=convert_audios(obj.audios),
     )
     return data

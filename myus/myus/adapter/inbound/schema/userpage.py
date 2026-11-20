@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
 from .channel import ChannelOut
-from .media.output import VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
+from .media.output import VideoOut, AudioOut, BlogOut, ComicOut, PictureOut, ChatOut
 
 
 class UserPageOut(BaseModel):
@@ -20,7 +20,7 @@ class UserPageOut(BaseModel):
 
 class UserPageMediaOut(BaseModel):
     videos: list[VideoOut]
-    musics: list[MusicOut]
+    audios: list[AudioOut]
     blogs: list[BlogOut]
     comics: list[ComicOut]
     pictures: list[PictureOut]

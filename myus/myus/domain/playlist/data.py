@@ -11,6 +11,6 @@ class PlaylistData:
     description: str
     image: str
     publish: bool
-    music_ids: list[int]
+    audio_ids: list[int]
     created: datetime
     updated: datetime

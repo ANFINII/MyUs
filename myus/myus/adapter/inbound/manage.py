@@ -4,11 +4,11 @@ from django.http import HttpRequest
 from myus.domain.advertise.interface import ADVERTISE_PAGE_SIZE, PageOption
 from myus.domain.media.common import MEDIA_PAGE_SIZE
 from myus.usecase.dto.advertise import AdvertiseDTO
-from myus.usecase.dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
+from myus.usecase.dto.media import VideoUpdateDTO, AudioUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from myus.usecase.manage.advertise.core import get_manage_advertises, get_manage_advertise, create_manage_advertise, update_manage_advertise, delete_manage_advertise
 from myus.usecase.manage.media.core import (
     get_manage_videos, get_manage_video, update_manage_video, delete_manage_video,
-    get_manage_musics, get_manage_music, update_manage_music, delete_manage_music, update_manage_music_hires, delete_manage_music_hires,
+    get_manage_audios, get_manage_audio, update_manage_audio, delete_manage_audio, update_manage_audio_hires, delete_manage_audio_hires,
     get_manage_blogs, get_manage_blog, update_manage_blog, delete_manage_blog,
     get_manage_comics, get_manage_comic, update_manage_comic, delete_manage_comic,
     get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture,
@@ -18,12 +18,12 @@ from myus.utils.common.logger import log
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
 from .advertise import convert_advertises
 from .auth import auth_check
-from .media import convert_videos, convert_musics, convert_music_hires, convert_blogs, convert_product, convert_comics, convert_pictures, convert_chats
+from .media import convert_videos, convert_audios, convert_audio_hires, convert_blogs, convert_product, convert_comics, convert_pictures, convert_chats
 from .schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from .schema.common import ErrorOut, ErrorType, Limit, Offset, SuccessOut
-from .schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, MusicHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
-from .schema.media.output import MediaCreateOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
-from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
+from .schema.media.input import BulkDeleteIn, VideoUpdateIn, AudioUpdateIn, AudioHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
+from .schema.media.output import MediaCreateOut, VideoOut, AudioOut, BlogOut, ComicOut, PictureOut, ChatOut
+from .schema.media.output import VideoListOut, AudioListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 
 
 UploadedFiles = list[UploadedFile]
@@ -139,13 +139,13 @@ class ManageVideoAPI:
         return 200, SuccessOut(message="OK")
 
 
-class ManageMusicAPI:
-    """ManageMusicAPI"""
+class ManageAudioAPI:
+    """ManageAudioAPI"""
 
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: MusicListOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("", response={200: AudioListOut, 400: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
         log.info("request", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -157,15 +157,15 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        musics_ret = get_manage_musics(user_id, search, channel, limit, offset)
-        if musics_ret.is_err:
+        audios_ret = get_manage_audios(user_id, search, channel, limit, offset)
+        if audios_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        objs, total = musics_ret.ok_value
-        return 200, MusicListOut(items=convert_musics(objs), total=total)
+        objs, total = audios_ret.ok_value
+        return 200, AudioListOut(items=convert_audios(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: MusicOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: AudioOut, 400: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("request", ulid=ulid)
 
@@ -177,25 +177,25 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        music_ret = get_manage_music(user_id, ulid)
-        if music_ret.is_err:
-            message = music_ret.err_value.message
-            match music_ret.err_value:
+        audio_ret = get_manage_audio(user_id, ulid)
+        if audio_ret.is_err:
+            message = audio_ret.err_value.message
+            match audio_ret.err_value:
                 case NotFoundError():
                     return 400, ErrorOut(type=ErrorType.NOT_FOUND, message=message)
                 case FatalError():
                     return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
                 case _:
-                    assert_never(music_ret.err_value)
+                    assert_never(audio_ret.err_value)
 
-        music, hires, product = music_ret.ok_value
-        music_out = convert_musics([music])[0]
-        return 200, music_out.model_copy(update={"hires": convert_music_hires(hires), "product": convert_product(product)})
+        audio, hires, product = audio_ret.ok_value
+        audio_out = convert_audios([audio])[0]
+        return 200, audio_out.model_copy(update={"hires": convert_audio_hires(hires), "product": convert_product(product)})
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
-    def put(request: HttpRequest, ulid: str, input: MusicUpdateIn = Form(...), image: UploadedFile | None = File(None), music: UploadedFile | None = File(None)):
-        log.info("request", ulid=ulid, input=input, image=image, music=music)
+    def put(request: HttpRequest, ulid: str, input: AudioUpdateIn = Form(...), image: UploadedFile | None = File(None), audio: UploadedFile | None = File(None)):
+        log.info("request", ulid=ulid, input=input, image=image, audio=audio)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -205,8 +205,8 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = MusicUpdateDTO(**input.model_dump())
-        update_ret = update_manage_music(user_id, ulid, dto, image, music)
+        dto = AudioUpdateDTO(**input.model_dump())
+        update_ret = update_manage_audio(user_id, ulid, dto, image, audio)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -236,7 +236,7 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        delete_ret = delete_manage_music(user_id, input.ulids)
+        delete_ret = delete_manage_audio(user_id, input.ulids)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:
@@ -253,7 +253,7 @@ class ManageMusicAPI:
 
     @staticmethod
     @router.put("/{ulid}/hires", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})
-    def put_hires(request: HttpRequest, ulid: str, input: MusicHiresIn = Form(...), hires: UploadedFile | None = File(None)):
+    def put_hires(request: HttpRequest, ulid: str, input: AudioHiresIn = Form(...), hires: UploadedFile | None = File(None)):
         log.info("request", ulid=ulid, input=input, hires=hires)
 
         user_id_ret = auth_check(request)
@@ -264,7 +264,7 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        update_ret = update_manage_music_hires(user_id, ulid, input.price, hires)
+        update_ret = update_manage_audio_hires(user_id, ulid, input.price, hires)
         if update_ret.is_err:
             message = update_ret.err_value.message
             match update_ret.err_value:
@@ -294,7 +294,7 @@ class ManageMusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        delete_ret = delete_manage_music_hires(user_id, ulid)
+        delete_ret = delete_manage_audio_hires(user_id, ulid)
         if delete_ret.is_err:
             message = delete_ret.err_value.message
             match delete_ret.err_value:

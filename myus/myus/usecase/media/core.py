@@ -2,6 +2,8 @@ from dataclasses import replace
 from datetime import datetime
 from ninja import UploadedFile
 from django.utils import timezone
+from myus.domain.media.audio.data import AudioData
+from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
@@ -9,8 +11,6 @@ from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
 from myus.domain.media.common import MEDIA_PAGE_SIZE, FilterOption, PageOption, SortOption, SortType
-from myus.domain.media.music.data import MusicData
-from myus.domain.media.music.interface import MusicInterface
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
@@ -24,16 +24,16 @@ from myus.utils.enum.notification import NotificationObjectType, NotificationTyp
 from myus.utils.enum.payment import ProductType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
-from myus.utils.functions.convert.audio_converter import measure_music_gain
+from myus.utils.functions.convert.audio_converter import measure_audio_gain
 from myus.utils.functions.file import private_storage
 from myus.utils.functions.map import comment_type_no_map
 from myus.utils.functions.media import save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
-from ._convert import get_media_repository, home_sort_type, get_media_user_data, get_music_hires_data, create_video_data, create_music_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
+from ._convert import get_media_repository, home_sort_type, get_media_user_data, get_audio_hires_data, create_video_data, create_audio_data, create_blog_data, create_comic_data, create_picture_data, create_chat_data, save_read_data
 from ..category._convert import get_category_data
 from ..channel.core import get_channel_data
 from ..comment._convert import get_comments_data
-from ..dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
+from ..dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, AudioDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO, VideoCreateDTO, AudioCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from ..message._convert import get_messages_data
 from ..notification._convert import create_notification_data
 from ..payment._convert import get_product_data, get_product_purchase_ids_data, get_purchase_ids_data, get_seller_currency_data
@@ -103,8 +103,8 @@ def create_video(user_id: int, input: VideoCreateDTO, image: UploadedFile, video
 
 
 @Result.shield_exception()
-def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile, image: UploadedFile | None = None) -> Result[MediaCreateDTO, WriteError]:
-    upload_ret = validate_uploads([(music, MediaUpload.MUSIC), (image, ImageUpload.MUSIC)])
+def create_audio(user_id: int, input: AudioCreateDTO, audio: UploadedFile, image: UploadedFile | None = None) -> Result[MediaCreateDTO, WriteError]:
+    upload_ret = validate_uploads([(audio, MediaUpload.AUDIO), (image, ImageUpload.AUDIO)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
@@ -120,16 +120,16 @@ def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile, image
         log.warning("owner mismatch", channel_ulid=channel.ulid, user_id=user_id)
         return Result.err(ForbiddenError("error.createFailed"))
 
-    music_path = save_upload(music, MediaUpload.MUSIC, channel.ulid)
-    new_data = MusicData(
+    audio_path = save_upload(audio, MediaUpload.AUDIO, channel.ulid)
+    new_data = AudioData(
         id=0,
         ulid="",
         title=input.title,
         content=input.content,
         lyric=input.lyric,
-        image=save_upload(image, ImageUpload.MUSIC, channel.ulid) if image is not None else "",
-        music=music_path,
-        gain=measure_music_gain(music_path),
+        image=save_upload(image, ImageUpload.AUDIO, channel.ulid) if image is not None else "",
+        audio=audio_path,
+        gain=measure_audio_gain(audio_path),
         read=0,
         like=0,
         publish=input.publish,
@@ -141,14 +141,14 @@ def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile, image
         hashtags=[],
     )
 
-    repo = injector.get(MusicInterface)
+    repo = injector.get(AudioInterface)
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
 
-    create_ret = atomic_result(lambda: create_music_data(new_data, category_data))
+    create_ret = atomic_result(lambda: create_audio_data(new_data, category_data))
     if create_ret.is_err:
         return Result.err(create_ret.err_value)
 
@@ -160,9 +160,9 @@ def create_music(user_id: int, input: MusicCreateDTO, music: UploadedFile, image
     objs = objs_ret.ok_value
     obj = objs[0]
     if input.publish:
-        notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.AUDIO, obj.id, NotificationObjectType.AUDIO)
         if notification_ret.is_err:
-            log.error("create failed", error=notification_ret.err_value.message, object_type=NotificationObjectType.MUSIC.value, object_id=obj.id)
+            log.error("create failed", error=notification_ret.err_value.message, object_type=NotificationObjectType.AUDIO.value, object_id=obj.id)
 
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
@@ -435,9 +435,9 @@ def get_home(limit: int, search: str, sort: HomeSort) -> Result[HomeDTO, FatalEr
     if videos_ret.is_err:
         return Result.err(videos_ret.err_value)
 
-    musics_ret = get_musics(search, is_recommend=is_recommend, sort_type=sort_type, limit=limit)
-    if musics_ret.is_err:
-        return Result.err(musics_ret.err_value)
+    audios_ret = get_audios(search, is_recommend=is_recommend, sort_type=sort_type, limit=limit)
+    if audios_ret.is_err:
+        return Result.err(audios_ret.err_value)
 
     blogs_ret = get_blogs(search, is_recommend=is_recommend, sort_type=sort_type, limit=limit)
     if blogs_ret.is_err:
@@ -456,12 +456,12 @@ def get_home(limit: int, search: str, sort: HomeSort) -> Result[HomeDTO, FatalEr
         return Result.err(chats_ret.err_value)
 
     videos, _ = videos_ret.ok_value
-    musics, _ = musics_ret.ok_value
+    audios, _ = audios_ret.ok_value
     blogs, _ = blogs_ret.ok_value
     comics, _ = comics_ret.ok_value
     pictures, _ = pictures_ret.ok_value
     chats, _ = chats_ret.ok_value
-    return Result.ok(HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats))
+    return Result.ok(HomeDTO(videos=videos, audios=audios, blogs=blogs, comics=comics, pictures=pictures, chats=chats))
 
 
 @Result.shield_exception()
@@ -502,8 +502,8 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
 
 
 @Result.shield_exception()
-def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, sort_type: SortType = SortType.SCORE, media_ids: list[int] | None = None, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
-    repo = injector.get(MusicInterface)
+def get_audios(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0, user_id: int | None = None, is_recommend: bool = False, sort_type: SortType = SortType.SCORE, media_ids: list[int] | None = None, limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[AudioData], int], FatalError]:
+    repo = injector.get(AudioInterface)
     if media_ids is not None and len(media_ids) == 0:
         return Result.ok(([], 0))
 
@@ -528,7 +528,7 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, owner_id: int = 0,
         return Result.err(objs_ret.err_value)
 
     objs = objs_ret.ok_value
-    data = [replace(o, image=create_url(o.image), music=create_url(o.music)) for o in objs]
+    data = [replace(o, image=create_url(o.image), audio=create_url(o.audio)) for o in objs]
     return Result.ok((data, total))
 
 
@@ -723,8 +723,8 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
 
 @Result.shield_exception()
-def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[MusicDetailDTO, FindError]:
-    repo = injector.get(MusicInterface)
+def get_audio_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[AudioDetailDTO, FindError]:
+    repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, publish=publish), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -741,7 +741,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     objs = objs_ret.ok_value
     obj = objs[0]
 
-    type_no = comment_type_no_map(CommentType.MUSIC)
+    type_no = comment_type_no_map(CommentType.AUDIO)
     comments_ret = get_comments_data(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
@@ -760,17 +760,17 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
-    series_ret = get_media_series_data(MediaType.MUSIC, obj.id)
+    series_ret = get_media_series_data(MediaType.AUDIO, obj.id)
     if series_ret.is_err:
         return Result.err(series_ret.err_value)
 
     series = series_ret.ok_value
-    hires_ret = get_music_hires_data(obj.id)
+    hires_ret = get_audio_hires_data(obj.id)
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
     hires = hires_ret.ok_value
-    product_ret = get_product_data(ProductType.MUSIC_HIRES, obj.id)
+    product_ret = get_product_data(ProductType.AUDIO_HIRES, obj.id)
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
@@ -784,14 +784,14 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         purchase_ids = purchase_ids_ret.ok_value
         is_purchased = len(purchase_ids) > 0
 
-    data = MusicDetailDTO(
+    data = AudioDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         lyric=obj.lyric,
         image=create_url(obj.image),
-        music=create_url(obj.music),
+        audio=create_url(obj.audio),
         gain=obj.gain,
         is_purchased=is_purchased,
         comments=comments,
@@ -812,8 +812,8 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
 
 
 @Result.shield_exception()
-def get_music_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
-    repo = injector.get(MusicInterface)
+def get_audio_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
+    repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption(limit=1))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -829,7 +829,7 @@ def get_music_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    hires_ret = get_music_hires_data(obj.id)
+    hires_ret = get_audio_hires_data(obj.id)
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
@@ -839,7 +839,7 @@ def get_music_hires_url(user_id: int, ulid: str) -> Result[str, AccessError]:
         return Result.err(NotFoundError("error.hiresNotFound"))
 
     if user_id != obj.channel.owner_id:
-        purchase_ids_ret = get_product_purchase_ids_data(ProductType.MUSIC_HIRES, [obj.id], user_id)
+        purchase_ids_ret = get_product_purchase_ids_data(ProductType.AUDIO_HIRES, [obj.id], user_id)
         if purchase_ids_ret.is_err:
             return Result.err(purchase_ids_ret.err_value)
 

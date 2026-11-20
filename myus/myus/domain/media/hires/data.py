@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
-class MusicHiresData:
+class AudioHiresData:
     id: int
-    music_id: int
+    audio_id: int
     file: str
     sample_rate: int
     bit_depth: int

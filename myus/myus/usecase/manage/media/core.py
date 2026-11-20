@@ -1,16 +1,16 @@
 from dataclasses import replace
 from ninja import UploadedFile
 from django.utils import timezone
+from myus.domain.media.audio.data import AudioData
+from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
-from myus.domain.media.hires.data import MusicHiresData
 from myus.domain.media.common import MEDIA_PAGE_SIZE, FilterOption, PageOption, SortOption
-from myus.domain.media.music.data import MusicData
-from myus.domain.media.music.interface import MusicInterface
+from myus.domain.media.hires.data import AudioHiresData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
@@ -26,13 +26,13 @@ from myus.utils.enum.notification import NotificationObjectType, NotificationTyp
 from myus.utils.enum.payment import ProductType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
-from myus.utils.functions.convert.audio_converter import measure_music_gain, probe_audio
+from myus.utils.functions.convert.audio_converter import measure_audio_gain, probe_audio
 from myus.utils.functions.media import probe_upload, save_upload, validate_uploads
 from myus.utils.functions.transaction import atomic_result
-from ._convert import save_video_data, save_music_data, save_music_hires_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_music_data, delete_music_hires_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
+from ._convert import save_video_data, save_audio_data, save_audio_hires_data, save_blog_data, save_comic_data, save_picture_data, save_chat_data, delete_video_data, delete_audio_data, delete_audio_hires_data, delete_blog_data, delete_comic_data, delete_picture_data, delete_chat_data
 from ...category._convert import get_category_data
-from ...dto.media import VideoUpdateDTO, MusicUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
-from ...media._convert import get_music_hires_data
+from ...dto.media import VideoUpdateDTO, AudioUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
+from ...media._convert import get_audio_hires_data
 from ...notification._convert import create_publish_notification_data
 from ...payment._convert import get_product_data, get_product_purchase_ids_data, get_purchase_ids_data, get_seller_currency_data
 
@@ -165,8 +165,8 @@ def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, FindErro
 
 
 @Result.shield_exception()
-def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
-    repo = injector.get(MusicInterface)
+def get_manage_audios(user_id: int, search: str, channel_ulid: str = "", limit: int = MEDIA_PAGE_SIZE, offset: int = 0) -> Result[tuple[list[AudioData], int], FatalError]:
+    repo = injector.get(AudioInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
     count_ret = repo.count(filter)
     if count_ret.is_err:
@@ -184,13 +184,13 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
 
     objs = objs_ret.ok_value
 
-    data = [replace(o, image=create_url(o.image), music=create_url(o.music)) for o in objs]
+    data = [replace(o, image=create_url(o.image), audio=create_url(o.audio)) for o in objs]
     return Result.ok((data, total))
 
 
 @Result.shield_exception()
-def get_manage_music(user_id: int, ulid: str) -> Result[tuple[MusicData, MusicHiresData | None, ProductData | None], FindError]:
-    repo = injector.get(MusicInterface)
+def get_manage_audio(user_id: int, ulid: str) -> Result[tuple[AudioData, AudioHiresData | None, ProductData | None], FindError]:
+    repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -206,26 +206,26 @@ def get_manage_music(user_id: int, ulid: str) -> Result[tuple[MusicData, MusicHi
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    hires_ret = get_music_hires_data(obj.id)
+    hires_ret = get_audio_hires_data(obj.id)
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
     hires = hires_ret.ok_value
-    product_ret = get_product_data(ProductType.MUSIC_HIRES, obj.id)
+    product_ret = get_product_data(ProductType.AUDIO_HIRES, obj.id)
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
     product = product_ret.ok_value
-    return Result.ok((replace(obj, image=create_url(obj.image), music=create_url(obj.music)), hires, product))
+    return Result.ok((replace(obj, image=create_url(obj.image), audio=create_url(obj.audio)), hires, product))
 
 
 @Result.shield_exception()
-def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO, image: UploadedFile | None = None, music: UploadedFile | None = None) -> Result[None, WriteError]:
-    upload_ret = validate_uploads([(image, ImageUpload.MUSIC), (music, MediaUpload.MUSIC)])
+def update_manage_audio(user_id: int, ulid: str, input: AudioUpdateDTO, image: UploadedFile | None = None, audio: UploadedFile | None = None) -> Result[None, WriteError]:
+    upload_ret = validate_uploads([(image, ImageUpload.AUDIO), (audio, MediaUpload.AUDIO)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repo = injector.get(MusicInterface)
+    repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -248,22 +248,22 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO, image: U
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, publish=input.publish, publish_at=input.publish_at)
     if image is not None:
-        update_data = replace(update_data, image=save_upload(image, ImageUpload.MUSIC, obj.channel.ulid))
-    if music is not None:
-        music_path = save_upload(music, MediaUpload.MUSIC, obj.channel.ulid)
-        update_data = replace(update_data, music=music_path, gain=measure_music_gain(music_path))
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.AUDIO, obj.channel.ulid))
+    if audio is not None:
+        audio_path = save_upload(audio, MediaUpload.AUDIO, obj.channel.ulid)
+        update_data = replace(update_data, audio=audio_path, gain=measure_audio_gain(audio_path))
     category_data_ret = get_category_data(input.category_ulid)
     if category_data_ret.is_err:
         return Result.err(category_data_ret.err_value)
 
     category_data = category_data_ret.ok_value
 
-    save_ret = atomic_result(lambda: save_music_data(update_data, category_data))
+    save_ret = atomic_result(lambda: save_audio_data(update_data, category_data))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
     if not obj.publish and input.publish:
-        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        notification_ret = create_publish_notification_data(user_id, NotificationTypeNo.AUDIO, obj.id, NotificationObjectType.AUDIO)
         if notification_ret.is_err:
             return Result.err(notification_ret.err_value)
 
@@ -271,8 +271,8 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateDTO, image: U
 
 
 @Result.shield_exception()
-def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, InputError]:
-    repo = injector.get(MusicInterface)
+def delete_manage_audio(user_id: int, ulids: list[str]) -> Result[None, InputError]:
+    repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulids=ulids, owner_id=user_id), SortOption(), PageOption(limit=len(ulids)))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -282,7 +282,7 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, InputErr
         log.warning("not found or owner mismatch", ulids=ulids, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    purchase_ids_ret = get_product_purchase_ids_data(ProductType.MUSIC_HIRES, delete_ids)
+    purchase_ids_ret = get_product_purchase_ids_data(ProductType.AUDIO_HIRES, delete_ids)
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 
@@ -291,7 +291,7 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, InputErr
         log.warning("purchased", ulids=ulids, user_id=user_id)
         return Result.err(ValidationError("error.deletePurchased"))
 
-    delete_ret = atomic_result(lambda: delete_music_data(delete_ids))
+    delete_ret = atomic_result(lambda: delete_audio_data(delete_ids))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 
@@ -299,12 +299,12 @@ def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, InputErr
 
 
 @Result.shield_exception()
-def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: UploadedFile | None = None) -> Result[None, WriteError]:
+def update_manage_audio_hires(user_id: int, ulid: str, price: int, hires: UploadedFile | None = None) -> Result[None, WriteError]:
     upload_ret = validate_uploads([(hires, MediaUpload.HIRES)])
     if upload_ret.is_err:
         return Result.err(upload_ret.err_value)
 
-    repo = injector.get(MusicInterface)
+    repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -330,12 +330,12 @@ def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: Upload
         return Result.err(currency_ret.err_value)
 
     currency = currency_ret.ok_value
-    hires_ret = get_music_hires_data(obj.id)
+    hires_ret = get_audio_hires_data(obj.id)
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
     current = hires_ret.ok_value
-    product_ret = get_product_data(ProductType.MUSIC_HIRES, obj.id)
+    product_ret = get_product_data(ProductType.AUDIO_HIRES, obj.id)
     if product_ret.is_err:
         return Result.err(product_ret.err_value)
 
@@ -349,9 +349,9 @@ def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: Upload
     else:
         audio = probe_upload(hires, probe_audio)
         path = save_upload(hires, MediaUpload.HIRES, obj.channel.ulid)
-        save_data = MusicHiresData(
+        save_data = AudioHiresData(
             id=current.id if current is not None else 0,
-            music_id=obj.id,
+            audio_id=obj.id,
             file=path,
             sample_rate=audio.sample_rate,
             bit_depth=audio.bit_depth,
@@ -361,11 +361,11 @@ def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: Upload
         id=product.id if product is not None else 0,
         ulid=product.ulid if product is not None else "",
         seller_id=user_id,
-        product_type=ProductType.MUSIC_HIRES,
+        product_type=ProductType.AUDIO_HIRES,
         object_id=obj.id,
         price=Money(amount=price, currency=currency),
     )
-    save_ret = atomic_result(lambda: save_music_hires_data(save_data, save_product))
+    save_ret = atomic_result(lambda: save_audio_hires_data(save_data, save_product))
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
@@ -373,8 +373,8 @@ def update_manage_music_hires(user_id: int, ulid: str, price: int, hires: Upload
 
 
 @Result.shield_exception()
-def delete_manage_music_hires(user_id: int, ulid: str) -> Result[None, InputError]:
-    repo = injector.get(MusicInterface)
+def delete_manage_audio_hires(user_id: int, ulid: str) -> Result[None, InputError]:
+    repo = injector.get(AudioInterface)
     ids_ret = repo.get_ids(FilterOption(ulid=ulid, owner_id=user_id), SortOption(), PageOption())
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
@@ -384,7 +384,7 @@ def delete_manage_music_hires(user_id: int, ulid: str) -> Result[None, InputErro
         log.warning("not found or owner mismatch", ulid=ulid, user_id=user_id)
         return Result.err(NotFoundError("error.deleteFailed"))
 
-    hires_ret = get_music_hires_data(ids[0])
+    hires_ret = get_audio_hires_data(ids[0])
     if hires_ret.is_err:
         return Result.err(hires_ret.err_value)
 
@@ -392,7 +392,7 @@ def delete_manage_music_hires(user_id: int, ulid: str) -> Result[None, InputErro
     if hires is None:
         return Result.ok(None)
 
-    purchase_ids_ret = get_product_purchase_ids_data(ProductType.MUSIC_HIRES, [hires.music_id])
+    purchase_ids_ret = get_product_purchase_ids_data(ProductType.AUDIO_HIRES, [hires.audio_id])
     if purchase_ids_ret.is_err:
         return Result.err(purchase_ids_ret.err_value)
 
@@ -401,7 +401,7 @@ def delete_manage_music_hires(user_id: int, ulid: str) -> Result[None, InputErro
         log.warning("purchased", ulid=ulid, user_id=user_id)
         return Result.err(ValidationError("error.saleStopPurchased"))
 
-    delete_ret = atomic_result(lambda: delete_music_hires_data(hires))
+    delete_ret = atomic_result(lambda: delete_audio_hires_data(hires))
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 

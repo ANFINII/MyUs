@@ -4,37 +4,37 @@ from ninja import File, Form, Router, UploadedFile
 from django.http import HttpRequest
 from myus.domain.channel.data import ChannelData
 from myus.domain.hashtag.data import HashtagData
+from myus.domain.media.audio.data import AudioData
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.common import MEDIA_PAGE_SIZE
-from myus.domain.media.hires.data import MusicHiresData
-from myus.domain.media.music.data import MusicData
+from myus.domain.media.hires.data import AudioHiresData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
 from myus.domain.payment.product.data import ProductData
 from myus.usecase.dto.comment import CommentDTO, ReplyDTO
-from myus.usecase.dto.media import VideoCreateDTO, MusicCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
+from myus.usecase.dto.media import VideoCreateDTO, AudioCreateDTO, BlogCreateDTO, ComicCreateDTO, PictureCreateDTO, ChatCreateDTO
 from myus.usecase.dto.message import MessageDTO
 from myus.usecase.dto.user import AuthorDTO, MediaUserDTO
-from myus.usecase.media.core import create_video, create_music, create_blog, create_comic, create_picture, create_chat
-from myus.usecase.media.core import get_home, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
-from myus.usecase.media.core import get_video_detail, get_music_detail, get_music_hires_url, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
+from myus.usecase.media.core import create_video, create_audio, create_blog, create_comic, create_picture, create_chat
+from myus.usecase.media.core import get_home, get_videos, get_audios, get_blogs, get_comics, get_pictures, get_chats
+from myus.usecase.media.core import get_video_detail, get_audio_detail, get_audio_hires_url, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from myus.usecase.media.core import increment_media_read
 from myus.utils.common.logger import log
-from myus.utils.enum.media import HomeSort
 from myus.utils.common.result import FatalError, ForbiddenError, NotFoundError, ValidationError
+from myus.utils.enum.media import HomeSort
 from myus.utils.functions.common import create_url, get_client_ip
 from .auth import auth_check
 from .schema.channel import ChannelOut
 from .schema.comment import CommentOut, ReplyOut
 from .schema.common import ErrorOut, ErrorType, Limit, Offset
-from .schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn
-from .schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, MusicHiresOut, MusicHiresUrlOut, HashtagOut
-from .schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
-from .schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
-from .schema.media.output import VideoDetailsOut, MusicDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
-from .schema.media.output import VideoSeriesOut, MusicSeriesOut, BlogSeriesOut, ComicSeriesOut, PictureSeriesOut, ChatSeriesOut
+from .schema.media.input import VideoIn, AudioIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn
+from .schema.media.output import HomeOut, VideoOut, AudioOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, AudioHiresOut, AudioHiresUrlOut, HashtagOut
+from .schema.media.output import VideoListOut, AudioListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
+from .schema.media.output import VideoDetailOut, AudioDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
+from .schema.media.output import VideoDetailsOut, AudioDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
+from .schema.media.output import VideoSeriesOut, AudioSeriesOut, BlogSeriesOut, ComicSeriesOut, PictureSeriesOut, ChatSeriesOut
 from .schema.message import MessageOut
 from .schema.payment import MoneyOut, ProductOut
 from .schema.user import AuthorOut, MediaUserOut
@@ -57,7 +57,7 @@ class HomeAPI:
         home = ret.ok_value
         data = HomeOut(
             videos=convert_videos(home.videos),
-            musics=convert_musics(home.musics),
+            audios=convert_audios(home.audios),
             blogs=convert_blogs(home.blogs),
             comics=convert_comics(home.comics),
             pictures=convert_pictures(home.pictures),
@@ -186,15 +186,15 @@ class VideoAPI:
         return 200, data
 
 
-class MusicAPI:
-    """MusicAPI"""
+class AudioAPI:
+    """AudioAPI"""
 
     router = Router()
 
     @staticmethod
     @router.post("", response={200: MediaCreateOut, 400: ErrorOut, 500: ErrorOut})
-    def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...), image: UploadedFile | None = File(None)):
-        log.info("request", input=input, music=music)
+    def create(request: HttpRequest, input: AudioIn = Form(...), audio: UploadedFile = File(...), image: UploadedFile | None = File(None)):
+        log.info("request", input=input, audio=audio)
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
@@ -204,8 +204,8 @@ class MusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        dto = MusicCreateDTO(**input.model_dump())
-        obj_ret = create_music(user_id=user_id, input=dto, music=music, image=image)
+        dto = AudioCreateDTO(**input.model_dump())
+        obj_ret = create_audio(user_id=user_id, input=dto, audio=audio, image=image)
         if obj_ret.is_err:
             message = obj_ret.err_value.message
             match obj_ret.err_value:
@@ -225,7 +225,7 @@ class MusicAPI:
         return 200, data
 
     @staticmethod
-    @router.get("", response={200: MusicListOut, 500: ErrorOut})
+    @router.get("", response={200: AudioListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: Limit = MEDIA_PAGE_SIZE, offset: Offset = 0):
         log.info("request", search=search, limit=limit, offset=offset)
         user_id_ret = auth_check(request)
@@ -233,16 +233,16 @@ class MusicAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
-        musics_ret = get_musics(search, user_id=user_id, limit=limit, offset=offset)
-        if musics_ret.is_err:
+        audios_ret = get_audios(search, user_id=user_id, limit=limit, offset=offset)
+        if audios_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
-        objs, total = musics_ret.ok_value
-        data = MusicListOut(items=convert_musics(objs), total=total)
+        objs, total = audios_ret.ok_value
+        data = AudioListOut(items=convert_audios(objs), total=total)
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: MusicDetailsOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}", response={200: AudioDetailsOut, 400: ErrorOut, 500: ErrorOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("request", ulid=ulid, search=search)
 
@@ -251,7 +251,7 @@ class MusicAPI:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
-        detail_ret = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
+        detail_ret = get_audio_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
             message = detail_ret.err_value.message
             match detail_ret.err_value:
@@ -264,29 +264,29 @@ class MusicAPI:
 
         obj = detail_ret.ok_value
 
-        list_ret = get_musics(search, obj.id)
+        list_ret = get_audios(search, obj.id)
         if list_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         objs, _ = list_ret.ok_value
-        series_ret = get_musics("", media_ids=obj.series.media_ids, limit=0)
+        series_ret = get_audios("", media_ids=obj.series.media_ids, limit=0)
         if series_ret.is_err:
             return 500, ErrorOut(type=ErrorType.INTERNAL, message="Internal Server Error")
 
         series_objs, _ = series_ret.ok_value
 
-        data = MusicDetailsOut(
-            detail=MusicDetailOut(
+        data = AudioDetailsOut(
+            detail=AudioDetailOut(
                 ulid=obj.ulid,
                 title=obj.title,
                 content=obj.content,
                 lyric=obj.lyric,
                 image=obj.image,
-                music=obj.music,
+                audio=obj.audio,
                 gain=obj.gain,
                 is_purchased=obj.is_purchased,
                 comments=convert_comments(obj.comments),
-                hires=convert_music_hires(obj.hires),
+                hires=convert_audio_hires(obj.hires),
                 product=convert_product(obj.product),
                 hashtags=convert_hashtags(obj.hashtags),
                 read=obj.read,
@@ -297,14 +297,14 @@ class MusicAPI:
                 channel=convert_channel(obj.channel),
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
-            list=convert_musics(objs),
-            series=MusicSeriesOut(ulid=obj.series.ulid, title=obj.series.title, items=convert_musics(series_objs)),
+            list=convert_audios(objs),
+            series=AudioSeriesOut(ulid=obj.series.ulid, title=obj.series.title, items=convert_audios(series_objs)),
         )
 
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}/hires", response={200: MusicHiresUrlOut, 400: ErrorOut, 500: ErrorOut})
+    @router.get("/{ulid}/hires", response={200: AudioHiresUrlOut, 400: ErrorOut, 500: ErrorOut})
     def hires(request: HttpRequest, ulid: str):
         log.info("request", ulid=ulid)
 
@@ -316,7 +316,7 @@ class MusicAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        url_ret = get_music_hires_url(user_id, ulid)
+        url_ret = get_audio_hires_url(user_id, ulid)
         if url_ret.is_err:
             message = url_ret.err_value.message
             match url_ret.err_value:
@@ -330,7 +330,7 @@ class MusicAPI:
                     assert_never(url_ret.err_value)
 
         url = url_ret.ok_value
-        return 200, MusicHiresUrlOut(url=url)
+        return 200, AudioHiresUrlOut(url=url)
 
 
 class BlogAPI:
@@ -840,15 +840,15 @@ def convert_videos(objs: list[VideoData]) -> list[VideoOut]:
     return data
 
 
-def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
+def convert_audios(objs: list[AudioData]) -> list[AudioOut]:
     data = [
-        MusicOut(
+        AudioOut(
             ulid=x.ulid,
             title=x.title,
             content=x.content,
             lyric=x.lyric,
             image=x.image,
-            music=x.music,
+            audio=x.audio,
             gain=x.gain,
             read=x.read,
             like=x.like,
@@ -865,11 +865,11 @@ def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
     return data
 
 
-def convert_music_hires(hires: MusicHiresData | None) -> MusicHiresOut | None:
+def convert_audio_hires(hires: AudioHiresData | None) -> AudioHiresOut | None:
     if hires is None:
         return None
 
-    return MusicHiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth)
+    return AudioHiresOut(sample_rate=hires.sample_rate, bit_depth=hires.bit_depth)
 
 
 def convert_product(product: ProductData | None) -> ProductOut | None:

@@ -3,7 +3,7 @@ from enum import Enum
 
 class NotificationType(str, Enum):
     VIDEO = "Video"
-    MUSIC = "Music"
+    AUDIO = "Audio"
     BLOG = "Blog"
     COMIC = "Comic"
     PICTURE = "Picture"
@@ -16,7 +16,7 @@ class NotificationType(str, Enum):
 
 class NotificationTypeNo(int, Enum):
     VIDEO = 1
-    MUSIC = 2
+    AUDIO = 2
     BLOG = 3
     COMIC = 4
     PICTURE = 5
@@ -29,7 +29,7 @@ class NotificationTypeNo(int, Enum):
 
 class NotificationObjectType(str, Enum):
     VIDEO = "Video"
-    MUSIC = "Music"
+    AUDIO = "Audio"
     BLOG = "Blog"
     COMIC = "Comic"
     PICTURE = "Picture"

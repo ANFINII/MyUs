@@ -1,5 +1,5 @@
 from myus.utils.common.result import Result, ValidationError
-from .data import MusicHiresData
+from .data import AudioHiresData
 
 
 HIRES_BIT_DEPTH = 24
@@ -7,9 +7,9 @@ HIRES_SAMPLE_RATE_MIN = 48000
 HIRES_SAMPLE_RATE_MAX = 192000
 
 
-def validate(obj: MusicHiresData) -> Result[None, ValidationError]:
-    if obj.music_id == 0:
-        return Result.err(ValidationError("error.musicRequired"))
+def validate(obj: AudioHiresData) -> Result[None, ValidationError]:
+    if obj.audio_id == 0:
+        return Result.err(ValidationError("error.audioRequired"))
 
     if len(obj.file) == 0:
         return Result.err(ValidationError("error.fileRequired"))

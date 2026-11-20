@@ -1,7 +1,7 @@
 from typing import Any, assert_never
 from django_ulid.models import ulid
 from django.utils.html import strip_tags
-from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
+from myus.db.models.media import Video, Audio, Blog, Comic, Picture, Chat
 from myus.db.models.notification import Notification
 from myus.domain.notification.data import NotificationContentData, NotificationData
 from myus.utils.enum.media import MediaType
@@ -56,7 +56,7 @@ def get_content(object_type: NotificationObjectType, obj: Any | None, comment_me
 
 def get_link(object_type: NotificationObjectType, obj: Any, comment_media_ulids: dict[int, str]) -> tuple[MediaType | None, str, str]:
     match object_type:
-        case NotificationObjectType.VIDEO | NotificationObjectType.MUSIC | NotificationObjectType.BLOG | NotificationObjectType.COMIC | NotificationObjectType.PICTURE | NotificationObjectType.CHAT:
+        case NotificationObjectType.VIDEO | NotificationObjectType.AUDIO | NotificationObjectType.BLOG | NotificationObjectType.COMIC | NotificationObjectType.PICTURE | NotificationObjectType.CHAT:
             return MediaType(object_type.value), str(obj.ulid), ""
         case NotificationObjectType.COMMENT:
             return MediaType(obj.type_name), comment_media_ulids[obj.id], ""
@@ -69,12 +69,12 @@ def get_link(object_type: NotificationObjectType, obj: Any, comment_media_ulids:
             assert_never(object_type)
 
 
-def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
+def get_media_model(media_type: MediaType) -> type[Video] | type[Audio] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
     match media_type:
         case MediaType.VIDEO:
             return Video
-        case MediaType.MUSIC:
-            return Music
+        case MediaType.AUDIO:
+            return Audio
         case MediaType.BLOG:
             return Blog
         case MediaType.COMIC:

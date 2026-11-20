@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Count
 from .models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
 from .models import User, Profile, MyPage, SearchTag, HashTag, Category, NgWord, UserNotification
-from .models import Video, Music, Blog, Comic, Picture, Chat
+from .models import Video, Audio, Blog, Comic, Picture, Chat
 
 
 ADMIN_LOGIN_FAILURE_LIMIT = 5
@@ -217,8 +217,8 @@ class VideoAdmin(ImportExportModelAdmin):
     ]
 
 
-@admin.register(Music)
-class MusicAdmin(ImportExportModelAdmin):
+@admin.register(Audio)
+class AudioAdmin(ImportExportModelAdmin):
     list_display = ("id", "channel", "title", "read", "total_like", "comment_count", "publish", "created", "updated")
     list_select_related = ("channel",)
     search_fields = ("title", "channel__owner__nickname", "created")
@@ -229,7 +229,7 @@ class MusicAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "music", "like", "read", "publish", "publish_at")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "audio", "like", "read", "publish", "publish_at")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 

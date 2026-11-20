@@ -1,7 +1,7 @@
 from typing import assert_never
 from django_ulid.models import ulid
 from django.contrib.auth.hashers import make_password
-from myus.db.models.media import Video, Music, Blog, Comic, Picture, Chat
+from myus.db.models.media import Video, Audio, Blog, Comic, Picture, Chat
 from myus.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from myus.domain.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from myus.utils.enum.i18n import Country
@@ -69,7 +69,7 @@ def mypage_data(mypage: MyPage) -> MyPageData:
 def user_notification_data(user_notification: UserNotification) -> UserNotificationData:
     return UserNotificationData(
         is_video=user_notification.is_video,
-        is_music=user_notification.is_music,
+        is_audio=user_notification.is_audio,
         is_blog=user_notification.is_blog,
         is_comic=user_notification.is_comic,
         is_picture=user_notification.is_picture,
@@ -140,7 +140,7 @@ def marshal_user_notification_data(user: User, data: UserAllData) -> UserNotific
     return UserNotification(
         user=user,
         is_video=notification.is_video,
-        is_music=notification.is_music,
+        is_audio=notification.is_audio,
         is_blog=notification.is_blog,
         is_comic=notification.is_comic,
         is_picture=notification.is_picture,
@@ -163,12 +163,12 @@ def marshal_user_plan_data(user: User, data: UserAllData) -> UserPlan:
     )
 
 
-def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
+def get_media_model(media_type: MediaType) -> type[Video] | type[Audio] | type[Blog] | type[Comic] | type[Picture] | type[Chat]:
     match media_type:
         case MediaType.VIDEO:
             return Video
-        case MediaType.MUSIC:
-            return Music
+        case MediaType.AUDIO:
+            return Audio
         case MediaType.BLOG:
             return Blog
         case MediaType.COMIC:

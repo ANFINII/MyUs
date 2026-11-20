@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from myus.domain.media.music.data import MusicData
+from myus.domain.media.audio.data import AudioData
 from .user import AuthorDTO
 
 
@@ -11,7 +11,7 @@ class PlaylistDTO:
     image: str
     publish: bool
     count: int
-    music_ulids: list[str]
+    audio_ulids: list[str]
     updated: datetime
 
 
@@ -21,25 +21,25 @@ class PlaylistDetailDTO:
     title: str
     description: str
     image: str
-    thumbnail_music_ulid: str
+    thumbnail_audio_ulid: str
     publish: bool
     is_owner: bool
     updated: datetime
     author: AuthorDTO
-    musics: list[MusicData]
+    audios: list[AudioData]
 
 
 @dataclass(frozen=True, slots=True)
 class PlaylistCreateDTO:
     title: str
     publish: bool
-    music_ulid: str
+    audio_ulid: str
 
 
 @dataclass(frozen=True, slots=True)
 class PlaylistUpdateDTO:
     title: str
     description: str
-    thumbnail_music_ulid: str
+    thumbnail_audio_ulid: str
     publish: bool
-    music_ulids: list[str]
+    audio_ulids: list[str]

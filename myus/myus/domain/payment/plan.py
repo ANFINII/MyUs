@@ -45,7 +45,7 @@ PLANS = [
         is_series=True,
         is_hide_global_advertise=True,
         is_paid_content=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 2つ\n・全体広告非表示\n・有料記事・音楽の販売",
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 2つ\n・全体広告非表示\n・有料記事・オーディオの販売",
     ),
     Plan(
         name=PlanName.PREMIUM,
@@ -55,7 +55,7 @@ PLANS = [
         is_series=True,
         is_hide_global_advertise=True,
         is_paid_content=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 3つ\n・全体広告非表示\n・有料記事・音楽の販売",
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 3つ\n・全体広告非表示\n・有料記事・オーディオの販売",
     ),
     Plan(
         name=PlanName.ULTIMATE,
@@ -65,7 +65,7 @@ PLANS = [
         is_series=True,
         is_hide_global_advertise=True,
         is_paid_content=True,
-        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 4つ\n・全体広告非表示\n・有料記事・音楽の販売",
+        description="・シリーズ作成\n・プレイリスト作成\n・個別広告表示 4つ\n・全体広告非表示\n・有料記事・オーディオの販売",
     ),
 ]
 

@@ -1,6 +1,6 @@
 from django_ulid.models import ulid
 from django.db import models
-from .media import Music
+from .media import Audio
 from .user import User
 
 
@@ -25,15 +25,15 @@ class Playlist(models.Model):
         indexes = [models.Index(fields=["author", "-updated"], name="playlist_author_updated_idx")]
 
 
-class PlaylistMusic(models.Model):
-    """PlaylistMusic"""
+class PlaylistAudio(models.Model):
+    """PlaylistAudio"""
     id       = models.BigAutoField(primary_key=True)
-    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE, related_name="playlist_musics")
-    music    = models.ForeignKey(Music, on_delete=models.CASCADE)
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE, related_name="playlist_audios")
+    audio    = models.ForeignKey(Audio, on_delete=models.CASCADE)
     sequence = models.IntegerField()
 
     class Meta:
-        db_table = "playlist_music"
-        verbose_name_plural = "02 PlaylistMusic"
-        constraints = [models.UniqueConstraint(fields=["playlist", "music"], name="playlist_music_uniq")]
-        indexes = [models.Index(fields=["playlist", "sequence"], name="playlist_music_seq_idx")]
+        db_table = "playlist_audio"
+        verbose_name_plural = "02 PlaylistAudio"
+        constraints = [models.UniqueConstraint(fields=["playlist", "audio"], name="playlist_audio_uniq")]
+        indexes = [models.Index(fields=["playlist", "sequence"], name="playlist_audio_seq_idx")]

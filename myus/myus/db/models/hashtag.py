@@ -31,17 +31,17 @@ class VideoHashtag(models.Model):
         ordering = ["sequence"]
 
 
-class MusicHashtag(models.Model):
-    """MusicHashtag"""
+class AudioHashtag(models.Model):
+    """AudioHashtag"""
     id       = models.BigAutoField(primary_key=True)
-    music    = models.ForeignKey("Music", on_delete=models.CASCADE, related_name="music_hashtags")
-    hashtag  = models.ForeignKey(HashTag, on_delete=models.CASCADE, related_name="music_hashtags")
+    audio    = models.ForeignKey("Audio", on_delete=models.CASCADE, related_name="audio_hashtags")
+    hashtag  = models.ForeignKey(HashTag, on_delete=models.CASCADE, related_name="audio_hashtags")
     sequence = models.PositiveIntegerField()
 
     class Meta:
-        db_table = "music_hashtag"
+        db_table = "audio_hashtag"
         constraints = [
-            models.UniqueConstraint(fields=["music", "hashtag"], name="music_hashtag_uniq"),
+            models.UniqueConstraint(fields=["audio", "hashtag"], name="audio_hashtag_uniq"),
         ]
         ordering = ["sequence"]
 

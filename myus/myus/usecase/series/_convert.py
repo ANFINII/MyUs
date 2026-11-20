@@ -1,14 +1,14 @@
 from dataclasses import replace
 from myus.domain.channel.data import ChannelData
 from myus.domain.channel.interface import ChannelInterface
-from myus.domain.payment.plan import get_plan
+from myus.domain.media.audio.data import AudioData
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.chat.data import ChatData
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.common import FilterOption as MediaFilterOption, PageOption as MediaPageOption, SortOption as MediaSortOption
-from myus.domain.media.music.data import MusicData
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.video.data import VideoData
+from myus.domain.payment.plan import get_plan
 from myus.domain.series.data import SeriesData
 from myus.domain.series.interface import FilterOption, PageOption, SeriesInterface, SortOption
 from myus.injectors.container import injector
@@ -20,7 +20,7 @@ from ..media._convert import get_media_repository
 from ..user.core import get_user_data
 
 
-type MediaDataType = VideoData | MusicData | BlogData | ComicData | PictureData | ChatData
+type MediaDataType = VideoData | AudioData | BlogData | ComicData | PictureData | ChatData
 
 
 @Result.shield_exception()

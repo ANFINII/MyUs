@@ -1,25 +1,25 @@
 from datetime import datetime
 from pydantic import BaseModel
-from .media.output import MusicOut
+from .media.output import AudioOut
 from .user import AuthorOut
 
 
 class PlaylistIn(BaseModel):
     title: str
     publish: bool
-    music_ulid: str
+    audio_ulid: str
 
 
 class PlaylistUpdateIn(BaseModel):
     title: str
     description: str
-    thumbnail_music_ulid: str
+    thumbnail_audio_ulid: str
     publish: bool
-    music_ulids: list[str]
+    audio_ulids: list[str]
 
 
-class PlaylistMusicIn(BaseModel):
-    music_ulid: str
+class PlaylistAudioIn(BaseModel):
+    audio_ulid: str
 
 
 class PlaylistOut(BaseModel):
@@ -28,7 +28,7 @@ class PlaylistOut(BaseModel):
     image: str
     publish: bool
     count: int
-    music_ulids: list[str]
+    audio_ulids: list[str]
     updated: datetime
 
 
@@ -41,12 +41,12 @@ class PlaylistDetailOut(BaseModel):
     title: str
     description: str
     image: str
-    thumbnail_music_ulid: str
+    thumbnail_audio_ulid: str
     publish: bool
     is_owner: bool
     updated: datetime
     author: AuthorOut
-    musics: list[MusicOut]
+    audios: list[AudioOut]
 
 
 class PlaylistCreateOut(BaseModel):

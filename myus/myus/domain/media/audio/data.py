@@ -5,14 +5,14 @@ from ...hashtag.data import HashtagData
 
 
 @dataclass(frozen=True, slots=True)
-class MusicData:
+class AudioData:
     id: int
     ulid: str
     title: str
     content: str
     lyric: str
     image: str
-    music: str
+    audio: str
     gain: float
     read: int
     like: int

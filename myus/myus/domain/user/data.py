@@ -55,7 +55,7 @@ class MyPageData:
 @dataclass(frozen=True, slots=True)
 class UserNotificationData:
     is_video: bool
-    is_music: bool
+    is_audio: bool
     is_blog: bool
     is_comic: bool
     is_picture: bool

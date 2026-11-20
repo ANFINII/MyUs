@@ -1,20 +1,20 @@
 from abc import ABC, abstractmethod
 from myus.utils.common.result import FatalError, Result
-from .data import MusicData
+from .data import AudioData
 from ..common import FilterOption, PageOption, SortOption
 
 
-class MusicInterface(ABC):
+class AudioInterface(ABC):
     @abstractmethod
     def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> Result[list[MusicData], FatalError]:
+    def bulk_get(self, ids: list[int]) -> Result[list[AudioData], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[MusicData]) -> Result[list[int], FatalError]:
+    def bulk_save(self, objs: list[AudioData]) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
