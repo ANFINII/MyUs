@@ -164,14 +164,14 @@ export default function Payment(props: Props): React.JSX.Element {
         <footer className={style.footer}>
           <p className={style.notice}>{t('setting.payment.renewalNotice')}</p>
           <nav className={style.links}>
-            <Link href="/menu/commerce" className={style.link}>
-              {t('menu.commerce.title')}
+            <Link href="/menu/userpolicy" className={style.link}>
+              {t('menu.userpolicy.title')}
             </Link>
             <Link href="/menu/privacy" className={style.link}>
               {t('menu.privacy.title')}
             </Link>
-            <Link href="/menu/userpolicy" className={style.link}>
-              {t('menu.userpolicy.title')}
+            <Link href="/menu/commerce" className={style.link}>
+              {t('menu.commerce.title')}
             </Link>
           </nav>
         </footer>
