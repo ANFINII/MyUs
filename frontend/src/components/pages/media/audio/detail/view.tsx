@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { AudioDetailOut } from 'types/internal/media/output'
 import { RepeatMode } from 'types/internal/other'
-import { getAudioHiresUrl } from 'api/internal/media/detail'
+import { getHiresUrl } from 'api/internal/media/detail'
 import { FetchError, MediaPath } from 'utils/constants/enum'
 import { hiresLabel } from 'utils/functions/hires'
 import { useLoading } from 'components/hooks/useLoading'
@@ -54,7 +54,7 @@ export default function AudioDetail(props: Props): React.JSX.Element {
 
   const handleDownload = async () => {
     handleLoading(true)
-    const ret = await getAudioHiresUrl(other.ulid)
+    const ret = await getHiresUrl(other.ulid)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Get), true)

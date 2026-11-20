@@ -60,7 +60,7 @@ export interface AudioUpdateIn extends MediaUpdateIn {
   audio?: File
 }
 
-export interface AudioHiresIn {
+export interface HiresIn {
   price: number
   hires?: File
 }

@@ -62,7 +62,7 @@ export interface Video extends Media {
   encodeStatus: EncodeStatus
 }
 
-export interface AudioHires {
+export interface Hires {
   sampleRate: number
   bitDepth: number
 }
@@ -72,11 +72,11 @@ export interface Audio extends Media {
   audio: string
   gain: number
   lyric: string
-  hires: AudioHires | null
+  hires: Hires | null
   product: Product | null
 }
 
-export interface AudioHiresUrlOut {
+export interface HiresUrlOut {
   url: string
 }
 
@@ -159,7 +159,7 @@ export interface AudioDetail extends MediaDetail {
   lyric: string
   isPurchased: boolean
   comments: Comment[]
-  hires: AudioHires | null
+  hires: Hires | null
   product: Product | null
 }
 

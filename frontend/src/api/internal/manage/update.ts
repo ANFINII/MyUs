@@ -1,9 +1,9 @@
 import { LARGE_UPLOAD_TIMEOUT_MS, apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { AdvertiseUpdateIn } from 'types/internal/advertise'
-import { VideoUpdateIn, AudioUpdateIn, AudioHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn } from 'types/internal/media/input'
+import { VideoUpdateIn, AudioUpdateIn, HiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn } from 'types/internal/media/input'
 import { ErrorOut } from 'types/internal/other'
-import { apiManageVideo, apiManageAudio, apiManageAudioHires, apiManageBlog, apiManageComic, apiManagePicture, apiManageChat, apiManageAdvertise } from 'api/uri'
+import { apiManageVideo, apiManageAudio, apiManageHires, apiManageBlog, apiManageComic, apiManagePicture, apiManageChat, apiManageAdvertise } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const putManageVideo = async (ulid: string, request: VideoUpdateIn): Promise<ApiOut<ErrorOut>> => {
@@ -14,8 +14,8 @@ export const putManageAudio = async (ulid: string, request: AudioUpdateIn): Prom
   return await apiOut(apiClient('form').put(apiManageAudio(ulid), camelSnake(request)))
 }
 
-export const putManageAudioHires = async (ulid: string, request: AudioHiresIn): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('form', LARGE_UPLOAD_TIMEOUT_MS).put(apiManageAudioHires(ulid), camelSnake(request)))
+export const putManageHires = async (ulid: string, request: HiresIn): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('form', LARGE_UPLOAD_TIMEOUT_MS).put(apiManageHires(ulid), camelSnake(request)))
 }
 
 export const putManageBlog = async (ulid: string, request: BlogUpdateIn): Promise<ApiOut<ErrorOut>> => {

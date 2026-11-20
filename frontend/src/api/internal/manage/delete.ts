@@ -1,7 +1,7 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { ErrorOut } from 'types/internal/other'
-import { apiManageVideos, apiManageAudios, apiManageAudioHires, apiManageBlogs, apiManageComics, apiManagePictures, apiManageChats, apiManageAdvertises } from 'api/uri'
+import { apiManageVideos, apiManageAudios, apiManageHires, apiManageBlogs, apiManageComics, apiManagePictures, apiManageChats, apiManageAdvertises } from 'api/uri'
 
 export const deleteManageVideos = async (ulids: string[]): Promise<ApiOut<ErrorOut>> => {
   return await apiOut(apiClient('json').delete(apiManageVideos, { data: { ulids } }))
@@ -11,8 +11,8 @@ export const deleteManageAudios = async (ulids: string[]): Promise<ApiOut<ErrorO
   return await apiOut(apiClient('json').delete(apiManageAudios, { data: { ulids } }))
 }
 
-export const deleteManageAudioHires = async (ulid: string): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('json').delete(apiManageAudioHires(ulid)))
+export const deleteManageHires = async (ulid: string): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('json').delete(apiManageHires(ulid)))
 }
 
 export const deleteManageBlogs = async (ulids: string[]): Promise<ApiOut<ErrorOut>> => {
