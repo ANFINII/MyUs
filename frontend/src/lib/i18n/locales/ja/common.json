@@ -87,6 +87,7 @@
     "sellerOnboardFailed": "口座の登録を始められませんでした。時間をおいて再度お試しください",
     "planChangeSame": "今のプランと同じです",
     "planChangeToFree": "無料プランにするときは解約してください",
+    "planNotAvailable": "このプランは申し込めません",
     "publishAtAfterPeriod": "公開日時は期間の終わりより前にしてください"
   },
   "gender": {

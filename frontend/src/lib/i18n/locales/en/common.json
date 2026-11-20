@@ -87,6 +87,7 @@
     "sellerOnboardFailed": "Could not start the account registration. Please try again later",
     "planChangeSame": "This is your current plan",
     "planChangeToFree": "To switch to the free plan, please cancel your subscription",
+    "planNotAvailable": "This plan is not available",
     "publishAtAfterPeriod": "Set the publish date on or before the end of the period"
   },
   "gender": {
