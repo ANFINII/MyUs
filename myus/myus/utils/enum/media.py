@@ -36,3 +36,4 @@ class EncodeStatus(str, Enum):
     ENCODING = "Encoding"
     DONE = "Done"
     FAILED = "Failed"
+    LOW_BIT_RATE = "LowBitRate"

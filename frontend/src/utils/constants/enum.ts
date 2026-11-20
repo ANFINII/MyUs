@@ -184,6 +184,7 @@ export enum EncodeStatus {
   Encoding = 'Encoding',
   Done = 'Done',
   Failed = 'Failed',
+  LowBitRate = 'LowBitRate',
 }
 
 export enum MediaPath {

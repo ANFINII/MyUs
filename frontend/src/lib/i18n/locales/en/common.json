@@ -401,7 +401,8 @@
     },
     "encode": {
       "encoding": "Converting",
-      "failed": "Conversion failed"
+      "failed": "Conversion failed",
+      "lowBitRate": "The audio quality is too low to publish. Upload a source of 192kbps or higher, or a WAV or FLAC file"
     },
     "video": {
       "encodeFailedNotice": "Conversion failed. Please re-upload the video."

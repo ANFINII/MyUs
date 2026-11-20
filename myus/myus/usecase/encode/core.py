@@ -66,16 +66,22 @@ def encode_audios(limit: int) -> Result[int, FatalError]:
     audios = audios_ret.ok_value
     encoded_count = 0
     for audio in audios:
-        result = AudioConvert(audio="", gain=0.0)
+        result = AudioConvert(audio="", gain=0.0, is_low_bit_rate=False)
         for attempt in range(1, ENCODE_RETRY_COUNT + 1):
             result = convert_audio(audio.audio)
-            if result.audio != "":
+            if result.audio != "" or result.is_low_bit_rate:
                 break
             log.warning("encode failed", audio_id=audio.id, attempt=attempt)
 
+        if result.is_low_bit_rate:
+            low_bit_rate_ret = save_audio_encode_failed_data(audio.id, EncodeStatus.LOW_BIT_RATE)
+            if low_bit_rate_ret.is_err:
+                return Result.err(low_bit_rate_ret.err_value)
+            continue
+
         if result.audio == "":
             log.error("gave up", audio_id=audio.id, attempts=ENCODE_RETRY_COUNT)
-            failed_ret = save_audio_encode_failed_data(audio.id)
+            failed_ret = save_audio_encode_failed_data(audio.id, EncodeStatus.FAILED)
             if failed_ret.is_err:
                 return Result.err(failed_ret.err_value)
             continue

@@ -81,7 +81,7 @@ def save_encoded_audio_data(audio_id: int, result: AudioConvert) -> Result[None,
 
 
 @Result.shield_exception()
-def save_audio_encode_failed_data(audio_id: int) -> Result[None, FatalError]:
+def save_audio_encode_failed_data(audio_id: int, encode_status: EncodeStatus) -> Result[None, FatalError]:
     repo = injector.get(AudioInterface)
     audios_ret = repo.bulk_get([audio_id])
     if audios_ret.is_err:
@@ -92,7 +92,7 @@ def save_audio_encode_failed_data(audio_id: int) -> Result[None, FatalError]:
         log.info("not found", audio_id=audio_id)
         return Result.ok(None)
 
-    save_ret = repo.bulk_save([replace(audios[0], encode_status=EncodeStatus.FAILED)])
+    save_ret = repo.bulk_save([replace(audios[0], encode_status=encode_status)])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
 
