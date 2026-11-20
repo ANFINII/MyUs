@@ -6,6 +6,25 @@ data "aws_cloudfront_origin_request_policy" "all_viewer_and_cloudfront_headers" 
   name = "Managed-AllViewerAndCloudFrontHeaders-2022-06"
 }
 
+resource "aws_cloudfront_vpc_origin" "api" {
+  vpc_origin_endpoint_config {
+    name                   = "myus-api-${local.p.env}"
+    arn                    = aws_instance.api.arn
+    http_port              = 80
+    https_port             = 443
+    origin_protocol_policy = "http-only"
+
+    origin_ssl_protocols {
+      items    = ["TLSv1.2"]
+      quantity = 1
+    }
+  }
+
+  tags = {
+    Name = "myus-api-${local.p.env}"
+  }
+}
+
 resource "aws_cloudfront_distribution" "api" {
   aliases         = ["api.${local.p.domain}"]
   enabled         = true
@@ -15,14 +34,11 @@ resource "aws_cloudfront_distribution" "api" {
 
   origin {
     origin_id   = "api"
-    domain_name = aws_eip.api.public_dns
+    domain_name = aws_instance.api.private_dns
 
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-      origin_read_timeout    = 60
+    vpc_origin_config {
+      vpc_origin_id       = aws_cloudfront_vpc_origin.api.id
+      origin_read_timeout = 60
     }
   }
 

@@ -5,7 +5,7 @@ data "aws_ssm_parameter" "al2023_arm64" {
 resource "aws_instance" "api" {
   ami                    = data.aws_ssm_parameter.al2023_arm64.insecure_value
   instance_type          = "t4g.small"
-  subnet_id              = local.vpc.public_subnet_ids.a
+  subnet_id              = local.vpc.app_subnet_ids.a
   vpc_security_group_ids = [local.security_group_ids.api]
   iam_instance_profile   = aws_iam_instance_profile.api.name
 
@@ -32,15 +32,6 @@ resource "aws_instance" "api" {
   lifecycle {
     ignore_changes = [ami, user_data]
   }
-
-  tags = {
-    Name = "myus-api-${local.p.env}"
-  }
-}
-
-resource "aws_eip" "api" {
-  instance = aws_instance.api.id
-  domain   = "vpc"
 
   tags = {
     Name = "myus-api-${local.p.env}"

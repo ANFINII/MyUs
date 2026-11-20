@@ -336,7 +336,7 @@ flowchart LR
 - 環境は `prod` の 1 つで始める。`stg` は必要になってから足す
 - スタック（state）は `infra/aws/prod/{general,common,products/myus}/<名前>/` に分ける
 - 通知は今はメールで送る。運用の通知は、あとで Slack にまとめる。予算・費用の異常・監視のアラームを SNS に送り、Amazon Q Developer in chat applications（旧 AWS Chatbot）で Slack に流す
-- NAT を使わない。EC2 はパブリックサブネット、RDS は VPC の外に出られない datastore サブネットに置く
+- NAT Gateway を使わない。EC2 は外から入る経路のない app サブネットに置き、CloudFront の VPC オリジンでつなぐ。外へは NAT インスタンス（fck-nat）で出る。RDS は VPC の外に出られない datastore サブネットに置く
 
 ### AWS アカウントの今の形
 

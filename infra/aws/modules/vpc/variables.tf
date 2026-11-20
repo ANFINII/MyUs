@@ -22,4 +22,8 @@ locals {
     a = { availability_zone = "${var.region}a", cidr_block = "${var.vpc_cidr16}.10.0/24" }
     c = { availability_zone = "${var.region}c", cidr_block = "${var.vpc_cidr16}.11.0/24" }
   }
+
+  app_subnets = {
+    a = { availability_zone = "${var.region}a", cidr_block = "${var.vpc_cidr16}.20.0/24" }
+  }
 }
