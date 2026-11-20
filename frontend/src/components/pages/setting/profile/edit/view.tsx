@@ -99,7 +99,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   return (
     <Main title={t('setting.profile.title')} type="table" size="l" toast={toast} button={button}>
       {message && (
-        <Alert type="error" isPlain>{message}</Alert>
+        <Alert type="error" isPlain className="mb_4">{message}</Alert>
       )}
 
       <Table>

@@ -53,7 +53,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.withdrawal.title')}</h1>
           {message && (
-            <Alert type="error" isPlain>{message}</Alert>
+            <Alert type="error" isPlain className="mb_4">{message}</Alert>
           )}
           <VStack gap="8">
             <Alert type="error">{t('account.withdrawal.confirm')}</Alert>

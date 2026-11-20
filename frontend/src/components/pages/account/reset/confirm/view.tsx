@@ -61,7 +61,7 @@ export default function ResetConfirm(props: Props): React.JSX.Element {
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.reset.confirmTitle')}</h1>
           {message && (
-            <Alert type="error" isPlain>{message}</Alert>
+            <Alert type="error" isPlain className="mb_4">{message}</Alert>
           )}
           <VStack gap="8">
             <Input type="email" name="email" value={email} disabled maxLength={255} />
