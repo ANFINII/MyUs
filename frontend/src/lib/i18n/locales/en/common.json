@@ -603,7 +603,7 @@
         "individualAds_one": "{{count}} custom ad slot",
         "individualAds_other": "{{count}} custom ad slots",
         "hideGlobalAds": "No site-wide ads",
-        "paidContent": "Sell paid articles and audio",
+        "paidContent": "Sell blogs, comics, and hi-res audio",
         "longHires": "Sell hi-res audio of 1 hour or longer",
         "playlist": "Create playlists",
         "series": "Create series",
@@ -818,7 +818,7 @@
       },
       "article7": {
         "title": "Article 7. Paid Content",
-        "p1": "Users on the Standard plan or higher who have registered an account to receive earnings can sell paid sections of blogs, comics, and hi-res audio. Hi-res audio of 1 hour or longer can be sold on the Premium plan or higher.",
+        "p1": "Users who have registered an account to receive earnings can sell paid sections of blogs, comics, and hi-res audio. What you can sell depends on your plan.",
         "p2": "At the time of payment, the sale price minus 15% is sent to the poster. The operator pays the payment processing fees.",
         "p3": "Content that someone has bought cannot be deleted or taken off sale.",
         "p4": "You shall use purchased content only for your personal enjoyment.",
