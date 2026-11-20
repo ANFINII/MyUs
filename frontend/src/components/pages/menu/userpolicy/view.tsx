@@ -14,7 +14,6 @@ export default function UserPolicy(): React.JSX.Element {
         <h2>{t('menu.userpolicy.article1.title')}</h2>
         <p>{t('menu.userpolicy.article1.p1')}</p>
         <p>{t('menu.userpolicy.article1.p2')}</p>
-        <p>{t('menu.userpolicy.article1.p3')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article2.title')}</h2>
@@ -23,8 +22,6 @@ export default function UserPolicy(): React.JSX.Element {
         <p>{t('menu.userpolicy.article2.p3')}</p>
         <p>{t('menu.userpolicy.article2.p4')}</p>
         <p>{t('menu.userpolicy.article2.p5')}</p>
-        <p>{t('menu.userpolicy.article2.p6')}</p>
-        <p>{t('menu.userpolicy.article2.p7')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article3.title')}</h2>
@@ -48,7 +45,6 @@ export default function UserPolicy(): React.JSX.Element {
         <h2>{t('menu.userpolicy.article5.title')}</h2>
         <p>{t('menu.userpolicy.article5.p1')}</p>
         <p>{t('menu.userpolicy.article5.p2')}</p>
-        <p>{t('menu.userpolicy.article5.p3')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article6.title')}</h2>
@@ -65,8 +61,6 @@ export default function UserPolicy(): React.JSX.Element {
         <p>{t('menu.userpolicy.article7.p5')}</p>
         <p>{t('menu.userpolicy.article7.p6')}</p>
         <p>{t('menu.userpolicy.article7.p7')}</p>
-        <p>{t('menu.userpolicy.article7.p8')}</p>
-        <p>{t('menu.userpolicy.article7.p9')}</p>
         <Divide />
 
         <h2>{t('menu.userpolicy.article8.title')}</h2>
