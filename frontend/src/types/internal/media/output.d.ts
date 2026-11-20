@@ -90,8 +90,8 @@ export interface Blog extends Media {
 
 export interface Comic extends Media {
   image: string
-  freePages: number
   pages: string[]
+  freePages: number
   product: Product | null
 }
 

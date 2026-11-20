@@ -22,7 +22,7 @@ export const paidTextError = (paidText: string, price: number): string => {
   return ''
 }
 
-export const paidPagesError = (price: number, freePages: number, pageCount: number): string => {
+export const paidPagesError = (price: number, pageCount: number, freePages: number): string => {
   if (price < COMIC_PRICE_MIN || price > COMIC_PRICE_MAX) return 'error.comicPriceRange'
   if (freePages < 0 || freePages >= pageCount) return 'error.freePagesRange'
   return ''
