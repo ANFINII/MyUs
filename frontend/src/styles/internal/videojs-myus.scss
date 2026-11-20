@@ -56,9 +56,9 @@
 .video-js:after,
 .video-js:before {
   box-sizing: inherit;
-  color: inherit;
   font-size: inherit;
   line-height: inherit;
+  color: inherit;
 }
 
 .video-js.vjs-fullscreen,
@@ -68,8 +68,8 @@
 }
 
 .video-js {
-  overflow: hidden;
   font-size: 14px;
+  overflow: hidden;
 }
 
 .video-js .vjs-menu-button-inline:hover,
@@ -107,20 +107,20 @@
   display: -webkit-flex;
   display: flex;
   flex: 1 1 auto;
-  -webkit-box-flex: 1 1 auto;
-  -moz-box-flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1 1 auto;
+  -moz-box-flex: 1 1 auto;
 }
 
 .video-js .vjs-time-control {
   flex: 0 1 auto;
-  width: 1; /* auto → 1*/
-  padding: 0;
-  -webkit-box-flex: 0 1 auto;
-  -moz-box-flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
+  -webkit-box-flex: 0 1 auto;
+  -moz-box-flex: 0 1 auto;
+  width: 1; /* auto → 1*/
+  padding: 0;
 }
 
 .video-js .vjs-time-control.vjs-time-divider {
@@ -134,8 +134,8 @@
 }
 
 .video-js .vjs-time-control.vjs-current-time {
-  margin-left: 1em;
   padding: 0;
+  margin-left: 1em;
   margin: 0;
 }
 
@@ -206,14 +206,14 @@
 .video-js.not-hover.vjs-has-started.vjs-playing.vjs-user-active .vjs-control-bar,
 .video-js.not-hover.vjs-has-started.vjs-playing.vjs-user-inactive .vjs-control-bar,
 .video-js.vjs-has-started.vjs-playing.vjs-user-inactive .vjs-control-bar {
-  opacity: 1;
   visibility: visible;
-  -webkit-backface-visibility: hidden;
+  opacity: 1;
   -webkit-transform: translateY(3em);
   -moz-transform: translateY(3em);
   -ms-transform: translateY(3em);
   -o-transform: translateY(3em);
   transform: translateY(3em);
+  -webkit-backface-visibility: hidden;
   -webkit-transition: -webkit-transform 1s ease 0s;
   -moz-transition: -moz-transform 1s ease 0s;
   -ms-transition: -ms-transform 1s ease 0s;
@@ -228,12 +228,12 @@
 .video-js.vjs-has-started.vjs-playing.vjs-user-inactive .vjs-progress-control {
   top: -0.25em;
   height: 0.25em;
-  pointer-events: none;
   -webkit-transition: height 1s, top 1s;
   -moz-transition: height 1s, top 1s;
   -ms-transition: height 1s, top 1s;
   -o-transition: height 1s, top 1s;
   transition: height 1s, top 1s;
+  pointer-events: none;
 }
 
 .video-js.not-hover.vjs-has-started.vjs-paused.vjs-user-active.vjs-fullscreen .vjs-progress-control,
@@ -256,12 +256,12 @@
 .video-js .vjs-big-play-button {
   top: 50%;
   left: 50%;
-  margin-left: -1em;
-  margin-top: -1em;
   width: 2em;
   height: 2em;
-  line-height: 2em;
+  margin-left: -1em;
+  margin-top: -1em;
   font-size: 2.5em;
+  line-height: 2em;
   color: rgb(255, 255, 255);
   border: 0.06666em solid rgb(255, 255, 255);
   background: rgba(0, 105, 255, 0.2);
@@ -292,9 +292,9 @@
 }
 
 .vjs-menu li.vjs-menu-title {
-  text-transform: none;
   font-weight: lighter;
   line-height: 1.5em;
+  text-transform: none;
 }
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item.vjs-selected {
@@ -308,14 +308,15 @@
   margin-top: -0.8em !important;
   font-size: 2.5em;
   line-height: 1.6em !important;
-  background: rgba(0, 0, 0, 0.1);
   border: none;
   border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
   opacity: 0;
   transition: opacity 0.2s, background-color 0.1s;
 }
 
 .video-js .vjs-big-play-button .vjs-icon-placeholder::before {
+  content: '';
   top: 50%;
   left: 54%;
   width: 0;
@@ -323,7 +324,6 @@
   border-color: transparent transparent transparent rgb(255, 255, 255);
   border-style: solid;
   border-width: 9px 0 9px 15px;
-  content: '';
   transform: translate(-50%, -50%);
 }
 
@@ -350,8 +350,8 @@
 }
 
 .video-js .vjs-control-bar {
-  color: rgb(255, 255, 255);
   font-size: 12px;
+  color: rgb(255, 255, 255);
   background: rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -369,8 +369,8 @@
 }
 
 .vjs-playback-rate .vjs-playback-rate-value {
-  line-height: 2.5;
   font-size: 1.3em;
+  line-height: 2.5;
 }
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item {
@@ -391,20 +391,20 @@
 }
 
 .skip {
-  display: none;
   position: absolute;
-  z-index: 100;
-  bottom: 40px;
   right: 10px;
+  bottom: 40px;
+  display: none;
   width: 150px;
-  box-sizing: border-box;
   padding: 5px;
-  text-align: center;
+  box-sizing: border-box;
   font-size: 15px;
   font-weight: bold;
+  text-align: center;
   color: rgb(255, 255, 255);
   border: 1px solid rgb(0, 0, 139);
   background: rgb(0, 0, 205);
+  z-index: 100;
   cursor: pointer;
 }
 
@@ -413,8 +413,8 @@
   display: none;
   color: rgba(255, 255, 255, 0);
   border: 0 solid rgb(255, 255, 255);
-  opacity: 0;
   background: rgba(255, 255, 255, 0);
+  opacity: 0;
 }
 
 .video .video-js {
@@ -436,11 +436,11 @@
 
   .vjs-volume-panel .vjs-volume-control.vjs-control.vjs-volume-horizontal {
     display: flex !important;
+    visibility: visible !important;
     width: 5em !important;
     height: 3em !important;
     margin-right: 1em !important;
     opacity: 1 !important;
-    visibility: visible !important;
   }
 
   .vjs-volume-panel:hover .vjs-volume-control.vjs-control.vjs-volume-horizontal,
@@ -448,11 +448,11 @@
   .vjs-volume-panel.vjs-slider-active .vjs-volume-control.vjs-control.vjs-volume-horizontal,
   .vjs-volume-panel .vjs-volume-control.vjs-control.vjs-volume-horizontal {
     display: flex !important;
+    visibility: visible !important;
     width: 5em !important;
     height: 3em !important;
     margin-right: 1em !important;
     opacity: 1 !important;
-    visibility: visible !important;
   }
 }
 
@@ -464,13 +464,13 @@
 // カスタム設定メニュー
 .vjs-settings-menu {
   position: absolute;
-  bottom: 40px;
   right: 0;
-  z-index: 100;
+  bottom: 40px;
   min-width: 200px;
   padding: 0;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
 
   &.vjs-hidden {
     display: none;
@@ -480,13 +480,13 @@
 .vjs-speed-submenu,
 .vjs-quality-submenu {
   position: absolute;
-  bottom: 40px;
   right: 0;
-  z-index: 100;
-  padding: 0;
+  bottom: 40px;
   min-width: 200px;
+  padding: 0;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
 
   &.vjs-hidden {
     display: none;

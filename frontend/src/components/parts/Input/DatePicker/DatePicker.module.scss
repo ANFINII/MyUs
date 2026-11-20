@@ -42,15 +42,15 @@
 
       &.active,
       &:focus-visible {
-        outline: none;
         border-color: rgb(40, 130, 250);
+        outline: none;
       }
     }
 
     .icon {
       position: absolute;
-      right: 10px;
       top: 50%;
+      right: 10px;
       color: rgb(120, 120, 120);
       transform: translateY(-50%);
       pointer-events: none;
@@ -60,13 +60,13 @@
       position: absolute;
       bottom: calc(100% + 4px);
       left: 0;
-      z-index: 10;
       width: 280px;
       padding: 12px;
-      background: rgb(255, 255, 255);
       border: 1px solid rgb(220, 220, 220);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      background: rgb(255, 255, 255);
+      z-index: 10;
 
       &.below {
         top: calc(100% + 4px);
@@ -76,8 +76,8 @@
 
     .calendar .nav {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 8px;
     }
 
@@ -89,15 +89,15 @@
 
     .calendar .nav .nav_button {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       width: 28px;
       height: 28px;
       font-size: 18px;
       color: rgb(50, 50, 50);
-      background: transparent;
       border: 1px solid transparent;
       border-radius: 6px;
+      background: transparent;
       cursor: pointer;
 
       &:hover {
@@ -107,16 +107,16 @@
 
     .calendar .weekdays {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
       gap: 2px;
+      grid-template-columns: repeat(7, 1fr);
       margin-bottom: 4px;
     }
 
     .calendar .weekdays .weekday {
       padding: 4px 0;
-      text-align: center;
       font-size: 12px;
       font-weight: 600;
+      text-align: center;
       color: rgb(120, 120, 120);
 
       &.sunday {
@@ -130,8 +130,8 @@
 
     .calendar .grid {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
       gap: 2px;
+      grid-template-columns: repeat(7, 1fr);
     }
 
     .calendar .grid .empty {
@@ -140,14 +140,14 @@
 
     .calendar .grid .day {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 32px;
       font-size: 14px;
       color: rgb(30, 30, 30);
-      background: transparent;
       border: 1px solid transparent;
       border-radius: 6px;
+      background: transparent;
       cursor: pointer;
 
       &:hover:not(:disabled) {
@@ -196,8 +196,8 @@
       background: rgb(255, 255, 255);
 
       &:focus-visible {
-        outline: none;
         border-color: rgb(40, 130, 250);
+        outline: none;
       }
     }
   }
@@ -205,7 +205,7 @@
   .error_text {
     padding-top: 2px;
     font-size: 12px;
-    color: rgb(255, 0, 0);
     text-indent: 4px;
+    color: rgb(255, 0, 0);
   }
 }

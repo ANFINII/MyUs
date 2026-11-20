@@ -1,7 +1,7 @@
 .data_table {
-  overflow-x: auto;
   border: 1px solid rgb(220, 220, 220);
   border-radius: 5px;
+  overflow-x: auto;
 
   .table {
     width: 100%;
@@ -24,8 +24,8 @@
   .th,
   .td {
     padding: 4px 8px;
-    white-space: nowrap;
     vertical-align: middle;
+    white-space: nowrap;
   }
 
   .th {
@@ -39,8 +39,8 @@
       gap: 4px;
       width: 100%;
       padding: 0;
-      color: inherit;
       font: inherit;
+      color: inherit;
       border: none;
       background: none;
       cursor: pointer;
@@ -73,8 +73,8 @@
   }
 
   .td {
-    overflow: hidden;
     text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .tr {

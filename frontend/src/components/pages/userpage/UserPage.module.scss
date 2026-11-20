@@ -3,8 +3,8 @@
     position: relative;
     width: 100%;
     padding-top: 16%;
-    overflow: hidden;
     border-radius: 15px;
+    overflow: hidden;
 
     img {
       position: absolute;
@@ -26,8 +26,8 @@
       flex-shrink: 0;
       width: 80px;
       height: 80px;
-      background: rgb(200, 200, 200);
       border-radius: 50%;
+      background: rgb(200, 200, 200);
     }
 
     .author_info {
@@ -51,8 +51,8 @@
 
     .follow_button {
       display: flex;
-      flex-shrink: 0;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .follow_button button {
@@ -92,9 +92,9 @@
       flex-shrink: 0;
       width: 64px;
       height: 64px;
+      object-fit: cover;
       border-radius: 50%;
       background: rgb(200, 200, 200);
-      object-fit: cover;
     }
 
     .channel_detail {

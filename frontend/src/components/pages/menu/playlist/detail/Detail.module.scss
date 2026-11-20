@@ -4,14 +4,14 @@
 
   .thumbnail_box {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     flex-shrink: 0;
     width: 160px;
     height: 160px;
-    overflow: hidden;
     border-radius: 6px;
     background: rgb(30, 30, 30);
+    overflow: hidden;
   }
 
   .thumbnail {
@@ -29,8 +29,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex: 1;
   gap: 12px;
+  flex: 1;
   min-width: 0;
 
   .heading {
@@ -48,9 +48,9 @@
   .description {
     margin: 0;
     font-size: 13px;
-    color: rgb(80, 80, 80);
     white-space: pre-wrap;
     word-break: break-all;
+    color: rgb(80, 80, 80);
   }
 
   .meta {
@@ -78,8 +78,8 @@
 .list {
   display: flex;
   flex-direction: column;
-  margin: 24px 0 40px;
   padding: 0;
+  margin: 24px 0 40px;
   list-style: none;
 }
 
@@ -114,9 +114,9 @@
   .index {
     width: 32px;
     font-size: 13px;
+    font-variant-numeric: tabular-nums;
     text-align: center;
     color: rgb(120, 120, 120);
-    font-variant-numeric: tabular-nums;
   }
 
   .grip {
@@ -127,8 +127,8 @@
     flex-shrink: 0;
     width: 40px;
     height: 40px;
-    border-radius: 4px;
     object-fit: cover;
+    border-radius: 4px;
   }
 
   .item_text {
@@ -138,9 +138,9 @@
 
   .item_title,
   .item_channel {
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
   }
 
   .item_title {

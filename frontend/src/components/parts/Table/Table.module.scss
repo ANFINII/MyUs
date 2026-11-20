@@ -1,10 +1,10 @@
 .table {
   width: 100%;
-  overflow: hidden;
   font-size: 15px;
   border: 1px solid rgb(0, 125, 0);
-  border-radius: 5px;
   border-spacing: 0;
+  border-radius: 5px;
+  overflow: hidden;
 
   tr:not(:first-child) td {
     border-top: 1px solid rgb(0, 125, 0);
@@ -19,8 +19,8 @@
     min-width: 125px;
     padding: 8px;
     vertical-align: top;
-    background: rgb(190, 250, 210);
     border-right: 1px solid rgb(0, 125, 0);
+    background: rgb(190, 250, 210);
   }
 
   .indent {

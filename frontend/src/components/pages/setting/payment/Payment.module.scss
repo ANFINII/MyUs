@@ -8,8 +8,8 @@
 
   .plans {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
 
   .actions {
@@ -75,16 +75,16 @@
     }
 
     .link {
-      color: rgb(0, 130, 255);
       text-decoration: none;
+      color: rgb(0, 130, 255);
 
       &:hover {
         text-decoration: underline;
       }
 
       &:not(:first-child)::before {
-        color: rgb(180, 180, 180);
         content: '・';
+        color: rgb(180, 180, 180);
       }
     }
   }

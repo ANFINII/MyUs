@@ -11,17 +11,17 @@
   position: fixed;
   top: 3.5em;
   right: -250px;
-  z-index: 80;
   width: 250px;
   padding: 0;
   margin: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
   color: rgb(50, 50, 50);
   border: 1px solid rgb(255, 230, 200);
   border-right: none;
   background: rgb(255, 250, 245);
+  overflow-x: hidden;
+  overflow-y: auto;
   transition: all 0.2s;
+  z-index: 80;
 
   &.active {
     right: 0;
@@ -70,8 +70,8 @@
   }
 
   a {
-    color: rgb(33, 37, 41);
     text-decoration: none;
+    color: rgb(33, 37, 41);
   }
 
   .avatar {
@@ -85,14 +85,14 @@
     }
 
     .hidden {
-      margin: 0;
       visibility: hidden;
+      margin: 0;
     }
   }
 
   .anker {
-    flex: 1;
     align-self: flex-start;
+    flex: 1;
     min-width: 0;
     padding-top: 6px;
     cursor: pointer;
@@ -100,24 +100,24 @@
 
   .content {
     display: -webkit-box;
+    -webkit-box-orient: vertical;
     width: 100%;
-    overflow: hidden;
     font-size: 12px;
     line-height: 1.4;
     text-align: left;
     word-break: break-all;
-    -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 
   .close {
     display: flex;
-    align-items: center;
+    visibility: hidden;
     justify-content: center;
+    align-items: center;
     align-self: flex-start;
     width: 24px;
     padding-top: 6px;
-    visibility: hidden;
     cursor: pointer;
 
     .close_icon {

@@ -1,12 +1,12 @@
 .cover {
   position: fixed;
+  right: 0;
+  bottom: -38px;
+  left: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  left: 0;
-  right: 0;
-  bottom: -38px;
   background: rgba(0, 0, 0, 0);
   transition: all 0.2s 0s linear;
 

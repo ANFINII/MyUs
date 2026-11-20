@@ -6,9 +6,9 @@
   height: 32px;
   padding: 0 8px;
   color: rgb(60, 60, 60);
-  background: none;
   border: 1px solid rgb(220, 220, 220);
   border-radius: 4px;
+  background: none;
   cursor: pointer;
 
   &:hover:not(.disabled) {

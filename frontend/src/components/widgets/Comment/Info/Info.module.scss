@@ -17,9 +17,9 @@
 
   .text {
     max-height: 150px;
-    overflow-y: auto;
     font-size: 14px;
     white-space: pre-wrap;
+    overflow-y: auto;
 
     &:hover {
       overflow-y: scroll;

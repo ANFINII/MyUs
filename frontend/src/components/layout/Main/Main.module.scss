@@ -10,16 +10,16 @@
 
   .header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
   }
 
   .title {
     display: inline-block;
     height: 30px;
     font-size: 24px;
-    color: rgb(50, 70, 140);
     white-space: nowrap;
+    color: rgb(50, 70, 140);
     user-select: none;
 
     span {
@@ -33,8 +33,8 @@
     padding: 0;
     margin: 0 0 0 8px;
     font-size: 14px;
-    color: rgb(33, 37, 41);
     list-style: none;
+    color: rgb(33, 37, 41);
   }
 
   .button {

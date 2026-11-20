@@ -13,9 +13,9 @@
 }
 
 .editor {
-  overflow: hidden;
   border: 1px solid rgb(204, 204, 204);
   border-radius: 5px;
+  overflow: hidden;
 
   &:focus-within {
     border-color: rgb(160, 160, 160);
@@ -25,13 +25,13 @@
   :global(.tiptap) {
     min-height: 200px;
     padding: 12px 15px;
-    overflow-y: auto;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.42;
     white-space: pre-wrap;
-    outline: none;
     tab-size: 4;
+    outline: none;
+    overflow-y: auto;
 
     > * + * {
       margin-top: 0.75em;
@@ -142,8 +142,8 @@
 .error_text {
   padding-top: 2px;
   font-size: 12px;
-  color: rgb(255, 0, 0);
   text-indent: 4px;
+  color: rgb(255, 0, 0);
 }
 
 .toolbar {
@@ -164,8 +164,8 @@
   .color_label {
     position: relative;
     display: inline-flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 32px;
     height: 32px;
     border-radius: 5px;
@@ -186,15 +186,15 @@
 
   .button {
     display: inline-flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 32px;
     height: 32px;
     padding: 0;
-    vertical-align: middle;
     font-size: 13px;
     font-weight: 600;
     line-height: 1;
+    vertical-align: middle;
     color: rgb(68, 68, 68);
     border: none;
     border-radius: 4px;

@@ -6,9 +6,9 @@
 
   .thumbnail {
     min-width: 192px;
+    object-fit: cover;
     border: 1px solid rgb(220, 220, 220);
     border-radius: 6px;
-    object-fit: cover;
   }
 
   .content {
@@ -16,18 +16,18 @@
 
     .title {
       display: -webkit-box;
-      overflow: hidden;
-      font-size: 14px;
-      color: rgb(3, 3, 3);
-      word-break: break-all;
       -webkit-box-orient: vertical;
+      font-size: 14px;
+      word-break: break-all;
       -webkit-line-clamp: 2;
+      color: rgb(3, 3, 3);
+      overflow: hidden;
     }
 
     .font {
       height: 16px;
-      line-height: 1;
       font-size: 13px;
+      line-height: 1;
       color: rgb(40, 70, 150);
     }
 

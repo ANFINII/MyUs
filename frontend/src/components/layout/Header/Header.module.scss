@@ -1,20 +1,20 @@
 .header {
   position: fixed;
+  top: 0;
   grid-column: 1/-1;
   grid-row: 1/2;
-  top: 0;
-  z-index: 70;
   width: 100%;
   height: 56px;
   color: rgb(255, 255, 255);
   background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+  z-index: 70;
 
   &::after {
+    content: '';
     position: absolute;
     bottom: 0;
     height: 2px;
     background: rgb(0, 60, 255);
-    content: '';
   }
 
   &.loading::after {
@@ -23,9 +23,9 @@
 
   .nav {
     display: grid;
+    align-items: center;
     grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em;
     grid-template-rows: 2.5em;
-    align-items: center;
     padding: 8px 0;
     text-align: center;
 
@@ -36,8 +36,8 @@
 
     .nav_2 {
       position: relative;
-      grid-column: 2/3;
       justify-self: flex-start;
+      grid-column: 2/3;
     }
 
     .nav_2 h1 {
@@ -64,8 +64,8 @@
 
     .nav_6 {
       position: relative;
-      grid-column: 6/7;
       justify-self: center;
+      grid-column: 6/7;
     }
   }
 
@@ -151,12 +151,12 @@
 
 .side_menu_cover {
   position: fixed;
-  display: none;
   top: 0;
-  z-index: 90;
+  display: none;
   width: 100%;
   height: 100%;
   transition: all 0.2s;
+  z-index: 90;
 
   &.active {
     display: block;
@@ -166,13 +166,13 @@
 
 .drop_back_cover {
   position: fixed;
-  display: none;
   top: 0;
   left: 0;
-  z-index: 80;
+  display: none;
   width: 100%;
   height: 100%;
   transition: all 0.2s;
+  z-index: 80;
 
   &.active {
     display: block;

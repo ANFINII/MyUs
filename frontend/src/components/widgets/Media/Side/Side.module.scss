@@ -5,19 +5,19 @@
 
 .thumbnail {
   min-width: 192px;
-  border-radius: 6px;
   border: 1px solid rgb(220, 220, 220);
+  border-radius: 6px;
 }
 
 .thumbnail_box {
   display: flex;
-  flex-shrink: 0;
   justify-content: center;
+  flex-shrink: 0;
   width: 192px;
   height: 100px;
-  overflow: hidden;
-  background: rgb(30, 30, 30);
   border-radius: 6px;
+  background: rgb(30, 30, 30);
+  overflow: hidden;
 }
 
 .square {

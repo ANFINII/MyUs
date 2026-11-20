@@ -11,9 +11,9 @@
     display: flex;
     justify-content: center;
     height: 195px;
-    overflow: hidden;
-    background: rgb(30, 30, 30);
     border-radius: 6px 6px 0 0;
+    background: rgb(30, 30, 30);
+    overflow: hidden;
     cursor: pointer;
 
     &:hover .play,
@@ -38,20 +38,20 @@
     left: 50%;
     width: 56px;
     height: 56px;
-    background: rgba(0, 0, 0, 0.1);
     border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: translate(-50%, -50%);
     transition: opacity 0.2s, background-color 0.1s;
 
     &::after {
+      content: '';
       position: absolute;
       top: 50%;
       left: 54%;
       border-color: transparent transparent transparent rgb(255, 255, 255);
       border-style: solid;
       border-width: 9px 0 9px 15px;
-      content: '';
       transform: translate(-50%, -50%);
     }
   }
@@ -77,9 +77,9 @@
     padding: 1px 4px;
     font-size: 12px;
     color: rgb(255, 255, 255);
-    opacity: 0;
-    background: rgba(0, 0, 0, 0.75);
     border-radius: 4px;
+    background: rgba(0, 0, 0, 0.75);
+    opacity: 0;
     transition: opacity 0.2s;
   }
 }

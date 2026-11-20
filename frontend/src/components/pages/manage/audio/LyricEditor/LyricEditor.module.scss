@@ -21,8 +21,8 @@
   .preview {
     display: flex;
     flex-direction: column;
-    flex: 1;
     gap: 8px;
+    flex: 1;
     min-width: 0;
   }
 
@@ -33,12 +33,12 @@
 
 .list {
   height: 360px;
-  margin: 0;
   padding: 0;
-  overflow-y: auto;
+  margin: 0;
+  list-style: none;
   border: 1px solid rgb(220, 220, 220);
   border-radius: 6px;
-  list-style: none;
+  overflow-y: auto;
 
   .row {
     display: flex;
@@ -53,8 +53,8 @@
     }
 
     &.selected {
-      background: rgb(235, 243, 255);
       box-shadow: inset 3px 0 0 rgb(40, 130, 255);
+      background: rgb(235, 243, 255);
     }
   }
 
@@ -78,8 +78,8 @@
     }
 
     &:focus {
-      outline: none;
       border-color: rgb(40, 130, 250);
+      outline: none;
       background: rgb(255, 255, 255);
     }
   }
@@ -98,8 +98,8 @@
     }
 
     &:focus {
-      outline: none;
       border-color: rgb(40, 130, 250);
+      outline: none;
       background: rgb(255, 255, 255);
     }
   }

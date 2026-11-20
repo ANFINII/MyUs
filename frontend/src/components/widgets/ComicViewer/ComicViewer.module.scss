@@ -45,14 +45,14 @@
     .prev,
     .next {
       display: flex;
-      flex: 1;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       align-self: stretch;
+      flex: 1;
       min-width: 48px;
       color: rgba(255, 255, 255, 0.3);
-      cursor: pointer;
       transition: color 0.2s, background 0.2s;
+      cursor: pointer;
 
       &:hover {
         color: rgba(255, 255, 255, 0.9);
@@ -74,16 +74,16 @@
   .footer {
     position: relative;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     margin-top: 12px;
 
     .counter {
       position: absolute;
       left: 12px;
       font-size: 13px;
-      color: rgba(0, 0, 0, 0.5);
       white-space: nowrap;
+      color: rgba(0, 0, 0, 0.5);
     }
 
     .full_icon {
@@ -106,9 +106,9 @@
     .thumbnails .thumbnail {
       width: 48px;
       height: 32px;
-      overflow: hidden;
       border: 2px solid transparent;
       border-radius: 3px;
+      overflow: hidden;
       opacity: 0.4;
       transition: opacity 0.2s, border-color 0.2s;
       cursor: pointer;

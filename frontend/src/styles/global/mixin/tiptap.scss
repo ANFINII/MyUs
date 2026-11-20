@@ -1,7 +1,7 @@
 @mixin tiptap {
   p {
-    margin: 0;
     padding: 0;
+    margin: 0;
   }
 
   ul {
@@ -15,15 +15,15 @@
   }
 
   blockquote {
-    margin-left: 0;
     padding-left: 16px;
+    margin-left: 0;
     border-left: 4px solid rgb(204, 204, 204);
   }
 
   pre {
+    padding: 5px 10px;
     margin-top: 5px;
     margin-bottom: 5px;
-    padding: 5px 10px;
     font-family: monospace;
     white-space: pre-wrap;
     border-radius: 3px;
@@ -45,7 +45,7 @@
   }
 
   a {
-    color: rgb(0, 102, 204);
     text-decoration: underline;
+    color: rgb(0, 102, 204);
   }
 }

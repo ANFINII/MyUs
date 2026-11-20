@@ -50,12 +50,12 @@
     .nav_item .nav_title {
       padding: 3px 0;
       margin: 0;
-      overflow: hidden;
       font-size: 14px;
       font-weight: 400;
-      color: rgb(50, 50, 50);
-      white-space: nowrap;
       text-overflow: ellipsis;
+      white-space: nowrap;
+      color: rgb(50, 50, 50);
+      overflow: hidden;
     }
   }
 
@@ -63,9 +63,9 @@
     position: absolute;
     top: 0;
     right: -1px;
-    z-index: 10;
     width: 2px;
     height: 100%;
+    z-index: 10;
     cursor: col-resize;
 
     &:hover {

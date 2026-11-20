@@ -4,17 +4,17 @@
     width: 16px;
     height: 16px;
     margin-top: 5px;
+    appearance: none;
     border: 1px solid rgb(200, 200, 200);
     border-radius: 5px;
     background-color: rgb(255, 255, 255);
     background-image: var(--bs-form-check-bg-image);
-    appearance: none;
     cursor: pointer;
 
     &:checked {
+      --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
       border: 1px solid rgb(40, 130, 250);
       background-color: rgb(40, 130, 250);
-      --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
     }
   }
 

@@ -36,8 +36,8 @@
     font-size: 11px;
     font-weight: 500;
     color: rgb(120, 120, 120);
-    background: rgb(240, 240, 240);
     border-radius: 10px;
+    background: rgb(240, 240, 240);
   }
 
   .price {
@@ -58,13 +58,13 @@
   .features {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
     gap: 10px;
+    flex-grow: 1;
     padding: 16px 0;
     margin: 0;
+    list-style: none;
     border-top: 1px solid rgb(230, 230, 230);
     border-bottom: 1px solid rgb(230, 230, 230);
-    list-style: none;
 
     &:last-child {
       border-bottom: none;
@@ -78,9 +78,9 @@
       color: rgb(80, 80, 80);
 
       &::before {
+        content: '✓';
         font-weight: 700;
         color: rgb(0, 70, 175);
-        content: '✓';
       }
     }
   }

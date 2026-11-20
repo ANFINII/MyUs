@@ -2,15 +2,15 @@
   position: fixed;
   top: 0;
   left: -250px;
-  z-index: 100;
   width: 250px;
   height: 100%;
   padding: 0;
   margin: 0;
-  overflow-y: auto;
   color: rgb(50, 50, 50);
   background: rgb(255, 255, 255);
+  overflow-y: auto;
   transition: all 0.2s;
+  z-index: 100;
 
   &.active {
     left: 0;

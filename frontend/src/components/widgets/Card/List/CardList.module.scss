@@ -1,11 +1,11 @@
 .card_list {
   position: relative;
   display: grid;
+  justify-content: center;
+  grid-gap: 15px;
   grid-template-columns: repeat(auto-fill, minmax(auto, 312px));
   grid-template-rows: auto;
-  justify-content: center;
   margin-top: 16px;
-  grid-gap: 15px;
 }
 
 /* 668pxまでの幅の場合に適応される  */

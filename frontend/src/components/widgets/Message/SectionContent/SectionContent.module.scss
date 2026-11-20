@@ -5,15 +5,15 @@
 
   &.active {
     position: absolute;
-    display: block;
     top: 0;
     left: 0;
-    z-index: 60;
+    display: block;
     width: 100%;
     height: 100%;
     padding: 8px;
-    overflow-y: auto;
     background: rgb(255, 255, 255);
+    overflow-y: auto;
+    z-index: 60;
     @include scrollbar.scrollbar;
   }
 
@@ -37,8 +37,8 @@
       @include scrollbar.scrollbar;
 
       &.active {
-        min-height: 104px;
         height: fit-content;
+        min-height: 104px;
       }
     }
   }

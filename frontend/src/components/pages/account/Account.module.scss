@@ -50,8 +50,8 @@
       }
 
       &:not(:first-child)::before {
-        color: rgb(180, 180, 180);
         content: '・';
+        color: rgb(180, 180, 180);
       }
     }
   }

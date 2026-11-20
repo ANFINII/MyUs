@@ -5,16 +5,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  z-index: 75;
   width: 100%;
   height: 56px;
   padding: 0 12px;
   background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+  z-index: 75;
 
   .back {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     flex-shrink: 0;
     width: 36px;
     height: 36px;
