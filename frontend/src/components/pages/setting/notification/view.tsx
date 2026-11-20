@@ -54,7 +54,7 @@ export default function SettingNotification(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title={t('setting.notification.title')} type="table" size="xl" toast={toast} button={button}>
+    <Main title={t('setting.notification.title')} type="table" size="l" toast={toast} button={button}>
       <Table>
         <TableRow isIndent label={t('setting.notification.title')}>
           {t('setting.notification.description')}

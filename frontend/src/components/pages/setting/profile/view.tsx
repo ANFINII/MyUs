@@ -31,7 +31,7 @@ export default function SettingProfile(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title={t('setting.profile.title')} type="table" size="xl" button={button}>
+    <Main title={t('setting.profile.title')} type="table" size="l" button={button}>
       <Table>
         <TableRow label={t('setting.profile.avatar')}>
           {profile.avatar !== '' ? (

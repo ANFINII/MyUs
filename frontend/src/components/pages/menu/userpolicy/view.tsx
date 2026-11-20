@@ -6,7 +6,7 @@ export default function UserPolicy(): React.JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Main title={t('menu.userpolicy.title')} type="table" size="xl" isFooter={false}>
+    <Main title={t('menu.userpolicy.title')} type="table" size="l" isFooter={false}>
       <article className="article_userpolicy">
         <p>{t('menu.userpolicy.intro.p1')}</p>
         <Divide />

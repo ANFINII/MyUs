@@ -13,7 +13,7 @@ interface Props {
   metaTitle?: string
   meta?: MetaType
   type?: 'defalt' | 'table'
-  size?: 's' | 'l' | 'xl'
+  size?: 's' | 'm' | 'l'
   search?: Search
   toast?: ToastType
   isFooter?: boolean

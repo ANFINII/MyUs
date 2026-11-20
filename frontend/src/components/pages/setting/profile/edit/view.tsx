@@ -97,7 +97,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title={t('setting.profile.title')} type="table" size="xl" toast={toast} button={button}>
+    <Main title={t('setting.profile.title')} type="table" size="l" toast={toast} button={button}>
       {message && (
         <Alert type="error">{message}</Alert>
       )}

@@ -72,7 +72,7 @@ export default function PaymentChange(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={t('setting.payment.changeTitle')} size="l" toast={toast}>
+    <Main metaTitle={t('setting.payment.changeTitle')} size="m" toast={toast}>
       <div className={style.change}>
         <CurrentBanner planName={currentPlanName} notice="" />
 

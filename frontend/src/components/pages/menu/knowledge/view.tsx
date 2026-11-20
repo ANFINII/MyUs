@@ -10,7 +10,7 @@ export default function Knowledge(): React.JSX.Element {
   const rows = items.map((item) => ({ label: t(`menu.knowledge.${item}.label`), content: t(`menu.knowledge.${item}.content`) }))
 
   return (
-    <Main title={t('menu.knowledge.title')} type="table" size="xl">
+    <Main title={t('menu.knowledge.title')} type="table" size="l">
       <SideTable rows={rows} />
     </Main>
   )
