@@ -17,7 +17,6 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import style from '../../Form.module.scss'
 
 interface Props {
   data: Advertise
@@ -63,8 +62,8 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="Advertise" type="table" toast={toast} isFooter={false} button={button}>
-      <form className={style.form} method="POST" action="" encType="multipart/form-data">
+    <Main title="Advertise" type="table" size="l" toast={toast} isFooter={false} button={button}>
+      <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />

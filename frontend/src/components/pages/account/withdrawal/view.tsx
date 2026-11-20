@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'components/hooks/useRouter'
-import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
@@ -14,7 +13,7 @@ export default function Withdrawal(): React.JSX.Element {
   const handleNext = () => router.push('/account/withdrawal/confirm')
 
   return (
-    <Main metaTitle={t('account.withdrawal.title')}>
+    <Main metaTitle={t('account.withdrawal.title')} size="s" isFooter>
       <article className={style.account}>
         <div className={style.form}>
           <h1 className={style.title}>{t('account.withdrawal.title')}</h1>
@@ -33,7 +32,6 @@ export default function Withdrawal(): React.JSX.Element {
           </VStack>
         </div>
       </article>
-      <Footer />
     </Main>
   )
 }

@@ -122,7 +122,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title={t('setting.mypage.title')} type="table" toast={toast} button={button}>
+    <Main title={t('setting.mypage.title')} type="table" size="l" toast={toast} button={button}>
       {message && (
         <Alert type="error">{message}</Alert>
       )}

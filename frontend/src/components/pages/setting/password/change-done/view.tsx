@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
-import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import VStack from 'components/parts/Stack/Vertical'
@@ -13,7 +12,7 @@ export default function PasswordChangeDone(): React.JSX.Element {
   const handleBack = () => router.push('/setting/profile')
 
   return (
-    <Main title={t('setting.password.title')}>
+    <Main title={t('setting.password.title')} size="s" isFooter>
       <article className={style.article_pass}>
         <div className={cx(style.form_account, style.password_done)}>
           <p className="fs_14">{t('setting.password.done')}</p>
@@ -22,7 +21,6 @@ export default function PasswordChangeDone(): React.JSX.Element {
           </VStack>
         </div>
       </article>
-      <Footer />
     </Main>
   )
 }

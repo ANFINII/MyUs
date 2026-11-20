@@ -22,7 +22,6 @@ import VStack from 'components/parts/Stack/Vertical'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import Empty from 'components/widgets/Status/Empty'
 import style from './Edit.module.scss'
-import formStyle from '../../Form.module.scss'
 
 interface Props {
   data: SeriesDetail
@@ -96,8 +95,8 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="Series" type="table" toast={toast} isFooter={false} button={button}>
-      <form className={formStyle.form}>
+    <Main title="Series" type="table" size="l" toast={toast} isFooter={false} button={button}>
+      <form>
         <VStack gap="8">
           <SelectBox label={t('manage.series.mediaType')} value={data.mediaType} options={mediaTypeOptions} disabled />
           <Input label={t('manage.form.title')} value={title} maxLength={100} required onChange={handleTitle} />

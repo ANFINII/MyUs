@@ -48,7 +48,7 @@ export default function Playlists(props: Props): React.JSX.Element {
   const button = <Button name={t('playlist.new')} color="green" size="s" onClick={handleModal} />
 
   return (
-    <Main title="Playlist" type="table" toast={toast} button={button}>
+    <Main title="Playlist" type="table" toast={toast} isFooter={false} button={button}>
       {items.length > 0 ? <CardList items={items} Content={PlaylistCard} /> : <Empty content={t('playlist.empty')} />}
 
       <Modal

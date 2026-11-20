@@ -6,7 +6,7 @@ export default function Privacy(): React.JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Main title={t('menu.privacy.title')} type="table" isFooter={false}>
+    <Main title={t('menu.privacy.title')} type="table" size="l" isFooter={false}>
       <article className="article_userpolicy">
         <h2>{t('menu.privacy.collect.title')}</h2>
         <p>{t('menu.privacy.collect.p1')}</p>

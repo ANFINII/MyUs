@@ -8,7 +8,6 @@ import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
-import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Password from 'components/parts/Input/Password'
@@ -45,7 +44,7 @@ export default function PasswordChange(): React.JSX.Element {
   }
 
   return (
-    <Main title={t('setting.password.title')} toast={toast}>
+    <Main title={t('setting.password.title')} size="s" toast={toast} isFooter>
       <article className={style.article_pass}>
         <form method="POST" action="" className={style.form_account}>
           <VStack gap="8">
@@ -60,7 +59,6 @@ export default function PasswordChange(): React.JSX.Element {
           </VStack>
         </form>
       </article>
-      <Footer />
     </Main>
   )
 }

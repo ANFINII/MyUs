@@ -29,7 +29,6 @@ import VStack from 'components/parts/Stack/Vertical'
 import ComicPageEditor from 'components/widgets/ComicPageEditor'
 import ComicModal from 'components/widgets/Modal/Comic'
 import PaidPagesInput from 'components/widgets/PaidPagesInput'
-import style from '../../Form.module.scss'
 
 interface Props {
   channels: Channel[]
@@ -109,8 +108,8 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="Comic" type="table" toast={toast} isFooter={false} button={button}>
-      <form className={style.form} method="POST" action="" encType="multipart/form-data">
+    <Main title="Comic" type="table" size="l" toast={toast} isFooter={false} button={button}>
+      <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
