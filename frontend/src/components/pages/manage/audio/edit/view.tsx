@@ -93,7 +93,7 @@ export default function ManageAudioEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="Audio" type="table" size="xl" toast={toast} isFooter={false} button={button}>
+    <Main title="Audio" type="table" size="l" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />

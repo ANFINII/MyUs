@@ -95,7 +95,7 @@ export default function ManageSeriesEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="Series" type="table" size="xl" toast={toast} isFooter={false} button={button}>
+    <Main title="Series" type="table" size="l" toast={toast} isFooter={false} button={button}>
       <form>
         <VStack gap="8">
           <SelectBox label={t('manage.series.mediaType')} value={data.mediaType} options={mediaTypeOptions} disabled />

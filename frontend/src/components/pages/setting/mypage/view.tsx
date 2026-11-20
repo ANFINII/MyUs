@@ -43,7 +43,7 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title={t('setting.mypage.title')} type="table" button={button}>
+    <Main title={t('setting.mypage.title')} type="table" size="xl" button={button}>
       <Table>
         <TableRow label={t('setting.mypage.banner')}>
           {mypage.banner !== '' ? (

@@ -76,7 +76,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="Video" type="table" size="xl" toast={toast} isFooter={false} button={button}>
+    <Main title="Video" type="table" size="l" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           {isEncodeFailed && <Alert type="error">{t('manage.video.encodeFailedNotice')}</Alert>}

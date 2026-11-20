@@ -116,7 +116,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="Playlist" type="table" toast={toast} button={button}>
+    <Main title="Playlist" type="table" toast={toast} isFooter={false} button={button}>
       <section className={style.header}>
         <div className={style.thumbnail_box}>{headerImage ? <ExImage src={headerImage} className={style.thumbnail} /> : <IconPlaylist size="48" className={style.icon} />}</div>
         <div className={style.info}>

@@ -100,7 +100,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="Blog" type="table" size="xl" toast={toast} isFooter={false} button={button}>
+    <Main title="Blog" type="table" size="l" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />

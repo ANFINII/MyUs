@@ -13,7 +13,7 @@ interface Props {
   metaTitle?: string
   meta?: MetaType
   type?: 'defalt' | 'table'
-  size?: 's' | 'm' | 'l' | 'xl'
+  size?: 's' | 'l' | 'xl'
   search?: Search
   toast?: ToastType
   isFooter?: boolean
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function Main(props: Props): React.JSX.Element {
-  const { title, metaTitle, meta, type = 'defalt', size, search, toast, isFooter = true, button, children } = props
+  const { title, metaTitle, meta, type = 'defalt', size, search, toast, isFooter = type === 'table', button, children } = props
 
   const { t } = useTranslation()
   const { user } = useUser()
@@ -41,7 +41,8 @@ export default function Main(props: Props): React.JSX.Element {
             </div>
             {button && <div className={style.button}>{button}</div>}
           </div>
-          {content}
+          {size ? <div className={cx(style.content, style[size])}>{children}</div> : children}
+          {isFooter && <Footer />}
         </>
       )}
 

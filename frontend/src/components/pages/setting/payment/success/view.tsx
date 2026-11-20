@@ -10,7 +10,7 @@ export default function PaymentSuccess(): React.JSX.Element {
   const handleBack = () => router.push('/setting/payment')
 
   return (
-    <Main metaTitle={t('setting.payment.successTitle')} size="m">
+    <Main metaTitle={t('setting.payment.successTitle')} size="s">
       <div className={style.result}>
         <h1 className={style.title}>{t('setting.payment.successHeading')}</h1>
         <p className={style.message}>

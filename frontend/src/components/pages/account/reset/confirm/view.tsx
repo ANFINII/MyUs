@@ -8,7 +8,6 @@ import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
-import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -55,7 +54,7 @@ export default function ResetConfirm(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={t('account.reset.confirmTitle')} size="s" toast={toast}>
+    <Main metaTitle={t('account.reset.confirmTitle')} size="s" toast={toast} isFooter>
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.title}>{t('account.reset.confirmTitle')}</h1>
@@ -71,7 +70,6 @@ export default function ResetConfirm(props: Props): React.JSX.Element {
           </VStack>
         </form>
       </article>
-      <Footer />
     </Main>
   )
 }

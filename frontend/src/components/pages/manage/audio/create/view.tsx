@@ -83,7 +83,7 @@ export default function AudioCreate(props: Props): React.JSX.Element {
     <Main
       title="Audio"
       type="table"
-      size="xl"
+      size="l"
       toast={toast}
       isFooter={false}
       button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}

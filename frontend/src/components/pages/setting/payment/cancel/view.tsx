@@ -10,7 +10,7 @@ export default function PaymentCancel(): React.JSX.Element {
   const handleBack = () => router.push('/setting/payment')
 
   return (
-    <Main metaTitle={t('setting.payment.checkoutCancelTitle')} size="m">
+    <Main metaTitle={t('setting.payment.checkoutCancelTitle')} size="s">
       <div className={style.result}>
         <h1 className={style.title}>{t('setting.payment.checkoutCancelHeading')}</h1>
         <p className={style.message}>{t('setting.payment.checkoutCancelMessage')}</p>
