@@ -1,14 +1,14 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { musicsQuery } from 'lib/query/options'
+import { audiosQuery } from 'lib/query/options'
 import { pageParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
-import Musics from './view'
+import Audios from './view'
 
-export default function MusicsPage(): React.JSX.Element {
+export default function AudiosPage(): React.JSX.Element {
   const router = useRouter()
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
-  const { data } = useSuspenseQuery(musicsQuery(params))
+  const { data } = useSuspenseQuery(audiosQuery(params))
 
-  return <Musics data={data} page={page} />
+  return <Audios data={data} page={page} />
 }

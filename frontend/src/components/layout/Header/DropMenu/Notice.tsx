@@ -22,10 +22,10 @@ interface Props {
   onClose: () => void
 }
 
-const mediaObjs = [NotificationType.Video, NotificationType.Music, NotificationType.Blog, NotificationType.Comic, NotificationType.Picture, NotificationType.Chat]
+const mediaObjs = [NotificationType.Video, NotificationType.Audio, NotificationType.Blog, NotificationType.Comic, NotificationType.Picture, NotificationType.Chat]
 const mediaPaths: Record<MediaType, MediaPath> = {
   [MediaType.Video]: MediaPath.Video,
-  [MediaType.Music]: MediaPath.Music,
+  [MediaType.Audio]: MediaPath.Audio,
   [MediaType.Blog]: MediaPath.Blog,
   [MediaType.Comic]: MediaPath.Comic,
   [MediaType.Picture]: MediaPath.Picture,

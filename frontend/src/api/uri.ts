@@ -59,9 +59,9 @@ export const apiHome = base + '/media/home'
 export const apiVideos = base + '/media/video'
 export const apiVideo = (ulid: string) => base + `/media/video/${ulid}`
 
-export const apiMusics = base + '/media/music'
-export const apiMusic = (ulid: string) => base + `/media/music/${ulid}`
-export const apiMusicHires = (ulid: string) => base + `/media/music/${ulid}/hires`
+export const apiAudios = base + '/media/audio'
+export const apiAudio = (ulid: string) => base + `/media/audio/${ulid}`
+export const apiAudioHires = (ulid: string) => base + `/media/audio/${ulid}/hires`
 
 export const apiBlogs = base + '/media/blog'
 export const apiBlog = (ulid: string) => base + `/media/blog/${ulid}`
@@ -87,16 +87,16 @@ export const apiMessage = (ulid: string) => base + `/media/message/${ulid}`
 
 export const apiPlaylists = base + '/media/playlist'
 export const apiPlaylist = (ulid: string) => base + `/media/playlist/${ulid}`
-export const apiPlaylistMusic = (ulid: string) => base + `/media/playlist/${ulid}/music`
-export const apiPlaylistMusicDelete = (ulid: string, musicUlid: string) => base + `/media/playlist/${ulid}/music/${musicUlid}`
+export const apiPlaylistAudio = (ulid: string) => base + `/media/playlist/${ulid}/audio`
+export const apiPlaylistAudioDelete = (ulid: string, audioUlid: string) => base + `/media/playlist/${ulid}/audio/${audioUlid}`
 
 // Manage
 export const apiManageVideos = base + '/manage/media/video'
 export const apiManageVideo = (ulid: string) => base + `/manage/media/video/${ulid}`
 
-export const apiManageMusics = base + '/manage/media/music'
-export const apiManageMusic = (ulid: string) => base + `/manage/media/music/${ulid}`
-export const apiManageMusicHires = (ulid: string) => base + `/manage/media/music/${ulid}/hires`
+export const apiManageAudios = base + '/manage/media/audio'
+export const apiManageAudio = (ulid: string) => base + `/manage/media/audio/${ulid}`
+export const apiManageAudioHires = (ulid: string) => base + `/manage/media/audio/${ulid}/hires`
 
 export const apiManageBlogs = base + '/manage/media/blog'
 export const apiManageBlog = (ulid: string) => base + `/manage/media/blog/${ulid}`

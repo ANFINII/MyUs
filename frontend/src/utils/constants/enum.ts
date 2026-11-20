@@ -167,7 +167,7 @@ export enum Locale {
 
 export enum MediaType {
   Video = 'Video',
-  Music = 'Music',
+  Audio = 'Audio',
   Blog = 'Blog',
   Comic = 'Comic',
   Picture = 'Picture',
@@ -188,7 +188,7 @@ export enum EncodeStatus {
 
 export enum MediaPath {
   Video = 'video',
-  Music = 'music',
+  Audio = 'audio',
   Blog = 'blog',
   Comic = 'comic',
   Picture = 'picture',
@@ -197,7 +197,7 @@ export enum MediaPath {
 
 export enum NotificationType {
   Video = 'Video',
-  Music = 'Music',
+  Audio = 'Audio',
   Blog = 'Blog',
   Comic = 'Comic',
   Picture = 'Picture',
@@ -210,7 +210,7 @@ export enum NotificationType {
 
 export enum NotificationObjectType {
   Video = 'Video',
-  Music = 'Music',
+  Audio = 'Audio',
   Blog = 'Blog',
   Comic = 'Comic',
   Picture = 'Picture',
@@ -227,7 +227,7 @@ export enum AdvertiseType {
 
 export enum CommentType {
   Video = 'Video',
-  Music = 'Music',
+  Audio = 'Audio',
   Blog = 'Blog',
   Comic = 'Comic',
   Picture = 'Picture',

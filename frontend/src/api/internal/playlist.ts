@@ -1,8 +1,8 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { ErrorOut } from 'types/internal/other'
-import { PlaylistCreateOut, PlaylistDetailOut, PlaylistIn, PlaylistList, PlaylistMusicIn, PlaylistUpdateIn } from 'types/internal/playlist'
-import { apiPlaylist, apiPlaylistMusic, apiPlaylistMusicDelete, apiPlaylists, apiUserPlaylists } from 'api/uri'
+import { PlaylistCreateOut, PlaylistDetailOut, PlaylistIn, PlaylistList, PlaylistAudioIn, PlaylistUpdateIn } from 'types/internal/playlist'
+import { apiPlaylist, apiPlaylistAudio, apiPlaylistAudioDelete, apiPlaylists, apiUserPlaylists } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getPlaylists = async (): Promise<ApiOut<PlaylistList>> => {
@@ -29,10 +29,10 @@ export const deletePlaylist = async (ulid: string): Promise<ApiOut<ErrorOut>> =>
   return await apiOut(apiClient('json').delete(apiPlaylist(ulid)))
 }
 
-export const postPlaylistMusic = async (ulid: string, request: PlaylistMusicIn): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('json').post(apiPlaylistMusic(ulid), camelSnake(request)))
+export const postPlaylistAudio = async (ulid: string, request: PlaylistAudioIn): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('json').post(apiPlaylistAudio(ulid), camelSnake(request)))
 }
 
-export const deletePlaylistMusic = async (ulid: string, musicUlid: string): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('json').delete(apiPlaylistMusicDelete(ulid, musicUlid)))
+export const deletePlaylistAudio = async (ulid: string, audioUlid: string): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('json').delete(apiPlaylistAudioDelete(ulid, audioUlid)))
 }

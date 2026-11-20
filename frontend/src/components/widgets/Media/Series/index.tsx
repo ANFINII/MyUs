@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { Blog, Chat, Comic, MediaSeries, Music, Picture, Video } from 'types/internal/media/output'
+import { Blog, Chat, Comic, MediaSeries, Audio, Picture, Video } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import ExImage from 'components/parts/ExImage'
 import Link from 'components/parts/Link'
 import style from './Series.module.scss'
 
-type MediaItem = Video | Music | Blog | Comic | Picture | Chat
+type MediaItem = Video | Audio | Blog | Comic | Picture | Chat
 
 const thumbnail = (item: MediaItem): string => ('image' in item && item.image) || item.channel.avatar
 

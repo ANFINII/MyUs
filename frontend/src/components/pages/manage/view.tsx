@@ -2,18 +2,18 @@ import { useTranslation } from 'react-i18next'
 import { useRouter } from 'components/hooks/useRouter'
 import Main from 'components/layout/Main'
 import IconAdvertise from 'components/parts/Icon/Advertise'
+import IconAudio from 'components/parts/Icon/Audio'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
 import IconList from 'components/parts/Icon/List'
-import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
 import style from './Manage.module.scss'
 
 const menus = [
   { label: 'Video', icon: <IconVideo size="2em" />, path: 'video' },
-  { label: 'Music', icon: <IconMusic size="2em" />, path: 'music' },
+  { label: 'Audio', icon: <IconAudio size="2em" />, path: 'audio' },
   { label: 'Blog', icon: <IconBlog size="2em" />, path: 'blog' },
   { label: 'Comic', icon: <IconComic size="2em" />, path: 'comic' },
   { label: 'Picture', icon: <IconPicture size="2em" />, path: 'picture' },

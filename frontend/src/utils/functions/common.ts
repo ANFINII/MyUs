@@ -43,8 +43,8 @@ export const shuffleItems = <T>(items: T[]): T[] => {
 }
 
 export const mediaCount = (media: MediaHome): number => {
-  const { videos, musics, blogs, comics, pictures, chats } = media
-  return videos.length + musics.length + blogs.length + comics.length + pictures.length + chats.length
+  const { videos, audios, blogs, comics, pictures, chats } = media
+  return videos.length + audios.length + blogs.length + comics.length + pictures.length + chats.length
 }
 
 export const pathMediaName = (pathname: string): string => capitalize(pathname.split('/')[2] ?? '')

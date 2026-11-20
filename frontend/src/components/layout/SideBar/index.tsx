@@ -1,9 +1,9 @@
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
+import IconAudio from 'components/parts/Icon/Audio'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
-import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
 import style from './SideBar.module.scss'
@@ -17,7 +17,7 @@ export default function SideBar(): React.JSX.Element {
 
   const sideBarItems = [
     { path: '/media/video', label: 'Video', icon: <IconVideo size="25" /> },
-    { path: '/media/music', label: 'Music', icon: <IconMusic size="25" /> },
+    { path: '/media/audio', label: 'Audio', icon: <IconAudio size="25" /> },
     { path: '/media/blog', label: 'Blog', icon: <IconBlog size="25" /> },
     { path: '/media/comic', label: 'Comic', icon: <IconComic size="25" /> },
     { path: '/media/picture', label: 'Picture', icon: <IconPicture size="25" /> },

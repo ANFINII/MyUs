@@ -1,13 +1,13 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { Advertise, AdvertiseList, AdvertiseSearchParams } from 'types/internal/advertise'
-import { VideoList, MusicList, BlogList, ComicList, PictureList, ChatList } from 'types/internal/media/output'
-import { SearchParams, Video, Music, Blog, Comic, Picture, Chat } from 'types/internal/media/output'
+import { VideoList, AudioList, BlogList, ComicList, PictureList, ChatList } from 'types/internal/media/output'
+import { SearchParams, Video, Audio, Blog, Comic, Picture, Chat } from 'types/internal/media/output'
 import {
   apiManageVideos,
   apiManageVideo,
-  apiManageMusics,
-  apiManageMusic,
+  apiManageAudios,
+  apiManageAudio,
   apiManageBlogs,
   apiManageBlog,
   apiManageComics,
@@ -24,8 +24,8 @@ export const getManageVideos = async (params: SearchParams): Promise<ApiOut<Vide
   return await apiOut(apiClient('json').get(apiManageVideos, { params }))
 }
 
-export const getManageMusics = async (params: SearchParams): Promise<ApiOut<MusicList>> => {
-  return await apiOut(apiClient('json').get(apiManageMusics, { params }))
+export const getManageAudios = async (params: SearchParams): Promise<ApiOut<AudioList>> => {
+  return await apiOut(apiClient('json').get(apiManageAudios, { params }))
 }
 
 export const getManageBlogs = async (params: SearchParams): Promise<ApiOut<BlogList>> => {
@@ -48,8 +48,8 @@ export const getManageVideo = async (ulid: string): Promise<ApiOut<Video>> => {
   return await apiOut(apiClient('json').get(apiManageVideo(ulid)))
 }
 
-export const getManageMusic = async (ulid: string): Promise<ApiOut<Music>> => {
-  return await apiOut(apiClient('json').get(apiManageMusic(ulid)))
+export const getManageAudio = async (ulid: string): Promise<ApiOut<Audio>> => {
+  return await apiOut(apiClient('json').get(apiManageAudio(ulid)))
 }
 
 export const getManageBlog = async (ulid: string): Promise<ApiOut<Blog>> => {

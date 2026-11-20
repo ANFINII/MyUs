@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { isTranslationKey } from 'lib/i18n'
 import { Playlist } from 'types/internal/playlist'
-import { deletePlaylistMusic, getPlaylists, postPlaylist, postPlaylistMusic } from 'api/internal/playlist'
+import { deletePlaylistAudio, getPlaylists, postPlaylist, postPlaylistAudio } from 'api/internal/playlist'
 import { FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import { useLoading } from 'components/hooks/useLoading'
@@ -19,12 +19,12 @@ import LoginRequired from 'components/widgets/Status/LoginRequired'
 import style from './PlaylistAdd.module.scss'
 
 interface Props {
-  musicUlid: string
+  audioUlid: string
   className?: string
 }
 
 export default function PlaylistAdd(props: Props): React.JSX.Element {
-  const { musicUlid, className } = props
+  const { audioUlid, className } = props
 
   const { t, i18n } = useTranslation()
   const { user } = useUser()
@@ -38,7 +38,7 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
   const [playlists, setPlaylists] = useState<Playlist[]>([])
 
   const selected = playlists.find((p) => p.ulid === selectedUlid)
-  const isAdded = selected?.musicUlids.includes(musicUlid) ?? false
+  const isAdded = selected?.audioUlids.includes(audioUlid) ?? false
   const options = playlists.map((p) => ({ label: p.title, value: p.ulid }))
 
   const handleError = (content: string) => setError(isTranslationKey(i18n, content) ? t(content) : content)
@@ -55,31 +55,31 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Get))
     const items = ret.value.items
     setPlaylists(items)
-    setSelectedUlid((items.find((p) => !p.musicUlids.includes(musicUlid)) ?? items[0])?.ulid ?? '')
+    setSelectedUlid((items.find((p) => !p.audioUlids.includes(audioUlid)) ?? items[0])?.ulid ?? '')
   }
 
   const handleAdd = async () => {
     setIsSaving(true)
-    const ret = await postPlaylistMusic(selectedUlid, { musicUlid })
+    const ret = await postPlaylistAudio(selectedUlid, { audioUlid })
     setIsSaving(false)
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Post))
-    setPlaylists((prev) => prev.map((p) => (p.ulid === selectedUlid ? { ...p, count: p.count + 1, musicUlids: [...p.musicUlids, musicUlid] } : p)))
+    setPlaylists((prev) => prev.map((p) => (p.ulid === selectedUlid ? { ...p, count: p.count + 1, audioUlids: [...p.audioUlids, audioUlid] } : p)))
   }
 
   const handleRemove = async () => {
     setIsSaving(true)
-    const ret = await deletePlaylistMusic(selectedUlid, musicUlid)
+    const ret = await deletePlaylistAudio(selectedUlid, audioUlid)
     setIsSaving(false)
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Delete))
-    setPlaylists((prev) => prev.map((p) => (p.ulid === selectedUlid ? { ...p, count: p.count - 1, musicUlids: p.musicUlids.filter((u) => u !== musicUlid) } : p)))
+    setPlaylists((prev) => prev.map((p) => (p.ulid === selectedUlid ? { ...p, count: p.count - 1, audioUlids: p.audioUlids.filter((u) => u !== audioUlid) } : p)))
   }
 
   const handleCreate = async () => {
     handleLoading(true)
-    const ret = await postPlaylist({ title, publish: isPublish, musicUlid })
+    const ret = await postPlaylist({ title, publish: isPublish, audioUlid })
     handleLoading(false)
     if (ret.isErr()) return handleError(errorMessage(ret.error, FetchError.Post))
-    const playlist = { ulid: ret.value.ulid, title, publish: isPublish, count: 1, image: '', musicUlids: [musicUlid], updated: '' }
+    const playlist = { ulid: ret.value.ulid, title, publish: isPublish, count: 1, image: '', audioUlids: [audioUlid], updated: '' }
     setPlaylists((prev) => [playlist, ...prev])
     setSelectedUlid(playlist.ulid)
     setTitle('')
@@ -110,7 +110,7 @@ export default function PlaylistAdd(props: Props): React.JSX.Element {
             <div className={style.create}>
               <Input label={t('playlist.newTitle')} value={title} maxLength={100} onChange={handleTitle} />
               <div className={style.create_actions}>
-                <CheckBox label={t('playlist.publish')} id={`playlist_publish_${musicUlid}`} checked={isPublish} onChange={handlePublish} />
+                <CheckBox label={t('playlist.publish')} id={`playlist_publish_${audioUlid}`} checked={isPublish} onChange={handlePublish} />
                 <Button name={t('playlist.create')} color="green" size="s" loading={loading} disabled={title.trim() === ''} onClick={handleCreate} />
               </div>
             </div>

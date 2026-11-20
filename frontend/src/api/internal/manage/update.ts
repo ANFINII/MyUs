@@ -1,21 +1,21 @@
 import { LARGE_UPLOAD_TIMEOUT_MS, apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
 import { AdvertiseUpdateIn } from 'types/internal/advertise'
-import { VideoUpdateIn, MusicUpdateIn, MusicHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn } from 'types/internal/media/input'
+import { VideoUpdateIn, AudioUpdateIn, AudioHiresIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn } from 'types/internal/media/input'
 import { ErrorOut } from 'types/internal/other'
-import { apiManageVideo, apiManageMusic, apiManageMusicHires, apiManageBlog, apiManageComic, apiManagePicture, apiManageChat, apiManageAdvertise } from 'api/uri'
+import { apiManageVideo, apiManageAudio, apiManageAudioHires, apiManageBlog, apiManageComic, apiManagePicture, apiManageChat, apiManageAdvertise } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const putManageVideo = async (ulid: string, request: VideoUpdateIn): Promise<ApiOut<ErrorOut>> => {
   return await apiOut(apiClient('form').put(apiManageVideo(ulid), camelSnake(request)))
 }
 
-export const putManageMusic = async (ulid: string, request: MusicUpdateIn): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('form').put(apiManageMusic(ulid), camelSnake(request)))
+export const putManageAudio = async (ulid: string, request: AudioUpdateIn): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('form').put(apiManageAudio(ulid), camelSnake(request)))
 }
 
-export const putManageMusicHires = async (ulid: string, request: MusicHiresIn): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('form', LARGE_UPLOAD_TIMEOUT_MS).put(apiManageMusicHires(ulid), camelSnake(request)))
+export const putManageAudioHires = async (ulid: string, request: AudioHiresIn): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('form', LARGE_UPLOAD_TIMEOUT_MS).put(apiManageAudioHires(ulid), camelSnake(request)))
 }
 
 export const putManageBlog = async (ulid: string, request: BlogUpdateIn): Promise<ApiOut<ErrorOut>> => {

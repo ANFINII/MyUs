@@ -4,8 +4,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
-import { Music, MusicList } from 'types/internal/media/output'
-import { deleteManageMusics } from 'api/internal/manage/delete'
+import { Audio, AudioList } from 'types/internal/media/output'
+import { deleteManageAudios } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
@@ -24,11 +24,11 @@ import ManageTable from '../_container/Table'
 
 interface Props {
   channels: Channel[]
-  data: MusicList
+  data: AudioList
   page: number
 }
 
-export default function ManageMusics(props: Props): React.JSX.Element {
+export default function ManageAudios(props: Props): React.JSX.Element {
   const { channels, data, page } = props
   const { items, total } = data
 
@@ -43,7 +43,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
   const handleModal = () => setIsModal(!isModal)
-  const handleEdit = (music: Music) => router.push(`/manage/music/${music.ulid}`)
+  const handleEdit = (audio: Audio) => router.push(`/manage/audio/${audio.ulid}`)
 
   const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => {
     router.push({ pathname: router.pathname, query: { ...router.query, channel: e.target.value, page: 1 } })
@@ -54,7 +54,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
     if (ulids.length === 0) return
 
     handleLoading(true)
-    const ret = await deleteManageMusics(ulids)
+    const ret = await deleteManageAudios(ulids)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Delete), true)
@@ -62,13 +62,13 @@ export default function ManageMusics(props: Props): React.JSX.Element {
     }
     setSelectedKeys(new Set())
     handleModal()
-    await queryClient.invalidateQueries({ queryKey: queryKeys.manageMusicAll })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.manageAudioAll })
   }
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const channelUlid = String(router.query.channel ?? '') || channels[0]!.ulid
 
-  const columns: Column<Music>[] = [
+  const columns: Column<Audio>[] = [
     {
       key: 'thumbnail',
       header: t('manage.form.thumbnail'),
@@ -120,7 +120,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
       className: style.narrow,
       cellClass: style.detail,
       cell: (m) => (
-        <Link href={`/media/music/${m.ulid}`} className={style.detail_link}>
+        <Link href={`/media/audio/${m.ulid}`} className={style.detail_link}>
           <IconArrow size="16" type="external" />
         </Link>
       ),
@@ -152,7 +152,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
   const button = <ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />
 
   return (
-    <Main title="Music" type="table" toast={toast} isFooter={false} button={button}>
+    <Main title="Audio" type="table" toast={toast} isFooter={false} button={button}>
       <ManageTable
         table={{ datas: items, columns, rowKey: (m) => m.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}

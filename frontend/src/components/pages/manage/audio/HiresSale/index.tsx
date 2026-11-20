@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
-import { MusicHiresIn } from 'types/internal/media/input'
-import { MusicHires } from 'types/internal/media/output'
+import { AudioHiresIn } from 'types/internal/media/input'
+import { AudioHires } from 'types/internal/media/output'
 import { PaymentSellerOut, Product } from 'types/internal/payment'
-import { deleteManageMusicHires } from 'api/internal/manage/delete'
-import { putManageMusicHires } from 'api/internal/manage/update'
+import { deleteManageAudioHires } from 'api/internal/manage/delete'
+import { putManageAudioHires } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { flacHires, hiresError, hiresLabel } from 'utils/functions/hires'
 import { priceAmount, priceText } from 'utils/functions/price'
@@ -24,7 +24,7 @@ import style from './HiresSale.module.scss'
 interface Props {
   ulid: string
   seller: PaymentSellerOut
-  hires: MusicHires | null
+  hires: AudioHires | null
   product: Product | null
   handleToast: (content: string, isError: boolean) => void
 }
@@ -37,7 +37,7 @@ export default function HiresSale(props: Props): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const currency = product?.price.currency ?? seller.currency
   const [file, setFile] = useState<File | null>(null)
-  const [fileHires, setFileHires] = useState<MusicHires | null>(null)
+  const [fileHires, setFileHires] = useState<AudioHires | null>(null)
   const [text, setText] = useState<string>(priceText(product?.price.amount ?? 0, currency))
   const [isSale, setIsSale] = useState<boolean>(hires !== null)
 
@@ -61,22 +61,22 @@ export default function HiresSale(props: Props): React.JSX.Element {
       handleToast(error, true)
       return
     }
-    const request: MusicHiresIn = file === null ? { price } : { price, hires: file }
+    const request: AudioHiresIn = file === null ? { price } : { price, hires: file }
     handleLoading(true)
-    const ret = await putManageMusicHires(ulid, request)
+    const ret = await putManageAudioHires(ulid, request)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Put), true)
       return
     }
     setFile(null)
-    await queryClient.invalidateQueries({ queryKey: queryKeys.manageMusic(ulid) })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.manageAudio(ulid) })
     handleToast(Fetch.Save, false)
   }
 
   const handleStop = async () => {
     handleLoading(true)
-    const ret = await deleteManageMusicHires(ulid)
+    const ret = await deleteManageAudioHires(ulid)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(errorMessage(ret.error, FetchError.Delete), true)
@@ -85,7 +85,7 @@ export default function HiresSale(props: Props): React.JSX.Element {
     setFile(null)
     setText('')
     setIsSale(false)
-    await queryClient.invalidateQueries({ queryKey: queryKeys.manageMusic(ulid) })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.manageAudio(ulid) })
     handleToast(Fetch.Delete, false)
   }
 

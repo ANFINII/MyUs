@@ -76,7 +76,7 @@
     "deleteFailed": "削除に失敗しました",
     "fileTypeInvalid": "対応していないファイル形式です",
     "fileTooLarge": "ファイルサイズが大きすぎます",
-    "musicBitRateLow": "音質が低いため上げられません。192kbps 以上の音楽ファイルか、WAV・FLAC を上げ直してください",
+    "audioBitRateLow": "音質が低いため上げられません。192kbps 以上のオーディオファイルか、WAV・FLAC を上げ直してください",
     "searchTagLimit": "検索タグは20個までです",
     "checkoutFailed": "決済セッションの作成に失敗しました",
     "cancelFailed": "解約処理に失敗しました。時間をおいて再度お試しください",
@@ -416,7 +416,7 @@
       "pageRemove": "外す",
       "pageHint": "ドラッグか矢印で並べ替えられます。表紙はページに入りません。",
       "video": "動画",
-      "music": "音楽",
+      "audio": "オーディオ",
       "richtext": "本文",
       "sale": "有料で販売する",
       "price": "値段（{{currency}}）",
@@ -593,7 +593,7 @@
       "features": {
         "individualAds": "個別広告表示 {{count}}つ",
         "hideGlobalAds": "全体広告 非表示",
-        "paidContent": "有料記事・音楽の販売",
+        "paidContent": "有料記事・オーディオの販売",
         "playlist": "プレイリスト作成",
         "series": "シリーズ作成",
         "basic": "基本機能",
@@ -643,7 +643,7 @@
     "count": "{{count}}曲",
     "playAll": "すべて再生",
     "playShuffle": "シャッフル再生",
-    "emptyMusic": "曲はまだありません",
+    "emptyAudio": "オーディオはまだありません",
     "deleteTitle": "プレイリストの削除",
     "deleteConfirm": "「{{title}}」を削除しますか？",
     "add": "プレイリストに追加",
@@ -926,8 +926,8 @@
         "label": "Video",
         "content": "動画コンテンツを投稿できる機能です。"
       },
-      "music": {
-        "label": "Music",
+      "audio": {
+        "label": "Audio",
         "content": "音楽、音声、オーディオブックなどを投稿できる機能です。Standard 以上のプランなら、オリジナルの曲のハイレゾ音源を販売することもできます。"
       },
       "blog": {
@@ -981,7 +981,7 @@
       "label": "シリーズ",
       "count": "{{count}}件"
     },
-    "music": {
+    "audio": {
       "hiresTitle": "ハイレゾ音源",
       "hiresDownload": "ハイレゾをダウンロード",
       "hiresNotice": "購入後、ダウンロードできるようになるまで少し時間がかかる場合があります。"

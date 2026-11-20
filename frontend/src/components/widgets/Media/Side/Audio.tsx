@@ -1,4 +1,4 @@
-import { Music } from 'types/internal/media/output'
+import { Audio } from 'types/internal/media/output'
 import ExImage from 'components/parts/ExImage'
 import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -7,10 +7,10 @@ import style from './Side.module.scss'
 
 interface Props {
   href: string
-  item: Music
+  item: Audio
 }
 
-export default function MediaSideMusic(props: Props): React.JSX.Element {
+export default function MediaSideAudio(props: Props): React.JSX.Element {
   const { href, item } = props
   const { image, channel } = item
 

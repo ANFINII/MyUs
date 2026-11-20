@@ -1,6 +1,6 @@
 import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
-import { Hashtag, MediaSeries, MediaUser, Video, Music, Blog, Comic, Picture } from 'types/internal/media/output'
+import { Hashtag, MediaSeries, MediaUser, Video, Audio, Blog, Comic, Picture } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import style from './Common.module.scss'
 import MediaDetailLeft from './Left'
@@ -20,8 +20,8 @@ interface Props {
     mediaUser: MediaUser
     mediaPath: MediaPath
   }
-  list: Video[] | Music[] | Blog[] | Picture[]
-  series: MediaSeries<Video | Music | Blog | Comic | Picture>
+  list: Video[] | Audio[] | Blog[] | Picture[]
+  series: MediaSeries<Video | Audio | Blog | Comic | Picture>
   handleToast: (content: string, isError: boolean) => void
 }
 

@@ -1,10 +1,10 @@
 import { MediaHome } from 'types/internal/media/output'
 import Divide from 'components/parts/Divide'
 import CardIndexList from 'components/widgets/Card/IndexList'
+import AudioCard from 'components/widgets/Card/Media/Audio'
 import BlogCard from 'components/widgets/Card/Media/Blog'
 import ChatCard from 'components/widgets/Card/Media/Chat'
 import ComicCard from 'components/widgets/Card/Media/Comic'
-import MusicCard from 'components/widgets/Card/Media/Music'
 import PictureCard from 'components/widgets/Card/Media/Picture'
 import VideoCard from 'components/widgets/Card/Media/Video'
 
@@ -14,7 +14,7 @@ interface Props {
 
 export default function MediaIndexList(props: Props): React.JSX.Element {
   const { media } = props
-  const { videos, musics, blogs, comics, pictures, chats } = media
+  const { videos, audios, blogs, comics, pictures, chats } = media
 
   return (
     <>
@@ -25,9 +25,9 @@ export default function MediaIndexList(props: Props): React.JSX.Element {
       </CardIndexList>
 
       <Divide />
-      <CardIndexList title="Music">
-        {musics.map((item) => (
-          <MusicCard key={item.ulid} item={item} items={musics} />
+      <CardIndexList title="Audio">
+        {audios.map((item) => (
+          <AudioCard key={item.ulid} item={item} items={audios} />
         ))}
       </CardIndexList>
 
