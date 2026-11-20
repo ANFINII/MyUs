@@ -7,9 +7,9 @@ from .data import ProductData
 BLOG_PRICE_MIN = 300
 BLOG_PRICE_MAX = 50000
 HIRES_PRICE_MIN = 300
-HIRES_PRICE_MAX = 600
+HIRES_PRICE_MAX = 5000
 COMIC_PRICE_MIN = 300
-COMIC_PRICE_MAX = 50000
+COMIC_PRICE_MAX = 5000
 
 
 def price_range(product_type: ProductType) -> tuple[int, int]:
@@ -24,6 +24,18 @@ def price_range(product_type: ProductType) -> tuple[int, int]:
             assert_never(product_type)
 
 
+def price_range_error(product_type: ProductType) -> str:
+    match product_type:
+        case ProductType.BLOG:
+            return "error.priceRange"
+        case ProductType.HIRES:
+            return "error.hiresPriceRange"
+        case ProductType.COMIC:
+            return "error.comicPriceRange"
+        case _:
+            assert_never(product_type)
+
+
 def validate(obj: ProductData) -> Result[None, ValidationError]:
     if obj.seller_id == 0:
         return Result.err(ValidationError("error.sellerRequired"))
@@ -33,6 +45,6 @@ def validate(obj: ProductData) -> Result[None, ValidationError]:
 
     price_min, price_max = price_range(obj.product_type)
     if not price_min <= obj.price.amount <= price_max:
-        return Result.err(ValidationError("error.priceRange"))
+        return Result.err(ValidationError(price_range_error(obj.product_type)))
 
     return Result.ok(None)

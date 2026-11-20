@@ -11,17 +11,19 @@ export const priceText = (amount: number, currency: Currency): string => (amount
 
 export const priceAmount = (text: string, currency: Currency): number => Math.round(Number(text) * 10 ** priceDigits(currency))
 
-const PRICE_MIN = 300
-const PRICE_MAX = 50000
+const BLOG_PRICE_MIN = 300
+const BLOG_PRICE_MAX = 50000
+const COMIC_PRICE_MIN = 300
+const COMIC_PRICE_MAX = 5000
 
 export const paidTextError = (paidText: string, price: number): string => {
-  if (price < PRICE_MIN || price > PRICE_MAX) return 'error.priceRange'
+  if (price < BLOG_PRICE_MIN || price > BLOG_PRICE_MAX) return 'error.priceRange'
   if (paidText === '') return 'error.paidTextRequired'
   return ''
 }
 
 export const paidPagesError = (price: number, freePages: number, pageCount: number): string => {
-  if (price < PRICE_MIN || price > PRICE_MAX) return 'error.priceRange'
+  if (price < COMIC_PRICE_MIN || price > COMIC_PRICE_MAX) return 'error.comicPriceRange'
   if (freePages < 0 || freePages >= pageCount) return 'error.freePagesRange'
   return ''
 }

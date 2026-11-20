@@ -3,6 +3,7 @@ from ninja import UploadedFile
 from django.utils import timezone
 from myus.domain.media.audio.data import AudioData, HiresData
 from myus.domain.media.audio.interface import AudioInterface
+from myus.domain.media.audio.validation import HIRES_LONG_SECONDS
 from myus.domain.media.blog.data import BlogData
 from myus.domain.media.blog.interface import BlogInterface
 from myus.domain.media.chat.data import ChatData
@@ -16,6 +17,7 @@ from myus.domain.media.video.data import VideoData
 from myus.domain.media.video.interface import VideoInterface
 from myus.domain.message.interface import FilterOption as MessageFilterOption, MessageInterface, PageOption as MessagePageOption, SortOption as MessageSortOption
 from myus.domain.payment.data import Money
+from myus.domain.payment.plan import get_plan
 from myus.domain.payment.product.data import ProductData
 from myus.injectors.container import injector
 from myus.utils.common.logger import log
@@ -33,6 +35,7 @@ from ...category._convert import get_category_data
 from ...dto.media import VideoUpdateDTO, AudioUpdateDTO, BlogUpdateDTO, ComicUpdateDTO, PictureUpdateDTO, ChatUpdateDTO
 from ...notification._convert import create_publish_notification_data
 from ...payment._convert import get_product_data, get_product_purchase_ids_data, get_purchase_ids_data, get_seller_currency_data
+from ...user.core import get_user_data
 
 
 @Result.shield_exception()
@@ -337,6 +340,17 @@ def update_manage_hires(user_id: int, ulid: str, price: int, hires: UploadedFile
         save_data = current
     else:
         audio = probe_upload(hires, probe_audio)
+        if audio.duration >= HIRES_LONG_SECONDS:
+            user_ret = get_user_data(user_id=user_id)
+            if user_ret.is_err:
+                return Result.err(user_ret.err_value)
+
+            user = user_ret.ok_value
+            plan = get_plan(user.user_plan.plan) if user is not None else None
+            if plan is None or not plan.is_long_hires:
+                log.info("plan required", user_id=user_id, duration=audio.duration)
+                return Result.err(ForbiddenError("error.hiresLongPlanRequired"))
+
         path = save_upload(hires, MediaUpload.HIRES, obj.channel.ulid)
         save_data = HiresData(
             id=current.id if current is not None else 0,

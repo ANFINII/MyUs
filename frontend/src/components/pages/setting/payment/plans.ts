@@ -11,7 +11,7 @@ export const plans: Plan[] = [
   },
   {
     name: 'Premium',
-    features: [{ key: 'series' }, { key: 'playlist' }, { key: 'individualAds', count: 3 }, { key: 'hideGlobalAds' }, { key: 'paidContent' }],
+    features: [{ key: 'series' }, { key: 'playlist' }, { key: 'individualAds', count: 3 }, { key: 'hideGlobalAds' }, { key: 'paidContent' }, { key: 'longHires' }],
   },
   {
     name: 'Free',
