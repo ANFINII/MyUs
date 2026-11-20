@@ -10,8 +10,6 @@ from myus.domain.media.chat.interface import ChatInterface
 from myus.domain.media.comic.data import ComicData
 from myus.domain.media.comic.interface import ComicInterface
 from myus.domain.media.common import SortType
-from myus.domain.media.hires.data import HiresData
-from myus.domain.media.hires.interface import FilterOption as HiresFilterOption, HiresInterface, PageOption as HiresPageOption, SortOption as HiresSortOption
 from myus.domain.media.picture.data import PictureData
 from myus.domain.media.picture.interface import PictureInterface
 from myus.domain.media.video.data import VideoData
@@ -87,22 +85,6 @@ def get_media_user_data(is_like: bool, channel_id: int, user_id: int | None) -> 
     )
 
     return Result.ok(data)
-
-
-@Result.shield_exception()
-def get_hires_data(audio_id: int) -> Result[HiresData | None, FatalError]:
-    repo = injector.get(HiresInterface)
-    ids_ret = repo.get_ids(HiresFilterOption(audio_id=audio_id), HiresSortOption(), HiresPageOption(limit=1))
-    if ids_ret.is_err:
-        return Result.err(ids_ret.err_value)
-
-    ids = ids_ret.ok_value
-    objs_ret = repo.bulk_get(ids)
-    if objs_ret.is_err:
-        return Result.err(objs_ret.err_value)
-
-    objs = objs_ret.ok_value
-    return Result.ok(next(iter(objs), None))
 
 
 @Result.shield_exception()

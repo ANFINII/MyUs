@@ -1,22 +1,24 @@
+from django.db import transaction
 from django.db.models import Count, F
 from django.db.models.query import QuerySet
-from myus.db.models.media import Audio
-from myus.domain.media.audio.data import AudioData
+from myus.db.models.media import Audio, Hires
+from myus.domain.media.audio.data import AudioData, HiresData
 from myus.domain.media.audio.interface import AudioInterface
 from myus.domain.media.audio.validation import validate
 from myus.domain.media.common import FilterOption, PageOption, SortOption
 from myus.utils.common.result import FatalError, Result
-from ._convert import convert_data, marshal_data
+from ._convert import convert_data, marshal_data, marshal_hires_data
 from ..common import filter_queryset, get_ids_queryset
 from ...common import get_save_new_ids, sort_ids
 
 
 AUDIO_FIELDS = ["channel_id", "title", "content", "lyric", "image", "audio", "gain", "publish", "publish_at", "updated"]
+HIRES_FIELDS = ["audio_id", "file", "sample_rate", "bit_depth"]
 
 
 class AudioRepository(AudioInterface):
     def queryset(self) -> QuerySet[Audio]:
-        return Audio.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
+        return Audio.objects.select_related("channel", "channel__owner", "hires").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
 
     @Result.shield_exception()
     def get_ids(self, filter: FilterOption, sort: SortOption, page: PageOption) -> Result[list[int], FatalError]:
@@ -42,7 +44,10 @@ class AudioRepository(AudioInterface):
             return Result.err(FatalError(f"Invalid Data: {errors}"))
 
         models = [marshal_data(o) for o in objs]
-        new_ids = get_save_new_ids(models, AUDIO_FIELDS)
+        with transaction.atomic():
+            new_ids = get_save_new_ids(models, AUDIO_FIELDS)
+            for obj, model in zip(objs, models):
+                save_hires(model.pk, obj.hires)
 
         return Result.ok(new_ids)
 
@@ -65,3 +70,11 @@ class AudioRepository(AudioInterface):
         Audio.objects.filter(id=media_id).update(read=F("read") + 1)
         read = Audio.objects.filter(id=media_id).values_list("read", flat=True).first()
         return Result.ok(read if read is not None else 0)
+
+
+def save_hires(audio_id: int, hires: HiresData | None) -> None:
+    if hires is None:
+        Hires.objects.filter(audio_id=audio_id).delete()
+        return
+
+    get_save_new_ids([marshal_hires_data(hires, audio_id)], HIRES_FIELDS)

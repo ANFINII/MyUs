@@ -1,8 +1,8 @@
 from django_ulid.models import ulid
-from myus.db.models.media import Audio
+from myus.db.models.media import Audio, Hires
 from myus.domain.channel.data import ChannelData
 from myus.domain.hashtag.data import HashtagData
-from myus.domain.media.audio.data import AudioData
+from myus.domain.media.audio.data import AudioData, HiresData
 
 
 def convert_data(obj: Audio) -> AudioData:
@@ -36,6 +36,16 @@ def convert_data(obj: Audio) -> AudioData:
             count=obj.channel.count,
         ),
         hashtags=[HashtagData(id=t.id, ulid=t.ulid, name=t.name) for t in obj.hashtag.all()],
+        hires=hires_data(obj.hires) if hasattr(obj, "hires") else None,
+    )
+
+
+def hires_data(obj: Hires) -> HiresData:
+    return HiresData(
+        id=obj.id,
+        file=obj.file.name or "",
+        sample_rate=obj.sample_rate,
+        bit_depth=obj.bit_depth,
     )
 
 
@@ -53,4 +63,14 @@ def marshal_data(data: AudioData) -> Audio:
         read=data.read,
         publish=data.publish,
         publish_at=data.publish_at,
+    )
+
+
+def marshal_hires_data(data: HiresData, audio_id: int) -> Hires:
+    return Hires(
+        id=data.id if data.id != 0 else None,
+        audio_id=audio_id,
+        file=data.file,
+        sample_rate=data.sample_rate,
+        bit_depth=data.bit_depth,
     )

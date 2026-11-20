@@ -188,9 +188,9 @@ class ManageAudioAPI:
                 case _:
                     assert_never(audio_ret.err_value)
 
-        audio, hires, product = audio_ret.ok_value
+        audio, product = audio_ret.ok_value
         audio_out = convert_audios([audio])[0]
-        return 200, audio_out.model_copy(update={"hires": convert_hires(hires), "product": convert_product(product)})
+        return 200, audio_out.model_copy(update={"hires": convert_hires(audio.hires), "product": convert_product(product)})
 
     @staticmethod
     @router.put("/{ulid}", response={200: SuccessOut, 400: ErrorOut, 500: ErrorOut})

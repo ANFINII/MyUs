@@ -209,7 +209,8 @@ YouTubeのチャンネルと同様の概念。1人のユーザーが複数のチ
 - ジャケット画像（無ければチャンネルのアバターを出す）
 - ハイレゾの販売。再生用のオーディオとは別に、販売用の FLAC を編集画面で上げると、その曲が有料の販売データになる（`Hires`）
   - 売れるのは Standard 以上のプランで、売上を受け取る口座の登録が済んだ人。通貨は投稿者の国から決める
-  - 音質は 24bit で、サンプリングレートは 48kHz〜192kHz。アップロードのときに ffprobe で読んで保存し、決まりは `domain/media/hires/validation.py` が保存の前に確かめる
+  - 音質は 24bit で、サンプリングレートは 48kHz〜192kHz。アップロードのときに ffprobe で読んで保存し、決まりは `domain/media/audio/validation.py` の `validate_hires` が保存の前に確かめる
+  - ハイレゾはオーディオの集約の中に置く（`AudioData.hires: HiresData | None`）。オーディオの Repository が一緒に取り、`bulk_save` でハイレゾの作成・更新・削除まで行う。`hires` を `None` にして保存すると、ハイレゾの行も消える
   - 値段は 300〜600。ドルは 3.00〜6.00。値段は `Product` に持つ
   - 購入した人がいるときは、販売をやめることも、曲を削除することもできない（`error.saleStopPurchased`・`error.deletePurchased`）
   - ファイルは変換せずに、公開しない置き場（`STORAGES["private"]`）に置く。開発は `myus/private`、本番は別の S3 のバケット
