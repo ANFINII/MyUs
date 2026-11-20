@@ -36,9 +36,9 @@ export default function PaymentChange(props: Props): React.JSX.Element {
   const [activeName, setActiveName] = useState<string>('')
 
   const currentPlanName = mypage.plan
-  const changeable = plans.filter((plan) => plan.name !== 'Free')
-  const isChanged = activeName !== '' && activeName !== currentPlanName
   const priceMap = new Map(planPrices.map((p) => [p.name, p.price]))
+  const changeable = plans.filter((plan) => plan.name !== 'Free' && priceMap.has(plan.name))
+  const isChanged = activeName !== '' && activeName !== currentPlanName
 
   const handleBack = () => router.push('/setting/payment')
 

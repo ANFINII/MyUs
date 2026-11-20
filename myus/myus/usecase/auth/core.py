@@ -219,6 +219,7 @@ def signup_user(input: SignupDTO) -> Result[None, FatalError]:
         user_plan=UserPlanData(
             plan=PlanName.FREE,
             is_paid=False,
+            is_ultimate_invited=False,
             start_date=None,
             end_date=None,
         ),

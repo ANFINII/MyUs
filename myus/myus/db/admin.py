@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db.models import Count
 from .models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
-from .models import User, Profile, MyPage, SearchTag, HashTag, Category, NgWord, UserNotification
+from .models import User, Profile, MyPage, SearchTag, HashTag, Category, NgWord, UserNotification, UserPlan
 from .models import Video, Audio, Blog, Comic, Picture, Chat
 
 
@@ -68,6 +68,15 @@ class UserNotificationInline(admin.TabularInline):
         return False
 
 
+class UserPlanInline(admin.TabularInline):
+    model = UserPlan
+    readonly_fields = ("plan", "is_paid", "start_date", "end_date")
+    verbose_name = "プラン"
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 class SearchTagInline(admin.TabularInline):
     model = SearchTag
     extra = 1
@@ -115,7 +124,7 @@ class UserAdmin(ImportExportModelAdmin):
     search_fields = ("email", "username", "nickname")
     ordering = ("id",)
     readonly_fields = ("last_login", "date_joined")
-    inlines = [ProfileInline, MyPageInline, UserNotificationInline, SearchTagInline]
+    inlines = [ProfileInline, MyPageInline, UserNotificationInline, UserPlanInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [
