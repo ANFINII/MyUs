@@ -838,7 +838,7 @@
         "title": "Information We Collect",
         "p1": "Account and profile: email address, user name, nickname, name, date of birth, gender, country/region, phone number, and address",
         "p2": "Usage records: actions such as views, likes, and follows, IP address, and cookies",
-        "p3": "Payments: records of payments and earnings\nCredit card numbers are handled by Stripe, and the operator does not receive them",
+        "p3": "Payments: records of payments and earnings. Credit card numbers are handled by Stripe, and the operator does not receive them",
         "p4": "Posts: content you post and its title, description, and so on"
       },
       "purpose": {
@@ -869,7 +869,7 @@
       "request": {
         "title": "Requests for Disclosure, Correction, or Deletion",
         "p1": "When you request disclosure, correction, deletion, or suspension of use of your personal information, we will respond without delay after confirming your identity.",
-        "p2": "You can withdraw from the settings page.\nRequests to delete information after withdrawal are accepted at our contact address."
+        "p2": "You can withdraw from the settings page. Requests to delete information after withdrawal are accepted at our contact address."
       },
       "change": {
         "title": "Changes to This Policy",
