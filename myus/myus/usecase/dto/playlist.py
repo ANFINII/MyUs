@@ -21,7 +21,7 @@ class PlaylistDetailDTO:
     title: str
     description: str
     image: str
-    thumbnail_audio_ulid: str
+    thumbnail_ulid: str
     publish: bool
     is_owner: bool
     updated: datetime
@@ -40,6 +40,6 @@ class PlaylistCreateDTO:
 class PlaylistUpdateDTO:
     title: str
     description: str
-    thumbnail_audio_ulid: str
+    thumbnail_ulid: str
     publish: bool
     audio_ulids: list[str]

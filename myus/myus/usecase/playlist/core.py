@@ -61,13 +61,13 @@ def get_playlist(user_id: int | None, ulid: str) -> Result[PlaylistDetailDTO, Fi
 
     all_audios = audios_ret.ok_value
     audios = [m for m in all_audios if is_visible_audio(m, user_id)]
-    thumbnail_audio_ulids = [m.ulid for m in audios if playlist.image and audio_image(m) == playlist.image]
+    thumbnail_ulids = [m.ulid for m in audios if playlist.image and audio_image(m) == playlist.image]
     return Result.ok(PlaylistDetailDTO(
         ulid=playlist.ulid,
         title=playlist.title,
         description=playlist.description,
         image=playlist_image(audios, playlist.image),
-        thumbnail_audio_ulid=thumbnail_audio_ulids[0] if len(thumbnail_audio_ulids) > 0 else "",
+        thumbnail_ulid=thumbnail_ulids[0] if len(thumbnail_ulids) > 0 else "",
         publish=playlist.publish,
         is_owner=is_owner,
         updated=playlist.updated,
@@ -130,7 +130,7 @@ def update_playlist(user_id: int, ulid: str, input: PlaylistUpdateDTO) -> Result
     if hidden_ids_ret.is_err:
         return Result.err(hidden_ids_ret.err_value)
 
-    thumbnail_ret = get_audio_data(input.thumbnail_audio_ulid, user_id) if input.thumbnail_audio_ulid else Result.ok(None)
+    thumbnail_ret = get_audio_data(input.thumbnail_ulid, user_id) if input.thumbnail_ulid else Result.ok(None)
     if thumbnail_ret.is_err:
         return Result.err(thumbnail_ret.err_value)
 
