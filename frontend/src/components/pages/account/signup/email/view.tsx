@@ -48,9 +48,11 @@ export default function SignupEmail(): React.JSX.Element {
       <article className={style.account}>
         <form method="POST" action="" className={style.form} onSubmit={handleSubmit}>
           <h1 className={style.signup_title}>{t('account.signup.title')}</h1>
-          {message && (
-            <Alert type="error" isPlain className="mb_8">{message}</Alert>
-          )}
+          <div className={style.message}>
+            {message && (
+              <Alert type="error" isPlain className={style.error}>{message}</Alert>
+            )}
+          </div>
           <VStack gap="8">
             <Input type="email" name="email" placeholder={t('account.form.email')} maxLength={255} required error={error} onChange={handleInput} />
             <Alert type="info">

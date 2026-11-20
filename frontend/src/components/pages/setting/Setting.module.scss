@@ -78,6 +78,17 @@
     padding: 15px;
   }
 
+  .message {
+    position: relative;
+
+    .error {
+      position: absolute;
+      right: 0;
+      bottom: 8px;
+      left: 0;
+    }
+  }
+
   .title {
     margin: 40px 0;
     font-size: 28px;
