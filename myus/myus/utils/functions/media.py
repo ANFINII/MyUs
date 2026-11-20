@@ -9,7 +9,6 @@ from PIL import Image, UnidentifiedImageError
 from ninja import UploadedFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import TemporaryUploadedFile
-from .convert.audio_converter import is_conversion, is_low_bit_rate, probe_audio, save_converted_mp3
 from .file import advertise_image_path, advertise_video_path, audios_path, avatar_path, comic_path, file_extension, hires_path, image_path, private_storage, video_path
 from ..common.logger import log
 from ..common.result import Result, ValidationError
@@ -61,12 +60,6 @@ def validate_uploads(files: list[tuple[UploadedFile | None, UploadType]]) -> Res
         if isinstance(upload_type, MediaUpload) and not is_media(file, upload_type):
             log.warning("unsupported format", upload_type=upload_type.value, extension=extension, content_type=content_type)
             return Result.err(ValidationError("error.fileTypeInvalid"))
-
-        if upload_type == MediaUpload.AUDIO:
-            audio = probe_upload(file, probe_audio)
-            if is_low_bit_rate(audio):
-                log.warning("low bit rate", codec=audio.codec, bit_rate=audio.bit_rate)
-                return Result.err(ValidationError("error.audioBitRateLow"))
 
     return Result.ok(None)
 
@@ -145,9 +138,7 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
         case MediaUpload.ADVERTISE:
             path = advertise_video_path(ulid, extension)
         case MediaUpload.AUDIO:
-            path = audios_path(ulid)
-            if is_conversion(filename):
-                return save_converted_mp3(file, path)
+            path = audios_path(ulid, extension)
         case MediaUpload.HIRES:
             return private_storage().save(hires_path(ulid), file)
         case _:

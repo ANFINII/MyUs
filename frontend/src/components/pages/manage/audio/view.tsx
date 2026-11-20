@@ -19,6 +19,7 @@ import IconArrow from 'components/parts/Icon/Arrow'
 import Toggle from 'components/parts/Input/Toggle'
 import Link from 'components/parts/Link'
 import style from '../Media.module.scss'
+import ManageEncodeStatus from '../_container/EncodeStatus'
 import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
 
@@ -82,9 +83,12 @@ export default function ManageAudios(props: Props): React.JSX.Element {
       sortValue: (m) => m.title,
       className: style.title,
       cell: (m) => (
-        <a className={style.title_link} onClick={() => handleEdit(m)}>
-          {m.title}
-        </a>
+        <>
+          <a className={style.title_link} onClick={() => handleEdit(m)}>
+            {m.title}
+          </a>
+          <ManageEncodeStatus status={m.encodeStatus} />
+        </>
       ),
     },
     {

@@ -78,7 +78,6 @@
     "deleteFailed": "削除に失敗しました",
     "fileTypeInvalid": "対応していないファイル形式です",
     "fileTooLarge": "ファイルサイズが大きすぎます",
-    "audioBitRateLow": "音質が低いため上げられません。192kbps 以上のオーディオファイルか、WAV・FLAC を上げ直してください",
     "searchTagLimit": "検索タグは20個までです",
     "checkoutFailed": "決済セッションの作成に失敗しました",
     "cancelFailed": "解約処理に失敗しました。時間をおいて再度お試しください",
@@ -397,9 +396,11 @@
       "created": "投稿日時",
       "createdAt": "作成日時"
     },
-    "video": {
+    "encode": {
       "encoding": "変換中",
-      "encodeFailed": "変換できませんでした",
+      "failed": "変換できませんでした"
+    },
+    "video": {
       "encodeFailedNotice": "変換できませんでした。動画を上げ直してください。"
     },
     "form": {

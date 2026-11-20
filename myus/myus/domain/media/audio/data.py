@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from myus.utils.enum.media import EncodeStatus
 from ...channel.data import ChannelData
 from ...hashtag.data import HashtagData
 
@@ -22,6 +23,7 @@ class AudioData:
     image: str
     audio: str
     gain: float
+    encode_status: EncodeStatus
     read: int
     like: int
     publish: bool

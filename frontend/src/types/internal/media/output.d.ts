@@ -71,6 +71,7 @@ export interface Audio extends Media {
   image: string
   audio: string
   gain: number
+  encodeStatus: EncodeStatus
   lyric: string
   hires: Hires | null
   product: Product | null

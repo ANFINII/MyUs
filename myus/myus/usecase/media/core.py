@@ -24,7 +24,6 @@ from myus.utils.enum.notification import NotificationObjectType, NotificationTyp
 from myus.utils.enum.payment import ProductType
 from myus.utils.enum.upload import ImageUpload, MediaUpload
 from myus.utils.functions.common import create_url
-from myus.utils.functions.convert.audio_converter import measure_audio_gain
 from myus.utils.functions.file import private_storage
 from myus.utils.functions.map import comment_type_no_map
 from myus.utils.functions.media import save_upload, validate_uploads
@@ -129,7 +128,8 @@ def create_audio(user_id: int, input: AudioCreateDTO, audio: UploadedFile, image
         lyric=input.lyric,
         image=save_upload(image, ImageUpload.AUDIO, channel.ulid) if image is not None else "",
         audio=audio_path,
-        gain=measure_audio_gain(audio_path),
+        gain=0.0,
+        encode_status=EncodeStatus.ENCODING,
         read=0,
         like=0,
         publish=input.publish,
@@ -160,10 +160,6 @@ def create_audio(user_id: int, input: AudioCreateDTO, audio: UploadedFile, image
 
     objs = objs_ret.ok_value
     obj = objs[0]
-    if input.publish:
-        notification_ret = create_notification_data(channel.owner_id, 0, NotificationTypeNo.AUDIO, obj.id, NotificationObjectType.AUDIO)
-        if notification_ret.is_err:
-            log.error("create failed", error=notification_ret.err_value.message, object_type=NotificationObjectType.AUDIO.value, object_id=obj.id)
 
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 

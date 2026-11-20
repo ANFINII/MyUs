@@ -21,8 +21,8 @@ def video_path(type: MediaUpload, ulid: str, extension: str) -> str:
     return f"videos/{type.value}/channel_{ulid}/{new_ulid()}{extension}"
 
 
-def audios_path(ulid: str) -> str:
-    return f"audios/channel_{ulid}/{new_ulid()}.mp3"
+def audios_path(ulid: str, extension: str) -> str:
+    return f"audios/channel_{ulid}/{new_ulid()}{extension}"
 
 
 def hires_path(ulid: str) -> str:
@@ -68,7 +68,7 @@ def video_upload(obj: Any, filename: str) -> str:
 
 
 def audio_upload(obj: Any, filename: str) -> str:
-    return audios_path(str(obj.channel.ulid))
+    return audios_path(str(obj.channel.ulid), file_extension(filename))
 
 
 def hires_upload(obj: Any, filename: str) -> str:
