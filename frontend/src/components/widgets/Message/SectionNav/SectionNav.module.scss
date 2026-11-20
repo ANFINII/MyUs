@@ -37,25 +37,25 @@
       text-decoration: none;
       cursor: pointer;
 
-      > :first-child {
-        flex-shrink: 0;
-        min-width: 40px;
-      }
-
       &:hover {
         background: rgb(240, 245, 255, 0.8);
       }
+    }
 
-      .nav_title {
-        padding: 3px 0;
-        margin: 0;
-        overflow: hidden;
-        font-size: 14px;
-        font-weight: 400;
-        color: rgb(50, 50, 50);
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
+    .nav_item > :first-child {
+      flex-shrink: 0;
+      min-width: 40px;
+    }
+
+    .nav_item .nav_title {
+      padding: 3px 0;
+      margin: 0;
+      overflow: hidden;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgb(50, 50, 50);
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 

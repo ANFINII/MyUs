@@ -38,13 +38,13 @@
       position: relative;
       grid-column: 2/3;
       justify-self: flex-start;
+    }
 
-      h1 {
-        display: flex;
-        align-items: center;
-        margin: auto;
-        font-size: 1.8em;
-      }
+    .nav_2 h1 {
+      display: flex;
+      align-items: center;
+      margin: auto;
+      font-size: 1.8em;
     }
 
     .nav_3 {

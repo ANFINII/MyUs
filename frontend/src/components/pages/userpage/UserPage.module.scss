@@ -33,31 +33,31 @@
     .author_info {
       display: flex;
       flex-direction: column;
+    }
 
-      .nickname {
-        height: 30px;
-        margin-top: 2px;
-        font-size: 20px;
-        white-space: nowrap;
-      }
+    .author_info .nickname {
+      height: 30px;
+      margin-top: 2px;
+      font-size: 20px;
+      white-space: nowrap;
+    }
 
-      .follower,
-      .following {
-        height: 22px;
-        font-size: 14px;
-        white-space: nowrap;
-      }
+    .author_info .follower,
+    .author_info .following {
+      height: 22px;
+      font-size: 14px;
+      white-space: nowrap;
     }
 
     .follow_button {
       display: flex;
       flex-shrink: 0;
       align-items: center;
+    }
 
-      button {
-        width: 122px;
-        margin-top: 4px;
-      }
+    .follow_button button {
+      width: 122px;
+      margin-top: 4px;
     }
   }
 
@@ -100,15 +100,15 @@
     .channel_detail {
       display: flex;
       flex-direction: column;
+    }
 
-      .channel_name {
-        font-size: 16px;
-      }
+    .channel_detail .channel_name {
+      font-size: 16px;
+    }
 
-      .channel_count {
-        font-size: 14px;
-        color: rgb(100, 100, 100);
-      }
+    .channel_detail .channel_count {
+      font-size: 14px;
+      color: rgb(100, 100, 100);
     }
   }
 
