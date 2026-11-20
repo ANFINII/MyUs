@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
+import IconAudio from 'components/parts/Icon/Audio'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
 import IconGrid from 'components/parts/Icon/Grid'
-import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
 import NavItem from 'components/parts/NavItem'
@@ -37,7 +37,7 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
       <ul>
         <NavItem label={t('cloudMenu.manage')} icon={<IconGrid size="1.5em" />} className={style.item} onClick={() => handleManage()} />
         <NavItem label={t('cloudMenu.upload', { media: 'Video' })} icon={<IconVideo size="1.5em" />} className={style.item} onClick={() => handleRouter('video')} />
-        <NavItem label={t('cloudMenu.upload', { media: 'Music' })} icon={<IconMusic size="1.5em" />} className={style.item} onClick={() => handleRouter('music')} />
+        <NavItem label={t('cloudMenu.upload', { media: 'Audio' })} icon={<IconAudio size="1.5em" />} className={style.item} onClick={() => handleRouter('audio')} />
         <NavItem label={t('cloudMenu.upload', { media: 'Blog' })} icon={<IconBlog size="1.5em" />} className={style.item} onClick={() => handleRouter('blog')} />
         <NavItem label={t('cloudMenu.upload', { media: 'Comic' })} icon={<IconComic size="1.5em" />} className={style.item} onClick={() => handleRouter('comic')} />
         <NavItem label={t('cloudMenu.upload', { media: 'Picture' })} icon={<IconPicture size="1.5em" />} className={style.item} onClick={() => handleRouter('picture')} />

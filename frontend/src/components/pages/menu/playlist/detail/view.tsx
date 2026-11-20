@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from 'lib/error'
 import { queryKeys } from 'lib/query/keys'
-import { Music } from 'types/internal/media/output'
+import { Audio } from 'types/internal/media/output'
 import { PlaylistDetailOut } from 'types/internal/playlist'
 import { deletePlaylist, putPlaylist } from 'api/internal/playlist'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
+import { useAudioPlayer } from 'components/hooks/useAudioPlayer'
 import { useDragSort } from 'components/hooks/useDragSort'
 import { useLoading } from 'components/hooks/useLoading'
-import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
 import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -38,51 +38,51 @@ interface Props {
 
 export default function PlaylistDetail(props: Props): React.JSX.Element {
   const { data } = props
-  const { ulid, title, description, image, thumbnailMusicUlid, publish, isOwner, author, musics } = data
+  const { ulid, title, description, image, thumbnailUlid, publish, isOwner, author, audios } = data
 
   const router = useRouter()
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  const { current, play, playShuffle } = useMusicPlayer()
+  const { current, play, playShuffle } = useAudioPlayer()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [editTitle, setEditTitle] = useState<string>(title)
   const [editDescription, setEditDescription] = useState<string>(description)
-  const [editThumbnail, setEditThumbnail] = useState<string>(thumbnailMusicUlid)
+  const [editThumbnail, setEditThumbnail] = useState<string>(thumbnailUlid)
   const [isEditPublish, setIsEditPublish] = useState<boolean>(publish)
-  const [editMusics, setEditMusics] = useState<Music[]>(musics)
-  const { dragIndex, dragOverIndex, dragItem } = useDragSort(editMusics, setEditMusics)
+  const [editAudios, setEditAudios] = useState<Audio[]>(audios)
+  const { dragIndex, dragOverIndex, dragItem } = useDragSort(editAudios, setEditAudios)
 
-  const editThumbnailMusic = editMusics.find((m) => m.ulid === editThumbnail) ?? editMusics[0]
-  const editImage = editThumbnailMusic ? editThumbnailMusic.image || editThumbnailMusic.channel.avatar : ''
+  const editThumbnailAudio = editAudios.find((m) => m.ulid === editThumbnail) ?? editAudios[0]
+  const editImage = editThumbnailAudio ? editThumbnailAudio.image || editThumbnailAudio.channel.avatar : ''
   const headerImage = isEdit ? editImage : image
-  const thumbnailOptions = [{ label: t('playlist.thumbnailAuto'), value: '' }, ...editMusics.map((m) => ({ label: m.title, value: m.ulid }))]
+  const thumbnailOptions = [{ label: t('playlist.thumbnailAuto'), value: '' }, ...editAudios.map((m) => ({ label: m.title, value: m.ulid }))]
 
   const handleModal = () => setIsModal(!isModal)
-  const handlePlay = (index: number) => play(musics, index)
-  const handlePlayShuffle = () => playShuffle(musics)
+  const handlePlay = (index: number) => play(audios, index)
+  const handlePlayShuffle = () => playShuffle(audios)
   const handleStop = (e: React.MouseEvent) => e.stopPropagation()
   const handleTitle = (e: ChangeEvent<HTMLInputElement>) => setEditTitle(e.target.value)
   const handleDescription = (e: ChangeEvent<HTMLTextAreaElement>) => setEditDescription(e.target.value)
   const handleThumbnail = (e: ChangeEvent<HTMLSelectElement>) => setEditThumbnail(e.target.value)
   const handlePublish = (e: ChangeEvent<HTMLInputElement>) => setIsEditPublish(e.target.checked)
-  const handleRemove = (index: number) => setEditMusics(editMusics.filter((_, i) => i !== index))
+  const handleRemove = (index: number) => setEditAudios(editAudios.filter((_, i) => i !== index))
 
   const handleEdit = () => {
     setEditTitle(title)
     setEditDescription(description)
-    setEditThumbnail(thumbnailMusicUlid)
+    setEditThumbnail(thumbnailUlid)
     setIsEditPublish(publish)
-    setEditMusics(musics)
+    setEditAudios(audios)
     setIsEdit(!isEdit)
   }
 
   const handleSave = async () => {
     handleLoading(true)
-    const thumbnail = editMusics.some((m) => m.ulid === editThumbnail) ? editThumbnail : ''
-    const ret = await putPlaylist(ulid, { title: editTitle, description: editDescription, thumbnailMusicUlid: thumbnail, publish: isEditPublish, musicUlids: editMusics.map((m) => m.ulid) })
+    const thumbnail = editAudios.some((m) => m.ulid === editThumbnail) ? editThumbnail : ''
+    const ret = await putPlaylist(ulid, { title: editTitle, description: editDescription, thumbnailUlid: thumbnail, publish: isEditPublish, audioUlids: editAudios.map((m) => m.ulid) })
     handleLoading(false)
     if (ret.isErr()) return handleToast(errorMessage(ret.error, FetchError.Put), true)
     await queryClient.invalidateQueries({ queryKey: queryKeys.mediaPlaylists })
@@ -131,7 +131,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
             <div className={style.heading}>
               <div className={style.meta}>
                 <AvatarLink size="s" src={author.avatar} ulid={author.ulid} title={author.nickname} />
-                <span>{t('playlist.count', { count: musics.length })}</span>
+                <span>{t('playlist.count', { count: audios.length })}</span>
                 <span>{publish ? t('playlist.public') : t('playlist.private')}</span>
               </div>
               <h2 className={style.title}>{title}</h2>
@@ -140,8 +140,8 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
           )}
           {!isEdit && (
             <div className={style.actions}>
-              <Button name={t('playlist.playAll')} color="blue" size="s" disabled={musics.length === 0} onClick={() => handlePlay(0)} />
-              <Button name={t('playlist.playShuffle')} color="purple" size="s" disabled={musics.length === 0} onClick={handlePlayShuffle} />
+              <Button name={t('playlist.playAll')} color="blue" size="s" disabled={audios.length === 0} onClick={() => handlePlay(0)} />
+              <Button name={t('playlist.playShuffle')} color="purple" size="s" disabled={audios.length === 0} onClick={handlePlayShuffle} />
               {publish && <ShareButton path={`/menu/playlist/${ulid}`} handleToast={handleToast} />}
             </div>
           )}
@@ -150,17 +150,17 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
 
       {isEdit ? (
         <ul className={style.list}>
-          {editMusics.map((music, index) => (
+          {editAudios.map((audio, index) => (
             <li
-              key={music.ulid}
+              key={audio.ulid}
               className={cx(style.item, style.editable, dragIndex === index && style.dragging, dragOverIndex === index && style.drag_over)}
               {...dragItem(index)}
             >
               <IconGrip size="14" className={style.grip} />
-              <ExImage src={music.image || music.channel.avatar} className={style.item_thumbnail} />
+              <ExImage src={audio.image || audio.channel.avatar} className={style.item_thumbnail} />
               <div className={style.item_text}>
-                <div className={style.item_title}>{music.title}</div>
-                <div className={style.item_channel}>{music.channel.name}</div>
+                <div className={style.item_title}>{audio.title}</div>
+                <div className={style.item_channel}>{audio.channel.name}</div>
               </div>
               <button type="button" title={t('action.delete')} className={style.remove} onClick={() => handleRemove(index)}>
                 <IconCross size="18" />
@@ -168,18 +168,18 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
             </li>
           ))}
         </ul>
-      ) : musics.length > 0 ? (
+      ) : audios.length > 0 ? (
         <ul className={style.list}>
-          {musics.map((music, index) => (
-            <li key={music.ulid} className={cx(style.item, current?.ulid === music.ulid && style.current)} onClick={() => handlePlay(index)}>
+          {audios.map((audio, index) => (
+            <li key={audio.ulid} className={cx(style.item, current?.ulid === audio.ulid && style.current)} onClick={() => handlePlay(index)}>
               <span className={style.index}>{String(index + 1).padStart(3, '0')}</span>
-              <ExImage src={music.image || music.channel.avatar} className={style.item_thumbnail} />
+              <ExImage src={audio.image || audio.channel.avatar} className={style.item_thumbnail} />
               <div className={style.item_text}>
-                <div className={style.item_title}>{music.title}</div>
-                <div className={style.item_channel}>{music.channel.name}</div>
+                <div className={style.item_title}>{audio.title}</div>
+                <div className={style.item_channel}>{audio.channel.name}</div>
               </div>
               <span className={style.detail} onClick={handleStop}>
-                <Link href={`/media/music/${music.ulid}`} className={style.detail_link}>
+                <Link href={`/media/audio/${audio.ulid}`} className={style.detail_link}>
                   <IconArrow size="16" type="external" />
                 </Link>
               </span>
@@ -187,7 +187,7 @@ export default function PlaylistDetail(props: Props): React.JSX.Element {
           ))}
         </ul>
       ) : (
-        <Empty content={t('playlist.emptyMusic')} />
+        <Empty content={t('playlist.emptyAudio')} />
       )}
 
       <DeleteModal

@@ -62,21 +62,21 @@ export interface Video extends Media {
   encodeStatus: EncodeStatus
 }
 
-export interface MusicHires {
+export interface Hires {
   sampleRate: number
   bitDepth: number
 }
 
-export interface Music extends Media {
+export interface Audio extends Media {
   image: string
-  music: string
+  audio: string
   gain: number
   lyric: string
-  hires: MusicHires | null
+  hires: Hires | null
   product: Product | null
 }
 
-export interface MusicHiresUrlOut {
+export interface HiresUrlOut {
   url: string
 }
 
@@ -108,7 +108,7 @@ export interface Chat extends Media {
 
 export interface MediaHome {
   videos: Video[]
-  musics: Music[]
+  audios: Audio[]
   blogs: Blog[]
   comics: Comic[]
   pictures: Picture[]
@@ -120,8 +120,8 @@ export interface VideoList {
   total: number
 }
 
-export interface MusicList {
-  items: Music[]
+export interface AudioList {
+  items: Audio[]
   total: number
 }
 
@@ -152,14 +152,14 @@ export interface VideoDetail extends MediaDetail {
   comments: Comment[]
 }
 
-export interface MusicDetail extends MediaDetail {
+export interface AudioDetail extends MediaDetail {
   image: string
-  music: string
+  audio: string
   gain: number
   lyric: string
   isPurchased: boolean
   comments: Comment[]
-  hires: MusicHires | null
+  hires: Hires | null
   product: Product | null
 }
 
@@ -207,10 +207,10 @@ export interface VideoDetailOut {
   series: MediaSeries<Video>
 }
 
-export interface MusicDetailOut {
-  detail: MusicDetail
-  list: Music[]
-  series: MediaSeries<Music>
+export interface AudioDetailOut {
+  detail: AudioDetail
+  list: Audio[]
+  series: MediaSeries<Audio>
 }
 
 export interface BlogDetailOut {

@@ -21,7 +21,7 @@ const ALLOWED_PATTERN = /^[ぁ-んァ-ヶー一-龯a-zA-Z]+$/
 
 const pathToTypeMap: Record<MediaPath, MediaType> = {
   [MediaPath.Video]: MediaType.Video,
-  [MediaPath.Music]: MediaType.Music,
+  [MediaPath.Audio]: MediaType.Audio,
   [MediaPath.Blog]: MediaType.Blog,
   [MediaPath.Comic]: MediaType.Comic,
   [MediaPath.Picture]: MediaType.Picture,

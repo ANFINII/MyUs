@@ -3,11 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { errorMessage } from 'lib/error'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
-import { MusicUpdateIn } from 'types/internal/media/input'
-import { Music } from 'types/internal/media/output'
-import { PaymentSellerOut } from 'types/internal/payment'
-import { putManageMusic } from 'api/internal/manage/update'
-import { Fetch, FetchError } from 'utils/constants/enum'
+import { AudioIn } from 'types/internal/media/input'
+import { postAudioCreate } from 'api/internal/manage/create'
+import { FetchError } from 'utils/constants/enum'
 import { datetimeLocal, datetimeISO } from 'utils/functions/datetime'
 import { previewUrl } from 'utils/functions/file'
 import { useLoading } from 'components/hooks/useLoading'
@@ -23,22 +21,19 @@ import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
-import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../../Form.module.scss'
-import HiresSale from '../HiresSale'
 import LyricEditor from '../LyricEditor'
 
 interface Props {
   channels: Channel[]
   categories: Category[]
-  seller: PaymentSellerOut
-  data: Music
 }
 
-export default function ManageMusicEdit(props: Props): React.JSX.Element {
-  const { channels, categories, seller, data } = props
-  const { categoryUlid, title, content, lyric, publish, publishAt } = data
+export default function AudioCreate(props: Props): React.JSX.Element {
+  const { channels, categories } = props
+
+  const channelUlid = channels.find((c) => c.isDefault)!.ulid
 
   const router = useRouter()
   const { t } = useTranslation()
@@ -46,13 +41,12 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [musicUrl, setMusicUrl] = useState<string>('')
-  const [values, setValues] = useState<MusicUpdateIn>({ categoryUlid, title, content, lyric, publish, publishAt: datetimeISO(publishAt) })
+  const [audioUrl, setAudioUrl] = useState<string>('')
+  const [values, setValues] = useState<AudioIn>({ channelUlid, categoryUlid: '', publish: true, publishAt: datetimeISO(), title: '', content: '', lyric: '' })
 
   const channelOptions = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
-  const handleBack = () => router.push('/manage/music')
   const handleModal = () => setIsModal(!isModal)
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -62,8 +56,8 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const handlePublishAt = (publishAt: string) => setValues({ ...values, publishAt: datetimeISO(publishAt) })
 
   const handleFile = (file: File) => {
-    setValues({ ...values, music: file })
-    setMusicUrl(previewUrl(file, musicUrl))
+    setValues({ ...values, audio: file })
+    setAudioUrl(previewUrl(file, audioUrl))
   }
 
   const handleLyric = (lyric: string) => {
@@ -72,47 +66,47 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   }
 
   const handleForm = async () => {
-    const { categoryUlid, title, content } = values
-    if (!validate({ categoryUlid, title, content })) return
+    const { channelUlid, categoryUlid, title, content, audio } = values
+    if (!validate({ channelUlid, categoryUlid, title, content, audio })) return
     handleLoading(true)
-    const ret = await putManageMusic(data.ulid, values)
+    const ret = await postAudioCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(errorMessage(ret.error, FetchError.Put), true)
+      handleToast(errorMessage(ret.error, FetchError.Post), true)
       return
     }
-    handleToast(Fetch.Save, false)
+    router.push({ pathname: '/manage/audio', query: { channel: channelUlid } })
   }
 
-  const button = (
-    <HStack gap="4">
-      <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleForm} />
-      <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
-    </HStack>
-  )
-
   return (
-    <Main title="Music" type="table" toast={toast} isFooter={false} button={button}>
+    <Main
+      title="Audio"
+      type="table"
+      toast={toast}
+      isFooter={false}
+      button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}
+    >
       <form className={style.form} method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
           <DatePicker label={t('manage.form.publishAt')} name="publishAt" value={datetimeLocal(values.publishAt)} onChange={handlePublishAt} isTime />
-          <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
+          <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label={t('manage.form.title')} name="title" maxLength={100} value={values.title} required error={error} onChange={handleInput} />
-          <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
+          <Input label={t('manage.form.title')} name="title" maxLength={100} required error={error} onChange={handleInput} />
+          <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
           <Textarea label={t('manage.form.lyric')} name="lyric" className={style.lyric} value={values.lyric} onChange={handleText} />
           <div className={style.lyric_hint}>
             <IconInfo size="14" className={style.lyric_hint_icon} />
             <span>{t('manage.form.lyricHint')}</span>
-            <Button color="purple" size="s" name={t('manage.lyric.open')} className={style.lyric_hint_button} onClick={handleModal} />
+            <Button color="purple" size="s" name={t('manage.lyric.open')} disabled={!values.audio} className={style.lyric_hint_button} onClick={handleModal} />
           </div>
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" onChange={handleImage} />
-          <InputFile label={t('manage.form.music')} accept="audio/*" onChange={handleFile} />
-          <HiresSale ulid={data.ulid} seller={seller} hires={data.hires} product={data.product} handleToast={handleToast} />
+          <VStack gap="2">
+            <InputFile label={t('manage.form.audio')} accept="audio/*" required error={error} onChange={handleFile} />
+          </VStack>
         </VStack>
       </form>
-      {isModal && <LyricEditor src={musicUrl || data.music} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
+      {isModal && <LyricEditor src={audioUrl} lyric={values.lyric} onClose={handleModal} onApply={handleLyric} />}
     </Main>
   )
 }

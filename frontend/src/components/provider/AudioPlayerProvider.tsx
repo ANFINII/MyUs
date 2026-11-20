@@ -1,15 +1,15 @@
 import { useRef, useState, createContext, useCallback } from 'react'
-import { Music } from 'types/internal/media/output'
+import { Audio } from 'types/internal/media/output'
 import { RepeatMode } from 'types/internal/other'
 import { shuffleItems } from 'utils/functions/common'
 
-export interface MusicPlayerContextType {
-  current: Music | undefined
+export interface AudioPlayerContextType {
+  current: Audio | undefined
   audioRef: React.RefObject<HTMLAudioElement | null>
   isShuffle: boolean
   repeat: RepeatMode
-  play: (queue: Music[], index: number) => void
-  playShuffle: (queue: Music[]) => void
+  play: (queue: Audio[], index: number) => void
+  playShuffle: (queue: Audio[]) => void
   toggle: () => void
   next: () => void
   prev: () => void
@@ -18,29 +18,29 @@ export interface MusicPlayerContextType {
   close: () => void
 }
 
-export const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined)
+export const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined)
 
 const NEXT_REPEAT: Record<RepeatMode, RepeatMode> = { off: 'all', all: 'one', one: 'off' }
 
-const shuffleFrom = (items: Music[], first: Music): Music[] => [first, ...shuffleItems(items.filter((m) => m.ulid !== first.ulid))]
+const shuffleFrom = (items: Audio[], first: Audio): Audio[] => [first, ...shuffleItems(items.filter((m) => m.ulid !== first.ulid))]
 
 interface Props {
   children: React.ReactNode
 }
 
-export function MusicPlayerProvider(props: Props): React.JSX.Element {
+export function AudioPlayerProvider(props: Props): React.JSX.Element {
   const { children } = props
 
   const audioRef = useRef<HTMLAudioElement>(null)
-  const [original, setOriginal] = useState<Music[]>([])
-  const [queue, setQueue] = useState<Music[]>([])
+  const [original, setOriginal] = useState<Audio[]>([])
+  const [queue, setQueue] = useState<Audio[]>([])
   const [index, setIndex] = useState<number>(0)
   const [isShuffle, setIsShuffle] = useState<boolean>(false)
   const [repeat, setRepeat] = useState<RepeatMode>('off')
 
   const current = queue[index]
 
-  const play = (items: Music[], i: number) => {
+  const play = (items: Audio[], i: number) => {
     const first = items[i]
     setOriginal(items)
     if (isShuffle && first) {
@@ -52,7 +52,7 @@ export function MusicPlayerProvider(props: Props): React.JSX.Element {
     setIndex(i)
   }
 
-  const playShuffle = (items: Music[]) => {
+  const playShuffle = (items: Audio[]) => {
     setIsShuffle(true)
     setOriginal(items)
     setQueue(shuffleItems(items))
@@ -102,5 +102,5 @@ export function MusicPlayerProvider(props: Props): React.JSX.Element {
   const close = useCallback(() => setQueue([]), [])
 
   const value = { current, audioRef, isShuffle, repeat, play, playShuffle, toggle, next, prev, toggleShuffle, toggleRepeat, close }
-  return <MusicPlayerContext.Provider value={value}>{children}</MusicPlayerContext.Provider>
+  return <AudioPlayerContext.Provider value={value}>{children}</AudioPlayerContext.Provider>
 }

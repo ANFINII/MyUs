@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
-import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
+import { useAudioPlayer } from 'components/hooks/useAudioPlayer'
 import { useRouter } from 'components/hooks/useRouter'
 import ExImage from 'components/parts/ExImage'
 import IconChevront from 'components/parts/Icon/Chevront'
@@ -11,12 +11,12 @@ import Link from 'components/parts/Link'
 import AudioPlayer from 'components/widgets/AudioPlayer'
 import style from './MiniPlayer.module.scss'
 
-const PLAYER_DETAIL_PATH = /^\/media\/(video|music)\/[^/]+$/
+const PLAYER_DETAIL_PATH = /^\/media\/(video|audio)\/[^/]+$/
 
 export default function MiniPlayer(): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
-  const { current, audioRef, isShuffle, repeat, next, prev, toggleShuffle, toggleRepeat, close } = useMusicPlayer()
+  const { current, audioRef, isShuffle, repeat, next, prev, toggleShuffle, toggleRepeat, close } = useAudioPlayer()
 
   const isPlayerDetail = PLAYER_DETAIL_PATH.test(router.pathname)
 
@@ -30,7 +30,7 @@ export default function MiniPlayer(): React.JSX.Element {
     <div className={style.mini_player}>
       <ExImage src={current.image || current.channel.avatar} width="40" height="40" className={style.thumbnail} />
       <div className={style.info}>
-        <Link href={`/media/music/${current.ulid}`} className={style.title}>
+        <Link href={`/media/audio/${current.ulid}`} className={style.title}>
           {current.title}
         </Link>
         <span className={style.channel}>{current.channel.name}</span>
@@ -41,7 +41,7 @@ export default function MiniPlayer(): React.JSX.Element {
       <button type="button" className={style.button} onClick={prev}>
         <IconChevront width="1.2em" height="1.2em" type="left" />
       </button>
-      <AudioPlayer key={current.ulid} src={current.music} gain={current.gain} autoPlay isVolumeInline audioRef={audioRef} repeat={repeat} onEnded={next} onRepeat={toggleRepeat} className={style.player} />
+      <AudioPlayer key={current.ulid} src={current.audio} gain={current.gain} autoPlay isVolumeInline audioRef={audioRef} repeat={repeat} onEnded={next} onRepeat={toggleRepeat} className={style.player} />
       <button type="button" className={style.button} onClick={next}>
         <IconChevront width="1.2em" height="1.2em" type="right" />
       </button>

@@ -6,7 +6,7 @@ import { searchParams } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 import Userpage from './view'
 
-const initMedia: UserPageMedia = { videos: [], musics: [], blogs: [], comics: [], pictures: [], chats: [] }
+const initMedia: UserPageMedia = { videos: [], audios: [], blogs: [], comics: [], pictures: [], chats: [] }
 
 export default function UserpagePage(): React.JSX.Element {
   const router = useRouter()

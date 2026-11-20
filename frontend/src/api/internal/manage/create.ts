@@ -1,17 +1,17 @@
 import { apiClient } from 'lib/axios/internal'
 import { apiOut, ApiOut } from 'lib/error'
 import { AdvertiseIn } from 'types/internal/advertise'
-import { VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn } from 'types/internal/media/input'
+import { VideoIn, AudioIn, BlogIn, ComicIn, PictureIn, ChatIn } from 'types/internal/media/input'
 import { MediaCreateOut } from 'types/internal/media/output'
-import { apiManageAdvertises, apiVideos, apiMusics, apiBlogs, apiComics, apiPictures, apiChats } from 'api/uri'
+import { apiManageAdvertises, apiVideos, apiAudios, apiBlogs, apiComics, apiPictures, apiChats } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const postVideoCreate = async (request: VideoIn): Promise<ApiOut<MediaCreateOut>> => {
   return await apiOut(apiClient('form').post(apiVideos, camelSnake(request)))
 }
 
-export const postMusicCreate = async (request: MusicIn): Promise<ApiOut<MediaCreateOut>> => {
-  return await apiOut(apiClient('form').post(apiMusics, camelSnake(request)))
+export const postAudioCreate = async (request: AudioIn): Promise<ApiOut<MediaCreateOut>> => {
+  return await apiOut(apiClient('form').post(apiAudios, camelSnake(request)))
 }
 
 export const postBlogCreate = async (request: BlogIn): Promise<ApiOut<MediaCreateOut>> => {

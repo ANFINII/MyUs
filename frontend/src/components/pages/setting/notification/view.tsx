@@ -44,7 +44,7 @@ export default function SettingNotification(props: Props): React.JSX.Element {
     setValues(ret.value)
   }
 
-  const notificationKeys: (keyof UserNotification)[] = ['isVideo', 'isMusic', 'isBlog', 'isComic', 'isPicture', 'isChat', 'isFollow', 'isReply', 'isLike', 'isViews']
+  const notificationKeys: (keyof UserNotification)[] = ['isVideo', 'isAudio', 'isBlog', 'isComic', 'isPicture', 'isChat', 'isFollow', 'isReply', 'isLike', 'isViews']
 
   const button = (
     <HStack gap="4">

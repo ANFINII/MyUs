@@ -76,7 +76,7 @@
     "deleteFailed": "Failed to delete",
     "fileTypeInvalid": "Unsupported file type",
     "fileTooLarge": "The file is too large",
-    "musicBitRateLow": "The audio quality is too low. Upload a source of 192kbps or higher, or a WAV or FLAC file",
+    "audioBitRateLow": "The audio quality is too low. Upload a source of 192kbps or higher, or a WAV or FLAC file",
     "searchTagLimit": "You can add up to 20 search tags",
     "checkoutFailed": "Failed to start the payment",
     "cancelFailed": "Failed to cancel the subscription. Please try again later",
@@ -409,7 +409,7 @@
       "title": "Title",
       "content": "Description",
       "lyric": "Lyrics",
-      "lyricHint": "Add a time like [00:12.00] at the start of each line to sync the lyrics with playback on the music page",
+      "lyricHint": "Add a time like [00:12.00] at the start of each line to sync the lyrics with playback on the audio page",
       "thumbnail": "Thumbnail",
       "image": "Image",
       "pages": "Page images",
@@ -419,7 +419,7 @@
       "pageRemove": "Remove",
       "pageHint": "Drag or use the arrows to reorder. The cover is not counted as a page.",
       "video": "Video",
-      "music": "Audio",
+      "audio": "Audio",
       "richtext": "Body",
       "sale": "Sell this",
       "price": "Price ({{currency}})",
@@ -598,7 +598,7 @@
         "individualAds_one": "{{count}} custom ad slot",
         "individualAds_other": "{{count}} custom ad slots",
         "hideGlobalAds": "No site-wide ads",
-        "paidContent": "Sell paid articles and music",
+        "paidContent": "Sell paid articles and audio",
         "playlist": "Create playlists",
         "series": "Create series",
         "basic": "Basic features",
@@ -649,7 +649,7 @@
     "count_other": "{{count}} songs",
     "playAll": "Play all",
     "playShuffle": "Shuffle",
-    "emptyMusic": "No songs yet",
+    "emptyAudio": "No audio yet",
     "deleteTitle": "Delete playlist",
     "deleteConfirm": "Delete \"{{title}}\"?",
     "add": "Add to playlist",
@@ -939,8 +939,8 @@
         "label": "Video",
         "content": "Post video content."
       },
-      "music": {
-        "label": "Music",
+      "audio": {
+        "label": "Audio",
         "content": "Post music, audio, audiobooks, and more. On the Standard plan or higher, you can also sell hi-res audio of your original songs."
       },
       "blog": {
@@ -995,7 +995,7 @@
       "count_one": "{{count}} post",
       "count_other": "{{count}} posts"
     },
-    "music": {
+    "audio": {
       "hiresTitle": "Hi-res audio",
       "hiresDownload": "Download hi-res audio",
       "hiresNotice": "It may take a moment before you can download it after purchase."

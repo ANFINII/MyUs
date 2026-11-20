@@ -4,7 +4,7 @@ export const loginPages = [
   { path: '/menu/follow', title: 'Follow' },
   { path: '/menu/follower', title: 'Follower' },
   { path: '/manage/video', title: 'Video' },
-  { path: '/manage/music', title: 'Music' },
+  { path: '/manage/audio', title: 'Audio' },
   { path: '/manage/blog', title: 'Blog' },
   { path: '/manage/comic', title: 'Comic' },
   { path: '/manage/picture', title: 'Picture' },

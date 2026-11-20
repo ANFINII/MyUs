@@ -14,10 +14,10 @@ export interface VideoIn extends MediaIn {
   video?: File
 }
 
-export interface MusicIn extends MediaIn {
+export interface AudioIn extends MediaIn {
   lyric: string
   image?: File
-  music?: File
+  audio?: File
 }
 
 export interface BlogIn extends MediaIn {
@@ -54,13 +54,13 @@ export interface VideoUpdateIn extends MediaUpdateIn {
   video?: File
 }
 
-export interface MusicUpdateIn extends MediaUpdateIn {
+export interface AudioUpdateIn extends MediaUpdateIn {
   lyric: string
   image?: File
-  music?: File
+  audio?: File
 }
 
-export interface MusicHiresIn {
+export interface HiresIn {
   price: number
   hires?: File
 }

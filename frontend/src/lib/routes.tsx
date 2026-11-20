@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, ResolveParams } from '@tanstack/react-router'
+import { AsyncRouteComponent, createRootRouteWithContext, createRoute, lazyRouteComponent, redirect, ResolveParams } from '@tanstack/react-router'
 import {
   blogLoader,
   blogsLoader,
@@ -22,16 +22,16 @@ import {
   manageComicsLoader,
   manageCreateLoader,
   manageLoader,
-  manageMusicLoader,
-  manageMusicsLoader,
+  manageAudioLoader,
+  manageAudiosLoader,
   managePictureLoader,
   managePicturesLoader,
   manageSeriesListLoader,
   manageSeriesLoader,
   manageVideoLoader,
   manageVideosLoader,
-  musicLoader,
-  musicsLoader,
+  audioLoader,
+  audiosLoader,
   PageLoad,
   passwordResetLoader,
   pictureLoader,
@@ -78,13 +78,25 @@ const page = <TPath extends string>(path: TPath, load: PageImport, loader?: Page
   })
 }
 
+const moved = <TPath extends string>(path: TPath, to: (params: ResolveParams<TPath>) => string) => {
+  return createRoute({
+    getParentRoute: () => rootRoute,
+    path,
+    beforeLoad: ({ params }) => {
+      throw redirect({ href: to(params as ResolveParams<TPath>), replace: true })
+    },
+  })
+}
+
 export const routeTree = rootRoute.addChildren([
   page('/', () => import('components/pages/home'), homeLoader),
   page('/userpage/$ulid', () => import('components/pages/userpage'), userPageLoader),
   page('/media/video', () => import('components/pages/media/video'), videosLoader),
   page('/media/video/$ulid', () => import('components/pages/media/video/detail'), videoLoader),
-  page('/media/music', () => import('components/pages/media/music'), musicsLoader),
-  page('/media/music/$ulid', () => import('components/pages/media/music/detail'), musicLoader),
+  page('/media/audio', () => import('components/pages/media/audio'), audiosLoader),
+  page('/media/audio/$ulid', () => import('components/pages/media/audio/detail'), audioLoader),
+  moved('/media/music', () => '/media/audio'),
+  moved('/media/music/$ulid', (params) => `/media/audio/${params.ulid}`),
   page('/media/blog', () => import('components/pages/media/blog'), blogsLoader),
   page('/media/blog/$ulid', () => import('components/pages/media/blog/detail'), blogLoader),
   page('/media/comic', () => import('components/pages/media/comic'), comicsLoader),
@@ -118,9 +130,9 @@ export const routeTree = rootRoute.addChildren([
   page('/manage/video', () => import('components/pages/manage/video'), manageVideosLoader),
   page('/manage/video/create', () => import('components/pages/manage/video/create'), manageCreateLoader),
   page('/manage/video/$ulid', () => import('components/pages/manage/video/edit'), manageVideoLoader),
-  page('/manage/music', () => import('components/pages/manage/music'), manageMusicsLoader),
-  page('/manage/music/create', () => import('components/pages/manage/music/create'), manageCreateLoader),
-  page('/manage/music/$ulid', () => import('components/pages/manage/music/edit'), manageMusicLoader),
+  page('/manage/audio', () => import('components/pages/manage/audio'), manageAudiosLoader),
+  page('/manage/audio/create', () => import('components/pages/manage/audio/create'), manageCreateLoader),
+  page('/manage/audio/$ulid', () => import('components/pages/manage/audio/edit'), manageAudioLoader),
   page('/manage/blog', () => import('components/pages/manage/blog'), manageBlogsLoader),
   page('/manage/blog/create', () => import('components/pages/manage/blog/create'), manageBlogCreateLoader),
   page('/manage/blog/$ulid', () => import('components/pages/manage/blog/edit'), manageBlogLoader),

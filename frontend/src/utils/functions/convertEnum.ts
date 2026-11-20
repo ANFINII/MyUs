@@ -5,8 +5,8 @@ export const commentTypeNameEnum = (typeName: string) => {
   switch (typeName) {
     case CommentType.Video:
       return CommentType.Video
-    case CommentType.Music:
-      return CommentType.Music
+    case CommentType.Audio:
+      return CommentType.Audio
     case CommentType.Blog:
       return CommentType.Blog
     case CommentType.Comic:

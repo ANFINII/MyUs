@@ -1,4 +1,4 @@
-import { MusicHires } from 'types/internal/media/output'
+import { Hires } from 'types/internal/media/output'
 
 const FLAC_HEADER_SIZE = 42
 const HIRES_BIT_DEPTH = 24
@@ -7,7 +7,7 @@ const HIRES_SAMPLE_RATE_MAX = 192000
 const HIRES_PRICE_MIN = 300
 const HIRES_PRICE_MAX = 600
 
-export const flacHires = async (file: File): Promise<MusicHires | null> => {
+export const flacHires = async (file: File): Promise<Hires | null> => {
   const bytes = new Uint8Array(await file.slice(0, FLAC_HEADER_SIZE).arrayBuffer())
   if (bytes.length < FLAC_HEADER_SIZE) return null
   if (new TextDecoder().decode(bytes.slice(0, 4)) !== 'fLaC') return null
@@ -17,9 +17,9 @@ export const flacHires = async (file: File): Promise<MusicHires | null> => {
   return { sampleRate, bitDepth }
 }
 
-export const hiresLabel = (hires: MusicHires): string => `${hires.bitDepth}bit / ${hires.sampleRate / 1000}kHz`
+export const hiresLabel = (hires: Hires): string => `${hires.bitDepth}bit / ${hires.sampleRate / 1000}kHz`
 
-export const hiresError = (hires: MusicHires | null, price: number): string => {
+export const hiresError = (hires: Hires | null, price: number): string => {
   if (hires === null || hires.bitDepth !== HIRES_BIT_DEPTH) return 'error.hiresInvalid'
   if (hires.sampleRate < HIRES_SAMPLE_RATE_MIN || hires.sampleRate > HIRES_SAMPLE_RATE_MAX) return 'error.hiresInvalid'
   if (price < HIRES_PRICE_MIN || price > HIRES_PRICE_MAX) return 'error.hiresPriceRange'

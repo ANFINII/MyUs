@@ -1,34 +1,34 @@
 import { useState } from 'react'
-import { Music } from 'types/internal/media/output'
+import { Audio } from 'types/internal/media/output'
 import cx from 'utils/functions/cx'
 import { formatTime } from 'utils/functions/datetime'
-import { useMusicPlayer } from 'components/hooks/useMusicPlayer'
+import { useAudioPlayer } from 'components/hooks/useAudioPlayer'
 import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
 import PlaylistAdd from 'components/widgets/PlaylistAdd'
-import style from './Music.module.scss'
+import style from './Audio.module.scss'
 import CardMediaContent from '../Content'
 
 interface Props {
-  item: Music
-  items?: Music[]
+  item: Audio
+  items?: Audio[]
 }
 
-export default function MusicCard(props: Props): React.JSX.Element {
+export default function AudioCard(props: Props): React.JSX.Element {
   const { item, items = [item] } = props
-  const { ulid, image, music, channel } = item
+  const { ulid, image, audio, channel } = item
 
-  const { current, play, toggle } = useMusicPlayer()
+  const { current, play, toggle } = useAudioPlayer()
   const [duration, setDuration] = useState<number>(0)
 
   const isCurrent = current?.ulid === ulid
 
   const handleDuration = () => {
     if (duration > 0) return
-    const audio = new Audio()
-    audio.preload = 'metadata'
-    audio.onloadedmetadata = () => setDuration(isFinite(audio.duration) ? audio.duration : 0)
-    audio.src = music
+    const element = document.createElement('audio')
+    element.preload = 'metadata'
+    element.onloadedmetadata = () => setDuration(isFinite(element.duration) ? element.duration : 0)
+    element.src = audio
   }
 
   const handlePlay = () => {
@@ -50,8 +50,8 @@ export default function MusicCard(props: Props): React.JSX.Element {
         <span className={style.play} />
         {duration > 0 && <span className={style.duration}>{formatTime(duration)}</span>}
       </div>
-      <PlaylistAdd musicUlid={ulid} className={style.playlist_add} />
-      <CardMediaContent href={`/media/music/${ulid}`} media={item} />
+      <PlaylistAdd audioUlid={ulid} className={style.playlist_add} />
+      <CardMediaContent href={`/media/audio/${ulid}`} media={item} />
     </Card>
   )
 }

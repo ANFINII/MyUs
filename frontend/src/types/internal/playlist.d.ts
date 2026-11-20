@@ -1,22 +1,22 @@
-import { Music } from 'types/internal/media/output'
+import { Audio } from 'types/internal/media/output'
 import { Author } from 'types/internal/user'
 
 export interface PlaylistIn {
   title: string
   publish: boolean
-  musicUlid: string
+  audioUlid: string
 }
 
 export interface PlaylistUpdateIn {
   title: string
   description: string
-  thumbnailMusicUlid: string
+  thumbnailUlid: string
   publish: boolean
-  musicUlids: string[]
+  audioUlids: string[]
 }
 
-export interface PlaylistMusicIn {
-  musicUlid: string
+export interface PlaylistAudioIn {
+  audioUlid: string
 }
 
 export interface Playlist {
@@ -25,7 +25,7 @@ export interface Playlist {
   image: string
   publish: boolean
   count: number
-  musicUlids: string[]
+  audioUlids: string[]
   updated: string
 }
 
@@ -38,12 +38,12 @@ export interface PlaylistDetailOut {
   title: string
   description: string
   image: string
-  thumbnailMusicUlid: string
+  thumbnailUlid: string
   publish: boolean
   isOwner: boolean
   updated: string
   author: Author
-  musics: Music[]
+  audios: Audio[]
 }
 
 export interface PlaylistCreateOut {

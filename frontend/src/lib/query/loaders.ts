@@ -22,16 +22,16 @@ import {
   manageChatsQuery,
   manageComicQuery,
   manageComicsQuery,
-  manageMusicQuery,
-  manageMusicsQuery,
+  manageAudioQuery,
+  manageAudiosQuery,
   managePictureQuery,
   managePicturesQuery,
   manageSeriesListQuery,
   manageSeriesQuery,
   manageVideoQuery,
   manageVideosQuery,
-  musicQuery,
-  musicsQuery,
+  audioQuery,
+  audiosQuery,
   passwordResetQuery,
   paymentPlansQuery,
   paymentSellerQuery,
@@ -90,7 +90,7 @@ export const withdrawalLoader = ({ queryClient }: PageLoad<object>) => queryClie
 
 export const homeLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(homeQuery(homeParams(search)))
 export const videosLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(videosQuery(listParams(search)))
-export const musicsLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(musicsQuery(listParams(search)))
+export const audiosLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(audiosQuery(listParams(search)))
 export const blogsLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(blogsQuery(listParams(search)))
 export const comicsLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(comicsQuery(listParams(search)))
 export const picturesLoader = ({ queryClient, search }: PageLoad<object>) => queryClient.query(picturesQuery(listParams(search)))
@@ -102,9 +102,9 @@ export const videoLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>)
   return Promise.all([queryClient.query(videoQuery(params.ulid)), advertises])
 }
 
-export const musicLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
-  postMediaRead({ ulid: params.ulid, mediaType: MediaType.Music })
-  return queryClient.query(musicQuery(params.ulid))
+export const audioLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
+  postMediaRead({ ulid: params.ulid, mediaType: MediaType.Audio })
+  return queryClient.query(audioQuery(params.ulid))
 }
 
 export const blogLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) => {
@@ -174,7 +174,7 @@ export const manageBlogCreateLoader = ({ queryClient }: PageLoad<object>) =>
   Promise.all([queryClient.query(channelsQuery()), queryClient.query(categoriesQuery()), queryClient.query(paymentSellerQuery())])
 
 export const manageVideosLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageVideosQuery(await manageListParams(queryClient, search)))
-export const manageMusicsLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageMusicsQuery(await manageListParams(queryClient, search)))
+export const manageAudiosLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageAudiosQuery(await manageListParams(queryClient, search)))
 export const manageBlogsLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageBlogsQuery(await manageListParams(queryClient, search)))
 export const manageComicsLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(manageComicsQuery(await manageListParams(queryClient, search)))
 export const managePicturesLoader = async ({ queryClient, search }: PageLoad<object>) => queryClient.query(managePicturesQuery(await manageListParams(queryClient, search)))
@@ -187,8 +187,8 @@ export const manageSeriesListLoader = async ({ queryClient, search }: PageLoad<o
 
 export const manageVideoLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
   Promise.all([queryClient.query(manageVideoQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
-export const manageMusicLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
-  Promise.all([queryClient.query(manageMusicQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
+export const manageAudioLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
+  Promise.all([queryClient.query(manageAudioQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery())])
 export const manageBlogLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>
   Promise.all([queryClient.query(manageBlogQuery(params.ulid)), queryClient.query(channelsQuery()), queryClient.query(categoriesQuery()), queryClient.query(paymentSellerQuery())])
 export const manageComicLoader = ({ queryClient, params }: PageLoad<{ ulid: string }>) =>

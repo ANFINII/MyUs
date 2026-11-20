@@ -39,7 +39,7 @@ export default function Playlists(props: Props): React.JSX.Element {
 
   const handleCreate = async () => {
     handleLoading(true)
-    const ret = await postPlaylist({ title, publish: isPublish, musicUlid: '' })
+    const ret = await postPlaylist({ title, publish: isPublish, audioUlid: '' })
     handleLoading(false)
     if (ret.isErr()) return handleToast(errorMessage(ret.error, FetchError.Post), true)
     router.push(`/menu/playlist/${ret.value.ulid}`)
