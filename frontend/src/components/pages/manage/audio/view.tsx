@@ -6,7 +6,7 @@ import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Audio, AudioList } from 'types/internal/media/output'
 import { deleteManageAudios } from 'api/internal/manage/delete'
-import { FetchError } from 'utils/constants/enum'
+import { EncodeStatus, FetchError } from 'utils/constants/enum'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
@@ -126,11 +126,12 @@ export default function ManageAudios(props: Props): React.JSX.Element {
       align: 'center',
       className: style.narrow,
       cellClass: style.detail,
-      cell: (m) => (
-        <Link href={`/media/audio/${m.ulid}`} className={style.detail_link}>
-          <IconArrow size="16" type="external" />
-        </Link>
-      ),
+      cell: (m) =>
+        m.encodeStatus === EncodeStatus.Done && (
+          <Link href={`/media/audio/${m.ulid}`} className={style.detail_link}>
+            <IconArrow size="16" type="external" />
+          </Link>
+        ),
     },
     {
       key: 'publish',
