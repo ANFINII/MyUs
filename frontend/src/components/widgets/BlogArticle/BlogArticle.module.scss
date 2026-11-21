@@ -16,7 +16,7 @@
     margin: 0 0 1.4em;
 
     pre {
-      padding-right: 80px;
+      padding-right: 60px;
       margin: 0;
     }
   }
@@ -25,9 +25,12 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    padding: 4px 10px;
-    font-size: 12px;
-    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
     color: rgb(226, 230, 245);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
@@ -37,6 +40,22 @@
 
     &:hover {
       background: rgba(255, 255, 255, 0.18);
+    }
+
+    [data-icon='check'] {
+      display: none;
+    }
+
+    &[data-copied] {
+      color: rgb(80, 220, 160);
+
+      [data-icon='copy'] {
+        display: none;
+      }
+
+      [data-icon='check'] {
+        display: block;
+      }
     }
   }
 

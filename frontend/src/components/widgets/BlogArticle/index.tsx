@@ -19,16 +19,19 @@ export default function BlogArticle(props: Props): React.JSX.Element {
   const { t } = useTranslation()
 
   const handleCopy = async (e: MouseEvent<HTMLDivElement>) => {
-    const button = e.target
-    if (!(button instanceof HTMLButtonElement) || !button.hasAttribute('data-code-copy')) return
+    if (!(e.target instanceof Element)) return
+    const button = e.target.closest('[data-code-copy]')
+    if (!(button instanceof HTMLButtonElement)) return
     try {
       await navigator.clipboard.writeText(button.nextElementSibling?.textContent ?? '')
     } catch {
       return
     }
-    button.textContent = t('media.blog.codeCopied')
+    button.setAttribute('data-copied', '')
+    button.title = t('media.blog.codeCopied')
     setTimeout(() => {
-      button.textContent = t('action.copy')
+      button.removeAttribute('data-copied')
+      button.title = t('action.copy')
     }, COPIED_MS)
   }
 
