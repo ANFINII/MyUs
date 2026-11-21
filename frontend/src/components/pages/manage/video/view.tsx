@@ -96,7 +96,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     },
     {
       key: 'encodeStatus',
-      header: t('manage.table.encode'),
+      header: t('manage.table.encodeStatus'),
       className: style.normal,
       cell: (v) => <ManageEncodeStatus status={v.encodeStatus} />,
     },

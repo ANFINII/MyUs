@@ -96,7 +96,7 @@ export default function ManageAudios(props: Props): React.JSX.Element {
     },
     {
       key: 'encodeStatus',
-      header: t('manage.table.encode'),
+      header: t('manage.table.encodeStatus'),
       className: style.normal,
       cell: (m) => <ManageEncodeStatus status={m.encodeStatus} />,
     },
