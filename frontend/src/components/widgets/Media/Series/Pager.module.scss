@@ -47,11 +47,10 @@
     color: rgb(7, 11, 43);
     border: 1px solid rgb(226, 229, 238);
     border-radius: 8px;
-    transition: border-color 0.2s, transform 0.2s;
+    transition: border-color 0.2s;
 
     &:hover {
       border-color: rgb(50, 150, 255);
-      transform: translateY(-2px);
     }
 
     &.next {
