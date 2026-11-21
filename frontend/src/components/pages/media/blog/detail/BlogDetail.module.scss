@@ -18,19 +18,25 @@
   .side {
     flex-shrink: 0;
     width: 400px;
+
+    .toc {
+      padding: 40px;
+    }
   }
 }
 
 @media screen and (max-width: 1280px) {
   .blog_body {
-    gap: 24px;
-
     .main {
       padding: 24px;
     }
 
     .side {
       width: 260px;
+
+      .toc {
+        padding: 24px;
+      }
     }
   }
 }
