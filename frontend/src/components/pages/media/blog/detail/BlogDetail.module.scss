@@ -4,7 +4,7 @@
   gap: 32px;
   padding: 32px 24px;
   border-radius: 16px;
-  background: rgb(15, 15, 15);
+  background: rgb(20, 20, 20);
 
   .main {
     flex: 1;
@@ -17,7 +17,7 @@
 
   .side {
     flex-shrink: 0;
-    width: 280px;
+    width: 320px;
   }
 }
 
@@ -31,7 +31,7 @@
     }
 
     .side {
-      width: 240px;
+      width: 260px;
     }
   }
 }
