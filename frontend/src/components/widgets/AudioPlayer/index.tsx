@@ -17,7 +17,6 @@ interface Props {
   playbackRate?: number
   autoPlay?: boolean
   isVolumeInline?: boolean
-  isMobileVolumeHidden?: boolean
   repeat?: RepeatMode
   audioRef?: React.RefObject<HTMLAudioElement | null>
   className?: string
@@ -27,7 +26,7 @@ interface Props {
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, gain = 0, playbackRate = 1, autoPlay = false, isVolumeInline = false, isMobileVolumeHidden = false, repeat = 'off', audioRef: sharedAudioRef, className, onEnded, onRepeat, onTimeUpdate } = props
+  const { src, gain = 0, playbackRate = 1, autoPlay = false, isVolumeInline = false, repeat = 'off', audioRef: sharedAudioRef, className, onEnded, onRepeat, onTimeUpdate } = props
 
   const { t } = useTranslation()
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -58,7 +57,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
       const track = volumeTrackRef.current
       if (!audio || !track) return
       const rect = track.getBoundingClientRect()
-      const ratio = isVolumeInline ? (clientX - rect.left) / rect.width : 1 - (clientY - rect.top) / rect.height
+      const ratio = rect.width > rect.height ? (clientX - rect.left) / rect.width : 1 - (clientY - rect.top) / rect.height
       const newVolume = Math.max(0, Math.min(1, ratio))
       audio.volume = gainVolume(newVolume, gain)
       setVolume(newVolume)
@@ -68,7 +67,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         setIsMuted(false)
       }
     },
-    [isVolumeInline, gain],
+    [gain],
   )
 
   const handlePlayPause = () => {
@@ -182,7 +181,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const playedPercent = duration ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, isVolumeInline && style.volume_inline, isMobileVolumeHidden && style.mobile_volume_hidden, onRepeat && style.repeatable, className)}>
+    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, isVolumeInline && style.volume_inline, className)}>
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>
@@ -211,7 +210,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         </div>
         <div className={style.volume_adjust}>
           <div ref={volumeTrackRef} onMouseDown={handleVolumeMouseDown}>
-            <div style={isVolumeInline ? { width: `${volume * 100}%` } : { height: `${volume * 100}%` }} />
+            <div style={{ '--volume': `${volume * 100}%` } as React.CSSProperties} />
           </div>
         </div>
       </div>

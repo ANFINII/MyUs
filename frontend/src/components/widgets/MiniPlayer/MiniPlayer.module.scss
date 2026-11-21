@@ -58,9 +58,12 @@
 
 @media screen and (max-width: 1024px) {
   .mini_player {
+    gap: 8px;
+
     .info {
-      flex: 0 1 160px;
+      flex: 0 1 140px;
       width: auto;
+      min-width: 80px;
     }
   }
 }
