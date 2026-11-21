@@ -3,12 +3,11 @@
 .toc {
   position: sticky;
   top: 32px;
-  max-height: calc(100vh - 136px);
-  padding: 24px 16px 20px;
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 130px);
+  border-radius: 10px;
   background: rgb(255, 255, 255);
-  overflow-y: auto;
-  @include scrollbar.scrollbar;
 
   .header {
     display: flex;
@@ -46,6 +45,13 @@
     transition: width 0.3s ease;
   }
 
+  .scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    @include scrollbar.scrollbar;
+  }
+
   .list {
     position: relative;
     padding: 0;
@@ -71,6 +77,7 @@
     font-size: 14px;
     line-height: 1.6;
     text-align: left;
+    word-break: auto-phrase;
     color: rgb(130, 134, 155);
     border: none;
     border-radius: 8px;

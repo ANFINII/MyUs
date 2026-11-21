@@ -32,10 +32,11 @@ export default function BlogDetail(props: Props): React.JSX.Element {
       <MediaDetail publish={publish}>
         <div className={style.blog_body}>
           <div className={style.main}>
+            <h1 className={style.title}>{other.title}</h1>
             <BlogArticle richtext={article.richtext} paidText={article.paidText} isPromotion={isPromotion} />
             {isLocked && product !== null && <Paywall title={t('media.blog.paywallTitle')} notice={t('media.blog.paywallNotice')} product={product} handleToast={handleToast} />}
           </div>
-          <aside className={style.side}>{article.headings.length > 0 && <BlogToc headings={article.headings} />}</aside>
+          <aside className={style.side}>{article.headings.length > 0 && <BlogToc headings={article.headings} className={style.toc} />}</aside>
         </div>
         <Divide />
         <MediaDetailCommon media={{ mediaPath: MediaPath.Blog, ...other }} list={list} series={series} handleToast={handleToast} />

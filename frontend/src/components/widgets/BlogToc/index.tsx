@@ -6,10 +6,11 @@ import style from './BlogToc.module.scss'
 
 interface Props {
   headings: TocHeading[]
+  className?: string
 }
 
 export default function BlogToc(props: Props): React.JSX.Element {
-  const { headings } = props
+  const { headings, className } = props
 
   const { t } = useTranslation()
   const [activeId, setActiveId] = useState(headings[0]?.id ?? '')
@@ -40,7 +41,7 @@ export default function BlogToc(props: Props): React.JSX.Element {
   }
 
   return (
-    <nav className={style.toc} aria-label={t('media.blog.toc')}>
+    <nav className={cx(style.toc, className)} aria-label={t('media.blog.toc')}>
       <div className={style.header}>
         <span className={style.title}>{t('media.blog.toc')}</span>
         <span className={style.count}>
@@ -50,19 +51,21 @@ export default function BlogToc(props: Props): React.JSX.Element {
       <div className={style.progress}>
         <div className={style.progress_bar} style={{ width: `${progress}%` }} />
       </div>
-      <ul className={style.list}>
-        {headings.map((heading, index) => (
-          <li key={heading.id}>
-            <button
-              type="button"
-              className={cx(style.item, heading.level === topLevel ? style.main : style.sub, index < activeIndex && style.passed, index === activeIndex && style.active)}
-              onClick={() => handleHeading(heading.id)}
-            >
-              {heading.text}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className={style.scroll}>
+        <ul className={style.list}>
+          {headings.map((heading, index) => (
+            <li key={heading.id}>
+              <button
+                type="button"
+                className={cx(style.item, heading.level === topLevel ? style.main : style.sub, index < activeIndex && style.passed, index === activeIndex && style.active)}
+                onClick={() => handleHeading(heading.id)}
+              >
+                {heading.text}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   )
 }

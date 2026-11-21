@@ -3,13 +3,60 @@
 .article {
   max-width: 760px;
   height: auto;
-  padding: 32px 0 48px;
   margin: 0;
   background: rgb(255, 255, 255);
   @include tiptap.article;
 
   > div > :first-child {
     margin-top: 0;
+  }
+
+  [data-code-block] {
+    position: relative;
+    margin: 0 0 1.4em;
+
+    pre {
+      padding-right: 60px;
+      margin: 0;
+    }
+  }
+
+  [data-code-copy] {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: rgb(226, 230, 245);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    [data-icon='check'] {
+      display: none;
+    }
+
+    &[data-copied] {
+      color: rgb(80, 220, 160);
+
+      [data-icon='copy'] {
+        display: none;
+      }
+
+      [data-icon='check'] {
+        display: block;
+      }
+    }
   }
 
   .paid_line {
@@ -26,11 +73,5 @@
       content: '';
       border-top: 1px dashed rgb(200, 200, 200);
     }
-  }
-}
-
-@media screen and (max-width: 668px) {
-  .article {
-    padding: 20px 0 32px;
   }
 }

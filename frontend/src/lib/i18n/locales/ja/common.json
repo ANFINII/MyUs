@@ -1017,7 +1017,8 @@
       "paidLine": "ここから先は有料部分です",
       "paywallTitle": "この続きを読むには",
       "paywallNotice": "購入後、読めるようになるまで少し時間がかかる場合があります。",
-      "toc": "目次"
+      "toc": "目次",
+      "codeCopied": "コピーしました"
     },
     "comic": {
       "paywallTitle": "この続きを読むには",
