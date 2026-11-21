@@ -3,11 +3,11 @@
 .toc {
   position: sticky;
   top: 32px;
-  max-height: calc(100vh - 136px);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 130px);
   border-radius: 10px;
   background: rgb(255, 255, 255);
-  overflow-y: auto;
-  @include scrollbar.scrollbar;
 
   .header {
     display: flex;
@@ -43,6 +43,13 @@
     border-radius: 2px;
     background: linear-gradient(to right, rgb(10, 115, 120), rgb(255, 0, 130));
     transition: width 0.3s ease;
+  }
+
+  .scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    @include scrollbar.scrollbar;
   }
 
   .list {

@@ -51,19 +51,21 @@ export default function BlogToc(props: Props): React.JSX.Element {
       <div className={style.progress}>
         <div className={style.progress_bar} style={{ width: `${progress}%` }} />
       </div>
-      <ul className={style.list}>
-        {headings.map((heading, index) => (
-          <li key={heading.id}>
-            <button
-              type="button"
-              className={cx(style.item, heading.level === topLevel ? style.main : style.sub, index < activeIndex && style.passed, index === activeIndex && style.active)}
-              onClick={() => handleHeading(heading.id)}
-            >
-              {heading.text}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className={style.scroll}>
+        <ul className={style.list}>
+          {headings.map((heading, index) => (
+            <li key={heading.id}>
+              <button
+                type="button"
+                className={cx(style.item, heading.level === topLevel ? style.main : style.sub, index < activeIndex && style.passed, index === activeIndex && style.active)}
+                onClick={() => handleHeading(heading.id)}
+              >
+                {heading.text}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   )
 }
