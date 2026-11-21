@@ -1,4 +1,5 @@
-.lyric.lyric textarea {
+.lyric.lyric textarea,
+.content.content textarea {
   max-height: 368px;
   overflow-y: auto;
 }

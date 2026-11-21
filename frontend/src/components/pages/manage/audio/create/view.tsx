@@ -95,7 +95,7 @@ export default function AudioCreate(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" maxLength={MEDIA_TITLE_MAX} required error={error} onChange={handleInput} />
-          <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
+          <Textarea label={t('manage.form.content')} name="content" className={style.content} required error={error} onChange={handleText} />
           <Textarea label={t('manage.form.lyric')} name="lyric" className={style.lyric} value={values.lyric} onChange={handleText} />
           <div className={style.lyric_hint}>
             <IconInfo size="14" className={style.lyric_hint_icon} />

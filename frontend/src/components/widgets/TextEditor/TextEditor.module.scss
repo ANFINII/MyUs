@@ -24,6 +24,7 @@
 
   :global(.tiptap) {
     min-height: 200px;
+    max-height: 600px;
     padding: 20px 24px;
     white-space: pre-wrap;
     tab-size: 4;
