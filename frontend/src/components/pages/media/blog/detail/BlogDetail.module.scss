@@ -23,6 +23,21 @@
 
 @media screen and (max-width: 1280px) {
   .blog_body {
+    gap: 24px;
+    padding: 32px 16px;
+
+    .main {
+      padding: 8px 28px 16px;
+    }
+
+    .side {
+      width: 240px;
+    }
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .blog_body {
     .side {
       display: none;
     }
