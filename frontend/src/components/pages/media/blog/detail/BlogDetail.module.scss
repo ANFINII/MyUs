@@ -1,12 +1,18 @@
 .blog_body {
   display: flex;
   justify-content: center;
-  gap: 64px;
+  gap: 32px;
+  padding: 32px 24px;
+  border-radius: 16px;
+  background: rgb(237, 242, 247);
 
   .main {
     flex: 1;
     min-width: 0;
-    max-width: 760px;
+    max-width: 856px;
+    padding: 8px 48px 16px;
+    border-radius: 16px;
+    background: rgb(255, 255, 255);
   }
 
   .side {
@@ -15,10 +21,20 @@
   }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1120px) {
   .blog_body {
     .side {
       display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 668px) {
+  .blog_body {
+    padding: 16px 0;
+
+    .main {
+      padding: 0 20px 8px;
     }
   }
 }
