@@ -5,7 +5,7 @@
   top: 32px;
   max-height: calc(100vh - 136px);
   padding: 24px 16px 20px;
-  border-radius: 16px;
+  border-radius: 8px;
   background: rgb(255, 255, 255);
   overflow-y: auto;
   @include scrollbar.scrollbar;
@@ -105,26 +105,6 @@
     &:hover {
       color: rgb(7, 11, 43);
       background: rgba(255, 0, 130, 0.08);
-    }
-
-    &.depth_1,
-    &.depth_2 {
-      font-size: 13px;
-
-      &::before {
-        top: 14px;
-        left: 8px;
-        width: 8px;
-        height: 8px;
-      }
-    }
-
-    &.depth_1 {
-      padding-left: 46px;
-    }
-
-    &.depth_2 {
-      padding-left: 60px;
     }
 
     &.passed {
