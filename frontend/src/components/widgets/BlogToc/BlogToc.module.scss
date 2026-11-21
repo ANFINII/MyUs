@@ -4,7 +4,7 @@
   position: sticky;
   top: 32px;
   max-height: calc(100vh - 136px);
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgb(255, 255, 255);
   overflow-y: auto;
   @include scrollbar.scrollbar;
@@ -70,6 +70,7 @@
     font-size: 14px;
     line-height: 1.6;
     text-align: left;
+    word-break: auto-phrase;
     color: rgb(130, 134, 155);
     border: none;
     border-radius: 8px;
