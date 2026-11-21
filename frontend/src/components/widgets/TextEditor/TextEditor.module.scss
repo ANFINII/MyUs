@@ -24,66 +24,15 @@
 
   :global(.tiptap) {
     min-height: 200px;
-    padding: 12px 15px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.42;
+    padding: 20px 24px;
     white-space: pre-wrap;
     tab-size: 4;
     outline: none;
     overflow-y: auto;
+    @include tiptap.article;
 
-    > * + * {
-      margin-top: 0.75em;
-    }
-
-    @include tiptap.tiptap;
-
-    h1 {
-      font-size: 2em;
-      font-weight: bold;
-    }
-
-    h2 {
-      font-size: 1.5em;
-      font-weight: bold;
-    }
-
-    h3 {
-      font-size: 1.17em;
-      font-weight: bold;
-    }
-
-    h4 {
-      font-size: 1em;
-      font-weight: bold;
-    }
-
-    h5 {
-      font-size: 0.83em;
-      font-weight: bold;
-    }
-
-    h6 {
-      font-size: 0.67em;
-      font-weight: bold;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-
-      &[data-rounded='s'] {
-        border-radius: 4px;
-      }
-
-      &[data-rounded='m'] {
-        border-radius: 8px;
-      }
-
-      &[data-rounded='l'] {
-        border-radius: 16px;
-      }
+    > :first-child {
+      margin-top: 0;
     }
 
     :global([data-resize-container]):hover :global([data-resize-handle]),
@@ -118,16 +67,6 @@
     :global([data-resize-handle='bottom-right']) {
       transform: translate(50%, 50%);
       cursor: nwse-resize;
-    }
-
-    sub {
-      font-size: smaller;
-      vertical-align: sub;
-    }
-
-    sup {
-      font-size: smaller;
-      vertical-align: super;
     }
   }
 }
