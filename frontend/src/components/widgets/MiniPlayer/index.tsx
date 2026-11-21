@@ -7,9 +7,9 @@ import ExImage from 'components/parts/ExImage'
 import IconChevront from 'components/parts/Icon/Chevront'
 import IconCross from 'components/parts/Icon/Cross'
 import IconShuffle from 'components/parts/Icon/Shuffle'
-import Link from 'components/parts/Link'
 import AudioPlayer from 'components/widgets/AudioPlayer'
 import style from './MiniPlayer.module.scss'
+import MiniPlayerTitle from './Title'
 
 const PLAYER_DETAIL_PATH = /^\/media\/(video|audio)\/[^/]+$/
 
@@ -30,19 +30,17 @@ export default function MiniPlayer(): React.JSX.Element {
     <div className={style.mini_player}>
       <ExImage src={current.image || current.channel.avatar} width="40" height="40" className={style.thumbnail} />
       <div className={style.info}>
-        <Link href={`/media/audio/${current.ulid}`} className={style.title}>
-          {current.title}
-        </Link>
+        <MiniPlayerTitle key={current.ulid} href={`/media/audio/${current.ulid}`} title={current.title} />
         <span className={style.channel}>{current.channel.name}</span>
       </div>
-      <button type="button" title={t('player.shuffle')} className={cx(style.button, isShuffle && style.active)} onClick={toggleShuffle}>
+      <button type="button" title={t('player.shuffle')} className={cx(style.button, style.shuffle, isShuffle && style.active)} onClick={toggleShuffle}>
         <IconShuffle size="1.1em" />
       </button>
-      <button type="button" className={style.button} onClick={prev}>
+      <button type="button" className={cx(style.button, style.prev)} onClick={prev}>
         <IconChevront width="1.2em" height="1.2em" type="left" />
       </button>
-      <AudioPlayer key={current.ulid} src={current.audio} gain={current.gain} autoPlay isVolumeInline audioRef={audioRef} repeat={repeat} onEnded={next} onRepeat={toggleRepeat} className={style.player} />
-      <button type="button" className={style.button} onClick={next}>
+      <AudioPlayer key={current.ulid} src={current.audio} gain={current.gain} autoPlay isVolumeInline isMobileVolumeHidden audioRef={audioRef} repeat={repeat} onEnded={next} onRepeat={toggleRepeat} className={style.player} />
+      <button type="button" className={cx(style.button, style.next)} onClick={next}>
         <IconChevront width="1.2em" height="1.2em" type="right" />
       </button>
       <IconCross size="1.2em" className={style.close} onClick={close} />
