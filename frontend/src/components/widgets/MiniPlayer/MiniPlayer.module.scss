@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  height: 48px;
   padding: 4px;
   color: rgb(255, 255, 255);
   background: rgb(15, 15, 15);
@@ -56,19 +57,28 @@
   }
 }
 
+:global(body):has(.mini_player) :global(main) {
+  padding-bottom: 64px;
+}
+
 @media screen and (max-width: 1024px) {
   .mini_player {
+    gap: 8px;
+
     .info {
-      flex: 0 1 160px;
+      flex: 0 1 140px;
       width: auto;
+      min-width: 80px;
     }
   }
 }
 
-@media screen and (max-width: 668px) {
+@media screen and (max-width: 880px) {
+  :global(body):has(.mini_player) :global(main) {
+    padding-bottom: 119px;
+  }
+
   .mini_player {
-    bottom: 56px;
-    left: 0;
     display: grid;
     column-gap: 4px;
     row-gap: 6px;
@@ -76,6 +86,7 @@
     grid-template-areas:
       "thumbnail info shuffle prev next close"
       "player player player player player player";
+    height: 103px;
     padding: 8px 8px 8px 12px;
     border-top: 1px solid rgb(38, 38, 38);
 
@@ -116,5 +127,16 @@
     .player {
       grid-area: player;
     }
+  }
+}
+
+@media screen and (max-width: 668px) {
+  :global(body):has(.mini_player) :global(main) {
+    padding-bottom: 115px;
+  }
+
+  .mini_player {
+    bottom: 56px;
+    left: 0;
   }
 }

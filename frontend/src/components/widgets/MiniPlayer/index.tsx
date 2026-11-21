@@ -39,7 +39,7 @@ export default function MiniPlayer(): React.JSX.Element {
       <button type="button" className={cx(style.button, style.prev)} onClick={prev}>
         <IconChevront width="1.2em" height="1.2em" type="left" />
       </button>
-      <AudioPlayer key={current.ulid} src={current.audio} gain={current.gain} autoPlay isVolumeInline isMobileVolumeHidden audioRef={audioRef} repeat={repeat} onEnded={next} onRepeat={toggleRepeat} className={style.player} />
+      <AudioPlayer key={current.ulid} src={current.audio} gain={current.gain} autoPlay isVolumeInline audioRef={audioRef} repeat={repeat} onEnded={next} onRepeat={toggleRepeat} className={style.player} />
       <button type="button" className={cx(style.button, style.next)} onClick={next}>
         <IconChevront width="1.2em" height="1.2em" type="right" />
       </button>
