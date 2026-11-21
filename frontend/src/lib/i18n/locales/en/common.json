@@ -675,6 +675,7 @@
   },
   "player": {
     "shuffle": "Shuffle",
+    "speed": "Speed",
     "repeat": {
       "off": "Repeat off",
       "all": "Repeat all",
