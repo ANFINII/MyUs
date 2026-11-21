@@ -14,6 +14,7 @@ export default function BlogToc(props: Props): React.JSX.Element {
   const { t } = useTranslation()
   const [activeId, setActiveId] = useState(headings[0]?.id ?? '')
 
+  const topLevel = Math.min(...headings.map((heading) => heading.level))
   const activeIndex = Math.max(
     headings.findIndex((heading) => heading.id === activeId),
     0,
@@ -54,7 +55,7 @@ export default function BlogToc(props: Props): React.JSX.Element {
           <li key={heading.id}>
             <button
               type="button"
-              className={cx(style.item, index < activeIndex && style.passed, index === activeIndex && style.active)}
+              className={cx(style.item, heading.level === topLevel && style.main, index < activeIndex && style.passed, index === activeIndex && style.active)}
               onClick={() => handleHeading(heading.id)}
             >
               {heading.text}

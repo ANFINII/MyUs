@@ -2,6 +2,7 @@ const HEADING = 'h1, h2, h3'
 
 export interface TocHeading {
   id: string
+  level: number
   text: string
 }
 
@@ -22,7 +23,7 @@ export const buildToc = (richtext: string, paidText: string): TocArticle => {
       if (text === '') return
       const id = `section-${headings.length + 1}`
       element.id = id
-      headings.push({ id, text })
+      headings.push({ id, level: Number(element.tagName.slice(1)), text })
     })
     return doc.body.innerHTML
   }
