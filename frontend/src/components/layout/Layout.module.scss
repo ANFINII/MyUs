@@ -2,4 +2,16 @@
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;
+  --mini-player-height: 48px;
+  --mini-player-space: 0px;
+
+  &.player_open {
+    --mini-player-space: var(--mini-player-height);
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .layout {
+    --mini-player-height: 103px;
+  }
 }

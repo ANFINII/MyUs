@@ -3,7 +3,7 @@
   top: 82px;
   left: 72px;
   width: calc(100% - 72px);
-  height: calc(100% - 82px);
+  height: calc(100% - 82px - var(--mini-player-space, 0px));
   padding: 16px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -71,7 +71,7 @@
   .main {
     left: 0;
     width: 100%;
-    height: calc(100% - 138px);
+    height: calc(100% - 138px - var(--mini-player-space, 0px));
     padding: 12px;
   }
 }
