@@ -15,8 +15,8 @@ export default function ManageEncodeStatus(props: Props): React.JSX.Element {
     <>
       {status === EncodeStatus.Failed && <span className={style.encode_failed}>{t('manage.encode.failed')}</span>}
       {status === EncodeStatus.LowBitRate && <span className={style.encode_failed}>{t('manage.encode.lowBitRate')}</span>}
-      {status === EncodeStatus.Encoding && <span className={style.encode_status}>{t('manage.encode.encoding')}</span>}
-      {status === EncodeStatus.Done && <span className={style.encode_status}>{t('manage.encode.done')}</span>}
+      {status === EncodeStatus.Encoding && <span>{t('manage.encode.encoding')}</span>}
+      {status === EncodeStatus.Done && <span>{t('manage.encode.done')}</span>}
     </>
   )
 }
