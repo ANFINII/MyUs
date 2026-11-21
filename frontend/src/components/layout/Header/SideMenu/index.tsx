@@ -33,7 +33,7 @@ export default function SideMenu(props: Props): React.JSX.Element {
     <aside className={cx(style.side_menu, open && style.active)}>
       <nav>
         <NavItem className={style.close} icon={<IconArrow size="1.5em" type="left" />} onClick={onClose}>
-          <ExImage src="/image/MyUs.png" size="30" />
+          <ExImage src="/favicon/apple-touch-icon.png" alt="MyUs" size="30" />
         </NavItem>
 
         <ul>
