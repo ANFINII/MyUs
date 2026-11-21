@@ -388,6 +388,7 @@
       "title": "Title",
       "detail": "Details",
       "content": "Description",
+      "encodeStatus": "Conversion status",
       "play": "Plays",
       "view": "Views",
       "thread": "Threads",
@@ -401,6 +402,7 @@
     },
     "encode": {
       "encoding": "Converting",
+      "done": "Done",
       "failed": "Conversion failed",
       "lowBitRate": "The audio quality is too low to publish. Upload a source of 192kbps or higher, or a WAV or FLAC file"
     },

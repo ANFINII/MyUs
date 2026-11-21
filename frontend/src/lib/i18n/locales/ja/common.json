@@ -385,6 +385,7 @@
       "title": "タイトル",
       "detail": "詳細",
       "content": "内容",
+      "encodeStatus": "変換状態",
       "play": "再生",
       "view": "閲覧",
       "thread": "スレッド",
@@ -398,6 +399,7 @@
     },
     "encode": {
       "encoding": "変換中",
+      "done": "完了",
       "failed": "変換できませんでした",
       "lowBitRate": "音質が低いため公開できません。192kbps 以上のオーディオファイルか、WAV・FLAC を上げ直してください"
     },

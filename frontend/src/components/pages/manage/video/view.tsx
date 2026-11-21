@@ -6,7 +6,7 @@ import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Video, VideoList } from 'types/internal/media/output'
 import { deleteManageVideos } from 'api/internal/manage/delete'
-import { FetchError } from 'utils/constants/enum'
+import { EncodeStatus, FetchError } from 'utils/constants/enum'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
@@ -83,12 +83,9 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortValue: (v) => v.title,
       className: style.title,
       cell: (v) => (
-        <>
-          <a className={style.title_link} onClick={() => handleEdit(v)}>
-            {v.title}
-          </a>
-          <ManageEncodeStatus status={v.encodeStatus} />
-        </>
+        <a className={style.title_link} onClick={() => handleEdit(v)}>
+          {v.title}
+        </a>
       ),
     },
     {
@@ -96,6 +93,12 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       header: t('manage.table.content'),
       className: style.content,
       cell: (v) => v.content,
+    },
+    {
+      key: 'encodeStatus',
+      header: t('manage.table.encodeStatus'),
+      className: style.normal,
+      cell: (v) => <ManageEncodeStatus status={v.encodeStatus} />,
     },
     {
       key: 'read',
@@ -123,11 +126,12 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       align: 'center',
       className: style.narrow,
       cellClass: style.detail,
-      cell: (v) => (
-        <Link href={`/media/video/${v.ulid}`} className={style.detail_link}>
-          <IconArrow size="16" type="external" />
-        </Link>
-      ),
+      cell: (v) =>
+        v.encodeStatus === EncodeStatus.Done && (
+          <Link href={`/media/video/${v.ulid}`} className={style.detail_link}>
+            <IconArrow size="16" type="external" />
+          </Link>
+        ),
     },
     {
       key: 'publish',
