@@ -1,11 +1,9 @@
-@use 'styles/global/mixin/scrollbar';
-
 .toc {
   position: sticky;
   top: 32px;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 130px);
+  max-height: calc(100vh - 120px);
   border-radius: 10px;
   background: rgb(255, 255, 255);
 
@@ -48,8 +46,13 @@
   .scroll {
     flex: 1;
     min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
     overflow-y: auto;
-    @include scrollbar.scrollbar;
+
+    &:hover {
+      scrollbar-color: rgb(192, 192, 192) transparent;
+    }
   }
 
   .list {
