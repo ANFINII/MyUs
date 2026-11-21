@@ -49,3 +49,174 @@
     color: rgb(0, 102, 204);
   }
 }
+
+@mixin article {
+  font-size: 16px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  color: rgb(34, 38, 58);
+  @include tiptap;
+
+  p,
+  ul,
+  ol,
+  pre,
+  blockquote {
+    margin: 0 0 1.4em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    margin: 2.2em 0 0.8em;
+    font-weight: 700;
+    line-height: 1.45;
+    color: rgb(7, 11, 43);
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    position: relative;
+    padding-bottom: 12px;
+    font-size: 24px;
+    border-bottom: 1px solid rgb(228, 230, 240);
+
+    &::after {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 72px;
+      height: 3px;
+      content: '';
+      border-radius: 2px;
+      background: linear-gradient(to right, rgb(10, 115, 120), rgb(255, 0, 130));
+    }
+  }
+
+  h3 {
+    padding-left: 14px;
+    font-size: 19px;
+    border-left: 4px solid rgb(255, 0, 130);
+  }
+
+  h4 {
+    font-size: 17px;
+  }
+
+  h5 {
+    font-size: 15px;
+    color: rgb(90, 96, 120);
+  }
+
+  ul,
+  ol {
+    padding-left: 1.6em;
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    li p {
+      margin: 0;
+    }
+
+    li::marker {
+      font-weight: 700;
+      color: rgb(10, 115, 120);
+    }
+  }
+
+  blockquote {
+    padding: 16px 20px;
+    color: rgb(80, 86, 110);
+    border-left: 4px solid rgb(10, 115, 120);
+    border-radius: 0 8px 8px 0;
+    background: rgb(244, 247, 249);
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  pre {
+    padding: 16px 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    letter-spacing: 0;
+    color: rgb(226, 230, 245);
+    border-radius: 10px;
+    background: rgb(14, 19, 48);
+    overflow-x: auto;
+  }
+
+  code {
+    color: rgb(60, 64, 90);
+    background: rgb(238, 240, 246);
+  }
+
+  a {
+    text-underline-offset: 3px;
+    color: rgb(37, 99, 200);
+  }
+
+  mark {
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+
+  sub {
+    font-size: smaller;
+    vertical-align: sub;
+  }
+
+  sup {
+    font-size: smaller;
+    vertical-align: super;
+  }
+
+  hr {
+    height: 1px;
+    margin: 3em 0;
+    border: none;
+    background: rgb(228, 230, 240);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 1.4em;
+
+    &[data-rounded='s'] {
+      border-radius: 4px;
+    }
+
+    &[data-rounded='m'] {
+      border-radius: 8px;
+    }
+
+    &[data-rounded='l'] {
+      border-radius: 16px;
+    }
+  }
+
+  @media screen and (max-width: 668px) {
+    font-size: 15px;
+
+    h1 {
+      font-size: 24px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    h3 {
+      font-size: 17px;
+    }
+  }
+}

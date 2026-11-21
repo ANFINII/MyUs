@@ -6,6 +6,7 @@
 - `parts/`、`widgets/`はCSS Modules（`.module.scss`）を使用
 - `pages/`ではグローバルCSS（`styles/`配下）を利用してよい
   - `styles/global/`：全体のスタイル（`reset.scss`・`style.scss` など）と mixin（`mixin/scrollbar.scss`・`mixin/tiptap.scss`）
+    - ブログの本文の見た目は `tiptap.article` の1つにまとめる。入力画面の `TextEditor`、プレビューと詳細画面の `BlogArticle` の両方がこれを使い、書いている間と公開したあとの見た目をそろえる。チャットは `tiptap.tiptap` だけを使う
   - `styles/internal/`：特定の画面・ライブラリ向け（`registration.scss`・`videojs-myus.scss` など）
 - ネスト構文で記述する。子要素は親クラスの中にネストし、5階層までにする。`&:hover`・`&.active` のように `&` で始まるものは階層に数えない
 - インラインスタイルは使用しない。ただし、再生位置のバーの幅のように値が連続して変わるものだけは `style` で渡してよい

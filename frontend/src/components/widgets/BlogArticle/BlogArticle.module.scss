@@ -1,24 +1,15 @@
 @use 'styles/global/mixin/tiptap';
 
 .article {
+  max-width: 760px;
   height: auto;
+  padding: 32px 0 48px;
+  margin: 0 auto;
   background: rgb(255, 255, 255);
-  @include tiptap.tiptap;
+  @include tiptap.article;
 
-  img {
-    height: auto;
-
-    &[data-rounded='s'] {
-      border-radius: 4px;
-    }
-
-    &[data-rounded='m'] {
-      border-radius: 8px;
-    }
-
-    &[data-rounded='l'] {
-      border-radius: 16px;
-    }
+  > div > :first-child {
+    margin-top: 0;
   }
 
   .paid_line {
@@ -31,9 +22,15 @@
 
     &::before,
     &::after {
-      content: '';
       flex: 1;
+      content: '';
       border-top: 1px dashed rgb(200, 200, 200);
     }
+  }
+}
+
+@media screen and (max-width: 668px) {
+  .article {
+    padding: 20px 0 32px;
   }
 }
