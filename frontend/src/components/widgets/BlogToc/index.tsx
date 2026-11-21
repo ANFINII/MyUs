@@ -15,6 +15,11 @@ export default function BlogToc(props: Props): React.JSX.Element {
   const [activeId, setActiveId] = useState(headings[0]?.id ?? '')
 
   const topLevel = Math.min(...headings.map((heading) => heading.level))
+  const activeIndex = Math.max(
+    headings.findIndex((heading) => heading.id === activeId),
+    0,
+  )
+  const progress = ((activeIndex + 1) / headings.length) * 100
 
   useEffect(() => {
     const elements = headings.map((heading) => document.getElementById(heading.id)).filter((element) => element !== null)
@@ -36,13 +41,21 @@ export default function BlogToc(props: Props): React.JSX.Element {
 
   return (
     <nav className={style.toc} aria-label={t('media.blog.toc')}>
-      <p className={style.title}>{t('media.blog.toc')}</p>
+      <div className={style.header}>
+        <span className={style.title}>{t('media.blog.toc')}</span>
+        <span className={style.count}>
+          {activeIndex + 1} / {headings.length}
+        </span>
+      </div>
+      <div className={style.progress}>
+        <div className={style.progress_bar} style={{ width: `${progress}%` }} />
+      </div>
       <ul className={style.list}>
-        {headings.map((heading) => (
+        {headings.map((heading, index) => (
           <li key={heading.id}>
             <button
               type="button"
-              className={cx(style.item, style[`depth_${heading.level - topLevel}`], heading.id === activeId && style.active)}
+              className={cx(style.item, style[`depth_${heading.level - topLevel}`], index < activeIndex && style.passed, index === activeIndex && style.active)}
               onClick={() => handleHeading(heading.id)}
             >
               {heading.text}
