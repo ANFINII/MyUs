@@ -1,0 +1,62 @@
+@use 'styles/global/mixin/scrollbar';
+
+.toc {
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 120px);
+  padding: 32px 0 16px;
+  overflow-y: auto;
+  @include scrollbar.scrollbar;
+
+  .title {
+    padding-left: 14px;
+    margin: 0 0 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: rgb(120, 124, 145);
+  }
+
+  .list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border-left: 2px solid rgb(232, 234, 242);
+  }
+
+  .item {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    margin-left: -2px;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: left;
+    color: rgb(90, 96, 120);
+    border: none;
+    border-left: 2px solid transparent;
+    background: none;
+    transition: color 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(7, 11, 43);
+    }
+
+    &.depth_1 {
+      padding-left: 26px;
+      font-size: 12px;
+    }
+
+    &.depth_2 {
+      padding-left: 40px;
+      font-size: 12px;
+    }
+
+    &.active {
+      font-weight: 700;
+      color: rgb(7, 11, 43);
+      border-left-color: rgb(255, 0, 130);
+    }
+  }
+}
