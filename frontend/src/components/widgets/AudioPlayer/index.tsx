@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RepeatMode } from 'types/internal/other'
 import cx from 'utils/functions/cx'
@@ -32,9 +32,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
   const volumeTrackRef = useRef<HTMLDivElement>(null)
-  const isDraggingRef = useRef(false)
   const wasPlayingRef = useRef(false)
-  const isVolumeDraggingRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [isMuted, setIsMuted] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
@@ -42,33 +40,30 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const [loaded, setLoaded] = useState<number>(0)
   const [volume, setVolume] = useState<number>(getVolume())
 
-  const seekToPosition = useCallback((clientX: number) => {
+  const seekToPosition = (clientX: number) => {
     const audio = audioRef.current
     const bar = barRef.current
     if (!audio || !bar || !isFinite(audio.duration)) return
     const rect = bar.getBoundingClientRect()
     const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
     audio.currentTime = ratio * audio.duration
-  }, [])
+  }
 
-  const setVolumeFromPosition = useCallback(
-    (clientX: number, clientY: number) => {
-      const audio = audioRef.current
-      const track = volumeTrackRef.current
-      if (!audio || !track) return
-      const rect = track.getBoundingClientRect()
-      const ratio = rect.width > rect.height ? (clientX - rect.left) / rect.width : 1 - (clientY - rect.top) / rect.height
-      const newVolume = Math.max(0, Math.min(1, ratio))
-      audio.volume = gainVolume(newVolume, gain)
-      setVolume(newVolume)
-      saveVolume(newVolume)
-      if (newVolume > 0 && audio.muted) {
-        audio.muted = false
-        setIsMuted(false)
-      }
-    },
-    [gain],
-  )
+  const setVolumeFromPosition = (clientX: number, clientY: number) => {
+    const audio = audioRef.current
+    const track = volumeTrackRef.current
+    if (!audio || !track) return
+    const rect = track.getBoundingClientRect()
+    const ratio = rect.width > rect.height ? (clientX - rect.left) / rect.width : 1 - (clientY - rect.top) / rect.height
+    const newVolume = Math.max(0, Math.min(1, ratio))
+    audio.volume = gainVolume(newVolume, gain)
+    setVolume(newVolume)
+    saveVolume(newVolume)
+    if (newVolume > 0 && audio.muted) {
+      audio.muted = false
+      setIsMuted(false)
+    }
+  }
 
   const handlePlayPause = () => {
     const audio = audioRef.current
@@ -86,12 +81,21 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
     audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + seconds))
   }
 
-  const handleBarMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBarPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId)
     const audio = audioRef.current
-    isDraggingRef.current = true
     wasPlayingRef.current = !!audio && !audio.paused
     audio?.pause()
     seekToPosition(e.clientX)
+  }
+
+  const handleBarPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) seekToPosition(e.clientX)
+  }
+
+  const handleBarPointerUp = () => {
+    if (wasPlayingRef.current) audioRef.current?.play()?.catch(() => {})
+    wasPlayingRef.current = false
   }
 
   const handleMuteToggle = () => {
@@ -101,9 +105,13 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
     setIsMuted(audio.muted)
   }
 
-  const handleVolumeMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    isVolumeDraggingRef.current = true
+  const handleVolumePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId)
     setVolumeFromPosition(e.clientX, e.clientY)
+  }
+
+  const handleVolumePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) setVolumeFromPosition(e.clientX, e.clientY)
   }
 
   const handleTimeUpdate = () => {
@@ -150,26 +158,6 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   }, [playbackRate])
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDraggingRef.current) seekToPosition(e.clientX)
-      if (isVolumeDraggingRef.current) setVolumeFromPosition(e.clientX, e.clientY)
-    }
-    const handleMouseUp = () => {
-      if (isDraggingRef.current && wasPlayingRef.current) {
-        audioRef.current?.play()?.catch(() => {})
-      }
-      isDraggingRef.current = false
-      isVolumeDraggingRef.current = false
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [seekToPosition, setVolumeFromPosition])
-
-  useEffect(() => {
     const handleGlobalPlay = (e: Event) => {
       const audio = audioRef.current
       if (audio && (e as CustomEvent).detail !== audio) audio.pause()
@@ -185,7 +173,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>
-      <div className={style.bar} ref={barRef} onMouseDown={handleBarMouseDown}>
+      <div className={style.bar} ref={barRef} onPointerDown={handleBarPointerDown} onPointerMove={handleBarPointerMove} onPointerUp={handleBarPointerUp} onPointerCancel={handleBarPointerUp}>
         <div className={style.bar_loaded} style={{ width: `${loaded}%` }} />
         <div className={style.bar_played} style={{ width: `${playedPercent}%` }} />
         <span className={style.bar_time}>
@@ -208,8 +196,8 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         <div className={style.volume_button} onClick={handleMuteToggle}>
           <span className={style.icon} />
         </div>
-        <div className={style.volume_adjust}>
-          <div ref={volumeTrackRef} onMouseDown={handleVolumeMouseDown}>
+        <div className={style.volume_adjust} onPointerDown={handleVolumePointerDown} onPointerMove={handleVolumePointerMove}>
+          <div ref={volumeTrackRef}>
             <div style={{ '--volume': `${volume * 100}%` } as React.CSSProperties} />
           </div>
         </div>
