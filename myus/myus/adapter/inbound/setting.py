@@ -156,9 +156,6 @@ class SettingMyPageAPI:
         if user_id is None:
             return 400, ErrorOut(type=ErrorType.UNAUTHENTICATED, message="Unauthorized")
 
-        if has_email(input.email):
-            return 400, ErrorOut(type=ErrorType.VALIDATION, message="error.emailInvalid")
-
         dto = SettingMyPageDTO(**input.model_dump())
         update_ret = update_mypage(user_id, dto, banner_file)
         if update_ret.is_err:
