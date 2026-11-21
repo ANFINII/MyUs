@@ -302,6 +302,26 @@
         }
       }
     }
+
+    @container (max-width: 419px) {
+      .volume {
+        width: 2.5em;
+
+        .volume_adjust {
+          display: none;
+        }
+      }
+
+      &.volume_open {
+        .volume {
+          width: 10em;
+
+          .volume_adjust {
+            display: flex;
+          }
+        }
+      }
+    }
   }
 
   @container (max-width: 419px) {

@@ -35,6 +35,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const wasPlayingRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [isMuted, setIsMuted] = useState<boolean>(false)
+  const [isVolumeOpen, setIsVolumeOpen] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
   const [loaded, setLoaded] = useState<number>(0)
@@ -105,6 +106,19 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
     setIsMuted(audio.muted)
   }
 
+  const handleVolumeClick = () => {
+    const track = volumeTrackRef.current
+    if (track && track.getClientRects().length === 0) {
+      setIsVolumeOpen(true)
+      return
+    }
+    if (isVolumeOpen) {
+      setIsVolumeOpen(false)
+      return
+    }
+    handleMuteToggle()
+  }
+
   const handleVolumePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId)
     setVolumeFromPosition(e.clientX, e.clientY)
@@ -169,7 +183,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const playedPercent = duration ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, isVolumeInline && style.volume_inline, className)}>
+    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, isVolumeInline && style.volume_inline, isVolumeOpen && style.volume_open, className)}>
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>
@@ -193,7 +207,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
         </div>
       )}
       <div className={style.volume}>
-        <div className={style.volume_button} onClick={handleMuteToggle}>
+        <div className={style.volume_button} onClick={handleVolumeClick}>
           <span className={style.icon} />
         </div>
         <div className={style.volume_adjust} onPointerDown={handleVolumePointerDown} onPointerMove={handleVolumePointerMove}>
