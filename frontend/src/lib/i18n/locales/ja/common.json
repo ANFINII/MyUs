@@ -619,7 +619,8 @@
     "update": "更新",
     "add": "追加",
     "copy": "コピー",
-    "reply": "返信"
+    "reply": "返信",
+    "close": "閉じる"
   },
   "view": {
     "expand": "拡大表示",
@@ -1018,7 +1019,10 @@
       "paywallTitle": "この続きを読むには",
       "paywallNotice": "購入後、読めるようになるまで少し時間がかかる場合があります。",
       "toc": "目次",
-      "codeCopied": "コピーしました"
+      "codeCopy": "コードをコピー",
+      "headingLink": "この見出しへのリンクをコピー",
+      "prevArticle": "前の記事",
+      "nextArticle": "次の記事"
     },
     "comic": {
       "paywallTitle": "この続きを読むには",

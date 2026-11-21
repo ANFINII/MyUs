@@ -21,6 +21,7 @@ const toolbarConfig: ToolbarConfig = {
   color: false,
   superscript: false,
   subscript: false,
+  codeLanguage: false,
   image: false,
 }
 

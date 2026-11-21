@@ -624,7 +624,8 @@
     "update": "Update",
     "add": "Add",
     "copy": "Copy link",
-    "reply": "Reply"
+    "reply": "Reply",
+    "close": "Close"
   },
   "view": {
     "expand": "Show more",
@@ -1027,7 +1028,10 @@
       "paywallTitle": "Read the rest of this article",
       "paywallNotice": "It may take a moment before you can read it after purchase.",
       "toc": "Contents",
-      "codeCopied": "Copied"
+      "codeCopy": "Copy code",
+      "headingLink": "Copy link to this heading",
+      "prevArticle": "Previous article",
+      "nextArticle": "Next article"
     },
     "comic": {
       "paywallTitle": "Read the rest of this comic",
