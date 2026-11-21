@@ -83,12 +83,9 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortValue: (v) => v.title,
       className: style.title,
       cell: (v) => (
-        <>
-          <a className={style.title_link} onClick={() => handleEdit(v)}>
-            {v.title}
-          </a>
-          <ManageEncodeStatus status={v.encodeStatus} />
-        </>
+        <a className={style.title_link} onClick={() => handleEdit(v)}>
+          {v.title}
+        </a>
       ),
     },
     {
@@ -96,6 +93,12 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       header: t('manage.table.content'),
       className: style.content,
       cell: (v) => v.content,
+    },
+    {
+      key: 'encodeStatus',
+      header: t('manage.table.encode'),
+      className: style.normal,
+      cell: (v) => <ManageEncodeStatus status={v.encodeStatus} />,
     },
     {
       key: 'read',

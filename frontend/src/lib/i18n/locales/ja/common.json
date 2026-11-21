@@ -385,6 +385,7 @@
       "title": "タイトル",
       "detail": "詳細",
       "content": "内容",
+      "encode": "変換",
       "play": "再生",
       "view": "閲覧",
       "thread": "スレッド",

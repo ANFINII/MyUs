@@ -83,12 +83,9 @@ export default function ManageAudios(props: Props): React.JSX.Element {
       sortValue: (m) => m.title,
       className: style.title,
       cell: (m) => (
-        <>
-          <a className={style.title_link} onClick={() => handleEdit(m)}>
-            {m.title}
-          </a>
-          <ManageEncodeStatus status={m.encodeStatus} />
-        </>
+        <a className={style.title_link} onClick={() => handleEdit(m)}>
+          {m.title}
+        </a>
       ),
     },
     {
@@ -96,6 +93,12 @@ export default function ManageAudios(props: Props): React.JSX.Element {
       header: t('manage.table.content'),
       className: style.content,
       cell: (m) => m.content,
+    },
+    {
+      key: 'encodeStatus',
+      header: t('manage.table.encode'),
+      className: style.normal,
+      cell: (m) => <ManageEncodeStatus status={m.encodeStatus} />,
     },
     {
       key: 'read',

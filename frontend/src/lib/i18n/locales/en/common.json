@@ -388,6 +388,7 @@
       "title": "Title",
       "detail": "Details",
       "content": "Description",
+      "encode": "Conversion",
       "play": "Plays",
       "view": "Views",
       "thread": "Threads",
