@@ -1,7 +1,7 @@
 .blog_body {
   display: flex;
   justify-content: center;
-  gap: 48px;
+  gap: 80px;
 
   .main {
     flex: 1;
@@ -15,7 +15,7 @@
   }
 }
 
-@media screen and (max-width: 1080px) {
+@media screen and (max-width: 1200px) {
   .blog_body {
     .side {
       display: none;
