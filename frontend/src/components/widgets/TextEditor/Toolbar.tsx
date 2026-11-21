@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Editor, useEditorState } from '@tiptap/react'
-import { CODE_LANGUAGES } from 'utils/functions/article'
 import cx from 'utils/functions/cx'
 import Select from 'components/parts/Select'
 import IconBlockquote from './Icon/Blockquote'
@@ -34,7 +33,6 @@ export interface ToolbarConfig {
   orderedList?: boolean
   bulletList?: boolean
   codeBlock?: boolean
-  codeLanguage?: boolean
   blockquote?: boolean
   link?: boolean
   image?: boolean
@@ -63,7 +61,6 @@ export default function Toolbar(props: Props): React.JSX.Element {
     orderedList: true,
     bulletList: true,
     codeBlock: true,
-    codeLanguage: true,
     blockquote: true,
     link: true,
     image: true,
@@ -86,11 +83,6 @@ export default function Toolbar(props: Props): React.JSX.Element {
     },
   })
 
-  const codeLanguage = useEditorState({
-    editor,
-    selector: ({ editor: e }): string | null => (e.isActive('codeBlock') ? String(e.getAttributes('codeBlock').language ?? '') : null),
-  })
-
   const fileRef = useRef<HTMLInputElement>(null)
 
   const headingOptions = [
@@ -109,8 +101,6 @@ export default function Toolbar(props: Props): React.JSX.Element {
     { label: 'Justify', value: 'justify' },
   ]
 
-  const languageOptions = [{ label: 'Plain', value: '' }, ...CODE_LANGUAGES]
-
   const btnClass = (isActive: boolean) => cx(style.button, isActive && style.button_active)
 
   const handleHeading = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -122,15 +112,6 @@ export default function Toolbar(props: Props): React.JSX.Element {
       const level = Number(value) as 1 | 2 | 3 | 4 | 5
       editor.chain().focus().toggleHeading({ level }).run()
     }
-  }
-
-  const handleLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value
-    editor
-      .chain()
-      .focus()
-      .updateAttributes('codeBlock', { language: value === '' ? null : value })
-      .run()
   }
 
   const handleAlign = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -315,9 +296,6 @@ export default function Toolbar(props: Props): React.JSX.Element {
               >
                 <IconCodeBlock className={style.icon} />
               </button>
-            )}
-            {config.codeLanguage && codeLanguage !== null && (
-              <Select value={codeLanguage} options={languageOptions} onChange={handleLanguage} className={style.select} />
             )}
             {config.blockquote && (
               <button
