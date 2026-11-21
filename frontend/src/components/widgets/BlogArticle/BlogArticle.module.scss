@@ -70,23 +70,27 @@
 
   [data-heading-link] {
     position: absolute;
-    top: 50%;
+    top: 0;
     left: -32px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 24px;
-    height: 24px;
+    height: 1.45em;
     padding: 0;
-    font-size: 18px;
+    font-size: inherit;
     font-weight: 700;
+    line-height: 1;
     color: rgb(50, 150, 255);
     border: none;
     background: none;
     opacity: 0;
-    transform: translateY(-50%);
     transition: opacity 0.15s;
     cursor: pointer;
+
+    [data-icon='hash'] {
+      font-size: 0.75em;
+    }
 
     [data-icon='check'] {
       display: none;
@@ -224,10 +228,10 @@
     [data-heading-link] {
       position: static;
       display: inline-flex;
+      height: auto;
       margin-left: 6px;
       vertical-align: middle;
       opacity: 1;
-      transform: none;
     }
   }
 }
