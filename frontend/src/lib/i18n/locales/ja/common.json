@@ -48,7 +48,7 @@
     "playlistNotFound": "プレイリストが見つかりません",
     "playlistPlanRequired": "プレイリストは有料プランで作成できます",
     "seriesPlanRequired": "シリーズは有料プランで作成できます",
-    "paidContentPlanRequired": "有料記事は Standard プラン以上で販売できます",
+    "paidContentPlanRequired": "コンテンツの販売は Standard プラン以上でできます",
     "priceRange": "値段は 300〜50,000 で入力してください。ドルは 3.00〜500.00 です",
     "paidTextRequired": "値段を付けるときは有料部分を入力してください",
     "freePagesRange": "無料で読めるページ数は、0 からページ数より 1 少ない数までで入力してください",
@@ -592,10 +592,10 @@
       "checkoutCancelHeading": "決済をキャンセルしました",
       "checkoutCancelMessage": "料金は請求されていません。",
       "seller": {
-        "title": "有料記事の販売",
-        "description": "有料記事を販売するには、売上を受け取る口座の登録が必要です。売上の15%をシステム利用料としていただきます。",
+        "title": "コンテンツの販売",
+        "description": "コンテンツを販売するには、売上を受け取る口座の登録が必要です。販売できるものは、料金プランによって変わります。売上の15%をシステム利用料としていただきます。",
         "pending": "口座の登録が終わっていません。続きから登録してください。",
-        "enabled": "口座の登録が完了しています。有料記事を販売できます。",
+        "enabled": "口座の登録が完了しています。コンテンツを販売できます。",
         "register": "口座を登録",
         "continue": "登録を続ける"
       },
