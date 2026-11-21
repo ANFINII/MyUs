@@ -1026,7 +1026,8 @@
       "paidLine": "The rest of this article is paid",
       "paywallTitle": "Read the rest of this article",
       "paywallNotice": "It may take a moment before you can read it after purchase.",
-      "toc": "Contents"
+      "toc": "Contents",
+      "codeCopied": "Copied"
     },
     "comic": {
       "paywallTitle": "Read the rest of this comic",
