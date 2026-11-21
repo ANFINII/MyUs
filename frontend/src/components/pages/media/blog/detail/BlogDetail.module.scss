@@ -13,6 +13,18 @@
     padding: 40px;
     border-radius: 8px;
     background: rgb(255, 255, 255);
+
+    .title {
+      padding-bottom: 24px;
+      margin: 0 0 40px;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.4;
+      text-wrap: balance;
+      overflow-wrap: anywhere;
+      color: rgb(7, 11, 43);
+      border-bottom: 1px solid rgb(230, 230, 240);
+    }
   }
 
   .side {
@@ -56,6 +68,11 @@
 
     .main {
       padding: 0;
+
+      .title {
+        margin-bottom: 24px;
+        font-size: 24px;
+      }
     }
   }
 }
