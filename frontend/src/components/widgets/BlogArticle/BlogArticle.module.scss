@@ -3,7 +3,6 @@
 .article {
   max-width: 760px;
   height: auto;
-  padding: 32px 0 48px;
   margin: 0;
   background: rgb(255, 255, 255);
   @include tiptap.article;
@@ -26,11 +25,5 @@
       content: '';
       border-top: 1px dashed rgb(200, 200, 200);
     }
-  }
-}
-
-@media screen and (max-width: 668px) {
-  .article {
-    padding: 20px 0 32px;
   }
 }
