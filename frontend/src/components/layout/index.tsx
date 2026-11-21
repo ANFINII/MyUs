@@ -1,5 +1,3 @@
-import cx from 'utils/functions/cx'
-import { useAudioPlayer } from 'components/hooks/useAudioPlayer'
 import { usePageLoading } from 'components/hooks/usePageLoading'
 import Header from 'components/layout/Header'
 import SearchTagBar from 'components/layout/SearchTagBar'
@@ -15,10 +13,9 @@ export default function Layout(props: Props): React.JSX.Element {
   const { children } = props
 
   const { loading } = usePageLoading()
-  const { current } = useAudioPlayer()
 
   return (
-    <div className={cx(style.layout, current && style.player_open)}>
+    <div className={style.layout}>
       <Header loading={loading} />
       <SideBar />
       <SearchTagBar />
