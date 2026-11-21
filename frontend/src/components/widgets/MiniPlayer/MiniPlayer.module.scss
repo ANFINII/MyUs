@@ -68,10 +68,8 @@
   }
 }
 
-@media screen and (max-width: 668px) {
+@media screen and (max-width: 880px) {
   .mini_player {
-    bottom: 56px;
-    left: 0;
     display: grid;
     column-gap: 4px;
     row-gap: 6px;
@@ -119,5 +117,12 @@
     .player {
       grid-area: player;
     }
+  }
+}
+
+@media screen and (max-width: 668px) {
+  .mini_player {
+    bottom: 56px;
+    left: 0;
   }
 }
