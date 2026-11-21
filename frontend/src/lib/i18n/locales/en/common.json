@@ -48,7 +48,7 @@
     "playlistNotFound": "Playlist not found",
     "playlistPlanRequired": "Playlists are available on paid plans",
     "seriesPlanRequired": "Series are available on paid plans",
-    "paidContentPlanRequired": "Paid articles are available on the Standard plan or higher",
+    "paidContentPlanRequired": "Selling content is available on the Standard plan or higher",
     "priceRange": "Enter a price between 300 and 50,000. For USD, enter 3.00 to 500.00",
     "paidTextRequired": "Enter the paid section when you set a price",
     "freePagesRange": "Enter free pages from 0 up to one less than the number of pages",
@@ -596,10 +596,10 @@
       "checkoutCancelHeading": "Payment was canceled",
       "checkoutCancelMessage": "You have not been charged.",
       "seller": {
-        "title": "Sell paid articles",
-        "description": "To sell paid articles, register an account to receive your earnings. A 15% system fee is deducted from sales.",
+        "title": "Sell your content",
+        "description": "To sell your content, register an account to receive your earnings. What you can sell depends on your plan. A 15% system fee is deducted from sales.",
         "pending": "Your account registration is not finished. Please continue.",
-        "enabled": "Your account is registered. You can sell paid articles.",
+        "enabled": "Your account is registered. You can sell your content.",
         "register": "Register account",
         "continue": "Continue registration"
       },
