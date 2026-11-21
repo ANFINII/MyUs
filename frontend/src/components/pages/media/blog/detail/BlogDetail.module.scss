@@ -17,11 +17,11 @@
 
   .side {
     flex-shrink: 0;
-    width: 240px;
+    width: 280px;
   }
 }
 
-@media screen and (max-width: 1120px) {
+@media screen and (max-width: 1280px) {
   .blog_body {
     .side {
       display: none;
