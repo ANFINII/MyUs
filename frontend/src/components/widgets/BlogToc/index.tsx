@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import { TocHeading } from 'utils/functions/toc'
@@ -14,6 +14,7 @@ export default function BlogToc(props: Props): React.JSX.Element {
 
   const { t } = useTranslation()
   const [activeId, setActiveId] = useState(headings[0]?.id ?? '')
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const topLevel = Math.min(...headings.map((heading) => heading.level))
   const activeIndex = Math.max(
@@ -22,12 +23,21 @@ export default function BlogToc(props: Props): React.JSX.Element {
   )
   const progress = ((activeIndex + 1) / headings.length) * 100
 
+  const followActive = (id: string) => {
+    const container = scrollRef.current
+    const button = container?.querySelector<HTMLElement>(`[data-toc-id="${id}"]`)
+    if (!container || !button) return
+    container.scrollTo({ top: button.offsetTop - (container.clientHeight - button.offsetHeight) / 2, behavior: 'smooth' })
+  }
+
   useEffect(() => {
     const elements = headings.map((heading) => document.getElementById(heading.id)).filter((element) => element !== null)
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries.find((e) => e.isIntersecting)
-        if (entry) setActiveId(entry.target.id)
+        if (!entry) return
+        setActiveId(entry.target.id)
+        followActive(entry.target.id)
       },
       { rootMargin: '0px 0px -70% 0px' },
     )
@@ -51,12 +61,13 @@ export default function BlogToc(props: Props): React.JSX.Element {
       <div className={style.progress}>
         <div className={style.progress_bar} style={{ width: `${progress}%` }} />
       </div>
-      <div className={style.scroll}>
+      <div ref={scrollRef} className={style.scroll}>
         <ul className={style.list}>
           {headings.map((heading, index) => (
             <li key={heading.id}>
               <button
                 type="button"
+                data-toc-id={heading.id}
                 className={cx(style.item, heading.level === topLevel ? style.main : style.sub, index < activeIndex && style.passed, index === activeIndex && style.active)}
                 onClick={() => handleHeading(heading.id)}
               >
