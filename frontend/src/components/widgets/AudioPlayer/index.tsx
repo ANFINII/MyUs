@@ -17,6 +17,7 @@ interface Props {
   playbackRate?: number
   autoPlay?: boolean
   isVolumeInline?: boolean
+  isMobileVolumeHidden?: boolean
   repeat?: RepeatMode
   audioRef?: React.RefObject<HTMLAudioElement | null>
   className?: string
@@ -26,7 +27,7 @@ interface Props {
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, gain = 0, playbackRate = 1, autoPlay = false, isVolumeInline = false, repeat = 'off', audioRef: sharedAudioRef, className, onEnded, onRepeat, onTimeUpdate } = props
+  const { src, gain = 0, playbackRate = 1, autoPlay = false, isVolumeInline = false, isMobileVolumeHidden = false, repeat = 'off', audioRef: sharedAudioRef, className, onEnded, onRepeat, onTimeUpdate } = props
 
   const { t } = useTranslation()
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -181,7 +182,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const playedPercent = duration ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, isVolumeInline && style.volume_inline, onRepeat && style.repeatable, className)}>
+    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, isVolumeInline && style.volume_inline, isMobileVolumeHidden && style.mobile_volume_hidden, onRepeat && style.repeatable, className)}>
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>

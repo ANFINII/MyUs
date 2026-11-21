@@ -1,0 +1,43 @@
+.title {
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  .link {
+    color: rgb(255, 255, 255);
+  }
+
+  .copy {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 668px) {
+  .title {
+    text-overflow: clip;
+
+    &.flow {
+      .link {
+        display: inline-flex;
+        gap: 40px;
+        animation: title_flow 12s linear infinite;
+      }
+
+      .copy {
+        display: inline;
+      }
+    }
+  }
+}
+
+@keyframes title_flow {
+  0%,
+  15% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-50% - 20px));
+  }
+}

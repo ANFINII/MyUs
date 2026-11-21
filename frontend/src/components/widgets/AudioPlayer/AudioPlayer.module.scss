@@ -357,3 +357,43 @@
     transform: rotate(45deg);
   }
 }
+
+@media screen and (max-width: 668px) {
+  .player {
+    &.mobile_volume_hidden {
+      .volume {
+        display: none;
+      }
+
+      .skip_back {
+        right: 2.5em;
+      }
+
+      .skip_forward {
+        right: 0;
+      }
+
+      .bar {
+        right: calc(5em + 8px);
+      }
+
+      &.repeatable {
+        .skip_back {
+          right: 5em;
+        }
+
+        .skip_forward {
+          right: 2.5em;
+        }
+
+        .repeat {
+          right: 0;
+        }
+
+        .bar {
+          right: calc(7.5em + 8px);
+        }
+      }
+    }
+  }
+}
