@@ -25,6 +25,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import ComicPageEditor from 'components/widgets/ComicPageEditor'
 import ComicModal from 'components/widgets/Modal/Comic'
+import style from '../../Form.module.scss'
 
 interface Props {
   channels: Channel[]
@@ -96,7 +97,7 @@ export default function ComicCreate(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" maxLength={MEDIA_TITLE_MAX} required error={error} onChange={handleInput} />
-          <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
+          <Textarea label={t('manage.form.content')} name="content" className={style.content} required error={error} onChange={handleText} />
           <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
           <ComicPageEditor label={t('manage.form.pages')} pages={pages} required error={error} onChange={setPages} />
         </VStack>

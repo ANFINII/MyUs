@@ -23,6 +23,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../../Form.module.scss'
 
 interface Props {
   channels: Channel[]
@@ -82,7 +83,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
           <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label={t('manage.form.title')} name="title" maxLength={MEDIA_TITLE_MAX} value={values.title} required error={error} onChange={handleInput} />
-          <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
+          <Textarea label={t('manage.form.content')} name="content" className={style.content} value={values.content} required error={error} onChange={handleText} />
           <DatePicker label={t('manage.form.period')} name="period" value={values.period} required error={error} onChange={handlePeriod} />
         </VStack>
       </form>
