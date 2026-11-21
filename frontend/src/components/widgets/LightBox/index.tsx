@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import ExImage from 'components/parts/ExImage'
-import IconCross from 'components/parts/Icon/Cross'
-import style from './LightBox.module.scss'
+import LightBoxOverlay from './Overlay'
 
 interface Props {
   size?: string
@@ -22,16 +21,7 @@ export default function LightBox(props: Props): React.JSX.Element {
   return (
     <>
       <ExImage {...props} onClick={handleToggle} />
-      <div className={open ? style.light_box : 'd_none'} onClick={handleClose}>
-        <div className={style.image_box}>
-          <div>
-            <ExImage src={src} title={title} onClick={(e) => e.stopPropagation()} />
-            <div className={style.cross}>
-              <IconCross size="2em" type="large" onClick={handleToggle} />
-            </div>
-          </div>
-        </div>
-      </div>
+      {open && <LightBoxOverlay src={src} title={title} onClose={handleClose} />}
     </>
   )
 }

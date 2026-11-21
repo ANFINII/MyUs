@@ -181,46 +181,6 @@
       border-top: 1px dashed rgb(200, 200, 200);
     }
   }
-
-  .zoom {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    background: rgba(7, 11, 43, 0.86);
-    z-index: 200;
-    cursor: zoom-out;
-
-    .zoom_image {
-      max-width: 100%;
-      max-height: 100%;
-      margin: 0;
-      border-radius: 8px;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-      cursor: zoom-out;
-    }
-
-    .zoom_close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      font-size: 28px;
-      line-height: 1;
-      color: rgb(255, 255, 255);
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
-      cursor: pointer;
-    }
-  }
 }
 
 @media screen and (max-width: 668px) {

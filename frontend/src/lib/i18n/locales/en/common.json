@@ -624,8 +624,7 @@
     "update": "Update",
     "add": "Add",
     "copy": "Copy link",
-    "reply": "Reply",
-    "close": "Close"
+    "reply": "Reply"
   },
   "view": {
     "expand": "Show more",

@@ -1,8 +1,9 @@
-import { KeyboardEvent, MouseEvent, useState } from 'react'
+import { MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { addHeadingLinks, decorateCodeBlocks } from 'utils/functions/article'
 import Alert from 'components/parts/Alert'
 import FormatHtml from 'components/parts/FormatHtml'
+import LightBoxOverlay from 'components/widgets/LightBox/Overlay'
 import style from './BlogArticle.module.scss'
 
 const COPIED_MS = 2000
@@ -53,10 +54,6 @@ export default function BlogArticle(props: Props): React.JSX.Element {
     }
   }
 
-  const handleZoomKey = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape') setZoomSrc('')
-  }
-
   return (
     <div className={style.article} onClick={handleClick}>
       {isPromotion && <Alert type="info">{t('media.blog.promotion')}</Alert>}
@@ -67,14 +64,7 @@ export default function BlogArticle(props: Props): React.JSX.Element {
           <FormatHtml content={decorate(paidText)} isSponsored={isPromotion} />
         </>
       )}
-      {zoomSrc !== '' && (
-        <div className={style.zoom} role="dialog" aria-modal="true" onClick={() => setZoomSrc('')} onKeyDown={handleZoomKey}>
-          <img src={zoomSrc} alt="" className={style.zoom_image} />
-          <button type="button" className={style.zoom_close} aria-label={t('action.close')} autoFocus>
-            ×
-          </button>
-        </div>
-      )}
+      {zoomSrc !== '' && <LightBoxOverlay src={zoomSrc} onClose={() => setZoomSrc('')} />}
     </div>
   )
 }
