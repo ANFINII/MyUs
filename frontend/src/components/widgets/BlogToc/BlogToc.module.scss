@@ -1,0 +1,147 @@
+@use 'styles/global/mixin/scrollbar';
+
+.toc {
+  position: sticky;
+  top: 32px;
+  max-height: calc(100vh - 136px);
+  padding: 24px 16px 20px;
+  border-radius: 8px;
+  background: rgb(255, 255, 255);
+  overflow-y: auto;
+  @include scrollbar.scrollbar;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0 4px;
+  }
+
+  .title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: rgb(7, 11, 43);
+  }
+
+  .count {
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: rgb(7, 11, 43);
+  }
+
+  .progress {
+    height: 4px;
+    margin: 12px 4px 16px;
+    border-radius: 2px;
+    background: rgb(226, 229, 238);
+    overflow: hidden;
+  }
+
+  .progress_bar {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(to right, rgb(10, 115, 120), rgb(255, 0, 130));
+    transition: width 0.3s ease;
+  }
+
+  .list {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    &::before {
+      position: absolute;
+      top: 18px;
+      bottom: 18px;
+      left: 11px;
+      width: 2px;
+      content: '';
+      background: rgb(226, 229, 238);
+    }
+  }
+
+  .item {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 7px 8px 7px 32px;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: left;
+    color: rgb(130, 134, 155);
+    border: none;
+    border-radius: 8px;
+    background: none;
+    transition: color 0.2s, background 0.2s;
+    cursor: pointer;
+
+    &::before {
+      position: absolute;
+      top: 12px;
+      left: 6px;
+      width: 12px;
+      height: 12px;
+      content: '';
+      border: 2px solid rgb(206, 210, 224);
+      border-radius: 50%;
+      background: rgb(255, 255, 255);
+      transition: all 0.2s;
+      z-index: 1;
+    }
+
+    &::after {
+      position: absolute;
+      top: 18px;
+      bottom: -18px;
+      left: 11px;
+      width: 2px;
+      content: '';
+      background: transparent;
+    }
+
+    &:hover {
+      color: rgb(7, 11, 43);
+      background: rgba(255, 0, 130, 0.08);
+    }
+
+    &.main {
+      font-weight: 700;
+    }
+
+    &.sub::before {
+      top: 14px;
+      left: 8px;
+      width: 8px;
+      height: 8px;
+    }
+
+    &.passed {
+      color: rgb(70, 76, 100);
+
+      &::before {
+        border-color: rgb(10, 115, 120);
+        background: rgb(10, 115, 120);
+      }
+
+      &::after {
+        background: rgb(10, 115, 120);
+      }
+    }
+
+    &.active {
+      font-weight: 700;
+      color: rgb(7, 11, 43);
+      background: rgba(50, 150, 255, 0.12);
+
+      &::before {
+        border-color: rgb(50, 150, 255);
+        box-shadow: 0 0 0 4px rgba(50, 150, 255, 0.22), 0 0 10px 2px rgba(50, 150, 255, 0.55);
+        background: rgb(50, 150, 255);
+      }
+
+    }
+  }
+}

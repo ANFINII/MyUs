@@ -1025,7 +1025,8 @@
       "promotionBadge": "PR",
       "paidLine": "The rest of this article is paid",
       "paywallTitle": "Read the rest of this article",
-      "paywallNotice": "It may take a moment before you can read it after purchase."
+      "paywallNotice": "It may take a moment before you can read it after purchase.",
+      "toc": "Contents"
     },
     "comic": {
       "paywallTitle": "Read the rest of this comic",

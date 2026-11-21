@@ -1016,7 +1016,8 @@
       "promotionBadge": "PR",
       "paidLine": "ここから先は有料部分です",
       "paywallTitle": "この続きを読むには",
-      "paywallNotice": "購入後、読めるようになるまで少し時間がかかる場合があります。"
+      "paywallNotice": "購入後、読めるようになるまで少し時間がかかる場合があります。",
+      "toc": "目次"
     },
     "comic": {
       "paywallTitle": "この続きを読むには",
