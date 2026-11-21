@@ -19,6 +19,113 @@
       padding-right: 60px;
       margin: 0;
     }
+
+    &[data-has-lang] pre {
+      padding-top: 44px;
+    }
+  }
+
+  [data-code-lang] {
+    position: absolute;
+    top: 14px;
+    left: 20px;
+    font-family: monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: rgb(150, 160, 200);
+  }
+
+  :global(.hljs-keyword),
+  :global(.hljs-selector-tag),
+  :global(.hljs-built_in),
+  :global(.hljs-literal) {
+    color: rgb(255, 121, 198);
+  }
+
+  :global(.hljs-string),
+  :global(.hljs-attr),
+  :global(.hljs-selector-attr) {
+    color: rgb(130, 220, 160);
+  }
+
+  :global(.hljs-title),
+  :global(.hljs-name),
+  :global(.hljs-selector-class),
+  :global(.hljs-selector-id) {
+    color: rgb(120, 190, 255);
+  }
+
+  :global(.hljs-number),
+  :global(.hljs-type),
+  :global(.hljs-variable),
+  :global(.hljs-params) {
+    color: rgb(255, 190, 110);
+  }
+
+  :global(.hljs-comment),
+  :global(.hljs-meta) {
+    font-style: italic;
+    color: rgb(120, 130, 170);
+  }
+
+  [data-heading-link] {
+    position: absolute;
+    top: 0;
+    left: -32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 1.45em;
+    padding: 0;
+    font-size: inherit;
+    font-weight: 700;
+    line-height: 1;
+    color: rgb(50, 150, 255);
+    border: none;
+    background: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    cursor: pointer;
+
+    [data-icon='hash'] {
+      font-size: 0.75em;
+    }
+
+    [data-icon='check'] {
+      display: none;
+    }
+
+    &[data-copied] {
+      color: rgb(10, 115, 120);
+      opacity: 1;
+
+      [data-icon='hash'] {
+        display: none;
+      }
+
+      [data-icon='check'] {
+        display: block;
+      }
+    }
+
+    &:focus-visible {
+      opacity: 1;
+    }
+  }
+
+  h1,
+  h2,
+  h3 {
+    position: relative;
+
+    &:hover [data-heading-link] {
+      opacity: 1;
+    }
+  }
+
+  img {
+    cursor: zoom-in;
   }
 
   [data-code-copy] {
@@ -72,6 +179,19 @@
       flex: 1;
       content: '';
       border-top: 1px dashed rgb(200, 200, 200);
+    }
+  }
+}
+
+@media screen and (max-width: 668px) {
+  .article {
+    [data-heading-link] {
+      position: static;
+      display: inline-flex;
+      height: auto;
+      margin-left: 6px;
+      vertical-align: middle;
+      opacity: 1;
     }
   }
 }

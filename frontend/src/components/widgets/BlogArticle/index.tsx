@@ -1,8 +1,9 @@
-import { MouseEvent } from 'react'
+import { MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { addCodeCopyButtons } from 'utils/functions/code'
+import { addHeadingLinks, decorateCodeBlocks } from 'utils/functions/article'
 import Alert from 'components/parts/Alert'
 import FormatHtml from 'components/parts/FormatHtml'
+import LightBoxOverlay from 'components/widgets/LightBox/Overlay'
 import style from './BlogArticle.module.scss'
 
 const COPIED_MS = 2000
@@ -17,34 +18,53 @@ export default function BlogArticle(props: Props): React.JSX.Element {
   const { richtext, paidText, isPromotion } = props
 
   const { t } = useTranslation()
+  const [zoomSrc, setZoomSrc] = useState('')
 
-  const handleCopy = async (e: MouseEvent<HTMLDivElement>) => {
-    if (!(e.target instanceof Element)) return
-    const button = e.target.closest('[data-code-copy]')
-    if (!(button instanceof HTMLButtonElement)) return
+  const decorate = (html: string) => addHeadingLinks(decorateCodeBlocks(html, t('media.blog.codeCopy')), t('media.blog.headingLink'))
+
+  const showCopied = (button: HTMLButtonElement) => {
+    button.setAttribute('data-copied', '')
+    setTimeout(() => button.removeAttribute('data-copied'), COPIED_MS)
+  }
+
+  const copyText = async (button: HTMLButtonElement, text: string) => {
     try {
-      await navigator.clipboard.writeText(button.nextElementSibling?.textContent ?? '')
+      await navigator.clipboard.writeText(text)
     } catch {
       return
     }
-    button.setAttribute('data-copied', '')
-    button.title = t('media.blog.codeCopied')
-    setTimeout(() => {
-      button.removeAttribute('data-copied')
-      button.title = t('action.copy')
-    }, COPIED_MS)
+    showCopied(button)
+  }
+
+  const handleClick = async (e: MouseEvent<HTMLDivElement>) => {
+    if (!(e.target instanceof Element)) return
+    if (e.target instanceof HTMLImageElement) {
+      setZoomSrc(e.target.src)
+      return
+    }
+    const button = e.target.closest('button')
+    if (!button) return
+    if (button.hasAttribute('data-code-copy')) {
+      await copyText(button, button.parentElement?.querySelector('pre')?.textContent ?? '')
+      return
+    }
+    if (button.hasAttribute('data-heading-link')) {
+      const id = button.parentElement?.id ?? ''
+      await copyText(button, `${window.location.origin}${window.location.pathname}#${id}`)
+    }
   }
 
   return (
-    <div className={style.article} onClick={handleCopy}>
+    <div className={style.article} onClick={handleClick}>
       {isPromotion && <Alert type="info">{t('media.blog.promotion')}</Alert>}
-      <FormatHtml content={addCodeCopyButtons(richtext, t('action.copy'))} isSponsored={isPromotion} />
+      <FormatHtml content={decorate(richtext)} isSponsored={isPromotion} />
       {paidText !== '' && (
         <>
           <p className={style.paid_line}>{t('media.blog.paidLine')}</p>
-          <FormatHtml content={addCodeCopyButtons(paidText, t('action.copy'))} isSponsored={isPromotion} />
+          <FormatHtml content={decorate(paidText)} isSponsored={isPromotion} />
         </>
       )}
+      {zoomSrc !== '' && <LightBoxOverlay src={zoomSrc} onClose={() => setZoomSrc('')} />}
     </div>
   )
 }

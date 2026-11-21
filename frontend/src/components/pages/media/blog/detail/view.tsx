@@ -7,8 +7,10 @@ import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import BlogArticle from 'components/widgets/BlogArticle'
 import BlogToc from 'components/widgets/BlogToc'
+import BlogTocMobile from 'components/widgets/BlogToc/Mobile'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
+import MediaSeriesPager from 'components/widgets/Media/Series/Pager'
 import Paywall from 'components/widgets/Paywall'
 import style from './BlogDetail.module.scss'
 
@@ -33,8 +35,17 @@ export default function BlogDetail(props: Props): React.JSX.Element {
         <div className={style.blog_body}>
           <div className={style.main}>
             <h1 className={style.title}>{other.title}</h1>
+            {article.headings.length > 0 && <BlogTocMobile headings={article.headings} className={style.mobile_toc} />}
             <BlogArticle richtext={article.richtext} paidText={article.paidText} isPromotion={isPromotion} />
             {isLocked && product !== null && <Paywall title={t('media.blog.paywallTitle')} notice={t('media.blog.paywallNotice')} product={product} handleToast={handleToast} />}
+            <MediaSeriesPager
+              series={series}
+              ulid={other.ulid}
+              mediaPath={MediaPath.Blog}
+              prevLabel={t('media.blog.prevArticle')}
+              nextLabel={t('media.blog.nextArticle')}
+              className={style.pager}
+            />
           </div>
           <aside className={style.side}>{article.headings.length > 0 && <BlogToc headings={article.headings} className={style.toc} />}</aside>
         </div>

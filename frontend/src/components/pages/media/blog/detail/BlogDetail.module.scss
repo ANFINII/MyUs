@@ -25,6 +25,15 @@
       color: rgb(7, 11, 43);
       border-bottom: 1px solid rgb(230, 230, 240);
     }
+
+    .mobile_toc {
+      display: none;
+      margin-bottom: 32px;
+    }
+
+    .pager {
+      margin-top: 40px;
+    }
   }
 
   .side {
@@ -55,6 +64,12 @@
 
 @media screen and (max-width: 960px) {
   .blog_body {
+    .main {
+      .mobile_toc {
+        display: block;
+      }
+    }
+
     .side {
       display: none;
     }
