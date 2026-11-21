@@ -31,7 +31,6 @@ export default function MediaSeriesPager(props: Props): React.JSX.Element {
   return (
     <nav className={cx(style.pager, className)} aria-label={t('media.series.label')}>
       <div className={style.header}>
-        <span className={style.label}>{t('media.series.label')}</span>
         <span className={style.title}>{title}</span>
         <span className={style.position}>{`${index + 1} / ${items.length}`}</span>
       </div>
