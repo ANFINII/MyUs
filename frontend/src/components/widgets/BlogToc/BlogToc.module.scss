@@ -111,6 +111,13 @@
       font-weight: 700;
     }
 
+    &.sub::before {
+      top: 14px;
+      left: 8px;
+      width: 8px;
+      height: 8px;
+    }
+
     &.passed {
       color: rgb(70, 76, 100);
 

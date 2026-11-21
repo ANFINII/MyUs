@@ -55,7 +55,7 @@ export default function BlogToc(props: Props): React.JSX.Element {
           <li key={heading.id}>
             <button
               type="button"
-              className={cx(style.item, heading.level === topLevel && style.main, index < activeIndex && style.passed, index === activeIndex && style.active)}
+              className={cx(style.item, heading.level === topLevel ? style.main : style.sub, index < activeIndex && style.passed, index === activeIndex && style.active)}
               onClick={() => handleHeading(heading.id)}
             >
               {heading.text}
